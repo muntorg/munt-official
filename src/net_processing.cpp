@@ -1396,9 +1396,6 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                 }
             }
 
-            // Track requests for our stuff.
-            GetMainSignals().Inventory(inv.hash);
-
             if (inv.type == MSG_BLOCK || inv.type == MSG_FILTERED_BLOCK || inv.type == MSG_CMPCT_BLOCK || inv.type == MSG_WITNESS_BLOCK)
                 break;
         }
@@ -1958,9 +1955,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     pfrom->AskFor(inv);
                 }
             }
-
-            // Track requests for our stuff
-            GetMainSignals().Inventory(inv.hash);
         }
     }
 

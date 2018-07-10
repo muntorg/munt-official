@@ -827,15 +827,6 @@ public:
     // CValidationInterface updates
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
     void SetBestChain(const CBlockLocator& loc) override;
-    void Inventory(const uint256 &hash) override
-    {
-        {
-            LOCK(cs_wallet);
-            std::map<uint256, int>::iterator mi = mapRequestCount.find(hash);
-            if (mi != mapRequestCount.end())
-                (*mi).second++;
-        }
-    }
 
     void GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
     void GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;

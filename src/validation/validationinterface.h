@@ -55,7 +55,6 @@ protected:
     virtual void BlockConnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block, [[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::vector<CTransactionRef> &txnConflicted) {}
     virtual void BlockDisconnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block) {}
     virtual void SetBestChain([[maybe_unused]] const CBlockLocator &locator) {}
-    virtual void Inventory([[maybe_unused]] const uint256 &hash) {}
     virtual void ResendWalletTransactions([[maybe_unused]] int64_t nBestBlockTime, [[maybe_unused]] CConnman* connman) {}
     virtual void BlockChecked([[maybe_unused]] const CBlock&, [[maybe_unused]] const CValidationState&) {}
     virtual void GetScriptForMining([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
@@ -85,8 +84,6 @@ struct CMainSignals {
     boost::signals2::signal<void (const std::shared_ptr<const CBlock> &)> BlockDisconnected;
     /** Notifies listeners of a new active block chain. */
     boost::signals2::signal<void (const CBlockLocator &)> SetBestChain;
-    /** Notifies listeners about an inventory item being seen on the network. */
-    boost::signals2::signal<void (const uint256 &)> Inventory;
     /** Tells listeners to broadcast their data. */
     boost::signals2::signal<void (int64_t nBestBlockTime, CConnman* connman)> Broadcast;
     /**

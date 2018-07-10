@@ -19,45 +19,6 @@ int64_t CWalletTx::GetTxTime() const
     return n ? n : nTimeReceived;
 }
 
-int CWalletTx::GetRequestCount() const
-{
-    // Returns -1 if it wasn't being tracked
-    int nRequests = -1;
-    {
-        LOCK(pwallet->cs_wallet);
-        if (IsCoinBase())
-        {
-            // Generated block
-            if (!hashUnset())
-            {
-                std::map<uint256, int>::const_iterator mi = pwallet->mapRequestCount.find(hashBlock);
-                if (mi != pwallet->mapRequestCount.end())
-                    nRequests = (*mi).second;
-            }
-        }
-        else
-        {
-            // Did anyone request this transaction?
-            std::map<uint256, int>::const_iterator mi = pwallet->mapRequestCount.find(GetHash());
-            if (mi != pwallet->mapRequestCount.end())
-            {
-                nRequests = (*mi).second;
-
-                // How about the block it's in?
-                if (nRequests == 0 && !hashUnset())
-                {
-                    std::map<uint256, int>::const_iterator _mi = pwallet->mapRequestCount.find(hashBlock);
-                    if (_mi != pwallet->mapRequestCount.end())
-                        nRequests = (*_mi).second;
-                    else
-                        nRequests = 1; // If it's in someone else's block it must have got out
-                }
-            }
-        }
-    }
-    return nRequests;
-}
-
 void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
                            std::list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from) const
 {
