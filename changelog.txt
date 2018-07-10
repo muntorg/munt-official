@@ -1,3 +1,9 @@
+2.1
+
+UI - Option to hide status bar when synchronized (default enabled). Disable to always show status indicators.
+
+
+
 2.0.0.2
 
 UI - Implement an improved "new account" page; which makes witnessing more visible as well as better displays and advertizes various other capabilities of our wallets.

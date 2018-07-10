@@ -633,6 +633,18 @@ void GUI::setClientModel(ClientModel *_clientModel)
         // while the client has not yet fully loaded
         createTrayIconMenu();
 
+        OptionsModel* optionsModel = _clientModel->getOptionsModel();
+        if(optionsModel)
+        {
+            // be aware of the tray icon disable state change reported by the OptionsModel object.
+            connect(optionsModel,SIGNAL(hideTrayIconChanged(bool)),this,SLOT(setTrayIconVisible(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+
+            // initialize the disable state of the tray icon with the current value in the model.
+            setTrayIconVisible(optionsModel->getHideTrayIcon());
+
+            setOptionsModel(optionsModel);
+        }
+
         // Keep up to date with client
         updateNetworkState();
         syncOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
@@ -655,18 +667,6 @@ void GUI::setClientModel(ClientModel *_clientModel)
         if(walletFrame)
             walletFrame->setClientModel(_clientModel);
         #endif
-
-        OptionsModel* optionsModel = _clientModel->getOptionsModel();
-        if(optionsModel)
-        {
-            // be aware of the tray icon disable state change reported by the OptionsModel object.
-            connect(optionsModel,SIGNAL(hideTrayIconChanged(bool)),this,SLOT(setTrayIconVisible(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-
-            // initialize the disable state of the tray icon with the current value in the model.
-            setTrayIconVisible(optionsModel->getHideTrayIcon());
-
-            setOptionsModel(optionsModel);
-        }
     }
     else
     {

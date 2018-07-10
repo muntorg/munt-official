@@ -702,7 +702,8 @@ void GUI::showToolBars()
     if (tabsBar) tabsBar->setVisible(true);
     if (spacerBarR) spacerBarR->setVisible(true);
     if (accountInfoBar) accountInfoBar->setVisible(true);
-    if (statusToolBar) statusToolBar->setVisible(progressBarLabel ? progressBarLabel->isVisible() : false);
+    if (statusToolBar) statusToolBar->setVisible(!optionsModel->getAutoHideStatusBar() ||
+                                                 (progressBarLabel ? progressBarLabel->isVisible() : false));
 }
 
 
@@ -902,7 +903,7 @@ void GUI::hideProgressBarLabel()
         progressBarLabel->setText("");
         progressBarLabel->setVisible(false);
     }
-    if(statusToolBar)
+    if(statusToolBar && optionsModel->getAutoHideStatusBar())
         statusToolBar->setVisible(false);
 }
 

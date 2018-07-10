@@ -83,6 +83,7 @@ public:
         ProxyIPTor,             // QString
         ProxyPortTor,           // int
         DisplayUnit,            // GuldenUnits::Unit
+        AutoHideStatusBar,      //
         ThirdPartyTxUrls,       // QString
         Language,               // QString
         CoinControlFeatures,    // bool
@@ -110,6 +111,7 @@ public:
     bool getAutoUpdateCheck() { return fAutoUpdateCheck; }
     bool getMinimizeOnClose() { return fMinimizeOnClose; }
     int getDisplayUnit() { return nDisplayUnit; }
+    bool getAutoHideStatusBar() const { return fAutoHideStatusBar; }
     QString getThirdPartyTxUrls() { return strThirdPartyTxUrls; }
     bool getProxySettings(QNetworkProxy& proxy) const;
     bool getCoinControlFeatures() { return fCoinControlFeatures; }
@@ -149,6 +151,7 @@ private:
     bool fMinimizeOnClose;
     QString language;
     int nDisplayUnit;
+    bool fAutoHideStatusBar;
     QString strThirdPartyTxUrls;
     bool fCoinControlFeatures;
     /* settings that were overridden by command-line */

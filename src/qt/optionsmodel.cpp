@@ -147,6 +147,10 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("nDisplayUnit", GuldenUnits::NLG);
     nDisplayUnit = GuldenUnits::NLG;//settings.value("nDisplayUnit").toInt();
 
+    if (!settings.contains("fAutoHideStatusBar"))
+        settings.setValue("fAutoHideStatusBar", true);
+    fAutoHideStatusBar = settings.value("fAutoHideStatusBar").toBool();
+
     if (!settings.contains("strThirdPartyTxUrls"))
         settings.setValue("strThirdPartyTxUrls", "");
     strThirdPartyTxUrls = settings.value("strThirdPartyTxUrls", "").toString();
@@ -317,6 +321,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
 #endif
         case DisplayUnit:
             return GuldenUnits::NLG; // fixme: (Post-2.1) - look at adding display units back possibly - nDisplayUnit;
+        case AutoHideStatusBar:
+            return fAutoHideStatusBar;
         case ThirdPartyTxUrls:
             return "";// fixme: (Post-2.1) - Consider adding this back strThirdPartyTxUrls;
         case Language:
@@ -449,6 +455,10 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case DisplayUnit:
             setDisplayUnit(value);
             break;
+        case AutoHideStatusBar:
+            fAutoHideStatusBar = value.toBool();
+            settings.setValue("fAutoHideStatusBar", fAutoHideStatusBar);
+            return fAutoHideStatusBar;
         case ThirdPartyTxUrls:
             if (strThirdPartyTxUrls != value.toString()) {
                 strThirdPartyTxUrls = value.toString();
