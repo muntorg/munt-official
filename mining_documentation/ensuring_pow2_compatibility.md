@@ -80,47 +80,47 @@ c2f3e0a8988bcae3a8004ea66e346e247f1388b3c72ce06f5b35f182f1db0d57
 * Now create and fund the witness accounts
 ```
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit1"
-a076a165-3bb8-4745-adbc-d27cfb48029b
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit2"
-acc009a0-604c-453d-81d1-64ab5a2a83ea
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit3"
-64cb416a-673f-4d09-b089-baae5768cf8c
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit4"
-0306880a-2542-4eee-ae15-5976f9ff4dc1
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit5"
-5be64366-db07-41a3-8283-cabd91f2b094
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit6"
-a50c39c2-afbe-4072-9d72-ac2a3039b5d1
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit7"
-8867e340-841b-4907-af7d-33fd562f3a3f
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit8"
-712f8edf-703c-4ebe-b796-7ee7b31d2727
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit9"
-cc3df1d5-e35f-4eb4-b6a5-671328f632c0
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit10"
-62965b3e-b42d-4d88-b9c1-37c302b4d95c
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit11"
-ef2ae4ea-5be3-4260-9025-33573b7152ad
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit12"
-367b6434-f576-4d82-b7c1-23e805a3a5a3
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit13"
-fb66eef5-9ad8-4060-b6c2-edd345384456
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit14"
-9b22cde7-1b70-4a69-8810-da50b61fb382
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit15"
-517d5035-b1f7-4367-b3de-526dbb1bbbfb
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit16"
-680da8ea-dc03-47e0-85fd-d7b88d5ad8e7
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit17"
-f6fbd27f-2334-4b44-a1ce-12cc9df6e236
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit18"
-2efeb416-71e0-4f68-9b8a-8500f36fcdfc
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit19"
-b830077e-c413-4e03-9869-bb94bafa2d25
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit20"
-685bcd24-7f6b-4748-9ac9-d8dece5b26b9
 # ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 createwitnessaccount "wit21"
-ee6f9598-a998-48d9-bb03-235fbd87e91b
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit1" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit2" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit3" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit4" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit5" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit6" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit7" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit8" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit9" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit10" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit11" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit12" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit13" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit14" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit15" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit16" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit17" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit18" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit19" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit20" 50000 3y
+# ./src/Gulden-cli -testnet=C1529916460:3 -rpcuser=a -rpcpassword=a -rpcport=8003 fundwitnessaccount "My account" "wit21" 50000 3y
 ```
 * Wait a while and check that `phase 3` has activated and the chain is still moving.
 ```
