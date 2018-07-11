@@ -20,9 +20,35 @@
 #include "utilmoneystr.h"
 #include "init.h"
 #include "net_processing.h"
+#include "spvscanner.h"
 #include <unity/appmanager.h>
 #include <Gulden/mnemonic.h>
 
+CWallet::CWallet()
+    : CGuldenWallet()
+{
+    SetNull();
+}
+
+CWallet::CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in)
+    : CGuldenWallet(std::move(dbw_in))
+{
+    SetNull();
+}
+
+CWallet::~CWallet()
+{
+    delete pwalletdbEncryption;
+    pwalletdbEncryption = NULL;
+    for (auto accountPair : mapAccounts)
+    {
+        delete accountPair.second;
+    }
+    for (auto mapPair : mapSeeds)
+    {
+        delete mapPair.second;
+    }
+}
 
 DBErrors CWallet::LoadWallet(WalletLoadState& nExtraLoadState)
 {

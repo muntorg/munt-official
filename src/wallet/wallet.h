@@ -24,7 +24,6 @@
 #include "validation/validationinterface.h"
 #include "script/ismine.h"
 #include "script/sign.h"
-#include "spvscanner.h"
 #include "wallet/crypter.h"
 #include "wallet/walletdb.h"
 #include "wallet/rpcwallet.h"
@@ -98,6 +97,7 @@ class CTxMemPool;
 class CBlockPolicyEstimator;
 class CWalletTx;
 class CWalletDB;
+class CSPVScanner;
 
 /** (client) version numbers for particular wallet features */
 enum WalletFeature
@@ -545,30 +545,12 @@ public:
     unsigned int nMasterKeyMaxID;
 
     // Create wallet with dummy database handle
-    CWallet(): CGuldenWallet()
-    {
-        SetNull();
-    }
+    CWallet();
 
     // Create wallet with passed-in database handle
-    CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : CGuldenWallet(std::move(dbw_in))
-    {
-        SetNull();
-    }
+    CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in);
 
-    ~CWallet()
-    {
-        delete pwalletdbEncryption;
-        pwalletdbEncryption = NULL;
-        for (auto accountPair : mapAccounts)
-        {
-            delete accountPair.second;
-        }
-        for (auto mapPair : mapSeeds)
-        {
-            delete mapPair.second;
-        }
-    }
+    ~CWallet();
 
     void SetNull()
     {
