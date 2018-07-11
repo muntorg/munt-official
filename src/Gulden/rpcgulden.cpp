@@ -454,6 +454,31 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     return witnessInfoForBlock;
 }
 
+static UniValue disablewitnessing(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 0) {
+        throw std::runtime_error(
+            "disablewitnessing\n"
+            "\nStops all witnessing activity, call \"enablewitnessing\" to start witnessing again.\n"
+        );
+    }
+
+    witnessingEnabled = false;
+    return true;
+}
+
+static UniValue enablewitnessing(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 0) {
+        throw std::runtime_error(
+            "enablewitnessing\n"
+            "\nStarts all witnessing activity, call \"disablewitnessing\" to stop witnessing again.\n"
+        );
+    }
+
+    witnessingEnabled = true;
+    return true;
+}
 
 static UniValue dumpdiffarray(const JSONRPCRequest& request)
 {
@@ -2997,6 +3022,8 @@ static const CRPCCommand commands[] =
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
     { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account", "witness_account", "amounts"} },
+    { "witness",                 "enablewitnessing",                &enablewitnessing,               true,    {} },
+    { "witness",                 "disablewitnessing",               &disablewitnessing,              true,    {} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
