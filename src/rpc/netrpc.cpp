@@ -652,7 +652,7 @@ static UniValue enablenetwork(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 0) {
         throw std::runtime_error(
             "enablenetwork\n"
-            "\nStops all p2p network activity, call \"enablenetwork\" to start p2p activity again.\n"
+            "\nStarts all p2p network activity, call \"disablenetwork\" to stop p2p activity again.\n"
         );
     }
 
