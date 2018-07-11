@@ -2306,6 +2306,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 LogPrintf("Peer %d sent us invalid header via cmpctblock\n", pfrom->GetId());
                 return true;
             }
+            return false;
         }
 
         // When we succeed in decoding a block's txids from a cmpctblock
@@ -2619,6 +2620,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 }
                 return error("invalid header received");
             }
+            return false;
         }
 
         NotifyHeaderProgress(connman);
@@ -2813,6 +2815,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     Misbehaving(pfrom->GetId(), 100);
                     return error("Something went very wrong when putting reverse headers into chain, blaming peer=%d!", pfrom->GetId());
                 }
+                return false;
             }
 
             LOCK(cs_main);
