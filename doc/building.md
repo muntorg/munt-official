@@ -1,5 +1,5 @@
 Note
-______
+-----
 
 Please note that in order to achieve quality and consistency Gulden is written to modern software standards, this means that we use the latest languages (C++17) and recent libraries (boost) which may not be present on older distributions.
 
