@@ -160,6 +160,8 @@ Actual pool upgrade
 
 Now that we have done the upgrade without a pool the process with a pool is very similar.
 Note that cpu miner software is sufficient for this, while you can use an asic for testing it is not necessary...
+
+Note that for this part of the instructions you will want to use `Scrypt` for your testnet and not `City hash` so `-testnet=S1529916460:3` and not `-testnet=C1529916460:3`
 * Wipe the data directories and start two GuldenD instance again
 * Make a testnet copy of your mining pool
 * Check the debug.log for the magic header bytes (they are logged near the start) and update your testnet pool with the information as well as other testnet information from above (rpc port etc.)
