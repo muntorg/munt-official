@@ -1197,6 +1197,9 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
         hideProgressBarLabel();
         progressBarLabel->setVisible(false);
         progressBar->setVisible(false);
+
+        // Hide SPV when fully synced, we are now working in full verification mode
+        spvStatusIcon->setVisible(false);
     }
     else
     {
@@ -1234,6 +1237,10 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
             tooltip += QString("<br>");
         }
         tooltip += tr("Transactions and balances will not be accurate or correct until synchronisation is complete.");
+
+        // When SPV is enabled and block sync is (still) behind we are working in SPV
+        if (fSPV)
+            spvStatusIcon->setVisible(true);
     }
 
     // Don't word-wrap this (fixed-width) tooltip
