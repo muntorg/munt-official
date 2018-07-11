@@ -1564,60 +1564,6 @@ static UniValue getchaintxstats(const JSONRPCRequest& request)
     return ret;
 }
 
-UniValue requestblocks(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
-        throw std::runtime_error(
-            "requestblocks ( add | flush | status ) ( [\"hash_0\", \"hash_1\", ...] )\n"
-            "\nPriorize blocks downloads.\n"
-            "\nArguments:\n"
-            "1. action            (string, required) the action to execute\n"
-            "                                        add  = add new blocks to the priority download\n"
-            "                                        flush = flush the queue (blocks in-flight will still be downloaded)\n"
-            "                                        status = get info about the queue\n"
-            "2. blockhashes       (array, optional) the hashes of the blocks to download\n"
-            "\nResult:\n"
-            "   add: <null>\n"
-            "   flush: <true|false> (if the the queue wasn't empty)\n"
-            "   status: {\"count\": \"<amount of blocks in the queue>\"}\n"
-            "\nExamples:\n"
-            + HelpExampleCli("requestblocks", "add, \"'[\"<blockhash>\"]'\"")
-            + HelpExampleRpc("requestblocks", "add, \"'[\"<blockhash>\"]'\"")
-            );
-
-    if (request.params[0].get_str() == "flush") {
-        return UniValue(FlushPriorityDownloads());
-    }
-    else if (request.params[0].get_str() == "status") {
-        UniValue ret(UniValue::VOBJ);
-        ret.push_back(Pair("count", (uint64_t)CountPriorityDownloads()));
-        return ret;
-    }
-    else if (request.params[0].get_str() == "add") {
-        if (request.params[1].isNull()) {
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Missing blocks array");
-        }
-        std::vector<const CBlockIndex*> blocksToDownload;
-        {
-            LOCK(cs_main); //mapBlockIndex
-            for (const UniValue& strHashU : request.params[1].get_array().getValues()) {
-                uint256 hash(uint256S(strHashU.get_str()));
-                BlockMap::const_iterator mi = mapBlockIndex.find(hash);
-                if (mi == mapBlockIndex.end()) {
-                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
-                }
-                blocksToDownload.push_back(mi->second);
-            }
-        }
-
-        AddPriorityDownload(blocksToDownload);
-        return NullUniValue;
-    }
-    else {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Unkown action");
-    }
-}
-
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafe argNames
   //  --------------------- ------------------------  -----------------------  ------ ----------
@@ -1639,7 +1585,6 @@ static const CRPCCommand commands[] =
     { "blockchain",         "gettxoutsetinfo",        &gettxoutsetinfo,        true,  {} },
     { "blockchain",         "pruneblockchain",        &pruneblockchain,        true,  {"height"} },
     { "blockchain",         "verifychain",            &verifychain,            true,  {"checklevel","nblocks"} },
-    { "blockchain",         "requestblocks",          &requestblocks,          true,  {"action", "blockhashes"} },
     { "blockchain",         "preciousblock",          &preciousblock,          true,  {"blockhash"} },
 
     /* Not shown in help */
