@@ -311,6 +311,7 @@ struct CBlockIndexCacheComparator
 std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessCandidates;
 
 bool witnessScriptsAreDirty = false;
+bool witnessingEnabled = true;
 
 void static GuldenWitness()
 {
@@ -339,6 +340,10 @@ void static GuldenWitness()
                     }
                     MilliSleep(5000);
                 } while (true);
+            }
+            while (!witnessingEnabled)
+            {
+                MilliSleep(200);
             }
             DO_BENCHMARK("WIT: GuldenWitness", BCLog::BENCH|BCLog::WITNESS);
 

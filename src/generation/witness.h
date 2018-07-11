@@ -12,6 +12,8 @@
 //! Indicate to the witness thread that it must erase the witness script cache and recalculate it.
 extern bool witnessScriptsAreDirty;
 
+extern bool witnessingEnabled;
+
 //! Run the main witnessing thread; On wallets with no witnessing accounts this will just sleep permanently.
 void StartPoW2WitnessThread(boost::thread_group& threadGroup);
 
