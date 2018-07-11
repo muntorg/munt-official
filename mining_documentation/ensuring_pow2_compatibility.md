@@ -171,10 +171,10 @@ Note that for this part of the instructions you will want to use `Scrypt` for yo
 Note the above samples ignore other Gulden specific customisations that might be required and already done on your pool - these are only the PoW² specific changes.
 
 * Start mining with the pool
-* Follow the same basic steps again ont he witness node to create witnesses and make sure that the pool continues to mine blocks well into phase 3
+* Follow the same basic steps again on the witness node to create witnesses and make sure that the pool continues to mine blocks well into phase 3
 
 If you run into issues, add debug logging (some sample log calls in the patchset above - just uncomment them) and then seek assistance.
-The Gulden developers will be available for pool related questions after the 2.0 launch.
+The Gulden developers are available on our slack for all pool related questions.
 
 Advanced
 --------
@@ -184,6 +184,6 @@ Final advanced testing should be done if you want to ensure 100% pool performanc
 * This time launch three `GuldenD` witnesses instead of 2
 * Split your witness accounts evenly between 2 of the 3 nodes
 * Advance to `phase 3` as before
-* During `phase 3` close on of the 2 instances that has witness accounts
+* During `phase 3` close one of the 2 instances that has witness accounts
 * At this point you should start to see some orphans in your log but the chain should keep moving 
 * If the chain keeps moving everything is 100%; if the chain freezes when you do this then you need further configuration adjustments and should seek support.
