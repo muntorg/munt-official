@@ -662,6 +662,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
         connect(_clientModel, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(headerProgressChanged(int, int)), this, SLOT(setNumHeaders(int,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+        connect(_clientModel, SIGNAL(spvProgressChanged(int, int, int)), this, SLOT(spvProgress(int,int, int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         // Receive and report messages from client model
         connect(_clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         // Show progress dialog
@@ -1180,10 +1181,33 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
         showBalances();
     }
 
-    // Set icon state: spinning if catching up, tick otherwise
-    if(secs < 90*60)
+    QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
+    updateProgress(secs < 90*60, 0, count, clientModel->getProbableHeight(), tr("%1 behind").arg(timeBehindText), tooltip);
+}
+
+void GUI::setNumHeaders(int current, int total)
+{
+    LogPrint(BCLog::QT, "GUI::setNumHeaders\n");
+
+    if (!clientModel)
+        return;
+
+    if (syncOverlay)
+        syncOverlay->setKnownBestHeight(clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(clientModel->getHeaderTipTime()));
+
+    // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
+    statusBar()->clearMessage();
+
+    updateHeadersSyncProgressLabel(current, total);
+}
+
+void GUI::updateProgress(bool synced, int minimum, int progress, int maximum, const QString& progressTextFormat, const QString& tooltipIn)
+{
+    QString tooltip;
+
+    if (synced)
     {
-        tooltip = tr("Up to date") + QString(".<br>") + tooltip;
+        tooltip = tr("Up to date") + QString(".<br>") + tooltipIn;
         labelBlocksIcon->setPixmap(QIcon(":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
 
 #ifdef ENABLE_WALLET
@@ -1203,24 +1227,25 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
     }
     else
     {
-        QString timeBehindText = GUIUtil::formatNiceTimeOffset(secs);
-
         showProgressBarLabel();
         progressBarLabel->setVisible(true);
-        progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
-        progressBar->setMaximum(1000000000);
-        progressBar->setValue(nSyncProgress * 1000000000.0 + 0.5);
+        progressBar->setFormat(progressTextFormat);
+        progressBar->setMinimum(minimum);
+        progressBar->setMaximum(maximum);
+        progressBar->setValue(progress);
         progressBar->setVisible(true);
 
-        tooltip = tr("Catching up... %1% complete.<br>").arg( std::min(99, qRound(nSyncProgress * 100)) ) + tooltip;
-        if(count != prevBlocks)
-        {
-            labelBlocksIcon->setPixmap(QIcon(QString(
+        double nSyncProgress = 0;
+        if (maximum - minimum > 1) {
+            nSyncProgress = std::min(1.0, double(progress-minimum) / double(maximum-minimum));
+        }
+
+        tooltip = tr("Catching up... %1% complete.<br>").arg( std::min(99, qRound(nSyncProgress * 100)) ) + tooltipIn;
+
+        labelBlocksIcon->setPixmap(QIcon(QString(
                 ":/movies/spinner-%1").arg(spinnerFrame, 3, 10, QChar('0')))
                 .pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
             spinnerFrame = (spinnerFrame + 1) % SPINNER_FRAMES;
-        }
-        prevBlocks = count;
 
 #ifdef ENABLE_WALLET
         if(walletFrame)
@@ -1230,12 +1255,7 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
         }
 #endif // ENABLE_WALLET
 
-        tooltip += QString("<br>");
-        if (count>1)
-        {
-            //tooltip += tr("Last received block was generated %1 ago.").arg(timeBehindText);
-            tooltip += QString("<br>");
-        }
+        tooltip += QString("<br><br>");
         tooltip += tr("Transactions and balances will not be accurate or correct until synchronisation is complete.");
 
         // When SPV is enabled and block sync is (still) behind we are working in SPV
@@ -1251,20 +1271,17 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
     progressBar->setToolTip(tooltip);
 }
 
-void GUI::setNumHeaders(int current, int total)
+void GUI::spvProgress(int start_height, int processed_height, int probable_height)
 {
-    LogPrint(BCLog::QT, "GUI::setNumHeaders\n");
+    LogPrint(BCLog::QT, "GUI::spvProgress\n");
 
     if (!clientModel)
         return;
 
-    if (syncOverlay)
-        syncOverlay->setKnownBestHeight(clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(clientModel->getHeaderTipTime()));
-
-    // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
-    statusBar()->clearMessage();
-
-    updateHeadersSyncProgressLabel(current, total);
+    updateProgress(processed_height >= probable_height,
+                   start_height, processed_height, probable_height,
+                   "%p%",
+                   tr("%1 block(s) remaining.").arg(std::max(0, probable_height-processed_height)));
 }
 
 void GUI::message(const QString &title, const QString &message, unsigned int style, bool *ret)

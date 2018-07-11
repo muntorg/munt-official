@@ -388,6 +388,14 @@ void ClientModel::subscribeToCoreSignals()
     uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChanged, this, _1, _2, false));
     uiInterface.NotifyHeaderTip.connect(boost::bind(BlockTipChanged, this, _1, _2, true));
     uiInterface.NotifyHeaderProgress.connect(boost::bind(HeaderProgressChanged, this, _1, _2, _3, _4));
+
+    // trigger spvProgressChanged signal on Qt thread
+    spvProgressConnection = uiInterface.NotifySPVProgress.connect([this](int start_height, int processed_height, int probable_height){
+        QMetaObject::invokeMethod(this, "spvProgressChanged", Qt::QueuedConnection,
+                                  Q_ARG(int, start_height),
+                                  Q_ARG(int, processed_height),
+                                  Q_ARG(int, probable_height));
+    });
 }
 
 void ClientModel::unsubscribeFromCoreSignals()
@@ -405,4 +413,5 @@ void ClientModel::unsubscribeFromCoreSignals()
     uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, false));
     uiInterface.NotifyHeaderTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, true));
     uiInterface.NotifyHeaderProgress.disconnect(boost::bind(HeaderProgressChanged, this, _1, _2, _3, _4));
+    spvProgressConnection.disconnect();
 }

@@ -125,6 +125,9 @@ public:
 
     /** Banlist did change. */
     boost::signals2::signal<void (void)> BannedListChanged;
+
+    /** SPV progress */
+    boost::signals2::signal<void (int start_height, int processed_height, int probable_height)> NotifySPVProgress;
 };
 
 /** Show warning message **/

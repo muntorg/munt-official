@@ -15,6 +15,7 @@
 #include <QObject>
 #include <QDateTime>
 
+#include <boost/signals2.hpp>
 #include <atomic>
 
 class AddressTableModel;
@@ -109,6 +110,8 @@ private:
 
     void subscribeToCoreSignals();
 
+    boost::signals2::connection spvProgressConnection;
+
 Q_SIGNALS:
     void numConnectionsChanged(int count);
     void numBlocksChanged(int count, const QDateTime& blockDate, double nVerificationProgress, bool header);
@@ -117,6 +120,7 @@ Q_SIGNALS:
     void alertsChanged(const QString &warnings);
     void bytesChanged(quint64 totalBytesIn, quint64 totalBytesOut);
     void headerProgressChanged(int current, int total);
+    void spvProgressChanged(int start_height, int processed_height, int probable_height);
 
     //! Fired when a message should be reported to the user
     void message(const QString &title, const QString &message, unsigned int style);

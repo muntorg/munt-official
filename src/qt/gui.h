@@ -264,6 +264,8 @@ private:
 
     void updateHeadersSyncProgressLabel(int current, int total);
 
+    void updateProgress(bool synced, int minimum, int progress, int maximum,  const QString& progressTextFormat, const QString& tooltipIn = "");
+
 Q_SIGNALS:
     /** Signal raised when a URI was entered or dragged to the GUI */
     void receivedURI(const QString &uri);
@@ -279,6 +281,8 @@ public Q_SLOTS:
     void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool headers);
     /** Set number of headers and headers sync progress in the UI */
     void setNumHeaders(int current, int total);
+    /** SPV progress update */
+    void spvProgress(int start_height, int processed_height, int probable_height);
 
     /** Notify the user of an event from the core network or transaction handling code.
        @param[in] title     the message box / notification title

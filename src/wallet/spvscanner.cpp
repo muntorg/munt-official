@@ -30,6 +30,7 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
 
     lastProcessed = FindForkInGlobalIndex(headerChain, locator);
     requestTip = lastProcessed;
+    startHeight = lastProcessed->nHeight;
 
     // fixme (SPV): get actual seed time, now for testing hacked to birth of test wallet
     // was uint64_t seedTime = wallet.GetOldestKeyPoolTime();
@@ -130,6 +131,8 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
         UpdateLastProcessed(pindex);
 
         RequestBlocks();
+
+        uiInterface.NotifySPVProgress(startHeight, pindex->nHeight, headerChain.Height());
     }
 }
 

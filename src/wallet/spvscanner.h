@@ -37,6 +37,9 @@ private:
     // Blocks (lastProcessed .. requstTip] have been requested and are pending
     const CBlockIndex* requestTip;
 
+    // Session start height for progress reporting
+    int startHeight;
+
     void RequestBlocks();
 
     // Update value of lastProcessed to pindex and persist it to the wallet db
