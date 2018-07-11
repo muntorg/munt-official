@@ -22,7 +22,6 @@ public:
     CSPVScanner& operator=(const CSPVScanner&) = delete;
 
 protected:
-    void ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex) override;
     void HeaderTipChanged(const CBlockIndex* pTip) override;
 
 private:
@@ -42,6 +41,8 @@ private:
 
     // Update value of lastProcessed to pindex and persist it to the wallet db
     void UpdateLastProcessed(const CBlockIndex* pindex);
+
+    void ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex);
 };
 
 #endif // SPVSCANNER_H

@@ -60,7 +60,7 @@ void CSPVScanner::RequestBlocks()
     // put lastProcessed and/or requestTip back on chain if forked
     while (!headerChain.Contains(requestTip)) {
         if (requestTip->nHeight > lastProcessed->nHeight) {
-            CancelPriorityDownload(requestTip);
+            CancelPriorityDownload(requestTip, std::bind(&CSPVScanner::ProcessPriorityRequest, this, std::placeholders::_1, std::placeholders::_2));
             requestTip = requestTip->pprev;
         }
         else { // so here requestTip == lastProcessed
@@ -101,7 +101,7 @@ void CSPVScanner::RequestBlocks()
 
     if (!blocksToRequest.empty()) {
         LogPrint(BCLog::WALLET, "Requesting %d blocks for SPV, up to height %d\n", blocksToRequest.size(), requestTip->nHeight);
-        AddPriorityDownload(blocksToRequest);
+        AddPriorityDownload(blocksToRequest, std::bind(&CSPVScanner::ProcessPriorityRequest, this, std::placeholders::_1, std::placeholders::_2));
     }
 }
 

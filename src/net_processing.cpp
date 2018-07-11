@@ -154,6 +154,7 @@ namespace {
     {
         const CBlockIndex* pindex;
         bool downloaded;
+        PriorityDownloadCallback_t callback;
     };
 
     std::list<PriorityBlockRequest> blocksToDownloadFirst;
@@ -1381,6 +1382,37 @@ inline void static SendBlockTransactions(const CBlock& block, const BlockTransac
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
     int nSendFlags = State(pfrom->GetId())->fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES;
     connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCKTXN, resp));
+}
+
+static void ProcessPriorityRequests() {
+    LOCK(cs_main);
+    while (!blocksToDownloadFirst.empty()) {
+        const PriorityBlockRequest &r = *blocksToDownloadFirst.begin();
+
+        // make sure we process blocks in order
+        if (!r.downloaded) {
+            break;
+        }
+
+        if (r.pindex->nStatus & BLOCK_HAVE_DATA) {
+            CBlock loadBlock;
+            if (!ReadBlockFromDisk(loadBlock, r.pindex, Params())) {
+                throw std::runtime_error(std::string(__func__) + "Can't read block from disk");
+            }
+            auto currentBlock = std::make_shared<const CBlock>(loadBlock);
+
+            r.callback(currentBlock, r.pindex);
+
+            LogPrint(BCLog::NET, "processed priority block request (%s) height=%d\n", r.pindex->GetBlockHashPoW2().ToString(), r.pindex->nHeight);
+
+            blocksToDownloadFirst.pop_front();
+        }
+        else {
+            // stop in case we have no block data for this request
+            // fixme (SPV): investigate if this case can happen
+            break;
+        }
+    }
 }
 
 bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, int64_t nTimeReceived, const CChainParams& chainparams, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
@@ -2940,7 +2972,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         bool fNewBlock = false;
         ProcessNewBlock(chainparams, pblock, forceProcessing, &fNewBlock, fAssumePOWGood, !result.fPriorityRequest);
         if (result.fPriorityRequest) {
-            ProcessPriorityRequests(pblock);
+            ProcessPriorityRequests();
         }
         if (fNewBlock)
             pfrom->nLastBlockTime = GetTime();
@@ -3917,15 +3949,14 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
     return true;
 }
 
-void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload) {
+void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload, const PriorityDownloadCallback_t& callback) {
     LOCK(cs_main);
     for (const CBlockIndex* pindex: blocksToDownload) {
-        // we add blocks regardless of duplicates
-        blocksToDownloadFirst.push_back({pindex, false});
+        blocksToDownloadFirst.push_back({pindex, false, callback});
     }
 }
 
-void CancelPriorityDownload(const CBlockIndex *index) {
+void CancelPriorityDownload(const CBlockIndex *index, const PriorityDownloadCallback_t& callback) {
     LOCK(cs_main);
     blocksToDownloadFirst.remove_if([&index](const PriorityBlockRequest& request){ return request.pindex == index; });
 }
@@ -3940,46 +3971,6 @@ bool isAutoRequestingBlocks() {
 
 void PreventBlockDownloadDuringHeaderSync(bool state) {
     fPreventBlockDownloadDuringHeaderSync = state;
-}
-
-void ProcessPriorityRequests(const std::shared_ptr<CBlock> blockRef) {
-    LOCK(cs_main);
-    if (blocksToDownloadFirst.empty()) {
-        return;
-    }
-    auto it = std::begin(blocksToDownloadFirst);
-    while (it != std::end(blocksToDownloadFirst)) {
-        std::shared_ptr<const CBlock> currentBlock;
-        const PriorityBlockRequest &r = *it;
-        // make sure we process blocks in order
-        if (!r.downloaded) {
-            break;
-        }
-        if (r.pindex && blockRef && blockRef->GetHashPoW2() == r.pindex->GetBlockHashPoW2()) {
-            // the passed in block, no need to load again from disk
-            currentBlock = blockRef;
-        }
-        else if (r.pindex->nStatus & BLOCK_HAVE_DATA) {
-            CBlock loadBlock;
-            if (!ReadBlockFromDisk(loadBlock, r.pindex, Params())) {
-                throw std::runtime_error(std::string(__func__) + "Can't read block from disk");
-            }
-            currentBlock = std::make_shared<const CBlock>(loadBlock);
-        }
-        else {
-            // stop in case we have no block data for this request
-            break;
-        }
-
-        // allow processing through signal
-        GetMainSignals().ProcessPriorityRequest(currentBlock, r.pindex);
-        LogPrint(BCLog::NET, "processed priority block request (%s) height=%d\n", r.pindex->GetBlockHashPoW2().ToString(), r.pindex->nHeight);
-
-        // remove processed block from queue
-        it = blocksToDownloadFirst.erase(std::remove_if(blocksToDownloadFirst.begin(), blocksToDownloadFirst.end(), [&r](const PriorityBlockRequest &rB) {
-                                        return rB.pindex == r.pindex;
-                                    }), blocksToDownloadFirst.end());
-    }
 }
 
 bool FlushPriorityDownloads() {

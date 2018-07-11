@@ -96,11 +96,12 @@ void PreventBlockDownloadDuringHeaderSync(bool state);
 /**
  * Prioritize a block for downloading
  * Blocks requested with priority will be downloaded and processed first
+ * Priority requests are delivered in requested order
  * Downloaded blocks will not trigger ActivateBestChain
  */
-void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload);
-void CancelPriorityDownload(const CBlockIndex* index);
-void ProcessPriorityRequests(const std::shared_ptr<CBlock> block);
+typedef std::function<void(const std::shared_ptr<const CBlock>, const CBlockIndex*)> PriorityDownloadCallback_t;
+void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload, const PriorityDownloadCallback_t& callback);
+void CancelPriorityDownload(const CBlockIndex* index, const PriorityDownloadCallback_t& callback);
 bool FlushPriorityDownloads();
 size_t CountPriorityDownloads();
 
