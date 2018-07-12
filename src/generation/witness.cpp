@@ -479,7 +479,7 @@ void static GuldenWitness()
                                     std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript, true, nullptr, true));
                                     if (!pblocktemplate.get())
                                     {
-                                        LogPrintf("Error in GuldenWitness: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                                        LogPrintf("Error in GuldenWitness: Failed to get block template.\n");
                                         continue;
                                     }
 
