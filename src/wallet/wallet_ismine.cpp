@@ -141,6 +141,11 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
 
         nTransactionScanProgressPercent = 0;
         ShowProgress(_("Rescanning..."), nTransactionScanProgressPercent); // show rescan progress in GUI, if -rescan on startup
+        if (!pindex)
+        {
+            LogPrintf("Nothing to do for rescan, chain empty.\n");
+            return ret;
+        }
         LogPrintf("Rescanning...\n");
         uint64_t nProgressStart = pindex->nHeight;
         uint64_t nProgressTip = chainActive.Tip()->nHeight;
