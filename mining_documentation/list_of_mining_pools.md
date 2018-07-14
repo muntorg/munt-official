@@ -31,5 +31,6 @@ If you are a mining pool operator and not on this list submit your information t
 |mining-dutch.nl|www.mining-dutch.nl|-|Ga4vnMZj3Drjh7rPknCokmkBrBsELcZF4k|||
 |cloudminr.com|www.cloudminr.com|-|GT66iYRqaTm5tQLuAMHwbzcbGt5APpA671|||
 |DEGULDENMIJN|www.deguldenmijn.eu|-|GbUoyKgsCVJejTfjX5c2EnSeJw31Bui1eZ|||
+|Scrypt|www.scryptpools.net||GTPp5vjVwG5KnpnmwttQjCQZ2AVqjNYXz5|https://www.scryptpools.net/nlg/public/index.php?page=statistics&action=round&height=746267||
 
 
