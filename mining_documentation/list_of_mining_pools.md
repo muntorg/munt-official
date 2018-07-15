@@ -21,7 +21,7 @@ Active:
 |Nicehash||-|GRCcdLrHKLRGGWDZ4LeJjvqfqqVwCkynbb|||
 |Multipool|www.multipool.us|-|GYFKKSwU2VL1NHQ98rkgoPur4v4pRACz9K|||
 |Zergpool|www.zergpool.com/|-|GYFKKSwU2VL1NHQ98rkgoPur4v4pRACz9K|||
-
+|ScryptPools|www.scryptpools.net||GTPp5vjVwG5KnpnmwttQjCQZ2AVqjNYXz5|https://www.scryptpools.net/nlg/public/index.php?page=statistics&action=round&height=746267|https://discordapp.com/channels/428170159920906250/428170159920906252|
 
 
 
@@ -32,7 +32,6 @@ Alive but inactive:
 |----|----|----|----|----|-----|
 |Neogulden|www.neogulden.com|Neogulden||||
 |Aikapool|www.aikapool.com|-|GbA6dXtFZjexUrEeKpEF95Ke92UhqUSrmL|https://www.aikapool.com/nlg/index.php?page=statistics&action=blocks||
-|Scrypt|www.scryptpools.net||GTPp5vjVwG5KnpnmwttQjCQZ2AVqjNYXz5|https://www.scryptpools.net/nlg/public/index.php?page=statistics&action=round&height=746267||
 |DEGULDENMIJN|www.deguldenmijn.eu|-|GbUoyKgsCVJejTfjX5c2EnSeJw31Bui1eZ|||
 
 Unsure:
