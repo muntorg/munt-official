@@ -19,12 +19,17 @@ Active:
 |Hash-to-coins.com|www.hash-to-coins.com|-|GaC1mBCzC8kHSHkZK3QdKTfJxWRMSNCP2X|||
 |Btc1337||-|GUNsn8xrwrjT4cDHUjMWbV9BV7QRriFyvR|||
 |Nicehash||-|GRCcdLrHKLRGGWDZ4LeJjvqfqqVwCkynbb|||
+|Multipool|www.multipool.us|-|GYFKKSwU2VL1NHQ98rkgoPur4v4pRACz9K|||
+|Zergpool|www.zergpool.com/|-|GYFKKSwU2VL1NHQ98rkgoPur4v4pRACz9K|||
+
 
 
 
 Alive but inactive:
 ----
 
+|Suspected pool name|Website|Coinbase tag|Addresses|Confirmation URL|Contact details|
+|----|----|----|----|----|-----|
 |Neogulden|www.neogulden.com|Neogulden||||
 |Aikapool|www.aikapool.com|-|GbA6dXtFZjexUrEeKpEF95Ke92UhqUSrmL|https://www.aikapool.com/nlg/index.php?page=statistics&action=blocks||
 |Scrypt|www.scryptpools.net||GTPp5vjVwG5KnpnmwttQjCQZ2AVqjNYXz5|https://www.scryptpools.net/nlg/public/index.php?page=statistics&action=round&height=746267||
