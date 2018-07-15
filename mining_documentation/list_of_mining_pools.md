@@ -26,7 +26,7 @@ Active:
 |Moonpool.xyz|www.Moonpool.xyz||GfpAe6DVWRYjnZYzNXyqqztSwfmdXkXXY6|||
 |Mining.securepayment.cc|www.mining.securepayment.cc||GHs6q2w9khZF4aM1pzMRqQi4yooFDHqc3D|||
 |Ahashpool|www.ahashpool.com||GWw4cZoCRy4jsRujCvuRMiaQr1FbLGg4aF|||
-|tpool|www.tpool.io|tpool.io|GgdMXU14f4v5JqEs4V5h6eNsiRh6XppWps|http://tpool.io/pool/nlg/blocks||
+|Theogony|www.tpool.io|tpool.io|GgdMXU14f4v5JqEs4V5h6eNsiRh6XppWps|http://tpool.io/pool/nlg/blocks||
 
 Alive but inactive:
 ----
