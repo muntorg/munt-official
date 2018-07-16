@@ -143,7 +143,7 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
         vSeeds.push_back(CDNSSeedData("seed 0",  "seed.gulden.com", false));
-//        vSeeds.push_back(CDNSSeedData("seed 1",  "amsterdam.gulden.com"));
+        vSeeds.push_back(CDNSSeedData("seed 1",  "amsterdam.gulden.com"));
 //        vSeeds.push_back(CDNSSeedData("seed 2",  "seed.gulden.network"));
         vSeeds.push_back(CDNSSeedData("seed 3",  "rotterdam.gulden.network", false));
 //        vSeeds.push_back(CDNSSeedData("seed 4",  "seed.gulden.blue"));
