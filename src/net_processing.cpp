@@ -1196,7 +1196,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                             }
                         }
                         if (sendMerkleBlock) {
-                            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::MERKLEBLOCK, merkleBlock));
+                            connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::MERKLEBLOCK, merkleBlock));
                             // CMerkleBlock just contains hashes, so also push any transactions in the block the client did not see
                             // This avoids hurting performance by pointlessly requiring a round-trip
                             // Note that there is currently no way for a node to request any single transactions we didn't send here -
@@ -1205,7 +1205,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                             // however we MUST always provide at least what the remote peer needs
                             typedef std::pair<unsigned int, uint256> PairType;
                             for(PairType& pair : merkleBlock.vMatchedTxn)
-                                connman.PushMessage(pfrom, msgMaker.Make(SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES, NetMsgType::TX, *pblock->vtx[pair.first]));
+                                connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES, NetMsgType::TX, *pblock->vtx[pair.first]));
                         }
                         // else
                             // no response
@@ -1231,10 +1231,10 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                             else
                             {
                                 if ((fPeerWantsWitness || !fWitnessesPresentInARecentCompactBlock) && a_recent_compact_block && a_recent_compact_block->header.GetHashLegacy() == mi->second->GetBlockHashLegacy()) {
-                                    connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *a_recent_compact_block));
+                                    connman.PushMessage(pfrom, msgMakerHeadersCompat.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *a_recent_compact_block));
                                 } else {
                                     CBlockHeaderAndShortTxIDs cmpctblock(*pblock, fPeerWantsWitness);
-                                    connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
+                                    connman.PushMessage(pfrom, msgMakerHeadersCompat.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
                                 }
                             }
                         } else {
@@ -1257,7 +1257,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                         {
                             vInv.push_back(CInv(MSG_BLOCK, chainActive.Tip()->GetBlockHashLegacy()));
                         }
-                        connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
+                        connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
                         pfrom->hashContinue.SetNull();
                     }
                 }
