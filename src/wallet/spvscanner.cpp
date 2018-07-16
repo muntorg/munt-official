@@ -12,10 +12,10 @@
 
 // Maximum number of requests pending. This number should be high enough so that
 // the requests can be reasonably distributed over our peers.
-const static int nMaxPendingRequests = 512;
+const int MAX_PENDING_REQUESTS = 512;
 
 // Seconds before oldest key to start scanning blocks.
-const static int64_t startTimeGap = 3 * 3600;
+const int64_t START_TIME_GAP = 3 * 3600;
 
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet),
@@ -37,7 +37,7 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
 
     int64_t seedTime = wallet.nTimeFirstKey;
 
-    startTime =  std::max(int64_t(0), seedTime - startTimeGap);
+    startTime =  std::max(int64_t(0), seedTime - START_TIME_GAP);
 
     LogPrint(BCLog::WALLET, "Using %s (height = %d) as last processed SPV block\n",
              lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
@@ -96,7 +96,7 @@ void CSPVScanner::RequestBlocks()
     std::vector<const CBlockIndex*> blocksToRequest;
 
     // add requests for as long as nMaxPendingRequests is not reached and there are still heigher blocks in headerChain
-    while (requestTip->nHeight - lastProcessed->nHeight < nMaxPendingRequests &&
+    while (requestTip->nHeight - lastProcessed->nHeight < MAX_PENDING_REQUESTS &&
            headerChain.Height() > requestTip->nHeight) {
 
         requestTip = headerChain.Next(requestTip);
