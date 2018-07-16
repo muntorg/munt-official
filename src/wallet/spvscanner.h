@@ -21,6 +21,9 @@ public:
     CSPVScanner(const CSPVScanner&) = delete;
     CSPVScanner& operator=(const CSPVScanner&) = delete;
 
+    // write locator for lastProcessed to db for resuming next session, call sparingly
+    void Persist();
+
 protected:
     void HeaderTipChanged(const CBlockIndex* pTip) override;
 
@@ -46,6 +49,12 @@ private:
     void UpdateLastProcessed(const CBlockIndex* pindex);
 
     void ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex);
+
+    // last time when scan progress was persisted to the db
+    int64_t lastPersistTime;
+
+    // blocks processed since last persist
+    int blocksSincePersist;
 };
 
 #endif // SPVSCANNER_H

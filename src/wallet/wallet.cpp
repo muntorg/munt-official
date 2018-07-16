@@ -35,6 +35,7 @@
 #include "script/script.h"
 #include "script/sign.h"
 #include "scheduler.h"
+#include "spvscanner.h"
 #include "timedata.h"
 #include "txmempool.h"
 #include "util.h"
@@ -438,6 +439,9 @@ bool CWallet::HasWalletSpend(const uint256& txid) const
 
 void CWallet::Flush(bool shutdown)
 {
+    if (shutdown && pSPVScanner)
+        pSPVScanner->Persist();
+
     dbw->Flush(shutdown);
 }
 

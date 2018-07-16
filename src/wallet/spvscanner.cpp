@@ -5,6 +5,7 @@
 
 #include "spvscanner.h"
 #include "../net_processing.h"
+#include "timedata.h"
 #include "../validation/validation.h"
 #include "wallet.h"
 
@@ -17,9 +18,23 @@ const int MAX_PENDING_REQUESTS = 512;
 // Seconds before oldest key to start scanning blocks.
 const int64_t START_TIME_GAP = 3 * 3600;
 
+// Persisting wallet db updates are limited as they are very expensive
+// and updating at every processed block would give very poor performance.
+// Therefore the state is only written to the db when a minimum time interval has passed,
+// or a certain of number of blocks have been processed (whichever comes first).
+// Note that due to this some blocks might be re-processed in case of abnormal termination,
+// this is fine.
+
+// Interval in seconds for writing the scan progress to the wallet db
+const int64_t PERSIST_INTERVAL_SEC = 5;
+
+// Blocks count after which scan processing state is written to the db.
+const int PERSIST_BLOCK_COUNT = 500;
+
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet),
-    startTime(0)
+    startTime(0),
+    lastPersistTime(0)
 {
     LOCK(cs_main);
 
@@ -147,6 +162,17 @@ void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
 void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
 {
     lastProcessed = pindex;
+
+    int64_t now = GetAdjustedTime();
+    if (now - lastPersistTime > PERSIST_INTERVAL_SEC || blocksSincePersist >= PERSIST_BLOCK_COUNT)
+        Persist();
+}
+
+void CSPVScanner::Persist()
+{
     CWalletDB walletdb(*wallet.dbw);
     walletdb.WriteLastSPVBlockProcessed(headerChain.GetLocatorPoW2(lastProcessed));
+
+    lastPersistTime = GetAdjustedTime();
+    blocksSincePersist = 0;
 }
