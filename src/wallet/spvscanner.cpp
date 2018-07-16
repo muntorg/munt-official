@@ -87,8 +87,10 @@ void CSPVScanner::RequestBlocks()
     if (skip != lastProcessed) {
         LogPrint(BCLog::WALLET, "Skipping %d old blocks for SPV scan, up to height %d\n", skip->nHeight - lastProcessed->nHeight, skip->nHeight);
         UpdateLastProcessed(skip);
-        if (lastProcessed->nHeight > requestTip->nHeight)
+        if (lastProcessed->nHeight > requestTip->nHeight) {
             requestTip = lastProcessed;
+            startHeight = lastProcessed->nHeight;
+        }
     }
 
     std::vector<const CBlockIndex*> blocksToRequest;
