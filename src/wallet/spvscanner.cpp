@@ -26,15 +26,16 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
     CWalletDB walletdb(*wallet.dbw);
     CBlockLocator locator;
     if (!walletdb.ReadLastSPVBlockProcessed(locator))
+    {
+        // fixme: (SPV) start locator at approriate checkpoint
         locator = chainActive.GetLocatorPoW2(chainActive.Genesis());
+    }
 
     lastProcessed = FindForkInGlobalIndex(headerChain, locator);
     requestTip = lastProcessed;
     startHeight = lastProcessed->nHeight;
 
-    // fixme (SPV): get actual seed time, now for testing hacked to birth of test wallet
-    // was uint64_t seedTime = wallet.GetOldestKeyPoolTime();
-    int64_t seedTime = 1527681623; // 05/30/2018 @ 12:00pm (UTC)
+    int64_t seedTime = wallet.nTimeFirstKey;
 
     startTime =  std::max(int64_t(0), seedTime - startTimeGap);
 
