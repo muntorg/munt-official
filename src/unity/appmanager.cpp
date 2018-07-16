@@ -4,6 +4,7 @@
 // file COPYING
 
 #include "appmanager.h"
+#include "chainparams.h"
 #include "util.h"
 #include "init.h"
 #include "warnings.h"
@@ -20,10 +21,13 @@
 #include <unistd.h>
 #endif
 
+static constexpr int recovery_birth_period = 7 * 24 * 3600; // one week
+
 GuldenAppManager* GuldenAppManager::gApp = nullptr;
 
 GuldenAppManager::GuldenAppManager()
-: fShutDownHasBeenInitiated(false)
+: fShutDownHasBeenInitiated(false),
+  recoveryBirthNumber(0)
 {
     if (gApp)
         assert(0);
@@ -287,6 +291,79 @@ void GuldenAppManager::BurnRecoveryPhrase()
 {
     // The below is a 'SecureString' - so no memory burn necessary, it should burn itself.
     recoveryPhrase = "";
+}
+
+// if no birth number given or birth number is invalid the result will be zero
+void GuldenAppManager::splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber)
+{
+    phrase = input;
+
+    auto lastSpace = phrase.find_last_of(" ");
+    if (lastSpace != SecureString::npos) {
+        std::string birthString(phrase.substr(lastSpace));
+        try {
+            birthNumber = std::stoi(birthString);
+        }
+        catch (const std::exception) {}
+        if (birthNumber != 0) {
+            // succesfull numeric conversion, strip birth number from phrase
+            phrase.erase(lastSpace);
+        }
+    }
+}
+
+int GuldenAppManager::getRecoveryBirth() const
+{
+    return recoveryBirthNumber;
+}
+
+void GuldenAppManager::setRecoveryBirthNumber(int _recoveryBirth)
+{
+    recoveryBirthNumber = _recoveryBirth;
+}
+
+int64_t GuldenAppManager::getRecoveryBirthTime() const
+{
+    int64_t time = 0;
+    if (recoveryBirthNumber != 0) {
+        time = Params().GenesisBlock().nTime + int64_t(recoveryBirthNumber) * recovery_birth_period;
+    }
+    return time;
+}
+
+void GuldenAppManager::setRecoveryBirthTime(int64_t birthTime)
+{
+    // fixme: (SPV) put checksum on birthNumber to prevent using wrong start time due to typos
+    if (birthTime >= Params().GenesisBlock().nTime) {
+        recoveryBirthNumber = (birthTime - Params().GenesisBlock().nTime) / recovery_birth_period;
+    }
+    else
+        recoveryBirthNumber = 0;
+}
+
+SecureString GuldenAppManager::getCombinedRecoveryPhrase() const
+{
+    if (recoveryBirthNumber != 0)
+        return recoveryPhrase + SecureString(" ") + SecureString(i64tostr(recoveryBirthNumber));
+    else
+        return recoveryPhrase;
+}
+
+void GuldenAppManager::setCombinedRecoveryPhrase(const SecureString& combinedPhrase)
+{
+    SecureString phrase;
+    int birth;
+    splitRecoveryPhraseAndBirth(combinedPhrase, phrase, birth);
+    setRecoveryPhrase(phrase);
+    setRecoveryBirthNumber(birth);
+}
+
+SecureString GuldenAppManager::composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime)
+{
+    if (birthTime != 0)
+        return phrase + SecureString(" ") + SecureString(i64tostr((birthTime - Params().GenesisBlock().nTime) / recovery_birth_period));
+    else
+        return phrase;
 }
 
 bool ShutdownRequested()

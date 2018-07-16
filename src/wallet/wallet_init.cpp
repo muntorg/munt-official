@@ -207,12 +207,13 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 std::vector<unsigned char> entropy(16);
                 GetStrongRandBytes(&entropy[0], 16);
                 GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
+                GuldenAppManager::gApp->setRecoveryBirthTime(GetAdjustedTime());
             }
 
             // fixme: (SPV) decide if we want to keep this option
             if (IsArgSet("-phrase")) {
                 SecureString phrase(GetArg("-phrase", ""));
-                GuldenAppManager::gApp->setRecoveryPhrase(phrase);
+                GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);
                 LogPrintf("Using phrase argument for new wallet seed\n");
             }
 
@@ -226,6 +227,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
             // Generate a new primary seed and account (BIP44)
             walletInstance->activeSeed = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
+            walletInstance->nTimeFirstKey = GuldenAppManager::gApp->getRecoveryBirthTime();
             if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*walletInstance->activeSeed))
             {
                 throw std::runtime_error("Writing seed failed");
@@ -237,6 +239,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             // Only for recovery wallets though, new ones don't need them
             if (GuldenAppManager::gApp->isRecovery)
             {
+                // fixme: (SPV) extract firstkeytim efrom recovery
                 CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
                 if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*seedBip32))
                 {
@@ -447,7 +450,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         throw std::runtime_error("Unknown wallet load state.");
     }
 
-    if (GuldenAppManager::gApp->isRecovery)
+    if (GuldenAppManager::gApp->isRecovery && GuldenAppManager::gApp->getRecoveryBirthTime() == 0)
     {
         walletInstance->nTimeFirstKey = Params().GenesisBlock().nTime;
     }
@@ -459,6 +462,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     CBlockIndex *pindexRescan = chainActive.Tip();
     if (GetBoolArg("-rescan", false) || GuldenAppManager::gApp->isRecovery)
     {
+        // fixme: (SPV) rescan from latest checkpoint before nTimeFirstKey
         pindexRescan = chainActive.Genesis();
     }
     else

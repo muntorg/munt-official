@@ -67,8 +67,20 @@ public:
     SecureString getRecoveryPhrase();
     void BurnRecoveryPhrase();
     bool isRecovery = false;
+
+    // fixme: (SPV) move these recovery helpers to a better place
+    int getRecoveryBirth() const;
+    int64_t getRecoveryBirthTime() const;
+    void setRecoveryBirthNumber(int _recoveryBirth);
+    void setRecoveryBirthTime(int64_t birthTime);
+    SecureString getCombinedRecoveryPhrase() const;
+    static SecureString composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime);
+    void setCombinedRecoveryPhrase(const SecureString& combinedPhrase);
+    static void splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber);
+
 private:
     SecureString recoveryPhrase;
+    int recoveryBirthNumber;
 
     // Passed on to the rest of the app but not used internally by GuldenAppManager.
 private:

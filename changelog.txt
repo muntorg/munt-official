@@ -1,5 +1,6 @@
 2.1
 
+Extend recovery phrase with (optional) birth number.
 UI - Option to hide status bar when synchronized (default enabled). Disable to always show status indicators.
 
 

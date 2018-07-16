@@ -9,6 +9,7 @@
 #include "wallet/wallet.h"
 #include "walletmodel.h"
 #include "guiconstants.h"
+#include "unity/appmanager.h"
 
 
 
@@ -50,7 +51,10 @@ void BackupDialog::showBackupPhrase()
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)
         {
-            allPhrases.insert(seedIter.second->getMnemonic());
+            // fixme: (SPV) get real start time in here
+            int64_t birthTime = 123456;
+            SecureString phrase = GuldenAppManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime);
+            allPhrases.insert(phrase);
         }
 
         if (allPhrases.size() == 1)

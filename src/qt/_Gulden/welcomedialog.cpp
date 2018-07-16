@@ -4,6 +4,7 @@
 // file COPYING
 
 #include "welcomedialog.h"
+#include "timedata.h"
 #include <qt/_Gulden/forms/ui_welcomedialog.h>
 #include <unity/appmanager.h>
 #include "gui.h"
@@ -113,8 +114,9 @@ void WelcomeDialog::newWallet()
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
     GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
+    GuldenAppManager::gApp->setRecoveryBirthTime(GetAdjustedTime());
 
-    ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(GuldenAppManager::gApp->getRecoveryPhrase().c_str()));
+    ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(GuldenAppManager::gApp->getCombinedRecoveryPhrase().c_str()));
     ui->edittextEnterRecoveryPhrase->setReadOnly(true);
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setVisible(true);
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setChecked(false);
@@ -129,6 +131,14 @@ void WelcomeDialog::newWallet()
 
 void WelcomeDialog::recoverWallet()
 {
+    // fixme: (SPV) decide if we want to keep this option
+    if (IsArgSet("-phrase")) {
+        SecureString phrase(GetArg("-phrase", ""));
+        GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);
+        ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(GuldenAppManager::gApp->getCombinedRecoveryPhrase().c_str()));
+        LogPrintf("Using phrase argument for new wallet seed\n");
+    }
+
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setVisible(false);
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setChecked(true);
     ui->buttonRecoverWallet->setText(tr("Recover wallet"));
@@ -146,6 +156,12 @@ void WelcomeDialog::processRecoveryPhrase()
 
     //Strip double whitespace and leading/trailing whitespace, newlines, capitals etc.
     recoveryPhrase = recoveryPhrase.simplified().toLower();
+
+    SecureString phrase;
+    int birth;
+
+    GuldenAppManager::splitRecoveryPhraseAndBirth(SecureString(recoveryPhrase.toStdString()), phrase, birth);
+
     if(ui->checkboxConfirmRecoveryPhraseWrittenDown->isChecked())
     {
         // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement
@@ -159,7 +175,7 @@ void WelcomeDialog::processRecoveryPhrase()
         else
         {
             // Make sure the recovery phrase is a valid one, if it isn't then we allow the user the option to proceed anyway - but we strongly advise against it.
-            if (!checkMnemonic(recoveryPhrase.toStdString().c_str()))
+            if (!checkMnemonic(phrase))
             {
                 QString message = tr("The recovery phrase you have entered is not a valid Gulden recovery phrase, if you are sure that this is your phrase then the program can attempt to use it, note that it will be used exactly as is so no double spacing or any other correction will be performed. Making up your own phrase can greatly reduce security, no support can be offered for invalid phrases.");
                 QDialog* d = GUI::createDialog(this, message, tr("Cancel"), tr("Proceed with invalid phrase"), 400, 180);
@@ -170,10 +186,11 @@ void WelcomeDialog::processRecoveryPhrase()
                     return;
                 }
                 //Use unmodified recovery phrase.
-                recoveryPhrase = ui->edittextEnterRecoveryPhrase->toPlainText();
+                phrase = ui->edittextEnterRecoveryPhrase->toPlainText().toStdString().c_str();
             }
 
-            GuldenAppManager::gApp->setRecoveryPhrase(recoveryPhrase.toStdString().c_str());
+            GuldenAppManager::gApp->setRecoveryPhrase(phrase);
+            GuldenAppManager::gApp->setRecoveryBirthNumber(birth);
 
             //Try burn memory - just in case - not guaranteed to work everywhere but better than doing nothing.
             burnTextEditMemory(ui->edittextEnterRecoveryPhrase);
