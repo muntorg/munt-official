@@ -31,6 +31,9 @@ const int64_t PERSIST_INTERVAL_SEC = 5;
 // Blocks count after which scan processing state is written to the db.
 const int PERSIST_BLOCK_COUNT = 500;
 
+// limit UI update notifications (except when catched up)
+const int UI_UPDATE_LIMIT = 50;
+
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet),
     startTime(0),
@@ -150,7 +153,10 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
 
         RequestBlocks();
 
-        uiInterface.NotifySPVProgress(startHeight, pindex->nHeight, headerChain.Height());
+        if (headerChain.Height() == pindex->nHeight || pindex->nHeight % UI_UPDATE_LIMIT == 0)
+            uiInterface.NotifySPVProgress(startHeight, pindex->nHeight, headerChain.Height());
+
+        blocksSincePersist++;
     }
 }
 
