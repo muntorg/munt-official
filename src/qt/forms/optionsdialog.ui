@@ -649,6 +649,16 @@
         </layout>
        </item>
        <item>
+        <widget class="QCheckBox" name="autoHideStatusBar">
+         <property name="toolTip">
+          <string>Automatically hide status bar when synchronised. Disable to always show status indicators.</string>
+         </property>
+         <property name="text">
+          <string>Hide status bar when synchronized</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2_Display">
          <item>
           <widget class="QLabel" name="unitLabel">
