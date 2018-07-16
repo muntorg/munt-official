@@ -34,6 +34,7 @@ Alive but inactive:
 
 |Suspected pool name|Website|Coinbase tag|Addresses|Confirmation URL|Contact details|
 |----|----|----|----|----|-----|
+|Jaypool|www.159.89.239.37||||jaypool@pm.me|
 |Neogulden|www.neogulden.com|Neogulden||||
 |Aikapool|www.aikapool.com|-|GbA6dXtFZjexUrEeKpEF95Ke92UhqUSrmL|https://www.aikapool.com/nlg/index.php?page=statistics&action=blocks||
 |DEGULDENMIJN|www.deguldenmijn.eu|-|GbUoyKgsCVJejTfjX5c2EnSeJw31Bui1eZ|||
