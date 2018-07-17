@@ -117,9 +117,6 @@ public:
     /** New block has been accepted */
     boost::signals2::signal<void (bool, const CBlockIndex *)> NotifyBlockTip;
 
-    /** Best header has changed */
-    boost::signals2::signal<void (bool, const CBlockIndex *)> NotifyHeaderTip;
-
     /** Header progress has changed */
     boost::signals2::signal<void (int, int, int, int64_t)> NotifyHeaderProgress;
 

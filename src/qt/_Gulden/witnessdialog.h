@@ -104,7 +104,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void updateUnit(int nNewUnit_);
     void update();
-    void numBlocksChanged(int,QDateTime,double,bool);
+    void numBlocksChanged(int,QDateTime,double);
     void compoundEarningsCheckboxClicked();
     void unitButtonClicked();
     void viewWitnessInfoClicked();

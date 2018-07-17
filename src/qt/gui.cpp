@@ -660,7 +660,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
 
         connect(_clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-        connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+        connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double)), this, SLOT(setNumBlocks(int,QDateTime,double)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(headerProgressChanged(int, int)), this, SLOT(setNumHeaders(int,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(spvProgressChanged(int, int, int)), this, SLOT(spvProgress(int,int, int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         // Receive and report messages from client model
@@ -1098,7 +1098,7 @@ void GUI::updateWindowTitle()
     setWindowTitle(windowTitle);
 }
 
-void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)
+void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool)
 {
     LogPrint(BCLog::QT, "GUI::setNumBlocks\n");
 
@@ -1124,45 +1124,9 @@ void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificati
         static uint64_t lastUpdate = GetTimeMillis();
         if (GetTimeMillis() - lastUpdate > 1000)
         {
-            if (header)
-            {
-                syncOverlay->setKnownBestHeight(count, blockDate);
-            }
-            else
-            {
-                syncOverlay->tipUpdate(count, blockDate, nSyncProgress);
-            }
+            syncOverlay->tipUpdate(count, blockDate, nSyncProgress);
             lastUpdate = GetTimeMillis();
         }
-    }
-
-    // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
-    statusBar()->clearMessage();
-
-    // Acquire current block source
-    enum BlockSource blockSource = clientModel->getBlockSource();
-    switch (blockSource) {
-        case BLOCK_SOURCE_NETWORK:
-            // set label only if header download is (almost) done
-            if (clientModel->getProbableHeight() - clientModel->getHeaderTipHeight() < HEADER_HEIGHT_DELTA_SYNC)
-                progressBarLabel->setText(tr("Synchronizing with network..."));
-            break;
-        case BLOCK_SOURCE_DISK:
-            if (header) {
-                progressBarLabel->setText(tr("Indexing blocks on disk..."));
-            } else {
-                progressBarLabel->setText(tr("Processing blocks on disk..."));
-            }
-            break;
-        case BLOCK_SOURCE_REINDEX:
-            progressBarLabel->setText(tr("Reindexing blocks on disk..."));
-            break;
-        case BLOCK_SOURCE_NONE:
-            if (header) {
-                return;
-            }
-            progressBarLabel->setText(tr("Connecting to peers..."));
-            break;
     }
 
     QString tooltip;
@@ -1203,6 +1167,28 @@ void GUI::setNumHeaders(int current, int total)
 
 void GUI::updateProgress(bool synced, int minimum, int progress, int maximum, const QString& progressTextFormat, const QString& tooltipIn)
 {
+    // Prevent orphan statusbar messages (e.g. hover Quit in main menu, wait until chain-sync starts -> garbled text)
+    statusBar()->clearMessage();
+
+    // Acquire current block source
+    enum BlockSource blockSource = clientModel->getBlockSource();
+    switch (blockSource) {
+        case BLOCK_SOURCE_NETWORK:
+            // set label only if header download is (almost) done
+            if (clientModel->getProbableHeight() - clientModel->getHeaderTipHeight() < HEADER_HEIGHT_DELTA_SYNC)
+                progressBarLabel->setText(tr("Synchronizing with network..."));
+            break;
+        case BLOCK_SOURCE_DISK:
+            progressBarLabel->setText(tr("Indexing blocks on disk..."));
+            break;
+        case BLOCK_SOURCE_REINDEX:
+            progressBarLabel->setText(tr("Reindexing blocks on disk..."));
+            break;
+        case BLOCK_SOURCE_NONE:
+            progressBarLabel->setText(tr("Connecting to peers..."));
+            break;
+    }
+
     QString tooltip;
 
     if (synced)

@@ -326,7 +326,7 @@ static void BannedListChanged(ClientModel *clientmodel)
     QMetaObject::invokeMethod(clientmodel, "updateBanlist", Qt::QueuedConnection);
 }
 
-static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CBlockIndex *pIndex, bool fHeader)
+static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CBlockIndex *pIndex)
 {
     // lock free async UI updates in case we have a new block tip
     // during initial sync, only update the UI if the last update
@@ -335,13 +335,8 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
     if (initialSync)
         now = GetTimeMillis();
 
-    int64_t& nLastUpdateNotification = fHeader ? nLastHeaderTipUpdateNotification : nLastBlockTipUpdateNotification;
+    int64_t& nLastUpdateNotification = nLastBlockTipUpdateNotification;
 
-    if (fHeader) {
-        // cache best headers time and height to reduce future cs_main locks
-        clientmodel->cachedBestHeaderHeight = pIndex->nHeight;
-        clientmodel->cachedBestHeaderTime = pIndex->GetBlockTime();
-    }
     // if we are in-sync, update the UI regardless of last update time
     if (!initialSync || now - nLastUpdateNotification > MODEL_UPDATE_DELAY) {
         clientmodel->updatePoW2Display();
@@ -349,8 +344,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
         QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
                                   Q_ARG(int, pIndex->nHeight),
                                   Q_ARG(QDateTime, QDateTime::fromTime_t(pIndex->GetBlockTime())),
-                                  Q_ARG(double, clientmodel->getVerificationProgress(pIndex)),
-                                  Q_ARG(bool, fHeader));
+                                  Q_ARG(double, clientmodel->getVerificationProgress(pIndex)));
         nLastUpdateNotification = now;
     }
 }
@@ -385,8 +379,7 @@ void ClientModel::subscribeToCoreSignals()
     uiInterface.NotifyAlertChanged.connect(boost::bind(NotifyAlertChanged, this, _1, _2));
     uiInterface.NotifyUIAlertChanged.connect(boost::bind(NotifyUIAlertChanged, this, _1));
     uiInterface.BannedListChanged.connect(boost::bind(BannedListChanged, this));
-    uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChanged, this, _1, _2, false));
-    uiInterface.NotifyHeaderTip.connect(boost::bind(BlockTipChanged, this, _1, _2, true));
+    uiInterface.NotifyBlockTip.connect(boost::bind(BlockTipChanged, this, _1, _2));
     uiInterface.NotifyHeaderProgress.connect(boost::bind(HeaderProgressChanged, this, _1, _2, _3, _4));
 
     // trigger spvProgressChanged signal on Qt thread
@@ -410,8 +403,7 @@ void ClientModel::unsubscribeFromCoreSignals()
     uiInterface.NotifyAlertChanged.disconnect(boost::bind(NotifyAlertChanged, this, _1, _2));
     uiInterface.NotifyUIAlertChanged.disconnect(boost::bind(NotifyUIAlertChanged, this, _1));
     uiInterface.BannedListChanged.disconnect(boost::bind(BannedListChanged, this));
-    uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, false));
-    uiInterface.NotifyHeaderTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, true));
+    uiInterface.NotifyBlockTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2));
     uiInterface.NotifyHeaderProgress.disconnect(boost::bind(HeaderProgressChanged, this, _1, _2, _3, _4));
     spvProgressConnection.disconnect();
 }
