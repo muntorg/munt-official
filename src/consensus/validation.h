@@ -26,6 +26,8 @@ static const int gEarliestPossibleMainnetWitnessActivationHeight = 765000;
 static const int gNumWitnessesRequiredForPhase3Activation = 300;
 static const int gTotalWeightRequiredForPhase3Activation =  20000000;
 static const int gStartingWitnessNetworkWeightEstimate =    25000000;
+static const int gMinimumWitnessLockLength                = 30 * 576;
+static const int gMaximumWitnessLockLength                = 3 * 365 * 576;
 
 /** "reject" message codes */
 static const unsigned char REJECT_MALFORMED = 0x01;
