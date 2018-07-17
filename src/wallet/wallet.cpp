@@ -2626,6 +2626,11 @@ CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtrac
     return CRecipient();
 }
 
+const CBlockIndex* CWallet::LastSPVBlockProcessed() const
+{
+    return pSPVScanner ? pSPVScanner->LastBlockProcessed() : nullptr;
+}
+
 int CWallet::ChainHeight()
 {
     LOCK(cs_main);

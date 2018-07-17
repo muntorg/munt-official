@@ -926,6 +926,8 @@ public:
 
     bool BackupWallet(const std::string& strDest);
 
+    const CBlockIndex* LastSPVBlockProcessed() const;
+
     //! Chain height for wallets (height used depends on SPV).
     static int ChainHeight();
 

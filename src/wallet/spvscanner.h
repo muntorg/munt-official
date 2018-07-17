@@ -18,6 +18,8 @@ public:
 
     void StartScan();
 
+    const CBlockIndex* LastBlockProcessed() const;
+
     CSPVScanner(const CSPVScanner&) = delete;
     CSPVScanner& operator=(const CSPVScanner&) = delete;
 

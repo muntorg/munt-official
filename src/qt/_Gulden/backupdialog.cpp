@@ -69,8 +69,15 @@ void BackupDialog::showBackupPhrase()
             }
         }
 
-        if (firstTransactionTime < std::numeric_limits<int64_t>::max())
-            birthTime = firstTransactionTime;
+        int64_t tipTime;
+        const CBlockIndex* lastSPVBlock = pactiveWallet->LastSPVBlockProcessed();
+        if (lastSPVBlock)
+            tipTime = lastSPVBlock->GetBlockTime();
+        else
+            tipTime = chainActive.Tip()->GetBlockTime();
+
+        // never use a time beyond our processed tip either spv or full sync
+        birthTime = std::min(tipTime, firstTransactionTime);
 
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)

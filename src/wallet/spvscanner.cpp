@@ -73,6 +73,11 @@ void CSPVScanner::StartScan()
     RequestBlocks();
 }
 
+const CBlockIndex* CSPVScanner::LastBlockProcessed() const
+{
+    return lastProcessed;
+}
+
 void CSPVScanner::RequestBlocks()
 {
     LOCK2(cs_main, wallet.cs_wallet);
