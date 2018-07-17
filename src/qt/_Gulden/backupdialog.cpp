@@ -48,11 +48,33 @@ void BackupDialog::showBackupPhrase()
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
+        int64_t birthTime = 0;
+
+        // determine block time of earliest transaction (if any)
+        // if this cannot be determined for every transaction a phrase without birth time acceleration will be used
+        int64_t firstTransactionTime = std::numeric_limits<int64_t>::max();
+        for (CWallet::TxItems::const_iterator it = pactiveWallet->wtxOrdered.begin(); it != pactiveWallet->wtxOrdered.end(); ++it)
+        {
+            CWalletTx* wtx = it->second.first;
+            if (!wtx->hashUnset())
+            {
+                CBlockIndex* index = mapBlockIndex[wtx->hashBlock];
+                if (index && index->IsValid(BLOCK_VALID_HEADER))
+                    firstTransactionTime = std::min(firstTransactionTime, std::max(int64_t(0), index->GetBlockTime()));
+                else
+                {
+                    firstTransactionTime = 0;
+                    break;
+                }
+            }
+        }
+
+        if (firstTransactionTime < std::numeric_limits<int64_t>::max())
+            birthTime = firstTransactionTime;
+
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)
         {
-            // fixme: (SPV) get real start time in here
-            int64_t birthTime = 123456;
             SecureString phrase = GuldenAppManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime);
             allPhrases.insert(phrase);
         }
