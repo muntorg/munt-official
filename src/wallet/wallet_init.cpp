@@ -204,17 +204,19 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         {
             if (fNoUI)
             {
-                std::vector<unsigned char> entropy(16);
-                GetStrongRandBytes(&entropy[0], 16);
-                GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
-                GuldenAppManager::gApp->setRecoveryBirthTime(GetAdjustedTime());
-            }
-
-            // fixme: (SPV) decide if we want to keep this option
-            if (IsArgSet("-phrase")) {
-                SecureString phrase(GetArg("-phrase", ""));
-                GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);
-                LogPrintf("Using phrase argument for new wallet seed\n");
+                // fixme: (SPV) decide if we want to keep this option
+                if (IsArgSet("-phrase")) {
+                    SecureString phrase(GetArg("-phrase", ""));
+                    GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);
+                    LogPrintf("Using phrase argument for new wallet seed\n");
+                }
+                else
+                {
+                    std::vector<unsigned char> entropy(16);
+                    GetStrongRandBytes(&entropy[0], 16);
+                    GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
+                    GuldenAppManager::gApp->setRecoveryBirthTime(GetAdjustedTime());
+                }
             }
 
             if (GuldenAppManager::gApp->getRecoveryPhrase().size() == 0)
