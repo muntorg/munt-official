@@ -656,7 +656,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
         // Keep up to date with client
         updateNetworkState();
         syncOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
-        setNumBlocks(_clientModel->getNumBlocks(), _clientModel->getLastBlockDate(), _clientModel->getVerificationProgress(NULL), false);
+        setNumBlocks(_clientModel->getNumBlocks(), _clientModel->getLastBlockDate(), _clientModel->getVerificationProgress(NULL));
 
         connect(_clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
@@ -1098,7 +1098,7 @@ void GUI::updateWindowTitle()
     setWindowTitle(windowTitle);
 }
 
-void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool)
+void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress)
 {
     LogPrint(BCLog::QT, "GUI::setNumBlocks\n");
 

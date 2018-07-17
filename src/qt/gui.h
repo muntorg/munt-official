@@ -278,7 +278,7 @@ public Q_SLOTS:
     /** Update the window title (on testnet window title can contain dynamic content) */
     void updateWindowTitle();
     /** Set number of blocks and last block date shown in the UI */
-    void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool);
+    void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress);
     /** Set number of headers and headers sync progress in the UI */
     void setNumHeaders(int current, int total);
     /** SPV progress update */
