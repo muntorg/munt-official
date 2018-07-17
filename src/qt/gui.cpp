@@ -1208,8 +1208,9 @@ void GUI::updateProgress(bool synced, int minimum, int progress, int maximum, co
         progressBarLabel->setVisible(false);
         progressBar->setVisible(false);
 
-        // Hide SPV when fully synced, we are now working in full verification mode
-        spvStatusIcon->setVisible(false);
+        // Hide SPV indicator only when fully synced
+        if (clientModel->getNumBlocks() >= maximum && synced)
+            spvStatusIcon->setVisible(false);
     }
     else
     {
