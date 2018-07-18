@@ -151,6 +151,8 @@ namespace {
 
     /** Dirty block file entries. */
     std::set<int> setDirtyFileInfo;
+
+    std::atomic<bool> fFullSyncMode(DEFAULT_FULL_SYNC_MODE);
 } // anon namespace
 
 CBlockIndex* FindForkInGlobalIndex(const CChain& chain, const CBlockLocator& locator)
@@ -2797,7 +2799,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
         fCloseToTip = pindex->nHeight <= chainActive.Height() + int(MIN_BLOCKS_TO_KEEP);
     }
 
-    if (fCloseToTip) {
+    if (fCloseToTip && isFullSyncMode()) {
         CValidationState state; // Only used to report errors, not invalidity - ignore it
         if (!ActivateBestChain(state, chainparams, pblock))
             return error("%s: ActivateBestChain failed", __func__);
@@ -3860,7 +3862,13 @@ CBlockFileInfo* GetBlockFileInfo(size_t n)
     return &vinfoBlockFile.at(n);
 }
 
+void SetFullSyncMode(bool state) {
+    fFullSyncMode = state;
+}
 
+bool isFullSyncMode() {
+    return fFullSyncMode;
+}
 
 class CMainCleanup
 {

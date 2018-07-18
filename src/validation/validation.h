@@ -177,6 +177,9 @@ static const bool DEFAULT_PEERBLOOMFILTERS = true;
 /** Default for -stopatheight */
 static const int DEFAULT_STOPATHEIGHT = 0;
 
+/** if disabled full sync and validation will be skipped, ie. no chain is build. */
+static const bool DEFAULT_FULL_SYNC_MODE = true;
+
 struct BlockHasher
 {
     size_t operator()(const uint256& hash) const { return hash.GetCheapHash(); }
@@ -564,5 +567,9 @@ void DumpMempool();
 
 /** Load the mempool from disk. */
 bool LoadMempool();
+
+/** Full sync and validation. */
+void SetFullSyncMode(bool state);
+bool isFullSyncMode();
 
 #endif // GULDEN_VALIDATION_H

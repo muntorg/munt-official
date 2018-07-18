@@ -16,8 +16,6 @@
 #include "net.h"
 #include "validation/validationinterface.h"
 
-/** if disabled, blocks will not be requested automatically, useful for low-resources-available mode */
-static const bool DEFAULT_FULL_SYNC_MODE = true;
 /** Default for -maxorphantx, maximum number of orphan transactions kept in memory */
 static const unsigned int DEFAULT_MAX_ORPHAN_TRANSACTIONS = 100;
 /** Expiration time for orphan transactions in seconds */
@@ -89,8 +87,6 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
  */
 bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interrupt);
 
-void SetFullSyncMode(bool state);
-bool isFullSyncMode();
 void PreventBlockDownloadDuringHeaderSync(bool state);
 
 /**
