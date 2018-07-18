@@ -50,7 +50,7 @@
 # error "Gulden cannot be compiled without assertions."
 #endif
 
-static std::atomic<bool> fAutoRequestBlocks(DEFAULT_AUTOMATIC_BLOCK_REQUESTS);
+static std::atomic<bool> fFullSyncMode(DEFAULT_FULL_SYNC_MODE);
 static std::atomic<bool> fPreventBlockDownloadDuringHeaderSync(false);
 
 std::atomic<int64_t> nTimeBestReceived(0); // Used only to inform the wallet of when we last received a block
@@ -563,7 +563,7 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
         return true;
     }
 
-    if (!fAutoRequestBlocks) {
+    if (!fFullSyncMode) {
         return false;
     }
 
@@ -2762,7 +2762,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                         pindexLast->nHeight);
             } else {
                 // Do not request blocks if autorequest is disabled
-                if (!fAutoRequestBlocks) {
+                if (!fFullSyncMode) {
                     return true;
                 }
                 std::vector<CInv> vGetData;
@@ -3961,12 +3961,12 @@ void CancelPriorityDownload(const CBlockIndex *index, const PriorityDownloadCall
     blocksToDownloadFirst.remove_if([&index](const PriorityBlockRequest& request){ return request.pindex == index; });
 }
 
-void SetAutoRequestBlocks(bool state) {
-    fAutoRequestBlocks = state;
+void SetFullSyncMode(bool state) {
+    fFullSyncMode = state;
 }
 
-bool isAutoRequestingBlocks() {
-    return fAutoRequestBlocks;
+bool isFullSyncMode() {
+    return fFullSyncMode;
 }
 
 void PreventBlockDownloadDuringHeaderSync(bool state) {
