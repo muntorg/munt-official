@@ -183,6 +183,10 @@ void OpenDebugLog();
 void ShrinkDebugFile();
 void runCommand(const std::string& strCommand);
 
+// Base-10 variation on Fletcher's checksum algorithm to create a position dependent checksum
+int Base10ChecksumEncode(int data);
+bool Base10ChecksumDecode(int number, int* decoded=nullptr);
+
 inline bool IsSwitchChar(char c)
 {
 #ifdef WIN32

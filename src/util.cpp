@@ -942,3 +942,65 @@ int GetNumCores()
     return boost::thread::hardware_concurrency();
 #endif
 }
+
+// Base-10 variation on Fletcher's checksum algorithm to create a position dependent checksum
+int Base10ChecksumEncode(int data)
+{
+    int number = data;
+
+    int sum1 = 0;
+    int sum2 = 0;
+    while (data>0)
+    {
+        int v = data % 10;
+        sum1 = (sum1 + v) % 10;
+        sum2 = (sum2 + sum1) % 10;
+        data = data / 10;
+    }
+
+    int f0 = sum1;
+    int f1 = sum2;
+    int c0 = 10 - (( f0 + f1) % 10);
+    int c1 = 10 - (( f0 + c0 ) % 10);
+
+    // here we have c0/c1 in [1..10], map onto [0..9] to fit into single digit
+    c0 = c0 - 1;
+    c1 = c1 - 1;
+
+    return 100 * number + 10 * c1 + c0;
+}
+
+bool Base10ChecksumDecode(int number, int* decoded)
+{
+    int c0 = number % 10;
+    int c1 = (number / 10) % 10;
+
+    // remap c0/1 from [0..9] onto their original [1..10] range
+    c0 += 1;
+    c1 += 1;
+
+    int data = number / 100;
+
+    int sum1 = 0;
+    int sum2 = 0;
+    while (data>0)
+    {
+        int v = data % 10;
+        sum1 = (sum1 + v) % 10;
+        sum2 = (sum2 + sum1) % 10;
+        data = data / 10;
+    }
+
+    sum1 = (sum1 + c0) % 10;
+    sum2 = (sum2 + sum1) % 10;
+
+    sum1 = (sum1 + c1) % 10;
+    sum2 = (sum2 + sum1) % 10;
+
+    bool succes = sum1 == 0 && sum2 == 0;
+
+    if (succes && decoded)
+        *decoded = number / 100;
+
+    return succes;
+}

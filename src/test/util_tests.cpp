@@ -578,4 +578,28 @@ BOOST_AUTO_TEST_CASE(test_ParseFixedPoint)
     BOOST_CHECK(!ParseFixedPoint("1.", 8, &amount));
 }
 
+BOOST_AUTO_TEST_CASE(util_Base10Checksum)
+{
+    // test valid checksums
+    for (int i = 0; i < 30000; i++)
+    {
+        int encoded = Base10ChecksumEncode(i);
+        int decoded;
+        bool success = Base10ChecksumDecode(encoded, &decoded);
+        BOOST_CHECK(success);
+        BOOST_CHECK(encoded == decoded);
+    }
+
+    // test a range of number, which should mostly fail
+    // note that exactly 1% can be decoded
+    // there is almost no chance that a typo will result in a number that can be decoded
+    int fail = 0;
+    for (int i = 0; i < 30000; i++)
+    {
+        if (Base10ChecksumDecode(i))
+            fail++;
+    }
+    BOOST_CHECK(fail == 300);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

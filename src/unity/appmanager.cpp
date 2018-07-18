@@ -293,6 +293,27 @@ void GuldenAppManager::BurnRecoveryPhrase()
     recoveryPhrase = "";
 }
 
+
+int timeToBirthNumber(const int64_t time)
+{
+    // 0 for invalid time
+    if (time < Params().GenesisBlock().nTime)
+        return 0;
+
+    int periods = (time - Params().GenesisBlock().nTime) / recovery_birth_period;
+
+    return Base10ChecksumEncode(periods);
+}
+
+int64_t birthNumberToTime(int number)
+{
+    int periods;
+    if (!Base10ChecksumDecode(number, &periods))
+        return 0;
+
+    return Params().GenesisBlock().nTime + int64_t(periods) * recovery_birth_period;
+}
+
 // if no birth number given or birth number is invalid the result will be zero
 void GuldenAppManager::splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber)
 {
@@ -324,18 +345,14 @@ void GuldenAppManager::setRecoveryBirthNumber(int _recoveryBirth)
 
 int64_t GuldenAppManager::getRecoveryBirthTime() const
 {
-    int64_t time = 0;
-    if (recoveryBirthNumber != 0) {
-        time = Params().GenesisBlock().nTime + int64_t(recoveryBirthNumber) * recovery_birth_period;
-    }
-    return time;
+    return birthNumberToTime(recoveryBirthNumber);
 }
 
 void GuldenAppManager::setRecoveryBirthTime(int64_t birthTime)
 {
     // fixme: (SPV) put checksum on birthNumber to prevent using wrong start time due to typos
     if (birthTime >= Params().GenesisBlock().nTime) {
-        recoveryBirthNumber = (birthTime - Params().GenesisBlock().nTime) / recovery_birth_period;
+        recoveryBirthNumber = timeToBirthNumber(birthTime);
     }
     else
         recoveryBirthNumber = 0;
@@ -361,7 +378,7 @@ void GuldenAppManager::setCombinedRecoveryPhrase(const SecureString& combinedPhr
 SecureString GuldenAppManager::composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime)
 {
     if (birthTime != 0)
-        return phrase + SecureString(" ") + SecureString(i64tostr((birthTime - Params().GenesisBlock().nTime) / recovery_birth_period));
+        return phrase + SecureString(" ") + SecureString(i64tostr(timeToBirthNumber(birthTime)));
     else
         return phrase;
 }
