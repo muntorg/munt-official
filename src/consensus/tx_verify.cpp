@@ -666,7 +666,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 //So this check is very important, must not be skipped and must come before the bundle creation for these bundle types.
                 if (!HasSpendKey(input, inputDetails))
                 {
-                    return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-input-without-matching-output");
+                    return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-missing-spend-key");
                 }
 
                 bool matchedExistingBundle = false;
