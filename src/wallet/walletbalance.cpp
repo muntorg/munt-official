@@ -359,7 +359,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWi
             //fixme: (Post-2.1) - is this okay? Should it be cached or something? (CBSU?)
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
-                if (pcoin->IsTrusted() && !pcoin->isAbandoned())
+                if (pcoin->IsTrusted() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
                 {
                     nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetAvailableCredit(true, forAccount);
                 }
@@ -415,8 +415,10 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeP
             //fixme: (Post-2.1)- is this okay? Should it be cached or something? (CBSU?)
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
-                if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool())
+                if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
+                {
                     nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetAvailableCredit(true, forAccount);
+                }
             }
         }
     }
@@ -442,9 +444,12 @@ CAmount CWallet::GetImmatureBalance(const CAccount* forAccount, bool includePoW2
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
-            if (!forAccount || ::IsMine(forAccount, *pcoin))
+            if (!pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
             {
-                nTotal += includePoW2LockedWitnesses ? pcoin->GetImmatureCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetImmatureCredit(true, forAccount);
+                if (!forAccount || ::IsMine(forAccount, *pcoin))
+                {
+                    nTotal += includePoW2LockedWitnesses ? pcoin->GetImmatureCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetImmatureCredit(true, forAccount);
+                }
             }
         }
     }

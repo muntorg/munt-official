@@ -868,8 +868,11 @@ bool CWallet::MarkReplaced(const uint256& originalHash, const uint256& newHash)
 
     CWalletTx& wtx = (*mi).second;
 
+    wtx.MarkDirty();
+
     // Ensure for now that we're not overwriting data
-    assert(wtx.mapValue.count("replaced_by_txid") == 0);
+    if (wtx.mapValue.count("replaced_by_txid") != 0)
+        return false;
 
     wtx.mapValue["replaced_by_txid"] = newHash.ToString();
 

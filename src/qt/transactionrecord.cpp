@@ -33,7 +33,7 @@ bool TransactionRecord::showTransaction(const CWalletTx &wtx)
 
     //fixme: (2.1) - We can potentially remove this for 2.1; depending on how 2.1 handles wallet upgrades.
     // Hide orphaned phase 3 witness earnings when they were orphaned by a subsequent PoW block that contain the same earnings.
-    if (wtx.IsCoinBase() && wtx.mapValue.count("replaced_by_txid"))
+    if (wtx.IsCoinBase() && wtx.mapValue.count("replaced_by_txid") > 0)
     {
         return false;
     }
