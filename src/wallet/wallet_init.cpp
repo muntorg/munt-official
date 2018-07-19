@@ -410,42 +410,59 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 throw std::runtime_error("Wallet contains no accounts, but is marked as upgraded.");
         }
 
+        //Detect any HD account seed gaps.
         bool indexError=false;
-        for (const auto& [seedUUID, seed] : walletInstance->mapSeeds)
+        for (const auto& accountType : {AccountType::Desktop, AccountType::Mobi, AccountType::PoW2Witness})
         {
-            (unused)seed;
-            std::set<uint64_t> allIndexes;
-            for(const auto& [accountUUID, account] : walletInstance->mapAccounts)
+            for (const auto& [seedUUID, seed] : walletInstance->mapSeeds)
             {
-                (unused)accountUUID;
-                if (account->IsHD() && dynamic_cast<CAccountHD*>(account)->getSeedUUID() == seedUUID)
+                (unused)seed;
+                std::set<uint64_t> allIndexes;
+                for(const auto& [accountUUID, account] : walletInstance->mapAccounts)
                 {
-                    uint64_t nIndex = dynamic_cast<CAccountHD*>(account)->getIndex();
-                    if (nIndex >= BIP32_HARDENED_KEY_LIMIT)
+                    if (account->m_Type != accountType)
+                        continue;
+
+                    (unused)accountUUID;
+                    if (account->IsHD() && dynamic_cast<CAccountHD*>(account)->getSeedUUID() == seedUUID)
                     {
-                        nIndex = nIndex & ~BIP32_HARDENED_KEY_LIMIT;
-                    }
-                    allIndexes.insert(nIndex);
-                }
-            }
-            if (allIndexes.size() > 0)
-            {
-                uint64_t nStart = *allIndexes.begin();
-                if (nStart != 0 && nStart != 1)
-                    indexError = true;
-                if (!indexError)
-                {
-                    std::set<uint64_t>::iterator setIter = allIndexes.begin();
-                    ++setIter;
-                    uint64_t index=1;
-                    for (;setIter != allIndexes.end();)
-                    {
-                        if (*setIter != nStart + index)
+                        uint64_t nIndex = dynamic_cast<CAccountHD*>(account)->getIndex();
+                        if (nIndex >= BIP32_HARDENED_KEY_LIMIT)
                         {
-                            indexError = true;
+                            nIndex = nIndex & ~BIP32_HARDENED_KEY_LIMIT;
                         }
-                        ++index;
+                        allIndexes.insert(nIndex);
+                    }
+                }
+                if (allIndexes.size() > 0)
+                {
+                    uint64_t nStart = *allIndexes.begin();
+                    uint64_t nStartComp = 0;
+                    switch (accountType)
+                    {
+                        case AccountType::Desktop: nStartComp=0; break;
+                        case AccountType::Mobi: nStartComp=HDMobileStartIndex; break;
+                        case AccountType::PoW2Witness: nStartComp=HDWitnessStartIndex; break;
+                        default:
+                            //Do nothing.
+                            break;
+                    }
+                    if (nStart != nStartComp && nStart != nStartComp+1)
+                        indexError = true;
+                    if (!indexError)
+                    {
+                        std::set<uint64_t>::iterator setIter = allIndexes.begin();
                         ++setIter;
+                        uint64_t index=1;
+                        for (;setIter != allIndexes.end();)
+                        {
+                            if (*setIter != nStart + index)
+                            {
+                                indexError = true;
+                            }
+                            ++index;
+                            ++setIter;
+                        }
                     }
                 }
             }
