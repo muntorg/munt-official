@@ -278,6 +278,14 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
 
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
 
+    if (!IsPow2Phase4Active(chainActive.Tip(), Params(), chainActive, nullptr))
+    {
+        QString message = tr("This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.");
+        QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
+        d->exec();
+        return;
+    }
+
     std::function<void (void)> successCallback = [=](){doRequestRenewWitness(funderAccount, targetWitnessAccount);};
     if (pactiveWallet->IsLocked())
     {
