@@ -4,8 +4,8 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-07-08 20:32+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-07-08 20:32+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-07-19 08:21+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-07-19 08:21+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -735,7 +735,7 @@ Estimated earnings: %3 (%4% per month)
 
 Witness weight: %5</source>
         <translation>De Guldens zijn geblokkeerd gedurende %1 dagen (%2). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de looptijd.
-Verwachte verdiensten: %3 (%4 per maand)
+Verwachte verdiensten: %3 (%4% per maand)
 
 Witness-gewicht: %5</translation>
     </message>
