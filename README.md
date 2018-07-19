@@ -87,7 +87,8 @@ If you are sure you need to build the software yourself, please read the [build 
 |Transaction confirmations:|6||
 |Total coins:|1680M||
 |Premine reserved for development, marketing and funding of community projects:|170M (10%)||
-|Block reward:|100 NLG||
+|Block reward miners:|80 NLG||
+|Block reward witness:|20 NLG||
 |Block time:|150 seconds||
 |P2P Port|9231|9923|
 |RPC Port|9232|9924|
