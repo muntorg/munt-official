@@ -1,3 +1,15 @@
+2.0.0.6
+
+CORE - Stability fix for a minor crash issue some users might otherwise experience in phase 3.
+UI - Some very minor localisation and UI cleanups
+UI - Fix a balance display issue
+WALLET - Implement detection for an issue with incorrect HD index counter incrementing that may have effected some users in past versions of the software. Users who are effected are in no immediate danger but should be warned to rectify the issue regardless.
+NET - No longer advertise or establish outgoing connections to outdated (1.6.x) peers but allow incoming connections from them.
+
+
+
+
+
 2.0.0.4
 
 UI - Fix a (phase 3 only) issue where the transaction list sometimes displaying unnecessary duplicate "rejected" earning messages for every valid earning message.
