@@ -102,6 +102,4 @@ If you are sure you need to build the software yourself, please read the [build 
 |Electrum server 2|electrum2.gulden.com:5038||
 |DNS Seed 1|seed.gulden.com||
 |DNS Seed 2|amsterdam.gulden.com||
-|DNS Seed 3|seed.gulden.network||
-|DNS Seed 4|rotterdam.gulden.network||
-|DNS Seed 5|seed.gulden.blue||
+|DNS Seed 3|rotterdam.gulden.network||
