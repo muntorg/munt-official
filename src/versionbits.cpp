@@ -35,7 +35,7 @@ const struct VBDeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_B
     }
 };
 
-//NB! It is important that we use a hash here instead of a poitner - see comment in header file.
+//NB! It is important that we use a hash here instead of a pointer - see comment in header file.
 #define PREVHASH (!pindexPrev?uint256():pindexPrev->GetBlockHeader().GetHashPoW2())
 
 ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex* pindexPrev, const Consensus::Params& params, ThresholdConditionCache& cache) const

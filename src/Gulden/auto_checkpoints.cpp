@@ -404,13 +404,11 @@ namespace Checkpoints
         {
             return pindex->GetBlockHashLegacy();
         }
-
         // Search backwards AUTO_CHECKPOINT_DEPTH blocks
         for(int i=0;i<AUTO_CHECKPOINT_DEPTH;i++)
         {
             pindex = pindex->pprev;
         }
-
         return pindex->GetBlockHashLegacy();
     }
 

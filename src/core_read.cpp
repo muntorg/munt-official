@@ -167,7 +167,7 @@ bool DecodeHexBlk(CBlock& block, const std::string& strHexBlk)
         {
             ssBlock >> block;
         }
-        catch (const std::exception&)
+        catch (...)
         {
             parsedAsSegSig = false;
         }

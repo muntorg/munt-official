@@ -311,6 +311,7 @@ struct CBlockIndexCacheComparator
 std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessCandidates;
 
 bool witnessScriptsAreDirty = false;
+bool witnessingEnabled = true;
 
 void static GuldenWitness()
 {
@@ -339,6 +340,10 @@ void static GuldenWitness()
                     }
                     MilliSleep(5000);
                 } while (true);
+            }
+            while (!witnessingEnabled)
+            {
+                MilliSleep(200);
             }
             DO_BENCHMARK("WIT: GuldenWitness", BCLog::BENCH|BCLog::WITNESS);
 
@@ -474,7 +479,7 @@ void static GuldenWitness()
                                     std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript, true, nullptr, true));
                                     if (!pblocktemplate.get())
                                     {
-                                        LogPrintf("Error in GuldenWitness: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                                        LogPrintf("Error in GuldenWitness: Failed to get block template.\n");
                                         continue;
                                     }
 

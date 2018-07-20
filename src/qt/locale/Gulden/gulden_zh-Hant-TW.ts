@@ -4,8 +4,8 @@
     <extra-po-header-language>zh_Hant_TW</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-07-07 11:25+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-07-07 11:25+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-07-19 13:04+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-07-19 13:04+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -2140,13 +2140,6 @@
     <message>
         <source>Yes</source>
         <translation>是</translation>
-    </message>
-</context>
-<context>
-    <name>WalletModel</name>
-    <message>
-        <source>Send Coins</source>
-        <translation>付款</translation>
     </message>
 </context>
 <context>

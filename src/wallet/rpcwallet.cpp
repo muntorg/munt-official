@@ -829,7 +829,7 @@ UniValue getunconfirmedbalance(const JSONRPCRequest &request)
         throw std::runtime_error(
                 "getunconfirmedbalance \"for_account\"\n"
                 "\nArguments:\n"
-                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account you want the balance for.\n"
                 "Returns the server's total unconfirmed balance\n");
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
@@ -858,7 +858,7 @@ UniValue getimmaturebalance(const JSONRPCRequest &request)
         throw std::runtime_error(
                 "getimmaturebalance \"for_account\"\n"
                 "\nArguments:\n"
-                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account you want the balance for.\n"
                 "Returns the server's total immature balance\n");
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
@@ -887,7 +887,7 @@ UniValue getlockedbalance(const JSONRPCRequest &request)
         throw std::runtime_error(
                 "getlockedbalance \"for_account\"\n"
                 "\nArguments:\n"
-                "1. \"for_account\"   (string, optional) The UUID or unique label of the account to move funds from. Empty or \"*\" for all.\n"
+                "1. \"for_account\"   (string, optional) The UUID or unique label of the account you want the balance for.\n"
                 "Returns the server's total locked balance (inclusive of immature and unconfirmed transactions)\n");
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);

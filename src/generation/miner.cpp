@@ -423,8 +423,10 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     else
     {
         CValidationState state;
-        if (!TestBlockValidity(chainActive, state, chainparams, *pblock, pParent, false, false, nullptr)) {
-            throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
+        if (!TestBlockValidity(chainActive, state, chainparams, *pblock, pParent, false, false, nullptr))
+        {
+            LogPrintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state));
+            return nullptr;
         }
     }
     int64_t nTime2 = GetTimeMicros();
