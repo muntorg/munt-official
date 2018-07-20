@@ -458,6 +458,7 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case AutoHideStatusBar:
             fAutoHideStatusBar = value.toBool();
             settings.setValue("fAutoHideStatusBar", fAutoHideStatusBar);
+            Q_EMIT autoHideStatusBarChanged(fAutoHideStatusBar);
             return fAutoHideStatusBar;
         case ThirdPartyTxUrls:
             if (strThirdPartyTxUrls != value.toString()) {

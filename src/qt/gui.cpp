@@ -646,6 +646,18 @@ void GUI::setClientModel(ClientModel *_clientModel)
         {
             // be aware of the tray icon disable state change reported by the OptionsModel object.
             connect(optionsModel,SIGNAL(hideTrayIconChanged(bool)),this,SLOT(setTrayIconVisible(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+            connect(optionsModel, &OptionsModel::autoHideStatusBarChanged, [this](bool autoHide) {
+                if (autoHide) {
+                    // just hide regardless of sync state, the next progress update will make it visible again if needed
+                    hideProgressBarLabel();
+                    progressBar->setVisible(false);
+                }
+                else {
+                    // set text to empty, as above the next progress update will render the correct text again
+                    progressBarLabel->setText("");
+                    showProgressBarLabel();
+                }
+            });
 
             // initialize the disable state of the tray icon with the current value in the model.
             setTrayIconVisible(optionsModel->getHideTrayIcon());

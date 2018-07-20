@@ -169,6 +169,7 @@ Q_SIGNALS:
     void displayUnitChanged(int unit);
     void coinControlFeaturesChanged(bool);
     void hideTrayIconChanged(bool);
+    void autoHideStatusBarChanged(bool);
 };
 
 #endif // GULDEN_QT_OPTIONSMODEL_H
