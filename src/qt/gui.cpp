@@ -1078,7 +1078,10 @@ void GUI::updateHeadersSyncProgressLabel(int current, int total)
     LogPrint(BCLog::QT, "GUI::updateHeadersSyncProgressLabel\n");
 
     if (total - current > HEADER_HEIGHT_DELTA_SYNC)
+    {
         progressBarLabel->setText(tr("Syncing Headers (%1%)...").arg(QString::number(100.0 * current / total, 'f', 1)));
+        showProgressBarLabel();
+    }
 }
 
 void GUI::updateWindowTitle()
