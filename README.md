@@ -87,7 +87,8 @@ If you are sure you need to build the software yourself, please read the [build 
 |Transaction confirmations:|6||
 |Total coins:|1680M||
 |Premine reserved for development, marketing and funding of community projects:|170M (10%)||
-|Block reward:|100 NLG||
+|Block reward miners:|80 NLG||
+|Block reward witness:|20 NLG||
 |Block time:|150 seconds||
 |P2P Port|9231|9923|
 |RPC Port|9232|9924|
@@ -102,6 +103,4 @@ If you are sure you need to build the software yourself, please read the [build 
 |Electrum server 2|electrum2.gulden.com:5038||
 |DNS Seed 1|seed.gulden.com||
 |DNS Seed 2|amsterdam.gulden.com||
-|DNS Seed 3|seed.gulden.network||
-|DNS Seed 4|rotterdam.gulden.network||
-|DNS Seed 5|seed.gulden.blue||
+|DNS Seed 3|rotterdam.gulden.network||
