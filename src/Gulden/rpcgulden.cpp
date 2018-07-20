@@ -454,6 +454,31 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     return witnessInfoForBlock;
 }
 
+static UniValue disablewitnessing(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 0) {
+        throw std::runtime_error(
+            "disablewitnessing\n"
+            "\nStops all witnessing activity, call \"enablewitnessing\" to start witnessing again.\n"
+        );
+    }
+
+    witnessingEnabled = false;
+    return true;
+}
+
+static UniValue enablewitnessing(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 0) {
+        throw std::runtime_error(
+            "enablewitnessing\n"
+            "\nStarts all witnessing activity, call \"disablewitnessing\" to stop witnessing again.\n"
+        );
+    }
+
+    witnessingEnabled = true;
+    return true;
+}
 
 static UniValue dumpdiffarray(const JSONRPCRequest& request)
 {
@@ -1013,14 +1038,14 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     if (nLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
 
-    if (nLockPeriodInBlocks > 3 * 365 * 576)
+    if (nLockPeriodInBlocks > gMaximumWitnessLockLength)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
 
-    if (nLockPeriodInBlocks < 30 * 576)
+    if (nLockPeriodInBlocks < gMinimumWitnessLockLength)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
 
     // Add a small buffer to give us time to enter the blockchain
-    if (nLockPeriodInBlocks == 30 * 576)
+    if (nLockPeriodInBlocks == gMinimumWitnessLockLength)
         nLockPeriodInBlocks += 50;
 
     // Enforce minimum weight
@@ -1115,14 +1140,14 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
     if (requestedLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
 
-    if (requestedLockPeriodInBlocks > 3 * 365 * 576)
+    if (requestedLockPeriodInBlocks > gMaximumWitnessLockLength)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
 
-    if (requestedLockPeriodInBlocks < 30 * 576)
+    if (requestedLockPeriodInBlocks < gMinimumWitnessLockLength)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
 
     // Add a small buffer to give us time to enter the blockchain
-    if (requestedLockPeriodInBlocks == 30 * 576)
+    if (requestedLockPeriodInBlocks == gMinimumWitnessLockLength)
         requestedLockPeriodInBlocks += 50;
 
     // Check for immaturity
@@ -2057,14 +2082,12 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
     CKey privWitnessKey;
     if (!witnessAccount->GetKey(rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID, privWitnessKey))
     {
-        //fixme: (2.1) Localise
         reasonForFail = strprintf("Wallet error, failed to retrieve private witness key.");
         throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
         return false;
     }
     if (!pwallet->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *witnessAccount, KEYCHAIN_WITNESS))
     {
-        //fixme: (2.1) Localise
         reasonForFail = strprintf("Wallet error, failed to store witness key.");
         throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
         return false;
@@ -2999,6 +3022,8 @@ static const CRPCCommand commands[] =
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
     { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account", "witness_account", "amounts"} },
+    { "witness",                 "enablewitnessing",                &enablewitnessing,               true,    {} },
+    { "witness",                 "disablewitnessing",               &disablewitnessing,              true,    {} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },

@@ -4,8 +4,8 @@
     <extra-po-header-language>pt_PT</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-07-07 11:22+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-07-07 11:22+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-07-19 13:02+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-07-19 13:02+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -2304,11 +2304,36 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     </message>
 </context>
 <context>
-    <name>WalletModel</name>
+    <name>ShutdownWindow</name>
     <message>
-        <source>Send Coins</source>
-        <translation>Enviar Moedas</translation>
+        <source>%1 is shutting down...</source>
+        <translation>%1 está a encerrar...</translation>
     </message>
+    <message>
+        <source>Do not shut down the computer until this window disappears.</source>
+        <translation>Não desligue o computador enquanto esta janela não desaparecer.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>KB/s</source>
+        <translation>KB/s</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDescDialog</name>
+    <message>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation>Esta janela mostra uma descrição detalhada da transação</translation>
+    </message>
+    <message>
+        <source>Details for %1</source>
+        <translation>Detalhes para %1</translation>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
     <message>
         <source>Increasing transaction fee failed</source>
         <translation>Aumento da taxa de transação falhou</translation>
@@ -2340,35 +2365,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>Could not commit transaction</source>
         <translation>Não foi possível confirmar a transação</translation>
-    </message>
-</context>
-<context>
-    <name>ShutdownWindow</name>
-    <message>
-        <source>%1 is shutting down...</source>
-        <translation>%1 está a encerrar...</translation>
-    </message>
-    <message>
-        <source>Do not shut down the computer until this window disappears.</source>
-        <translation>Não desligue o computador enquanto esta janela não desaparecer.</translation>
-    </message>
-</context>
-<context>
-    <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDescDialog</name>
-    <message>
-        <source>This pane shows a detailed description of the transaction</source>
-        <translation>Esta janela mostra uma descrição detalhada da transação</translation>
-    </message>
-    <message>
-        <source>Details for %1</source>
-        <translation>Detalhes para %1</translation>
     </message>
 </context>
 <context>

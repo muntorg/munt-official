@@ -370,8 +370,7 @@ bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsView
             //fixme: (2.1) activate warning
             // if(!fTestnet)
             // CAlert::Notify("Warning network is experiencing low levels of witnessing participants!");
-            // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where their are a shortage of witnesses paticipating on the network.
-            // Hard limit - we never allow a min age lower than 2 as this starts to cause code issues.
+            // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where there are a shortage of witnesses paticipating on the network.
             if (nMinAge == 0 || (nMinAge <= 10 && witnessInfo.witnessSelectionPoolFiltered.size() > 5))
             {
                 break;

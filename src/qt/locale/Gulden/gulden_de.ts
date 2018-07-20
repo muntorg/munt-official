@@ -4,8 +4,8 @@
     <extra-po-header-language>de</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-07-07 11:17+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-07-07 11:17+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-07-19 12:57+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-07-19 12:57+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -28,7 +28,7 @@
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation>Scanne den QR Code um dich mit deiner Gulden App zu verbinden</translation>
+        <translation>Scan die QR-kode um verbindung zu bekommen mit deinen Gulden App</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
@@ -111,7 +111,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Enter passphrase</source>
-        <translation>Passphrase eingeben</translation>
+        <translation>Sicherheitswort oder Satz eingeben</translation>
     </message>
     <message>
         <source>New passphrase</source>
@@ -300,7 +300,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation>&amp;Schließen</translation>
+        <translation>Schließen</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
@@ -316,7 +316,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>E&amp;xportieren</translation>
+        <translation>Exportieren</translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -336,11 +336,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Wählen Sie die Adresse aus, an die Sie Bitcoins überweisen möchten</translation>
+        <translation>Wählen Sie die Adresse aus, an die Sie Guldencoins überweisen möchten</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Wählen Sie die Adresse aus, über die Sie Bitcoins empfangen wollen</translation>
+        <translation>Wählen Sie die Adresse aus, so mit Sie die Guldencoins empfangen wollen</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -364,7 +364,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation>Adresse &amp;kopieren</translation>
+        <translation>&amp;Kopier Adresse</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
@@ -372,7 +372,7 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;Editieren</translation>
+        <translation>&amp;Bearbeiten</translation>
     </message>
     <message>
         <source>Export Address List</source>
@@ -2321,13 +2321,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Yes</source>
         <translation>Ja</translation>
-    </message>
-</context>
-<context>
-    <name>WalletModel</name>
-    <message>
-        <source>Send Coins</source>
-        <translation>Bitcoins überweisen</translation>
     </message>
 </context>
 <context>

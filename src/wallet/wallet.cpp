@@ -873,8 +873,11 @@ bool CWallet::MarkReplaced(const uint256& originalHash, const uint256& newHash)
 
     CWalletTx& wtx = (*mi).second;
 
+    wtx.MarkDirty();
+
     // Ensure for now that we're not overwriting data
-    assert(wtx.mapValue.count("replaced_by_txid") == 0);
+    if (wtx.mapValue.count("replaced_by_txid") != 0)
+        return false;
 
     wtx.mapValue["replaced_by_txid"] = newHash.ToString();
 
@@ -1026,6 +1029,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
     {
         AssertLockHeld(cs_wallet);
 
+        std::vector<std::pair<uint256, uint256>> markReplacements;
         if (pIndex != NULL)
         {
             for(const CTxIn& txin : tx.vin)
@@ -1039,12 +1043,16 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                         if (mi != mapWallet.end() && GetPoW2Phase(chainActive.Tip(), Params(), chainActive) == 3 && (*mi).second.tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
                         {
                             LogPrintf("Updated phase 3 witness transaction %s (in block %s) replace wallet transaction %s\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString());
+                            if (mapWallet.find(range.first->second)->second.mapValue.count("replaced_by_txid") == 0)
+                            {
+                                markReplacements.push_back(std::pair(range.first->second, tx.GetHash()));
+                            }
                         }
                         else
                         {
                             LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), range.first->first.getHash().ToString(), range.first->first.n);
+                            MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                         }
-                        MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                     }
                     range.first++;
                 }
@@ -1105,6 +1113,12 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     }
                 }
             }
+
+            for (const auto& [wtx, newTx] : markReplacements)
+            {
+                MarkReplaced(wtx, newTx);
+            }
+
             return ret;
             //fixme: (2.1) It is not clear if this is 100% necessary or not. See comment below for the original motivation.
             //Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.

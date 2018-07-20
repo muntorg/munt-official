@@ -4,264 +4,10 @@
     <extra-po-header-language>fr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-07-07 11:18+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-07-07 11:18+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-07-19 12:58+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-07-19 12:58+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
-<context>
-    <name>TransactionTableModel</name>
-    <message>
-        <source>Fund witness accoun</source>
-        <translation>Financement d&apos;un compte witness</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(aucune étiquette)</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Date</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Reçu</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Envoyé</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Ouvert jusqu&apos;à %1</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>juste-regarder</translation>
-    </message>
-    <message>
-        <source>Unlock funds</source>
-        <translation>Déverrouiller les fonds</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation>Type</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation>Description</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>Ouvert pendant encore %n bloc</numerusform>
-            <numerusform>Ouvert pendant encore %n blocs</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Hors ligne</translation>
-    </message>
-    <message>
-        <source>Unconfirmed</source>
-        <translation>Non confirmée</translation>
-    </message>
-    <message>
-        <source>Abandoned</source>
-        <translation>Abandonnée</translation>
-    </message>
-    <message>
-        <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation>Confirmation (%1 sur %2 confirmations recommandées)</translation>
-    </message>
-    <message>
-        <source>Confirmed (%1 confirmations)</source>
-        <translation>Confirmée (%1 confirmations)</translation>
-    </message>
-    <message>
-        <source>Conflicted</source>
-        <translation>En conflit</translation>
-    </message>
-    <message>
-        <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation>Immature (%1 confirmations, sera disponible après %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Ce bloc n’a été reçu par aucun autre nœud et ne sera probablement pas accepté !</translation>
-    </message>
-    <message>
-        <source>Generated but not accepted</source>
-        <translation>Générée mais refusée</translation>
-    </message>
-    <message>
-        <source>External payee</source>
-        <translation>Bénéficiaire externe</translation>
-    </message>
-    <message>
-        <source>Multiple addresses</source>
-        <translation>Plusieurs adresses</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation>Reçue avec</translation>
-    </message>
-    <message>
-        <source>Received from</source>
-        <translation>Reçue de</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation>Envoyée à</translation>
-    </message>
-    <message>
-        <source>Payment to yourself</source>
-        <translation>Paiement à vous-même</translation>
-    </message>
-    <message>
-        <source>Internal transfer</source>
-        <translation>Transfert interne</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Récompense minières</translation>
-    </message>
-    <message>
-        <source>Witness reward</source>
-        <translation>Récompense de witness</translation>
-    </message>
-    <message>
-        <source>Fund witness account extension</source>
-        <translation>Financement d&apos;un compte witness prolongation</translation>
-    </message>
-    <message>
-        <source>Extend witness account</source>
-        <translation>Prolonger le compte des witness</translation>
-    </message>
-    <message>
-        <source>Split locked funds</source>
-        <translation>Fractionnement des fonds bloqués</translation>
-    </message>
-    <message>
-        <source>Merge locked funds</source>
-        <translation>Fusionner les fonds bloqués</translation>
-    </message>
-    <message>
-        <source>Rotate witness key</source>
-        <translation>Tourner la clé du witness</translation>
-    </message>
-    <message>
-        <source>Renew witness account</source>
-        <translation>Renouveler le compte witness</translation>
-    </message>
-    <message>
-        <source>Fund witness account</source>
-        <translation>Financement d&apos;un compte witness</translation>
-    </message>
-    <message>
-        <source>Lock funds</source>
-        <translation>Verrouiller les fonds</translation>
-    </message>
-    <message>
-        <source>Empty witness account</source>
-        <translation>Vider le compte de witness</translation>
-    </message>
-    <message>
-        <source>Received from witness account</source>
-        <translation>Reçu d&apos;un compte de witness</translation>
-    </message>
-    <message>
-        <source>Lock funds from: %1</source>
-        <translation>Verrouiller les fonds à partir de: %1</translation>
-    </message>
-    <message>
-        <source>Extend locked funds from: %1</source>
-        <translation>Prolonger les fonds bloqués à partir de : %1</translation>
-    </message>
-    <message>
-        <source>Split locked funds: %1</source>
-        <translation>Fractionnement des fonds bloqués: %1</translation>
-    </message>
-    <message>
-        <source>Merge locked funds: %1</source>
-        <translation>Fusionner les fonds bloqués: %1</translation>
-    </message>
-    <message>
-        <source>Rotate witness key: %1</source>
-        <translation>Tourner la clé du witness: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds from: %1</source>
-        <translation>Débloquer les fonds de: %1</translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation>Payé à: %1</translation>
-    </message>
-    <message>
-        <source>Payment from: %1</source>
-        <translation>Paiement à partir de: %1</translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
-        <translation>Transaction complexe, voir les détails de la transaction.</translation>
-    </message>
-    <message>
-        <source>Internal transfer from: %1</source>
-        <translation>Transfert interne de: %1</translation>
-    </message>
-    <message>
-        <source>Fund witness account: %1</source>
-        <translation>Financement d&apos;un compte witness: %1</translation>
-    </message>
-    <message>
-        <source>Fund witness account extension: %1</source>
-        <translation>Financement d&apos;un compte witness prolongation: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds to: %1</source>
-        <translation>Déverrouiller les fonds à: %1</translation>
-    </message>
-    <message>
-        <source>Internal transfer to: %1</source>
-        <translation>Transfert interne à: %1</translation>
-    </message>
-    <message>
-        <source>Internal account movement</source>
-        <translation>Mouvement du compte interne</translation>
-    </message>
-    <message>
-        <source>Extend locked funds</source>
-        <translation>Prolonger les fonds bloqués</translation>
-    </message>
-    <message>
-        <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>État de la transaction. Survoler ce champ avec la souris pour afficher le nombre de confirmations.</translation>
-    </message>
-    <message>
-        <source>Date and time that the transaction was received.</source>
-        <translation>Date et heure de réception de la transaction.</translation>
-    </message>
-    <message>
-        <source>Type of transaction.</source>
-        <translation>Type de transaction.</translation>
-    </message>
-    <message>
-        <source>Whether or not a watch-only address is involved in this transaction.</source>
-        <translation>Une adresse juste-regarder est-elle ou non impliquée dans cette transaction.</translation>
-    </message>
-    <message>
-        <source>User-defined intent/purpose of the transaction.</source>
-        <translation>Intention/but de la transaction défini par l&apos;utilisateur.</translation>
-    </message>
-    <message>
-        <source>Amount added to balance.</source>
-        <translation>Montant ajouté au solde</translation>
-    </message>
-    <message>
-        <source>Amount removed from balance.</source>
-        <translation>Montant retiré de solde</translation>
-    </message>
-</context>
 <context>
     <name>AccountSettingsDialog</name>
     <message>
@@ -353,20 +99,8 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Annuler</translation>
     </message>
     <message>
-        <source> Connect to mobile Gulden app</source>
-        <translation> Connectez-vous à l&apos;application mobile Gulden</translation>
-    </message>
-    <message>
         <source>Scan QR to connect your mobile Gulden app</source>
         <translation>Scannez QR pour connecter votre application mobile Gulden</translation>
-    </message>
-    <message>
-        <source>Transactional account</source>
-        <translation>Compte transactionnel</translation>
-    </message>
-    <message>
-        <source>Witness account</source>
-        <translation>Compte Witness</translation>
     </message>
 </context>
 <context>
@@ -449,14 +183,6 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>Software update</source>
         <translation>Mise à jour du logiciel</translation>
-    </message>
-    <message>
-        <source>Pending confirmation: %1</source>
-        <translation>Confirmation en attente: %1</translation>
-    </message>
-    <message>
-        <source>Pending maturity: %1</source>
-        <translation>En cours d&apos;échéance: %1</translation>
     </message>
     <message>
         <source>Renewing witness account will incur a transaction fee: </source>
@@ -929,10 +655,6 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     </message>
     <message>
         <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
-        <translation>Un poids minimum de %1 est requis, mais le poids sélectionné est seulement %2, veuillez augmenter la quantité ou le temps de blocage pour un poids plus grand.</translation>
-    </message>
-    <message>
-        <source>A minimum weight of %1 is required, but selected weight is only %2 please increase the amount or lock time for a larger weight.</source>
         <translation>Un poids minimum de %1 est requis, mais le poids sélectionné est seulement %2, veuillez augmenter la quantité ou le temps de blocage pour un poids plus grand.</translation>
     </message>
     <message>
@@ -2282,6 +2004,256 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>(change)</source>
         <translation>(monnaie)</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(aucune étiquette)</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Date</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Reçu</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Envoyé</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Ouvert jusqu&apos;à %1</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>juste-regarder</translation>
+    </message>
+    <message>
+        <source>Unlock funds</source>
+        <translation>Déverrouiller les fonds</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Ouvert pendant encore %n bloc</numerusform>
+            <numerusform>Ouvert pendant encore %n blocs</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Offline</source>
+        <translation>Hors ligne</translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation>Non confirmée</translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation>Abandonnée</translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>Confirmation (%1 sur %2 confirmations recommandées)</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Confirmée (%1 confirmations)</translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation>En conflit</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>Immature (%1 confirmations, sera disponible après %2)</translation>
+    </message>
+    <message>
+        <source>This block was not received by any other nodes and will probably not be accepted!</source>
+        <translation>Ce bloc n’a été reçu par aucun autre nœud et ne sera probablement pas accepté !</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>Générée mais refusée</translation>
+    </message>
+    <message>
+        <source>External payee</source>
+        <translation>Bénéficiaire externe</translation>
+    </message>
+    <message>
+        <source>Multiple addresses</source>
+        <translation>Plusieurs adresses</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Reçue avec</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Reçue de</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Envoyée à</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Paiement à vous-même</translation>
+    </message>
+    <message>
+        <source>Internal transfer</source>
+        <translation>Transfert interne</translation>
+    </message>
+    <message>
+        <source>Mining reward</source>
+        <translation>Récompense minières</translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation>Récompense de witness</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension</source>
+        <translation>Financement d&apos;un compte witness prolongation</translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation>Prolonger le compte des witness</translation>
+    </message>
+    <message>
+        <source>Split locked funds</source>
+        <translation>Fractionnement des fonds bloqués</translation>
+    </message>
+    <message>
+        <source>Merge locked funds</source>
+        <translation>Fusionner les fonds bloqués</translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation>Tourner la clé du witness</translation>
+    </message>
+    <message>
+        <source>Renew witness account</source>
+        <translation>Renouveler le compte witness</translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation>Financement d&apos;un compte witness</translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation>Verrouiller les fonds</translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation>Vider le compte de witness</translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation>Reçu d&apos;un compte de witness</translation>
+    </message>
+    <message>
+        <source>Lock funds from: %1</source>
+        <translation>Verrouiller les fonds à partir de: %1</translation>
+    </message>
+    <message>
+        <source>Extend locked funds from: %1</source>
+        <translation>Prolonger les fonds bloqués à partir de : %1</translation>
+    </message>
+    <message>
+        <source>Split locked funds: %1</source>
+        <translation>Fractionnement des fonds bloqués: %1</translation>
+    </message>
+    <message>
+        <source>Merge locked funds: %1</source>
+        <translation>Fusionner les fonds bloqués: %1</translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation>Tourner la clé du witness: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds from: %1</source>
+        <translation>Débloquer les fonds de: %1</translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
+        <translation>Payé à: %1</translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation>Paiement à partir de: %1</translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation>Transaction complexe, voir les détails de la transaction.</translation>
+    </message>
+    <message>
+        <source>Internal transfer from: %1</source>
+        <translation>Transfert interne de: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account: %1</source>
+        <translation>Financement d&apos;un compte witness: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
+        <translation>Financement d&apos;un compte witness prolongation: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation>Déverrouiller les fonds à: %1</translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation>Transfert interne à: %1</translation>
+    </message>
+    <message>
+        <source>Internal account movement</source>
+        <translation>Mouvement du compte interne</translation>
+    </message>
+    <message>
+        <source>Extend locked funds</source>
+        <translation>Prolonger les fonds bloqués</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>État de la transaction. Survoler ce champ avec la souris pour afficher le nombre de confirmations.</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Date et heure de réception de la transaction.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Type de transaction.</translation>
+    </message>
+    <message>
+        <source>Whether or not a watch-only address is involved in this transaction.</source>
+        <translation>Une adresse juste-regarder est-elle ou non impliquée dans cette transaction.</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction.</source>
+        <translation>Intention/but de la transaction défini par l&apos;utilisateur.</translation>
+    </message>
+    <message>
+        <source>Amount added to balance.</source>
+        <translation>Montant ajouté au solde</translation>
+    </message>
+    <message>
+        <source>Amount removed from balance.</source>
+        <translation>Montant retiré de solde</translation>
     </message>
 </context>
 <context>
@@ -3841,11 +3813,36 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     </message>
 </context>
 <context>
-    <name>WalletModel</name>
+    <name>ShutdownWindow</name>
     <message>
-        <source>Send Coins</source>
-        <translation>Envoyer des pièces</translation>
+        <source>%1 is shutting down...</source>
+        <translation>Arrêt de %1...</translation>
     </message>
+    <message>
+        <source>Do not shut down the computer until this window disappears.</source>
+        <translation>Ne pas éteindre l&apos;ordinateur jusqu&apos;à la disparition de cette fenêtre.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>KB/s</source>
+        <translation>Ko/s</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDescDialog</name>
+    <message>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation>Ce panneau affiche une description détaillée de la transaction</translation>
+    </message>
+    <message>
+        <source>Details for %1</source>
+        <translation>Détails de %1</translation>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
     <message>
         <source>Fee bump error</source>
         <translation>Erreur de déclenchement des frais</translation>
@@ -3881,35 +3878,6 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>Could not commit transaction</source>
         <translation>Impossible d&apos;engager une transaction</translation>
-    </message>
-</context>
-<context>
-    <name>ShutdownWindow</name>
-    <message>
-        <source>%1 is shutting down...</source>
-        <translation>Arrêt de %1...</translation>
-    </message>
-    <message>
-        <source>Do not shut down the computer until this window disappears.</source>
-        <translation>Ne pas éteindre l&apos;ordinateur jusqu&apos;à la disparition de cette fenêtre.</translation>
-    </message>
-</context>
-<context>
-    <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>Ko/s</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDescDialog</name>
-    <message>
-        <source>This pane shows a detailed description of the transaction</source>
-        <translation>Ce panneau affiche une description détaillée de la transaction</translation>
-    </message>
-    <message>
-        <source>Details for %1</source>
-        <translation>Détails de %1</translation>
     </message>
 </context>
 <context>

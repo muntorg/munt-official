@@ -32,31 +32,10 @@ bool TransactionRecord::showTransaction(const CWalletTx &wtx)
     AssertLockHeld(pactiveWallet->cs_wallet);
 
     //fixme: (2.1) - We can potentially remove this for 2.1; depending on how 2.1 handles wallet upgrades.
-    // Hide orphaned phase 3 witness earnings when they are orphaned by a subsequent PoW block.
-    // We don't want slow/complex "IsPhase3" lookups here etc.
-    // So we do this in a rather round about way.
-    if (!wtx.IsInMainChain() && wtx.IsCoinBase() && wtx.tx->vout.size() >= 2 && wtx.nIndex == -1)
+    // Hide orphaned phase 3 witness earnings when they were orphaned by a subsequent PoW block that contain the same earnings.
+    if (wtx.IsCoinBase() && wtx.mapValue.count("replaced_by_txid") > 0)
     {
-        // Find the height of our block.
-        const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
-        if (findIter != mapBlockIndex.end())
-        {
-            for (const auto& iter : pactiveWallet->mapWallet)
-            {
-                // Find any transactions from the block that potentially replaces us.
-                if (iter.second.hashBlock == wtx.hashBlock)
-                {
-                    // Scan the outputs of the transaction and if it matches our output then we know we have been orphaned by it and can safely hide.
-                    for (const auto& txOut : iter.second.tx->vout)
-                    {
-                        if (txOut.output == wtx.tx->vout[1].output)
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
+        return false;
     }
     return true;
 }

@@ -1247,7 +1247,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                             }
                         }
                         if (sendMerkleBlock) {
-                            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::MERKLEBLOCK, merkleBlock));
+                            connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::MERKLEBLOCK, merkleBlock));
                             // CMerkleBlock just contains hashes, so also push any transactions in the block the client did not see
                             // This avoids hurting performance by pointlessly requiring a round-trip
                             // Note that there is currently no way for a node to request any single transactions we didn't send here -
@@ -1256,7 +1256,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                             // however we MUST always provide at least what the remote peer needs
                             typedef std::pair<unsigned int, uint256> PairType;
                             for(PairType& pair : merkleBlock.vMatchedTxn)
-                                connman.PushMessage(pfrom, msgMaker.Make(SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES, NetMsgType::TX, *pblock->vtx[pair.first]));
+                                connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES, NetMsgType::TX, *pblock->vtx[pair.first]));
                         }
                         // else
                             // no response
@@ -1282,10 +1282,10 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                             else
                             {
                                 if ((fPeerWantsWitness || !fWitnessesPresentInARecentCompactBlock) && a_recent_compact_block && a_recent_compact_block->header.GetHashLegacy() == mi->second->GetBlockHashLegacy()) {
-                                    connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *a_recent_compact_block));
+                                    connman.PushMessage(pfrom, msgMakerHeadersCompat.Make(nSendFlags, NetMsgType::CMPCTBLOCK, *a_recent_compact_block));
                                 } else {
                                     CBlockHeaderAndShortTxIDs cmpctblock(*pblock, fPeerWantsWitness);
-                                    connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
+                                    connman.PushMessage(pfrom, msgMakerHeadersCompat.Make(nSendFlags, NetMsgType::CMPCTBLOCK, cmpctblock));
                                 }
                             }
                         } else {
@@ -1308,7 +1308,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                         {
                             vInv.push_back(CInv(MSG_BLOCK, chainActive.Tip()->GetBlockHashLegacy()));
                         }
-                        connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
+                        connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
                         pfrom->hashContinue.SetNull();
                     }
                 }
@@ -1508,6 +1508,15 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
             connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
                                strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
+            pfrom->fDisconnect = true;
+            return false;
+        }
+
+        //fixme: (2.1) We can remove this; we temporarily accept incoming connections from old peers but refuse to establish outgoing ones with them.
+        if (nVersion < 70016 && !pfrom->fInbound)
+        {
+            LogPrintf("outgoing peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
+            connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", 70016)));
             pfrom->fDisconnect = true;
             return false;
         }
@@ -2388,6 +2397,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 LogPrintf("Peer %d sent us invalid header via cmpctblock\n", pfrom->GetId());
                 return true;
             }
+            return false;
         }
 
         // When we succeed in decoding a block's txids from a cmpctblock
@@ -2701,6 +2711,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 }
                 return error("invalid header received");
             }
+            return false;
         }
 
         NotifyHeaderProgress(connman);
@@ -2899,6 +2910,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     Misbehaving(pfrom->GetId(), 100);
                     return error("Something went very wrong when putting reverse headers into chain, blaming peer=%d!", pfrom->GetId());
                 }
+                return false;
             }
 
             LOCK(cs_main);

@@ -808,12 +808,18 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+316"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+283"/>
+        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
+        <translation>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+40"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="-66"/>
+        <location line="-74"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -868,7 +874,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Send</translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="+73"/>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
         <translation>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</translation>
     </message>

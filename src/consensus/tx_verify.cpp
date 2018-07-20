@@ -267,9 +267,9 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
             uint64_t nUnused1, nUnused2;
             int64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, checkHeight, nUnused1, nUnused2);
-            if (nLockLengthInBlocks < (576 * 30))
+            if (nLockLengthInBlocks < gMinimumWitnessLockLength)
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
-            if (nLockLengthInBlocks - checkHeight > (3 * 365 * 576))
+            if (nLockLengthInBlocks - checkHeight > gMaximumWitnessLockLength)
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
 
             int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
@@ -666,7 +666,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 //So this check is very important, must not be skipped and must come before the bundle creation for these bundle types.
                 if (!HasSpendKey(input, inputDetails))
                 {
-                    return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-input-without-matching-output");
+                    return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-missing-spend-key");
                 }
 
                 bool matchedExistingBundle = false;
