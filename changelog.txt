@@ -1,3 +1,10 @@
+2.0.0.7
+
+CORE - Fix a crash for users who run with -disablewallet
+
+
+
+
 2.0.0.6
 
 CORE - Stability fix for a minor crash issue some users might otherwise experience in phase 3.
