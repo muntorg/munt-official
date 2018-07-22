@@ -3049,7 +3049,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->nChainTx || pindex->pprev == NULL))
         {
             setBlockIndexCandidates.insert(pindex);
-            LogPrintf("LoadBlockIndexDB: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
+            //LogPrintf("LoadBlockIndexDB: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
         }
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
