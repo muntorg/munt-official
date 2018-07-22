@@ -2111,7 +2111,10 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     {
         SetChainWorkForIndex(pindexNew, chainParams);
         if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
+        {
+            LogPrintf("New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
             setBlockIndexCandidates.insert(pindexNew);
+        }
     }
 
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
