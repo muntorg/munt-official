@@ -264,6 +264,14 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     nHeight = pParent->nHeight + 1;
 
+    if (pWitnessBlockToEmbed)
+    {
+        LogPrintf("CreateNewBlock: parent height [%d]; embedded witness height [%d]; our height [%d]", pParent->nHeight, pWitnessBlockToEmbed->nHeight, nHeight);
+        assert(pParent->nHeight == pWitnessBlockToEmbed->nHeight);
+    }
+    else
+        LogPrintf("CreateNewBlock: parent height [%d]; our height [%d]", pParent->nHeight, nHeight);
+
     int nParentPoW2Phase = GetPoW2Phase(pParent, chainparams, chainActive);
     int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev, chainparams, chainActive);
     bool bSegSigIsEnabled = IsSegSigEnabled(pParent);
@@ -298,6 +306,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         pblock->nVersion = GetArg("-blockversion", pblock->nVersion);
 
     pblock->nTime = GetAdjustedTime();
+
     const int64_t nMedianTimePast = pParent->GetMedianTimePastWitness();
 
     nLockTimeCutoff = (STANDARD_LOCKTIME_VERIFY_FLAGS & LOCKTIME_MEDIAN_TIME_PAST)
