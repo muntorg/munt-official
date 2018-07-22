@@ -1941,6 +1941,7 @@ bool PreciousBlock(CValidationState& state, const CChainParams& params, CBlockIn
             nBlockReverseSequenceId--;
         }
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && pindex->nChainTx) {
+            LogPrintf("PreciousBlock: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
             setBlockIndexCandidates.insert(pindex);
             PruneBlockIndexCandidates();
         }
@@ -2078,6 +2079,7 @@ static void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainp
     {
         setBlockIndexCandidates.erase(findIter);
         setBlockIndexCandidates.insert(pIndex);
+        LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
     }
 }
 
@@ -2112,7 +2114,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
         SetChainWorkForIndex(pindexNew, chainParams);
         if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
         {
-            LogPrintf("New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
+            LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
             setBlockIndexCandidates.insert(pindexNew);
         }
     }
@@ -2157,7 +2159,9 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
                 setBlockIndexCandidates.erase(pindex);
                 pindex->nSequenceId = nBlockSequenceId++;
             }
-            if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)) {
+            if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight))
+            {
+                LogPrintf("ReceivedBlockTransactions: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
                 setBlockIndexCandidates.insert(pindex);
             }
             std::pair<std::multimap<CBlockIndex*, CBlockIndex*>::iterator, std::multimap<CBlockIndex*, CBlockIndex*>::iterator> range = mapBlocksUnlinked.equal_range(pindex);
@@ -3043,7 +3047,10 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         }
 
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->nChainTx || pindex->pprev == NULL))
+        {
             setBlockIndexCandidates.insert(pindex);
+            LogPrintf("LoadBlockIndexDB: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
+        }
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
         if (pindex->pprev)
@@ -3412,8 +3419,10 @@ bool RewindBlockIndex(const CChainParams& params)
                     ++ret.first;
                 }
             }
-        } else if (pindexIter->IsValid(BLOCK_VALID_TRANSACTIONS) && pindexIter->nChainTx) {
+        } else if (pindexIter->IsValid(BLOCK_VALID_TRANSACTIONS) && pindexIter->nChainTx)
+        {
             setBlockIndexCandidates.insert(pindexIter);
+            LogPrintf("RewindBlockIndex: New index candidate: [%s] [%d]\n", pindexIter->GetBlockHashPoW2().ToString(), pindexIter->nHeight);
         }
     }
 
