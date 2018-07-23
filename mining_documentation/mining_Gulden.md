@@ -23,10 +23,10 @@ Gulden is cutting edge software that is rapidly developing, as such it is import
 
 We also currently have a small team, we use the latest tools to improve our efficiency and quality but we do not have an endless amount of developer time and resources so we have to prioritise.
 Most of our users do not even know what a compiler is, they have no interest in compiling and pleasing these users is where the bulk of our priorities lie.
-This does not mean that we don't want others to be able to compile our software, we do, but it means that if you want to compile our software you need to be realistic, there will be breakages from time to time especially around major releases, we will deal with these but it takes time. If you cannot handle this then use the (binaries)[https://github.com/Gulden/gulden-official/releases] we provide instead it is far simpler. 
+This does not mean that we don't want others to be able to compile our software, we do, but it means that if you want to compile our software you need to be realistic, there will be breakages from time to time especially around major releases, we will deal with these but it takes time. If you cannot handle this then use the [binaries](https://github.com/Gulden/gulden-official/releases) we provide instead it is far simpler. 
 
 Do:
-* If possible use the (binaries)[https://github.com/Gulden/gulden-official/releases], this is the path of least resistance
+* If possible use the [binaries](https://github.com/Gulden/gulden-official/releases]) this is the path of least resistance
 * Leave github issues explaining the problem you face compiling with as much detail (config.log) as possible
 * Be patient
 
@@ -80,7 +80,7 @@ What to do:
 * Add a coinbase tag to your mining pool
 * If for some reason you can't add a coinbase tag use a static address
 * Let us know that you are mining us
-* (Submit a pull request to the list)[https://github.com/Gulden/gulden-official/blob/master/mining_documentation/list_of_mining_pools.md]
+* [Submit a pull request to the list](https://github.com/Gulden/gulden-official/blob/master/mining_documentation/list_of_mining_pools.md)
 
 
 Other things you should know
