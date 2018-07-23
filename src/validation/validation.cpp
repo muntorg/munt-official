@@ -2528,7 +2528,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     //Also having the check here prevents miners from broadcasting invalid blocks sooner.
     //fixme: (2.1) This is now a duplicate of the check in ConnectBlock - reconsider if we need both.
     //This was added as invalid blocks were still being accepted (just not connected) and this was combining with other factors to cause network issues.
-    if (IsPow2Phase3Active(nHeight-2) && !fHaveSegregatedSignatures && block.nVersionPoW2Witness == 0)
+    if (nHeight > 10 && IsPow2Phase3Active(nHeight-2) && !fHaveSegregatedSignatures && block.nVersionPoW2Witness == 0)
     {
         int nEmbeddedWitnessCoinbaseIndex = 0;
         nEmbeddedWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);

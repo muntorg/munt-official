@@ -100,6 +100,9 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
 {
     DO_BENCHMARK("WIT: IsPow2Phase2Active", BCLog::BENCH|BCLog::WITNESS);
 
+    if (!pIndex)
+        return false;
+
     // If we don't yet have any information on phase activation then do a once off scan on the entire chain so that our caches are correctly primed.
     if (pIndex && (IsArgSet("-tesnet") || pIndex->nHeight > 778176))
     {
