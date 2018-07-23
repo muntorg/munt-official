@@ -58,7 +58,7 @@ The gulden network is a lot less lenient than other networks when it comes to ti
 Do:
 * Make sure you have `ntpd` running in your system regularly to keep your time accurate
 * Make sure that your pool calls `getblocktemplate` frequently to update the timestamp
-* Make sure that your pool uses the timestamp returned by getblocktemplate and doesn't try 
+* Make sure that your pool uses the timestamp returned by getblocktemplate and doesn't try to fiddle with timestamps, doing so will reduce your earnings via increased orphan rates and worse network block times.
 
 Don't:
 * Try to fiddle with timestamps to try trick difficulty - you will only lose money this way
