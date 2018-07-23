@@ -961,17 +961,15 @@ void WitnessDialog::updateAccountIndicators()
 
     //Don't update for every single block change if we are on testnet and have them streaming in at a super fast speed.
     static uint64_t nUpdateTimerStart = 0;
-    if (IsArgSet("-testnet"))
+    static uint64_t nUpdateThrottle = IsArgSet("-testnet") ? 4000 : 1000;
+    // Only update at most once every four seconds (prevent this from being a bottleneck on testnet when blocks are coming in fast)
+    if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > nUpdateThrottle))
     {
-        // Only update at most once every four seconds (prevent this from being a bottleneck on testnet when blocks are coming in fast)
-        if (nUpdateTimerStart == 0 || (GetTimeMillis() - nUpdateTimerStart > 4000))
-        {
-            nUpdateTimerStart = GetTimeMillis();
-        }
-        else
-        {
-            return;
-        }
+        nUpdateTimerStart = GetTimeMillis();
+    }
+    else
+    {
+        return;
     }
 
     // If we don't yet have any active witness accounts then bypass the expensive GetWitnessInfo() calls.
