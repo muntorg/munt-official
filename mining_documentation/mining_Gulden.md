@@ -1,7 +1,8 @@
 Best practices for pools who want to mine Gulden
 ========
 
-Gulden is a unique digital currency that differs from other bitcoin derived currencies in several ways. If you want to mine Gulden it is best to become familiar with these in order to maximise your earnings and reduce 
+Gulden is a unique digital currency that differs from other bitcoin derived currencies in many quite substantial ways. If you want to mine Gulden it is best to become familiar with these in order to maximise your earnings and reduce.
+Do not expect Gulden to be another 'clone coin' that you can just drop in place and forget about, if you do you will be disappointed when things don't work for you properly.
 
 PoW²
 --------
@@ -19,6 +20,18 @@ Gulden is cutting edge software that is rapidly developing, as such it is import
 * Try to keep up with the latest version
 * Keep in touch with the dev team for assistance, ideally on our slack, alternatively give us your contact details
 * Try to follow our news to be aware of changes in advance
+
+We also currently have a small team, we use the latest tools to improve our efficiency and quality but we do not have an endless amount of developer time and resources so we have to prioritise.
+Most of our users do not even know what a compiler is, they have no interest in compiling and pleasing these users is where the bulk of our priorities lie.
+This does not mean that we don't want others to be able to compile our software, we do, but it means that if you want to compile our software you need to be realistic, there will be breakages from time to time especially around major releases, we will deal with these but it takes time. If you cannot handle this then use the (binaries)[https://github.com/Gulden/gulden-official/releases] we provide instead it is far simpler. 
+
+Do:
+* If possible use the (binaries)[https://github.com/Gulden/gulden-official/releases], this is the path of least resistance
+* Leave github issues explaining the problem you face compiling with as much detail (config.log) as possible
+* Be patient
+
+Don't:
+* Start making demands or insulting the dev team because you have issues compiling, this is not helpful for anyone.
 
 limitdeltadiffdrop
 --------
@@ -70,10 +83,15 @@ What to do:
 * (Submit a pull request to the list)[https://github.com/Gulden/gulden-official/blob/master/mining_documentation/list_of_mining_pools.md]
 
 
-Other things you shold know
+Other things you should know
 --------
 
 Gulden uses a unique system PoW² which involves all blocks you mine being signed by a witness, each block has one and only one witness who can sign it.
 What this means for you:
 * When your pool mines a block e.g. block 800000 it cannot proceed to mine block 800001 not until 800000 is witnessed, so instead it will attempt to mine another block 800000 sometimes it will find two. This is not a bug but by design and in your interests to do as there is no guarantee your first block 800000 will get accepted.
 * This also means that you can't expect to jump in with 10 times the network hashrate and find 3 blocks in super quick succession - you'll get lots of orphans this way. To minimise orphans it is better to have more stable hash and/or to use hash that is in line with the network hash and not vastly in excess of it.
+
+Gulden is 100% resistant to selfish mining.
+What this means for you:
+* When your pool mines a block you should broadcast it immediately, delaying the broadcast will not assist you in finding more blocks it will just increase your orphan rate.
+* You should attempt to have your GuldenD connect to multiple peers, or even host multiple GuldenD instances to which your pools GuldenD then connects; in order to broadcast your blocks to the network as fast as possible, the more peers it reaches and faster it does so the less orphans you will have.
