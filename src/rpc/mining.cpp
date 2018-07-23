@@ -830,7 +830,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("capabilities", aCaps));
 
     // In phase 3 we are restricted to using the same version bits as the witness; we aren't allowed to modify these bits.
-    bool versionBitsLockedToWitness = IsPow2Phase3Active(pindexPrev, Params(), chainActive) || (pindexPrev->pprev && IsPow2Phase3Active(pindexPrev->pprev, Params(), chainActive));
+    bool versionBitsLockedToWitness = IsPow2Phase3Active(pindexPrev->nHeight) || (pindexPrev->pprev && IsPow2Phase3Active(pindexPrev->pprev->nHeight));
     UniValue vbavailable(UniValue::VOBJ);
     UniValue aRules(UniValue::VARR);
     for (int j = 0; j < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; ++j) {
@@ -994,12 +994,16 @@ static UniValue submitblock(const JSONRPCRequest& request)
     RegisterValidationInterface(&sc);
     bool fAccepted = ProcessNewBlock(Params(), blockptr, true, NULL);
     UnregisterValidationInterface(&sc);
+
+
     if (fBlockPresent) {
         if (fAccepted && !sc.found) {
             return "duplicate-inconclusive";
         }
         return "duplicate";
     }
+    if (!fAccepted)
+        return "invalid";
     if (!sc.found) {
         return "inconclusive";
     }

@@ -333,7 +333,7 @@ void static GuldenWitness()
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do
                 {
-                    if (hashCity || g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
+                    if (pactiveWallet && (!hashCity || g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0))
                     {
                         if(!IsInitialBlockDownload())
                             break;
@@ -375,6 +375,7 @@ void static GuldenWitness()
             std::vector<CBlockIndex*> candidateOrphans;
             if (cacheAlreadySeenWitnessCandidates.find(pindexTip) == cacheAlreadySeenWitnessCandidates.end())
             {
+                LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from chain tip [%s]", pindexTip->GetBlockHashPoW2().ToString());
                 candidateOrphans.push_back(pindexTip);
             }
             if (candidateOrphans.size() == 0)
@@ -383,6 +384,7 @@ void static GuldenWitness()
                 {
                     if (cacheAlreadySeenWitnessCandidates.find(candidateIter) == cacheAlreadySeenWitnessCandidates.end())
                     {
+                        LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from top level pow orphans [%s]", candidateIter->GetBlockHashPoW2().ToString());
                         candidateOrphans.push_back(candidateIter);
                     }
                 }
@@ -420,6 +422,7 @@ void static GuldenWitness()
 
                         if (!GetWitness(chainActive, chainparams, nullptr, candidateIter->pprev, *pWitnessBlock, witnessInfo))
                         {
+                            LogPrintf("GuldenWitness: Invalid candidate witness [%s]", candidateIter->GetBlockHashPoW2().ToString());
                             std::string strErrorMessage = strprintf("Failed to calculate witness info for candidate block.\n Witnessing may be temporarily disabled.\n If this occurs frequently please contact a developer for assistance.\n height [%d] chain-tip-height [%d]", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                             CAlert::Notify(strErrorMessage, true, true);
                             LogPrintf("%s", strErrorMessage.c_str());

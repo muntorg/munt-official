@@ -1,3 +1,22 @@
+2.0.0.8
+
+CORE - Move some invalid block logic earlier in the block check process, this should help address some issues users have been experiencing as well as further stabalise the network.
+CORE - Simplify phase2/phase3 checks now that we know the final blocks where they activated; This will help performance in various ways and simplifies the code.
+CORE - Some minor performance improvements
+UI - Fix an underlying issue that was causing a "scary" looking message dialog to occasionally pop up and bother some users.
+CMDFLAG - Add a new flag `limitdeltadiffdrop=n` for mining pools, larger mining pools should set this to 0. Medium pools 1-6, very small pools can leave it off.
+
+
+
+
+
+2.0.0.7
+
+CORE - Fix a crash for users who run with -disablewallet
+
+
+
+
 2.0.0.6
 
 CORE - Stability fix for a minor crash issue some users might otherwise experience in phase 3.
