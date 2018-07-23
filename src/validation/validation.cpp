@@ -3445,7 +3445,7 @@ bool RewindBlockIndex(const CChainParams& params)
         } else if (pindexIter->IsValid(BLOCK_VALID_TRANSACTIONS) && pindexIter->nChainTx)
         {
             setBlockIndexCandidates.insert(pindexIter);
-            LogPrintf("RewindBlockIndex: New index candidate: [%s] [%d]\n", pindexIter->GetBlockHashPoW2().ToString(), pindexIter->nHeight);
+            //LogPrintf("RewindBlockIndex: New index candidate: [%s] [%d]\n", pindexIter->GetBlockHashPoW2().ToString(), pindexIter->nHeight);
         }
     }
 
