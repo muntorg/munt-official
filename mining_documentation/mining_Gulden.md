@@ -1,7 +1,7 @@
 Best practices for pools who want to mine Gulden
 ========
 
-Gulden is a unique digital currency that differs from other bitcoin derived currencies in many quite substantial ways. If you want to mine Gulden it is best to become familiar with these in order to maximise your earnings and reduce.
+Gulden is a unique digital currency that differs from other bitcoin derived currencies in many quite substantial ways. If you want to mine Gulden it is best to become familiar with these in order to maximise your earnings and reduce problems for both yourself and us.
 Do not expect Gulden to be another 'clone coin' that you can just drop in place and forget about, if you do you will be disappointed when things don't work for you properly.
 
 PoW²
