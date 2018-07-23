@@ -1002,6 +1002,8 @@ static UniValue submitblock(const JSONRPCRequest& request)
         }
         return "duplicate";
     }
+    if (!fAccepted)
+        return "invalid";
     if (!sc.found) {
         return "inconclusive";
     }
