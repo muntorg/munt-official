@@ -254,7 +254,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         nPow2Phase = 5;
     else if (IsPow2Phase4Active(pTipIndex_, Params(), tempChain, &viewNew))
         nPow2Phase = 4;
-    else if (IsPow2Phase3Active(pTipIndex_, Params(), tempChain, &viewNew))
+    else if (IsPow2Phase3Active(pTipIndex_->nHeight))
         nPow2Phase = 3;
     else if (IsPow2Phase2Active(pTipIndex_, Params(), tempChain, &viewNew))
         nPow2Phase = 2;

@@ -2522,6 +2522,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         }
     }
 
+
+
     // And the same for witness coinbase. (Enforce rule that the coinbase starts with serialized block height)
     unsigned int nWitnessCoinbaseIndex = 0;
     if (block.nVersionPoW2Witness != 0)
