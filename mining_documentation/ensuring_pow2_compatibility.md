@@ -14,9 +14,12 @@ Special thanks to Gregory de Graaf for his patience in helping to test these ste
 
 
 Sample changes for various pool software, note that these changes are applied and tested by a few pools, but the developers cannot guarantee they will work for you the onus is on you the pool operator to test them. Should you run into issues while testing we will happily assist but we cannot test on your behalf.
-[unomp](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master)
-[yiimp](https://github.com/tpruvot/yiimp/compare/next...mjmacleod:next)
-[slush0/stratum_mining](https://gist.github.com/mjmacleod/4437340f8e75c44fedcd5db540c5a51c)
+
+* [unomp](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master)
+* [yiimp](https://github.com/tpruvot/yiimp/compare/next...mjmacleod:next)
+* [slush0/stratum_mining](https://gist.github.com/mjmacleod/4437340f8e75c44fedcd5db540c5a51c)
+* [p2pool](https://github.com/0x0aNL/p2pool-0x0a/blob/PoW2/p2pool/bitcoin/data.p
+> y#L175)
 
 Phase 3 upgrade guide
 ============
@@ -171,7 +174,7 @@ Note that for this part of the instructions you will want to use `Scrypt` for yo
 * Make a testnet copy of your mining pool
 * Check the debug.log for the magic header bytes (they are logged near the start) and update your testnet pool with the information as well as other testnet information from above (rpc port etc.)
 * Some small changes need to be made to your pool software
-See some sample changes [unomp](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master) [yiimp](https://github.com/tpruvot/yiimp/compare/next...mjmacleod:next) [slush0/stratum_mining](https://gist.github.com/mjmacleod/4437340f8e75c44fedcd5db540c5a51c)
+See some sample changes [unomp](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master) [yiimp](https://github.com/tpruvot/yiimp/compare/next...mjmacleod:next) [slush0/stratum_mining](https://gist.github.com/mjmacleod/4437340f8e75c44fedcd5db540c5a51c) [p2pool](https://github.com/0x0aNL/p2pool-0x0a/blob/PoW2/p2pool/bitcoin/data.py#L175)
 
 Note the onus is on you the pool operator to properly test these changes, we cannot guarantee they work for you without further customisation.
 Note the above samples ignore other Gulden specific customisations that might be required and already done on your pool - these are only the PoW² specific changes.
