@@ -11,7 +11,7 @@ We are currently in PoW² phase 3 - as long as this phase remains active it is n
 Failiure to implement these changes will result in all blocks being orphaned, so make sure to follow them properly.
 If you struggle to follow them ask for assistance.
 
-[PoW² upgrade for mining pools](./mining_documentation/ensuring_pow2_compatibility.md)
+[PoW² upgrade for mining pools](./ensuring_pow2_compatibility.md)
 
 Latest version
 --------
