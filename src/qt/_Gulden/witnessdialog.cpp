@@ -691,6 +691,11 @@ void WitnessDialog::update()
 
 void WitnessDialog::doUpdate(bool forceUpdate)
 {
+    // rate limit this expensive UI update when chain tip is still far from known height
+    int heightRemaining = clientModel->cachedProbableHeight - chainActive.Height();
+    if (!forceUpdate && heightRemaining > 10 && heightRemaining % 100 != 0)
+        return;
+
     LogPrint(BCLog::QT, "WitnessDialog::doUpdate\n");
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
