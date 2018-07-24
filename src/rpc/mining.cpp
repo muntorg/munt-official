@@ -579,7 +579,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
             {
                 CCoinsViewCache viewNew(pcoinsTip);
                 CBlockIndex* pindexPrev_ = nullptr;
-                CCloneChain tempChain = chainActive.Clone(pIndexMiningTip, pindexPrev_);
+                CCloneChain tempChain(chainActive, 0, pIndexMiningTip, pindexPrev_);
                 //fixme: (2.0.1) error handling.
                 assert(pindexPrev_);
                 ForceActivateChain(pindexPrev_, nullptr, state, Params(), tempChain, viewNew);

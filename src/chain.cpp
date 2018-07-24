@@ -94,52 +94,6 @@ const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
     return pindex;
 }
 
-//fixme: (2.1) Ideally this should use move semantics, but for some reason doing so results in segfault. Look into this closer.
-CCloneChain CChain::Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut)
-{
-    CCloneChain clone;
-    clone.vChain.reserve(vChain.size());
-    clone.vFree.reserve(vChain.size());
-
-    CBlockIndex* pprev = nullptr;
-    for (const auto index : vChain)
-    {
-        clone.vChain.emplace_back(new CBlockIndex(*index));
-        clone.vFree.push_back(clone.vChain.back());
-        if (pprev)
-            clone.vChain.back()->pprev = pprev;
-        clone.vChain.back()->pskip = nullptr;
-        clone.vChain.back()->BuildSkip();
-        pprev = clone.vChain.back();
-        if (index == retainIndexIn)
-            retainIndexOut = pprev;
-    }
-
-    if (retainIndexIn && !retainIndexOut)
-    {
-        // Link the pprev(s) of our new potential tip with a new pointer thats inside the cloned chain instead of the old pointer to the old chain.
-        retainIndexOut = new CBlockIndex(*retainIndexIn);
-        {
-            //Don't worry about leaks, these become part of tempChain and are cleaned up along with tempChain.
-            CBlockIndex* pNotInChain = retainIndexOut;
-            // We might be sitting multiple blocks ahead of the chain, in which case we need to clone those blocks as well.
-            while (pNotInChain->pprev->nHeight > clone.Tip()->nHeight || pNotInChain->pprev->GetBlockHashPoW2() != clone.vChain[pNotInChain->pprev->nHeight]->GetBlockHashPoW2())
-            {
-                pNotInChain->pskip = nullptr;
-                pNotInChain->pprev = new CBlockIndex(*pNotInChain->pprev);
-                pNotInChain = pNotInChain->pprev;
-            }
-            while (pNotInChain->pprev != clone.vChain[pNotInChain->pprev->nHeight])
-            {
-                pNotInChain->pskip = nullptr;
-                pNotInChain->pprev = clone.vChain[pNotInChain->pprev->nHeight];
-                pNotInChain = pNotInChain->pprev;
-            }
-        }
-    }
-    return clone;
-}
-
 void CCloneChain::FreeMemory()
 {
     for (auto index : vFree)
@@ -158,6 +112,59 @@ void CCloneChain::FreeMemory()
     vFree.clear();
     vChain.clear();
 }
+
+CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const CBlockIndex *retainIndexIn, CBlockIndex *&retainIndexOut) :
+    CChain(),
+    origin(_origin),
+    cloneFrom(_cloneFrom)
+{
+    vChain.reserve(origin.Height()+1);
+    vFree.reserve(origin.Height()+1);
+
+    CBlockIndex* pprev = nullptr;
+    for (int i=0; i<=origin.Height(); i++)
+    {
+        CBlockIndex* index = origin[i];
+        vChain.emplace_back(new CBlockIndex(*index));
+        vFree.push_back(vChain.back());
+        if (pprev)
+            vChain.back()->pprev = pprev;
+        vChain.back()->pskip = nullptr;
+        vChain.back()->BuildSkip();
+        pprev = vChain.back();
+        if (index == retainIndexIn)
+            retainIndexOut = pprev;
+    }
+
+    if (retainIndexIn && !retainIndexOut)
+    {
+        // Link the pprev(s) of our new potential tip with a new pointer thats inside the cloned chain instead of the old pointer to the old chain.
+        retainIndexOut = new CBlockIndex(*retainIndexIn);
+        {
+            //Don't worry about leaks, these become part of tempChain and are cleaned up along with tempChain.
+            CBlockIndex* pNotInChain = retainIndexOut;
+            // We might be sitting multiple blocks ahead of the chain, in which case we need to clone those blocks as well.
+            while (pNotInChain->pprev->nHeight > Tip()->nHeight || pNotInChain->pprev->GetBlockHashPoW2() != vChain[pNotInChain->pprev->nHeight]->GetBlockHashPoW2())
+            {
+                pNotInChain->pskip = nullptr;
+                pNotInChain->pprev = new CBlockIndex(*pNotInChain->pprev);
+                pNotInChain = pNotInChain->pprev;
+            }
+            while (pNotInChain->pprev != vChain[pNotInChain->pprev->nHeight])
+            {
+                pNotInChain->pskip = nullptr;
+                pNotInChain->pprev = vChain[pNotInChain->pprev->nHeight];
+                pNotInChain = pNotInChain->pprev;
+            }
+        }
+    }
+}
+
+CBlockIndex *CCloneChain::operator[](int nHeight) const
+{
+    return CChain::operator[](nHeight);
+}
+
 
 CBlockIndex* CChain::FindEarliestAtLeast(int64_t nTime) const
 {

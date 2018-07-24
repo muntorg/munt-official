@@ -595,7 +595,7 @@ public:
     }
 
     /** Returns the index entry at a particular height in this chain, or NULL if no such height exists. */
-    CBlockIndex *operator[](int nHeight) const {
+    virtual CBlockIndex *operator[](int nHeight) const {
         if (nHeight < 0 || nHeight >= (int)vChain.size())
             return NULL;
         return vChain[nHeight];
@@ -646,22 +646,28 @@ public:
     /** Find the earliest block with timestamp equal or greater than the given. */
     CBlockIndex* FindEarliestAtLeast(int64_t nTime) const;
 
-    // Create a duplicate (deep copy) of this chain, update retainIndex to the pointer of the equivalent block in the new chain.
-    CCloneChain Clone(const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut);
-
     virtual ~CChain(){};
 };
 
 // Simple helper class to control memory of cloned chains.
 class CCloneChain : public CChain
 {
-    public:
-    CCloneChain() : CChain() {};
+public:
+    CCloneChain() = delete;
+    CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const CBlockIndex* retainIndexIn, CBlockIndex*& retainIndexOut);
+
     virtual ~CCloneChain()
     {
         FreeMemory();
     }
+
+    virtual CBlockIndex *operator[](int nHeight) const override;
+
+private:
     void FreeMemory();
+
+    const CChain& origin;
+    int cloneFrom;
     std::vector<CBlockIndex*> vFree;
 };
 
