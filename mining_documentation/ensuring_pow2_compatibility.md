@@ -18,8 +18,7 @@ Sample changes for various pool software, note that these changes are applied an
 * [unomp](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master)
 * [yiimp](https://github.com/tpruvot/yiimp/compare/next...mjmacleod:next)
 * [slush0/stratum_mining](https://gist.github.com/mjmacleod/4437340f8e75c44fedcd5db540c5a51c)
-* [p2pool](https://github.com/0x0aNL/p2pool-0x0a/blob/PoW2/p2pool/bitcoin/data.p
-> y#L175)
+* [p2pool](https://github.com/0x0aNL/p2pool-0x0a/blob/PoW2/p2pool/bitcoin/data.py#L175)
 
 Phase 3 upgrade guide
 ============
