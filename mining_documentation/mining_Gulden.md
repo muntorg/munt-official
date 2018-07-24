@@ -77,7 +77,7 @@ Why it is good for us:
 * Can contact you when something is wrong and sort problems out
 
 What to do:
-* Add a coinbase tag to your mining pool
+* Add a [coinbase tag](https://github.com/zone117x/node-stratum-pool/blob/4649a557dad29d4446941741b0d77da4f6ec5fd5/lib/transactions.js#L253) to your mining pool
 * If for some reason you can't add a coinbase tag use a static address
 * Let us know that you are mining us
 * [Submit a pull request to the list](https://github.com/Gulden/gulden-official/blob/master/mining_documentation/list_of_mining_pools.md)
