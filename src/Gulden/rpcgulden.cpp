@@ -278,7 +278,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
         if (nPow2Phase >= 3)
         {
-            if (!GetWitnessHelper(tempChain, Params(), &viewNew, pTipIndex_->pprev, block.GetHashLegacy(), witInfo, pTipIndex_->nHeight))
+            if (!GetWitnessHelper(block.GetHashLegacy(), witInfo, pTipIndex_->nHeight))
                 throw std::runtime_error("Could not select a valid PoW² witness for block.");
 
             CTxDestination selectedWitnessAddress;
