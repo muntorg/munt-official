@@ -268,7 +268,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     // fixme: (2.1) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     CBlockIndex* pPreviousIndexChain = nullptr;
-    CCloneChain tempChain(chain, 770000, pPreviousIndexChain_, pPreviousIndexChain);
+    CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(), pPreviousIndexChain_, pPreviousIndexChain);
     CValidationState state;
     assert(pPreviousIndexChain);
 
@@ -618,7 +618,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     // We work on a clone of the chain to prevent modifying the actual chain.
     {
         CBlockIndex* pPreviousIndexChain = nullptr;
-        CCloneChain tempChain(chain, 770000, pindexPrev->pprev, pPreviousIndexChain);
+        CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(), pindexPrev->pprev, pPreviousIndexChain);
         CValidationState state;
         CCoinsViewCache viewNew(&view);
         // Force the tip of the chain to the block that comes before the block we are examining.

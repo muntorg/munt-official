@@ -40,6 +40,8 @@ uint64_t GetPoW2RemainingLockLengthInBlocks(uint64_t lockUntilBlock, uint64_t ti
 
 CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex);
 
+int GetPow2ValidationCloneHeight();
+
 inline bool IsPow2WitnessOutput(const CTxOut& out)
 {
     if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) || (out.GetType() == CTxOutType::PoW2WitnessOutput) )
