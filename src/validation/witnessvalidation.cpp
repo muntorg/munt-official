@@ -572,8 +572,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     bool ret = true;
     if (ret)
     {
-        CBlockIndex* pPreviousIndexChain = nullptr;
-        CCloneChain tempChain(chain, 770000, pindexPrev->pprev, pPreviousIndexChain);
+        CBlockIndex* pPreviousIndexChain = pindexPrev->pprev;
         CValidationState state;
         CCoinsViewCache viewNew(&view);
 
@@ -589,7 +588,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
         if (ret)
         {
             CGetWitnessInfo witInfo;
-            if (!GetWitness(tempChain, chainParams, &viewNew, pPreviousIndexChain, embeddedWitnessBlock, witInfo))
+            if (!GetWitness(chain, chainParams, &viewNew, pPreviousIndexChain, embeddedWitnessBlock, witInfo))
             {
                 ret = error("Could not determine a valid witness for embedded witness coinbase header");
             }
