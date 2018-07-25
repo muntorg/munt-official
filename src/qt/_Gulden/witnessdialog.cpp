@@ -271,6 +271,16 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     unitSelectionMenu->addAction(unitWeeksAction);
     unitSelectionMenu->addAction(unitMonthsAction);
 
+    // Hide all buttons by default
+    ui->emptyWitnessButton->setVisible(false);
+    ui->emptyWitnessButton2->setVisible(false);
+    ui->withdrawEarningsButton->setVisible(false);
+    ui->withdrawEarningsButton2->setVisible(false);
+    ui->fundWitnessButton->setVisible(false);
+    ui->renewWitnessButton->setVisible(false);
+    ui->unitButton->setVisible(false);
+    ui->viewWitnessGraphButton->setVisible(false);
+
     connect(ui->unitButton, SIGNAL(clicked()), this, SLOT(unitButtonClicked()));
     connect(ui->viewWitnessGraphButton, SIGNAL(clicked()), this, SLOT(viewWitnessInfoClicked()));
     connect(ui->emptyWitnessButton, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
