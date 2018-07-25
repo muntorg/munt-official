@@ -1018,14 +1018,8 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
         if (fVerifyWitness)
         {
-            // fixme: (2.x) improve performance of WitnessCoinbaseInfoIsValid
-            // for performance only do the expensive WitnessCoinbaseInfoIsValid when we are within
-            // 100 blocks of known/excpected height
-            if (chain == chainActive && pindexBestHeader && pindexBestHeader->nHeight - chain.Height() < 100)
-            {
-                if (!WitnessCoinbaseInfoIsValid(chain, nEmbeddedWitnessCoinbaseIndex, pindex->pprev, block, chainparams, view))
-                    return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has invalid coinbase info)"), REJECT_INVALID, "bad-cb-badwitnessinfo");
-            }
+            if (!WitnessCoinbaseInfoIsValid(chain, nEmbeddedWitnessCoinbaseIndex, pindex->pprev, block, chainparams, view))
+                return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has invalid coinbase info)"), REJECT_INVALID, "bad-cb-badwitnessinfo");
         }
     }
     unsigned int nWitnessCoinbaseIndex = 0;
