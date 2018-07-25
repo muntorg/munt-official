@@ -1479,11 +1479,12 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
             DoWarning(strWarning);
         }
     }
-    LogPrintf("%s: new best=%s height=%d version=0x%08x versionpow2=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)", __func__,
-      chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion, chainActive.Tip()->nVersionPoW2Witness,
-      log(chainActive.Tip()->nChainWork.getdouble())/log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
-      DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
-      GuessVerificationProgress(chainParams.TxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
+    if(!IsArgSet("-minimallogging") || IsArgSet("-testnet") || chainActive.Height() % 100 == 0 || chainActive.Height() > 700000)
+        LogPrintf("%s: new best=%s height=%d version=0x%08x versionpow2=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)", __func__,
+            chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion, chainActive.Tip()->nVersionPoW2Witness,
+            log(chainActive.Tip()->nChainWork.getdouble())/log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
+            DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
+            GuessVerificationProgress(chainParams.TxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
     if (!warningMessages.empty())
         LogPrintf(" warning='%s'", boost::algorithm::join(warningMessages, ", "));
     LogPrintf("\n");
@@ -1942,7 +1943,8 @@ bool PreciousBlock(CValidationState& state, const CChainParams& params, CBlockIn
             nBlockReverseSequenceId--;
         }
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && pindex->nChainTx) {
-            LogPrintf("PreciousBlock: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
+            if (!IsArgSet("-minimallogging"))
+                LogPrintf("PreciousBlock: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
             setBlockIndexCandidates.insert(pindex);
             PruneBlockIndexCandidates();
         }
@@ -2080,7 +2082,8 @@ static void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainp
     {
         setBlockIndexCandidates.erase(findIter);
         setBlockIndexCandidates.insert(pIndex);
-        LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
+        if (!IsArgSet("-minimallogging"))
+            LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
     }
 }
 
@@ -2115,7 +2118,8 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
         SetChainWorkForIndex(pindexNew, chainParams);
         if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
         {
-            LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
+            if (!IsArgSet("-minimallogging"))
+                LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
             setBlockIndexCandidates.insert(pindexNew);
         }
     }
@@ -2162,7 +2166,8 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
             }
             if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight))
             {
-                LogPrintf("ReceivedBlockTransactions: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
+                if (!IsArgSet("-minimallogging"))
+                    LogPrintf("ReceivedBlockTransactions: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
                 setBlockIndexCandidates.insert(pindex);
             }
             std::pair<std::multimap<CBlockIndex*, CBlockIndex*>::iterator, std::multimap<CBlockIndex*, CBlockIndex*>::iterator> range = mapBlocksUnlinked.equal_range(pindex);
