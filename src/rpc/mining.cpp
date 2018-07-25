@@ -576,6 +576,11 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 return "inconclusive-not-best-prevblk";
 
             CValidationState state;
+            if (pIndexMiningTip->nHeight < GetPow2ValidationCloneHeight())
+            {
+                return "rejected";
+            }
+            else
             {
                 CCoinsViewCache viewNew(pcoinsTip);
                 CBlockIndex* pindexPrev_ = nullptr;
@@ -586,31 +591,6 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
 
                 TestBlockValidity(tempChain, state, Params(), block, pindexPrev_, false, true, &viewNew);
             }
-
-            //fixme: (2.1) - We can remove this after phase 4 activates
-            //fixme: (2.0.1) - Implement if needed
-            /*if (pWitnessBlockToEmbed)
-            {
-                CBlock PoWParent;
-                if (!ReadBlockFromDisk(PoWParent, pIndexParent, Params()))
-                {
-                    
-                }
-                int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(PoWParent);
-                if (nWitnessCoinbaseIndex == -1)
-                {
-                    return "missing-phase3-embedded-witness-coinbase";
-                }
-                else
-                {
-                    //fixme: (2.0.x) - If performance issues this can be sped up.
-                    //We have pWitnessBlockToEmbed so just access this directly.
-                    if (!WitnessCoinbaseInfoIsValid(chain, nEmbeddedWitnessCoinbaseIndex, pindex->pprev, block, chainparams, view))
-                    {
-                        return "invalid-phase3-embedded-witness-coinbase";
-                    }
-                }
-            }*/
 
             return BIP22ValidationResult(state);
         }

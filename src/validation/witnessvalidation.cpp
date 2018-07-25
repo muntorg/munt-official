@@ -265,6 +265,9 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     // NB!!! - It is important that we don't flush either of these before destructing, we want to throw the result away.
     CCoinsViewCache viewNew(viewOverride?viewOverride:pcoinsTip);
 
+    if (pPreviousIndexChain_->nHeight < GetPow2ValidationCloneHeight())
+        return true;
+
     // fixme: (2.1) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     CBlockIndex* pPreviousIndexChain = nullptr;
