@@ -232,6 +232,9 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         pTipIndex = chainActive.Tip();
     }
 
+    if (!pTipIndex || pTipIndex->nHeight < 10)
+        return NullUniValue;
+
     if (request.params.size() >= 2)
         fVerbose = request.params[1].get_bool();
 
@@ -239,7 +242,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         showMineOnly = request.params[2].get_bool();
 
     CBlockIndex* pTipIndex_ = nullptr;
-    CCloneChain tempChain(chainActive, pTipIndex->nHeight-1, pTipIndex, pTipIndex_);
+    //fixme: (2.0.x) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
+    CCloneChain tempChain(chainActive, 0, pTipIndex, pTipIndex_);
 
     if (!pTipIndex_)
         throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
