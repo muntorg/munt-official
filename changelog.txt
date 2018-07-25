@@ -1,3 +1,9 @@
+2.0.0.9
+
+CORE - Major witness validation performance improvement and memory usage reduction due to partial chain cloning
+
+
+
 2.0.0.8
 
 CORE - Move some invalid block logic earlier in the block check process, this should help address some issues users have been experiencing as well as further stabalise the network.
