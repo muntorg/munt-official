@@ -1099,7 +1099,8 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     //This fix should remain in place, but a follow up fix is needed to try stop the conflicting transaction entering the mempool to begin with - need to hunt the source of this down.
                     //Seems to have something to do with a double (conflicting) witness renewal transaction.
                     mempool.removeRecursive(tx, MemPoolRemovalReason::UNKNOWN);
-                    return state.DoS(100, error("ConnectBlock(): inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
+                    LogPrintf("ConnectBlock: mempool contains transaction with invalid inputs [%s]", tx.GetHash().ToString());
+                    return state.DoS(100, error("ConnectBlock: inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                 }
 
                 // Check that transaction is BIP68 final
@@ -1944,6 +1945,7 @@ bool PreciousBlock(CValidationState& state, const CChainParams& params, CBlockIn
             nBlockReverseSequenceId--;
         }
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && pindex->nChainTx) {
+            LogPrintf("PreciousBlock: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
             setBlockIndexCandidates.insert(pindex);
             PruneBlockIndexCandidates();
         }
@@ -2081,6 +2083,7 @@ static void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainp
     {
         setBlockIndexCandidates.erase(findIter);
         setBlockIndexCandidates.insert(pIndex);
+        LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
     }
 }
 
@@ -2114,7 +2117,10 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     {
         SetChainWorkForIndex(pindexNew, chainParams);
         if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
+        {
+            LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
             setBlockIndexCandidates.insert(pindexNew);
+        }
     }
 
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
@@ -2160,7 +2166,9 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
                 setBlockIndexCandidates.erase(pindex);
                 pindex->nSequenceId = nBlockSequenceId++;
             }
-            if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)) {
+            if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight))
+            {
+                LogPrintf("ReceivedBlockTransactions: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
                 setBlockIndexCandidates.insert(pindex);
             }
             std::pair<std::multimap<CBlockIndex*, CBlockIndex*>::iterator, std::multimap<CBlockIndex*, CBlockIndex*>::iterator> range = mapBlocksUnlinked.equal_range(pindex);
@@ -2519,6 +2527,29 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase1");
             }
         }
+    }
+
+
+    //Enforce embedded witness coinbase data in phase 3.
+    //Only the second block with a phase 3 parent onwards has a witness coinbase with embedded data, as only the first block with a phase 3 parent has a witness.
+    //Also having the check here prevents miners from broadcasting invalid blocks sooner.
+    //fixme: (2.1) This is now a duplicate of the check in ConnectBlock - reconsider if we need both.
+    //This was added as invalid blocks were still being accepted (just not connected) and this was combining with other factors to cause network issues.
+    if (nHeight > 10 && IsPow2Phase3Active(nHeight-2) && !fHaveSegregatedSignatures && block.nVersionPoW2Witness == 0)
+    {
+        int nEmbeddedWitnessCoinbaseIndex = 0;
+        nEmbeddedWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
+        if (nEmbeddedWitnessCoinbaseIndex == -1)
+            return state.DoS(20, error("ContextualCheckBlock(): PoW2 phase 3 coinbase lacks witness data)"), REJECT_INVALID, "bad-cb-nowitnessdata");
+
+        unsigned int nWitnessCoinbasePayoutIndex = nEmbeddedWitnessCoinbaseIndex + 1;
+
+        if (block.vtx[0]->vout.size()-1 < nWitnessCoinbasePayoutIndex)
+            return state.DoS(20, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness payout)"), REJECT_INVALID, "bad-cb-nowitnesspayout");
+
+        CAmount nSubsidyWitness = GetBlockSubsidyWitness(nHeight);
+        if (block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue != nSubsidyWitness)
+            return state.DoS(20, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount [%d] [%d])", block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue, nSubsidyWitness), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
     }
 
     // And the same for witness coinbase. (Enforce rule that the coinbase starts with serialized block height)
@@ -3070,7 +3101,10 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         }
 
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->nChainTx || pindex->pprev == NULL))
+        {
             setBlockIndexCandidates.insert(pindex);
+            //LogPrintf("LoadBlockIndexDB: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
+        }
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
         if (pindex->pprev)
@@ -3441,8 +3475,10 @@ bool RewindBlockIndex(const CChainParams& params)
                     ++ret.first;
                 }
             }
-        } else if (pindexIter->IsValid(BLOCK_VALID_TRANSACTIONS) && pindexIter->nChainTx) {
+        } else if (pindexIter->IsValid(BLOCK_VALID_TRANSACTIONS) && pindexIter->nChainTx)
+        {
             setBlockIndexCandidates.insert(pindexIter);
+            //LogPrintf("RewindBlockIndex: New index candidate: [%s] [%d]\n", pindexIter->GetBlockHashPoW2().ToString(), pindexIter->nHeight);
         }
     }
 

@@ -232,6 +232,9 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         pTipIndex = chainActive.Tip();
     }
 
+    if (!pTipIndex || pTipIndex->nHeight < 10)
+        return NullUniValue;
+
     if (request.params.size() >= 2)
         fVerbose = request.params[1].get_bool();
 
@@ -239,7 +242,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         showMineOnly = request.params[2].get_bool();
 
     CBlockIndex* pTipIndex_ = nullptr;
-    CCloneChain tempChain = chainActive.Clone(pTipIndex, pTipIndex_);
+    //fixme: (2.0.x) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
+    CCloneChain tempChain(chainActive, 0, pTipIndex, pTipIndex_);
 
     if (!pTipIndex_)
         throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
@@ -254,7 +258,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         nPow2Phase = 5;
     else if (IsPow2Phase4Active(pTipIndex_, Params(), tempChain, &viewNew))
         nPow2Phase = 4;
-    else if (IsPow2Phase3Active(pTipIndex_, Params(), tempChain, &viewNew))
+    else if (IsPow2Phase3Active(pTipIndex_->nHeight))
         nPow2Phase = 3;
     else if (IsPow2Phase2Active(pTipIndex_, Params(), tempChain, &viewNew))
         nPow2Phase = 2;
@@ -278,7 +282,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
         if (nPow2Phase >= 3)
         {
-            if (!GetWitnessHelper(tempChain, Params(), &viewNew, pTipIndex_->pprev, block.GetHashLegacy(), witInfo, pTipIndex_->nHeight))
+            if (!GetWitnessHelper(block.GetHashLegacy(), witInfo, pTipIndex_->nHeight))
                 throw std::runtime_error("Could not select a valid PoW² witness for block.");
 
             CTxDestination selectedWitnessAddress;
@@ -1262,7 +1266,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 4)
         throw std::runtime_error(
             "extendwitnessaddress \"funding_account\" \"witness_address\" \"amount\" \"time\" \n"
-            "Change the currently locked amount and time period for \"witness_address\" to match the new \"amount\" ant time period \"time\"\n"
+            "Change the currently locked amount and time period for \"witness_address\" to match the new \"amount\" and time period \"time\"\n"
             "Note the new amount must be ≥ the old amount, and the new time period must exceed the remaining lock period that is currently set on the account\n"
             "\"funding_account\" is the account from which the locked funds will be claimed.\n"
             "\"time\" may be a minimum of 1 month and a maximum of 3 years.\n"
@@ -1270,7 +1274,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed.\n"
             "2. \"witness_address\"  (string, required) The Gulden address for the witness key.\n"
             "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "[\n"
             "     \"txid\":\"txid\",   (string) The txid of the created transaction\n"
@@ -1330,7 +1334,7 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
             "1. \"funding_account\" (string, required) The unique UUID or label for the account from which money will be removed.\n"
             "2. \"witness_account\" (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
             "3. \"amount\"          (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
-            "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", prefix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "[\n"
             "     \"txid\":\"txid\",  (string) The txid of the created transaction\n"

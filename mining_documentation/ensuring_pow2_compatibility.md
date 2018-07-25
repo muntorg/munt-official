@@ -3,15 +3,22 @@ The basics
 
 PoW² activates in several phases.
 
-* At this moment the network is in what we call `Phase 1`
-* `Phase 2` is activated by miner upgrades - and allows people to start creating witnessing addresses; there is a roughly 2 week delay before this is allowed to commence and then an indeterminate but hopefully short period of time before it actually occurs.
+* At this moment the network is in what we call `Phase 3`
 * `Phase 3` is activated by creation of enough witness addresses, and is the point at which witnessing first kicks in. Any miner/pool who has not followed the upgrade steps will be isolated from the chain and all earnings orphaned.
-* `Phase 4` is set to activate at soonest a month after phase 3, and involved the activation of amongst other things a new transaction format. Any miner/pool who has not follwed the upgrade steps will again be isolated from the chain.
+* `Phase 4` is set to activate at soonest a month, likely later, after phase 3, and involves the activation of amongst other things a new transaction format. Any miner/pool who has not follwed the upgrade steps will again be isolated from the chain.
 
 It is therefore in the interests of all mining pool operators to read and follow this guide. And further to either join our slack, or to subscribe to this repo and carefully watch for news over the next month.
 Note that this guide is currently only for `phase 3` upgrade; information on `phase 4` upgrade will only become available later. Please *do not* ask for this information now, the developers will release a similar guide to this for `phase 4` when the time is right.
 
 Special thanks to Gregory de Graaf for his patience in helping to test these steps.
+
+
+Sample changes for various pool software, note that these changes are applied and tested by a few pools, but the developers cannot guarantee they will work for you the onus is on you the pool operator to test them. Should you run into issues while testing we will happily assist but we cannot test on your behalf.
+
+* [unomp](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master)
+* [yiimp](https://github.com/tpruvot/yiimp/compare/next...mjmacleod:next)
+* [slush0/stratum_mining](https://gist.github.com/mjmacleod/4437340f8e75c44fedcd5db540c5a51c)
+* [p2pool](https://github.com/0x0aNL/p2pool-0x0a/blob/PoW2/p2pool/bitcoin/data.py#L175)
 
 Phase 3 upgrade guide
 ============
@@ -165,9 +172,10 @@ Note that for this part of the instructions you will want to use `Scrypt` for yo
 * Wipe the data directories and start two GuldenD instance again
 * Make a testnet copy of your mining pool
 * Check the debug.log for the magic header bytes (they are logged near the start) and update your testnet pool with the information as well as other testnet information from above (rpc port etc.)
-* Some small changes need to be made to your pool software - see [This sample (for unomp)](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master) to get an idea of what needs to be done - these changes have been tested and confirmed working with 1 pool, the onus is on you the pool operator to ensure it works for your pool
-[Sample changes also for yiimp](https://github.com/tpruvot/yiimp/compare/next...mjmacleod:next) - note that these changes are *untested* the onus is on you the pool operator to test them. Should you run into issues while testing we will happily assist but we cannot test on your behalf.
+* Some small changes need to be made to your pool software
+See some sample changes [unomp](https://github.com/UNOMP/node-merged-pool/compare/master...mjmacleod:master) [yiimp](https://github.com/tpruvot/yiimp/compare/next...mjmacleod:next) [slush0/stratum_mining](https://gist.github.com/mjmacleod/4437340f8e75c44fedcd5db540c5a51c) [p2pool](https://github.com/0x0aNL/p2pool-0x0a/blob/PoW2/p2pool/bitcoin/data.py#L175)
 
+Note the onus is on you the pool operator to properly test these changes, we cannot guarantee they work for you without further customisation.
 Note the above samples ignore other Gulden specific customisations that might be required and already done on your pool - these are only the PoW² specific changes.
 
 * Start mining with the pool

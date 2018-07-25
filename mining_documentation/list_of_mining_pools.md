@@ -19,8 +19,8 @@ Active:
 |Hash-to-coins.com|www.hash-to-coins.com|-|GaC1mBCzC8kHSHkZK3QdKTfJxWRMSNCP2X|||
 |Btc1337||-|GUNsn8xrwrjT4cDHUjMWbV9BV7QRriFyvR|||
 |Nicehash||-|GRCcdLrHKLRGGWDZ4LeJjvqfqqVwCkynbb|||
-|Multipool|www.multipool.us|-|GQSJwbzciexTbUNxgJDQ3zS2DtzGma6sQ4, GU7KDqa2ASeErn25jNrFNQ9FGUdR4SB12h|||
-|Zergpool|www.zergpool.com/|-|GYFKKSwU2VL1NHQ98rkgoPur4v4pRACz9K|||
+|Multipool|www.multipool.us|Multipool.us|GQSJwbzciexTbUNxgJDQ3zS2DtzGma6sQ4, GU7KDqa2ASeErn25jNrFNQ9FGUdR4SB12h, GL9MJJzLByGQAybPkPEXiK75ZoY1ysDy5Y|||
+|Zergpool|www.zergpool.com/|zerg|GYFKKSwU2VL1NHQ98rkgoPur4v4pRACz9K|||
 |ScryptPools|www.scryptpools.net||GTPp5vjVwG5KnpnmwttQjCQZ2AVqjNYXz5|https://www.scryptpools.net/nlg/public/index.php?page=statistics&action=round&height=746267|https://discord.gg/24EksCN|
 |Blockmasters.co|www.Blockmasters.co||Gc5oUPU2UFAC6AczsGwzuPMY37g24Nx9QR|||
 |Moonpool.xyz|www.Moonpool.xyz||GfpAe6DVWRYjnZYzNXyqqztSwfmdXkXXY6|||

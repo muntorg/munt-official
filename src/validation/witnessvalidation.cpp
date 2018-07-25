@@ -268,7 +268,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     // fixme: (2.1) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     CBlockIndex* pPreviousIndexChain = nullptr;
-    CCloneChain tempChain = chain.Clone(pPreviousIndexChain_, pPreviousIndexChain);
+    CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(), pPreviousIndexChain_, pPreviousIndexChain);
     CValidationState state;
     assert(pPreviousIndexChain);
 
@@ -335,7 +335,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 
 //fixme: (2.0.1) Improve error handling.
 //fixme: (2.1) Handle nodes with excessive pruning. //pblocktree->ReadFlag("prunedblockfiles", fHavePruned);
-bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight)
+bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight)
 {
     DO_BENCHMARK("WIT: GetWitnessHelper", BCLog::BENCH|BCLog::WITNESS);
 
@@ -477,7 +477,7 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
     if (!GetWitnessInfo(chain, chainParams, viewOverride, pPreviousIndexChain, block, witnessInfo, nBlockHeight))
         return false;
 
-    return GetWitnessHelper(chain, chainParams, viewOverride, pPreviousIndexChain, block.GetHashLegacy(), witnessInfo, nBlockHeight);
+    return GetWitnessHelper(block.GetHashLegacy(), witnessInfo, nBlockHeight);
 }
 
 // Ideally this should have been some hybrid of witInfo.nTotalWeight / witInfo.nReducedTotalWeight - as both independantly aren't perfect.
@@ -572,8 +572,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     bool ret = true;
     if (ret)
     {
-        CBlockIndex* pPreviousIndexChain = nullptr;
-        CCloneChain tempChain = chain.Clone(pindexPrev->pprev, pPreviousIndexChain);
+        CBlockIndex* pPreviousIndexChain = pindexPrev->pprev;
         CValidationState state;
         CCoinsViewCache viewNew(&view);
 
@@ -589,7 +588,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
         if (ret)
         {
             CGetWitnessInfo witInfo;
-            if (!GetWitness(tempChain, chainParams, &viewNew, pPreviousIndexChain, embeddedWitnessBlock, witInfo))
+            if (!GetWitness(chain, chainParams, &viewNew, pPreviousIndexChain, embeddedWitnessBlock, witInfo))
             {
                 ret = error("Could not determine a valid witness for embedded witness coinbase header");
             }
@@ -619,7 +618,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     // We work on a clone of the chain to prevent modifying the actual chain.
     {
         CBlockIndex* pPreviousIndexChain = nullptr;
-        CCloneChain tempChain = chain.Clone(pindexPrev->pprev, pPreviousIndexChain);
+        CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(), pindexPrev->pprev, pPreviousIndexChain);
         CValidationState state;
         CCoinsViewCache viewNew(&view);
         // Force the tip of the chain to the block that comes before the block we are examining.

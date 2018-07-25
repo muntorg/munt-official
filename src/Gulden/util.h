@@ -17,7 +17,7 @@ CHDSeed::SeedType SeedTypeFromString(std::string type);
 
 class CBlockIndex;
 bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
-bool IsPow2Phase3Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase3Active(uint64_t nHeight);
 bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
@@ -39,6 +39,8 @@ int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockN
 uint64_t GetPoW2RemainingLockLengthInBlocks(uint64_t lockUntilBlock, uint64_t tipHeight);
 
 CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex);
+
+int GetPow2ValidationCloneHeight();
 
 inline bool IsPow2WitnessOutput(const CTxOut& out)
 {

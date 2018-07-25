@@ -5,6 +5,24 @@ UI - Option to hide status bar when synchronized (default enabled). Disable to a
 
 
 
+2.0.0.9
+
+CORE - Major witness validation performance improvement and memory usage reduction due to partial chain cloning
+CORE - Move some invalid block logic earlier in the block check process, this should help address some issues users have been experiencing as well as further stabalise the network.
+CORE - Simplify phase2/phase3 checks now that we know the final blocks where they activated; This will help performance in various ways and simplifies the code.
+CORE - Some minor performance improvements
+UI - Fix an underlying issue that was causing a "scary" looking message dialog to occasionally pop up and bother some users.
+UI - Fix an issue with witness earnings graph display for units other than "blocks"
+CMDFLAG - Add a new flag `limitdeltadiffdrop=n` for mining pools, larger mining pools should set this to 0. Medium pools 1-6, very small pools can leave it off.
+
+
+
+2.0.0.7
+
+CORE - Fix a crash for users who run with -disablewallet
+
+
+
 2.0.0.6
 
 CORE - Stability fix for a minor crash issue some users might otherwise experience in phase 3.

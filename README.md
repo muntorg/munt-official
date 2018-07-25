@@ -55,10 +55,11 @@ All code, binaries and other assets in this repository are subject to [The Gulde
 If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
 
 ### Technical documentation
-* [PoW² whitepaper](.//technical_documentation/Gulden_PoW2.pdf); [PoW² upgrade for mining pools](./mining_documentation/ensuring_pow2_compatibility.md); [PoW² activation](./technical_documentation/PoW2_activation.md)
+* [PoW² whitepaper](.//technical_documentation/Gulden_PoW2.pdf); [PoW² activation](./technical_documentation/PoW2_activation.md)
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
 * [Accelerated testnet](./technical_documentation/accelerated_testnet.md)
+* [Information for mining pools](./mining_documentation/mining_Gulden.md); [PoW² upgrade for mining pools](./mining_documentation/ensuring_pow2_compatibility.md); [List of identified mining pools](./mining_documentation/list_of_mining_pools.md)
 
 
 ### Community
@@ -87,7 +88,8 @@ If you are sure you need to build the software yourself, please read the [build 
 |Transaction confirmations:|6||
 |Total coins:|1680M||
 |Premine reserved for development, marketing and funding of community projects:|170M (10%)||
-|Block reward:|100 NLG||
+|Block reward miners:|80 NLG||
+|Block reward witness:|20 NLG||
 |Block time:|150 seconds||
 |P2P Port|9231|9923|
 |RPC Port|9232|9924|
@@ -102,6 +104,4 @@ If you are sure you need to build the software yourself, please read the [build 
 |Electrum server 2|electrum2.gulden.com:5038||
 |DNS Seed 1|seed.gulden.com||
 |DNS Seed 2|amsterdam.gulden.com||
-|DNS Seed 3|seed.gulden.network||
-|DNS Seed 4|rotterdam.gulden.network||
-|DNS Seed 5|seed.gulden.blue||
+|DNS Seed 3|rotterdam.gulden.network||

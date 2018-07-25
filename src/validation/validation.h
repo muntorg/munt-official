@@ -169,8 +169,10 @@ static const bool DEFAULT_FEEFILTER = true;
 /** Maximum number of headers to announce when relaying blocks with headers message.*/
 static const unsigned int MAX_BLOCKS_TO_ANNOUNCE = 8;
 
+//fixme: (2.1) Temporary increase from 10 (if lots of absent witnesses a miner could send quite a few unconnecting headers)
+//re-look at special logic for this.
 /** Maximum number of unconnecting headers announcements before DoS score */
-static const int MAX_UNCONNECTING_HEADERS = 10;
+static const int MAX_UNCONNECTING_HEADERS = 200;
 
 static const bool DEFAULT_PEERBLOOMFILTERS = true;
 
