@@ -441,7 +441,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         CCoinsViewCache viewNew(pcoinsTip);
 
         CBlockIndex* pindexPrev_ = nullptr;
-        CCloneChain tempChain = chainActive.Clone(pParent, pindexPrev_);
+        CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(), pParent, pindexPrev_);
         assert(pindexPrev_);
         ForceActivateChain(pindexPrev_, nullptr, state, chainparams, tempChain, viewNew);
 

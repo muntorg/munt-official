@@ -94,7 +94,7 @@ uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeig
 
 bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, std::map<COutPoint, Coin>& allWitnessCoins, CBlock* newBlock=nullptr, CCoinsViewCache* viewOverride=nullptr);
 
-bool GetWitnessHelper(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight);
+bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight);
 
 bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight);
 

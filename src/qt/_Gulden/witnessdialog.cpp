@@ -271,6 +271,16 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     unitSelectionMenu->addAction(unitWeeksAction);
     unitSelectionMenu->addAction(unitMonthsAction);
 
+    // Hide all buttons by default
+    ui->emptyWitnessButton->setVisible(false);
+    ui->emptyWitnessButton2->setVisible(false);
+    ui->withdrawEarningsButton->setVisible(false);
+    ui->withdrawEarningsButton2->setVisible(false);
+    ui->fundWitnessButton->setVisible(false);
+    ui->renewWitnessButton->setVisible(false);
+    ui->unitButton->setVisible(false);
+    ui->viewWitnessGraphButton->setVisible(false);
+
     connect(ui->unitButton, SIGNAL(clicked()), this, SLOT(unitButtonClicked()));
     connect(ui->viewWitnessGraphButton, SIGNAL(clicked()), this, SLOT(viewWitnessInfoClicked()));
     connect(ui->emptyWitnessButton, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
@@ -521,7 +531,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
     for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < infoForAccount.nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
     {
         unsigned int nX = i;
-        uint64_t nDays = infoForAccount.originDate.daysTo(tipTime.addSecs(nEstimatedWitnessBlockPeriodOrigin*Params().GetConsensus().nPowTargetSpacing));
+        uint64_t nDays = infoForAccount.originDate.daysTo(tipTime.addSecs(i*Params().GetConsensus().nPowTargetSpacing));
         AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
     }
 
@@ -691,6 +701,11 @@ void WitnessDialog::update()
 
 void WitnessDialog::doUpdate(bool forceUpdate)
 {
+    // rate limit this expensive UI update when chain tip is still far from known height
+    int heightRemaining = clientModel->cachedProbableHeight - chainActive.Height();
+    if (!forceUpdate && heightRemaining > 10 && heightRemaining % 100 != 0)
+        return;
+
     LogPrint(BCLog::QT, "WitnessDialog::doUpdate\n");
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);

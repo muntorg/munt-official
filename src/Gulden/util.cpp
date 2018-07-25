@@ -444,5 +444,7 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
     return mapBlockIndex[powHash];
 }
 
-
-
+int GetPow2ValidationCloneHeight()
+{
+    return IsArgSet("-testnet") ? 0 : 770000;
+}
