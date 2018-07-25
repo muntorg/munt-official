@@ -580,31 +580,31 @@ protected:
 public:
     /** Returns the index entry for the genesis block of this chain, or NULL if none. */
     CBlockIndex *Genesis() const {
-        return vChain.size() > 0 ? vChain[0] : NULL;
+        return Height() >= 0 ? operator[](0) : nullptr;
     }
 
     /** Returns the index entry for the tip of this chain, or NULL if none. */
     CBlockIndex *Tip() const {
-        return vChain.size() > 0 ? vChain[vChain.size() - 1] : NULL;
+        return Height() >= 0 > 0 ? operator[](Height()) : nullptr;
     }
 
     /** Returns the index entry for the previout to tip of this chain, or NULL if none. */
     CBlockIndex* TipPrev() const
     {
-        return vChain.size() > 1 ? vChain[vChain.size() - 2] : NULL;
+        return Height() > 0 ? operator[](Height()-1) : nullptr;
     }
 
     /** Returns the index entry at a particular height in this chain, or NULL if no such height exists. */
     virtual CBlockIndex *operator[](int nHeight) const {
         if (nHeight < 0 || nHeight >= (int)vChain.size())
-            return NULL;
+            return nullptr;
         return vChain[nHeight];
     }
 
     /** Compare two chains efficiently. */
     friend bool operator==(const CChain &a, const CChain &b) {
-        return a.vChain.size() == b.vChain.size() &&
-               a.vChain[a.vChain.size() - 1] == b.vChain[b.vChain.size() - 1];
+        return a.Height() == b.Height() &&
+               a[a.Height()] == b[a.Height()];
     }
 
     /** Efficiently check whether a block is present in this chain. */
@@ -629,12 +629,12 @@ public:
     }
 
     /** Return the maximal height in the chain. Is equal to chain.Tip() ? chain.Tip()->nHeight : -1. */
-    int Height() const {
+    virtual int Height() const {
         return vChain.size() - 1;
     }
 
     /** Set/initialize a chain with a given tip. */
-    void SetTip(CBlockIndex *pindex);
+    virtual void SetTip(CBlockIndex *pindex);
 
     /** Return a CBlockLocator that refers to a block in this chain (by default the tip). */
     CBlockLocator GetLocatorLegacy(const CBlockIndex *pindex = NULL) const;
@@ -662,6 +662,10 @@ public:
     }
 
     virtual CBlockIndex *operator[](int nHeight) const override;
+
+    virtual int Height() const override;
+
+    virtual void SetTip(CBlockIndex *pindex) override;
 
 private:
     void FreeMemory();
