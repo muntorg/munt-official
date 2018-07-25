@@ -43,7 +43,7 @@ CBlockLocator CChain::GetLocatorLegacy(const CBlockIndex *pindex) const {
         int nHeight = std::max(pindex->nHeight - nStep, 0);
         if (Contains(pindex)) {
             // Use O(1) CChain index if possible.
-            pindex = (*this)[nHeight];
+            pindex = (vChain)[nHeight];
         } else {
             // Otherwise, use O(log n) skiplist.
             pindex = pindex->GetAncestor(nHeight);
@@ -71,7 +71,7 @@ CBlockLocator CChain::GetLocatorPoW2(const CBlockIndex *pindex) const {
         int nHeight = std::max(pindex->nHeight - nStep, 0);
         if (Contains(pindex)) {
             // Use O(1) CChain index if possible.
-            pindex = (*this)[nHeight];
+            pindex = vChain[nHeight];
         } else {
             // Otherwise, use O(log n) skiplist.
             pindex = pindex->GetAncestor(nHeight);
@@ -156,16 +156,16 @@ CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const C
             //Don't worry about leaks, these become part of tempChain and are cleaned up along with tempChain.
             CBlockIndex* pNotInChain = retainIndexOut;
             // We might be sitting multiple blocks ahead of the chain, in which case we need to clone those blocks as well.
-            while (pNotInChain->pprev->nHeight > Tip()->nHeight || pNotInChain->pprev->GetBlockHashPoW2() != vChain[pNotInChain->pprev->nHeight]->GetBlockHashPoW2())
+            while (pNotInChain->pprev->nHeight > Tip()->nHeight || pNotInChain->pprev->GetBlockHashPoW2() != vChain[pNotInChain->pprev->nHeight - cloneFrom]->GetBlockHashPoW2())
             {
                 pNotInChain->pskip = nullptr;
                 pNotInChain->pprev = new CBlockIndex(*pNotInChain->pprev);
                 pNotInChain = pNotInChain->pprev;
             }
-            while (pNotInChain->pprev != vChain[pNotInChain->pprev->nHeight])
+            while (pNotInChain->pprev != vChain[pNotInChain->pprev->nHeight - cloneFrom])
             {
                 pNotInChain->pskip = nullptr;
-                pNotInChain->pprev = vChain[pNotInChain->pprev->nHeight];
+                pNotInChain->pprev = vChain[pNotInChain->pprev->nHeight - cloneFrom];
                 pNotInChain = pNotInChain->pprev;
             }
         }
