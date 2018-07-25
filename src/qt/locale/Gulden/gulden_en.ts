@@ -808,12 +808,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+283"/>
-        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
-        <translation>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+284"/>
         <location line="+40"/>
         <source>Okay</source>
         <translation>Okay</translation>
@@ -844,6 +839,11 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Spendable funds: </translation>
     </message>
     <message>
+        <location line="+63"/>
+        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
+        <translation>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</translation>
+    </message>
+    <message>
         <location filename="../../gui.cpp" line="+511"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
@@ -864,7 +864,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Software update</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+26"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-37"/>
         <source>Renewing witness account will incur a transaction fee: </source>
         <translation>Renewing witness account will incur a transaction fee: </translation>
     </message>
@@ -4837,7 +4837,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="+567"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="+577"/>
         <source>%1 months</source>
         <translation>%1 months</translation>
     </message>
@@ -4867,7 +4867,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="+49"/>
         <location line="+23"/>
         <location line="+23"/>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-518"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-528"/>
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
@@ -4877,7 +4877,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
-        <location line="+456"/>
+        <location line="+466"/>
         <source>n/a</source>
         <translation>n/a</translation>
     </message>
@@ -4996,7 +4996,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>Renew account</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-418"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-428"/>
         <source>Earnings to date</source>
         <translation>Earnings to date</translation>
     </message>
@@ -5031,7 +5031,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>&amp;Months</translation>
     </message>
     <message>
-        <location line="+382"/>
+        <location line="+392"/>
         <source>%1 blocks</source>
         <translation>%1 blocks</translation>
     </message>

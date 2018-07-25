@@ -4,8 +4,8 @@
     <extra-po-header-language>de</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-07-19 12:57+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-07-19 12:57+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-07-25 15:51+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-07-25 15:51+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -23,6 +23,10 @@
         <translation>Konto löschen</translation>
     </message>
     <message>
+        <source>Copy sync code</source>
+        <translation>Sync-Code kopieren</translation>
+    </message>
+    <message>
         <source>Done</source>
         <translation>Erledigt</translation>
     </message>
@@ -36,12 +40,32 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Hier drücken um QR Code sichtbar zu machen. WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswegen stelle bitte sicher, dass du die einzige Person bist, die diesen sehen kann.</translation>
     </message>
     <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation>QR-Code mit einem Witnessing-Gerät scannen, um das Gerät mit Ihrer Wallet zu verbinden</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
+        <translation>Hier drücken um QR Code sichtbar zu machen.
+WARNUNG: bitte sicher stellen das du die einzige Person bist, die diesen QR Code sehen kann, andernfalls könnte der QR Code verwendet werden um in deinem Namem zu verdienen und dein Witnesseinnahmen zu stehlen.</translation>
+    </message>
+    <message>
+        <source>Please fund the witness account first.</source>
+        <translation>Bitte zuerst das Witness-Konto füllen.</translation>
+    </message>
+    <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
         <translation>Das Konto kann erst gelöscht werden wenn es leer ist.</translation>
     </message>
     <message>
         <source>Okay</source>
         <translation>Okay</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation>Bist du sicher, dass du %1 von deiner Kontoliste löschen willst?
+</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
@@ -97,6 +121,138 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Total funds: </source>
+        <translation>Gesamtbetrag: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Gesperrter Betrag: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Betrag in Erwartung der Bestätigung:  </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Verfügbarer Betrag: </translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Nach Updates suchen</translation>
+    </message>
+    <message>
+        <source>Check for software updates</source>
+        <translation>Nach Softwareupdates suchen</translation>
+    </message>
+    <message>
+        <source>Software update warning</source>
+        <translation>Softwareupdate Warnung</translation>
+    </message>
+    <message>
+        <source>Software update</source>
+        <translation>Softwareupdate</translation>
+    </message>
+    <message>
+        <source>Renewing witness account will incur a transaction fee: </source>
+        <translation>Erneueren des Witnesskontos hat eine Transaktionsgebühr zur Folge: </translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Senden</translation>
+    </message>
+    <message>
+        <source>Tabs toolbar</source>
+        <translation>Registerkartenleiste</translation>
+    </message>
+    <message>
+        <source>My accounts</source>
+        <translation>Meine Konten</translation>
+    </message>
+    <message>
+        <source>Add account</source>
+        <translation>Konto hinzufügen</translation>
+    </message>
+    <message>
+        <source>&amp;Password</source>
+        <translation>&amp;Passwort</translation>
+    </message>
+    <message>
+        <source>Change wallet password</source>
+        <translation>Wallet Passwort ändern</translation>
+    </message>
+    <message>
+        <source>&amp;Backup</source>
+        <translation>&amp;Sicherung</translation>
+    </message>
+    <message>
+        <source>Backup wallet</source>
+        <translation>Wallet sichern</translation>
+    </message>
+    <message>
+        <source>Imported key</source>
+        <translation>Importierter Schlüssel</translation>
+    </message>
+    <message>
+        <source>Imported witness</source>
+        <translation>Importierter Witness</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation>&amp;Übersicht</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation>Statistiken und Information der Witnesskonto einsehen.</translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation>Allgemeine Wallet-Übersicht anzeigen</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Senden</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>&amp;Empfangen</translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation>&amp;Transaktionen</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation>Transaktionsverlauf durchsehen</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation>&amp;Anzeigen / Verstecken</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation>Das Hauptfenster anzeigen oder verstecken</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation>&amp;Schlüssel importieren</translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation>Importiere eine private Schlüsseladresse</translation>
+    </message>
+    <message>
+        <source>&amp;Import witness</source>
+        <translation>&amp;Importiere Witness</translation>
+    </message>
+    <message>
+        <source>Import a witness-only account</source>
+        <translation>Importiere ein Nur-Witnesskonto</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation>&amp;URI öffnen...</translation>
     </message>
 </context>
 <context>
@@ -290,6 +446,25 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Enter a private key to import</source>
         <translation>Gib einen privaten Schlüssel zum importiern ein</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSummaryWidget</name>
+    <message>
+        <source>Total funds: </source>
+        <translation>Gesamtbetrag: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Gesperrter Betrag: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Betrag in Erwartung der Bestätigung:  </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Verfügbarer Betrag: </translation>
     </message>
 </context>
 <context>
@@ -1168,6 +1343,13 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>PNG Image (*.png)</source>
         <translation>PNG-Grafik (*.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ClientModel</name>
+    <message>
+        <source>Network Alert</source>
+        <translation>Netzwerk Warnung</translation>
     </message>
 </context>
 <context>
