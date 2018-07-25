@@ -177,6 +177,7 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
 bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CAmount& nFeeRet,
                                 int& nChangePosInOut, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
 {
+
     if (forAccount->IsReadOnly())
     {
         strFailReason = _("Can't send from read only (watch) account.");
@@ -229,7 +230,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
     if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (2.1) (only set this for high fee [per byte] transactions?)
-    txNew.nLockTime = chainActive.Height();
+        txNew.nLockTime = chainActive.Height();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
     // that transactions that are delayed after signing for whatever reason,
