@@ -585,7 +585,7 @@ public:
 
     /** Returns the index entry for the tip of this chain, or NULL if none. */
     CBlockIndex *Tip() const {
-        return Height() >= 0 > 0 ? operator[](Height()) : nullptr;
+        return Height() >= 0 ? operator[](Height()) : nullptr;
     }
 
     /** Returns the index entry for the previout to tip of this chain, or NULL if none. */
