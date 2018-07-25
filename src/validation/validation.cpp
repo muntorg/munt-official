@@ -1096,7 +1096,8 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     //This fix should remain in place, but a follow up fix is needed to try stop the conflicting transaction entering the mempool to begin with - need to hunt the source of this down.
                     //Seems to have something to do with a double (conflicting) witness renewal transaction.
                     mempool.removeRecursive(tx, MemPoolRemovalReason::UNKNOWN);
-                    return state.DoS(100, error("ConnectBlock(): inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
+                    LogPrintf("ConnectBlock: mempool contains transaction with invalid inputs [%s]", tx.GetHash().ToString());
+                    return state.DoS(100, error("ConnectBlock: inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                 }
 
                 // Check that transaction is BIP68 final
