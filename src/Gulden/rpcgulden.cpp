@@ -239,7 +239,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         showMineOnly = request.params[2].get_bool();
 
     CBlockIndex* pTipIndex_ = nullptr;
-    CCloneChain tempChain(chainActive, 0, pTipIndex, pTipIndex_);
+    CCloneChain tempChain(chainActive, pTipIndex->nHeight-1, pTipIndex, pTipIndex_);
 
     if (!pTipIndex_)
         throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
