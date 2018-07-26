@@ -1326,6 +1326,9 @@ void GUI::activeAccountChanged(CAccount* account)
     if (accountSummaryWidget)
         accountSummaryWidget->setActiveAccount(account);
 
+    // Force receive Qr code to update on balance change.
+    updateAccount( walletFrame->currentWalletView()->walletModel->getActiveAccount() );
+
     refreshTabVisibilities();
     if ( walletFrame)
         walletFrame->currentWalletView()->witnessDialogPage->update();
