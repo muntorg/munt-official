@@ -43,7 +43,7 @@ CBlockLocator CChain::GetLocatorLegacy(const CBlockIndex *pindex) const {
         int nHeight = std::max(pindex->nHeight - nStep, 0);
         if (Contains(pindex)) {
             // Use O(1) CChain index if possible.
-            pindex = (vChain)[nHeight];
+            pindex = (*this)[nHeight];
         } else {
             // Otherwise, use O(log n) skiplist.
             pindex = pindex->GetAncestor(nHeight);
@@ -71,7 +71,7 @@ CBlockLocator CChain::GetLocatorPoW2(const CBlockIndex *pindex) const {
         int nHeight = std::max(pindex->nHeight - nStep, 0);
         if (Contains(pindex)) {
             // Use O(1) CChain index if possible.
-            pindex = vChain[nHeight];
+            pindex = (*this)[nHeight];
         } else {
             // Otherwise, use O(log n) skiplist.
             pindex = pindex->GetAncestor(nHeight);
@@ -123,7 +123,8 @@ CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const C
     // forbid nested cloning
     //assert(dynamic_cast<const CCloneChain*>(&origin) == nullptr);
 
-    assert(cloneFrom >=0 && cloneFrom <= origin.Height());
+    assert(cloneFrom <= origin.Height());
+    assert(cloneFrom >=0);
 
     vChain.reserve(origin.Height() + 1 - cloneFrom);
     vFree.reserve(origin.Height() + 1 - cloneFrom);
