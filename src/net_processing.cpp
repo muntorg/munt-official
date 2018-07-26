@@ -1423,9 +1423,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (nVersion < MIN_PEER_PROTO_VERSION)
         {
             // disconnect from peers older than this proto version
-            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
-            connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
-                               strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
+            if (!IsArgSet("-minimallogging"))
+                LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
+            connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
             pfrom->fDisconnect = true;
             return false;
         }
@@ -1433,7 +1433,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         //fixme: (2.1) We can remove this; we temporarily accept incoming connections from old peers but refuse to establish outgoing ones with them.
         if (nVersion < 70016 && !pfrom->fInbound)
         {
-            LogPrintf("outgoing peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
+            if (!IsArgSet("-minimallogging"))
+                LogPrintf("outgoing peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
             connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", 70016)));
             pfrom->fDisconnect = true;
             return false;
@@ -3255,8 +3256,10 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
         PrintExceptionContinue(NULL, "ProcessMessages()");
     }
 
-    if (!fRet) {
-        LogPrintf("%s(%s, %u bytes) FAILED peer=%d\n", __func__, SanitizeString(strCommand), nMessageSize, pfrom->GetId());
+    if (!fRet)
+    {
+        if (!IsArgSet("-minimallogging") || strCommand != NetMsgType::VERSION)
+            LogPrintf("%s(%s, %u bytes) FAILED peer=%d\n", __func__, SanitizeString(strCommand), nMessageSize, pfrom->GetId());
     }
 
     LOCK(cs_main);
