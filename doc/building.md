@@ -3,7 +3,7 @@ Note
 
 Please note that in order to achieve quality and consistency Gulden is written to modern software standards, this means that we use the latest languages (C++17) and recent libraries (boost) which may not be present on older distributions.
 
-In order to build Gulden you will therefor require a recent compiler (GCC 7.2 or newer) and recent libraries which means you should either use a recent distro or manually install these.
+In order to build Gulden you will therefore require a recent compiler (GCC 7.2 or newer) and recent libraries which means you should either use a recent distro or manually install these.
 
 These instructions do not deal with this, however we will provide distro specific instructions in future to assist with this.
 
@@ -11,13 +11,14 @@ Please read all the below instructions before attempting to build the software o
 
 Binaries
 -----
-There are perfectly good binaries for every release, please reconsider your need to build and instead download the latest linux*.tar.gz extract it and simply copy GuldenD out of it instead of going through the unnecessary hassle of building.
+There are binaries for every release, please reconsider your need to build and unless you have a very good reason to do so rather just download these.
 Latest binaries can always be found here: https://github.com/Gulden/gulden-official/releases
+Download the latest linux*.tar.gz extract it and simply copy GuldenD out of it instead of going through the unnecessary hassle of building.
 
 Gitian instructions
 -----
 
-Note the gitian build system is temporarily broken and will be fixed in the next release, check back in the next few days.
+Note work on the automated gitian build script is temporarily ongoing. If the setup doesn't work for you it may be necessary to take manual steps, bug reports and pull requests to improve this are welcome.
 
 When to use gitian for your builds:
 * You are on an older distribution
@@ -25,7 +26,7 @@ When to use gitian for your builds:
 * You are not in a rush - the downside of gitian builds is that they are slow.
 
 Instructions:
-* ./contrib/gitian-build.sh --setup --lxc  x.x.x.x    (substitute x.x.x.x for the latest version number)
+* ./contrib/gitian-build.sh --setup x.x.x.x    (substitute x.x.x.x for the latest version number e.g. 2.0.0.9)
 * ./contrib/gitian-build.sh --build -o -l x.x.x.x
 
 Generic instructions
