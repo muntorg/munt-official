@@ -165,19 +165,19 @@ echo ${COMMIT}
 # Setup build environment
 if [[ $setup = true ]]
 then
-    if [[ HOSTOS = "Ubuntu" ]]
+    if [[ ${HOSTOS} = "Ubuntu" ]]
     then
         sudo apt-get install ruby apache2 git apt-cacher-ng python-vm-builder qemu-kvm qemu-utils curl
 
-        if [[ HOSTVER = *"18"* ]]
+        if [[ ${HOSTVER} = *"18"* ]]
         then
             sudo apt-get install lxc
         else
-            if [[ HOSTVER = *"16"* ]]
+            if [[ ${HOSTVER} = *"16"* ]]
             then
                 sudo apt-get install -t xenial-backports lxc
             else
-                if [[ HOSTVER = *"14"* ]]
+                if [[ ${HOSTVER} = *"14"* ]]
                 then
                     sudo apt-get install -t trusty-backports lxc
                 else
@@ -219,7 +219,7 @@ then
     # Linux
     if [[ $linux = true ]]
     then
-            echo ""
+        echo ""
         echo "Compiling ${VERSION} Linux"
         echo ""
         ./bin/gbuild -j ${proc} -m ${mem} --commit Gulden=${COMMIT} --url Gulden=`pwd`/../ ../contrib/gitian-descriptors/gitian-linux.yml
