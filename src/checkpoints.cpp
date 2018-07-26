@@ -9,23 +9,27 @@
 #include "validation/validation.h"
 #include "uint256.h"
 
-#include <boost/foreach.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 #include <stdint.h>
 
 namespace Checkpoints {
 
-    CBlockIndex* GetLastCheckpoint(const CCheckpointData& data)
+    CBlockIndex* GetLastCheckpointIndex()
     {
-        const MapCheckpoints& checkpoints = data.mapCheckpoints;
-
-        BOOST_REVERSE_FOREACH(const MapCheckpoints::value_type& i, checkpoints)
+        for (const auto& i: boost::adaptors::reverse(Params().Checkpoints()))
         {
             const uint256& hash = i.second;
             BlockMap::const_iterator t = mapBlockIndex.find(hash);
             if (t != mapBlockIndex.end())
                 return t->second;
         }
-        return NULL;
+        return nullptr;
+    }
+
+    int LastCheckPointHeight()
+    {
+        auto lastCheckpoint = Params().Checkpoints().rbegin();
+        return lastCheckpoint->first;
     }
 
 } // namespace Checkpoints

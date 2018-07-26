@@ -650,8 +650,7 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
 void NotifyHeaderProgress(CConnman& connman)
 {
     int probableHeight = nMaxStartingHeight;
-    int lastCheckPointHeight = Params().Checkpoints().mapCheckpoints.rbegin()->first;
-    probableHeight = std::max(probableHeight, lastCheckPointHeight);
+    probableHeight = std::max(probableHeight, Checkpoints::LastCheckPointHeight());
     probableHeight = std::max(probableHeight, connman.GetBestHeight());
 
     int currentCount = vReverseHeaders.size();
@@ -2827,8 +2826,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
 
         int nRHeadersConnected = 0;
-        auto lastCheckpoint = chainparams.Checkpoints().mapCheckpoints.rbegin();
-        int lastCheckPointHeight = lastCheckpoint->first;
+        const int lastCheckPointHeight = Checkpoints::LastCheckPointHeight();
         for (unsigned int n = 0; n < nCount; n++) {
             CBlockHeader header;
             vRecv >> header;
@@ -2853,8 +2851,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             }
 
             // if a checkpoint exists at the expected height verify it
-            auto it = chainparams.Checkpoints().mapCheckpoints.find(expectedHeight);
-            if (it!=chainparams.Checkpoints().mapCheckpoints.end()) {
+            auto it = chainparams.Checkpoints().find(expectedHeight);
+            if (it!=chainparams.Checkpoints().end()) {
                 if (hash != it->second) {
                     LOCK(cs_main);
                     Misbehaving(pfrom->GetId(), 100);
@@ -3464,8 +3462,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         bool fFetch = state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot); // Download if this is a nice peer, or we have no nice peers and this one might do.
         if (!state.fSyncStarted && !state.fRHeadersSyncStarted && !pto->fClient && !fImporting && !fReindex) {
 
-            auto lastCheckpoint = Params().Checkpoints().mapCheckpoints.rbegin();
-            int lastCheckPointHeight = lastCheckpoint->first;
+            int lastCheckPointHeight = Checkpoints::LastCheckPointHeight();
 
             // Prefer reverse header sync if possible
             if (fReverseHeaders && pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch

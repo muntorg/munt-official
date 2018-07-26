@@ -11,6 +11,7 @@
 // file COPYING
 
 #include "blockstore.h"
+#include "checkpoints.h"
 #include "streams.h"
 #include "clientversion.h"
 #include "validation/validation.h" //For cs_main
@@ -131,8 +132,7 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
                      index->ToString(), pos.ToString());
 
     bool fPOW_ok = false;
-    int lastCheckPointHeight = params.Checkpoints().mapCheckpoints.rbegin()->first;
-    if (index && (index->nStatus & BLOCK_VALID_HEADER) != 0 && index->nHeight < lastCheckPointHeight)
+    if (index && (index->nStatus & BLOCK_VALID_HEADER) != 0 && index->nHeight < Checkpoints::LastCheckPointHeight())
     {
         // block header data equals that in our index which is valid and below checkpoint height
         // the expensive PoW check does not need be done

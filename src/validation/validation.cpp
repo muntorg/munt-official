@@ -2392,7 +2392,7 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
     // Don't accept any forks from the main chain prior to last checkpoint.
     // GetLastCheckpoint finds the last checkpoint in MapCheckpoints that's in our
     // MapBlockIndex.
-    CBlockIndex* pcheckpoint = Checkpoints::GetLastCheckpoint(chainparams.Checkpoints());
+    CBlockIndex* pcheckpoint = Checkpoints::GetLastCheckpointIndex();
     if (pcheckpoint && nHeight < pcheckpoint->nHeight)
         return state.DoS(100, error("%s: forked chain older than last checkpoint (height %d)", __func__, nHeight), REJECT_CHECKPOINT, "bad-fork-prior-to-checkpoint");
 

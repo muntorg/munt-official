@@ -355,7 +355,7 @@ namespace Checkpoints
     {
         LOCK2(cs_main, cs_hashSyncCheckpoint);// cs_main lock required for ReadBlockFromDisk
 
-        const uint256& hash = GetLastCheckpoint(chainparams.Checkpoints())->GetBlockHashLegacy();
+        const uint256& hash = GetLastCheckpointIndex()->GetBlockHashLegacy();
         if (mapBlockIndex.count(hash) && !chainActive.Contains(mapBlockIndex[hash]))
         {
             // checkpoint block accepted but not yet in main chain
