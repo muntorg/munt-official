@@ -1,3 +1,10 @@
+2.0.0.10
+
+UI - Fix an issue where the receive coins dialog would, when creating a new account, in certain instances temporarily show the address for a different account.
+
+
+
+
 2.0.0.9
 
 CORE - Major witness validation performance improvement and memory usage reduction due to partial chain cloning
