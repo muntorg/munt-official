@@ -42,7 +42,7 @@ To build GuldenD from this repository please follow these steps which are valid 
 * cd ..
 * mkdir build && cd build
 * ../configure --prefix=$PWD/../depends/x86_64-pc-linux-gnu/
-* make -j`nproc`
+* make -j$(nproc)
 
 To build the full UI version of Gulden:
 * sudo apt-get install curl build-essential libtool autotools-dev autoconf pkg-config libssl-dev
@@ -52,9 +52,10 @@ To build the full UI version of Gulden:
 * cd ..
 * mkdir build && cd build
 * ../configure --prefix=$PWD/../depends/x86_64-pc-linux-gnu/
-* make -j`nproc`
+* make -j$(nproc)
 
 Note that it may take a while to build all the dependencies.
+Note if you are using a shell other than bash or your system doesn't have the `nproc` command you will need to manually substitute a number (e.g. 4 for a 4 core cpu) for `$(nproc)` instead.
 
 
 
