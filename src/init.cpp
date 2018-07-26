@@ -878,6 +878,12 @@ void InitParameterInteraction()
         if (SoftSetBoolArg("-whitelistrelay", true))
             LogPrintf("%s: parameter interaction: -whitelistforcerelay=1 -> setting -whitelistrelay=1\n", __func__);
     }
+
+    //For raspberry pis etc. we default to keeping logging at a minimum
+    #if defined(__arm__) || defined(__aarch64__)
+    SoftSetBoolArg("-minimallogging", true)
+    #endif
+    gbMinimalLogging = GetBoolArg("-logips", DEFAULT_LOGIPS);
 }
 
 static std::string ResolveErrMsg(const char * const optname, const std::string& strBind)

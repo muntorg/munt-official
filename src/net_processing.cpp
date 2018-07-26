@@ -1423,7 +1423,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (nVersion < MIN_PEER_PROTO_VERSION)
         {
             // disconnect from peers older than this proto version
-            if (!IsArgSet("-minimallogging"))
+            if (!gbMinimalLogging)
                 LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
             connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
             pfrom->fDisconnect = true;
@@ -1433,7 +1433,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         //fixme: (2.1) We can remove this; we temporarily accept incoming connections from old peers but refuse to establish outgoing ones with them.
         if (nVersion < 70016 && !pfrom->fInbound)
         {
-            if (!IsArgSet("-minimallogging"))
+            if (!gbMinimalLogging)
                 LogPrintf("outgoing peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
             connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", 70016)));
             pfrom->fDisconnect = true;
@@ -3258,7 +3258,7 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
 
     if (!fRet)
     {
-        if (!IsArgSet("-minimallogging") || strCommand != NetMsgType::VERSION)
+        if (!gbMinimalLogging || strCommand != NetMsgType::VERSION)
             LogPrintf("%s(%s, %u bytes) FAILED peer=%d\n", __func__, SanitizeString(strCommand), nMessageSize, pfrom->GetId());
     }
 
