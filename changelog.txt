@@ -1,7 +1,7 @@
 2.0.0.10
 
 UI - Fix an issue where the receive coins dialog would, when creating a new account, in certain instances temporarily show the address for a different account.
-
+CMDFLAG - Default "minimallogging" flag to on for arm and aarch64 architectures.
 
 
 
