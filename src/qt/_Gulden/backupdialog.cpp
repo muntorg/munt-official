@@ -43,7 +43,7 @@ void BackupDialog::showBackupPhrase()
     ui->labelShowBackupPhrase->setVisible(false);
     ui->buttonShowBackupPhrase->setVisible(false);
 
-    LOCK(pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
