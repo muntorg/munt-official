@@ -669,8 +669,8 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         {
             if (!seedIter.second->Encrypt(_vMasterKey))
             {
-            pwalletdbEncryption->TxnAbort();
-            delete pwalletdbEncryption;
+                pwalletdbEncryption->TxnAbort();
+                delete pwalletdbEncryption;
                 // We now probably have half of our keys encrypted in memory, and half not...
                 // die and let the user reload the unencrypted wallet.
                 assert(false);
