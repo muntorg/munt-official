@@ -475,22 +475,34 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         //Clean up an issue with some wallets that didn't delete one of the seeds correctly
         if (walletInstance->IsCrypted() && walletInstance->mapSeeds.size() > 1)
         {
-            for (const auto& [seedUUID, seed] : walletInstance->mapSeeds)
+            bool anyFixed = true;
+            while (anyFixed)
             {
-                if (!seed->IsCrypted())
+                anyFixed = false;
+                for (const auto& [seedUUID, seed] : walletInstance->mapSeeds)
                 {
-                    if (seed->m_type == CHDSeed::CHDSeed::BIP32 || seed->m_type == CHDSeed::CHDSeed::BIP32Legacy)
+                    if (!seed->IsCrypted())
                     {
-                        // Erase
-                        walletInstance->mapSeeds.erase(walletInstance->mapSeeds.find(seedUUID));
-                        if (!CWalletDB(*dbw).DeleteHDSeed(*seed))
+                        if (seed->m_type == CHDSeed::CHDSeed::BIP32 || seed->m_type == CHDSeed::CHDSeed::BIP32Legacy)
                         {
-                            throw std::runtime_error("Deleting seed failed");
+                            // Erase
+                            walletInstance->mapSeeds.erase(walletInstance->mapSeeds.find(seedUUID));
+                            if (!CWalletDB(*walletInstance->dbw).DeleteHDSeed(*seed))
+                            {
+                                throw std::runtime_error("Deleting seed failed");
+                            }
+                            anyFixed = true;
+                            break;
                         }
-                    }
-                    else
-                    {
-                        std::string strErrorMessage = strprintf("Wallet contains a seed encryption error, this is not immediately dangerous but should be rectified as soon as possible, please contact a developer for assistance");
+                        else
+                        {
+                            std::string strErrorMessage = strprintf("Wallet contains a seed encryption error, this is not immediately dangerous but should be rectified as soon as possible, please contact a developer for assistance");
+                            CAlert::Notify(strErrorMessage, true, true);
+                            LogPrintf("%s", strErrorMessage.c_str());
+                            uiInterface.ThreadSafeMessageBox(strErrorMessage,"", CClientUIInterface::MSG_ERROR);
+                            anyFixed = false;
+                            break;
+                        }
                     }
                 }
             }
