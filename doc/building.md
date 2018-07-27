@@ -29,6 +29,15 @@ Instructions:
 * ./contrib/gitian-build.sh --setup x.x.x.x    (substitute x.x.x.x for the latest version number e.g. 2.0.0.9)
 * ./contrib/gitian-build.sh --build -o -l x.x.x.x
 
+Distribution specific instructions
+-----
+
+The distribution specific instructions attempt to minimise compiling by using native system packages where possible. Note that installing these packages may have unintended consequences for other packages on your system; It is your responsibility to  understand package management and your system. If you cannot deal with the possibility of such side effects it is better to follow the Gitian instructions.
+
+|Distribution|Version|
+|:-----------|:---------|
+|Ubuntu|[16.04.4](https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d#file-ubuntu_16-04-4-txt)|
+
 Generic instructions
 -----
 
@@ -88,7 +97,7 @@ Binaries are output as follows by the build process:
 
 |Binary|Location|
 |:-----------|:---------|
-|Qt wallet|src/qt/Gulden|
-|Gulden Daemon/RPC server|src/GuldenD|
-|Gulden RPC client|src/Gulden-cli|
-|Gulden tx utility|src/Gulden-tx|
+|Qt wallet|build/src/qt/Gulden|
+|Gulden Daemon/RPC server|build/src/GuldenD|
+|Gulden RPC client|build/src/Gulden-cli|
+|Gulden tx utility|build/src/Gulden-tx|
