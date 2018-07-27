@@ -2853,7 +2853,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // if a checkpoint exists at the expected height verify it
             auto it = chainparams.Checkpoints().find(expectedHeight);
             if (it!=chainparams.Checkpoints().end()) {
-                if (hash != it->second) {
+                if (hash != it->second.hash) {
                     LOCK(cs_main);
                     Misbehaving(pfrom->GetId(), 100);
                     return error("rheaders from %d mismatch checkpoint", pfrom->GetId());

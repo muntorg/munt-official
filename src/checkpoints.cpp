@@ -18,8 +18,7 @@ namespace Checkpoints {
     {
         for (const auto& i: boost::adaptors::reverse(Params().Checkpoints()))
         {
-            const uint256& hash = i.second;
-            BlockMap::const_iterator t = mapBlockIndex.find(hash);
+            BlockMap::const_iterator t = mapBlockIndex.find(i.second.hash);
             if (t != mapBlockIndex.end())
                 return t->second;
         }
