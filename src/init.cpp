@@ -881,7 +881,7 @@ void InitParameterInteraction()
 
     //For raspberry pis etc. we default to keeping logging at a minimum
     #if defined(__arm__) || defined(__aarch64__)
-    SoftSetBoolArg("-minimallogging", true)
+    SoftSetBoolArg("-minimallogging", true);
     #endif
     gbMinimalLogging = GetBoolArg("-logips", DEFAULT_LOGIPS);
 }
