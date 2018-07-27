@@ -205,11 +205,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             // Only for recovery wallets though, new ones don't need them
             if (GuldenAppManager::gApp->isRecovery)
             {
+                //Temporary seeds for shadow children
                 CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
-                if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*seedBip32))
-                {
-                    throw std::runtime_error("Writing bip32 seed failed");
-                }
                 CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
 
                 // Write new accounts
@@ -473,6 +470,30 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             CAlert::Notify(strErrorMessage, true, true);
             LogPrintf("%s", strErrorMessage.c_str());
             uiInterface.ThreadSafeMessageBox(strErrorMessage,"", CClientUIInterface::MSG_ERROR);
+        }
+
+        //Clean up an issue with some wallets that didn't delete one of the seeds correctly
+        if (walletInstance->IsCrypted() && walletInstance->mapSeeds.size() > 1)
+        {
+            for (const auto& [seedUUID, seed] : walletInstance->mapSeeds)
+            {
+                if (!seed->IsCrypted())
+                {
+                    if (seed->m_type == CHDSeed::CHDSeed::BIP32 || seed->m_type == CHDSeed::CHDSeed::BIP32Legacy)
+                    {
+                        // Erase
+                        walletInstance->mapSeeds.erase(walletInstance->mapSeeds.find(seedUUID));
+                        if (!CWalletDB(*dbw).DeleteHDSeed(*seed))
+                        {
+                            throw std::runtime_error("Deleting seed failed");
+                        }
+                    }
+                    else
+                    {
+                        std::string strErrorMessage = strprintf("Wallet contains a seed encryption error, this is not immediately dangerous but should be rectified as soon as possible, please contact a developer for assistance");
+                    }
+                }
+            }
         }
     }
     else
