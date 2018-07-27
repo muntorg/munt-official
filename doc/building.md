@@ -38,7 +38,7 @@ The distribution specific instructions attempt to minimise compiling by using na
 |:-----------|:---------|
 |Ubuntu|[14.04.5](https://gist.github.com/mjmacleod/31ad31386fcb421a7ba04948e83ace76#file-ubuntu_14-04-5-txt)|
 |Ubuntu|[16.04.4](https://gist.github.com/mjmacleod/a3562af661661ce6206e5950e406ff9d#file-ubuntu_16-04-4-txt)|
-
+|Ubuntu|[18.04](https://gist.github.com/mjmacleod/c5be3d05d213317b7ae4cbc50324d5ee#file-ubuntu_18-04-txt)|
 
 
 Generic instructions
