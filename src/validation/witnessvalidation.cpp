@@ -253,7 +253,12 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 {
     DO_BENCHMARK("WIT: getAllUnspentWitnessCoins", BCLog::BENCH|BCLog::WITNESS);
 
+    #ifdef ENABLE_WALLET
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
     assert(pPreviousIndexChain_);
 
     allWitnessCoins.clear();
@@ -342,7 +347,11 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
 {
     DO_BENCHMARK("WIT: GetWitnessHelper", BCLog::BENCH|BCLog::WITNESS);
 
+    #ifdef ENABLE_WALLET
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
+    #else
+    LOCK(cs_main);
+    #endif
 
     /** Generate the pool of potential witnesses for the given block index **/
     /** Addresses older than 10000 blocks or younger than 100 blocks are discarded **/
@@ -443,7 +452,11 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
 {
     DO_BENCHMARK("WIT: GetWitnessInfo", BCLog::BENCH|BCLog::WITNESS);
 
+    #ifdef DISABLE_WALLET
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
+    #else
+    LOCK(cs_main);
+    #endif
 
     // Fetch all unspent witness outputs for the chain in which -block- acts as the tip.
     if (!getAllUnspentWitnessCoins(chain, chainParams, pPreviousIndexChain, witnessInfo.allWitnessCoins, &block, viewOverride))
@@ -473,7 +486,11 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
 {
     DO_BENCHMARK("WIT: GetWitness", BCLog::BENCH|BCLog::WITNESS);
 
+    #ifdef ENABLE_WALLET
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
+    #else
+    LOCK(cs_main);
+    #endif
 
     // Fetch all the chain info (for specific block) we will need to calculate the witness.
     uint64_t nBlockHeight = pPreviousIndexChain->nHeight + 1;

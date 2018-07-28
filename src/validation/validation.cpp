@@ -1862,7 +1862,12 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         const CBlockIndex *pindexFork;
         bool fInitialDownload;
         {
+            #ifdef ENABLE_WALLET
             LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+            #else
+            LOCK(cs_main);
+            #endif
+
             ConnectTrace connectTrace(mempool); // Destructed before cs_main is unlocked
 
             CBlockIndex *pindexOldTip = chainActive.Tip();

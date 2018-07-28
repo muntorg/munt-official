@@ -41,6 +41,7 @@
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
 
+
 #include <algorithm>
 #include <queue>
 #include <utility>
@@ -281,7 +282,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     pblocktemplate->vTxFees.push_back(-1); // updated at end
     pblocktemplate->vTxSigOpsCost.push_back(-1); // updated at end
 
+    #ifdef ENABLE_WALLET
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+    #else
+    LOCK(cs_main);
+    #endif
     LOCK(Checkpoints::cs_hashSyncCheckpoint); // prevents potential deadlock being reported from tests
 
     nHeight = pParent->nHeight + 1;
