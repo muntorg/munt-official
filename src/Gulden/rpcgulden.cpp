@@ -2605,7 +2605,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
             "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
-            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there is additional fees to distribute after applying the compunding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
+            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nArguments:\n"
             "1. \"witness_account\"            (string) The UUID or unique label of the account.\n"
             "2. amount                        (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
@@ -2663,7 +2663,7 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
             "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
-            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there is additional fees to distribute after applying the compunding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
+            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnesscompound \"My witness account\"", "")
             + HelpExampleRpc("getwitnesscompound \"My witness account\"", ""));
