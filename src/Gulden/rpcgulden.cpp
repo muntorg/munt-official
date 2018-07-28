@@ -7,13 +7,17 @@
 #include "generation/miner.h"
 #include "generation/witness.h"
 #include <rpc/server.h>
-#include <wallet/rpcwallet.h>
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 #include <consensus/consensus.h>
 #include <boost/assign/list_of.hpp>
 
+#ifdef ENABLE_WALLET
+#include <wallet/rpcwallet.h>
 #include "wallet/wallet.h"
+#include "wallet/coincontrol.h"
+#include "wallet/wallet.h"
+#endif
 
 #include <univalue.h>
 
@@ -28,8 +32,6 @@
 
 #include "txdb.h"
 #include "coins.h"
-#include "wallet/coincontrol.h"
-#include "wallet/wallet.h"
 #include "primitives/transaction.h"
 
 #include <Gulden/util.h>

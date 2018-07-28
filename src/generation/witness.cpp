@@ -20,6 +20,7 @@
 #include "consensus/validation.h"
 #include "Gulden/auto_checkpoints.h"
 #include "hash.h"
+#include "key.h"
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 #include "net.h"
@@ -52,6 +53,7 @@
 
 CCriticalSection processBlockCS;
 
+#ifdef ENABLE_WALLET
 static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOutput)
 {
     assert(pBlock->nVersionPoW2Witness != 0);
@@ -563,8 +565,12 @@ void static GuldenWitness()
     }
 }
 
+#endif
+
 
 void StartPoW2WitnessThread(boost::thread_group& threadGroup)
 {
+    #ifdef ENABLE_WALLET
     threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "pow2_witness", &GuldenWitness));
+    #endif
 }

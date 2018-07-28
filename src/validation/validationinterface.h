@@ -16,6 +16,8 @@
 #include <boost/signals2/signal.hpp>
 #include <memory>
 
+#include "generation/generation.h"
+
 #include "primitives/transaction.h" // CTransaction(Ref)
 
 class CBlock;
@@ -23,7 +25,6 @@ class CBlockIndex;
 struct CBlockLocator;
 class CBlockIndex;
 class CConnman;
-class CReserveKeyOrScript;
 class CValidationInterface;
 class CValidationState;
 class uint256;

@@ -13,6 +13,8 @@
 #ifndef GULDEN_MINER_H
 #define GULDEN_MINER_H
 
+#include "generation.h"
+
 #include "primitives/block.h"
 #include "txmempool.h"
 
@@ -26,7 +28,6 @@
 
 class CBlockIndex;
 class CChainParams;
-class CReserveKeyOrScript;
 class CScript;
 class CWallet;
 

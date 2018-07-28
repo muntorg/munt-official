@@ -11,7 +11,6 @@
 // file COPYING
 
 #include "miner.h"
-#include "generation.h"
 
 #include "net.h"
 
@@ -41,6 +40,7 @@
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
 
+#include "generation/generation.h"
 
 #include <algorithm>
 #include <queue>
@@ -366,6 +366,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize(1);
+    #ifdef ENABLE_WALLET
     if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
     {
         coinbaseTx.vout[0].SetType(CTxOutType::StandardKeyHashOutput);
@@ -378,6 +379,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         coinbaseTx.vout[0].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
     }
     else
+    #endif
     {
         coinbaseTx.vout[0].SetType(CTxOutType::ScriptLegacyOutput);
         coinbaseTx.vout[0].output.scriptPubKey = coinbaseReservedKey->reserveScript;

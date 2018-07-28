@@ -6,7 +6,9 @@
 #ifndef GULDEN_QT_SENDCOINSENTRY_H
 #define GULDEN_QT_SENDCOINSENTRY_H
 
+#ifdef ENABLE_WALLET
 #include "walletmodel.h"
+#endif
 
 #include <QStackedWidget>
 

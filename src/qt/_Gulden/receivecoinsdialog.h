@@ -7,7 +7,9 @@
 #define GULDEN_QT_GULDENRECEIVECOINSDIALOG_H
 
 #include "guiutil.h"
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
 
 #include <QDialog>
 #include <QHeaderView>

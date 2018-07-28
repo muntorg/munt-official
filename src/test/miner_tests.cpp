@@ -25,7 +25,9 @@
 #include "util.h"
 #include "utilstrencodings.h"
 
+#ifdef ENABLE_WALLET
 #include <wallet/wallet.h>
+#endif
 
 #include "test/test_gulden.h"
 

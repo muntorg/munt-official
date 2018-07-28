@@ -5,7 +5,9 @@
 
 #include "util.h"
 #include "wallet/wallettx.h"
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
 #include "consensus/validation.h"
 #include "validation/validation.h"
 #include "validation/versionbitsvalidation.h"
@@ -18,6 +20,7 @@
 #include <LRUCache/LRUCache11.hpp>
 
 
+#ifdef ENABLE_WALLET
 static bool alreadyInRescan = false;
 void rescanThread()
 {
@@ -63,6 +66,7 @@ CHDSeed::SeedType SeedTypeFromString(std::string type)
 
     return CHDSeed::CHDSeed::BIP44;
 }
+#endif
 
 static uint256 phase3ActivationHash;
 static uint256 phase4ActivationHash;

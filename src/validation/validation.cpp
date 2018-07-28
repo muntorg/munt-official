@@ -38,6 +38,7 @@
 #include "random.h"
 #include "script/script.h"
 #include "script/sigcache.h"
+#include "script/sign.h"
 #include "script/standard.h"
 #include "timedata.h"
 #include "tinyformat.h"

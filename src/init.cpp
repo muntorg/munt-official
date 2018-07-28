@@ -1375,7 +1375,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         return false;
 #endif
 
+    #ifdef ENABLE_WALLET
     StartShadowPoolManagerThread(threadGroup);
+    #endif
 
     // ********************************************************* Step 6: network initialization
     // Note that we absolutely cannot open any actual connections

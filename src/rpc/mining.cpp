@@ -43,6 +43,8 @@
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
+#include "generation/generation.h"
+#include "script/script.h"
 #include <Gulden/Common/diff.h>
 #include <Gulden/rpcgulden.h>
 #include <validation/witnessvalidation.h>
@@ -269,6 +271,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     if (Params().MineBlocksOnDemand())
         throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Use the generate method instead of setgenerate on this network");
 
+    #ifdef ENABLE_WALLET
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
@@ -303,6 +306,10 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     {
         return strprintf("Mining enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] ,nGenProcLimit);
     }
+    #else
+    throw std::runtime_error("Cannot use command without an active wallet");
+    return nullptr;
+    #endif
 }
 
 static UniValue generatetoaddress(const JSONRPCRequest& request)

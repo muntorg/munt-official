@@ -7,13 +7,19 @@
 #define GULDEN_GULDEN_UTIL_H
 
 #include <string>
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
+#include "script/standard.h"
+#include "chainparams.h"
 #include "chain.h"
 #include "coins.h"
 
+#ifdef ENABLE_WALLET
 void rescanThread();
 std::string StringFromSeedType(CHDSeed* seed);
 CHDSeed::SeedType SeedTypeFromString(std::string type);
+#endif
 
 class CBlockIndex;
 bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
