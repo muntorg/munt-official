@@ -29,6 +29,7 @@ Active:
 |Theogony|www.tpool.io|tpool.io|GgdMXU14f4v5JqEs4V5h6eNsiRh6XppWps|http://tpool.io/pool/nlg/blocks||
 |KHPOOL|hpool01.karpa.us|||nazkov@gmail.com|
 |mininghub||mininghub|GYLqFZZ3tHThPDzuRF2oir78PW97h39178||
+|luckypool||luckypool|GRH1SKLneAzwYn7yXdKBSuuAwwsmAz9JtQ||
 
 Alive but inactive:
 ----
