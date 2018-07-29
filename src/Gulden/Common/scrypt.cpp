@@ -44,6 +44,7 @@
 #endif
 #endif
 
+#ifndef __FreeBSD__
 /* unused keeping it around as it's the counterpart of be32enc below
 static inline uint32_t be32dec(const void *pp)
 {
@@ -61,6 +62,7 @@ static inline void be32enc(void *pp, uint32_t x)
 	p[1] = (x >> 16) & 0xff;
 	p[0] = (x >> 24) & 0xff;
 }
+#endif
 
 typedef struct HMAC_SHA256Context {
 	SHA256_CTX ictx;
