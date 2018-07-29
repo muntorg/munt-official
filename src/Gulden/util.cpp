@@ -3,11 +3,11 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "util.h"
 #include "wallet/wallettx.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
+#include "util.h"
 #include "consensus/validation.h"
 #include "validation/validation.h"
 #include "validation/versionbitsvalidation.h"

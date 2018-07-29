@@ -54,6 +54,49 @@
 CCriticalSection processBlockCS;
 
 #ifdef ENABLE_WALLET
+CReserveKeyOrScript::CReserveKeyOrScript(CWallet* pwalletIn, CAccount* forAccount, int64_t forKeyChain)
+{
+    pwallet = pwalletIn;
+    account = forAccount;
+    nIndex = -1;
+    nKeyChain = forKeyChain;
+}
+
+CReserveKeyOrScript::CReserveKeyOrScript(CScript& script)
+{
+    pwallet = nullptr;
+    account = nullptr;
+    nIndex = -1;
+    nKeyChain = -1;
+    reserveScript = script;
+}
+
+CReserveKeyOrScript::~CReserveKeyOrScript()
+{
+    if (shouldKeepOnDestroy)
+        KeepScript();
+    if (!scriptOnly())
+        ReturnKey();
+}
+
+bool CReserveKeyOrScript::scriptOnly()
+{
+    if (account == nullptr && pwallet == nullptr)
+        return true;
+    return false;
+}
+
+void CReserveKeyOrScript::KeepScript()
+{
+    if (!scriptOnly())
+        KeepKey();
+}
+
+void CReserveKeyOrScript::keepScriptOnDestroy()
+{
+    shouldKeepOnDestroy = true;
+}
+
 static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOutput)
 {
     assert(pBlock->nVersionPoW2Witness != 0);

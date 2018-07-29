@@ -10,6 +10,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include "generation/generation.h"
 #include "miner.h"
 
 #include "net.h"
@@ -39,8 +40,6 @@
 #include "utiltime.h"
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
-
-#include "generation/generation.h"
 
 #include <algorithm>
 #include <queue>

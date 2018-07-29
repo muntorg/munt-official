@@ -6,6 +6,10 @@
 #ifndef GULDEN_QT_SENDCOINSENTRY_H
 #define GULDEN_QT_SENDCOINSENTRY_H
 
+#if defined(HAVE_CONFIG_H)
+#include "config/gulden-config.h"
+#endif
+
 #ifdef ENABLE_WALLET
 #include "walletmodel.h"
 #endif

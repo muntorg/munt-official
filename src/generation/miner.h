@@ -13,10 +13,10 @@
 #ifndef GULDEN_MINER_H
 #define GULDEN_MINER_H
 
-#include "generation.h"
-
 #include "primitives/block.h"
 #include "txmempool.h"
+
+#include "generation/generation.h"
 
 #include <stdint.h>
 #include <memory>

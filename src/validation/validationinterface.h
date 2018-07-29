@@ -13,6 +13,10 @@
 #ifndef GULDEN_VALIDATIONINTERFACE_H
 #define GULDEN_VALIDATIONINTERFACE_H
 
+#if defined(HAVE_CONFIG_H)
+#include "config/gulden-config.h"
+#endif
+
 #include <boost/signals2/signal.hpp>
 #include <memory>
 

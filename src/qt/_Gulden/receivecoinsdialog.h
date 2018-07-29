@@ -44,6 +44,8 @@ class CReserveKeyOrScript;
 class QWebEngineNewViewRequest;
 class QNetworkReply;
 
+class CAccount;
+
 namespace Ui {
     class ReceiveCoinsDialog;
 }

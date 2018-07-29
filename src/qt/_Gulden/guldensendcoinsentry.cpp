@@ -3,6 +3,10 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#if defined(HAVE_CONFIG_H)
+#include "config/gulden-config.h"
+#endif
+
 #include "guldensendcoinsentry.h"
 #include "_Gulden/forms/ui_guldensendcoinsentry.h"
 

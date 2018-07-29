@@ -4,6 +4,7 @@
 // file COPYING
 
 #include "rpcgulden.h"
+#include "generation/generation.h"
 #include "generation/miner.h"
 #include "generation/witness.h"
 #include <rpc/server.h>

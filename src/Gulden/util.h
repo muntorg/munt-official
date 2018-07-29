@@ -9,6 +9,7 @@
 #include <string>
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#include "account.h"
 #endif
 #include "script/standard.h"
 #include "chainparams.h"
