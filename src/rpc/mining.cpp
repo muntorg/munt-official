@@ -737,7 +737,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptDummy);
         pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed, false, &witnessCoinbaseHex, &witnessSubsidyHex, &amountPoW2Subsidy);
         if (!pblocktemplate)
-            throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Failed to create new block, read GuldenD debug.log for more information");
 
         // Need to update only after we know CreateNewBlock succeeded
         pindexPrev = pindexPrevNew;
