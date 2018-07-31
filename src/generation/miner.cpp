@@ -341,6 +341,14 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     int nPackagesSelected = 0;
     int nDescendantsUpdated = 0;
+
+    // For phase 3 we need to do some gymnastics to ensure the right chain tip before calling TestBlockValidity.
+    CValidationState state;
+    CCoinsViewCache viewNew(pcoinsTip);
+    CBlockIndex* pindexPrev_ = nullptr;
+    CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(), pParent, pindexPrev_);
+    assert(pindexPrev_);
+    ForceActivateChain(pindexPrev_, nullptr, state, chainparams, tempChain, viewNew);
     {
         LOCK(mempool.cs);
 
@@ -351,7 +359,36 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         // TODO: replace this with a call to main to assess validity of a mempool
         // transaction (which in most cases can be a no-op).
         fIncludeSegSig = IsSegSigEnabled(pParent) && fMineSegSig;
-        addPackageTxs(nPackagesSelected, nDescendantsUpdated);
+
+        // If we are mining below the tip (orphaned tip due to absent witness) - it is desirable to include first all transactions that are in the tip.
+        // If we do not do this we can end up creating invalid blocks, due to the fact that we don't rewind the mempool here
+        // Which can lead to inclusion of transactions without their ancestors (ancestors are in tip) for instance.
+        // It is also however beneficial to the chain that transactions already in the chain stay in the chain for new block...
+        std::deque<CBlockIndex*> canabalizeBlocks;
+        CBlockIndex* pCannibalTip = chainActive.Tip();
+        while (nHeight <= pCannibalTip->nHeight)
+        {
+            canabalizeBlocks.push_front(pCannibalTip);
+            pCannibalTip = pCannibalTip->pprev;
+        }
+        std::vector<CTransactionRef> canabalizeTransactions;
+        for (const auto& pIndexCannibalBlock : canabalizeBlocks)
+        {
+            std::shared_ptr<CBlock> pBlockCannibal(new CBlock);
+            if (!ReadBlockFromDisk(*pBlockCannibal.get(), pIndexCannibalBlock, Params()))
+            {
+                LogPrintf("Error in CreateNewBlock: could not read block from disk.\n");
+                return nullptr;
+            }
+            //fixme: (2.1) - Phase 4
+            // We don't want to canabalize coinbase transaction or 'witness refresh' transaction as these are 'generated' by miner and not actual transactions.
+            for (uint32_t i = (bSegSigIsEnabled?1:2); i < pBlockCannibal.get()->vtx.size(); ++i)
+            {
+                canabalizeTransactions.push_back(pBlockCannibal.get()->vtx[i]);
+            }
+        }
+
+        addPackageTxs(nPackagesSelected, nDescendantsUpdated, &canabalizeTransactions, &viewNew);
     }
 
     int64_t nTime1 = GetTimeMicros();
@@ -441,30 +478,10 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     pblock->nNonce         = 0;
     pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(*pblock->vtx[0]);
 
-    if (nParentPoW2Phase/*nGrandParentPoW2Phase*/ >= 3) // For phase 3 we need to do some gymnastics to ensure the right chain tip before calling TestBlockValidity.
+    if (!noValidityCheck && !TestBlockValidity(tempChain, state, chainparams, *pblock, pindexPrev_, false, false, &viewNew))
     {
-        CValidationState state;
-        CCoinsViewCache viewNew(pcoinsTip);
-
-        CBlockIndex* pindexPrev_ = nullptr;
-        CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(), pParent, pindexPrev_);
-        assert(pindexPrev_);
-        ForceActivateChain(pindexPrev_, nullptr, state, chainparams, tempChain, viewNew);
-
-        if (!noValidityCheck && !TestBlockValidity(tempChain, state, chainparams, *pblock, pindexPrev_, false, false, &viewNew))
-        {
-            LogPrintf("Error in CreateNewBlock: TestBlockValidity failed.\n");
-            return nullptr;
-        }
-    }
-    else
-    {
-        CValidationState state;
-        if (!TestBlockValidity(chainActive, state, chainparams, *pblock, pParent, false, false, nullptr))
-        {
-            LogPrintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state));
-            return nullptr;
-        }
+        LogPrintf("Error in CreateNewBlock: TestBlockValidity failed.\n");
+        return nullptr;
     }
     int64_t nTime2 = GetTimeMicros();
 
@@ -607,13 +624,37 @@ void BlockAssembler::SortForBlock(const CTxMemPool::setEntries& package, CTxMemP
 // Each time through the loop, we compare the best transaction in
 // mapModifiedTxs with the next transaction in the mempool to decide what
 // transaction package to work on next.
-void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpdated)
+void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpdated, std::vector<CTransactionRef>* pCannabalizeTransactions, CCoinsViewCache* pViewIn)
 {
     // mapModifiedTx will store sorted packages after they are modified
     // because some of their txs are already in the block
     indexed_modified_transaction_set mapModifiedTx;
     // Keep track of entries that failed inclusion, to avoid duplicate work
     CTxMemPool::setEntries failedTx;
+
+    // First canabalise all the transactions from the existing chain that space will allow, in preserved order, only afterwards add new transactions.
+    if (pCannabalizeTransactions && pViewIn)
+    {
+        for (const auto& cannabalisedTransaction : *pCannabalizeTransactions)
+        {
+            if (nBlockWeight + GetTransactionWeight(*cannabalisedTransaction) > nBlockMaxWeight)
+                return;
+
+            pblock->vtx.push_back(cannabalisedTransaction);
+            int nFee = pViewIn->GetValueIn(*cannabalisedTransaction) - cannabalisedTransaction->GetValueOut();
+            pblocktemplate->vTxFees.push_back(nFee);
+            int nSigOpsCost = GetTransactionSigOpCost(*cannabalisedTransaction, *pViewIn, STANDARD_SCRIPT_VERIFY_FLAGS);
+            pblocktemplate->vTxSigOpsCost.push_back(nSigOpsCost);
+            if (fNeedSizeAccounting)
+            {
+                nBlockSize += ::GetSerializeSize(*cannabalisedTransaction, SER_NETWORK, PROTOCOL_VERSION);
+            }
+            nBlockWeight += GetTransactionWeight(*cannabalisedTransaction);
+            ++nBlockTx;
+            nBlockSigOpsCost += nSigOpsCost;
+            nFees += nFee;
+        }
+    }
 
     // Start by adding all descendants of previously added txs to mapModifiedTx
     // and modifying them for their already included ancestors
