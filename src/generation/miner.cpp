@@ -292,11 +292,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     if (pWitnessBlockToEmbed)
     {
-        LogPrintf("CreateNewBlock: parent height [%d]; embedded witness height [%d]; our height [%d]", pParent->nHeight, pWitnessBlockToEmbed->nHeight, nHeight);
+        LogPrintf("CreateNewBlock: parent height [%d]; embedded witness height [%d]; our height [%d]\n", pParent->nHeight, pWitnessBlockToEmbed->nHeight, nHeight);
         assert(pParent->nHeight == pWitnessBlockToEmbed->nHeight);
     }
     else
-        LogPrintf("CreateNewBlock: parent height [%d]; our height [%d]", pParent->nHeight, nHeight);
+        LogPrintf("CreateNewBlock: parent height [%d]; our height [%d]\n", pParent->nHeight, nHeight);
 
     int nParentPoW2Phase = GetPoW2Phase(pParent, chainparams, chainActive);
     int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev, chainparams, chainActive);
