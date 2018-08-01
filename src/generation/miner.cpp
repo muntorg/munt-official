@@ -641,7 +641,19 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
                 return;
 
             pblock->vtx.push_back(cannabalisedTransaction);
-            int nFee = pViewIn->GetValueIn(*cannabalisedTransaction) - cannabalisedTransaction->GetValueOut();
+            int nFee = pViewIn->GetValueIn(*cannabalisedTransaction);
+            // If the inputs aren't in the cache they may also be canabalised so search the list for them
+            for (const auto& cannabalisedInputTransaction : *pCannabalizeTransactions)
+            {
+                for (const auto& thisTransactionInputs : cannabalisedTransaction->vin)
+                {
+                    if (thisTransactionInputs.prevout.getHash() == cannabalisedInputTransaction->GetHash())
+                    {
+                        nFee += cannabalisedInputTransaction->vout[thisTransactionInputs.prevout.n].nValue;
+                    }
+                }
+            }
+            nFee -= cannabalisedTransaction->GetValueOut();
             pblocktemplate->vTxFees.push_back(nFee);
             int nSigOpsCost = GetTransactionSigOpCost(*cannabalisedTransaction, *pViewIn, STANDARD_SCRIPT_VERIFY_FLAGS);
             pblocktemplate->vTxSigOpsCost.push_back(nSigOpsCost);
