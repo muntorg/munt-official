@@ -402,14 +402,17 @@ bool MarkBlockAsInFlight(NodeId nodeid, const uint256& hash, const CBlockIndex* 
 }
 
 /** Check whether the last unknown block a peer advertised is not yet known. */
-void ProcessBlockAvailability(NodeId nodeid) {
+void ProcessBlockAvailability(NodeId nodeid)
+{
     CNodeState *state = State(nodeid);
     assert(state != NULL);
 
-    if (!state->hashLastUnknownBlock.IsNull()) {
+    if (!state->hashLastUnknownBlock.IsNull())
+    {
         BlockMap::iterator itOld = mapBlockIndex.find(state->hashLastUnknownBlock);
-        if (itOld != mapBlockIndex.end() && itOld->second->nChainWork > 0) {
-            if (state->pindexBestKnownBlock == NULL || itOld->second->nChainWork >= state->pindexBestKnownBlock->nChainWork)
+        if (itOld != mapBlockIndex.end() && itOld->second->nChainWork > 0)
+        {
+            if (state->pindexBestKnownBlock == NULL || itOld->second->nChainWork >= state->pindexBestKnownBlock->nChainWork || itOld->second->nHeight == state->pindexBestKnownBlock->nHeight)
                 state->pindexBestKnownBlock = itOld->second;
             state->hashLastUnknownBlock.SetNull();
         }
@@ -417,18 +420,22 @@ void ProcessBlockAvailability(NodeId nodeid) {
 }
 
 /** Update tracking information about which blocks a peer is assumed to have. */
-void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash) {
+void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash)
+{
     CNodeState *state = State(nodeid);
     assert(state != NULL);
 
     ProcessBlockAvailability(nodeid);
 
     BlockMap::iterator it = mapBlockIndex.find(hash);
-    if (it != mapBlockIndex.end() && it->second->nChainWork > 0) {
+    if (it != mapBlockIndex.end() && it->second->nChainWork > 0)
+    {
         // An actually better block was announced.
-        if (state->pindexBestKnownBlock == NULL || it->second->nChainWork >= state->pindexBestKnownBlock->nChainWork)
+        if (state->pindexBestKnownBlock == NULL || it->second->nChainWork >= state->pindexBestKnownBlock->nChainWork || it->second->nHeight == state->pindexBestKnownBlock->nHeight)
             state->pindexBestKnownBlock = it->second;
-    } else {
+    }
+    else
+    {
         // An unknown block was announced; just assume that the latest one is the best one.
         state->hashLastUnknownBlock = hash;
     }
@@ -521,7 +528,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
     // Make sure pindexBestKnownBlock is up to date, we'll need it.
     ProcessBlockAvailability(nodeid);
 
-    if (state->pindexBestKnownBlock == NULL || state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork || state->pindexBestKnownBlock->nChainWork < UintToArith256(consensusParams.nMinimumChainWork)) {
+    if (state->pindexBestKnownBlock == NULL || (state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork && state->pindexBestKnownBlock->nHeight != chainActive.Tip()->nHeight) || state->pindexBestKnownBlock->nChainWork < UintToArith256(consensusParams.nMinimumChainWork)) {
         // This peer has nothing interesting.
         return;
     }
@@ -2348,7 +2355,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (pindex->nStatus & BLOCK_HAVE_DATA) // Nothing to do here
             return true;
 
-        if (pindex->nChainWork <= chainActive.Tip()->nChainWork || // We know something better
+        if ((pindex->nChainWork <= chainActive.Tip()->nChainWork && pindex->nHeight != chainActive.Tip()->nHeight) || // We know something better
                 pindex->nTx != 0) { // We had this block at some point, but pruned it
             if (fAlreadyInFlight) {
                 // We requested this block for some reason, but our mempool will probably be useless
