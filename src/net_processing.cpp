@@ -377,7 +377,8 @@ bool MarkBlockAsInFlight(NodeId nodeid, const uint256& hash, const CBlockIndex* 
     // Short-circuit most stuff in case its from the same node
     std::map<uint256, std::pair<NodeId, std::list<QueuedBlock>::iterator> >::iterator itInFlight = mapBlocksInFlight.find(hash);
     if (itInFlight != mapBlocksInFlight.end() && itInFlight->second.first == nodeid) {
-        *pit = &itInFlight->second.second;
+        if (pit)
+            *pit = &itInFlight->second.second;
         return false;
     }
 
@@ -412,7 +413,7 @@ void ProcessBlockAvailability(NodeId nodeid)
         BlockMap::iterator itOld = mapBlockIndex.find(state->hashLastUnknownBlock);
         if (itOld != mapBlockIndex.end() && itOld->second->nChainWork > 0)
         {
-            if (state->pindexBestKnownBlock == NULL || itOld->second->nChainWork >= state->pindexBestKnownBlock->nChainWork || itOld->second->nHeight == state->pindexBestKnownBlock->nHeight)
+            if (state->pindexBestKnownBlock == NULL || itOld->second->nChainWork >= state->pindexBestKnownBlock->nChainWork || itOld->second->nHeight >= state->pindexBestKnownBlock->nHeight)
                 state->pindexBestKnownBlock = itOld->second;
             state->hashLastUnknownBlock.SetNull();
         }
@@ -431,7 +432,7 @@ void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash)
     if (it != mapBlockIndex.end() && it->second->nChainWork > 0)
     {
         // An actually better block was announced.
-        if (state->pindexBestKnownBlock == NULL || it->second->nChainWork >= state->pindexBestKnownBlock->nChainWork || it->second->nHeight == state->pindexBestKnownBlock->nHeight)
+        if (state->pindexBestKnownBlock == NULL || it->second->nChainWork >= state->pindexBestKnownBlock->nChainWork || it->second->nHeight >= state->pindexBestKnownBlock->nHeight)
             state->pindexBestKnownBlock = it->second;
     }
     else
@@ -528,7 +529,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
     // Make sure pindexBestKnownBlock is up to date, we'll need it.
     ProcessBlockAvailability(nodeid);
 
-    if (state->pindexBestKnownBlock == NULL || (state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork && state->pindexBestKnownBlock->nHeight != chainActive.Tip()->nHeight) || state->pindexBestKnownBlock->nChainWork < UintToArith256(consensusParams.nMinimumChainWork)) {
+    if (state->pindexBestKnownBlock == NULL || (state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork && state->pindexBestKnownBlock->nHeight < chainActive.Tip()->nHeight) || state->pindexBestKnownBlock->nChainWork < UintToArith256(consensusParams.nMinimumChainWork)) {
         // This peer has nothing interesting.
         return;
     }
@@ -543,7 +544,25 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
     // of its current tip anymore. Go back enough to fix that.
     state->pindexLastCommonBlock = LastCommonAncestor(state->pindexLastCommonBlock, state->pindexBestKnownBlock);
     if (state->pindexLastCommonBlock == state->pindexBestKnownBlock)
+    {
+        if (state->pindexBestKnownBlock->nHeight >= chainActive.Tip()->nHeight)
+        {
+            const CBlockIndex* pIndex = state->pindexBestKnownBlock;
+            if (!pIndex->IsValid(BLOCK_VALID_TREE))
+                return;
+            if (!State(nodeid)->fHaveSegregatedSignatures && IsSegSigEnabled(pIndex->pprev))
+                return;
+            if (pIndex->nStatus & BLOCK_HAVE_DATA || chainActive.Contains(pIndex))
+            {
+                return;
+            }
+            else if (mapBlocksInFlight.count(pIndex->GetBlockHashPoW2()) == 0)
+            {
+                vBlocks.push_back(state->pindexBestKnownBlock);
+            }
+        }
         return;
+    }
 
     std::vector<const CBlockIndex*> vToFetch;
     const CBlockIndex *pindexWalk = state->pindexLastCommonBlock;
@@ -906,7 +925,7 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
         CNodeState &state = *State(pnode->GetId());
         // If the peer has, or we announced to them the previous block already,
         // but we don't think they have this one, go ahead and announce it
-        if ( !PeerHasHeader(&state, pindex) && PeerHasHeader(&state, pindex->pprev) )
+        if ( !PeerHasHeader(&state, pindex) /*&& PeerHasHeader(&state, pindex->pprev)*/ )
         {
             if (state.fPreferHeaderAndIDs && (!fWitnessEnabled || state.fWantsCmpctWitness))
             {
@@ -1130,7 +1149,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                         ActivateBestChain(dummy, Params(), a_recent_block);
                     }
                     // If it is part of the chain or a competing PoW tip orphan then we want to send it.
-                    if (chainActive.Contains(mi->second) || mi->second->nHeight == chainActive.Tip()->nHeight)
+                    if (chainActive.Contains(mi->second) || mi->second->nHeight >= chainActive.Tip()->nHeight)
                     {
                         send = true;
                     }

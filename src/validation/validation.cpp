@@ -1749,8 +1749,8 @@ static void PruneBlockIndexCandidates() {
 
     //NB! We don't prune blocks that are the same height as the current tip when the current tip is PoW.
     //The reason for this is that we must consider all such blocks as witness candidates even if they are of lower weight - in case the higher weight block has an "absent" witness.
-    while ( ( it != setBlockIndexCandidates.end() ) && ( (*it)->nChainWork < chainActive.Tip()->nChainWork ) && ( (*it)->nHeight < chainActive.Tip()->nHeight || (*it)->nVersionPoW2Witness == 0 ) ) {
-            setBlockIndexCandidates.erase(it++);
+    while ( ( it != setBlockIndexCandidates.end() ) && ( (*it)->nChainWork < chainActive.Tip()->nChainWork ) && ( (*it)->nHeight < chainActive.Tip()->nHeight /*|| (*it)->nVersionPoW2Witness == 0*/ ) ) {
+        setBlockIndexCandidates.erase(it++);
     }
     // Either the current tip or a successor of it we're working towards is left in setBlockIndexCandidates.
     assert(!setBlockIndexCandidates.empty());
