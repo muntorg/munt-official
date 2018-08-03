@@ -883,7 +883,7 @@ void InitParameterInteraction()
     #if defined(__arm__) || defined(__aarch64__)
     SoftSetBoolArg("-minimallogging", true);
     #endif
-    gbMinimalLogging = GetBoolArg("-logips", DEFAULT_LOGIPS);
+    gbMinimalLogging = GetBoolArg("-minimallogging", false);
 }
 
 static std::string ResolveErrMsg(const char * const optname, const std::string& strBind)
