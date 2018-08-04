@@ -189,6 +189,15 @@ void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBal
     CAmount displayBalanceImmatureOrUnconfirmed = balances.immatureExcludingLocked + balances.unconfirmedExcludingLocked;
     CAmount displayBalanceTotal = displayBalanceLocked + displayBalanceAvailable + displayBalanceImmatureOrUnconfirmed;
 
+    if (displayBalanceTotal < 0)
+        displayBalanceTotal = 0;
+    if (displayBalanceLocked < 0)
+        displayBalanceLocked = 0;
+    if (displayBalanceImmatureOrUnconfirmed < 0)
+        displayBalanceImmatureOrUnconfirmed = 0;
+    if (displayBalanceTotal < 0)
+        displayBalanceTotal = 0;
+
     labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
     if (displayBalanceTotal > 0 && optionsModel)
     {
