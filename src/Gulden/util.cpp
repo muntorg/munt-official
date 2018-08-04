@@ -125,7 +125,7 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
 
     if (IsArgSet("-testnet"))
     {
-        if (pIndex->nHeight > 60)
+        if (pIndex->nHeight > 20)
             return true;
     }
     else
@@ -136,15 +136,14 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
     return false;
 }
 
-// Phase 3 becomes active after 200 or more witnessing addresses are present on the chain, as well as a combined witness weight of 20 000 000 or more.
-// 'backwards compatible' witnessing becomes possible at this point.
+// Phase 3
 // prevhash of blocks continue to point to previous PoW block alone.
 // prevhash of witness block is stored in coinbase.
 bool IsPow2Phase3Active(uint64_t nHeight)
 {
     if (IsArgSet("-testnet"))
     {
-        if (nHeight > 300)
+        if (nHeight > 50)
             return true;
     }
     else
