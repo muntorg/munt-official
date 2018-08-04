@@ -954,6 +954,15 @@ void WitnessDialog::doUpdate(bool forceUpdate)
             cachedIndex = setIndex;
             cachedIndexForAccount = forAccount;
         }
+
+        //If we accidentally transfer non-witness funds into a witness account, show empty button to allow emptying it.
+        if (setIndex == WitnessDialogStates::EMPTY)
+        {
+            if (pactiveWallet->GetBalance(forAccount, true, true) > 0)
+            {
+                stateEmptyWitnessButton = true;
+            }
+        }
     }
 
     ui->witnessDialogStackedWidget->setCurrentIndex(setIndex);
