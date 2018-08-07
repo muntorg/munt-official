@@ -36,7 +36,7 @@ Don't:
 limitdeltadiffdrop
 --------
 
-For optimal mining, it is important to set `limitdeltadiffdrop=n` in your Gulden.conf - if you do not do this you risk having more orphans and in some special cases having your pool crash due to your miners dos'ing you with low difficulty blocks.
+For optimal mining, it is important to set `limitdeltadiffdrop=n` in your Gulden.conf - if you do not do this a default setting will be chosen for you that might be non-optimal for your pool size.
 
 If you are a large pool - likely to at times have 20% of network weight or more:
 * Set `limitdeltadiffdrop=0`
@@ -48,7 +48,7 @@ If you are a smaller pool:
 * Set one of `limitdeltadiffdrop=7` ... `limitdeltadiffdrop=30`
 
 If you are a very small pool or small solo miner:
-* Do not set this option at all just leave it out
+* Set `limitdeltadiffdrop=30` or larger
 
 Time
 -------
