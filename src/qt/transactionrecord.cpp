@@ -689,7 +689,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             }
             else if (!fAllFromMe && !fAllToMe && vNotToMe.size() == 1 && wallet->IsMine(vNotToMe[0]))
             {
-                //Handle the 'receieve' part of an internal send between two accounts
+                //Handle the 'receive' part of an internal send between two accounts
                 TransactionRecord sub(hash, nTime);
 
                 //We don't bother filling in the sender details here for now
