@@ -21,6 +21,7 @@
 #include <boost/thread.hpp>
 
 
+
 CWitViewDB *ppow2witdbview = NULL;
 std::shared_ptr<CCoinsViewCache> ppow2witTip = NULL;
 
@@ -361,20 +362,14 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
         witnessInfo.witnessSelectionPoolFiltered.clear();
         witnessInfo.witnessSelectionPoolFiltered = witnessInfo.witnessSelectionPoolUnfiltered;
 
-        //LogPrint(BCLog::WITNESS, "Witness pool size1b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
         /** Eliminate addresses that have witnessed within the last `gMinimumParticipationAge` blocks **/
         witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return (x.nAge <= nMinAge); }), witnessInfo.witnessSelectionPoolFiltered.end());
-        //LogPrint(BCLog::WITNESS, "Witness pool size1a %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
         /** Eliminate addresses that have not witnessed within the expected period of time that they should have **/
-        //LogPrint(BCLog::WITNESS, "Witness pool size2b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
-        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return witnessHasExpired(x.nAge, x.nWeight, witnessInfo.nTotalWeight); }), witnessInfo.witnessSelectionPoolFiltered.end());
-        //LogPrint(BCLog::WITNESS, "Witness pool size2a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
+        witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ return witnessHasExpired(x.nAge, x.nWeight, witnessInfo.nTotalWeightRaw); }), witnessInfo.witnessSelectionPoolFiltered.end());
 
         /** Eliminate addresses that are within 100 blocks from lock period expiring, or whose lock period has expired. **/
-        //LogPrint(BCLog::WITNESS, "Witness pool size3b: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
         witnessInfo.witnessSelectionPoolFiltered.erase(std::remove_if(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), [&](RouletteItem& x){ CTxOutPoW2Witness details; GetPow2WitnessOutput(x.coin.out, details); return (GetPoW2RemainingLockLengthInBlocks(details.lockUntilBlock, nBlockHeight) <= nMinAge); }), witnessInfo.witnessSelectionPoolFiltered.end());
-        //LogPrint(BCLog::WITNESS, "Witness pool size3a: %d minage: %d\n", witnessInfo.witnessSelectionPoolFiltered.size(), nMinAge);
 
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
         if (witnessInfo.witnessSelectionPoolFiltered.size() < 100)
@@ -382,6 +377,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
             //fixme: (2.1) activate warning
             // if(!fTestnet)
             // CAlert::Notify("Warning network is experiencing low levels of witnessing participants!");
+
             // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where there are a shortage of witnesses paticipating on the network.
             if (nMinAge == 0 || (nMinAge <= 10 && witnessInfo.witnessSelectionPoolFiltered.size() > 5))
             {
@@ -407,18 +403,26 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     /** Ensure the pool is sorted deterministically **/
     std::sort(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end());
 
+    /** Calculate total eligible weight **/
+    witnessInfo.nTotalWeightEligibleRaw = 0;
+    for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
+    {
+        witnessInfo.nTotalWeightEligibleRaw += item.nWeight;
+    }
+
     /** Reduce larger weightings to a maximum weighting of 1% of network weight. **/
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeight / 100;
-    witnessInfo.nReducedTotalWeight = 0;
+    //fixme: (2.1) This should be using nTotalWeightEligibleRaw
+    witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightRaw / 100;
+    witnessInfo.nTotalWeightEligibleAdjusted = 0;
     for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
         if (item.nWeight > witnessInfo.nMaxIndividualWeight)
             item.nWeight = witnessInfo.nMaxIndividualWeight;
-        witnessInfo.nReducedTotalWeight += item.nWeight;
-        item.nCumulativeWeight = witnessInfo.nReducedTotalWeight;
+        witnessInfo.nTotalWeightEligibleAdjusted += item.nWeight;
+        item.nCumulativeWeight = witnessInfo.nTotalWeightEligibleAdjusted;
     }
 
     /** sha256 as random roulette spin/seed - NB! We deliritely use sha256 and -not- the normal PoW hash here as the normal PoW hash is biased towards certain number ranges by -design- (block target) so is not a good RNG... **/
@@ -426,21 +430,20 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
 
     //fixme: (2.0.1) Update whitepaper.
     /** ensure random seed exceeds one full spin of the wheel to prevent any possible bias towards low numbers **/
-    //while (rouletteSelectionSeed < witnessInfo.nReducedTotalWeight)
+    //while (rouletteSelectionSeed < witnessInfo.nTotalWeightEligibleAdjusted)
     //{
         //rouletteSelectionSeed = rouletteSelectionSeed * 2;
     //}
 
-    //LogPrint(BCLog::WITNESS, "RNG1 %d %d\n", rouletteSelectionSeed.GetLow64(), witnessInfo.nReducedTotalWeight);
-    if (rouletteSelectionSeed > arith_uint256(witnessInfo.nReducedTotalWeight))
+    /** Reduce selection number to fit within possible range of values **/
+    if (rouletteSelectionSeed > arith_uint256(witnessInfo.nTotalWeightEligibleAdjusted))
     {
         // 'BigNum' Modulo operator via mathematical identity:  a % b = a - (b * int(a/b))
-        rouletteSelectionSeed = rouletteSelectionSeed - (arith_uint256(witnessInfo.nReducedTotalWeight) * arith_uint256(rouletteSelectionSeed/arith_uint256(witnessInfo.nReducedTotalWeight)));
+        rouletteSelectionSeed = rouletteSelectionSeed - (arith_uint256(witnessInfo.nTotalWeightEligibleAdjusted) * arith_uint256(rouletteSelectionSeed/arith_uint256(witnessInfo.nTotalWeightEligibleAdjusted)));
     }
-    //LogPrint(BCLog::WITNESS, "RNG2 %d %d\n", rouletteSelectionSeed.GetLow64(), witnessInfo.nReducedTotalWeight);
 
+    /** Perform selection **/
     auto selectedWitness = std::lower_bound(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), rouletteSelectionSeed.GetLow64());
-    //LogPrint(BCLog::WITNESS, "Selected witness age %d\n", selectedWitness->nAge);
     witnessInfo.selectedWitnessTransaction = selectedWitness->coin.out;
     witnessInfo.selectedWitnessBlockHeight = selectedWitness->coin.nHeight;
     witnessInfo.selectedWitnessOutpoint = selectedWitness->outpoint;
@@ -476,7 +479,7 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
             if (nWeight < gMinimumWitnessWeight)
                 continue;
             witnessInfo.witnessSelectionPoolUnfiltered.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
-            witnessInfo.nTotalWeight += nWeight;
+            witnessInfo.nTotalWeightRaw += nWeight;
         }
     }
     return true;

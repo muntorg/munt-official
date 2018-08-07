@@ -887,7 +887,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
                     CAlert::Notify(strErrorMessage, true, true);
                     return;
                 }
-                nNetworkWeight = witnessInfo.nTotalWeight;
+                nNetworkWeight = witnessInfo.nTotalWeightRaw;
             }
         }
     }

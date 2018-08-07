@@ -854,7 +854,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     {
         if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
         {
-            if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
+            if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
             {
                 // Add witness input
                 AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);

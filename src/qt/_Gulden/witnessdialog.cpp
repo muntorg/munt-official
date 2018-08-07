@@ -790,7 +790,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                             LogPrintf("%s", strErrorMessage.c_str());
                             return;
                         }
-                        nTotalNetworkWeight = witnessInfo.nTotalWeight;
+                        nTotalNetworkWeight = witnessInfo.nTotalWeightRaw;
                     }
                     for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
                     {
@@ -804,7 +804,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                             }
                             else
                             {
-                                if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
+                                if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
                                 {
                                     bAnyExpired = true;
                                 }
@@ -1066,7 +1066,7 @@ void WitnessDialog::updateAccountIndicators()
                             bAnyFinished = true;
                             break;
                         }
-                        else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeight))
+                        else if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
                         {
                             newState = AccountStatus::WitnessExpired;
 

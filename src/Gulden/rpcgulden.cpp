@@ -327,7 +327,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     {
                         if (poolIter->coin.out == iter.second.out)
                         {
-                            if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeight))
+                            if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeightRaw))
                             {
                                 fExpired = true;
                             }
@@ -364,8 +364,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("raw_weight", nRawWeight));
             rec.push_back(Pair("adjusted_weight", std::min(nRawWeight, witInfo.nMaxIndividualWeight)));
             rec.push_back(Pair("adjusted_weight_final", nAdjustedWeight));
-            rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
-            rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
+            rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
+            rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
             rec.push_back(Pair("last_active_block", nLastActiveBlock));
             rec.push_back(Pair("lock_from_block", nLockFromBlock));
             rec.push_back(Pair("lock_until_block", nLockUntilBlock));
@@ -402,9 +402,9 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     rec.push_back(Pair("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll));
     rec.push_back(Pair("number_of_witnesses_total", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size()));
     rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolFiltered.size()));
-    rec.push_back(Pair("total_witness_weight_raw", (uint64_t)nTotalWeightAll));
-    rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeight));
-    rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nReducedTotalWeight));
+    rec.push_back(Pair("total_witness_weight_raw", (uint64_t)witInfo.nTotalWeightRaw));
+    rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeightEligibleRaw));
+    rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nTotalWeightEligibleAdjusted));
     rec.push_back(Pair("selected_witness_address", sWitnessAddress));
     if (fVerbose)
     {
