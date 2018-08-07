@@ -80,26 +80,23 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     if (nOldTime < nNewTime)
         pblock->nTime = nNewTime;
 
-    // Allow pools to limit diff drop to suit their hashrate (prevent sudden pool ddos from 100s of blocks)
+    // Allow pools to control maximum diff drop to suit their hashrate (prevent sudden pool ddos from 100s of blocks)
+    // Larger pools should stick to 0, smaller pools should put a higher value.
     //fixme: (2.1) Speed up once confirmed working.
-    if (IsArgSet("-limitdeltadiffdrop"))
+    int64_t nMaxMissedSteps = GetArg("-limitdeltadiffdrop", 0);
+    static const int64_t nDrift   = 1;
+    static int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
+    static int64_t nLongTimeStep  = nDrift * 60;
+    while (true)
     {
-        static const int64_t nDrift   = 1;
-        static int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
-        static int64_t nLongTimeStep  = nDrift * 60;
-
-        int64_t nMaxMissedSteps = GetArg("-limitdeltadiffdrop", 4);
-        while (true)
+        int64_t nNumMissedSteps = 0;
+        if ((pblock->nTime - pindexPrev->GetBlockTime()) > nLongTimeLimit)
         {
-            int64_t nNumMissedSteps = 0;
-            if ((pblock->nTime - pindexPrev->GetBlockTime()) > nLongTimeLimit)
-            {
-                nNumMissedSteps = ((pblock->nTime - pindexPrev->GetBlockTime() - nLongTimeLimit) / nLongTimeStep) + 1;
-            }
-            if (nNumMissedSteps <= nMaxMissedSteps)
-                break;
-            pblock->nTime -= 10;
+            nNumMissedSteps = ((pblock->nTime - pindexPrev->GetBlockTime() - nLongTimeLimit) / nLongTimeStep) + 1;
         }
+        if (nNumMissedSteps <= nMaxMissedSteps)
+            break;
+        pblock->nTime -= 10;
     }
 
     // Updating time can change work required (Delta)
