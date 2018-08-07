@@ -20,6 +20,8 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/thread.hpp>
 
+#include "alert.h"
+
 
 
 CWitViewDB *ppow2witdbview = NULL;
@@ -374,9 +376,9 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
         if (witnessInfo.witnessSelectionPoolFiltered.size() < 100)
         {
-            //fixme: (2.1) activate warning
-            // if(!fTestnet)
-            // CAlert::Notify("Warning network is experiencing low levels of witnessing participants!");
+            if(!IsArgSet("-testnet") && nBlockHeight > 788000)
+                CAlert::Notify("Warning network is experiencing low levels of witnessing participants!", true, true);
+
 
             // NB!! This part of the code should (ideally) never actually be used, it exists only for instances where there are a shortage of witnesses paticipating on the network.
             if (nMinAge == 0 || (nMinAge <= 10 && witnessInfo.witnessSelectionPoolFiltered.size() > 5))
