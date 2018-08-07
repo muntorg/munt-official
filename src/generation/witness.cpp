@@ -468,7 +468,15 @@ void static GuldenWitness()
                         if (!GetWitness(chainActive, chainparams, nullptr, candidateIter->pprev, *pWitnessBlock, witnessInfo))
                         {
                             LogPrintf("GuldenWitness: Invalid candidate witness [%s]", candidateIter->GetBlockHashPoW2().ToString());
-                            std::string strErrorMessage = strprintf("Failed to calculate witness info for candidate block.\n Witnessing may be temporarily disabled.\n If this occurs frequently please contact a developer for assistance.\n height [%d] chain-tip-height [%d]", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                            static int64_t nLastErrorHeight = -1;
+
+                            if (nLastErrorHeight == -1 || candidateIter->nHeight - nLastErrorHeight > 10)
+                            {
+                                nLastErrorHeight = candidateIter->nHeight;
+                                continue;
+                            }
+                            nLastErrorHeight = candidateIter->nHeight;
+                            std::string strErrorMessage = strprintf("Failed to calculate witness info for candidate block.\n If this occurs frequently please contact a developer for assistance.\n height [%d] chain-tip-height [%d]", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                             CAlert::Notify(strErrorMessage, true, true);
                             LogPrintf("%s", strErrorMessage.c_str());
                             continue;
