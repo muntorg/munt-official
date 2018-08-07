@@ -1,10 +1,21 @@
 2.0.0.10
 
 RPC - Make "getrescanprogress" command more responsive.
+UI - Fix an issue with "orphaned" witness earnings incorrectly showing as part of account balance.
+UI - Add a user alert message if number of witnesses on the network drops bewlow 100 as a precaution to help keep the number of witnesses high.
 UI - Fix a bug with wallet rescan progress display.
+UI - Another fix to prevent "Failed to calculate witness info for candidate block" dialog from showing in situations where it isn't really harmful.
 UI - Fix an issue some users were having with unlocking wallet.
 UI - Fix an issue where the receive coins dialog would, when creating a new account, in certain instances temporarily show the address for a different account.
+UI - Allow emptying of non-witness funds if normal funds are somehow sent to a witness account address.
+UI - Fix a small glitch where empty wallet balance would occasionally display as -0.00
+UI - Fix a transaction view issue where "locked from" transactions were occasionally displayed as "received from" instead.
+RPC - Fix a small issue with one of the weights being output incorrectly in `getwitnessinfo` command.
+RPC - Add some additional PoW² related output to 'getblock' and 'getheader' calls.
+RPC - Fix an occasional/intermittent issue where getblocktemplate would fail when called by mining pools
 CMDFLAG - Default "minimallogging" flag to on for arm and aarch64 architectures.
+CORE - Fix a block relay issue that combined with other factors was occasionally leading to temporary chain stalls.
+
 
 
 
