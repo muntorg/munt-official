@@ -2,7 +2,7 @@
 
 RPC - Make "getrescanprogress" command more responsive.
 UI - Fix an issue with "orphaned" witness earnings incorrectly showing as part of account balance.
-UI - Add a user alert message if number of witnesses on the network drops bewlow 100 as a precaution to help keep the number of witnesses high.
+UI - Add a user alert message if number of witnesses on the network drops below 100 as a precaution to help keep the number of witnesses high.
 UI - Fix a bug with wallet rescan progress display.
 UI - Another fix to prevent "Failed to calculate witness info for candidate block" dialog from showing in situations where it isn't really harmful.
 UI - Fix an issue some users were having with unlocking wallet.
