@@ -2450,10 +2450,6 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
  *   current time.
  * - If receiving a block with a future timestamp, assign all its (not already
  *   known) transactions' timestamps to the current time.
- * - If receiving a block with a past timestamp, before the most recent known
- *   transaction (that we care about), assign all its (not already known)
- *   transactions' timestamps to the same timestamp as that most-recent-known
- *   transaction.
  * - If receiving a block with a past timestamp, but after the most recent known
  *   transaction, assign all its (not already known) transactions' timestamps to
  *   the block time.
@@ -2468,7 +2464,6 @@ unsigned int CWallet::ComputeTimeSmart(const CWalletTx& wtx) const
     if (!wtx.hashUnset()) {
         if (mapBlockIndex.count(wtx.hashBlock)) {
             int64_t latestNow = wtx.nTimeReceived;
-            int64_t latestEntry = 0;
 
             // Tolerate times up to the last timestamp in the wallet not more than 5 minutes into the future
             int64_t latestTolerated = latestNow + 300;
@@ -2489,7 +2484,6 @@ unsigned int CWallet::ComputeTimeSmart(const CWalletTx& wtx) const
                     nSmartTime = pacentry->nTime;
                 }
                 if (nSmartTime <= latestTolerated) {
-                    latestEntry = nSmartTime;
                     if (nSmartTime > latestNow) {
                         latestNow = nSmartTime;
                     }
@@ -2498,7 +2492,7 @@ unsigned int CWallet::ComputeTimeSmart(const CWalletTx& wtx) const
             }
 
             int64_t blocktime = mapBlockIndex[wtx.hashBlock]->GetBlockTime();
-            nTimeSmart = std::max(latestEntry, std::min(blocktime, latestNow));
+            nTimeSmart = std::min(blocktime, latestNow);
         } else {
             LogPrintf("%s: found %s in block %s not in index\n", __func__, wtx.GetHash().ToString(), wtx.hashBlock.ToString());
         }
