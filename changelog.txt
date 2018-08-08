@@ -1,3 +1,10 @@
+2.0.0.11
+
+UI - Fix an issue where the transaction list would sometimes show confusing more recent timestamps when importing a witness-only key or recovering from phrase.
+
+
+
+
 2.0.0.10
 
 RPC - Make "getrescanprogress" command more responsive.
