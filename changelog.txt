@@ -1,6 +1,10 @@
 2.0.0.11
 
 UI - Fix an issue where the transaction list would sometimes show confusing more recent timestamps when importing a witness-only key or recovering from phrase.
+RPC - New command "getaddress" as a way to easily get Gulden address(es) from a pubkey or script.
+RPC - New command "emptymempool" to temporarily empty the mempool of all transactions, useful for debugging as well as a last resort tool if mining pools ever find themselves in a situation where mempool is somehow misbehaving.
+CORE - Fix a "CreateBlock" issue that was triggering in rare circumstances and affecting "getblocktemplate" RPC calls by miners when it did.
+CMDFLAG - New command line flag "-disablenet" to start with networking disabled, useful in some debugging scenarios.
 
 
 
