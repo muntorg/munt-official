@@ -491,6 +491,9 @@ struct CBlockIndexWorkComparator
 
 void UpdateMempoolForReorg(DisconnectedBlockTransactions &disconnectpool, bool fAddToMempool);
 
+// Force mempool to empty
+void EmptyMempool(CTxMemPool& pool);
+
 // See definition for documentation
 bool FlushStateToDisk(const CChainParams& chainParams, CValidationState &state, FlushStateMode mode, int nManualPruneHeight=0);
 void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight);
