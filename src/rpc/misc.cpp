@@ -253,6 +253,64 @@ UniValue validateaddress(const JSONRPCRequest& request)
     return ret;
 }
 
+static UniValue getaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "getaddress \"pubkey_or_script\" \n"
+            "\nGet the address of a pubkey or script\n"
+            "\nTo get the pubkey of an address use 'validateaddress'\n"
+            "\nArguments:\n"
+            "1. \"pubkey_or_script\"       (required) An hex encoded script or public key.\n"
+            "\nResult:\n"
+            "\nReturn an array of addresses on success\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getaddress \"Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC\"", "")
+            + HelpExampleRpc("getaddress \"Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC\"", ""));
+
+    std::string pubKeyOrScript = request.params[0].get_str();
+    if (!IsHex(pubKeyOrScript))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is not hex encoded");
+
+    UniValue result(UniValue::VOBJ);
+
+    // Try public key first.
+    std::vector<unsigned char> data(ParseHex(pubKeyOrScript));
+    CPubKey pubKey(data.begin(), data.end());
+    if (pubKey.IsFullyValid())
+    {
+        result.push_back(CGuldenAddress(pubKey.GetID()).ToString());
+    }
+    else
+    {
+        // Not a public key so treat it as a script.
+        CScript scriptPubKey(data.begin(), data.end());
+        std::vector<CTxDestination> addresses;
+
+        int nRequired;
+        txnouttype type;
+        if (ExtractDestinations(scriptPubKey, type, addresses, nRequired))
+        {
+            for(const CTxDestination& addr : addresses)
+            {
+                result.push_back(CGuldenAddress(addr).ToString());
+            }
+        }
+        //fixme: (2.1) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
+    }
+
+    return result;
+}
+
 // Needed even with !ENABLE_WALLET, to pass (ignored) pointers around
 class CWallet;
 
