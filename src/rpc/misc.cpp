@@ -281,7 +281,7 @@ static UniValue getaddress(const JSONRPCRequest& request)
     if (!IsHex(pubKeyOrScript))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is not hex encoded");
 
-    UniValue result(UniValue::VOBJ);
+    UniValue result(UniValue::VARR);
 
     // Try public key first.
     std::vector<unsigned char> data(ParseHex(pubKeyOrScript));
