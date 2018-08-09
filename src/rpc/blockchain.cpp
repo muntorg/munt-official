@@ -1390,6 +1390,18 @@ static UniValue getmempoolinfo(const JSONRPCRequest& request)
     return mempoolInfoToJSON();
 }
 
+static UniValue emptymempool(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 0)
+        throw std::runtime_error(
+            "emptymempool\n"
+            "\nErase all transactions currently in the mempool, force mempool to empty.\n"
+        );
+
+    EmptyMempool(mempool);
+    return NullUniValue;
+}
+
 static UniValue preciousblock(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -1580,6 +1592,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getblockheader",         &getblockheader,         true,  {"blockhash","verbose"} },
     { "blockchain",         "getchaintips",           &getchaintips,           true,  {} },
     { "blockchain",         "getdifficulty",          &getdifficulty,          true,  {} },
+    { "blockchain",         "emptymempool",           &emptymempool,           true,  {} },
     { "blockchain",         "getmempoolancestors",    &getmempoolancestors,    true,  {"txid","verbose"} },
     { "blockchain",         "getmempooldescendants",  &getmempooldescendants,  true,  {"txid","verbose"} },
     { "blockchain",         "getmempoolentry",        &getmempoolentry,        true,  {"txid"} },
