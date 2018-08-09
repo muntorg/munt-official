@@ -926,8 +926,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         for (const auto& tx : block.vtx) {
             for (size_t o = 0; o < tx->vout.size(); o++) {
                 if (view.HaveCoin(COutPoint(tx->GetHash(), o))) {
-                    return state.DoS(100, error("ConnectBlock(): tried to overwrite transaction"),
-                                     REJECT_INVALID, "bad-txns-BIP30");
+                    return state.DoS(100, error("ConnectBlock(): tried to overwrite transaction [%s]", tx->GetHash().ToString()), REJECT_INVALID, "bad-txns-BIP30");
                 }
             }
         }
