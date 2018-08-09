@@ -255,14 +255,7 @@ UniValue validateaddress(const JSONRPCRequest& request)
 
 static UniValue getaddress(const JSONRPCRequest& request)
 {
-    #ifdef ENABLE_WALLET
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
-    #else
     LOCK(cs_main);
-    #endif
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
-        return NullUniValue;
 
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
