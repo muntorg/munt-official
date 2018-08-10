@@ -423,7 +423,7 @@ void static GuldenWitness()
 
                 if (hashLastAbsentWitnessTip == pindexTip->GetBlockHashPoW2())
                 {
-                    int nSecondsAbsent = (GetTimeMillis() - timeLastAbsentWitnessTip) / 1000;
+                    uint64_t nSecondsAbsent = (GetTimeMillis() - timeLastAbsentWitnessTip) / 1000;
                     if (((nSecondsAbsent % 5) == 0) && nSecondsAbsent != secondsLastAbsentWitnessTip)
                     {
                         secondsLastAbsentWitnessTip = nSecondsAbsent;
