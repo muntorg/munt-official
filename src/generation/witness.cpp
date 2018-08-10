@@ -414,13 +414,37 @@ void static GuldenWitness()
             if (nPoW2PhasePrev < 3 || pindexTip->nVersionPoW2Witness != 0)
                 continue;
 
+            // Log absent witness if witness logging enabled.
+            if (LogAcceptCategory(BCLog::WITNESS))
+            {
+                static uint256 hashLastAbsentWitnessTip;
+                static uint64_t timeLastAbsentWitnessTip = 0;
+                static uint64_t secondsLastAbsentWitnessTip = 0;
+
+                if (hashLastAbsentWitnessTip == pindexTip->GetBlockHashPoW2())
+                {
+                    int nSecondsAbsent = (GetTimeMillis() - timeLastAbsentWitnessTip) / 1000;
+                    if (((nSecondsAbsent % 5) == 0) && nSecondsAbsent != secondsLastAbsentWitnessTip)
+                    {
+                        secondsLastAbsentWitnessTip = nSecondsAbsent;
+                        LogPrintf("GuldenWitness: absent witness at tip [%s] [%d] %d seconds\n", hashLastAbsentWitnessTip.ToString(), pindexTip->nHeight, nSecondsAbsent);
+                    }
+                }
+                else
+                {
+                    hashLastAbsentWitnessTip = pindexTip->GetBlockHashPoW2();
+                    timeLastAbsentWitnessTip = GetTimeMillis();
+                    secondsLastAbsentWitnessTip = 0;
+                }
+            }
+
             // Use a cache to prevent trying the same blocks over and over.
             // Look for all potential signable blocks at same height as the index tip - don't limit ourselves to just the tip
             // This is important because otherwise the chain can stall if there is an absent signer for the current tip.
             std::vector<CBlockIndex*> candidateOrphans;
             if (cacheAlreadySeenWitnessCandidates.find(pindexTip) == cacheAlreadySeenWitnessCandidates.end())
             {
-                LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from chain tip [%s]", pindexTip->GetBlockHashPoW2().ToString());
+                LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from chain tip [%s]\n", pindexTip->GetBlockHashPoW2().ToString());
                 candidateOrphans.push_back(pindexTip);
             }
             if (candidateOrphans.size() == 0)
@@ -429,7 +453,7 @@ void static GuldenWitness()
                 {
                     if (cacheAlreadySeenWitnessCandidates.find(candidateIter) == cacheAlreadySeenWitnessCandidates.end())
                     {
-                        LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from top level pow orphans [%s]", candidateIter->GetBlockHashPoW2().ToString());
+                        LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from top level pow orphans [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
                         candidateOrphans.push_back(candidateIter);
                     }
                 }
@@ -467,7 +491,7 @@ void static GuldenWitness()
 
                         if (!GetWitness(chainActive, chainparams, nullptr, candidateIter->pprev, *pWitnessBlock, witnessInfo))
                         {
-                            LogPrintf("GuldenWitness: Invalid candidate witness [%s]", candidateIter->GetBlockHashPoW2().ToString());
+                            LogPrintf("GuldenWitness: Invalid candidate witness [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
                             static int64_t nLastErrorHeight = -1;
 
                             if (nLastErrorHeight == -1 || candidateIter->nHeight - nLastErrorHeight > 10)
