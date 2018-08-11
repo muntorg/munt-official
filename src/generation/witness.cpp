@@ -410,17 +410,22 @@ void static GuldenWitness()
             // Check for stop or if block needs to be rebuilt
             boost::this_thread::interruption_point();
 
+            static uint256 hashLastAbsentWitnessTip;
+            static uint64_t timeLastAbsentWitnessTip = 0;
+            static uint64_t secondsLastAbsentWitnessTip = 0;
+
             // If we already have a witnessed block at the tip don't bother looking at any orphans, just patiently wait for next unsigned tip.
             if (nPoW2PhasePrev < 3 || pindexTip->nVersionPoW2Witness != 0)
+            {
+                timeLastAbsentWitnessTip = 0;
+                secondsLastAbsentWitnessTip = 0;
+                hashLastAbsentWitnessTip.SetNull();
                 continue;
+            }
 
             // Log absent witness if witness logging enabled.
             if (LogAcceptCategory(BCLog::WITNESS))
             {
-                static uint256 hashLastAbsentWitnessTip;
-                static uint64_t timeLastAbsentWitnessTip = 0;
-                static uint64_t secondsLastAbsentWitnessTip = 0;
-
                 if (hashLastAbsentWitnessTip == pindexTip->GetBlockHashPoW2())
                 {
                     uint64_t nSecondsAbsent = (GetTimeMillis() - timeLastAbsentWitnessTip) / 1000;
