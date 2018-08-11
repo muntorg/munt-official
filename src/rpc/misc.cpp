@@ -235,17 +235,20 @@ UniValue validateaddress(const JSONRPCRequest& request)
         ret.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
 
 #ifdef ENABLE_WALLET
-        isminetype mine = pwallet ? IsMine(*pwallet, dest) : ISMINE_NO;
-        ret.push_back(Pair("ismine", (mine & ISMINE_SPENDABLE) ? true : false));
-        ret.push_back(Pair("iswatchonly", (mine & ISMINE_WATCH_ONLY) ? true: false));
-        UniValue detail = boost::apply_visitor(DescribeAddressVisitor(pwallet), dest);
-        ret.pushKVs(detail);
-        for (const auto& accountIter : pwallet->mapAccounts)
+        if (pwallet)
         {
-            if (IsMine(*accountIter.second, dest) > ISMINE_WATCH_ONLY )
+            isminetype mine = IsMine(*pwallet, dest);
+            ret.push_back(Pair("ismine", (mine & ISMINE_SPENDABLE) ? true : false));
+            ret.push_back(Pair("iswatchonly", (mine & ISMINE_WATCH_ONLY) ? true: false));
+            UniValue detail = boost::apply_visitor(DescribeAddressVisitor(pwallet), dest);
+            ret.pushKVs(detail);
+            for (const auto& accountIter : pwallet->mapAccounts)
             {
-                ret.push_back(Pair("account", getUUIDAsString(accountIter.second->getUUID())));
-                ret.push_back(Pair("accountlabel", accountIter.second->getLabel()));
+                if (IsMine(*accountIter.second, dest) > ISMINE_WATCH_ONLY )
+                {
+                    ret.push_back(Pair("account", getUUIDAsString(accountIter.second->getUUID())));
+                    ret.push_back(Pair("accountlabel", accountIter.second->getLabel()));
+                }
             }
         }
 #endif
