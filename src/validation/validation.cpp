@@ -1479,16 +1479,17 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
             DoWarning(strWarning);
         }
     }
-    if(!gbMinimalLogging || IsArgSet("-testnet") || chainActive.Height() % 100 == 0 || chainActive.Height() > 700000)
+    if(!gbMinimalLogging || !warningMessages.empty() || IsArgSet("-testnet") || chainActive.Height() % 1000 == 0 || chainActive.Height() > 700000)
+    {
         LogPrintf("%s: new best=%s height=%d version=0x%08x versionpow2=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)", __func__,
             chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion, chainActive.Tip()->nVersionPoW2Witness,
             log(chainActive.Tip()->nChainWork.getdouble())/log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
             DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
             GuessVerificationProgress(chainParams.TxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
-    if (!warningMessages.empty())
-        LogPrintf(" warning='%s'", boost::algorithm::join(warningMessages, ", "));
-    LogPrintf("\n");
-
+        if (!warningMessages.empty())
+            LogPrintf(" warning='%s'", boost::algorithm::join(warningMessages, ", "));
+        LogPrintf("\n");
+    }
 }
 
 /** Disconnect chainActive's tip.
