@@ -357,7 +357,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     #endif
 
     /** Generate the pool of potential witnesses for the given block index **/
-    /** Addresses older than 10000 blocks or younger than 100 blocks are discarded **/
+    /** Addresses younger than nMinAge blocks are discarded **/
     uint64_t nMinAge = gMinimumParticipationAge;
     while (true)
     {
@@ -467,7 +467,7 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
     if (!getAllUnspentWitnessCoins(chain, chainParams, pPreviousIndexChain, witnessInfo.allWitnessCoins, &block, viewOverride))
         return false;
 
-    // Calculate network weight based on current block, exclude witnesses that are too old.
+    // Gather all witnesses that exceed minimum weight and count the total witness weight.
     for (auto coinIter : witnessInfo.allWitnessCoins)
     {
         //fixme: (2.0.1) Unit tests
