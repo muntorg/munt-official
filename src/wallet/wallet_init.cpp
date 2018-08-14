@@ -554,6 +554,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         uiInterface.InitMessage(_("Rescanning..."));
         LogPrintf("Rescanning last %i blocks (from block %i)...\n", chainActive.Height() - pindexRescan->nHeight, pindexRescan->nHeight);
         nStart = GetTimeMillis();
+        //fixme: (FUT) We have to set the active wallet early here otherwise we get a crash inside AddToWalletIfInvolvingMe bia ScanForWalletTransactions as pActiveWallet is NULL.
+        //Normally active wallet would only be set after this function returns.
+        //Look into a re-architecture here.
+        pactiveWallet = walletInstance;
         walletInstance->ScanForWalletTransactions(pindexRescan, true);
         LogPrintf(" rescan      %15dms\n", GetTimeMillis() - nStart);
         walletInstance->SetBestChain(chainActive.GetLocatorPoW2());
