@@ -424,7 +424,7 @@ void static GuldenWitness()
             }
 
             // Log absent witness if witness logging enabled.
-            if (LogAcceptCategory(BCLog::WITNESS))
+            if (LogAcceptCategory(BCLog::WITNESS) || IsArgSet("-zmqpubstalledwitness"))
             {
                 if (hashLastAbsentWitnessTip == pindexTip->GetBlockHashPoW2())
                 {
@@ -432,7 +432,8 @@ void static GuldenWitness()
                     if (((nSecondsAbsent % 5) == 0) && nSecondsAbsent != secondsLastAbsentWitnessTip)
                     {
                         secondsLastAbsentWitnessTip = nSecondsAbsent;
-                        LogPrintf("GuldenWitness: absent witness at tip [%s] [%d] %d seconds\n", hashLastAbsentWitnessTip.ToString(), pindexTip->nHeight, nSecondsAbsent);
+                        GetMainSignals().StalledWitness(pindexTip, nSecondsAbsent);
+                        LogPrint(BCLog::WITNESS, "GuldenWitness: absent witness at tip [%s] [%d] %d seconds\n", hashLastAbsentWitnessTip.ToString(), pindexTip->nHeight, nSecondsAbsent);
                     }
                 }
                 else
