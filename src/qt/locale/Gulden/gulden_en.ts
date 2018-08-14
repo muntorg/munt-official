@@ -91,7 +91,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+145"/>
+        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+149"/>
         <source>Total funds: </source>
         <translation>Total funds: </translation>
     </message>
@@ -447,7 +447,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>No recovery phrases present for this wallet.</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+17"/>
         <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
         <translation>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</translation>
     </message>
@@ -808,7 +808,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+284"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+293"/>
         <location line="+40"/>
         <source>Okay</source>
         <translation>Okay</translation>
@@ -844,7 +844,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+511"/>
+        <location filename="../../gui.cpp" line="+513"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
     </message>
@@ -914,7 +914,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Backup wallet</translation>
     </message>
     <message>
-        <location line="+871"/>
+        <location line="+874"/>
         <source>Imported key</source>
         <translation>Imported key</translation>
     </message>
@@ -1455,7 +1455,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+466"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+470"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
@@ -3157,7 +3157,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <location line="+130"/>
-        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+402"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+406"/>
         <source>Request %1 Gulden</source>
         <translation>Request %1 Gulden</translation>
     </message>
@@ -5049,7 +5049,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
 <context>
     <name>toolbar</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1104"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1107"/>
         <source>Account toolbar</source>
         <translation>Account toolbar</translation>
     </message>
