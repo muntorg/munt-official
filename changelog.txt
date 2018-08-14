@@ -1,5 +1,6 @@
 2.0.0.11
 
+UI - Display full converted balance in upper left for forex (Euro or other currency) display instead of only available balance; Add a tooltip to break down the different amounts when hovered over.
 UI - Fix an issue where the transaction list would sometimes show confusing more recent timestamps when importing a witness-only key or recovering from phrase.
 RPC - New command "getaddress" as a way to easily get Gulden address(es) from a pubkey or script.
 RPC - New command "emptymempool" to temporarily empty the mempool of all transactions, useful for debugging as well as a last resort tool if mining pools ever find themselves in a situation where mempool is somehow misbehaving.
