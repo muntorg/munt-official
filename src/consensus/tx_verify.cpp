@@ -359,7 +359,7 @@ void IncrementWitnessFailCount(uint64_t& failCount)
 inline bool HasSpendKey(const CTxIn& input, uint64_t nInputHeight)
 {
     //fixme: (2.0.x) - We can get rid of this threshold check as soon as we pass block 797000.
-    int nCheckThreshold = IsArgSet("-testnet") ? 100 : 797000;
+    uint64_t nCheckThreshold = IsArgSet("-testnet") ? 100 : 797000;
 
     //fixme: (2.1) - Retest this for phase 4 switchover (that it doesn't cause any issues at switchover)
     //fixme: (2.1) - Remove this check for phase 4.
