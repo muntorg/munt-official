@@ -440,7 +440,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight)
 bool CScriptCheck::operator()() {
     const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
     const CSegregatedSignatureData *witness = &ptxTo->vin[nIn].segregatedSignatureData;
-    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), &error);
+    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, spendingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), &error);
 }
 
 int GetSpendHeight(const CCoinsViewCache& inputs)
@@ -511,12 +511,12 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                 // spent being checked as a part of CScriptCheck.
                 const CAmount amount = coin.out.nValue;
 
-                CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Witness);
+                CKeyID witnessSigningKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Witness);
                 if (coin.out.GetType() > CTxOutType::ScriptLegacyOutput)
                 {
+                    CKeyID spendSigningKeyID;
                     if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput || coin.out.GetType() == CTxOutType::PoW2WitnessOutput)
                     {
-                        CKeyID spendSigningKeyID;
                         if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
                         {
                             if (tx.vin[i].segregatedSignatureData.stack.size() != 1)
@@ -532,12 +532,12 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                                 spendSigningKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
                                 if (spendSigningKeyID.IsNull())
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid spending key from prevout)"));
-                                if (signingKeyID.IsNull())
+                                if (witnessSigningKeyID.IsNull())
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
                             }
                             else if (tx.vin[i].segregatedSignatureData.stack.size() == 1)
                             {
-                                if (signingKeyID.IsNull())
+                                if (witnessSigningKeyID.IsNull())
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
                             }
                             else
@@ -560,7 +560,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 
                         //We extract the pubkey from the signatures so just pass in an empty pubkey for the checks.
                         std::vector<unsigned char> vchEmptyPubKey;
-                        CachingTransactionSignatureChecker check1(signingKeyID, &tx, i, amount, cacheStore, txdata);
+                        CachingTransactionSignatureChecker check1(witnessSigningKeyID, CKeyID(), &tx, i, amount, cacheStore, txdata);
                         if (!check1.CheckSig(tx.vin[i].segregatedSignatureData.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                         {
                             return false;
@@ -568,7 +568,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         // For a witness spend operation we have a second key that also needs checking.
                         if (!spendSigningKeyID.IsNull())
                         {
-                            CachingTransactionSignatureChecker check2(spendSigningKeyID, &tx, i, amount, cacheStore, txdata);
+                            CachingTransactionSignatureChecker check2(spendSigningKeyID, CKeyID(), &tx, i, amount, cacheStore, txdata);
                             if (!check2.CheckSig(tx.vin[i].segregatedSignatureData.stack[1], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                             {
                                 return false;
@@ -584,21 +584,29 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 
                 //fixme: (2.1) (SEGSIG) - also transition to extracted signature.
                 // Verify signature
+                //fixme: spendingKeyID
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
-                CScriptCheck check(signingKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
-                if (pvChecks) {
+                CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
+                if (scriptPubKey.IsPoW2Witness())
+                {
+                    check.spendingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
+                }
+                if (pvChecks)
+                {
                     pvChecks->push_back(CScriptCheck());
                     check.swap(pvChecks->back());
-                } else if (!check()) {
-                    if (flags & STANDARD_NOT_MANDATORY_VERIFY_FLAGS) {
+                }
+                else if (!check())
+                {
+                    if (flags & STANDARD_NOT_MANDATORY_VERIFY_FLAGS)
+                    {
                         // Check whether the failure was caused by a
                         // non-mandatory script verification check, such as
                         // non-standard DER encodings or non-null dummy
                         // arguments; if so, don't trigger DoS protection to
                         // avoid splitting the network between upgraded and
                         // non-upgraded nodes.
-                        CScriptCheck check2(signingKeyID, scriptPubKey, amount, tx, i,
-                                flags & ~STANDARD_NOT_MANDATORY_VERIFY_FLAGS, cacheStore, &txdata);
+                        CScriptCheck check2(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags & ~STANDARD_NOT_MANDATORY_VERIFY_FLAGS, cacheStore, &txdata);
                         if (check2())
                             return state.Invalid(false, REJECT_NONSTANDARD, strprintf("non-mandatory-script-verify-flag (%s)", ScriptErrorString(check.GetScriptError())));
                     }
