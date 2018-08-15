@@ -7,6 +7,7 @@ RPC - New command "emptymempool" to temporarily empty the mempool of all transac
 RPC - Fix a crash when calling 'validateaddress' with no wallet.
 CORE - Fix a "CreateBlock" issue that was triggering in rare circumstances and affecting "getblocktemplate" RPC calls by miners when it did.
 CORE - Fix a crash that can occur du ring rescan when using zapwallettxes.
+CORE - Enable witness renewal and emptying of witness accounts whose lock period has expired - from block 797000 onwards.
 CMDFLAG - New command line flag "-disablenet" to start with networking disabled, useful in some debugging scenarios.
 CMDFLAG - New command line flag "-zmqpubstalledwitness=<address>" to turn on zmq monitoring for stalled witnesses.
 ZMQ - Add new message "stalledwitness" which can be used by services to monitor for slow and absent witnesses - enabled via CMDFLAG "zmqpubstalledwitness"
