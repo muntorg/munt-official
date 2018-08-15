@@ -292,9 +292,9 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
 
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
 
-    if (!IsPow2Phase4Active(chainActive.Tip(), Params(), chainActive, nullptr))
+    if (!chainActive.Tip() || (IsArgSet("-testnet") && chainActive.Tip()->nHeight < 100) || (!IsArgSet("-testnet") && chainActive.Tip()->nHeight < 797000))
     {
-        QString message = tr("This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.");
+        QString message = tr("This feature is not yet available, please try again after block 797000.");
         QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
         d->exec();
         return;
