@@ -356,13 +356,33 @@ void IncrementWitnessFailCount(uint64_t& failCount)
         failCount = std::numeric_limits<uint64_t>::max() / 3;
 }
 
-inline bool HasSpendKey(const CTxIn& input, const CTxOutPoW2Witness& inputDetails)
+inline bool HasSpendKey(const CTxIn& input, uint64_t nInputHeight)
 {
-    //fixme: (2.0.1) Double check usage of inputDetails here.
-    (unused) inputDetails;
-    // 2 signatures, spending key and witness key.
-    if (input.segregatedSignatureData.stack.size() != 2)
-        return false;
+    //fixme: (2.0.x) - We can get rid of this threshold check as soon as we pass block 797000.
+    int nCheckThreshold = IsArgSet("-testnet") ? 100 : 797000;
+
+    //fixme: (2.1) - Retest this for phase 4 switchover (that it doesn't cause any issues at switchover)
+    //fixme: (2.1) - Remove this check for phase 4.
+    if (nInputHeight >= nCheckThreshold && input.segregatedSignatureData.stack.size() == 0)
+    {
+        // At this point we only need to check here that the scriptSig is push only and that it has 4 items as a result, the rest is checked by later parts of the code.
+        if (!input.scriptSig.IsPushOnly())
+            return false;
+        std::vector<std::vector<unsigned char>> stack;
+        if (!EvalScript(stack, input.scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE))
+        {
+            return false;
+        }
+        if (stack.size() != 4)
+            return false;
+    }
+    else
+    {
+        // At this point we only need to check that there are 2 signatures, spending key and witness key.
+        // The rest is handled by later parts of the code.
+        if (input.segregatedSignatureData.stack.size() != 2)
+            return false;
+    }
     return true;
 }
 
@@ -664,7 +684,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
             {
                 //NB! We -must- check here that we have the spending key (2 items on stack) as when we later check the built up MergeType/SplitType bundles we have no way to check it then.
                 //So this check is very important, must not be skipped and must come before the bundle creation for these bundle types.
-                if (!HasSpendKey(input, inputDetails))
+                if (!HasSpendKey(input, nInputHeight))
                 {
                     return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-missing-spend-key");
                 }
