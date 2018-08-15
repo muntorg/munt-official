@@ -104,7 +104,7 @@ public:
     };
 
     /** Number of confirmation recommended for accepting a transaction */
-    static const int RecommendedNumConfirmations = 6;
+    static const int RecommendedNumConfirmations = 3;
 
     TransactionRecord():
             hash(), time(0), type(Other), address(""), debit(0), credit(0), fee(0), idx(0), actionAccountUUID(boost::uuids::nil_generator()()), actionAccountParentUUID(boost::uuids::nil_generator()()), fromAccountUUID(boost::uuids::nil_generator()()), fromAccountParentUUID(boost::uuids::nil_generator()()), receiveAccountUUID(boost::uuids::nil_generator()()), receiveAccountParentUUID(boost::uuids::nil_generator()())
