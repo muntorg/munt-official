@@ -1482,7 +1482,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
             warningMessages.push_back(strprintf(_("%d of last 100 blocks have unexpected version"), nUpgraded));
         if (nUpgraded > 100/2)
         {
-            std::string strWarning = _("Warning: Unknown block versions being mined! It's possible unknown rules are in effect");
+            std::string strWarning = _("Warning: Unknown block versions in chain! It's possible unknown rules are in effect");
             // notify GetWarnings(), called by Qt and the JSON-RPC code to warn the user:
             DoWarning(strWarning);
         }

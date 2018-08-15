@@ -1423,7 +1423,7 @@ void GUI::incomingTransaction(const QString& date, int unit, const CAmount& amou
     }
 
     //testnet prevent spamming of mined messages
-    if (IsArgSet("-testnet") && type == "Mined")
+    if (IsArgSet("-testnet") && type == "Generated")
     {
         return;
     }

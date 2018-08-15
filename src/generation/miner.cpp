@@ -59,7 +59,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// GuldenMiner
+// GuldenGenerate
 //
 
 //
@@ -190,7 +190,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     {
         LOCK(cs_main); // For ReadBlockFromDisk
         if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, params))
-            return error("GuldenMiner: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
+            return error("GuldenGenerate: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
     }
 
     if (commitpos == -1)
@@ -928,7 +928,7 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     int nPoW2PhaseTip = GetPoW2Phase(chainActive.Tip(), chainparams, chainActive);
     int nPoW2PhasePrev = GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive);
     LogPrintf("%s\n", pblock->ToString());
-    LogPrintf("generated hash= %s hashpow2= %s  amt= %s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
+    LogPrintf("Generated: hash= %s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
 
     //fixme: (2.1) we should avoid submitting stale blocks here
     //but only if they are really stale (there are cases where we want to mine not on the tip (stalled chain)
@@ -937,7 +937,7 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     // Found a solution
     // Process this block the same as if we had received it from another node
     if (!ProcessNewBlock(chainparams, pblock, true, NULL))
-        return error("GuldenMiner: ProcessNewBlock, block not accepted");
+        return error("ProcessBlockFound: block not accepted");
 
     return true;
 }
@@ -973,7 +973,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
 
                 if (!pIndexParent)
                 {
-                    strError = "Error in GuldenMiner: mining stalled, unable to read the witness block we intend to embed.";
+                    strError = "GuldenGenerate: Stalled, unable to read the witness block we intend to embed.";
                     return nullptr;
                 }
             }
@@ -1066,7 +1066,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
                     }
                     if (!pWitnessBlockToEmbed)
                     {
-                        strError = "Error in GuldenMiner: mining stalled, unable to locate suitable witness block to embed.\n";
+                        strError = "GuldenGenerate: stalled, unable to locate suitable witness block to embed.\n";
                         return nullptr;
                     }
                     if (pIndexParent->nHeight != pWitnessBlockToEmbed->nHeight)
@@ -1085,7 +1085,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
     {
         if (pIndexParent->nVersionPoW2Witness == 0)
         {
-            strError = "Error in GuldenMiner: mining stalled, unable to locate suitable witness tip on which to build.\n";
+            strError = "GuldenGenerate: stalled, unable to locate suitable witness tip on which to build.\n";
             return nullptr;
         }
     }
@@ -1101,10 +1101,10 @@ std::atomic<int64_t> nHashThrottle(-1);
 static CCriticalSection timerCS;
 
 static const unsigned int hashPSTimerInterval = 200;
-void static GuldenMiner(const CChainParams& chainparams)
+void static GuldenGenerate(const CChainParams& chainparams)
 {
-    LogPrintf("GuldenMiner started\n");
-    RenameThread("gulden-miner");
+    LogPrintf("GuldenGenerate started\n");
+    RenameThread("gulden-generate");
 
     int64_t nUpdateTimeStart = GetTimeMillis();
 
@@ -1191,16 +1191,16 @@ void static GuldenMiner(const CChainParams& chainparams)
                 pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed);
                 if (!pblocktemplate.get())
                 {
-                    LogPrintf("Error in GuldenMiner: Keypool ran out, please call keypoolrefill.\n");
+                    LogPrintf("GuldenGenerate: Failed to create block-template.\n");
                     if (GetTimeMillis() - nUpdateTimeStart > 5000)
-                            dHashesPerSec = 0;
+                        dHashesPerSec = 0;
                     continue;
                 }
             }
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexParent, nExtraNonce);
 
-            //LogPrintf("Running GuldenMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+            //LogPrintf("GuldenGenerate running: %u transactions (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             //
             // Search
@@ -1250,7 +1250,7 @@ void static GuldenMiner(const CChainParams& chainparams)
 
                     {
                         // Found a solution
-                        LogPrintf("GuldenMiner: proof-of-work found  \n  hash: %s  \ntarget: %s\n", hashMined.GetHex(), hashTarget.GetHex());
+                        LogPrintf("generated PoW\n  hash: %s\n  diff: %s\n", hashMined.GetHex(), hashTarget.GetHex());
                         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
                         ProcessBlockFound(shared_pblock, chainparams);
                         coinbaseScript->keepScriptOnDestroy();
@@ -1276,12 +1276,12 @@ void static GuldenMiner(const CChainParams& chainparams)
     }
     catch (const boost::thread_interrupted&)
     {
-        LogPrintf("GuldenMiner terminated\n");
+        LogPrintf("GuldenGenerate terminated\n");
         throw;
     }
     catch (const std::runtime_error &e)
     {
-        LogPrintf("GuldenMiner runtime error: %s\n", e.what());
+        LogPrintf("GuldenGenerate runtime error: %s\n", e.what());
         return;
     }
 }
@@ -1305,6 +1305,6 @@ void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&GuldenMiner, boost::cref(chainparams)));
+        minerThreads->create_thread(boost::bind(&GuldenGenerate, boost::cref(chainparams)));
 }
 

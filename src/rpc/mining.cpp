@@ -395,7 +395,7 @@ static UniValue prioritisetransaction(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 3)
         throw std::runtime_error(
             "prioritisetransaction <txid> <dummy value> <fee delta>\n"
-            "Accepts the transaction into mined blocks at a higher (or lower) priority\n"
+            "Accepts the transaction into generated blocks at a higher (or lower) priority\n"
             "\nArguments:\n"
             "1. \"txid\"       (string, required) The transaction id.\n"
             "2. dummy          (numeric, optional) API-Compatibility for previous API. Must be zero or null.\n"

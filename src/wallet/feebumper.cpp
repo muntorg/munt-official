@@ -65,7 +65,7 @@ bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx
     }
 
     if (wtx.GetDepthInMainChain() != 0) {
-        vErrors.push_back("Transaction has been mined, or is conflicted with a mined transaction");
+        vErrors.push_back("Transaction has been generated, or is conflicted with a generated transaction");
         currentResult = BumpFeeResult::WALLET_ERROR;
         return false;
     }
