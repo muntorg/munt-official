@@ -356,14 +356,14 @@ void IncrementWitnessFailCount(uint64_t& failCount)
         failCount = std::numeric_limits<uint64_t>::max() / 3;
 }
 
-inline bool HasSpendKey(const CTxIn& input, uint64_t nInputHeight)
+inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 {
     //fixme: (2.0.x) - We can get rid of this threshold check as soon as we pass block 797000.
     uint64_t nCheckThreshold = IsArgSet("-testnet") ? 100 : 797000;
 
     //fixme: (2.1) - Retest this for phase 4 switchover (that it doesn't cause any issues at switchover)
     //fixme: (2.1) - Remove this check for phase 4.
-    if (chainActive.Tip()->nHeight >= nCheckThreshold && input.segregatedSignatureData.stack.size() == 0)
+    if (nSpendHeight >= nCheckThreshold && input.segregatedSignatureData.stack.size() == 0)
     {
         // At this point we only need to check here that the scriptSig is push only and that it has 4 items as a result, the rest is checked by later parts of the code.
         if (!input.scriptSig.IsPushOnly())
@@ -628,7 +628,7 @@ inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness
 }
 
 //fixme: (2.0.1) (HIGH) Implement unit test code for this function.
-bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight)
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
     if (pWitnessBundles)
     {
@@ -684,7 +684,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
             {
                 //NB! We -must- check here that we have the spending key (2 items on stack) as when we later check the built up MergeType/SplitType bundles we have no way to check it then.
                 //So this check is very important, must not be skipped and must come before the bundle creation for these bundle types.
-                if (!HasSpendKey(input, nInputHeight))
+                if (!HasSpendKey(input, nSpendHeight))
                 {
                     return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-missing-spend-key");
                 }
@@ -764,7 +764,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
 
             if (pWitnessBundles)
             {
-                if (!CheckTxInputAgainstWitnessBundles(state, pWitnessBundles, coin.out, tx.vin[i], coin.nHeight))
+                if (!CheckTxInputAgainstWitnessBundles(state, pWitnessBundles, coin.out, tx.vin[i], coin.nHeight, nSpendHeight))
                     return false;
             }
         }

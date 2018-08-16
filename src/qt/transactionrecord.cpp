@@ -73,7 +73,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             if (!txPrev)
                 break;
 
-            if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nWalletTxBlockHeight))
+            if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nWalletTxBlockHeight, nWalletTxBlockHeight))
                 break;
         }
     }
