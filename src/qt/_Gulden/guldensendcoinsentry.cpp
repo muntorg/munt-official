@@ -505,7 +505,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         keySpending.ReturnKey();
         CReserveKeyOrScript keyWitness(pactiveWallet, targetWitnessAccount, KEYCHAIN_WITNESS);
         CPubKey pubWitnessKey;
-        if (!keySpending.GetReservedKey(pubWitnessKey))
+        if (!keyWitness.GetReservedKey(pubWitnessKey))
         {
             std::string strErrorMessage = "Failed to generate a witness key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
             CAlert::Notify(strErrorMessage, true, true);
