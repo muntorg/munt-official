@@ -363,7 +363,7 @@ inline bool HasSpendKey(const CTxIn& input, uint64_t nInputHeight)
 
     //fixme: (2.1) - Retest this for phase 4 switchover (that it doesn't cause any issues at switchover)
     //fixme: (2.1) - Remove this check for phase 4.
-    if (nInputHeight >= nCheckThreshold && input.segregatedSignatureData.stack.size() == 0)
+    if (chainActive.Tip()->nHeight >= nCheckThreshold && input.segregatedSignatureData.stack.size() == 0)
     {
         // At this point we only need to check here that the scriptSig is push only and that it has 4 items as a result, the rest is checked by later parts of the code.
         if (!input.scriptSig.IsPushOnly())
