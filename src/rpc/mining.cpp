@@ -317,7 +317,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw std::runtime_error(
             "generatetoaddress nblocks address (maxtries)\n"
-            "\Generate blocks immediately to a specified address (before the RPC call returns)\n"
+            "\nGenerate blocks immediately to a specified address (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
             "2. address      (string, required) The address to send the newly generated Gulden to.\n"
