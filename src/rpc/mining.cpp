@@ -215,7 +215,7 @@ static UniValue generate(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
             "generate nblocks ( maxtries )\n"
-            "\nMine up to nblocks blocks immediately (before the RPC call returns)\n"
+            "\ngenerate up to n blocks immediately (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
             "2. maxtries     (numeric, optional) How many iterations to try (default = 1000000).\n"
@@ -241,7 +241,7 @@ static UniValue generate(const JSONRPCRequest& request)
 
     //throw an error if no script was provided
     if (coinbaseScript->reserveScript.empty())
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "No coinbase script available (mining requires a wallet)");
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "No coinbase script available; a wallet is required");
 
     return generateBlocks(coinbaseScript, nGenerate, nMaxTries, true);
 }
@@ -277,14 +277,14 @@ static UniValue setgenerate(const JSONRPCRequest& request)
         throw std::runtime_error("Cannot use command without an active wallet");
 
     if (!pactiveWallet->activeAccount)
-        throw std::runtime_error("Cannot mine without an active account selected, first select an active account.");
+        throw std::runtime_error("No active account selected, first select an active account.");
 
     bool fGenerate = true;
     if (request.params.size() > 0)
         fGenerate = request.params[0].get_bool();
 
     if (fGenerate && pactiveWallet->activeAccount->IsPoW2Witness())
-        throw std::runtime_error("Cannot mine into a witness account, first select a regular account as the active account.");
+        throw std::runtime_error("Witness account selected, first select a regular account as the active account.");
 
     int nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
     if (request.params.size() > 1)
@@ -300,11 +300,11 @@ static UniValue setgenerate(const JSONRPCRequest& request)
 
     if (!fGenerate)
     {
-        return "Mining disabled.";
+        return "Block generation disabled.";
     }
     else
     {
-        return strprintf("Mining enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] ,nGenProcLimit);
+        return strprintf("Block generation enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] ,nGenProcLimit);
     }
     #else
     throw std::runtime_error("Cannot use command without an active wallet");
@@ -317,7 +317,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw std::runtime_error(
             "generatetoaddress nblocks address (maxtries)\n"
-            "\nMine blocks immediately to a specified address (before the RPC call returns)\n"
+            "\Generate blocks immediately to a specified address (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
             "2. address      (string, required) The address to send the newly generated Gulden to.\n"
@@ -350,7 +350,7 @@ static UniValue getmininginfo(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 0)
         throw std::runtime_error(
             "getmininginfo\n"
-            "\nReturns a json object containing mining-related information."
+            "\nReturns a json object containing information about block generation."
             "\nResult:\n"
             "{\n"
             "  \"blocks\": nnn,             (numeric) The current block\n"
@@ -1162,11 +1162,11 @@ static UniValue estimaterawfee(const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
-    { "mining",             "getnetworkhashps",       &getnetworkhashps,       true,  {"nblocks","height"} },
-    { "mining",             "getmininginfo",          &getmininginfo,          true,  {} },
-    { "mining",             "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","dummy","fee_delta"} },
-    { "mining",             "getblocktemplate",       &getblocktemplate,       true,  {"template_request"} },
-    { "mining",             "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
+    { "block_generation",   "getnetworkhashps",       &getnetworkhashps,       true,  {"nblocks","height"} },
+    { "block_generation",   "getmininginfo",          &getmininginfo,          true,  {} },
+    { "block_generation",   "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","dummy","fee_delta"} },
+    { "block_generation",   "getblocktemplate",       &getblocktemplate,       true,  {"template_request"} },
+    { "block_generation",   "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
 
     { "generating",         "generate",               &generate,               true,  {"nblocks","maxtries"} },
     { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"nblocks","address","maxtries"} },
