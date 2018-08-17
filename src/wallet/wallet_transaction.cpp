@@ -871,6 +871,12 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 // Increment fail count appropriately
                 IncrementWitnessFailCount(witnessDestination.failCount);
 
+                // Ensure consistent lock from
+                if (witnessDestination.lockFromBlock == 0)
+                {
+                    witnessDestination.lockFromBlock = witCoin.coin.nHeight;
+                }
+
                 if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) >= 4)
                 {
                     renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
