@@ -21,6 +21,7 @@
 #include "chain.h"
 #include "coins.h"
 #include "utilmoneystr.h"
+#include "base58.h"
 
 //Gulden dependencies
 #include "Gulden/util.h"
