@@ -13,6 +13,7 @@
 #include "clickablelabel.h"
 #include "receivecoinsdialog.h"
 #include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include "guiutil.h"
 #include "init.h"
 #include "unity/appmanager.h"
@@ -329,6 +330,68 @@ void GUI::requestEmptyWitness()
     CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, true);
     if (availableAmount > 0)
     {
+        //fixme: (2.1) - Remove this when ready
+        {
+            CGetWitnessInfo witnessInfo;
+            CBlock block;
+            {
+                LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
+                if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+                {
+                    std::string strErrorMessage = "Error in requestEmptyWitness, failed to read block from disk";
+                    CAlert::Notify(strErrorMessage, true, true);
+                    LogPrintf("%s", strErrorMessage.c_str());
+                    return;
+                }
+                if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+                {
+                    std::string strErrorMessage = "Error in requestEmptyWitness failed to retrieve witness info";
+                    CAlert::Notify(strErrorMessage, true, true);
+                    LogPrintf("%s", strErrorMessage.c_str());
+                    return;
+                }
+                for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
+                {
+                    if (IsMine(*fromWitnessAccount, witCoin.coin.out))
+                    {
+                        CTxOutPoW2Witness witnessDetails;
+                        if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && !IsPoW2WitnessLocked(witnessDetails, chainActive.Tip()->nHeight) )
+                        {
+                            if (!chainActive.Tip() || (IsArgSet("-testnet") && chainActive.Tip()->nHeight < 100) || (!IsArgSet("-testnet") && chainActive.Tip()->nHeight < 797000))
+                            {
+                                QString message = tr("This feature is not yet available, please try again after block 797000.");
+                                QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
+                                d->exec();
+                                return;
+                            }
+
+                            CTxDestination destIn;
+                            if (!ExtractDestination(witCoin.coin.out, destIn))
+                            {
+                                std::string strErrorMessage = "Error in requestEmptyWitness failed to extract input address";
+                                CAlert::Notify(strErrorMessage, true, true);
+                                LogPrintf("%s", strErrorMessage.c_str());
+                                return;
+                            }
+                            std::string sDestIn = CGuldenAddress(destIn).ToString();
+
+                            if (staticFundingAddressLookupTable.count(sDestIn) > 0)
+                            {
+                                SendCoinsRecipient rcp;
+                                rcp.paymentType = SendCoinsRecipient::PaymentType::NormalPayment;
+                                rcp.fSubtractFeeFromAmount = true;
+                                rcp.amount = availableAmount;
+                                rcp.forexFailCode = "";
+                                rcp.address = QString::fromStdString(staticFundingAddressLookupTable[sDestIn]);
+                                walletFrame->currentWalletView()->sendCoinsPage->pendingRecipients.push_back(rcp);
+                                walletFrame->currentWalletView()->sendCoinsPage->on_sendButton_clicked();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         walletFrame->gotoSendCoinsPage();
         walletFrame->currentWalletView()->sendCoinsPage->setAmount(availableAmount);
     }
