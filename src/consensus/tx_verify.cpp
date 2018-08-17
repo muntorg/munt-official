@@ -432,7 +432,7 @@ inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 * Input only
 * Signed by spending key.
 */
-inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight)
+inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CTransaction& tx)
 {
     if (outputs.size() != 0)
         return false;
@@ -440,6 +440,26 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight)
         return false;
     if (inputs[0].second.lockUntilBlock >= nCheckHeight)
         return false;
+
+    //fixme: (2.1) - We must remove this in future once it is no longer needed
+    if (inputs[0].second.witnessKeyID == inputs[0].second.spendingKeyID)
+    {
+        if (tx.vout.size() != 1)
+            return false;
+        CTxDestination destIn;
+        if (!ExtractDestination(inputs[0].first, destIn))
+            return false;
+        CTxDestination destOut;
+        if (!ExtractDestination(tx.vout[0], destOut))
+            return false;
+        std::string sDest1 = CGuldenAddress(destIn).ToString();
+        std::string sDest2 = CGuldenAddress(destOut).ToString();
+        if (staticFundingAddressLookupTable.count(sDest1) <= 0)
+            return false;
+        if (sDest2 != staticFundingAddressLookupTable[sDest1])
+            return false;
+    }
+
     return true;
 }
 
@@ -449,11 +469,12 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight)
 * Input/Output.
 * Signed by spending key.
 */
-inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
+inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
     // Needs 2 signature (spending key)
-    if (input.segregatedSignatureData.stack.size() != 2)
+    if (!HasSpendKey(input, nSpendHeight))
         return false;
+
     // Amount keys and lock unchanged.
     if (nInputAmount != nOutputAmount)
         return false;
@@ -657,7 +678,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::WitnessType;
                         break;
                     }
-                    else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
+                    else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight, nSpendHeight) )
                     {
                         matchedExistingBundle = true;
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
@@ -785,7 +806,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                 }
                 else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType)
                 {
-                    if (!bundle.IsValidSpendBundle(nSpendHeight))
+                    if (!bundle.IsValidSpendBundle(nSpendHeight, tx))
                         return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-spend-bundle");
                 }
                 else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::RenewType)
