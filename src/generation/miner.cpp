@@ -719,7 +719,7 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
             }
         }
 
-        // If we are mining a side-chain (in the case of an absent PoW2 witness) we need to be careful not to include mempol transactions that may have already entered the chain.
+        // If we are mining a side-chain (in the case of an absent PoW2 witness) we need to be careful not to include mempool transactions that may have already entered the chain.
         if (pViewIn)
         {
             CTransactionRef transactionRef;
