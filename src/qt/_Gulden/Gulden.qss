@@ -986,7 +986,7 @@ OptionsDialog QSpinBox
     qproperty-cursor: hand;
 }
 
-QToolTip, #gulden_bar #gulden_label_balance > QToolTip
+QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_label_balance_forex > QToolTip
 {
     background-color: white;
     color: TEXT_COLOR_1;

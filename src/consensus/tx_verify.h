@@ -61,14 +61,14 @@ struct CWitnessTxBundle
 
     inline bool IsValidSplitBundle();
     inline bool IsValidMergeBundle();
-    inline bool IsValidSpendBundle(uint64_t nHeight);
+    inline bool IsValidSpendBundle(uint64_t nHeight, const CTransaction& transaction);
 
     WitnessTxType bundleType=CreationType;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> inputs;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> outputs;
 };
 
-bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight);
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight);
 
 CAmount CalculateWitnessPenaltyFee(const CTxOut& output);
 void IncrementWitnessFailCount(uint64_t& failCount);

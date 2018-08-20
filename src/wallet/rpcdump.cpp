@@ -704,7 +704,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     file << strprintf("# Wallet dump created by Gulden %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHashPoW2().ToString());
-    file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
+    file << strprintf("#   timestamp %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
     file << "\n";
 
     // add the base58check encoded extended master if the wallet uses HD 

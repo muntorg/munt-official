@@ -13,8 +13,14 @@
 #ifndef GULDEN_VALIDATIONINTERFACE_H
 #define GULDEN_VALIDATIONINTERFACE_H
 
+#if defined(HAVE_CONFIG_H)
+#include "config/gulden-config.h"
+#endif
+
 #include <boost/signals2/signal.hpp>
 #include <memory>
+
+#include "generation/generation.h"
 
 #include "primitives/transaction.h" // CTransaction(Ref)
 
@@ -23,7 +29,6 @@ class CBlockIndex;
 struct CBlockLocator;
 class CBlockIndex;
 class CConnman;
-class CReserveKeyOrScript;
 class CValidationInterface;
 class CValidationState;
 class uint256;
@@ -42,6 +47,7 @@ class CValidationInterface {
 public:
     virtual ~CValidationInterface() {}
 protected:
+    virtual void StalledWitness([[maybe_unused]] const CBlockIndex* pBlock, [[maybe_unused]] uint64_t nSeconds) {}
     virtual void UpdatedBlockTip([[maybe_unused]] const CBlockIndex *pindexNew, [[maybe_unused]] const CBlockIndex *pindexFork, [[maybe_unused]] bool fInitialDownload) {}
     virtual void TransactionAddedToMempool([[maybe_unused]] const CTransactionRef &ptxn) {}
     virtual void BlockConnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block, [[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::vector<CTransactionRef> &txnConflicted) {}
@@ -59,6 +65,9 @@ protected:
 };
 
 struct CMainSignals {
+    //! Notifies listeners of a stalled witness at tip of chain
+    boost::signals2::signal<void (const CBlockIndex *, uint64_t nSeconds)> StalledWitness;
+
     /** Notifies listeners of updated block chain tip */
     boost::signals2::signal<void (const CBlockIndex *, const CBlockIndex *, bool fInitialDownload)> UpdatedBlockTip;
     /** Notifies listeners of a transaction having been added to mempool. */

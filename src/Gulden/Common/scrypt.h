@@ -27,6 +27,7 @@ void PBKDF2_SHA256(const uint8_t *passwd, size_t passwdlen, const uint8_t *salt,
 
 void PBKDF2_SHA512(const char* pass, size_t passwdlen, const unsigned char* salt,  size_t saltlen, int32_t iterations, unsigned char* digest, uint32_t outputbytes);
 
+#ifndef __FreeBSD__
 static inline uint32_t le32dec(const void *pp)
 {
         const uint8_t *p = (uint8_t const *)pp;
@@ -42,4 +43,5 @@ static inline void le32enc(void *pp, uint32_t x)
         p[2] = (x >> 16) & 0xff;
         p[3] = (x >> 24) & 0xff;
 }
+#endif
 #endif

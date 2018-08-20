@@ -17,7 +17,10 @@
 #include "script/script.h"
 #include "script/standard.h"
 #include "script/sign.h"
+
+#ifdef ENABLE_WALLET
 #include <wallet/wallet.h>
+
 
 
 
@@ -357,3 +360,4 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
     }*/
     return ISMINE_NO;
 }
+#endif

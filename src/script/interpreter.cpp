@@ -1438,13 +1438,79 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
             // serror is set
             return false;
     }
-    if (flags & SCRIPT_VERIFY_P2SH)
-            stackCopy = stack;
-    if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
+
+    //fixme: (2.1) we can remove this
+    //Special case spending of witness scripts as this falls outside of normal script behaviour.
+    if (scriptPubKey.IsPoW2Witness())
     {
-        // serror is set
-        return false;
+        if (scriptSig.IsPushOnly())
+        {
+            if (stack.size() == 4)
+            {
+                if (checker.spendingKeyID.IsNull())
+                    return false;
+                if (checker.signatureKeyID.IsNull())
+                    return false;
+
+                valtype& vchSig1    = stacktop(-2);
+                valtype& vchPubKey1 = stacktop(-1);
+                valtype& vchSig2    = stacktop(-4);
+                valtype& vchPubKey2 = stacktop(-3);
+
+                // Subset of script starting at the most recent codeseparator
+                CScript scriptCode(scriptPubKey);
+
+                if (!CheckSignatureEncoding(vchSig1, flags, serror) || !CheckPubKeyEncoding(vchPubKey1, flags, SIGVERSION_BASE, serror))
+                    return false;
+                if (!CheckSignatureEncoding(vchSig2, flags, serror) || !CheckPubKeyEncoding(vchPubKey2, flags, SIGVERSION_BASE, serror))
+                    return false;
+                if (!checker.CheckSig(vchSig1, vchPubKey1, scriptCode, SIGVERSION_BASE))
+                    return false;
+                if (!checker.CheckSig(vchSig2, vchPubKey2, scriptCode, SIGVERSION_BASE))
+                    return false;
+                if (checker.signatureKeyID != CPubKey(vchPubKey1).GetID())
+                    return false;
+                if (checker.spendingKeyID != CPubKey(vchPubKey2).GetID())
+                    return false;
+
+                popstack(stack);
+                popstack(stack);
+                popstack(stack);
+                popstack(stack);
+                // Push a single true onto the stack
+                stack.push_back(valtype(1, 1));
+            }
+            else if (stack.size() != 2)
+            {
+                return false;
+            }
+            else
+            {
+                if (flags & SCRIPT_VERIFY_P2SH)
+                stackCopy = stack;
+                if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
+                {
+                    // serror is set
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
+    else
+    {
+        if (flags & SCRIPT_VERIFY_P2SH)
+                stackCopy = stack;
+        if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
+        {
+            // serror is set
+            return false;
+        }
+    }
+
     if (stack.empty())
         return set_error(serror, SCRIPT_ERR_EVAL_FALSE);
     if (!CastToBool(stack.back()))

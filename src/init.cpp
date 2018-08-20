@@ -493,6 +493,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-zmqpubhashtx=<address>", helptr("Enable publish hash transaction in <address>"));
     strUsage += HelpMessageOpt("-zmqpubrawblock=<address>", helptr("Enable publish raw block in <address>"));
     strUsage += HelpMessageOpt("-zmqpubrawtx=<address>", helptr("Enable publish raw transaction in <address>"));
+    strUsage += HelpMessageOpt("-zmqpubstalledwitness=<address>", helptr("Enable publish of slow witnesses in <address>"));
 #endif
 
     strUsage += HelpMessageGroup(helptr("Debugging/Testing options:"));
@@ -558,11 +559,10 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-whitelistrelay", strprintf(helptr("Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)"), DEFAULT_WHITELISTRELAY));
     strUsage += HelpMessageOpt("-whitelistforcerelay", strprintf(helptr("Force relay of transactions from whitelisted peers even if they violate local relay policy (default: %d)"), DEFAULT_WHITELISTFORCERELAY));
 
-    strUsage += HelpMessageGroup(helptr("Block creation options:"));
+    strUsage += HelpMessageGroup(helptr("Block generation options:"));
     strUsage += HelpMessageOpt("-blockmaxweight=<n>", strprintf(helptr("Set maximum BIP141 block weight (default: %d)"), DEFAULT_BLOCK_MAX_WEIGHT));
     strUsage += HelpMessageOpt("-blockmaxsize=<n>", strprintf(helptr("Set maximum block size in bytes (default: %d)"), DEFAULT_BLOCK_MAX_SIZE));
-    strUsage += HelpMessageOpt("-blockmintxfee=<amt>", strprintf(helptr("Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)"), CURRENCY_UNIT, FormatMoney(DEFAULT_BLOCK_MIN_TX_FEE)));
-    strUsage += HelpMessageOpt("-coinbasesignature=<signature>", helptr("Set a signature to add to the coinbase of any mined blocks."));
+    strUsage += HelpMessageOpt("-blockmintxfee=<amt>", strprintf(helptr("Set lowest fee rate (in %s/kB) for transactions to be included in block generation. (default: %s)"), CURRENCY_UNIT, FormatMoney(DEFAULT_BLOCK_MIN_TX_FEE)));
     if (showDebug)
         strUsage += HelpMessageOpt("-blockversion=<n>", "Override block version to test forking scenarios");
 
@@ -582,7 +582,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageGroup(helptr("Gulden developer options:"));
     strUsage += HelpMessageOpt("-genkeypair", helptr("Generate a random public/private keypair for use with alert system and other similar functionality."));
     strUsage += HelpMessageOpt("-setwindowtitle", helptr("Change the window title name, useful for distinguishing multiple program instances during testing."));
-    strUsage += HelpMessageOpt("-coinbasesignature", helptr("Insert value into coinbase of generated (mined or witnessed) blocks, useful during testing."));
+    strUsage += HelpMessageOpt("-coinbasesignature", helptr("Insert value into coinbase of generated blocks, useful during testing."));
     strUsage += HelpMessageOpt("-accountpool", helptr("Use to increase the default account pool look ahead size. (Needed in some cases to find accounts on rescan when large account gaps are present)"));
 
     if (showDebug) {
@@ -878,6 +878,12 @@ void InitParameterInteraction()
         if (SoftSetBoolArg("-whitelistrelay", true))
             LogPrintf("%s: parameter interaction: -whitelistforcerelay=1 -> setting -whitelistrelay=1\n", __func__);
     }
+
+    //For raspberry pis etc. we default to keeping logging at a minimum
+    #if defined(__arm__) || defined(__aarch64__)
+    SoftSetBoolArg("-minimallogging", true);
+    #endif
+    gbMinimalLogging = GetBoolArg("-minimallogging", false);
 }
 
 static std::string ResolveErrMsg(const char * const optname, const std::string& strBind)
@@ -1369,7 +1375,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         return false;
 #endif
 
+    #ifdef ENABLE_WALLET
     StartShadowPoolManagerThread(threadGroup);
+    #endif
 
     // ********************************************************* Step 6: network initialization
     // Note that we absolutely cannot open any actual connections
@@ -1380,6 +1388,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     assert(!g_connman);
     g_connman = std::unique_ptr<CConnman>(new CConnman(GetRand(std::numeric_limits<uint64_t>::max()), GetRand(std::numeric_limits<uint64_t>::max())));
     CConnman& connman = *g_connman;
+
+    if (gArgs.IsArgSet("-disablenet"))
+        g_connman->SetNetworkActive(false);
 
     peerLogic.reset(new PeerLogicValidation(&connman));
     RegisterValidationInterface(peerLogic.get());

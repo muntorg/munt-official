@@ -91,7 +91,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AccountSummaryWidget</name>
     <message>
-        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+145"/>
+        <location filename="../../_Gulden/accountsummarywidget.cpp" line="+149"/>
         <source>Total funds: </source>
         <translation>Total funds: </translation>
     </message>
@@ -447,7 +447,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>No recovery phrases present for this wallet.</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+17"/>
         <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
         <translation>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</translation>
     </message>
@@ -808,12 +808,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+283"/>
-        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
-        <translation>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+298"/>
         <location line="+40"/>
         <source>Okay</source>
         <translation>Okay</translation>
@@ -824,27 +819,31 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-33"/>
+        <location line="-59"/>
+        <location line="+26"/>
         <source>Total funds: </source>
         <translation>Total funds: </translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-25"/>
+        <location line="+26"/>
         <source>Locked funds: </source>
         <translation>Locked funds: </translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-25"/>
+        <location line="+26"/>
         <source>Funds awaiting confirmation: </source>
         <translation>Funds awaiting confirmation: </translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-25"/>
+        <location line="+26"/>
         <source>Spendable funds: </source>
         <translation>Spendable funds: </translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+511"/>
+        <location filename="../../gui.cpp" line="+513"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
     </message>
@@ -874,7 +873,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Send</translation>
     </message>
     <message>
-        <location line="+73"/>
+        <location line="+33"/>
+        <source>This feature is not yet available, please try again after block 797000.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+40"/>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
         <translation>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</translation>
     </message>
@@ -894,7 +898,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Add account</translation>
     </message>
     <message>
-        <location line="+125"/>
+        <location line="+127"/>
         <source>&amp;Password</source>
         <translation>&amp;Password</translation>
     </message>
@@ -914,7 +918,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Backup wallet</translation>
     </message>
     <message>
-        <location line="+871"/>
+        <location line="+874"/>
         <source>Imported key</source>
         <translation>Imported key</translation>
     </message>
@@ -1455,7 +1459,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+466"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+470"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
@@ -2308,19 +2312,19 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</translation>
     </message>
     <message>
-        <location line="+25"/>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Mined balance in watch-only addresses that has not yet matured</translation>
-    </message>
-    <message>
-        <location line="+42"/>
+        <location line="+67"/>
         <source>Total:</source>
         <translation>Total:</translation>
     </message>
     <message>
-        <location line="+16"/>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Mined balance that has not yet matured</translation>
+        <location line="-42"/>
+        <source>Generated balance in watch-only addresses that has not yet matured</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+58"/>
+        <source>Generated balance that has not yet matured</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+29"/>
@@ -3157,7 +3161,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <location line="+130"/>
-        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+402"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+406"/>
         <source>Request %1 Gulden</source>
         <translation>Request %1 Gulden</translation>
     </message>
@@ -4246,14 +4250,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Internal transfer</translation>
     </message>
     <message>
-        <location line="+2"/>
-        <location line="+108"/>
-        <location line="+85"/>
-        <source>Mining reward</source>
-        <translation>Mining reward</translation>
-    </message>
-    <message>
-        <location line="-191"/>
+        <location line="+4"/>
         <location line="+108"/>
         <location line="+85"/>
         <source>Witness reward</source>
@@ -4400,7 +4397,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Internal transfer to: %1</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+13"/>
+        <source>Generated</source>
+        <translation type="unfinished">Generated</translation>
+    </message>
+    <message>
+        <location line="+10"/>
         <source>Internal account movement</source>
         <translation>Internal account movement</translation>
     </message>
@@ -4411,7 +4413,13 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Extend locked funds</translation>
     </message>
     <message>
-        <location line="+319"/>
+        <location line="-205"/>
+        <location line="+108"/>
+        <source>Generation reward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+416"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
         <translation>Transaction status. Hover over this field to show number of confirmations.</translation>
     </message>
@@ -4519,12 +4527,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Internal transfer</translation>
     </message>
     <message>
-        <location line="+2"/>
-        <source>Mining reward</source>
-        <translation>Mining reward</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+3"/>
         <source>Witness reward</source>
         <translation>Witness reward</translation>
     </message>
@@ -4569,7 +4572,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>All transaction types</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+7"/>
+        <source>Generated</source>
+        <translation type="unfinished">Generated</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>Other</source>
         <translation>Other</translation>
     </message>
@@ -4837,7 +4845,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="+567"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="+577"/>
         <source>%1 months</source>
         <translation>%1 months</translation>
     </message>
@@ -4867,7 +4875,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="+49"/>
         <location line="+23"/>
         <location line="+23"/>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-518"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-528"/>
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
@@ -4877,7 +4885,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
-        <location line="+456"/>
+        <location line="+466"/>
         <source>n/a</source>
         <translation>n/a</translation>
     </message>
@@ -4996,7 +5004,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>Renew account</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-418"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-428"/>
         <source>Earnings to date</source>
         <translation>Earnings to date</translation>
     </message>
@@ -5031,7 +5039,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>&amp;Months</translation>
     </message>
     <message>
-        <location line="+382"/>
+        <location line="+392"/>
         <source>%1 blocks</source>
         <translation>%1 blocks</translation>
     </message>
@@ -5049,7 +5057,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
 <context>
     <name>toolbar</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1104"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1109"/>
         <source>Account toolbar</source>
         <translation>Account toolbar</translation>
     </message>
@@ -5059,7 +5067,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>Overview toolbar</translation>
     </message>
     <message>
-        <location line="+77"/>
+        <location line="+79"/>
         <location line="+120"/>
         <source>Spacer  toolbar</source>
         <translation>Spacer  toolbar</translation>

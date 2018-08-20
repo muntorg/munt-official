@@ -57,7 +57,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     // Deal with special "complex" witness transaction types first.
     std::vector<CWitnessTxBundle> witnessBundles;
     CValidationState state;
-    int nWalletTxBlockHeight = 0;
+    int nWalletTxBlockHeight = chainActive.Tip()?chainActive.Tip()->nHeight:0;
     const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
     if (findIter != mapBlockIndex.end())
         nWalletTxBlockHeight = findIter->second->nHeight;
@@ -73,7 +73,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             if (!txPrev)
                 break;
 
-            if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nWalletTxBlockHeight))
+            if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nWalletTxBlockHeight, nWalletTxBlockHeight))
                 break;
         }
     }
@@ -689,7 +689,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             }
             else if (!fAllFromMe && !fAllToMe && vNotToMe.size() == 1 && wallet->IsMine(vNotToMe[0]))
             {
-                //Handle the 'receieve' part of an internal send between two accounts
+                //Handle the 'receive' part of an internal send between two accounts
                 TransactionRecord sub(hash, nTime);
 
                 //We don't bother filling in the sender details here for now

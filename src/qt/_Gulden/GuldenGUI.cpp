@@ -13,6 +13,7 @@
 #include "clickablelabel.h"
 #include "receivecoinsdialog.h"
 #include "validation/validation.h"
+#include "validation/witnessvalidation.h"
 #include "guiutil.h"
 #include "init.h"
 #include "unity/appmanager.h"
@@ -189,10 +190,24 @@ void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBal
     CAmount displayBalanceImmatureOrUnconfirmed = balances.immatureExcludingLocked + balances.unconfirmedExcludingLocked;
     CAmount displayBalanceTotal = displayBalanceLocked + displayBalanceAvailable + displayBalanceImmatureOrUnconfirmed;
 
+    if (displayBalanceTotal < 0)
+        displayBalanceTotal = 0;
+    if (displayBalanceLocked < 0)
+        displayBalanceLocked = 0;
+    if (displayBalanceImmatureOrUnconfirmed < 0)
+        displayBalanceImmatureOrUnconfirmed = 0;
+    if (displayBalanceTotal < 0)
+        displayBalanceTotal = 0;
+
     labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
     if (displayBalanceTotal > 0 && optionsModel)
     {
-        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
+        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
+        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceLocked, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceImmatureOrUnconfirmed, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        labelBalanceForex->setToolTip(toolTip);
         if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);
     }
@@ -278,9 +293,9 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
 
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
 
-    if (!IsPow2Phase4Active(chainActive.Tip(), Params(), chainActive, nullptr))
+    if (!chainActive.Tip() || (IsArgSet("-testnet") && chainActive.Tip()->nHeight < 100) || (!IsArgSet("-testnet") && chainActive.Tip()->nHeight < 797000))
     {
-        QString message = tr("This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.");
+        QString message = tr("This feature is not yet available, please try again after block 797000.");
         QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
         d->exec();
         return;
@@ -315,6 +330,68 @@ void GUI::requestEmptyWitness()
     CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, true);
     if (availableAmount > 0)
     {
+        //fixme: (2.1) - Remove this when ready
+        {
+            CGetWitnessInfo witnessInfo;
+            CBlock block;
+            {
+                LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
+                if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+                {
+                    std::string strErrorMessage = "Error in requestEmptyWitness, failed to read block from disk";
+                    CAlert::Notify(strErrorMessage, true, true);
+                    LogPrintf("%s", strErrorMessage.c_str());
+                    return;
+                }
+                if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+                {
+                    std::string strErrorMessage = "Error in requestEmptyWitness failed to retrieve witness info";
+                    CAlert::Notify(strErrorMessage, true, true);
+                    LogPrintf("%s", strErrorMessage.c_str());
+                    return;
+                }
+                for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
+                {
+                    if (IsMine(*fromWitnessAccount, witCoin.coin.out))
+                    {
+                        CTxOutPoW2Witness witnessDetails;
+                        if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && !IsPoW2WitnessLocked(witnessDetails, chainActive.Tip()->nHeight) )
+                        {
+                            if (!chainActive.Tip() || (IsArgSet("-testnet") && chainActive.Tip()->nHeight < 100) || (!IsArgSet("-testnet") && chainActive.Tip()->nHeight < 797000))
+                            {
+                                QString message = tr("This feature is not yet available, please try again after block 797000.");
+                                QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
+                                d->exec();
+                                return;
+                            }
+
+                            CTxDestination destIn;
+                            if (!ExtractDestination(witCoin.coin.out, destIn))
+                            {
+                                std::string strErrorMessage = "Error in requestEmptyWitness failed to extract input address";
+                                CAlert::Notify(strErrorMessage, true, true);
+                                LogPrintf("%s", strErrorMessage.c_str());
+                                return;
+                            }
+                            std::string sDestIn = CGuldenAddress(destIn).ToString();
+
+                            if (staticFundingAddressLookupTable.count(sDestIn) > 0)
+                            {
+                                SendCoinsRecipient rcp;
+                                rcp.paymentType = SendCoinsRecipient::PaymentType::NormalPayment;
+                                rcp.fSubtractFeeFromAmount = true;
+                                rcp.amount = availableAmount;
+                                rcp.forexFailCode = "";
+                                rcp.address = QString::fromStdString(staticFundingAddressLookupTable[sDestIn]);
+                                walletFrame->currentWalletView()->sendCoinsPage->pendingRecipients.push_back(rcp);
+                                walletFrame->currentWalletView()->sendCoinsPage->on_sendButton_clicked();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         walletFrame->gotoSendCoinsPage();
         walletFrame->currentWalletView()->sendCoinsPage->setAmount(availableAmount);
     }
@@ -511,12 +588,14 @@ void GUI::createToolBars()
 
         labelBalance = new ClickableLabel( balanceContainer );
         labelBalance->setObjectName( "gulden_label_balance" );
-        labelBalance->setText( "" );
+        labelBalance->setText("");
+        labelBalance->setToolTip("");
         layoutBalance->addWidget( labelBalance );
 
-        labelBalanceForex = new ClickableLabel( this );
+        labelBalanceForex = new ClickableLabel( balanceContainer );
         labelBalanceForex->setObjectName( "gulden_label_balance_forex" );
-        labelBalanceForex->setText( "" );
+        labelBalanceForex->setText("");
+        labelBalanceForex->setToolTip("");
         labelBalanceForex->setCursor( Qt::PointingHandCursor );
         connect( labelBalanceForex, SIGNAL( clicked() ), this, SLOT( showExchangeRateDialog() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         labelBalanceForex->setVisible(false);
@@ -1325,6 +1404,9 @@ void GUI::activeAccountChanged(CAccount* account)
 
     if (accountSummaryWidget)
         accountSummaryWidget->setActiveAccount(account);
+
+    // Force receive Qr code to update on balance change.
+    updateAccount( walletFrame->currentWalletView()->walletModel->getActiveAccount() );
 
     refreshTabVisibilities();
     if ( walletFrame)

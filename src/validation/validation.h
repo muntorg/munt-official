@@ -380,6 +380,9 @@ private:
     PrecomputedTransactionData *txdata;
 
 public:
+    //fixme: (2.1) - We can remove this after phase 4.
+    CKeyID spendingKeyID;
+
     CScriptCheck(): signingKeyID(CKeyID()), amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR) {}
     CScriptCheck(CKeyID signingKeyID_, const CScript& scriptPubKeyIn, const CAmount amountIn, const CTransaction& txToIn, unsigned int nInIn, unsigned int nFlagsIn, bool cacheIn, PrecomputedTransactionData* txdataIn) :
         signingKeyID(signingKeyID_),
@@ -398,6 +401,7 @@ public:
         std::swap(error, check.error);
         std::swap(txdata, check.txdata);
         std::swap(signingKeyID, check.signingKeyID);
+        std::swap(spendingKeyID, check.spendingKeyID);
     }
 
     ScriptError GetScriptError() const { return error; }
@@ -490,6 +494,9 @@ struct CBlockIndexWorkComparator
 //validation.cpp is too large and needs to shrink.
 
 void UpdateMempoolForReorg(DisconnectedBlockTransactions &disconnectpool, bool fAddToMempool);
+
+// Force mempool to empty
+void EmptyMempool(CTxMemPool& pool);
 
 // See definition for documentation
 bool FlushStateToDisk(const CChainParams& chainParams, CValidationState &state, FlushStateMode mode, int nManualPruneHeight=0);

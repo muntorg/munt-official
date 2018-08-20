@@ -70,6 +70,7 @@ public Q_SLOTS:
     void updateTabsAndLabels();
     void setBalance(WalletBalances balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
     void updateActionButtons();
+    void on_sendButton_clicked();
 
 private:
     Ui::SendCoinsDialog *ui;
@@ -81,7 +82,10 @@ private:
 
     NocksRequest* nocksRequest;
 
+    //fixme: (2.1) Make private again
+public:
     QList<SendCoinsRecipient> pendingRecipients;
+private:
 
     // Process WalletModel::SendCoinsReturn and generate a pair consisting
     // of a message and message flags for use in Q_EMIT message().
@@ -91,7 +95,6 @@ private:
     void updateFeeMinimizedLabel();
 
 private Q_SLOTS:
-    void on_sendButton_clicked();
     void on_buttonChooseFee_clicked();
     void on_buttonMinimizeFee_clicked();
     void removeEntry(GuldenSendCoinsEntry* entry);

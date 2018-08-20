@@ -162,6 +162,8 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     #endif
     #if QT_VERSION >= 0x050600
+    //fixme: (2.1) We temporarily introduce this in an attempt to fix issues around DPI font-scaling on windows/linux - revisit this in future.
+    QGuiApplication::setAttribute(Qt::AA_Use96Dpi);
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     #endif
     #ifdef Q_OS_MAC
@@ -1421,7 +1423,7 @@ void GUI::incomingTransaction(const QString& date, int unit, const CAmount& amou
     }
 
     //testnet prevent spamming of mined messages
-    if (IsArgSet("-testnet") && type == "Mined")
+    if (IsArgSet("-testnet") && type == "Generation reward")
     {
         return;
     }

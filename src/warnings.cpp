@@ -81,8 +81,8 @@ std::string GetWarnings(const std::string& strFor)
 
     if (fLargeWorkForkFound)
     {
-        strStatusBar = strRPC = "Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.";
-        strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + _("Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.");
+        strStatusBar = strRPC = "Warning: The network appears to be forked, please seek assistance.";
+        strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + _("Warning: The network appears to be forked, please seek assistance.");
     }
     else if (fLargeWorkInvalidChainFound)
     {

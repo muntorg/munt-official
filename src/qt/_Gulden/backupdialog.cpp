@@ -43,7 +43,7 @@ void BackupDialog::showBackupPhrase()
     ui->labelShowBackupPhrase->setVisible(false);
     ui->buttonShowBackupPhrase->setVisible(false);
 
-    LOCK(pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
@@ -74,10 +74,12 @@ void BackupDialog::showBackupPhrase()
         }
     }
 
+    //fixme: (2.1) - Show a warning label for accounts that have no seed attached?
+    //fixme: (2.1) - Show a different (more friendly?) warning label for witness-only accounts?
     bool haveNonHDAccounts = false;
     for (const auto& accountIter : pactiveWallet->mapAccounts)
     {
-        if (!accountIter.second->IsHD())
+        if (!accountIter.second->IsHD() && !accountIter.second->IsPoW2Witness())
         {
             haveNonHDAccounts = true;
         }

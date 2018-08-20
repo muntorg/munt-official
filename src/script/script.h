@@ -724,6 +724,7 @@ public:
     virtual void KeepScript() {}
     virtual void keepScriptOnDestroy() {}
     CReserveScript() {}
+    CReserveScript(CScript& reserveScript_) {reserveScript = reserveScript_;}
     virtual ~CReserveScript() {}
 };
 

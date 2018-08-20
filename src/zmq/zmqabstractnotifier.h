@@ -33,6 +33,7 @@ public:
     virtual void Shutdown() = 0;
 
     virtual bool NotifyBlock(const CBlockIndex *pindex);
+    virtual bool NotifyStalledWitness(const CBlockIndex* pDelayedIndex, uint64_t nSecondsDelayed);
     virtual bool NotifyTransaction(const CTransaction &transaction);
 
 protected:

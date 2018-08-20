@@ -205,11 +205,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             // Only for recovery wallets though, new ones don't need them
             if (GuldenAppManager::gApp->isRecovery)
             {
+                //Temporary seeds for shadow children
                 CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
-                if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*seedBip32))
-                {
-                    throw std::runtime_error("Writing bip32 seed failed");
-                }
                 CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
 
                 // Write new accounts
@@ -474,6 +471,42 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             LogPrintf("%s", strErrorMessage.c_str());
             uiInterface.ThreadSafeMessageBox(strErrorMessage,"", CClientUIInterface::MSG_ERROR);
         }
+
+        //Clean up an issue with some wallets that didn't delete one of the seeds correctly
+        if (walletInstance->IsCrypted() && walletInstance->mapSeeds.size() > 1)
+        {
+            bool anyFixed = true;
+            while (anyFixed)
+            {
+                anyFixed = false;
+                for (const auto& [seedUUID, seed] : walletInstance->mapSeeds)
+                {
+                    if (!seed->IsCrypted())
+                    {
+                        if (seed->m_type == CHDSeed::CHDSeed::BIP32 || seed->m_type == CHDSeed::CHDSeed::BIP32Legacy)
+                        {
+                            // Erase
+                            walletInstance->mapSeeds.erase(walletInstance->mapSeeds.find(seedUUID));
+                            if (!CWalletDB(*walletInstance->dbw).DeleteHDSeed(*seed))
+                            {
+                                throw std::runtime_error("Deleting seed failed");
+                            }
+                            anyFixed = true;
+                            break;
+                        }
+                        else
+                        {
+                            std::string strErrorMessage = strprintf("Wallet contains a seed encryption error, this is not immediately dangerous but should be rectified as soon as possible, please contact a developer for assistance");
+                            CAlert::Notify(strErrorMessage, true, true);
+                            LogPrintf("%s", strErrorMessage.c_str());
+                            uiInterface.ThreadSafeMessageBox(strErrorMessage,"", CClientUIInterface::MSG_ERROR);
+                            anyFixed = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
     else
     {
@@ -521,6 +554,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         uiInterface.InitMessage(_("Rescanning..."));
         LogPrintf("Rescanning last %i blocks (from block %i)...\n", chainActive.Height() - pindexRescan->nHeight, pindexRescan->nHeight);
         nStart = GetTimeMillis();
+        //fixme: (FUT) We have to set the active wallet early here otherwise we get a crash inside AddToWalletIfInvolvingMe bia ScanForWalletTransactions as pActiveWallet is NULL.
+        //Normally active wallet would only be set after this function returns.
+        //Look into a re-architecture here.
+        pactiveWallet = walletInstance;
         walletInstance->ScanForWalletTransactions(pindexRescan, true);
         LogPrintf(" rescan      %15dms\n", GetTimeMillis() - nStart);
         walletInstance->SetBestChain(chainActive.GetLocatorPoW2());

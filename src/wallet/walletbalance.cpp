@@ -444,7 +444,7 @@ CAmount CWallet::GetImmatureBalance(const CAccount* forAccount, bool includePoW2
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
-            if (!pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
+            if (!pcoin->isAbandoned() && pcoin->GetDepthInMainChain() > 0 && pcoin->mapValue.count("replaced_by_txid") == 0)
             {
                 if (!forAccount || ::IsMine(forAccount, *pcoin))
                 {

@@ -142,12 +142,15 @@ public:
         UniValue obj(UniValue::VOBJ);
         CPubKey vchPubKey;
         obj.push_back(Pair("isscript", false));
+        //fixme: (2.1) - turn this back on
+        /*
         if (pwallet && pwallet->GetPubKey(dest.spendingKey, vchPubKey)) {
             obj.push_back(Pair("spendingpubkey", HexStr(vchPubKey)));
         }
         if (pwallet && pwallet->GetPubKey(dest.witnessKey, vchPubKey)) {
             obj.push_back(Pair("witnesspubkey", HexStr(vchPubKey)));
         }
+        */
         return obj;
     }
 
@@ -235,22 +238,76 @@ UniValue validateaddress(const JSONRPCRequest& request)
         ret.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
 
 #ifdef ENABLE_WALLET
-        isminetype mine = pwallet ? IsMine(*pwallet, dest) : ISMINE_NO;
-        ret.push_back(Pair("ismine", (mine & ISMINE_SPENDABLE) ? true : false));
-        ret.push_back(Pair("iswatchonly", (mine & ISMINE_WATCH_ONLY) ? true: false));
-        UniValue detail = boost::apply_visitor(DescribeAddressVisitor(pwallet), dest);
-        ret.pushKVs(detail);
-        for (const auto& accountIter : pwallet->mapAccounts)
+        if (pwallet)
         {
-            if (IsMine(*accountIter.second, dest) > ISMINE_WATCH_ONLY )
+            isminetype mine = IsMine(*pwallet, dest);
+            ret.push_back(Pair("ismine", (mine & ISMINE_SPENDABLE) ? true : false));
+            ret.push_back(Pair("iswatchonly", (mine & ISMINE_WATCH_ONLY) ? true: false));
+            UniValue detail = boost::apply_visitor(DescribeAddressVisitor(pwallet), dest);
+            ret.pushKVs(detail);
+            for (const auto& accountIter : pwallet->mapAccounts)
             {
-                ret.push_back(Pair("account", getUUIDAsString(accountIter.second->getUUID())));
-                ret.push_back(Pair("accountlabel", accountIter.second->getLabel()));
+                if (IsMine(*accountIter.second, dest) > ISMINE_WATCH_ONLY )
+                {
+                    ret.push_back(Pair("account", getUUIDAsString(accountIter.second->getUUID())));
+                    ret.push_back(Pair("accountlabel", accountIter.second->getLabel()));
+                }
             }
         }
 #endif
     }
     return ret;
+}
+
+static UniValue getaddress(const JSONRPCRequest& request)
+{
+    LOCK(cs_main);
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "getaddress \"pubkey_or_script\" \n"
+            "\nGet the address of a pubkey or script\n"
+            "\nTo get the pubkey of an address use 'validateaddress'\n"
+            "\nArguments:\n"
+            "1. \"pubkey_or_script\"       (required) An hex encoded script or public key.\n"
+            "\nResult:\n"
+            "\nReturn an array of addresses on success\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getaddress \"Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC\"", "")
+            + HelpExampleRpc("getaddress \"Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC\"", ""));
+
+    std::string pubKeyOrScript = request.params[0].get_str();
+    if (!IsHex(pubKeyOrScript))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is not hex encoded");
+
+    UniValue result(UniValue::VARR);
+
+    // Try public key first.
+    std::vector<unsigned char> data(ParseHex(pubKeyOrScript));
+    CPubKey pubKey(data.begin(), data.end());
+    if (pubKey.IsFullyValid())
+    {
+        result.push_back(CGuldenAddress(pubKey.GetID()).ToString());
+    }
+    else
+    {
+        // Not a public key so treat it as a script.
+        CScript scriptPubKey(data.begin(), data.end());
+        std::vector<CTxDestination> addresses;
+
+        int nRequired;
+        txnouttype type;
+        if (ExtractDestinations(scriptPubKey, type, addresses, nRequired))
+        {
+            for(const CTxDestination& addr : addresses)
+            {
+                result.push_back(CGuldenAddress(addr).ToString());
+            }
+        }
+        //fixme: (2.1) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
+    }
+
+    return result;
 }
 
 // Needed even with !ENABLE_WALLET, to pass (ignored) pointers around
@@ -659,6 +716,8 @@ static const CRPCCommand commands[] =
   //  --------------------- ------------------------  -----------------------  ----------
     { "control",            "getinfo",                &getinfo,                true,  {} }, /* uses wallet if enabled */
     { "control",            "getmemoryinfo",          &getmemoryinfo,          true,  {"mode"} },
+
+    { "util",               "getaddress",             &getaddress,             true,  {"pubkey_or_script"} },
     { "util",               "validateaddress",        &validateaddress,        true,  {"address"} }, /* uses wallet if enabled */
     { "util",               "createmultisig",         &createmultisig,         true,  {"nrequired","keys"} },
     { "util",               "verifymessage",          &verifymessage,          true,  {"address","signature","message"} },

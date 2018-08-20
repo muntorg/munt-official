@@ -16,6 +16,11 @@ bool CZMQAbstractNotifier::NotifyBlock(const CBlockIndex * /*CBlockIndex*/)
     return true;
 }
 
+bool CZMQAbstractNotifier::NotifyStalledWitness(const CBlockIndex* pDelayedIndex, uint64_t nSecondsDelayed)
+{
+    return true;
+}
+
 bool CZMQAbstractNotifier::NotifyTransaction(const CTransaction &/*transaction*/)
 {
     return true;

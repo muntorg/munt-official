@@ -29,7 +29,9 @@
 #include "rpc/register.h"
 #include "script/sigcache.h"
 
+#ifdef ENABLE_WALLET
 #include <wallet/wallet.h>
+#endif
 
 #include "test/testutil.h"
 

@@ -4,8 +4,8 @@
     <extra-po-header-language>de</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-07-19 12:57+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-07-19 12:57+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-08-15 21:40+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-08-15 21:40+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -23,6 +23,10 @@
         <translation>Konto löschen</translation>
     </message>
     <message>
+        <source>Copy sync code</source>
+        <translation>Sync-Code kopieren</translation>
+    </message>
+    <message>
         <source>Done</source>
         <translation>Erledigt</translation>
     </message>
@@ -36,12 +40,32 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Hier drücken um QR Code sichtbar zu machen. WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswegen stelle bitte sicher, dass du die einzige Person bist, die diesen sehen kann.</translation>
     </message>
     <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation>QR-Code mit einem Witnessing-Gerät scannen, um das Gerät mit Ihrer Wallet zu verbinden</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
+        <translation>Hier drücken um QR Code sichtbar zu machen.
+WARNUNG: bitte sicher stellen das du die einzige Person bist, die diesen QR Code sehen kann, andernfalls könnte der QR Code verwendet werden um in deinem Namem zu verdienen und dein Witnesseinnahmen zu stehlen.</translation>
+    </message>
+    <message>
+        <source>Please fund the witness account first.</source>
+        <translation>Bitte zuerst das Witness-Konto füllen.</translation>
+    </message>
+    <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
         <translation>Das Konto kann erst gelöscht werden wenn es leer ist.</translation>
     </message>
     <message>
         <source>Okay</source>
         <translation>Okay</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation>Bist du sicher, dass du %1 von deiner Kontoliste löschen willst?
+</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from your account list?
@@ -87,6 +111,49 @@ The account will continue to be monitored and will be restored should it receive
         <source>No recovery phrases present for this wallet.</source>
         <translation>Keine Wiederherstellungsphrasen für dieses Wallet vorhanden.</translation>
     </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>Dein Wallet enthält veraltete nicht-HD Konten. Diese können nicht mit Passphrasen wiederhergestellt werden und benötigen stattdessen Widerherstellungsdateien. Bitte stelle sicher dass du regelmäßig dein Wallet in eine Datei sicherst, oder lösche dein veraltetes Konto um sicherzustellen das dein Guthaben weiterhin sicher ist.</translation>
+    </message>
+</context>
+<context>
+    <name>NewAccountDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Fertig</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Account name</source>
+        <translation>Kontoname</translation>
+    </message>
+    <message>
+        <source>Standard</source>
+        <translation>Standard</translation>
+    </message>
+    <message>
+        <source>Linked mobile</source>
+        <translation>Verbundenes Handy</translation>
+    </message>
+    <message>
+        <source>Witness</source>
+        <translation>Witness</translation>
+    </message>
+    <message>
+        <source>Witness-only</source>
+        <translation>Nur-Witness</translation>
+    </message>
+    <message>
+        <source>Private key</source>
+        <translation>Privater Schlüssel</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect your mobile Gulden app</source>
+        <translation>Scanne QR mit deinem Handy um deine Gulden App zu verbinden.</translation>
+    </message>
 </context>
 <context>
     <name>GUI</name>
@@ -97,6 +164,285 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Total funds: </source>
+        <translation>Gesamtbetrag: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Gesperrter Betrag: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Betrag in Erwartung der Bestätigung:  </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Verfügbarer Betrag: </translation>
+    </message>
+    <message>
+        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
+        <translation>Dieses Feature ist in den ersten paar Wochen der Witnessing nicht verfügbar, bitte aktualisiere auf die neueste Version und versuch es noch einmal, oder bitte um Hilfe.</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>Nach Updates suchen</translation>
+    </message>
+    <message>
+        <source>Check for software updates</source>
+        <translation>Nach Softwareupdates suchen</translation>
+    </message>
+    <message>
+        <source>Software update warning</source>
+        <translation>Softwareupdate Warnung</translation>
+    </message>
+    <message>
+        <source>Software update</source>
+        <translation>Softwareupdate</translation>
+    </message>
+    <message>
+        <source>Renewing witness account will incur a transaction fee: </source>
+        <translation>Erneueren des Witnesskontos hat eine Transaktionsgebühr zur Folge: </translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Senden</translation>
+    </message>
+    <message>
+        <source>Tabs toolbar</source>
+        <translation>Registerkartenleiste</translation>
+    </message>
+    <message>
+        <source>My accounts</source>
+        <translation>Meine Konten</translation>
+    </message>
+    <message>
+        <source>Add account</source>
+        <translation>Konto hinzufügen</translation>
+    </message>
+    <message>
+        <source>&amp;Password</source>
+        <translation>&amp;Passwort</translation>
+    </message>
+    <message>
+        <source>Change wallet password</source>
+        <translation>Wallet Passwort ändern</translation>
+    </message>
+    <message>
+        <source>&amp;Backup</source>
+        <translation>&amp;Sicherung</translation>
+    </message>
+    <message>
+        <source>Backup wallet</source>
+        <translation>Wallet sichern</translation>
+    </message>
+    <message>
+        <source>Imported key</source>
+        <translation>Importierter Schlüssel</translation>
+    </message>
+    <message>
+        <source>Imported witness</source>
+        <translation>Importierter Witness</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation>&amp;Übersicht</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation>Statistiken und Information der Witnesskonto einsehen.</translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation>Allgemeine Wallet-Übersicht anzeigen</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Senden</translation>
+    </message>
+    <message>
+        <source>Send coins to a Gulden address</source>
+        <translation>Gulden an eine Gulden-Adresse überweisen</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>&amp;Empfangen</translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation>&amp;Transaktionen</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation>Transaktionsverlauf durchsehen</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation>&amp;Anzeigen / Verstecken</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation>Das Hauptfenster anzeigen oder verstecken</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation>&amp;Schlüssel importieren</translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation>Importiere eine private Schlüsseladresse</translation>
+    </message>
+    <message>
+        <source>&amp;Import witness</source>
+        <translation>&amp;Importiere Witness</translation>
+    </message>
+    <message>
+        <source>Import a witness-only account</source>
+        <translation>Importiere ein Nur-Witnesskonto</translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation>&amp;Erneutes scannen von Transaktionen</translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation>Erneutes scannen der Blockchain zur Überprüfung fehlender Transaktionen</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation>&amp;URI öffnen...</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation>&amp;Zahlungsadressen...</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation>Anwendung beenden</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation>&amp;Debugfenster</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation>Debugging- und Diagnosekonsole öffnen</translation>
+    </message>
+    <message>
+        <source>Show information about Qt</source>
+        <translation>Informationen über Qt anzeigen</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>&amp;Datei</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation>&amp;Einstellungen</translation>
+    </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation>&amp;Werkzeuge</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;Hilfe</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Debugfenster</translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation>Wallet</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation>Node</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation>Synchronisiere mit Netzwerk...</translation>
+    </message>
+</context>
+<context>
+    <name>GuldenSendCoinsEntry</name>
+    <message>
+        <source>Okay</source>
+        <translation>Okay</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>My accounts</source>
+        <translation>Meine Konten</translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation>Alle</translation>
+    </message>
+    <message>
+        <source>Receiving address</source>
+        <translation>Empfangsadresse</translation>
+    </message>
+    <message>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation>Gib Empfangsadresse ein (Gulden, IBAN)</translation>
+    </message>
+    <message>
+        <source>Enter label</source>
+        <translation>Bezeichnung eingeben</translation>
+    </message>
+    <message>
+        <source>Add to address book</source>
+        <translation>Zum Adressbuch hinzufügen</translation>
+    </message>
+    <message>
+        <source>Address book</source>
+        <translation>Adressbuch</translation>
+    </message>
+    <message>
+        <source>1 month</source>
+        <translation>1 Monat</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation>3 Jahre</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>Die Gelder werden für 30 Tage (1 Monat) mit einem geschätzten Einkommen von 0 gesperrt. Es ist unter keinen Umständen möglich, diese Gelder für die Dauer der Periode auszugeben oder zu verschieben.</translation>
+    </message>
+    <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation>Der Betrag übersteigt das Maximum für IBAN-Zahlungen.</translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation>Betrag unter dem Minimum für IBAN-Zahlungen.</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Löschen</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Speichern</translation>
+    </message>
+    <message>
+        <source>1 year</source>
+        <translation>1 Jahr</translation>
+    </message>
+    <message>
+        <source>%1 years</source>
+        <translation>%1 Jahre</translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 Monate</translation>
     </message>
 </context>
 <context>
@@ -288,8 +634,460 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Ok</translation>
     </message>
     <message>
+        <source>Import private key</source>
+        <translation>Privaten Schlüssel importieren</translation>
+    </message>
+    <message>
         <source>Enter a private key to import</source>
         <translation>Gib einen privaten Schlüssel zum importiern ein</translation>
+    </message>
+</context>
+<context>
+    <name>ImportWitnessDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Import witness from URL</source>
+        <translation>Witness von URL importieren</translation>
+    </message>
+</context>
+<context>
+    <name>PasswordModifyDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Speichern</translation>
+    </message>
+    <message>
+        <source>Change password</source>
+        <translation>Passwort ändern</translation>
+    </message>
+    <message>
+        <source>Enter old password.</source>
+        <translation>Altes Passwort eingeben.</translation>
+    </message>
+    <message>
+        <source>Enter new password.</source>
+        <translation>Neues Passwort eingeben.</translation>
+    </message>
+    <message>
+        <source>Repeat new password.</source>
+        <translation>Neues Passwort wiederholen.</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Enter label</source>
+        <translation>Label eingeben</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nein</translation>
+    </message>
+    <message>
+        <source>My receiving address</source>
+        <translation>Meine Empfangsadresse</translation>
+    </message>
+    <message>
+        <source>QR code</source>
+        <translation>QR Code</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Schließen</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Adresse in Zwischenablage kopieren</translation>
+    </message>
+    <message>
+        <source>Save QR as image</source>
+        <translation>QR als Bild speichern</translation>
+    </message>
+    <message>
+        <source>Request payment</source>
+        <translation>Zahlung anfragen</translation>
+    </message>
+    <message>
+        <source>Generate request</source>
+        <translation>Anfrage erstellen</translation>
+    </message>
+    <message>
+        <source>New request</source>
+        <translation>Neue Anfrage</translation>
+    </message>
+    <message>
+        <source>Buy Gulden</source>
+        <translation>Gulden kaufen</translation>
+    </message>
+    <message>
+        <source>Buy</source>
+        <translation>Kaufen</translation>
+    </message>
+    <message>
+        <source>Choose amount</source>
+        <translation>Betrag wählen</translation>
+    </message>
+    <message>
+        <source>€ 10.00</source>
+        <translation>€ 10.00</translation>
+    </message>
+    <message>
+        <source>€ 25.00</source>
+        <translation>€ 25.00</translation>
+    </message>
+    <message>
+        <source>€ 50.00</source>
+        <translation>€ 50.00</translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>Mehr</translation>
+    </message>
+    <message>
+        <source>Your details</source>
+        <translation>Deine Details</translation>
+    </message>
+    <message>
+        <source>Enter email address</source>
+        <translation>E-mail Adresse eingeben</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resultierende URI ist zu lang, bitte den Text für Bezeichnung/Nachricht kürzen.</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Löschen</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(keine Bezeichnung)</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Anzahl:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Byte:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Betrag:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>&quot;Dust&quot;:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Gebühr:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Abzüglich Gebühr:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Wechselgeld:</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Betrag kopieren</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Anzahl kopieren</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Gebühr kopieren</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Abzüglich Gebühr kopieren</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Byte kopieren</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>&quot;Staub&quot; kopieren</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Wechselgeld kopieren</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Senden</translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation>Zahlungsanforderung abgelaufen.</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Ausblenden</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>Bitcoins überweisen</translation>
+    </message>
+    <message>
+        <source>Coin Control Features</source>
+        <translation>&quot;Coin Control&quot;-Funktionen</translation>
+    </message>
+    <message>
+        <source>Inputs...</source>
+        <translation>Eingaben...</translation>
+    </message>
+    <message>
+        <source>automatically selected</source>
+        <translation>automatisch ausgewählt</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>Unzureichender Kontostand!</translation>
+    </message>
+    <message>
+        <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
+        <translation>Wenn dies aktivert, und die Wechselgeld-Adresse leer oder ungültig ist, wird das Wechselgeld einer neu erzeugten Adresse gutgeschrieben.</translation>
+    </message>
+    <message>
+        <source>Custom change address</source>
+        <translation>Benutzerdefinierte Wechselgeld-Adresse</translation>
+    </message>
+    <message>
+        <source>Transaction Fee:</source>
+        <translation>Transaktionsgebühr:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation>Auswählen...</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Warnung: Gebührenschatzung ist gerade nicht möglich.</translation>
+    </message>
+    <message>
+        <source>collapse fee-settings</source>
+        <translation>Transaktionsgebühreneinstellungen ausblenden</translation>
+    </message>
+    <message>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>Wenn die benutzerdefinierte Gebühr 1000 Satoshis beträgt und die Transaktion nur 250 Byte groß ist, wird bei Auswahl von &quot;pro Kilobyte&quot; eine Gebühr in Höhe von 250 Satoshis, bei Auswahl von &quot;Mindestbetrag&quot; eine Gebühr in Höhe von 1000 Satoshis bezahlt. Bei Transaktionen die Größer als ein Kilobyte sind, werden bei beiden Optionen die Gebühren pro Kilobyte bezahlt.</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>pro Kilobyte</translation>
+    </message>
+    <message>
+        <source>(read the tooltip)</source>
+        <translation>(den Hinweistext lesen)</translation>
+    </message>
+    <message>
+        <source>Recommended:</source>
+        <translation>Empfehlungen:</translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation>Benutzerdefiniert:</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
+        <translation>(Intelligente Gebührenlogik ist noch nicht verfügbar. Normalerweise dauert dies einige Blöcke lang...)</translation>
+    </message>
+    <message>
+        <source>Confirmation time target:</source>
+        <translation>Gewünschte Bestätigungszeit:</translation>
+    </message>
+    <message>
+        <source>normal</source>
+        <translation>normal</translation>
+    </message>
+    <message>
+        <source>fast</source>
+        <translation>schnell</translation>
+    </message>
+    <message>
+        <source>Confirm the send action</source>
+        <translation>Überweisung bestätigen</translation>
+    </message>
+    <message>
+        <source>Clear all fields of the form.</source>
+        <translation>Alle Formularfelder zurücksetzen.</translation>
+    </message>
+    <message>
+        <source>Send to multiple recipients at once</source>
+        <translation>An mehrere Empfänger auf einmal überweisen</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>Kontostand:</translation>
+    </message>
+    <message>
+        <source>%1 to %2</source>
+        <translation>%1 an %2</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to send?</source>
+        <translation>Wollen Sie die Überweisung ausführen?</translation>
+    </message>
+    <message>
+        <source>added as transaction fee</source>
+        <translation>als Transaktionsgebühr hinzugefügt</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>Gesamtbetrag</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation>Die Zahlungsadresse ist ungültig, bitte nochmals überprüfen.</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>Der zu zahlende Betrag muss größer als 0 sein.</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %1 transaction fee is included.</source>
+        <translation>Der angegebene Betrag übersteigt aufgrund der Transaktionsgebühr in Höhe von %1 Ihren Kontostand.</translation>
+    </message>
+    <message>
+        <source>Duplicate address found: addresses should only be used once each.</source>
+        <translation>Doppelte Adresse entdeckt: Adressen dürfen jeweils nur einmal vorkommen.</translation>
+    </message>
+    <message>
+        <source>Transaction creation failed!</source>
+        <translation>Transaktionserstellung fehlgeschlagen!</translation>
+    </message>
+    <message>
+        <source>The transaction was rejected with the following reason: %1</source>
+        <translation>Die Transaktion wurde aus folgendem Grund abgelehnt: %1</translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation>Eine höhere Gebühr als %1 wird als unsinnig hohe Gebühr angesehen.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n block(s)</source>
+        <translation>
+            <numerusform>%n Block</numerusform>
+            <numerusform>%n Blöcke</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Pay only the required fee of %1</source>
+        <translation>Nur die notwendige Gebühr in Höhe von %1 zahlen</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation>
+            <numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Block.</numerusform>
+            <numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Blöcken.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Warning: Invalid Gulden address</source>
+        <translation>Warnung: Ungültige Gulden-Adresse</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown change address</source>
+        <translation>Warnung: Unbekannte Wechselgeld-Adresse</translation>
+    </message>
+    <message>
+        <source>Confirm custom change address</source>
+        <translation>Bestätige benutzerdefinierte Wechselgeld-Adresse</translation>
+    </message>
+</context>
+<context>
+    <name>WelcomeDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>New wallet</source>
+        <translation>Neues Wallet</translation>
+    </message>
+    <message>
+        <source>Restore wallet</source>
+        <translation>Wallet wiederherstellen</translation>
+    </message>
+    <message>
+        <source>I wrote it down</source>
+        <translation>Ich habe es aufgeschrieben</translation>
+    </message>
+    <message>
+        <source>Recover wallet</source>
+        <translation>Wallet wiederherstellen</translation>
+    </message>
+    <message>
+        <source>Create wallet</source>
+        <translation>Wallet erstellen</translation>
+    </message>
+    <message>
+        <source>Please enter a recovery phrase</source>
+        <translation>Bitte eine Wiederherstellungsphrase eingeben</translation>
+    </message>
+    <message>
+        <source>Generating wallet</source>
+        <translation>Wallet erzeugen</translation>
+    </message>
+    <message>
+        <source>Without your recovery phrase you will lose your Guldens when something goes wrong with your computer.</source>
+        <translation>Ohne deine Wiederherstellungsphrase werdest du deine Gulden verlieren, wenn etwas mit deinem Computer schief geht.</translation>
+    </message>
+    <message>
+        <source>I understand</source>
+        <translation>Ich verstehe</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSummaryWidget</name>
+    <message>
+        <source>Total funds: </source>
+        <translation>Gesamtbetrag: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Gesperrter Betrag: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Betrag in Erwartung der Bestätigung:  </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Verfügbarer Betrag: </translation>
     </message>
 </context>
 <context>
@@ -477,6 +1275,18 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Überwiesen an</translation>
     </message>
     <message>
+        <source>Internal transfer</source>
+        <translation>Interne Transaktion</translation>
+    </message>
+    <message>
+        <source>Mining reward</source>
+        <translation>Mining Belohnung</translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation>Witness Belohnung</translation>
+    </message>
+    <message>
         <source>Today</source>
         <translation>Heute</translation>
     </message>
@@ -497,6 +1307,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Dieses Jahr</translation>
     </message>
     <message>
+        <source>Select range</source>
+        <translation>Reichweite selektieren</translation>
+    </message>
+    <message>
         <source>Other</source>
         <translation>Andere</translation>
     </message>
@@ -507,6 +1321,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Abandon transaction</source>
         <translation>Transaktion einstellen</translation>
+    </message>
+    <message>
+        <source>Increase transaction fee</source>
+        <translation>Transaktionsgebühr erhöhen</translation>
     </message>
     <message>
         <source>Copy raw transaction</source>
@@ -798,235 +1616,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(keine Bezeichnung)</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Anzahl:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Byte:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Betrag:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>&quot;Dust&quot;:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Gebühr:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Abzüglich Gebühr:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Wechselgeld:</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Betrag kopieren</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Anzahl kopieren</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Gebühr kopieren</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Abzüglich Gebühr kopieren</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Byte kopieren</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>&quot;Staub&quot; kopieren</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Wechselgeld kopieren</translation>
-    </message>
-    <message>
-        <source>Payment request expired.</source>
-        <translation>Zahlungsanforderung abgelaufen.</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>Ausblenden</translation>
-    </message>
-    <message>
-        <source>Send Coins</source>
-        <translation>Bitcoins überweisen</translation>
-    </message>
-    <message>
-        <source>Coin Control Features</source>
-        <translation>&quot;Coin Control&quot;-Funktionen</translation>
-    </message>
-    <message>
-        <source>Inputs...</source>
-        <translation>Eingaben...</translation>
-    </message>
-    <message>
-        <source>automatically selected</source>
-        <translation>automatisch ausgewählt</translation>
-    </message>
-    <message>
-        <source>Insufficient funds!</source>
-        <translation>Unzureichender Kontostand!</translation>
-    </message>
-    <message>
-        <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
-        <translation>Wenn dies aktivert, und die Wechselgeld-Adresse leer oder ungültig ist, wird das Wechselgeld einer neu erzeugten Adresse gutgeschrieben.</translation>
-    </message>
-    <message>
-        <source>Custom change address</source>
-        <translation>Benutzerdefinierte Wechselgeld-Adresse</translation>
-    </message>
-    <message>
-        <source>Transaction Fee:</source>
-        <translation>Transaktionsgebühr:</translation>
-    </message>
-    <message>
-        <source>Choose...</source>
-        <translation>Auswählen...</translation>
-    </message>
-    <message>
-        <source>collapse fee-settings</source>
-        <translation>Transaktionsgebühreneinstellungen ausblenden</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Wenn die benutzerdefinierte Gebühr 1000 Satoshis beträgt und die Transaktion nur 250 Byte groß ist, wird bei Auswahl von &quot;pro Kilobyte&quot; eine Gebühr in Höhe von 250 Satoshis, bei Auswahl von &quot;Mindestbetrag&quot; eine Gebühr in Höhe von 1000 Satoshis bezahlt. Bei Transaktionen die Größer als ein Kilobyte sind, werden bei beiden Optionen die Gebühren pro Kilobyte bezahlt.</translation>
-    </message>
-    <message>
-        <source>per kilobyte</source>
-        <translation>pro Kilobyte</translation>
-    </message>
-    <message>
-        <source>(read the tooltip)</source>
-        <translation>(den Hinweistext lesen)</translation>
-    </message>
-    <message>
-        <source>Recommended:</source>
-        <translation>Empfehlungen:</translation>
-    </message>
-    <message>
-        <source>Custom:</source>
-        <translation>Benutzerdefiniert:</translation>
-    </message>
-    <message>
-        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
-        <translation>(Intelligente Gebührenlogik ist noch nicht verfügbar. Normalerweise dauert dies einige Blöcke lang...)</translation>
-    </message>
-    <message>
-        <source>Confirmation time target:</source>
-        <translation>Gewünschte Bestätigungszeit:</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>normal</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>schnell</translation>
-    </message>
-    <message>
-        <source>Confirm the send action</source>
-        <translation>Überweisung bestätigen</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Alle Formularfelder zurücksetzen.</translation>
-    </message>
-    <message>
-        <source>Send to multiple recipients at once</source>
-        <translation>An mehrere Empfänger auf einmal überweisen</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>Kontostand:</translation>
-    </message>
-    <message>
-        <source>%1 to %2</source>
-        <translation>%1 an %2</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to send?</source>
-        <translation>Wollen Sie die Überweisung ausführen?</translation>
-    </message>
-    <message>
-        <source>added as transaction fee</source>
-        <translation>als Transaktionsgebühr hinzugefügt</translation>
-    </message>
-    <message>
-        <source>The recipient address is not valid. Please recheck.</source>
-        <translation>Die Zahlungsadresse ist ungültig, bitte nochmals überprüfen.</translation>
-    </message>
-    <message>
-        <source>The amount to pay must be larger than 0.</source>
-        <translation>Der zu zahlende Betrag muss größer als 0 sein.</translation>
-    </message>
-    <message>
-        <source>The total exceeds your balance when the %1 transaction fee is included.</source>
-        <translation>Der angegebene Betrag übersteigt aufgrund der Transaktionsgebühr in Höhe von %1 Ihren Kontostand.</translation>
-    </message>
-    <message>
-        <source>Duplicate address found: addresses should only be used once each.</source>
-        <translation>Doppelte Adresse entdeckt: Adressen dürfen jeweils nur einmal vorkommen.</translation>
-    </message>
-    <message>
-        <source>Transaction creation failed!</source>
-        <translation>Transaktionserstellung fehlgeschlagen!</translation>
-    </message>
-    <message>
-        <source>The transaction was rejected with the following reason: %1</source>
-        <translation>Die Transaktion wurde aus folgendem Grund abgelehnt: %1</translation>
-    </message>
-    <message>
-        <source>A fee higher than %1 is considered an absurdly high fee.</source>
-        <translation>Eine höhere Gebühr als %1 wird als unsinnig hohe Gebühr angesehen.</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n block(s)</source>
-        <translation>
-            <numerusform>%n Block</numerusform>
-            <numerusform>%n Blöcke</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Pay only the required fee of %1</source>
-        <translation>Nur die notwendige Gebühr in Höhe von %1 zahlen</translation>
-    </message>
-    <message numerus="yes">
-        <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation>
-            <numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Block.</numerusform>
-            <numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Blöcken.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Warning: Unknown change address</source>
-        <translation>Warnung: Unbekannte Wechselgeld-Adresse</translation>
-    </message>
-    <message>
-        <source>Confirm custom change address</source>
-        <translation>Bestätige benutzerdefinierte Wechselgeld-Adresse</translation>
-    </message>
-</context>
-<context>
     <name>TransactionTableModel</name>
     <message>
         <source>(no label)</source>
@@ -1055,6 +1644,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Type</source>
         <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>Beschreibung</translation>
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
@@ -1116,6 +1709,18 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Eigenüberweisung</translation>
     </message>
     <message>
+        <source>Internal transfer</source>
+        <translation>Interne Transaktion</translation>
+    </message>
+    <message>
+        <source>Mining reward</source>
+        <translation>Mining Belohnung</translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation>Witness Belohnung</translation>
+    </message>
+    <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
         <translation>Transaktionsstatus. Fahren Sie mit der Maus über dieses Feld, um die Anzahl der Bestätigungen zu sehen.</translation>
     </message>
@@ -1171,10 +1776,21 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
+    <name>ClientModel</name>
+    <message>
+        <source>Network Alert</source>
+        <translation>Netzwerk Warnung</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Amount</source>
         <translation>Betrag</translation>
+    </message>
+    <message>
+        <source>Enter a private key</source>
+        <translation>Gib einen privaten Schlüssel ein</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1242,6 +1858,13 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>%1 and %2</source>
         <translation>%1 und %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n Jahr</numerusform>
+            <numerusform>%n Jahre</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 didn&apos;t yet exit safely...</source>
@@ -1545,6 +2168,14 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Öffnet die %1-Debugprotokolldatei aus dem aktuellen Datenverzeichnis. Dies kann bei großen Protokolldateien einige Sekunden dauern.</translation>
     </message>
     <message>
+        <source>Open</source>
+        <translation>Öffnen</translation>
+    </message>
+    <message>
+        <source>Current PoW² phase</source>
+        <translation>Aktuelle PoW² Phase</translation>
+    </message>
+    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsole</translation>
     </message>
@@ -1748,6 +2379,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Fehler</translation>
     </message>
     <message>
+        <source>Gulden</source>
+        <translation>Gulden</translation>
+    </message>
+    <message>
         <source>Welcome</source>
         <translation>Willkommen</translation>
     </message>
@@ -1791,6 +2426,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Error</source>
         <translation>Fehler</translation>
+    </message>
+    <message>
+        <source>&amp;Automatically check for updates</source>
+        <translation>&amp;Automatisch nach Updates suchen</translation>
     </message>
     <message>
         <source>Options</source>
@@ -1851,6 +2490,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Netzwerk</translation>
+    </message>
+    <message>
+        <source>Automatically open the Gulden client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automatisch den Gulden-Clientport auf dem Router öffnen. Dies funktioniert nur, wenn Ihr Router UPnP unterstützt und dies aktiviert ist.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -2015,28 +2658,131 @@ The account will continue to be monitored and will be restored should it receive
         <source>Information</source>
         <translation>Hinweis</translation>
     </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 Monate</translation>
+    </message>
+    <message>
+        <source>To begin witnessing, select an account from which to lock funds:</source>
+        <translation>Um mit Witnessing zu beginnen, wählen Sie ein Konto aus, von dem du Gulden sperren möchtest:</translation>
+    </message>
+    <message>
+        <source>Lock time remaining</source>
+        <translation>Restlaufzeit</translation>
+    </message>
+    <message>
+        <source>Locked from</source>
+        <translation>Gesperrt seit</translation>
+    </message>
+    <message>
+        <source>Locked until</source>
+        <translation>Gesperrt bis</translation>
+    </message>
+    <message>
+        <source>Last earnings</source>
+        <translation>Letzte Belohnung</translation>
+    </message>
+    <message>
+        <source>Earnings</source>
+        <translation>Belohnung</translation>
+    </message>
+    <message>
+        <source>Lock duration</source>
+        <translation>Laufzeit</translation>
+    </message>
+    <message>
+        <source>Required earnings frequency</source>
+        <translation>Erforderliche Belohnungszeit</translation>
+    </message>
+    <message>
+        <source>Weight</source>
+        <translation>Gewicht</translation>
+    </message>
+    <message>
+        <source>Estimated earnings frequency</source>
+        <translation>Geschätzte Belohnungszeit</translation>
+    </message>
+    <message>
+        <source>Network weight</source>
+        <translation>Netzwerkgewicht</translation>
+    </message>
+    <message>
+        <source>Inactive witness account</source>
+        <translation>Inaktives Witness-Konto</translation>
+    </message>
+    <message>
+        <source>Waiting for confirmation</source>
+        <translation>Warten auf Bestätigung</translation>
+    </message>
+    <message>
+        <source>Account emptied</source>
+        <translation>Konto geleert</translation>
+    </message>
+    <message>
+        <source>Change units</source>
+        <translation>Einheiten ändern</translation>
+    </message>
+    <message>
+        <source>View graph</source>
+        <translation>Diagram anzeigen</translation>
+    </message>
+    <message>
+        <source>Empty account</source>
+        <translation>Konto leeren</translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
+        <translation>Einnahmen abheben</translation>
+    </message>
+    <message>
+        <source>Renew account</source>
+        <translation>Konto erneuern</translation>
+    </message>
+    <message>
+        <source>&amp;Blocks</source>
+        <translation>&amp;Blöcke</translation>
+    </message>
+    <message>
+        <source>&amp;Days</source>
+        <translation>&amp;Tage</translation>
+    </message>
+    <message>
+        <source>&amp;Weeks</source>
+        <translation>&amp;Wochen</translation>
+    </message>
+    <message>
+        <source>&amp;Months</source>
+        <translation>&amp;Monate</translation>
+    </message>
+    <message>
+        <source>%1 blocks</source>
+        <translation>%1 Blöcke</translation>
+    </message>
+    <message>
+        <source>%1 days</source>
+        <translation>%1 Tage</translation>
+    </message>
+    <message>
+        <source>%1 weeks</source>
+        <translation>%1 Wochen</translation>
+    </message>
 </context>
 <context>
-    <name>GuldenSendCoinsEntry</name>
+    <name>Gulden</name>
     <message>
-        <source>Receiving address</source>
-        <translation>Empfangsadresse</translation>
+        <source>Done loading</source>
+        <translation>Laden fertig</translation>
     </message>
     <message>
-        <source>Enter receiving address (Gulden, IBAN)</source>
-        <translation>Gib Empfangsadresse ein (Gulden, IBAN)</translation>
+        <source>My account</source>
+        <translation>Mein Konto</translation>
     </message>
+</context>
+<context>
+    <name>GuldenAmountField</name>
     <message>
-        <source>Enter label</source>
-        <translation>Bezeichnung eingeben</translation>
-    </message>
-    <message>
-        <source>Add to address book</source>
-        <translation>Zum Adressbuch hinzufügen</translation>
-    </message>
-    <message>
-        <source>Address book</source>
-        <translation>Adressbuch</translation>
+        <source>Gulden</source>
+        <translation>Gulden</translation>
     </message>
 </context>
 <context>
@@ -2302,25 +3048,17 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nein</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resultierende URI ist zu lang, bitte den Text für Bezeichnung/Nachricht kürzen.</translation>
-    </message>
-</context>
-<context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Yes</source>
         <translation>Ja</translation>
+    </message>
+</context>
+<context>
+    <name>WarningOverlay</name>
+    <message>
+        <source>Hide</source>
+        <translation>Ausblenden</translation>
     </message>
 </context>
 <context>
@@ -2350,6 +3088,36 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Details for %1</source>
         <translation>Details für %1</translation>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
+    <message>
+        <source>Increasing transaction fee failed</source>
+        <translation>Erhöhung der Transaktionsgebühr ist fehlgeschlagen</translation>
+    </message>
+    <message>
+        <source>Do you want to increase the fee?</source>
+        <translation>Möchtest du die Gebühr erhöhen?</translation>
+    </message>
+    <message>
+        <source>Current fee:</source>
+        <translation>Aktuelle Gebühr:</translation>
+    </message>
+    <message>
+        <source>Increase:</source>
+        <translation>Erhöhung:</translation>
+    </message>
+    <message>
+        <source>New fee:</source>
+        <translation>Neue Gebühr:</translation>
+    </message>
+</context>
+<context>
+    <name>toolbar</name>
+    <message>
+        <source>Backup</source>
+        <translation>Sicherung</translation>
     </message>
 </context>
 </TS>

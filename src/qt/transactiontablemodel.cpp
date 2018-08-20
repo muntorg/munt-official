@@ -417,7 +417,7 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
     case TransactionRecord::InternalTransfer:
         return tr("Internal transfer");
     case TransactionRecord::Generated:
-        return tr("Mining reward");
+        return tr("Generation reward");
     case TransactionRecord::GeneratedWitness:
         return tr("Witness reward");
     case TransactionRecord::WitnessIncreaseSend:
@@ -525,7 +525,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
                     case TransactionRecord::WitnessEmptyRecv:
                         return tr("Unlock funds from: %1").arg(QString::fromStdString(wallet->mapAccountLabels[fromUUID]));
                     case TransactionRecord::Generated:
-                        return tr("Mining reward");
+                        return tr("Generation reward");
                     case TransactionRecord::GeneratedWitness:
                         return tr("Witness reward");
                     case TransactionRecord::WitnessRenew:
@@ -610,7 +610,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         case TransactionRecord::RecvWithAddress:
             return tr("Payment from: %1").arg(lookupAddress(wtx->address, tooltip) + watchAddress);
         case TransactionRecord::Generated:
-            return tr("Mining reward");
+            return tr("Generated");
         case TransactionRecord::GeneratedWitness:
             return tr("Witness reward");
         case TransactionRecord::WitnessRenew:

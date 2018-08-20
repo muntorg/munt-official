@@ -123,7 +123,8 @@ CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const C
     // forbid nested cloning
     //assert(dynamic_cast<const CCloneChain*>(&origin) == nullptr);
 
-    assert(cloneFrom >=0 && cloneFrom <= origin.Height());
+    assert(cloneFrom <= origin.Height());
+    assert(cloneFrom >=0);
 
     vChain.reserve(origin.Height() + 1 - cloneFrom);
     vFree.reserve(origin.Height() + 1 - cloneFrom);
@@ -156,16 +157,16 @@ CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const C
             //Don't worry about leaks, these become part of tempChain and are cleaned up along with tempChain.
             CBlockIndex* pNotInChain = retainIndexOut;
             // We might be sitting multiple blocks ahead of the chain, in which case we need to clone those blocks as well.
-            while (pNotInChain->pprev->nHeight > Tip()->nHeight || pNotInChain->pprev->GetBlockHashPoW2() != vChain[pNotInChain->pprev->nHeight]->GetBlockHashPoW2())
+            while (pNotInChain->pprev->nHeight > Tip()->nHeight || pNotInChain->pprev->GetBlockHashPoW2() != vChain[pNotInChain->pprev->nHeight - cloneFrom]->GetBlockHashPoW2())
             {
                 pNotInChain->pskip = nullptr;
                 pNotInChain->pprev = new CBlockIndex(*pNotInChain->pprev);
                 pNotInChain = pNotInChain->pprev;
             }
-            while (pNotInChain->pprev != vChain[pNotInChain->pprev->nHeight])
+            while (pNotInChain->pprev != vChain[pNotInChain->pprev->nHeight - cloneFrom])
             {
                 pNotInChain->pskip = nullptr;
-                pNotInChain->pprev = vChain[pNotInChain->pprev->nHeight];
+                pNotInChain->pprev = vChain[pNotInChain->pprev->nHeight - cloneFrom];
                 pNotInChain = pNotInChain->pprev;
             }
         }

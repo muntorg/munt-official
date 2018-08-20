@@ -84,24 +84,26 @@ If you are sure you need to build the software yourself, please read the [build 
 
 |Technical specifications|Main network|Testnet|
 |:-----------|:---------|:---------|
-|Algorithm:|Scrypt proof of work, with DELTA difficulty adjustment||
-|Transaction confirmations:|6||
-|Total coins:|1680M||
-|Premine reserved for development, marketing and funding of community projects:|170M (10%)||
-|Block reward miners:|80 NLG||
-|Block reward witness:|20 NLG||
-|Block time:|150 seconds||
+|Consensus algorithm:|PoW² Scrypt/Witness|PoW² Scrypt/Witness|
+|Recommended transaction confirmations:|2|2|
+|Block reward scrypt:|80 NLG|1000 NLG|
+|Block reward witness:|20 NLG|20 NLG|
+|Block interval target:|150 seconds (2.5 minutes)|Configurable|
+|Difficulty adjustment period:|Every block|Every block|
+|Difficulty adjustment algorithm:|Delta|Delta|
+|Total coins to be minted over time:|1680M|-|
 |P2P Port|9231|9923|
 |RPC Port|9232|9924|
 |P2P Network Header|fcfef7e0|Look in debug.log|
 |Address version byte|38 (G)|65 (T)|
 |P2SH version byte|98 (g)|127 (t)|
-|BIP44 coin type|87 0x80000057||
+|BIP44 coin type|87 0x80000057|87 0x80000057|
 |**Infrastructure**|**Main network**|**Testnet**|
-|Official block explorer|blockchain.gulden.com||
-|Community block explorer|guldenchain.com|testnet.guldenchain.com|
-|Electrum server 1|electrum1.gulden.com:5038||
-|Electrum server 2|electrum2.gulden.com:5038||
-|DNS Seed 1|seed.gulden.com||
-|DNS Seed 2|amsterdam.gulden.com||
-|DNS Seed 3|rotterdam.gulden.network||
+|Official block explorer|blockchain.gulden.com|-|
+|Community block explorer|www.dactual.com|-|
+|Community block explorer|www.guldenchain.com|testnet.guldenchain.com|
+|Electrum server 1|electrum1.gulden.com:5038|-|
+|Electrum server 2|electrum2.gulden.com:5038|-|
+|DNS Seed 1|seed.gulden.com|-|
+|DNS Seed 2|amsterdam.gulden.com|-|
+|DNS Seed 3|rotterdam.gulden.network|-|

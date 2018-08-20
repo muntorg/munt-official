@@ -24,7 +24,7 @@
 
 typedef std::vector<unsigned char> valtype;
 
-TransactionSignatureCreator::TransactionSignatureCreator(CKeyID signingKeyID, const CKeyStore* keystoreIn, const CTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn) : BaseSignatureCreator(keystoreIn), txTo(txToIn), nIn(nInIn), nHashType(nHashTypeIn), amount(amountIn), checker(signingKeyID, txTo, nIn, amountIn) {}
+TransactionSignatureCreator::TransactionSignatureCreator(CKeyID signingKeyID, const CKeyStore* keystoreIn, const CTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn) : BaseSignatureCreator(keystoreIn), txTo(txToIn), nIn(nInIn), nHashType(nHashTypeIn), amount(amountIn), checker(signingKeyID, CKeyID(), txTo, nIn, amountIn) {}
 
 bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, const CKeyID& address, const CScript& scriptCode, SigVersion sigversion) const
 {
@@ -468,7 +468,7 @@ struct Stacks
     Stacks() {}
     explicit Stacks(const std::vector<valtype>& scriptSigStack_) : script(scriptSigStack_), segregatedSignatureData() {}
     explicit Stacks(const SignatureData& data) : segregatedSignatureData(data.segregatedSignatureData.stack) {
-        EvalScript(script, data.scriptSig, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(), SIGVERSION_BASE);
+        EvalScript(script, data.scriptSig, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE);
     }
 
     SignatureData Output() const {
@@ -544,7 +544,7 @@ namespace {
 class DummySignatureChecker : public BaseSignatureChecker
 {
 public:
-    DummySignatureChecker() {}
+    DummySignatureChecker() : BaseSignatureChecker(CKeyID(), CKeyID()) {}
 
     bool CheckSig(const std::vector<unsigned char>& scriptSig, const std::vector<unsigned char>& vchPubKey, const CScript& scriptCode, SigVersion sigversion) const
     {

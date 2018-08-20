@@ -1,3 +1,40 @@
+2.0.0.11
+
+UI - Display full converted balance in upper left for forex (Euro or other currency) display instead of only available balance; Add a tooltip to break down the different amounts when hovered over.
+UI - Fix an issue where the transaction list would sometimes show confusing more recent timestamps when importing a witness-only key or recovering from phrase.
+RPC - New command "getaddress" as a way to easily get Gulden address(es) from a pubkey or script.
+RPC - New command "emptymempool" to temporarily empty the mempool of all transactions, useful for debugging as well as a last resort tool if mining pools ever find themselves in a situation where mempool is somehow misbehaving.
+RPC - Fix a crash when calling 'validateaddress' with no wallet.
+CORE - Fix a "CreateBlock" issue that was triggering in rare circumstances and affecting "getblocktemplate" RPC calls by miners when it did.
+CORE - Fix a crash that can occur du ring rescan when using zapwallettxes.
+CORE - Enable witness renewal and emptying of witness accounts whose lock period has expired - from block 797000 onwards.
+CMDFLAG - New command line flag "-disablenet" to start with networking disabled, useful in some debugging scenarios.
+CMDFLAG - New command line flag "-zmqpubstalledwitness=<address>" to turn on zmq monitoring for stalled witnesses.
+ZMQ - Add new message "stalledwitness" which can be used by services to monitor for slow and absent witnesses - enabled via CMDFLAG "zmqpubstalledwitness"
+
+
+
+2.0.0.10
+
+RPC - Make "getrescanprogress" command more responsive.
+UI - Fix an issue with "orphaned" witness earnings incorrectly showing as part of account balance.
+UI - Add a user alert message if number of witnesses on the network drops below 100 as a precaution to help keep the number of witnesses high.
+UI - Fix a bug with wallet rescan progress display.
+UI - Another fix to prevent "Failed to calculate witness info for candidate block" dialog from showing in situations where it isn't really harmful.
+UI - Fix an issue some users were having with unlocking wallet.
+UI - Fix an issue where the receive coins dialog would, when creating a new account, in certain instances temporarily show the address for a different account.
+UI - Allow emptying of non-witness funds if normal funds are somehow sent to a witness account address.
+UI - Fix a small glitch where empty wallet balance would occasionally display as -0.00
+UI - Fix a transaction view issue where "locked from" transactions were occasionally displayed as "received from" instead.
+RPC - Fix a small issue with one of the weights being output incorrectly in `getwitnessinfo` command.
+RPC - Add some additional PoW² related output to 'getblock' and 'getheader' calls.
+RPC - Fix an occasional/intermittent issue where getblocktemplate would fail when called by mining pools
+CMDFLAG - Default "minimallogging" flag to on for arm and aarch64 architectures.
+CORE - Fix a block relay issue that combined with other factors was occasionally leading to temporary chain stalls.
+
+
+
+
 2.0.0.9
 
 CORE - Major witness validation performance improvement and memory usage reduction due to partial chain cloning
@@ -6,8 +43,9 @@ CORE - Simplify phase2/phase3 checks now that we know the final blocks where the
 CORE - Some minor performance improvements
 UI - Fix an underlying issue that was causing a "scary" looking message dialog to occasionally pop up and bother some users.
 UI - Fix an issue with witness earnings graph display for units other than "blocks"
+UI - Fix an occasional/random UI lockup when password dialog shows from backup page.
 CMDFLAG - Add a new flag `limitdeltadiffdrop=n` for mining pools, larger mining pools should set this to 0. Medium pools 1-6, very small pools can leave it off.
-
+CMDFLAG - Add new "minimallogging" flag for the benefit of users with limited disk space e.g. pi users
 
 
 

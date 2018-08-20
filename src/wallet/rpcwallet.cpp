@@ -2507,8 +2507,8 @@ UniValue getrescanprogress(const JSONRPCRequest& request)
             + HelpExampleRpc("getrescanprogress", "")
         );
 
-    DS_LOCK2(cs_main, pwallet->cs_wallet);
-
+    //NB!! Intentionally don't lock here - rescan is very lock heavy
+    //We instead make sure to only use methods that don't need locks
     if (!pwallet->IsScanning() || pwallet->IsAbortingRescan())
         return false;
 
