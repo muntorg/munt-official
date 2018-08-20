@@ -41,4 +41,4 @@ Official testnet
 ======
 
 Of course for those who just want to test something on an existing testnet with lots of other users we have that as well, complete with nocks testbed integation.
-Just start with `-testnet=C1531425336:60 -addnode=devbak.net` to connect then head to our Slack to interact with other testnet users!
+Just start with `-testnet=C1534687770:60 -addnode=devbak.net` to connect then head to our Slack to interact with other testnet users!
