@@ -177,14 +177,22 @@ bool CWalletDB::ReadBestBlock(CBlockLocator& locator)
     return batch.Read(std::string("bestblock_nomerkle"), locator);
 }
 
-bool CWalletDB::WriteLastSPVBlockProcessed(const CBlockLocator& locator)
+bool CWalletDB::WriteLastSPVBlockProcessed(const CBlockLocator& locator, const int64_t time)
 {
-    return WriteIC(std::string("lastspvblock"), locator);
+    return WriteIC(std::string("lastspvblock"), std::pair(locator, time));
 }
 
-bool CWalletDB::ReadLastSPVBlockProcessed(CBlockLocator& locator)
+bool CWalletDB::ReadLastSPVBlockProcessed(CBlockLocator& locator, int64_t& time)
 {
-    return batch.Read(std::string("lastspvblock"), locator);
+    std::pair<CBlockLocator, int64_t> value;
+    if (batch.Read(std::string("lastspvblock"), value))
+    {
+        locator = value.first;
+        time = value.second;
+        return true;
+    }
+
+    return false;
 }
 
 bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)

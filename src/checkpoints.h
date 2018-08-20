@@ -5,9 +5,7 @@
 #ifndef GULDEN_CHECKPOINTS_H
 #define GULDEN_CHECKPOINTS_H
 
-#include "uint256.h"
-
-#include <map>
+#include "chainparams.h"
 
 class CBlockIndex;
 
@@ -23,6 +21,10 @@ CBlockIndex* GetLastCheckpointIndex();
 
 //! Height of last checkpoint in Params()
 int LastCheckPointHeight();
+
+/** Last checkpoint with timestamp before beforeTime.
+    Returns height of the checkpoint, or -1 iof there is none. */
+int LastCheckpointBefore(int64_t beforeTime, CheckPointEntry& entry);
 
 } //namespace Checkpoints
 

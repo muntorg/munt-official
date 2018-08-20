@@ -30,5 +30,18 @@ namespace Checkpoints {
         auto lastCheckpoint = Params().Checkpoints().rbegin();
         return lastCheckpoint->first;
     }
+    
+    int LastCheckpointBefore(int64_t beforeTime, CheckPointEntry& entry)
+    {
+        for (const auto& i: boost::adaptors::reverse(Params().Checkpoints()))
+        {
+            if (i.second.nTime < beforeTime)
+            {
+                entry = i.second;
+                return i.first;
+            }
+        }
+        return -1;
+    }
 
 } // namespace Checkpoints

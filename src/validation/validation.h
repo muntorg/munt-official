@@ -574,4 +574,6 @@ bool LoadMempool();
 void SetFullSyncMode(bool state);
 bool isFullSyncMode();
 
+void StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback);
+
 #endif // GULDEN_VALIDATION_H

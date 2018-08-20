@@ -10,7 +10,7 @@
 
 class CWallet;
 
-class CSPVScanner : public CValidationInterface
+class CSPVScanner
 {
 public:
     CSPVScanner(CWallet& _wallet);
@@ -25,9 +25,6 @@ public:
 
     // write locator for lastProcessed to db for resuming next session, call sparingly
     void Persist();
-
-protected:
-    void HeaderTipChanged(const CBlockIndex* pTip) override;
 
 private:
     CWallet& wallet;
@@ -44,6 +41,8 @@ private:
 
     // Session start height for progress reporting
     int startHeight;
+
+    void HeaderTipChanged(const CBlockIndex* pTip);
 
     void RequestBlocks();
 

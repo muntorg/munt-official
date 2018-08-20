@@ -153,6 +153,8 @@ namespace {
     std::set<int> setDirtyFileInfo;
 
     std::atomic<bool> fFullSyncMode(DEFAULT_FULL_SYNC_MODE);
+
+    boost::signals2::signal<void (const CBlockIndex *pTip)> headerTipSignal;
 } // anon namespace
 
 CBlockIndex* FindForkInGlobalIndex(const CChain& chain, const CBlockLocator& locator)
@@ -2699,7 +2701,7 @@ static void CheckAndNotifyHeaderTip()
         }
     }
     if (fNotify)
-        GetMainSignals().HeaderTipChanged(pPreviousHeaderTip);
+        headerTipSignal(pPreviousHeaderTip);
 }
 
 // Exposed wrapper for AcceptBlockHeader
@@ -3904,6 +3906,25 @@ void SetFullSyncMode(bool state) {
 
 bool isFullSyncMode() {
     return fFullSyncMode;
+}
+
+
+#define WIP_TODO _Pragma("message(\"Work in progress, not ready for use!\")");
+
+void StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
+{
+    WIP_TODO
+
+    /* TODO something along the lines of:
+     - if there is already a partial chain check if it starts before time, if it does noting needs to be done
+       if it doesn't then that is a problem, just clear the entire partial chain (so it is started again at a correct time)
+
+     - if there is no partial chain yet, initialize it with the height of the youngest checkpoint that is before time
+
+     - ensure that partial header fetching is started
+    */
+
+    headerTipSignal.connect(notifyCallback);
 }
 
 class CMainCleanup

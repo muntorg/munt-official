@@ -15,8 +15,8 @@
 // the requests can be reasonably distributed over our peers.
 const int MAX_PENDING_REQUESTS = 512;
 
-// Seconds before oldest key to start scanning blocks.
-const int64_t START_TIME_GAP = 3 * 3600;
+// Duration (seconds) of longest fork that can be handled
+const int64_t MAX_FORK_DURATION = 7 * 24 * 3600;
 
 // Persisting wallet db updates are limited as they are very expensive
 // and updating at every processed block would give very poor performance.
@@ -41,36 +41,25 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
 {
     LOCK(cs_main);
 
-    CWalletDB walletdb(*wallet.dbw);
-    CBlockLocator locator;
-    if (!walletdb.ReadLastSPVBlockProcessed(locator))
-    {
-        // fixme: (SPV) start locator at approriate checkpoint
-        locator = chainActive.GetLocatorPoW2(chainActive.Genesis());
-    }
-
-    lastProcessed = FindForkInGlobalIndex(headerChain, locator);
-    requestTip = lastProcessed;
-    startHeight = lastProcessed->nHeight;
-
     int64_t seedTime = wallet.nTimeFirstKey;
-
-    startTime =  std::max(int64_t(0), seedTime - START_TIME_GAP);
-
-    LogPrint(BCLog::WALLET, "Using %s (height = %d) as last processed SPV block\n",
-             lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
-
-    RegisterValidationInterface(this);
+    startTime =  std::max(int64_t(0), seedTime - MAX_FORK_DURATION);
 }
 
 CSPVScanner::~CSPVScanner()
 {
-    UnregisterValidationInterface(this);
 }
 
 void CSPVScanner::StartScan()
 {
-    RequestBlocks();
+    CWalletDB walletdb(*wallet.dbw);
+    CBlockLocator locator;
+    int64_t headerStartTime;
+    if (walletdb.ReadLastSPVBlockProcessed(locator, headerStartTime))
+        headerStartTime = headerStartTime - MAX_FORK_DURATION;
+    else
+        headerStartTime = startTime;
+
+    StartPartialHeaders(headerStartTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1));
 }
 
 const CBlockIndex* CSPVScanner::LastBlockProcessed() const
@@ -167,6 +156,29 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
 
 void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
 {
+    // initialization on the first header tip notification
+    if (lastProcessed == nullptr)
+    {
+        CWalletDB walletdb(*wallet.dbw);
+        CBlockLocator locator;
+        int64_t time;
+        if (walletdb.ReadLastSPVBlockProcessed(locator, time)) {
+            // TODO search fork up to start of partial chain and ensure that stat of partial chain is early enough
+            // so we can safely use it is our lastProcessed
+            lastProcessed = FindForkInGlobalIndex(headerChain, locator);
+        }
+        else
+        {
+            // TODO use start of partial chain to init lastProcessed, check that it is early enough
+        }
+
+        requestTip = lastProcessed;
+        startHeight = lastProcessed->nHeight;
+
+        LogPrint(BCLog::WALLET, "SPV init using %s (height = %d) as last processed block\n",
+                 lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
+    }
+
     RequestBlocks();
 }
 
@@ -182,7 +194,7 @@ void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
 void CSPVScanner::Persist()
 {
     CWalletDB walletdb(*wallet.dbw);
-    walletdb.WriteLastSPVBlockProcessed(headerChain.GetLocatorPoW2(lastProcessed));
+    walletdb.WriteLastSPVBlockProcessed(headerChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
 
     lastPersistTime = GetAdjustedTime();
     blocksSincePersist = 0;

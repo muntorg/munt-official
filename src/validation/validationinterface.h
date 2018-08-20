@@ -53,7 +53,6 @@ protected:
     virtual void GetScriptForMining([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
     virtual void GetScriptForWitnessing([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
     virtual void NewPoWValidBlock([[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::shared_ptr<const CBlock>& block) {};
-    virtual void HeaderTipChanged([[maybe_unused]] const CBlockIndex *pTip) {}
     friend void ::RegisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
     friend void ::UnregisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
     friend void ::UnregisterAllValidationInterfaces();
@@ -94,11 +93,6 @@ struct CMainSignals {
      * Notifies listeners that a block which builds directly on our current tip
      * has been received and connected to the headers tree, though not validated yet */
     boost::signals2::signal<void (const CBlockIndex *, const std::shared_ptr<const CBlock>&)> NewPoWValidBlock;
-    /** Notify listeners that tip of headerChain changed.
-     *  It is triggered for live changes only, ie. not when loading the index or processing external block files etc.
-    */
-    boost::signals2::signal<void (const CBlockIndex *pTip)> HeaderTipChanged;
-
 };
 
 CMainSignals& GetMainSignals();
