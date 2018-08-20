@@ -57,6 +57,7 @@ extern bool fNoUI;
 extern bool fLogTimestamps;
 extern bool fLogTimeMicros;
 extern bool fLogIPs;
+extern bool gbMinimalLogging;
 extern std::atomic<bool> fReopenDebugLog;
 extern CTranslationInterface translationInterface;
 

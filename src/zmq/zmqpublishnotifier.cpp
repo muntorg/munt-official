@@ -23,6 +23,7 @@ static const char *MSG_HASHBLOCK = "hashblock";
 static const char *MSG_HASHTX    = "hashtx";
 static const char *MSG_RAWBLOCK  = "rawblock";
 static const char *MSG_RAWTX     = "rawtx";
+static const char *MSG_STALLEDWITNESS = "stalledwitness";
 
 // Internal function to send multipart message
 static int zmq_send_multipart(void *sock, const void* data, size_t size, ...)
@@ -157,10 +158,21 @@ bool CZMQPublishHashBlockNotifier::NotifyBlock(const CBlockIndex *pindex)
 {
     uint256 hash = pindex->GetBlockHashPoW2();
     LogPrint(BCLog::ZMQ, "zmq: Publish hashblock %s\n", hash.GetHex());
-    char data[32];
+    unsigned char data[32];
     for (unsigned int i = 0; i < 32; i++)
         data[31 - i] = hash.begin()[i];
     return SendMessage(MSG_HASHBLOCK, data, 32);
+}
+
+bool CZMQPublishStalledWitnessNotifier::NotifyStalledWitness(const CBlockIndex* pDelayedIndex, uint64_t nSecondsDelayed)
+{
+    uint256 hash = pDelayedIndex->GetBlockHashPoW2();
+    LogPrint(BCLog::ZMQ, "zmq: Publish stalled witness hashblock %s %d\n", hash.GetHex(), nSecondsDelayed);
+    unsigned char data[40];
+    for (unsigned int i = 0; i < 32; i++)
+        data[31 - i] = hash.begin()[i];
+    WriteLE64(&data[31], nSecondsDelayed);
+    return SendMessage(MSG_STALLEDWITNESS, data, 40);
 }
 
 bool CZMQPublishHashTransactionNotifier::NotifyTransaction(const CTransaction &transaction)

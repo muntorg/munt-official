@@ -92,20 +92,20 @@ BOOST_AUTO_TEST_CASE(multisig_verify)
     keys.assign(1,key[0]);
     keys.push_back(key[1]);
     s = sign_multisig(a_and_b, keys, txTo[0], 0);
-    BOOST_CHECK(VerifyScript(s, a_and_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), &txTo[0], 0, amount), &err));
+    BOOST_CHECK(VerifyScript(s, a_and_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo[0], 0, amount), &err));
     BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
 
     for (int i = 0; i < 4; i++)
     {
         keys.assign(1,key[i]);
         s = sign_multisig(a_and_b, keys, txTo[0], 0);
-        BOOST_CHECK_MESSAGE(!VerifyScript(s, a_and_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), &txTo[0], 0, amount), &err), strprintf("a&b 1: %d", i));
+        BOOST_CHECK_MESSAGE(!VerifyScript(s, a_and_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo[0], 0, amount), &err), strprintf("a&b 1: %d", i));
         BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_INVALID_STACK_OPERATION, ScriptErrorString(err));
 
         keys.assign(1,key[1]);
         keys.push_back(key[i]);
         s = sign_multisig(a_and_b, keys, txTo[0], 0);
-        BOOST_CHECK_MESSAGE(!VerifyScript(s, a_and_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), &txTo[0], 0, amount), &err), strprintf("a&b 2: %d", i));
+        BOOST_CHECK_MESSAGE(!VerifyScript(s, a_and_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo[0], 0, amount), &err), strprintf("a&b 2: %d", i));
         BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_EVAL_FALSE, ScriptErrorString(err));
     }
 
@@ -116,18 +116,18 @@ BOOST_AUTO_TEST_CASE(multisig_verify)
         s = sign_multisig(a_or_b, keys, txTo[1], 0);
         if (i == 0 || i == 1)
         {
-            BOOST_CHECK_MESSAGE(VerifyScript(s, a_or_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), &txTo[1], 0, amount), &err), strprintf("a|b: %d", i));
+            BOOST_CHECK_MESSAGE(VerifyScript(s, a_or_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo[1], 0, amount), &err), strprintf("a|b: %d", i));
             BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
         }
         else
         {
-            BOOST_CHECK_MESSAGE(!VerifyScript(s, a_or_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), &txTo[1], 0, amount), &err), strprintf("a|b: %d", i));
+            BOOST_CHECK_MESSAGE(!VerifyScript(s, a_or_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo[1], 0, amount), &err), strprintf("a|b: %d", i));
             BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_EVAL_FALSE, ScriptErrorString(err));
         }
     }
     s.clear();
     s << OP_0 << OP_1;
-    BOOST_CHECK(!VerifyScript(s, a_or_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), &txTo[1], 0, amount), &err));
+    BOOST_CHECK(!VerifyScript(s, a_or_b, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo[1], 0, amount), &err));
     BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_SIG_DER, ScriptErrorString(err));
 
 
@@ -139,12 +139,12 @@ BOOST_AUTO_TEST_CASE(multisig_verify)
             s = sign_multisig(escrow, keys, txTo[2], 0);
             if (i < j && i < 3 && j < 3)
             {
-                BOOST_CHECK_MESSAGE(VerifyScript(s, escrow, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), &txTo[2], 0, amount), &err), strprintf("escrow 1: %d %d", i, j));
+                BOOST_CHECK_MESSAGE(VerifyScript(s, escrow, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo[2], 0, amount), &err), strprintf("escrow 1: %d %d", i, j));
                 BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
             }
             else
             {
-                BOOST_CHECK_MESSAGE(!VerifyScript(s, escrow, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), &txTo[2], 0, amount), &err), strprintf("escrow 2: %d %d", i, j));
+                BOOST_CHECK_MESSAGE(!VerifyScript(s, escrow, NULL, flags, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo[2], 0, amount), &err), strprintf("escrow 2: %d %d", i, j));
                 BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_EVAL_FALSE, ScriptErrorString(err));
             }
         }
@@ -198,6 +198,7 @@ BOOST_AUTO_TEST_CASE(multisig_Solver1)
     // one key that would satisfy an (a|b) or 2-of-3 keys needed
     // to spend an escrow transaction.
     //
+    #ifdef ENABLE_WALLET
     CBasicKeyStore keystore, emptykeystore, partialkeystore;
     CKey key[3];
     CTxDestination keyaddr[3];
@@ -273,6 +274,7 @@ BOOST_AUTO_TEST_CASE(multisig_Solver1)
         BOOST_CHECK(Solver(s, whichType, solutions));
         BOOST_CHECK(solutions.size() == 5);
     }
+    #endif
 }
 
 BOOST_AUTO_TEST_CASE(multisig_Sign)

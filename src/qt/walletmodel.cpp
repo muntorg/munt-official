@@ -331,6 +331,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
 
                     //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
                     recipient.witnessForAccount = rcp.witnessForAccount;
+                    assert(recipient.witnessDetails.witnessKeyID != recipient.witnessDetails.spendingKeyID);
 
                     vecSend.push_back(recipient);
                 }
@@ -341,6 +342,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
 
                     // We have to copy this anyway even though we are using a CSCript as later code depends on it to grab the witness key id.
                     recipient.witnessDetails.witnessKeyID = rcp.destinationPoW2Witness.witnessKey;
+                    recipient.witnessDetails.spendingKeyID = rcp.destinationPoW2Witness.spendingKey;
+                    assert(recipient.witnessDetails.witnessKeyID != recipient.witnessDetails.spendingKeyID);
 
                     //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
                     recipient.witnessForAccount = rcp.witnessForAccount;

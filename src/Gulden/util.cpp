@@ -3,9 +3,11 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "util.h"
 #include "wallet/wallettx.h"
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
+#include "util.h"
 #include "consensus/validation.h"
 #include "validation/validation.h"
 #include "validation/versionbitsvalidation.h"
@@ -18,6 +20,7 @@
 #include <LRUCache/LRUCache11.hpp>
 
 
+#ifdef ENABLE_WALLET
 static bool alreadyInRescan = false;
 void rescanThread()
 {
@@ -63,6 +66,7 @@ CHDSeed::SeedType SeedTypeFromString(std::string type)
 
     return CHDSeed::CHDSeed::BIP44;
 }
+#endif
 
 static uint256 phase3ActivationHash;
 static uint256 phase4ActivationHash;
@@ -70,7 +74,11 @@ void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& ch
 {
     DO_BENCHMARK("WIT: PerformFullChainPhaseScan", BCLog::BENCH|BCLog::WITNESS);
 
+    #ifdef ENABLE_WALLET
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+    #else
+    LOCK(cs_main);
+    #endif
 
     bool phase3Active = false;
     int nStartHeight = 778176;
@@ -117,7 +125,7 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
 
     if (IsArgSet("-testnet"))
     {
-        if (pIndex->nHeight > 60)
+        if (pIndex->nHeight > 20)
             return true;
     }
     else
@@ -128,15 +136,14 @@ bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainpara
     return false;
 }
 
-// Phase 3 becomes active after 200 or more witnessing addresses are present on the chain, as well as a combined witness weight of 20 000 000 or more.
-// 'backwards compatible' witnessing becomes possible at this point.
+// Phase 3
 // prevhash of blocks continue to point to previous PoW block alone.
 // prevhash of witness block is stored in coinbase.
 bool IsPow2Phase3Active(uint64_t nHeight)
 {
     if (IsArgSet("-testnet"))
     {
-        if (nHeight > 300)
+        if (nHeight > 50)
             return true;
     }
     else
@@ -184,7 +191,11 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const CChainParams& chainpara
     }
 
     {
+        #ifdef ENABLE_WALLET
         LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+        #else
+        LOCK(cs_main);
+        #endif
         // Version bits - mined by PoW but controlled by witnesses.
         bool ret = (VersionBitsState(pIndex, chainparams.GetConsensus(), Consensus::DEPLOYMENT_POW2_PHASE4, versionbitscache) == THRESHOLD_ACTIVE);
         // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
@@ -207,7 +218,11 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
 {
     DO_BENCHMARK("WIT: IsPow2Phase5Active", BCLog::BENCH|BCLog::WITNESS);
 
+    #ifdef ENABLE_WALLET
     LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+    #else
+    LOCK(cs_main);
+    #endif
 
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
     static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
@@ -381,7 +396,11 @@ bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
     }
 
     {
+        #ifdef ENABLE_WALLET
         LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+        #else
+        LOCK(cs_main);
+        #endif
 
         std::map<COutPoint, Coin> allWitnessCoins;
         if (!getAllUnspentWitnessCoins(chain, chainparams, pIndex, allWitnessCoins, nullptr, viewOverride))

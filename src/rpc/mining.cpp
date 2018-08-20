@@ -43,6 +43,8 @@
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
+#include "generation/generation.h"
+#include "script/script.h"
 #include <Gulden/Common/diff.h>
 #include <Gulden/rpcgulden.h>
 #include <validation/witnessvalidation.h>
@@ -213,7 +215,7 @@ static UniValue generate(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
             "generate nblocks ( maxtries )\n"
-            "\nMine up to nblocks blocks immediately (before the RPC call returns)\n"
+            "\ngenerate up to n blocks immediately (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
             "2. maxtries     (numeric, optional) How many iterations to try (default = 1000000).\n"
@@ -239,7 +241,7 @@ static UniValue generate(const JSONRPCRequest& request)
 
     //throw an error if no script was provided
     if (coinbaseScript->reserveScript.empty())
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "No coinbase script available (mining requires a wallet)");
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "No coinbase script available; a wallet is required");
 
     return generateBlocks(coinbaseScript, nGenerate, nMaxTries, true);
 }
@@ -269,19 +271,20 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     if (Params().MineBlocksOnDemand())
         throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Use the generate method instead of setgenerate on this network");
 
+    #ifdef ENABLE_WALLET
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
     if (!pactiveWallet->activeAccount)
-        throw std::runtime_error("Cannot mine without an active account selected, first select an active account.");
+        throw std::runtime_error("No active account selected, first select an active account.");
 
     bool fGenerate = true;
     if (request.params.size() > 0)
         fGenerate = request.params[0].get_bool();
 
     if (fGenerate && pactiveWallet->activeAccount->IsPoW2Witness())
-        throw std::runtime_error("Cannot mine into a witness account, first select a regular account as the active account.");
+        throw std::runtime_error("Witness account selected, first select a regular account as the active account.");
 
     int nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
     if (request.params.size() > 1)
@@ -297,12 +300,16 @@ static UniValue setgenerate(const JSONRPCRequest& request)
 
     if (!fGenerate)
     {
-        return "Mining disabled.";
+        return "Block generation disabled.";
     }
     else
     {
-        return strprintf("Mining enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] ,nGenProcLimit);
+        return strprintf("Block generation enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] ,nGenProcLimit);
     }
+    #else
+    throw std::runtime_error("Cannot use command without an active wallet");
+    return nullptr;
+    #endif
 }
 
 static UniValue generatetoaddress(const JSONRPCRequest& request)
@@ -310,7 +317,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw std::runtime_error(
             "generatetoaddress nblocks address (maxtries)\n"
-            "\nMine blocks immediately to a specified address (before the RPC call returns)\n"
+            "\nGenerate blocks immediately to a specified address (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
             "2. address      (string, required) The address to send the newly generated Gulden to.\n"
@@ -343,7 +350,7 @@ static UniValue getmininginfo(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 0)
         throw std::runtime_error(
             "getmininginfo\n"
-            "\nReturns a json object containing mining-related information."
+            "\nReturns a json object containing information about block generation."
             "\nResult:\n"
             "{\n"
             "  \"blocks\": nnn,             (numeric) The current block\n"
@@ -388,7 +395,7 @@ static UniValue prioritisetransaction(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 3)
         throw std::runtime_error(
             "prioritisetransaction <txid> <dummy value> <fee delta>\n"
-            "Accepts the transaction into mined blocks at a higher (or lower) priority\n"
+            "Accepts the transaction into generated blocks at a higher (or lower) priority\n"
             "\nArguments:\n"
             "1. \"txid\"       (string, required) The transaction id.\n"
             "2. dummy          (numeric, optional) API-Compatibility for previous API. Must be zero or null.\n"
@@ -576,6 +583,11 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 return "inconclusive-not-best-prevblk";
 
             CValidationState state;
+            if (pIndexMiningTip->nHeight < GetPow2ValidationCloneHeight())
+            {
+                return "rejected";
+            }
+            else
             {
                 CCoinsViewCache viewNew(pcoinsTip);
                 CBlockIndex* pindexPrev_ = nullptr;
@@ -586,31 +598,6 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
 
                 TestBlockValidity(tempChain, state, Params(), block, pindexPrev_, false, true, &viewNew);
             }
-
-            //fixme: (2.1) - We can remove this after phase 4 activates
-            //fixme: (2.0.1) - Implement if needed
-            /*if (pWitnessBlockToEmbed)
-            {
-                CBlock PoWParent;
-                if (!ReadBlockFromDisk(PoWParent, pIndexParent, Params()))
-                {
-                    
-                }
-                int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(PoWParent);
-                if (nWitnessCoinbaseIndex == -1)
-                {
-                    return "missing-phase3-embedded-witness-coinbase";
-                }
-                else
-                {
-                    //fixme: (2.0.x) - If performance issues this can be sped up.
-                    //We have pWitnessBlockToEmbed so just access this directly.
-                    if (!WitnessCoinbaseInfoIsValid(chain, nEmbeddedWitnessCoinbaseIndex, pindex->pprev, block, chainparams, view))
-                    {
-                        return "invalid-phase3-embedded-witness-coinbase";
-                    }
-                }
-            }*/
 
             return BIP22ValidationResult(state);
         }
@@ -750,7 +737,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptDummy);
         pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pIndexMiningTip, reservedScript, true, pWitnessBlockToEmbed, false, &witnessCoinbaseHex, &witnessSubsidyHex, &amountPoW2Subsidy);
         if (!pblocktemplate)
-            throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Failed to create new block, read GuldenD debug.log for more information");
 
         // Need to update only after we know CreateNewBlock succeeded
         pindexPrev = pindexPrevNew;
@@ -1175,11 +1162,11 @@ static UniValue estimaterawfee(const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
-    { "mining",             "getnetworkhashps",       &getnetworkhashps,       true,  {"nblocks","height"} },
-    { "mining",             "getmininginfo",          &getmininginfo,          true,  {} },
-    { "mining",             "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","dummy","fee_delta"} },
-    { "mining",             "getblocktemplate",       &getblocktemplate,       true,  {"template_request"} },
-    { "mining",             "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
+    { "block_generation",   "getnetworkhashps",       &getnetworkhashps,       true,  {"nblocks","height"} },
+    { "block_generation",   "getmininginfo",          &getmininginfo,          true,  {} },
+    { "block_generation",   "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","dummy","fee_delta"} },
+    { "block_generation",   "getblocktemplate",       &getblocktemplate,       true,  {"template_request"} },
+    { "block_generation",   "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
 
     { "generating",         "generate",               &generate,               true,  {"nblocks","maxtries"} },
     { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"nblocks","address","maxtries"} },

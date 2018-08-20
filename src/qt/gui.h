@@ -28,7 +28,9 @@
 #include "_Gulden/GuldenGUI.h"
 #include "updatecheck.h"
 #include "validation/validation.h"
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
 
 #include <boost/uuid/uuid.hpp>
 

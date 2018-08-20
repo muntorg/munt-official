@@ -20,7 +20,9 @@
 #include "test/test_gulden.h"
 #include "utiltime.h"
 
+#ifdef ENABLE_WALLET
 #include <wallet/wallet.h>
+#endif
 
 #include <boost/test/unit_test.hpp>
 

@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(tx_valid)
                 }
                 unsigned int verify_flags = ParseScriptFlags(test[2].get_str());
                 const CSegregatedSignatureData *segregatedSignatureData = &tx.vin[i].segregatedSignatureData;
-                BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), &tx, i, amount, txdata), &err), strTest);
+                BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), &err), strTest);
                 BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
             }
         }
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
                     amount = mapprevOutValues[tx.vin[i].prevout];
                 }
                 const CSegregatedSignatureData *segregatedSignatureData = &tx.vin[i].segregatedSignatureData;
-                fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), &tx, i, amount, txdata), &err);
+                fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), &err);
             }
             BOOST_CHECK_MESSAGE(!fValid, strTest);
             BOOST_CHECK_MESSAGE(err != SCRIPT_ERR_OK, ScriptErrorString(err));
@@ -395,7 +395,7 @@ void CheckWithFlag(const CTransactionRef& output, const CMutableTransaction& inp
 {
     ScriptError error;
     CTransaction inputi(input);
-    bool ret = VerifyScript(inputi.vin[0].scriptSig, output->vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), &inputi, 0, output->vout[0].nValue), &error);
+    bool ret = VerifyScript(inputi.vin[0].scriptSig, output->vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &inputi, 0, output->vout[0].nValue), &error);
     assert(ret == success);
 }
 
@@ -418,7 +418,7 @@ static CScript PushAll(const std::vector<valtype>& values)
 static void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
 {
     std::vector<valtype> stack;
-    EvalScript(stack, script, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(), SIGVERSION_BASE);
+    EvalScript(stack, script, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE);
     assert(stack.size() > 0);
     stack.back() = std::vector<unsigned char>(redeemScript.begin(), redeemScript.end());
     script = PushAll(stack);

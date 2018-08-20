@@ -49,7 +49,7 @@ Verify(const CScript& scriptSig, const CScript& scriptPubKey, bool fStrict, Scri
     txTo.vin[0].scriptSig = scriptSig;
     txTo.vout[0].nValue = 1;
 
-    return VerifyScript(scriptSig, scriptPubKey, NULL, fStrict ? SCRIPT_VERIFY_P2SH : SCRIPT_VERIFY_NONE, MutableTransactionSignatureChecker(CKeyID(), &txTo, 0, txFrom.vout[0].nValue), &err);
+    return VerifyScript(scriptSig, scriptPubKey, NULL, fStrict ? SCRIPT_VERIFY_P2SH : SCRIPT_VERIFY_NONE, MutableTransactionSignatureChecker(CKeyID(), CKeyID(), &txTo, 0, txFrom.vout[0].nValue), &err);
 }
 
 
@@ -62,6 +62,7 @@ BOOST_AUTO_TEST_CASE(sign)
     // scriptSig:    <sig> <sig...> <serialized_script>
     // scriptPubKey: HASH160 <hash> EQUAL
 
+    #ifdef ENABLE_WALLET
     // Test SignSignature() (and therefore the version of Solver() that signs transactions)
     CBasicKeyStore keystore;
     CKey key[4];
@@ -129,6 +130,7 @@ BOOST_AUTO_TEST_CASE(sign)
             txTo[i].vin[0].scriptSig = sigSave;
         }
     }
+    #endif
 }
 
 BOOST_AUTO_TEST_CASE(norecurse)
@@ -160,6 +162,7 @@ BOOST_AUTO_TEST_CASE(norecurse)
 
 BOOST_AUTO_TEST_CASE(set)
 {
+    #ifdef ENABLE_WALLET
     LOCK(cs_main);
     // Test the CScript::Set* methods
     CBasicKeyStore keystore;
@@ -212,6 +215,7 @@ BOOST_AUTO_TEST_CASE(set)
         BOOST_CHECK_MESSAGE(SignSignature(keystore, txFrom, txTo[i], 0, SIGHASH_ALL, SignType::Spend), strprintf("SignSignature %d", i));
         BOOST_CHECK_MESSAGE(IsStandardTx(txTo[i], reason), strprintf("txTo[%d].IsStandard", i));
     }
+    #endif
 }
 
 BOOST_AUTO_TEST_CASE(is)

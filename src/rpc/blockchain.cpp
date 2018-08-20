@@ -101,6 +101,10 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("merkleroot", blockindex->hashMerkleRoot.GetHex()));
     result.push_back(Pair("time", (int64_t)blockindex->nTime));
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
+    result.push_back(Pair("witness_version", blockindex->nVersionPoW2Witness));
+    result.push_back(Pair("witness_versionHex", strprintf("%08x", blockindex->nVersionPoW2Witness)));
+    result.push_back(Pair("witness_time", (int64_t)blockindex->nTimePoW2Witness));
+    result.push_back(Pair("witness_merkleroot", blockindex->hashMerkleRootPoW2Witness.GetHex()));
     result.push_back(Pair("nonce", (uint64_t)blockindex->nNonce));
     result.push_back(Pair("bits", strprintf("%08x", blockindex->nBits)));
     result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
@@ -131,6 +135,10 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("version", block.nVersion));
     result.push_back(Pair("versionHex", strprintf("%08x", block.nVersion)));
     result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
+    result.push_back(Pair("witness_version", blockindex->nVersionPoW2Witness));
+    result.push_back(Pair("witness_versionHex", strprintf("%08x", blockindex->nVersionPoW2Witness)));
+    result.push_back(Pair("witness_time", (int64_t)blockindex->nTimePoW2Witness));
+    result.push_back(Pair("witness_merkleroot", blockindex->hashMerkleRootPoW2Witness.GetHex()));
     UniValue txs(UniValue::VARR);
     for(const auto& tx : block.vtx)
     {
@@ -1386,6 +1394,18 @@ static UniValue getmempoolinfo(const JSONRPCRequest& request)
     return mempoolInfoToJSON();
 }
 
+static UniValue emptymempool(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 0)
+        throw std::runtime_error(
+            "emptymempool\n"
+            "\nErase all transactions currently in the mempool, force mempool to empty.\n"
+        );
+
+    EmptyMempool(mempool);
+    return NullUniValue;
+}
+
 static UniValue preciousblock(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -1576,6 +1596,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getblockheader",         &getblockheader,         true,  {"blockhash","verbose"} },
     { "blockchain",         "getchaintips",           &getchaintips,           true,  {} },
     { "blockchain",         "getdifficulty",          &getdifficulty,          true,  {} },
+    { "blockchain",         "emptymempool",           &emptymempool,           true,  {} },
     { "blockchain",         "getmempoolancestors",    &getmempoolancestors,    true,  {"txid","verbose"} },
     { "blockchain",         "getmempooldescendants",  &getmempooldescendants,  true,  {"txid","verbose"} },
     { "blockchain",         "getmempoolentry",        &getmempoolentry,        true,  {"txid"} },

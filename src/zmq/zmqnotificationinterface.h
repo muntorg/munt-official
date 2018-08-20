@@ -25,6 +25,7 @@ protected:
     void Shutdown();
 
     // CValidationInterface
+    void StalledWitness(const CBlockIndex* pBlock, uint64_t nSeconds) override;
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex* pindexConnected, const std::vector<CTransactionRef>& vtxConflicted) override;
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;

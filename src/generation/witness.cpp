@@ -20,6 +20,7 @@
 #include "consensus/validation.h"
 #include "Gulden/auto_checkpoints.h"
 #include "hash.h"
+#include "key.h"
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 #include "net.h"
@@ -51,6 +52,50 @@
 #include "streams.h"
 
 CCriticalSection processBlockCS;
+
+#ifdef ENABLE_WALLET
+CReserveKeyOrScript::CReserveKeyOrScript(CWallet* pwalletIn, CAccount* forAccount, int64_t forKeyChain)
+{
+    pwallet = pwalletIn;
+    account = forAccount;
+    nIndex = -1;
+    nKeyChain = forKeyChain;
+}
+
+CReserveKeyOrScript::CReserveKeyOrScript(CScript& script)
+{
+    pwallet = nullptr;
+    account = nullptr;
+    nIndex = -1;
+    nKeyChain = -1;
+    reserveScript = script;
+}
+
+CReserveKeyOrScript::~CReserveKeyOrScript()
+{
+    if (shouldKeepOnDestroy)
+        KeepScript();
+    if (!scriptOnly())
+        ReturnKey();
+}
+
+bool CReserveKeyOrScript::scriptOnly()
+{
+    if (account == nullptr && pwallet == nullptr)
+        return true;
+    return false;
+}
+
+void CReserveKeyOrScript::KeepScript()
+{
+    if (!scriptOnly())
+        KeepKey();
+}
+
+void CReserveKeyOrScript::keepScriptOnDestroy()
+{
+    shouldKeepOnDestroy = true;
+}
 
 static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOutput)
 {
@@ -333,7 +378,7 @@ void static GuldenWitness()
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do
                 {
-                    if (pactiveWallet && (!hashCity || g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0))
+                    if (pactiveWallet && (hashCity || g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0))
                     {
                         if(!IsInitialBlockDownload())
                             break;
@@ -365,9 +410,39 @@ void static GuldenWitness()
             // Check for stop or if block needs to be rebuilt
             boost::this_thread::interruption_point();
 
+            static uint256 hashLastAbsentWitnessTip;
+            static uint64_t timeLastAbsentWitnessTip = 0;
+            static uint64_t secondsLastAbsentWitnessTip = 0;
+
             // If we already have a witnessed block at the tip don't bother looking at any orphans, just patiently wait for next unsigned tip.
             if (nPoW2PhasePrev < 3 || pindexTip->nVersionPoW2Witness != 0)
+            {
+                timeLastAbsentWitnessTip = 0;
+                secondsLastAbsentWitnessTip = 0;
+                hashLastAbsentWitnessTip.SetNull();
                 continue;
+            }
+
+            // Log absent witness if witness logging enabled.
+            if (LogAcceptCategory(BCLog::WITNESS) || IsArgSet("-zmqpubstalledwitness"))
+            {
+                if (hashLastAbsentWitnessTip == pindexTip->GetBlockHashPoW2())
+                {
+                    uint64_t nSecondsAbsent = (GetTimeMillis() - timeLastAbsentWitnessTip) / 1000;
+                    if (((nSecondsAbsent % 5) == 0) && nSecondsAbsent != secondsLastAbsentWitnessTip)
+                    {
+                        secondsLastAbsentWitnessTip = nSecondsAbsent;
+                        GetMainSignals().StalledWitness(pindexTip, nSecondsAbsent);
+                        LogPrint(BCLog::WITNESS, "GuldenWitness: absent witness at tip [%s] [%d] %d seconds\n", hashLastAbsentWitnessTip.ToString(), pindexTip->nHeight, nSecondsAbsent);
+                    }
+                }
+                else
+                {
+                    hashLastAbsentWitnessTip = pindexTip->GetBlockHashPoW2();
+                    timeLastAbsentWitnessTip = GetTimeMillis();
+                    secondsLastAbsentWitnessTip = 0;
+                }
+            }
 
             // Use a cache to prevent trying the same blocks over and over.
             // Look for all potential signable blocks at same height as the index tip - don't limit ourselves to just the tip
@@ -375,7 +450,7 @@ void static GuldenWitness()
             std::vector<CBlockIndex*> candidateOrphans;
             if (cacheAlreadySeenWitnessCandidates.find(pindexTip) == cacheAlreadySeenWitnessCandidates.end())
             {
-                LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from chain tip [%s]", pindexTip->GetBlockHashPoW2().ToString());
+                LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from chain tip [%s]\n", pindexTip->GetBlockHashPoW2().ToString());
                 candidateOrphans.push_back(pindexTip);
             }
             if (candidateOrphans.size() == 0)
@@ -384,7 +459,7 @@ void static GuldenWitness()
                 {
                     if (cacheAlreadySeenWitnessCandidates.find(candidateIter) == cacheAlreadySeenWitnessCandidates.end())
                     {
-                        LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from top level pow orphans [%s]", candidateIter->GetBlockHashPoW2().ToString());
+                        LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from top level pow orphans [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
                         candidateOrphans.push_back(candidateIter);
                     }
                 }
@@ -422,8 +497,16 @@ void static GuldenWitness()
 
                         if (!GetWitness(chainActive, chainparams, nullptr, candidateIter->pprev, *pWitnessBlock, witnessInfo))
                         {
-                            LogPrintf("GuldenWitness: Invalid candidate witness [%s]", candidateIter->GetBlockHashPoW2().ToString());
-                            std::string strErrorMessage = strprintf("Failed to calculate witness info for candidate block.\n Witnessing may be temporarily disabled.\n If this occurs frequently please contact a developer for assistance.\n height [%d] chain-tip-height [%d]", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                            LogPrintf("GuldenWitness: Invalid candidate witness [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
+                            static int64_t nLastErrorHeight = -1;
+
+                            if (nLastErrorHeight == -1 || candidateIter->nHeight - nLastErrorHeight > 10)
+                            {
+                                nLastErrorHeight = candidateIter->nHeight;
+                                continue;
+                            }
+                            nLastErrorHeight = candidateIter->nHeight;
+                            std::string strErrorMessage = strprintf("Failed to calculate witness info for candidate block.\n If this occurs frequently please contact a developer for assistance.\n height [%d] chain-tip-height [%d]", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                             CAlert::Notify(strErrorMessage, true, true);
                             LogPrintf("%s", strErrorMessage.c_str());
                             continue;
@@ -563,8 +646,12 @@ void static GuldenWitness()
     }
 }
 
+#endif
+
 
 void StartPoW2WitnessThread(boost::thread_group& threadGroup)
 {
+    #ifdef ENABLE_WALLET
     threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "pow2_witness", &GuldenWitness));
+    #endif
 }

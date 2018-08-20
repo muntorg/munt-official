@@ -38,6 +38,7 @@
 #include "random.h"
 #include "script/script.h"
 #include "script/sigcache.h"
+#include "script/sign.h"
 #include "script/standard.h"
 #include "timedata.h"
 #include "tinyformat.h"
@@ -444,7 +445,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight)
 bool CScriptCheck::operator()() {
     const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
     const CSegregatedSignatureData *witness = &ptxTo->vin[nIn].segregatedSignatureData;
-    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), &error);
+    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, spendingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), &error);
 }
 
 int GetSpendHeight(const CCoinsViewCache& inputs)
@@ -515,12 +516,12 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                 // spent being checked as a part of CScriptCheck.
                 const CAmount amount = coin.out.nValue;
 
-                CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Witness);
+                CKeyID witnessSigningKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Witness);
                 if (coin.out.GetType() > CTxOutType::ScriptLegacyOutput)
                 {
+                    CKeyID spendSigningKeyID;
                     if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput || coin.out.GetType() == CTxOutType::PoW2WitnessOutput)
                     {
-                        CKeyID spendSigningKeyID;
                         if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
                         {
                             if (tx.vin[i].segregatedSignatureData.stack.size() != 1)
@@ -536,12 +537,12 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                                 spendSigningKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
                                 if (spendSigningKeyID.IsNull())
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid spending key from prevout)"));
-                                if (signingKeyID.IsNull())
+                                if (witnessSigningKeyID.IsNull())
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
                             }
                             else if (tx.vin[i].segregatedSignatureData.stack.size() == 1)
                             {
-                                if (signingKeyID.IsNull())
+                                if (witnessSigningKeyID.IsNull())
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
                             }
                             else
@@ -564,7 +565,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 
                         //We extract the pubkey from the signatures so just pass in an empty pubkey for the checks.
                         std::vector<unsigned char> vchEmptyPubKey;
-                        CachingTransactionSignatureChecker check1(signingKeyID, &tx, i, amount, cacheStore, txdata);
+                        CachingTransactionSignatureChecker check1(witnessSigningKeyID, CKeyID(), &tx, i, amount, cacheStore, txdata);
                         if (!check1.CheckSig(tx.vin[i].segregatedSignatureData.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                         {
                             return false;
@@ -572,7 +573,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         // For a witness spend operation we have a second key that also needs checking.
                         if (!spendSigningKeyID.IsNull())
                         {
-                            CachingTransactionSignatureChecker check2(spendSigningKeyID, &tx, i, amount, cacheStore, txdata);
+                            CachingTransactionSignatureChecker check2(spendSigningKeyID, CKeyID(), &tx, i, amount, cacheStore, txdata);
                             if (!check2.CheckSig(tx.vin[i].segregatedSignatureData.stack[1], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                             {
                                 return false;
@@ -588,21 +589,29 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 
                 //fixme: (2.1) (SEGSIG) - also transition to extracted signature.
                 // Verify signature
+                //fixme: spendingKeyID
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
-                CScriptCheck check(signingKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
-                if (pvChecks) {
+                CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
+                if (scriptPubKey.IsPoW2Witness())
+                {
+                    check.spendingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
+                }
+                if (pvChecks)
+                {
                     pvChecks->push_back(CScriptCheck());
                     check.swap(pvChecks->back());
-                } else if (!check()) {
-                    if (flags & STANDARD_NOT_MANDATORY_VERIFY_FLAGS) {
+                }
+                else if (!check())
+                {
+                    if (flags & STANDARD_NOT_MANDATORY_VERIFY_FLAGS)
+                    {
                         // Check whether the failure was caused by a
                         // non-mandatory script verification check, such as
                         // non-standard DER encodings or non-null dummy
                         // arguments; if so, don't trigger DoS protection to
                         // avoid splitting the network between upgraded and
                         // non-upgraded nodes.
-                        CScriptCheck check2(signingKeyID, scriptPubKey, amount, tx, i,
-                                flags & ~STANDARD_NOT_MANDATORY_VERIFY_FLAGS, cacheStore, &txdata);
+                        CScriptCheck check2(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags & ~STANDARD_NOT_MANDATORY_VERIFY_FLAGS, cacheStore, &txdata);
                         if (check2())
                             return state.Invalid(false, REJECT_NONSTANDARD, strprintf("non-mandatory-script-verify-flag (%s)", ScriptErrorString(check.GetScriptError())));
                     }
@@ -930,8 +939,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         for (const auto& tx : block.vtx) {
             for (size_t o = 0; o < tx->vout.size(); o++) {
                 if (view.HaveCoin(COutPoint(tx->GetHash(), o))) {
-                    return state.DoS(100, error("ConnectBlock(): tried to overwrite transaction"),
-                                     REJECT_INVALID, "bad-txns-BIP30");
+                    return state.DoS(100, error("ConnectBlock(): tried to overwrite transaction [%s]", tx->GetHash().ToString()), REJECT_INVALID, "bad-txns-BIP30");
                 }
             }
         }
@@ -1479,20 +1487,22 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
             warningMessages.push_back(strprintf(_("%d of last 100 blocks have unexpected version"), nUpgraded));
         if (nUpgraded > 100/2)
         {
-            std::string strWarning = _("Warning: Unknown block versions being mined! It's possible unknown rules are in effect");
+            std::string strWarning = _("Warning: Unknown block versions in chain! It's possible unknown rules are in effect");
             // notify GetWarnings(), called by Qt and the JSON-RPC code to warn the user:
             DoWarning(strWarning);
         }
     }
-    LogPrintf("%s: new best=%s height=%d version=0x%08x versionpow2=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)", __func__,
-      chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion, chainActive.Tip()->nVersionPoW2Witness,
-      log(chainActive.Tip()->nChainWork.getdouble())/log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
-      DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
-      GuessVerificationProgress(chainParams.TxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
-    if (!warningMessages.empty())
-        LogPrintf(" warning='%s'", boost::algorithm::join(warningMessages, ", "));
-    LogPrintf("\n");
-
+    if(!gbMinimalLogging || !warningMessages.empty() || IsArgSet("-testnet") || chainActive.Height() % 1000 == 0 || chainActive.Height() > 700000)
+    {
+        LogPrintf("%s: new best=%s height=%d version=0x%08x versionpow2=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)", __func__,
+            chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion, chainActive.Tip()->nVersionPoW2Witness,
+            log(chainActive.Tip()->nChainWork.getdouble())/log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
+            DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
+            GuessVerificationProgress(chainParams.TxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
+        if (!warningMessages.empty())
+            LogPrintf(" warning='%s'", boost::algorithm::join(warningMessages, ", "));
+        LogPrintf("\n");
+    }
 }
 
 /** Disconnect chainActive's tip.
@@ -1752,8 +1762,8 @@ static void PruneBlockIndexCandidates() {
 
     //NB! We don't prune blocks that are the same height as the current tip when the current tip is PoW.
     //The reason for this is that we must consider all such blocks as witness candidates even if they are of lower weight - in case the higher weight block has an "absent" witness.
-    while ( ( it != setBlockIndexCandidates.end() ) && ( (*it)->nChainWork < chainActive.Tip()->nChainWork ) && ( (*it)->nHeight < chainActive.Tip()->nHeight || (*it)->nVersionPoW2Witness == 0 ) ) {
-            setBlockIndexCandidates.erase(it++);
+    while ( ( it != setBlockIndexCandidates.end() ) && ( (*it)->nChainWork < chainActive.Tip()->nChainWork ) && ( (*it)->nHeight < chainActive.Tip()->nHeight /*|| (*it)->nVersionPoW2Witness == 0*/ ) ) {
+        setBlockIndexCandidates.erase(it++);
     }
     // Either the current tip or a successor of it we're working towards is left in setBlockIndexCandidates.
     assert(!setBlockIndexCandidates.empty());
@@ -1866,7 +1876,12 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         const CBlockIndex *pindexFork;
         bool fInitialDownload;
         {
+            #ifdef ENABLE_WALLET
             LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+            #else
+            LOCK(cs_main);
+            #endif
+
             ConnectTrace connectTrace(mempool); // Destructed before cs_main is unlocked
 
             CBlockIndex *pindexOldTip = chainActive.Tip();
@@ -1947,7 +1962,8 @@ bool PreciousBlock(CValidationState& state, const CChainParams& params, CBlockIn
             nBlockReverseSequenceId--;
         }
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && pindex->nChainTx) {
-            LogPrintf("PreciousBlock: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
+            if (!gbMinimalLogging)
+                LogPrintf("PreciousBlock: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
             setBlockIndexCandidates.insert(pindex);
             PruneBlockIndexCandidates();
         }
@@ -2085,7 +2101,8 @@ static void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainp
     {
         setBlockIndexCandidates.erase(findIter);
         setBlockIndexCandidates.insert(pIndex);
-        LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
+        if (!gbMinimalLogging)
+            LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
     }
 }
 
@@ -2120,7 +2137,8 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
         SetChainWorkForIndex(pindexNew, chainParams);
         if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
         {
-            LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
+            if (!gbMinimalLogging)
+                LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
             setBlockIndexCandidates.insert(pindexNew);
         }
     }
@@ -2170,7 +2188,8 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
             }
             if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight))
             {
-                LogPrintf("ReceivedBlockTransactions: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
+                if (!gbMinimalLogging)
+                    LogPrintf("ReceivedBlockTransactions: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
                 setBlockIndexCandidates.insert(pindex);
             }
             std::pair<std::multimap<CBlockIndex*, CBlockIndex*>::iterator, std::multimap<CBlockIndex*, CBlockIndex*>::iterator> range = mapBlocksUnlinked.equal_range(pindex);

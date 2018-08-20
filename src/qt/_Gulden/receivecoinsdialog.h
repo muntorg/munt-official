@@ -7,7 +7,9 @@
 #define GULDEN_QT_GULDENRECEIVECOINSDIALOG_H
 
 #include "guiutil.h"
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
 
 #include <QDialog>
 #include <QHeaderView>
@@ -29,6 +31,8 @@ class QWebView;
 class CReserveKeyOrScript;
 class QWebEngineNewViewRequest;
 class QNetworkReply;
+
+class CAccount;
 
 namespace Ui {
     class ReceiveCoinsDialog;

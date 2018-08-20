@@ -6,7 +6,13 @@
 #ifndef GULDEN_QT_ACCOUNT_SUMMARY_WIDGET_H
 #define GULDEN_QT_ACCOUNT_SUMMARY_WIDGET_H
 
+#if defined(HAVE_CONFIG_H)
+#include "config/gulden-config.h"
+#endif
+
+#ifdef ENABLE_WALLET
 #include "walletmodel.h"
+#endif
 #include "amount.h"
 #include <QStackedWidget>
 #include <string>

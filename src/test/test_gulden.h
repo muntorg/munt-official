@@ -12,6 +12,7 @@
 #include "random.h"
 #include "txdb.h"
 #include "txmempool.h"
+#include "generation/generation.h"
 
 #include <boost/thread.hpp>
 
@@ -64,7 +65,6 @@ struct TestingSetup: public BasicTestingSetup {
 class CBlock;
 struct CMutableTransaction;
 class CScript;
-class CReserveKeyOrScript;
 
 //
 // Testing fixture that pre-creates a

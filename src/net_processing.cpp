@@ -403,7 +403,8 @@ bool MarkBlockAsInFlight(NodeId nodeid, const uint256& hash, const CBlockIndex* 
     // Short-circuit most stuff in case its from the same node
     std::map<uint256, std::pair<NodeId, std::list<QueuedBlock>::iterator> >::iterator itInFlight = mapBlocksInFlight.find(hash);
     if (itInFlight != mapBlocksInFlight.end() && itInFlight->second.first == nodeid) {
-        *pit = &itInFlight->second.second;
+        if (pit)
+            *pit = &itInFlight->second.second;
         return false;
     }
 
@@ -428,14 +429,17 @@ bool MarkBlockAsInFlight(NodeId nodeid, const uint256& hash, const CBlockIndex* 
 }
 
 /** Check whether the last unknown block a peer advertised is not yet known. */
-void ProcessBlockAvailability(NodeId nodeid) {
+void ProcessBlockAvailability(NodeId nodeid)
+{
     CNodeState *state = State(nodeid);
     assert(state != NULL);
 
-    if (!state->hashLastUnknownBlock.IsNull()) {
+    if (!state->hashLastUnknownBlock.IsNull())
+    {
         BlockMap::iterator itOld = mapBlockIndex.find(state->hashLastUnknownBlock);
-        if (itOld != mapBlockIndex.end() && itOld->second->nChainWork > 0) {
-            if (state->pindexBestKnownBlock == NULL || itOld->second->nChainWork >= state->pindexBestKnownBlock->nChainWork)
+        if (itOld != mapBlockIndex.end() && itOld->second->nChainWork > 0)
+        {
+            if (state->pindexBestKnownBlock == NULL || itOld->second->nChainWork >= state->pindexBestKnownBlock->nChainWork || itOld->second->nHeight >= state->pindexBestKnownBlock->nHeight)
                 state->pindexBestKnownBlock = itOld->second;
             state->hashLastUnknownBlock.SetNull();
         }
@@ -443,18 +447,22 @@ void ProcessBlockAvailability(NodeId nodeid) {
 }
 
 /** Update tracking information about which blocks a peer is assumed to have. */
-void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash) {
+void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash)
+{
     CNodeState *state = State(nodeid);
     assert(state != NULL);
 
     ProcessBlockAvailability(nodeid);
 
     BlockMap::iterator it = mapBlockIndex.find(hash);
-    if (it != mapBlockIndex.end() && it->second->nChainWork > 0) {
+    if (it != mapBlockIndex.end() && it->second->nChainWork > 0)
+    {
         // An actually better block was announced.
-        if (state->pindexBestKnownBlock == NULL || it->second->nChainWork >= state->pindexBestKnownBlock->nChainWork)
+        if (state->pindexBestKnownBlock == NULL || it->second->nChainWork >= state->pindexBestKnownBlock->nChainWork || it->second->nHeight >= state->pindexBestKnownBlock->nHeight)
             state->pindexBestKnownBlock = it->second;
-    } else {
+    }
+    else
+    {
         // An unknown block was announced; just assume that the latest one is the best one.
         state->hashLastUnknownBlock = hash;
     }
@@ -571,7 +579,7 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
         return false;
     }
 
-    if (state->pindexBestKnownBlock == NULL || state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork || state->pindexBestKnownBlock->nChainWork < UintToArith256(consensusParams.nMinimumChainWork)) {
+    if (state->pindexBestKnownBlock == NULL || (state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork && state->pindexBestKnownBlock->nHeight < chainActive.Tip()->nHeight) || state->pindexBestKnownBlock->nChainWork < UintToArith256(consensusParams.nMinimumChainWork)) {
         // This peer has nothing interesting.
         return false;
     }
@@ -586,7 +594,25 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
     // of its current tip anymore. Go back enough to fix that.
     state->pindexLastCommonBlock = LastCommonAncestor(state->pindexLastCommonBlock, state->pindexBestKnownBlock);
     if (state->pindexLastCommonBlock == state->pindexBestKnownBlock)
+    {
+        if (state->pindexBestKnownBlock->nHeight >= chainActive.Tip()->nHeight)
+        {
+            const CBlockIndex* pIndex = state->pindexBestKnownBlock;
+            if (!pIndex->IsValid(BLOCK_VALID_TREE))
+                return false;
+            if (!State(nodeid)->fHaveSegregatedSignatures && IsSegSigEnabled(pIndex->pprev))
+                return false;
+            if (pIndex->nStatus & BLOCK_HAVE_DATA || chainActive.Contains(pIndex))
+            {
+                return false;
+            }
+            else if (mapBlocksInFlight.count(pIndex->GetBlockHashPoW2()) == 0)
+            {
+                vBlocks.push_back(state->pindexBestKnownBlock);
+            }
+        }
         return false;
+    }
 
     std::vector<const CBlockIndex*> vToFetch;
     const CBlockIndex *pindexWalk = state->pindexLastCommonBlock;
@@ -949,7 +975,7 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
         CNodeState &state = *State(pnode->GetId());
         // If the peer has, or we announced to them the previous block already,
         // but we don't think they have this one, go ahead and announce it
-        if ( !PeerHasHeader(&state, pindex) && PeerHasHeader(&state, pindex->pprev) )
+        if ( !PeerHasHeader(&state, pindex) /*&& PeerHasHeader(&state, pindex->pprev)*/ )
         {
             if (state.fPreferHeaderAndIDs && (!fWitnessEnabled || state.fWantsCmpctWitness))
             {
@@ -1173,7 +1199,7 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                         ActivateBestChain(dummy, Params(), a_recent_block);
                     }
                     // If it is part of the chain or a competing PoW tip orphan then we want to send it.
-                    if (chainActive.Contains(mi->second) || mi->second->nHeight == chainActive.Tip()->nHeight)
+                    if (chainActive.Contains(mi->second) || mi->second->nHeight >= chainActive.Tip()->nHeight)
                     {
                         send = true;
                     }
@@ -1504,9 +1530,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (nVersion < MIN_PEER_PROTO_VERSION)
         {
             // disconnect from peers older than this proto version
-            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
-            connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
-                               strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
+            if (!gbMinimalLogging)
+                LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
+            connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
             pfrom->fDisconnect = true;
             return false;
         }
@@ -1514,7 +1540,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         //fixme: (2.1) We can remove this; we temporarily accept incoming connections from old peers but refuse to establish outgoing ones with them.
         if (nVersion < 70016 && !pfrom->fInbound)
         {
-            LogPrintf("outgoing peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
+            if (!gbMinimalLogging)
+                LogPrintf("outgoing peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
             connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", 70016)));
             pfrom->fDisconnect = true;
             return false;
@@ -2428,7 +2455,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (pindex->nStatus & BLOCK_HAVE_DATA) // Nothing to do here
             return true;
 
-        if (pindex->nChainWork <= chainActive.Tip()->nChainWork || // We know something better
+        if ((pindex->nChainWork <= chainActive.Tip()->nChainWork && pindex->nHeight != chainActive.Tip()->nHeight) || // We know something better
                 pindex->nTx != 0) { // We had this block at some point, but pruned it
             if (fAlreadyInFlight) {
                 // We requested this block for some reason, but our mempool will probably be useless
@@ -3344,8 +3371,10 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
         PrintExceptionContinue(NULL, "ProcessMessages()");
     }
 
-    if (!fRet) {
-        LogPrintf("%s(%s, %u bytes) FAILED peer=%d\n", __func__, SanitizeString(strCommand), nMessageSize, pfrom->GetId());
+    if (!fRet)
+    {
+        if (!gbMinimalLogging || strCommand != NetMsgType::VERSION)
+            LogPrintf("%s(%s, %u bytes) FAILED peer=%d\n", __func__, SanitizeString(strCommand), nMessageSize, pfrom->GetId());
     }
 
     LOCK(cs_main);

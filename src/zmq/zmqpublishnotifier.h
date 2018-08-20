@@ -34,6 +34,12 @@ public:
     bool NotifyBlock(const CBlockIndex *pindex);
 };
 
+class CZMQPublishStalledWitnessNotifier : public CZMQAbstractPublishNotifier
+{
+public:
+    bool NotifyStalledWitness(const CBlockIndex* pDelayedIndex, uint64_t nSecondsDelayed) override;
+};
+
 class CZMQPublishHashTransactionNotifier : public CZMQAbstractPublishNotifier
 {
 public:

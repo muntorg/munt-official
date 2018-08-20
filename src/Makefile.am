@@ -252,6 +252,7 @@ libgulden_server_a_SOURCES = \
   torcontrol.cpp \
   txdb.cpp \
   txmempool.cpp \
+  Gulden/util.cpp \
   ui_interface.cpp \
   validation/validation.cpp \
   validation/validation_mempool.cpp \
@@ -280,7 +281,6 @@ libgulden_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_wallet_a_SOURCES = \
   account.cpp \
   Gulden/mnemonic.cpp \
-  Gulden/util.cpp \
   wallet/Gulden/guldenwallet.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \

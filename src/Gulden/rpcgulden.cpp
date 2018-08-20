@@ -4,16 +4,21 @@
 // file COPYING
 
 #include "rpcgulden.h"
+#include "generation/generation.h"
 #include "generation/miner.h"
 #include "generation/witness.h"
 #include <rpc/server.h>
-#include <wallet/rpcwallet.h>
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 #include <consensus/consensus.h>
 #include <boost/assign/list_of.hpp>
 
+#ifdef ENABLE_WALLET
+#include <wallet/rpcwallet.h>
 #include "wallet/wallet.h"
+#include "wallet/coincontrol.h"
+#include "wallet/wallet.h"
+#endif
 
 #include <univalue.h>
 
@@ -28,8 +33,6 @@
 
 #include "txdb.h"
 #include "coins.h"
-#include "wallet/coincontrol.h"
-#include "wallet/wallet.h"
 #include "primitives/transaction.h"
 
 #include <Gulden/util.h>
@@ -232,7 +235,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         pTipIndex = chainActive.Tip();
     }
 
-    if (!pTipIndex || pTipIndex->nHeight < 10)
+    if (!pTipIndex || pTipIndex->nHeight < GetPow2ValidationCloneHeight())
         return NullUniValue;
 
     if (request.params.size() >= 2)
@@ -243,7 +246,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
     CBlockIndex* pTipIndex_ = nullptr;
     //fixme: (2.0.x) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
-    CCloneChain tempChain(chainActive, 0, pTipIndex, pTipIndex_);
+    CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(), pTipIndex, pTipIndex_);
 
     if (!pTipIndex_)
         throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
@@ -324,7 +327,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     {
                         if (poolIter->coin.out == iter.second.out)
                         {
-                            if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeight))
+                            if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeightRaw))
                             {
                                 fExpired = true;
                             }
@@ -361,8 +364,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("raw_weight", nRawWeight));
             rec.push_back(Pair("adjusted_weight", std::min(nRawWeight, witInfo.nMaxIndividualWeight)));
             rec.push_back(Pair("adjusted_weight_final", nAdjustedWeight));
-            rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
-            rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeight)));
+            rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
+            rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
             rec.push_back(Pair("last_active_block", nLastActiveBlock));
             rec.push_back(Pair("lock_from_block", nLockFromBlock));
             rec.push_back(Pair("lock_until_block", nLockUntilBlock));
@@ -399,9 +402,9 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     rec.push_back(Pair("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll));
     rec.push_back(Pair("number_of_witnesses_total", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size()));
     rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolFiltered.size()));
-    rec.push_back(Pair("total_witness_weight_raw", (uint64_t)nTotalWeightAll));
-    rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeight));
-    rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nReducedTotalWeight));
+    rec.push_back(Pair("total_witness_weight_raw", (uint64_t)witInfo.nTotalWeightRaw));
+    rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeightEligibleRaw));
+    rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nTotalWeightEligibleAdjusted));
     rec.push_back(Pair("selected_witness_address", sWitnessAddress));
     if (fVerbose)
     {
@@ -2605,7 +2608,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
             "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
-            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there is additional fees to distribute after applying the compunding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
+            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nArguments:\n"
             "1. \"witness_account\"            (string) The UUID or unique label of the account.\n"
             "2. amount                        (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
@@ -2663,7 +2666,7 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
             "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
-            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there is additional fees to distribute after applying the compunding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
+            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnesscompound \"My witness account\"", "")
             + HelpExampleRpc("getwitnesscompound \"My witness account\"", ""));

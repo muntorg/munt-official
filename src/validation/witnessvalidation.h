@@ -14,6 +14,7 @@
 /** Global variable that points to the witness coins database (protected by cs_main) */
 extern CWitViewDB* ppow2witdbview;
 extern std::shared_ptr<CCoinsViewCache> ppow2witTip;
+extern std::map<std::string, std::string> staticFundingAddressLookupTable;
 
 struct RouletteItem
 {
@@ -58,14 +59,17 @@ struct CGetWitnessInfo
 
     uint64_t selectedWitnessBlockHeight = 0;
 
-    //! The total weight of all blocks considered for witnessing
-    uint64_t nTotalWeight = 0;
+    //! The total weight of all witness accounts
+    uint64_t nTotalWeightRaw = 0;
 
-    //! The maximum individual weight that any single address was allowed before being reduced.
-    uint64_t nMaxIndividualWeight = 0;
+    //! The total weight of all witness accounts considered eligible for this round of witnessing
+    uint64_t nTotalWeightEligibleRaw = 0;
 
     //! The reduced total weight after applying the individual weight maximum
-    uint64_t nReducedTotalWeight = 0;
+    uint64_t nTotalWeightEligibleAdjusted = 0;
+
+    //! The maximum individual weight that any single address was allowed when performing the reduction.
+    uint64_t nMaxIndividualWeight = 0;
 };
 
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
