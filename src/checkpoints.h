@@ -22,9 +22,9 @@ CBlockIndex* GetLastCheckpointIndex();
 //! Height of last checkpoint in Params()
 int LastCheckPointHeight();
 
-/** Last checkpoint with timestamp before beforeTime.
+/** Last checkpoint with timestamp before or at atTime.
     Returns height of the checkpoint, or -1 iof there is none. */
-int LastCheckpointBefore(int64_t beforeTime, CheckPointEntry& entry);
+int LastCheckpointAt(int64_t atTime, CheckPointEntry& entry);
 
 } //namespace Checkpoints
 

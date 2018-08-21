@@ -31,11 +31,11 @@ namespace Checkpoints {
         return lastCheckpoint->first;
     }
     
-    int LastCheckpointBefore(int64_t beforeTime, CheckPointEntry& entry)
+    int LastCheckpointAt(int64_t atTime, CheckPointEntry& entry)
     {
         for (const auto& i: boost::adaptors::reverse(Params().Checkpoints()))
         {
-            if (i.second.nTime < beforeTime)
+            if (i.second.nTime <= atTime)
             {
                 entry = i.second;
                 return i.first;

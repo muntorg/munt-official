@@ -34,6 +34,7 @@ struct SeedSpec6 {
 
 struct CheckPointEntry
 {
+    CheckPointEntry() : nTime(0) {}
     CheckPointEntry(uint256 _hash, int64_t _nTime) : hash(_hash), nTime(_nTime) {}
     uint256 hash;
     int64_t nTime;

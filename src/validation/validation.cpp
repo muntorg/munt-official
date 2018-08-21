@@ -77,7 +77,7 @@ CCriticalSection cs_main;
 
 BlockMap mapBlockIndex;
 CChain chainActive;
-CChain headerChain;
+CPartialChain headerChain;
 CBlockIndex *pindexBestHeader = NULL;
 CWaitableCriticalSection csBestBlock;
 CConditionVariable cvBlockChange;
@@ -2147,7 +2147,8 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pindexNew->nChainWork)
     {
         pindexBestHeader = pindexNew;
-        headerChain.SetTip(pindexBestHeader);
+        if (pindexBestHeader->nHeight >= headerChain.HeightOffset() && headerChain.HeightOffset() > 0)
+            headerChain.SetTip(pindexBestHeader);
     }
 
     setDirtyBlockIndex.insert(pindexNew);
@@ -3132,7 +3133,8 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             pindex->BuildSkip();
         if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex))) {
             pindexBestHeader = pindex;
-            headerChain.SetTip(pindexBestHeader);
+            if (pindexBestHeader->nHeight >= headerChain.HeightOffset() && headerChain.HeightOffset() > 0)
+                headerChain.SetTip(pindexBestHeader);
         }
     }
 
@@ -3943,7 +3945,16 @@ void StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
      - ensure that partial header fetching is started
     */
 
-    headerTipSignal.connect(notifyCallback);
+    CheckPointEntry entry;
+    int checkpointHeight = Checkpoints::LastCheckpointAt(time, entry);
+    if (checkpointHeight >= 0)
+    {
+        headerChain.SetHeightOffset(checkpointHeight);
+        headerTipSignal.connect(notifyCallback);
+        LogPrintf("Partial headers started with height=%d\n", checkpointHeight);
+    }
+    else
+        LogPrintf("Partial headers not started, no suitable starting height found.\n");
 }
 
 class CMainCleanup
