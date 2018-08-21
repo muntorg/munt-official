@@ -28,6 +28,8 @@ bool IsPow2Phase3Active(uint64_t nHeight);
 bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
+int GetPhase2ActivationHeight();
+
 bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
@@ -47,7 +49,7 @@ uint64_t GetPoW2RemainingLockLengthInBlocks(uint64_t lockUntilBlock, uint64_t ti
 
 CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex);
 
-int GetPow2ValidationCloneHeight();
+int GetPow2ValidationCloneHeight(CChain& chain, const CBlockIndex* pIndex, int nMargin);
 
 inline bool IsPow2WitnessOutput(const CTxOut& out)
 {

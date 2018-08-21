@@ -103,6 +103,17 @@ void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& ch
     }
 }
 
+int GetPhase2ActivationHeight()
+{
+    if (IsArgSet("-testnet"))
+    {
+        return 20;
+    }
+    else
+    {
+        return 778176;
+    }
+}
 
 bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
@@ -463,7 +474,8 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
     return mapBlockIndex[powHash];
 }
 
-int GetPow2ValidationCloneHeight()
+int GetPow2ValidationCloneHeight(CChain& chain, const CBlockIndex* pIndex, int nMargin)
 {
-    return IsArgSet("-testnet") ? 0 : 770000;
+    const CBlockIndex* pprevFork = chainActive.FindFork(pIndex);
+    return (pprevFork->nHeight > nMargin ? pprevFork->nHeight - nMargin : 0);
 }

@@ -343,7 +343,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     CValidationState state;
     CCoinsViewCache viewNew(pcoinsTip);
     CBlockIndex* pindexPrev_ = nullptr;
-    CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(), pParent, pindexPrev_);
+    CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(chainActive, pParent, 1), pParent, pindexPrev_);
     assert(pindexPrev_);
     ForceActivateChain(pindexPrev_, nullptr, state, chainparams, tempChain, viewNew);
     {
