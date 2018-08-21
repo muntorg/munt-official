@@ -117,6 +117,7 @@ void NocksSettings::pollSettings()
 
 void NocksSettings::netRequestFinished( QNetworkReply* reply )
 {
+    reply->deleteLater();
     bool signalUpdates = false;
 
     if ( reply->error() != QNetworkReply::NetworkError::NoError )

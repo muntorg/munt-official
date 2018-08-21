@@ -58,7 +58,7 @@ class CurrencyTicker : public QObject
 public:
     // parent should be QApplication object
     CurrencyTicker(QObject* parent);
-    ~CurrencyTicker();
+    virtual ~CurrencyTicker();
 
     CAmount convertGuldenToForex(CAmount guldenAmount, std::string forexCurrencyCode);
     CAmount convertForexToGulden(CAmount forexAmount, std::string forexCurrencyCode);
