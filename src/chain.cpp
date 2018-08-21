@@ -16,8 +16,9 @@
  * CChain implementation
  */
 void CChain::SetTip(CBlockIndex *pindex) {
-    if (pindex == NULL) {
+    if (pindex == nullptr) {
         vChain.clear();
+        vChain.shrink_to_fit();
         return;
     }
     vChain.resize(pindex->nHeight + 1);
@@ -302,4 +303,54 @@ int64_t GetBlockProofEquivalentTime(const CBlockIndex& to, const CBlockIndex& fr
         return sign * std::numeric_limits<int64_t>::max();
     }
     return sign * r.GetLow64();
+}
+
+CPartialChain::CPartialChain() :
+    nHeightOffset(0)
+{
+
+}
+
+void CPartialChain::SetHeightOffset(int offset)
+{
+    // changing the offset is only allowed if the chain is empty
+    assert(vChain.empty());
+
+    nHeightOffset = offset;
+}
+
+int CPartialChain::HeightOffset() const
+{
+    return nHeightOffset;
+}
+
+CBlockIndex *CPartialChain::operator[](int nHeight) const
+{
+    if (nHeight>= nHeightOffset && nHeight <= Height())
+        return vChain[nHeight - nHeightOffset];
+    else
+        return nullptr;
+}
+
+int CPartialChain::Height() const
+{
+    return vChain.size() + nHeightOffset - 1;
+}
+
+void CPartialChain::SetTip(CBlockIndex *pindex)
+{
+    if (pindex == nullptr) {
+        vChain.clear();
+        vChain.shrink_to_fit();
+        return;
+    }
+
+    assert(pindex->nHeight >= nHeightOffset);
+
+    vChain.resize(pindex->nHeight - nHeightOffset + 1);
+
+    while (pindex && pindex->nHeight >= nHeightOffset && vChain[pindex->nHeight - nHeightOffset] != pindex) {
+        vChain[pindex->nHeight - nHeightOffset] = pindex;
+        pindex = pindex->pprev;
+    }
 }

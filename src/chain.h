@@ -649,6 +649,27 @@ public:
     virtual ~CChain(){};
 };
 
+/** A partial chain only keeps the chain from a certain height-offset onwards.
+ * It does not (unlike the CCloneChain) keep a reference to another (full) chain to forward to
+ * for items it does not hold.
+ * The partial chain is intended to create light clients (SPV) that will only ever see and keep a part
+ * of the chain. Access to blocks below the height-offset is illegal.
+*/
+class CPartialChain : public CChain
+{
+public:
+    CPartialChain();
+
+    void SetHeightOffset(int offset);
+    int HeightOffset() const;
+    virtual CBlockIndex *operator[](int nHeight) const override;
+    virtual int Height() const override;
+    virtual void SetTip(CBlockIndex *pindex) override;
+
+private:
+    int nHeightOffset;
+};
+
 // Simple helper class to control memory of cloned chains.
 class CCloneChain : public CChain
 {
