@@ -79,6 +79,7 @@ public:
 
 Q_SIGNALS:
     void amountChanged();
+    void maxButtonClicked();
 
 protected:
     /** Intercept focus-in event and ',' key presses */

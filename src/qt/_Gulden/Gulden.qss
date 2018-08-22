@@ -546,14 +546,14 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     height: 34px;
     color: #fff;
     background-color: ACCENT_COLOR_1;
-    border-radius: 2px; 
+    border-radius: 2px;
     margin: 0px;
     padding: 0px;
     padding-left: 20px;
     padding-right: 20px;
     margin-bottom: 18px;
 }
-#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #withdrawEarningsButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed
+#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #withdrawEarningsButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed, #maxButton[pressed=true]
 {
     background-color: ACCENT_COLOR_2;
 }
@@ -1000,10 +1000,12 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     color: ACCENT_COLOR_1;
 }
 
-#sendAll
+#maxButton
 {
-    color: ACCENT_COLOR_1;
+    color: white;
+    background-color: ACCENT_COLOR_1;
     font-size: MINOR_LABEL_FONT_SIZE;
+    height:28px;
 }
 
 #checkBoxAddToAddressBook
