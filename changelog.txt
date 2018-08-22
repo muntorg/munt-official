@@ -1,5 +1,8 @@
 2.0.0.12
 
+UI - Improve visual look of the "all" button in the send coins dialog.
+UI - Fix a problem with increasing memory consumption over time that was affecting some users.
+CORE - Reduce memory footprint and improve performance of witness validation.
 
 
 
@@ -17,6 +20,7 @@ CORE - Enable witness renewal and emptying of witness accounts whose lock period
 CMDFLAG - New command line flag "-disablenet" to start with networking disabled, useful in some debugging scenarios.
 CMDFLAG - New command line flag "-zmqpubstalledwitness=<address>" to turn on zmq monitoring for stalled witnesses.
 ZMQ - Add new message "stalledwitness" which can be used by services to monitor for slow and absent witnesses - enabled via CMDFLAG "zmqpubstalledwitness"
+
 
 
 
