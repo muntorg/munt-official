@@ -113,10 +113,10 @@ void CCloneChain::FreeMemory()
     vChain.clear();
 }
 
-CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const CBlockIndex *retainIndexIn, CBlockIndex *&retainIndexOut) :
-    CChain(),
-    origin(_origin),
-    cloneFrom(_cloneFrom)
+CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const CBlockIndex *retainIndexIn, CBlockIndex *&retainIndexOut)
+: CChain()
+, origin(_origin)
+, cloneFrom(_cloneFrom)
 {
     //fixme: (2.0.x) - Temporarily allow nested cloning 'getwitnessinfo' needs this; however we should fix this in the near future.
     // NB! Nested cloning is okay IFF we stick to a fixed clone height, the second we start trying to optimise by using a non-fixed clone height there will be problems.

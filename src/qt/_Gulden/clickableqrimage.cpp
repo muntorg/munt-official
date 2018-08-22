@@ -50,6 +50,7 @@ QImage ClickableQRImage::exportImage()
 
 void ClickableQRImage::setCode(const QString& qrString)
 {
+    #ifdef USE_QRCODE
     m_qrString = qrString;
 
     QRcode *code = QRcode_encodeString(m_qrString.toUtf8().constData(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
@@ -81,6 +82,7 @@ void ClickableQRImage::setCode(const QString& qrString)
     painter.end();
 
     setPixmap(QPixmap::fromImage(qrAddrImage));
+    #endif
 }
 
 void ClickableQRImage::mousePressEvent(QMouseEvent *event)

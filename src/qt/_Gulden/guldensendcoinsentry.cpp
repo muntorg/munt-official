@@ -76,10 +76,6 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     ui->addressBookTabTable->setContentsMargins(0, 0, 0, 0);
     ui->myAccountsTabTable->setContentsMargins(0, 0, 0, 0);
 
-    ui->sendAll->setContentsMargins(0, 0, 0, 0);
-    ui->sendAll->setIndent(0);
-    ui->sendAll->setCursor(Qt::PointingHandCursor);
-
     ui->pow2LockFundsSlider->setMinimum(30);
     ui->pow2LockFundsSlider->setMaximum(365*3);
     ui->pow2LockFundsSlider->setValue(30);
@@ -98,7 +94,7 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SLOT(payAmountChanged()));
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SIGNAL(valueChanged()));
 
-    connect(ui->sendAll, SIGNAL(clicked()), this, SLOT(sendAllClicked()));
+    connect(ui->payAmount, SIGNAL(maxButtonClicked()), this, SLOT(sendAllClicked()));
 
     ui->receivingAddress->setProperty("valid", true);
     //ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));

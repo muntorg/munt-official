@@ -956,13 +956,12 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     // NB!!! - It is important that we don't flush either of these before destructing, we want to throw the result away.
     CCoinsViewCache viewNew(viewOverride?viewOverride:pcoinsTip);
 
-    if (pPreviousIndexChain_->nHeight < GetPow2ValidationCloneHeight())
+    if (pPreviousIndexChain_->nHeight < GetPhase2ActivationHeight())
         return true;
 
-    // fixme: (2.1) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     CBlockIndex* pPreviousIndexChain = nullptr;
-    CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(), pPreviousIndexChain_, pPreviousIndexChain);
+    CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(chain, pPreviousIndexChain_, 2), pPreviousIndexChain_, pPreviousIndexChain);
     CValidationState state;
     assert(pPreviousIndexChain);
 
@@ -1326,7 +1325,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     // We work on a clone of the chain to prevent modifying the actual chain.
     {
         CBlockIndex* pPreviousIndexChain = nullptr;
-        CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(), pindexPrev->pprev, pPreviousIndexChain);
+        CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(chain, pindexPrev->pprev, 1), pindexPrev->pprev, pPreviousIndexChain);
         CValidationState state;
         CCoinsViewCache viewNew(&view);
         // Force the tip of the chain to the block that comes before the block we are examining.
