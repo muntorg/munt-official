@@ -478,12 +478,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Copy Image</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="+29"/>
         <source>Error encoding URI into QR Code.</source>
         <translation>Error encoding URI into QR Code.</translation>
     </message>
     <message>
-        <location line="+49"/>
+        <location line="+50"/>
         <source>Save QR Code</source>
         <translation>Save QR Code</translation>
     </message>
@@ -808,13 +808,14 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+298"/>
-        <location line="+40"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+299"/>
+        <location line="+64"/>
+        <location line="+38"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="-74"/>
+        <location line="-136"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -874,11 +875,12 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <location line="+33"/>
+        <location line="+64"/>
         <source>This feature is not yet available, please try again after block 797000.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="+38"/>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
         <translation>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</translation>
     </message>
@@ -1451,7 +1453,12 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenAmountField</name>
     <message>
-        <location filename="../../amountfield.cpp" line="+308"/>
+        <location filename="../../amountfield.cpp" line="+310"/>
+        <source>Max</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <source>Gulden</source>
         <translation>Gulden</translation>
     </message>
@@ -1459,7 +1466,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+470"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+466"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
@@ -1470,17 +1477,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+279"/>
+        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+263"/>
         <source>My accounts</source>
         <translation>My accounts</translation>
     </message>
     <message>
-        <location line="-211"/>
-        <source>All</source>
-        <translation>All</translation>
-    </message>
-    <message>
-        <location line="+51"/>
+        <location line="-160"/>
         <source>Receiving address</source>
         <translation>Receiving address</translation>
     </message>
@@ -4660,7 +4662,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletModel</name>
     <message>
-        <location filename="../../walletmodel.cpp" line="+928"/>
+        <location filename="../../walletmodel.cpp" line="+931"/>
         <location line="+46"/>
         <location line="+9"/>
         <source>Fee bump error</source>
