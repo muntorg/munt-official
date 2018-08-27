@@ -2642,5 +2642,5 @@ const CBlockIndex* CWallet::LastSPVBlockProcessed() const
 int CWallet::ChainHeight()
 {
     LOCK(cs_main);
-    return fSPV ? headerChain.Height() : chainActive.Height();
+    return fSPV ? partialChain.Height() : chainActive.Height();
 }

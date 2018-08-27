@@ -75,7 +75,7 @@ void CSPVScanner::RequestBlocks()
     LOCK2(cs_main, wallet.cs_wallet);
 
     // put lastProcessed and/or requestTip back on chain if forked
-    while (!headerChain.Contains(requestTip)) {
+    while (!partialChain.Contains(requestTip)) {
         if (requestTip->nHeight > lastProcessed->nHeight) {
             CancelPriorityDownload(requestTip, std::bind(&CSPVScanner::ProcessPriorityRequest, this, std::placeholders::_1, std::placeholders::_2));
             requestTip = requestTip->pprev;
@@ -97,8 +97,8 @@ void CSPVScanner::RequestBlocks()
 
     // skip blocks that are before startTime
     const CBlockIndex* skip = lastProcessed;
-    while (skip->GetBlockTime() < startTime && headerChain.Height() > skip->nHeight)
-        skip = headerChain.Next(skip);
+    while (skip->GetBlockTime() < startTime && partialChain.Height() > skip->nHeight)
+        skip = partialChain.Next(skip);
     if (skip != lastProcessed) {
         LogPrint(BCLog::WALLET, "Skipping %d old blocks for SPV scan, up to height %d\n", skip->nHeight - lastProcessed->nHeight, skip->nHeight);
         UpdateLastProcessed(skip);
@@ -112,9 +112,9 @@ void CSPVScanner::RequestBlocks()
 
     // add requests for as long as nMaxPendingRequests is not reached and there are still heigher blocks in headerChain
     while (requestTip->nHeight - lastProcessed->nHeight < MAX_PENDING_REQUESTS &&
-           headerChain.Height() > requestTip->nHeight) {
+           partialChain.Height() > requestTip->nHeight) {
 
-        requestTip = headerChain.Next(requestTip);
+        requestTip = partialChain.Next(requestTip);
         blocksToRequest.push_back(requestTip);
     }
 
@@ -129,9 +129,9 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
     LOCK2(cs_main, wallet.cs_wallet);
 
     // if chainActive is up-to-date no SPV blocks need to be requested, we can update SPV to the activeChain
-    if (chainActive.Tip() == headerChain.Tip()) {
+    if (chainActive.Tip() == partialChain.Tip()) {
         LogPrint(BCLog::WALLET, "chainActive is up-to-date, skipping SPV processing block %d\n", pindex->nHeight);
-        if (lastProcessed != headerChain.Tip()) {
+        if (lastProcessed != partialChain.Tip()) {
             UpdateLastProcessed(chainActive.Tip());
             requestTip = lastProcessed;
         }
@@ -150,8 +150,8 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
 
         RequestBlocks();
 
-        if (headerChain.Height() == pindex->nHeight || pindex->nHeight % UI_UPDATE_LIMIT == 0)
-            uiInterface.NotifySPVProgress(startHeight, pindex->nHeight, headerChain.Height());
+        if (partialChain.Height() == pindex->nHeight || pindex->nHeight % UI_UPDATE_LIMIT == 0)
+            uiInterface.NotifySPVProgress(startHeight, pindex->nHeight, partialChain.Height());
 
         blocksSincePersist++;
     }
@@ -162,13 +162,13 @@ void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
     // initialization on the first header tip notification
     if (lastProcessed == nullptr)
     {
-        if (headerChain.Height() >= headerChain.HeightOffset()
-                && headerChain[headerChain.HeightOffset()]->GetBlockTime() <= startTime)
+        if (partialChain.Height() >= partialChain.HeightOffset()
+                && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= startTime)
         {
             // use start of partial chain to init lastProcessed
             // forks are handled when requesting blocks which will also fast-forward to startTime
             // should the headerChain be very early
-            lastProcessed = headerChain[headerChain.HeightOffset()];
+            lastProcessed = partialChain[partialChain.HeightOffset()];
         }
         else
         {
@@ -200,7 +200,7 @@ void CSPVScanner::Persist()
     if (lastProcessed != nullptr)
     {
         CWalletDB walletdb(*wallet.dbw);
-        walletdb.WriteLastSPVBlockProcessed(headerChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
+        walletdb.WriteLastSPVBlockProcessed(partialChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
 
         lastPersistTime = GetAdjustedTime();
         blocksSincePersist = 0;

@@ -38,7 +38,7 @@ int CMerkleTx::GetDepthInMainChain(const CBlockIndex* &pindexRet) const
     if (mi == mapBlockIndex.end())
         return 0;
 
-    const CChain& chain = fSPV ? headerChain : chainActive;
+    const CChain& chain = fSPV ? partialChain : chainActive;
 
     CBlockIndex* pindex = (*mi).second;
     if (!pindex || !chain.Contains(pindex))

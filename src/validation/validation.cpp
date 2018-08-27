@@ -77,7 +77,7 @@ CCriticalSection cs_main;
 
 BlockMap mapBlockIndex;
 CChain chainActive;
-CPartialChain headerChain;
+CPartialChain partialChain;
 CBlockIndex *pindexBestHeader = NULL;
 CWaitableCriticalSection csBestBlock;
 CConditionVariable cvBlockChange;
@@ -2147,8 +2147,8 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pindexNew->nChainWork)
     {
         pindexBestHeader = pindexNew;
-        if (pindexBestHeader->nHeight >= headerChain.HeightOffset() && headerChain.HeightOffset() > 0)
-            headerChain.SetTip(pindexBestHeader);
+        if (pindexBestHeader->nHeight >= partialChain.HeightOffset() && partialChain.HeightOffset() > 0)
+            partialChain.SetTip(pindexBestHeader);
     }
 
     setDirtyBlockIndex.insert(pindexNew);
@@ -2715,9 +2715,9 @@ static void CheckAndNotifyHeaderTip()
     bool fNotify = false;
     {
         LOCK(cs_main);
-        if (headerChain.Tip() != pPreviousHeaderTip) {
+        if (partialChain.Tip() != pPreviousHeaderTip) {
             fNotify = true;
-            pPreviousHeaderTip = headerChain.Tip();
+            pPreviousHeaderTip = partialChain.Tip();
         }
     }
     if (fNotify)
@@ -3133,8 +3133,8 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             pindex->BuildSkip();
         if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex))) {
             pindexBestHeader = pindex;
-            if (pindexBestHeader->nHeight >= headerChain.HeightOffset() && headerChain.HeightOffset() > 0)
-                headerChain.SetTip(pindexBestHeader);
+            if (pindexBestHeader->nHeight >= partialChain.HeightOffset() && partialChain.HeightOffset() > 0)
+                partialChain.SetTip(pindexBestHeader);
         }
     }
 
@@ -3526,7 +3526,7 @@ void UnloadBlockIndex()
     chainActive.SetTip(NULL);
     pindexBestInvalid = NULL;
     pindexBestHeader = NULL;
-    headerChain.SetTip(nullptr);
+    partialChain.SetTip(nullptr);
     mempool.clear();
     mapBlocksUnlinked.clear();
     vinfoBlockFile.clear();
@@ -3949,7 +3949,7 @@ void StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
     int checkpointHeight = Checkpoints::LastCheckpointAt(time, entry);
     if (checkpointHeight >= 0)
     {
-        headerChain.SetHeightOffset(checkpointHeight);
+        partialChain.SetHeightOffset(checkpointHeight);
         headerTipSignal.connect(notifyCallback);
         LogPrintf("Partial headers started with height=%d\n", checkpointHeight);
     }

@@ -574,7 +574,7 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
         return false;
     }
 
-    bool headerTipStillOld = !headerChain.Tip() || headerChain.Tip()->GetBlockTime() < GetAdjustedTime() - HEADERS_RECENT_FOR_BLOCKDOWNLOAD;
+    bool headerTipStillOld = !partialChain.Tip() || partialChain.Tip()->GetBlockTime() < GetAdjustedTime() - HEADERS_RECENT_FOR_BLOCKDOWNLOAD;
     if (fPreventBlockDownloadDuringHeaderSync && headerTipStillOld) {
         return false;
     }
