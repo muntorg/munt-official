@@ -86,6 +86,8 @@ namespace {
     /** Number of nodes with fRHeaderSyncStarted. */
     int nRHeaderSyncStarted = 0;
 
+    int nPartialSyncStarted = 0;
+
     /**
      * Sources of received blocks, saved to be able to send them reject
      * messages or ban them when processing happens afterwards. Protected by
@@ -205,6 +207,8 @@ struct CNodeState {
     bool fSyncStarted;
     //! Whether we've started reverse headers synchronization with this peer.
     bool fRHeadersSyncStarted;
+    //! Whether we've started partial headers synchronization with this peer.
+    bool fPartialSyncStarted;
     //! When to potentially disconnect peer for stalling headers download
     int64_t nHeadersSyncTimeout;
     //! Since when we're stalling block download progress (in microseconds), or 0.
@@ -247,6 +251,7 @@ struct CNodeState {
         nUnconnectingHeaders = 0;
         fSyncStarted = false;
         fRHeadersSyncStarted = false;
+        fPartialSyncStarted = false;
         nHeadersSyncTimeout = 0;
         nStallingSince = 0;
         nDownloadingSince = 0;
@@ -330,6 +335,9 @@ void FinalizeNode(NodeId nodeid, bool& fUpdateConnectionTime) {
 
     if (state->fRHeadersSyncStarted)
         nRHeaderSyncStarted--;
+
+    if (state->fPartialSyncStarted)
+        nPartialSyncStarted--;
 
     if (state->nMisbehavior == 0 && state->fCurrentlyConnected) {
         fUpdateConnectionTime = true;
@@ -2700,11 +2708,15 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         //   nUnconnectingHeaders gets reset back to 0.
         if (mapBlockIndex.find(headers[0].hashPrevBlock) == mapBlockIndex.end() && nCount < MAX_BLOCKS_TO_ANNOUNCE) {
             nodestate->nUnconnectingHeaders++;
-            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorPoW2(pindexBestHeader), uint256()));
+            CBlockIndex* pindex = pindexBestPartial && pindexBestPartial->nHeight > pindexBestHeader->nHeight
+                    ? pindexBestPartial
+                    : pindexBestHeader;
+            CChain& chain = pindex == pindexBestHeader ? chainActive : partialChain;
+            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chain.GetLocatorPoW2(pindex), uint256()));
             LogPrint(BCLog::NET, "received header %s: missing prev block %s, sending getheaders (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
                     headers[0].GetHashPoW2().ToString(),
                     headers[0].hashPrevBlock.ToString(),
-                    pindexBestHeader->nHeight,
+                    pindex->nHeight,
                     pfrom->GetId(), nodestate->nUnconnectingHeaders);
             // Set hashLastUnknownBlock for this peer, so that if we
             // eventually get the headers - even from a different peer -
@@ -2717,6 +2729,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return true;
         }
 
+        // verify that the received headers are continuous, ie. connect
         uint256 hashLastBlock;
         for (const CBlockHeader& header : headers) {
             if (!hashLastBlock.IsNull() && header.hashPrevBlock != hashLastBlock) {
@@ -2769,13 +2782,32 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 return true;
             }
             LogPrint(BCLog::NET, "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight, pfrom->GetId(), pfrom->nStartingHeight);
-            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chainActive.GetLocatorPoW2(pindexLast), uint256()));
+            LOCK(cs_main);
+            CBlockLocator locator;
+            bool connectsToPartial = IsPartialSyncActive() && partialChain.FindFork(pindexLast);
+            if (IsPartialSyncActive() && !connectsToPartial && !IsPartialNearPresent())
+            {
+                // if headers we got are not connecting to partial chain and it still has way to go
+                // switch further header requests to tip of partial chain
+                locator = partialChain.GetLocatorPoW2(pindexBestPartial);
+            }
+            else if (connectsToPartial)
+            {
+                // just resume partial from what we received if received headers connect to that
+                locator = partialChain.GetLocatorPoW2(pindexLast);
+            }
+            else
+            {
+                // received headers don't connect to partial, they did connect though so resume based on activeChain
+                locator = chainActive.GetLocatorPoW2(pindexLast);
+            }
+            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, locator, uint256()));
         }
 
         bool fCanDirectFetch = CanDirectFetch(chainparams.GetConsensus());
         // If this set of headers is valid and ends in a block with at least as
         // much work as our tip, download as much as possible.
-        if (fCanDirectFetch && pindexLast->IsValid(BLOCK_VALID_TREE) && chainActive.Tip()->nChainWork <= pindexLast->nChainWork) {
+        if (!IsPartialSyncActive() && fCanDirectFetch && pindexLast->IsValid(BLOCK_VALID_TREE) && chainActive.Tip()->nChainWork <= pindexLast->nChainWork) {
             std::vector<const CBlockIndex*> vToFetch;
             const CBlockIndex *pindexWalk = pindexLast;
             // Calculate all the blocks we'd need to switch to pindexLast, up to a limit.
@@ -2940,8 +2972,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
             LOCK(cs_main);
             CNodeState *nodestate = State(pfrom->GetId());
-            nodestate->fRHeadersSyncStarted = false;
-            nRHeaderSyncStarted--;
+            if (nodestate->fRHeadersSyncStarted)
+            {
+                nodestate->fRHeadersSyncStarted = false;
+                nRHeaderSyncStarted--;
+            }
 
             LogPrintf("Header height after reverse header sync %s\n", pindexBestHeader->nHeight);
 
@@ -3485,16 +3520,26 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 pto->vAddrToSend.shrink_to_fit();
         }
 
-        // Start block sync
+        // Start sync
         if (pindexBestHeader == NULL)
             pindexBestHeader = chainActive.Tip();
         bool fFetch = state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot); // Download if this is a nice peer, or we have no nice peers and this one might do.
-        if (!state.fSyncStarted && !state.fRHeadersSyncStarted && !pto->fClient && !fImporting && !fReindex) {
+        if (!state.fPartialSyncStarted && !state.fSyncStarted && !state.fRHeadersSyncStarted && !pto->fClient && !fImporting && !fReindex) {
 
             int lastCheckPointHeight = Checkpoints::LastCheckPointHeight();
 
-            // Prefer reverse header sync if possible
-            if (fReverseHeaders && pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch
+            // Partial header sync
+            if (fFetch && IsPartialSyncActive())
+            {
+                state.fPartialSyncStarted = true;
+                int64_t startTime = partialChain[partialChain.Height()]->GetBlockTime();
+                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE
+                        + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - startTime)/(consensusParams.nPowTargetSpacing);
+                nSyncStarted++;
+                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, partialChain.GetLocatorPoW2(pindexBestPartial), uint256()));
+            }
+            // Reverse header sync if possible
+            else if (fReverseHeaders && pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch
                     && pto->nStartingHeight > lastCheckPointHeight
                     && pindexBestHeader->nHeight < lastCheckPointHeight - (int)vReverseHeaders.size()) {
 
@@ -3867,7 +3912,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             }
         }
         // Check for headers sync timeouts
-        if ((state.fSyncStarted || state.fRHeadersSyncStarted) && state.nHeadersSyncTimeout < std::numeric_limits<int64_t>::max()) {
+        if ((state.fPartialSyncStarted || state.fSyncStarted || state.fRHeadersSyncStarted) && state.nHeadersSyncTimeout < std::numeric_limits<int64_t>::max()) {
             // Detect whether this is a stalling initial-headers-sync peer
             if (pindexBestHeader->GetBlockTime() <= GetAdjustedTime() - 24*60*60) {
                 if (nNow > state.nHeadersSyncTimeout && (nSyncStarted + nRHeaderSyncStarted) == 1 && (nPreferredDownload - state.fPreferredDownload >= 1)) {

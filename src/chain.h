@@ -167,6 +167,8 @@ enum BlockStatus: uint32_t {
     BLOCK_FAILED_MASK        =   BLOCK_FAILED_VALID | BLOCK_FAILED_CHILD,
 
     BLOCK_OPT_WITNESS       =   128, //!< block data in blk*.data was received with a witness-enforcing client
+
+    BLOCK_PARTIAL_TREE      =  256, //! block is in partial tree
 };
 
 /** The block chain is a tree shaped structure starting with the
@@ -638,7 +640,7 @@ public:
 
     /** Return a CBlockLocator that refers to a block in this chain (by default the tip). */
     CBlockLocator GetLocatorLegacy(const CBlockIndex *pindex = NULL) const;
-    CBlockLocator GetLocatorPoW2(const CBlockIndex *pindex = NULL) const;
+    virtual CBlockLocator GetLocatorPoW2(const CBlockIndex *pindex = NULL) const;
 
     /** Find the last common block between this chain and a block index entry. */
     const CBlockIndex *FindFork(const CBlockIndex *pindex) const;
@@ -665,6 +667,7 @@ public:
     virtual CBlockIndex *operator[](int nHeight) const override;
     virtual int Height() const override;
     virtual void SetTip(CBlockIndex *pindex) override;
+    CBlockLocator GetLocatorPoW2(const CBlockIndex *pindex = NULL) const override;
 
 private:
     int nHeightOffset;

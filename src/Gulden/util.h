@@ -99,4 +99,13 @@ inline bool IsPoW2WitnessLocked(const CTxOut& out, uint64_t nTipHeight)
     return IsPoW2WitnessLocked(witnessDetails, nTipHeight);
 }
 
+/**
+ * Partial (header) sync is considered active if the partial chain has been populatd with at least one block.
+ * Requires cs_main
+ */
+bool IsPartialSyncActive();
+
+//! Requires cs_main
+bool IsPartialNearPresent();
+
 #endif

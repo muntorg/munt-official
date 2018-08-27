@@ -7,6 +7,7 @@
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
+#include "timedata.h"
 #include "util.h"
 #include "consensus/validation.h"
 #include "validation/validation.h"
@@ -466,4 +467,14 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
 int GetPow2ValidationCloneHeight()
 {
     return IsArgSet("-testnet") ? 0 : 770000;
+}
+
+bool IsPartialSyncActive()
+{
+    return partialChain.Height() >= partialChain.HeightOffset();
+}
+
+bool IsPartialNearPresent()
+{
+    return IsPartialSyncActive() && partialChain.Tip()->GetBlockTime() > GetAdjustedTime() - Params().GetConsensus().nPowTargetSpacing * 20;
 }

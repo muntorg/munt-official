@@ -77,8 +77,9 @@ CCriticalSection cs_main;
 
 BlockMap mapBlockIndex;
 CChain chainActive;
-CPartialChain partialChain;
 CBlockIndex *pindexBestHeader = NULL;
+CPartialChain partialChain;
+CBlockIndex *pindexBestPartial = nullptr;
 CWaitableCriticalSection csBestBlock;
 CConditionVariable cvBlockChange;
 int nScriptCheckThreads = 0;
@@ -2049,15 +2050,12 @@ bool ResetBlockFailureFlags(CBlockIndex *pindex) {
     return true;
 }
 
-static void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainparams)
+static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainParams& chainparams)
 {
     LOCK(cs_main);
 
-    // Check if we are an existing item in the set or not - NB! we must do this before we modify the index as with a custom comparator find might otherwise fail.
-    const auto& findIter = setBlockIndexCandidates.find(pIndex);
-
     arith_uint256 nBlockProof = GetBlockProof(*pIndex);
-    pIndex->nChainWork = (pIndex->pprev ? pIndex->pprev->nChainWork : 0) + nBlockProof;
+    arith_uint256 chainWork = (pIndex->pprev ? pIndex->pprev->nChainWork : 0) + nBlockProof;
     if (pIndex->nVersionPoW2Witness != 0)
     {
         // Note: (PoW2) If we wanted to include witness weight in the chain weight this would be the place to do it.
@@ -2087,19 +2085,30 @@ static void SetChainWorkForIndex(CBlockIndex* pIndex, const CChainParams& chainp
             }
             assert (nCount == 10);
             nBlockProof /= nCount;
-            pIndex->nChainWork += nBlockProof;
+            chainWork += nBlockProof;
         }
         else
         {
             // However for phase 3 we need subsequent PoW blocks to outweigh PoS blocks so we are stuck with the temporary limitation of using nChainWork + 1
-            pIndex->nChainWork += 1;
+            chainWork += 1;
         }
     }
+    return chainWork;
+}
+
+static void UpdateChainWorkAndBlockIndexCandidates(CBlockIndex* pIndex, arith_uint256& chainWork, const CChainParams& chainparams)
+{
+    LOCK(cs_main);
+
+    // Check if we are an existing item in the set or not
+    // NB! we must do this before we modify the index as with a custom comparator find might otherwise fail.
+    const auto& findIter = setBlockIndexCandidates.find(pIndex);
 
     // Update setBlockIndexCandidates with the new ordering, ordering depends on nChainWork so might have changed.
     if (findIter != setBlockIndexCandidates.end())
     {
         setBlockIndexCandidates.erase(findIter);
+        pIndex->nChainWork = chainWork;
         setBlockIndexCandidates.insert(pIndex);
         if (!gbMinimalLogging)
             LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
@@ -2128,27 +2137,39 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     {
         pindexNew->pprev = (*miPrev).second;
         pindexNew->nHeight = pindexNew->pprev->nHeight + 1;
-        pindexNew->BuildSkip();
+        // Skip list can only be build for full chain
+        if (pindexNew->pprev->pskip || pindexNew->pprev->nHeight == 0)
+            pindexNew->BuildSkip();
     }
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
 
-    // Gulden: PoW2
+    arith_uint256 chainWork = CalculateChainWork(pindexNew, chainParams);
+    if ((pindexNew->nHeight > 0 && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)) || pindexNew->nHeight == 0)
     {
-        SetChainWorkForIndex(pindexNew, chainParams);
+        // block is extending the main tree
+        UpdateChainWorkAndBlockIndexCandidates(pindexNew, chainWork, chainParams);
         if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
         {
             if (!gbMinimalLogging)
                 LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
             setBlockIndexCandidates.insert(pindexNew);
         }
+        pindexNew->RaiseValidity(BLOCK_VALID_TREE);
+    }
+    else
+    {
+        // block is not extending main tree, so it's extending the partial tree
+        pindexNew->nChainWork = chainWork;
+        pindexNew->nStatus |= BLOCK_PARTIAL_TREE;
     }
 
-    pindexNew->RaiseValidity(BLOCK_VALID_TREE);
-    if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pindexNew->nChainWork)
+    if (IsPartialSyncActive() && (pindexBestPartial == nullptr || pindexBestPartial->nChainWork < pindexNew->nChainWork))
     {
-        pindexBestHeader = pindexNew;
-        if (pindexBestHeader->nHeight >= partialChain.HeightOffset() && partialChain.HeightOffset() > 0)
-            partialChain.SetTip(pindexBestHeader);
+        if (pindexNew->nHeight > partialChain.HeightOffset())
+        {
+            pindexBestPartial = pindexNew;
+            partialChain.SetTip(pindexBestPartial);
+        }
     }
 
     setDirtyBlockIndex.insert(pindexNew);
@@ -2695,7 +2716,9 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
         if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, hash))
             return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
 
-        if (!ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
+        // do context check if block header connects to the full tree or when we have at least the required amount of partial tree available
+        bool doContextCheck = pindexPrev->IsValid(BLOCK_VALID_TREE) || ((pindexPrev->nStatus & BLOCK_PARTIAL_TREE) && pindexPrev->nHeight - partialChain.HeightOffset() > 576);
+        if (doContextCheck && !ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
     }
     if (pindex == NULL)
@@ -2794,6 +2817,9 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
         }
         return error("%s: %s", __func__, FormatStateMessage(state));
     }
+
+    // TODO, do not relay if we are SPV and have not fully validated the block? Something with the contextual block check
+    // fails in our partial sync.
 
     // Header is valid/has work, merkle tree are good...RELAY NOW
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
@@ -3105,7 +3131,12 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     for(const PAIRTYPE(int, CBlockIndex*)& item : vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
-        SetChainWorkForIndex(pindex, chainparams);
+        arith_uint256 chainwork = CalculateChainWork(pindex, chainparams);
+        if (pindex->IsValid(BLOCK_VALID_TREE))
+            UpdateChainWorkAndBlockIndexCandidates(pindex, chainwork, chainparams);
+        else
+            pindex->nChainWork = chainwork;
+
         pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.
@@ -3929,32 +3960,52 @@ bool isFullSyncMode() {
     return fFullSyncMode;
 }
 
-
-#define WIP_TODO _Pragma("message(\"Work in progress, not ready for use!\")");
-
 void StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
 {
-    WIP_TODO
+    headerTipSignal.connect(notifyCallback);
 
-    /* TODO something along the lines of:
-     - if there is already a partial chain check if it starts before time, if it does noting needs to be done
-       if it doesn't then that is a problem, just clear the entire partial chain (so it is started again at a correct time)
-
-     - if there is no partial chain yet, initialize it with the height of the youngest checkpoint that is before time
-
-     - ensure that partial header fetching is started
-    */
-
-    CheckPointEntry entry;
-    int checkpointHeight = Checkpoints::LastCheckpointAt(time, entry);
-    if (checkpointHeight >= 0)
+    if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= time)
     {
-        partialChain.SetHeightOffset(checkpointHeight);
-        headerTipSignal.connect(notifyCallback);
-        LogPrintf("Partial headers started with height=%d\n", checkpointHeight);
+        LogPrintf("Partial sync already in progress when start requested. Sync continues.\n");
+        return;
     }
-    else
-        LogPrintf("Partial headers not started, no suitable starting height found.\n");
+
+    if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() > time)
+    {
+        LogPrintf("Partial sync in progress but starting point is to fresh for requested start. Sync restarted.\n");
+        pindexBestPartial = nullptr;
+        partialChain.SetTip(nullptr);
+        partialChain.SetHeightOffset(0);
+    }
+
+    // Search checkpoint with at least a 576 block height difference to the checkpoint that is the youngest before
+    // the desired starting time. This way when we reach the latter checkpoint there will be enough data to do context checks
+    // the largest windows for context checking is the DELTA algorithm, which needs 576 blocks.
+    CheckPointEntry entry;
+    int youngestHeight = Checkpoints::LastCheckpointAt(time, entry);
+    int olderHeight = youngestHeight;
+    while (olderHeight > 0 && youngestHeight - olderHeight <= 576)
+    {
+        olderHeight = Checkpoints::LastCheckpointAt(entry.nTime - 1, entry);
+    }
+    // if no suitable checkpoint was found use Genesis
+    if (olderHeight < 0)
+    {
+        olderHeight = Checkpoints::LastCheckpointAt(Params().GenesisBlock().GetBlockTime(), entry);
+        assert(olderHeight == 0);
+    }
+
+    // inititalize partial sync
+    partialChain.SetHeightOffset(olderHeight);
+    CBlockIndex* index = InsertBlockIndex(entry.hash);
+    index->nHeight = olderHeight;
+    index->nStatus |= BLOCK_PARTIAL_TREE;
+    partialChain.SetTip(index);
+    pindexBestPartial = index;
+
+    LogPrintf("Partial headers started from built-in checkpoint with height=%d\n", olderHeight);
+
+    // from now IsPartialSyncActive() == true, as the offset is set and the partial chain has at least one netry
 }
 
 class CMainCleanup

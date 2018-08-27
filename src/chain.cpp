@@ -354,3 +354,33 @@ void CPartialChain::SetTip(CBlockIndex *pindex)
         pindex = pindex->pprev;
     }
 }
+
+CBlockLocator CPartialChain::GetLocatorPoW2(const CBlockIndex *pindex) const
+{
+    int nStep = 1;
+    std::vector<uint256> vHave;
+    vHave.reserve(32);
+
+    if (!pindex)
+        pindex = Tip();
+    while (pindex) {
+        vHave.push_back(pindex->GetBlockHashPoW2());
+        // Stop when we have added the genesis block.
+        if (pindex->nHeight == nHeightOffset)
+            break;
+        // Exponentially larger steps back, plus the genesis block.
+        int nHeight = std::max(pindex->nHeight - nStep, nHeightOffset);
+        if (Contains(pindex)) {
+            // Use O(1) CChain index if possible.
+            pindex = (*this)[nHeight];
+        } else {
+            // Otherwise, use O(log n) skiplist.
+            pindex = pindex->GetAncestor(nHeight);
+        }
+        if (vHave.size() > 10)
+            nStep *= 2;
+    }
+
+    return CBlockLocator(vHave);
+}
+
