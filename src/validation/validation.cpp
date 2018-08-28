@@ -3164,9 +3164,19 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             pindex->BuildSkip();
         if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex))) {
             pindexBestHeader = pindex;
-            if (pindexBestHeader->nHeight >= partialChain.HeightOffset() && partialChain.HeightOffset() > 0)
-                partialChain.SetTip(pindexBestHeader);
         }
+        if ((pindex->nStatus & BLOCK_PARTIAL_TREE)
+                && (!pindexBestPartial || pindex->nHeight >= pindexBestPartial->nHeight))
+            pindexBestPartial = pindex;
+    }
+
+    if (pindexBestPartial)
+    {
+        CBlockIndex* pindex = pindexBestPartial;
+        while (pindex->pprev && pindex->pprev->nStatus & BLOCK_PARTIAL_TREE)
+            pindex = pindex->pprev;
+        partialChain.SetHeightOffset(pindex->nHeight);
+        partialChain.SetTip(pindexBestPartial);
     }
 
     // Load block file info
@@ -4003,9 +4013,11 @@ void StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
     partialChain.SetTip(index);
     pindexBestPartial = index;
 
+    setDirtyBlockIndex.insert(index);
+
     LogPrintf("Partial headers started from built-in checkpoint with height=%d\n", olderHeight);
 
-    // from now IsPartialSyncActive() == true, as the offset is set and the partial chain has at least one netry
+    // from now IsPartialSyncActive() == true, as the offset is set and the partial chain has at least one entry
 }
 
 class CMainCleanup

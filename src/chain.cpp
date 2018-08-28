@@ -253,11 +253,14 @@ CBlockIndex* CBlockIndex::GetAncestor(int height)
             // Only follow pskip if pprev->pskip isn't better than pskip->pprev.
             pindexWalk = pindexWalk->pskip;
             heightWalk = heightSkip;
-        } else {
-            assert(pindexWalk->pprev);
+        }
+        else if (pindexWalk->pprev)
+        {
             pindexWalk = pindexWalk->pprev;
             heightWalk--;
         }
+        else
+            return nullptr;
     }
     return pindexWalk;
 }
