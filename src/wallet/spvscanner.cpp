@@ -16,7 +16,7 @@
 const int MAX_PENDING_REQUESTS = 512;
 
 // Duration (seconds) of longest fork that can be handled
-const int64_t MAX_FORK_DURATION = 7 * 24 * 3600;
+const int64_t MAX_FORK_DURATION = 2 * 24 * 3600;
 
 // Persisting wallet db updates are limited as they are very expensive
 // and updating at every processed block would give very poor performance.

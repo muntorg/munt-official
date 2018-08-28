@@ -25,13 +25,23 @@ rpcpass='<your-rpc-password>'
 
 access = ServiceProxy("http://"+rpcuser+":"+rpcpass+"@127.0.0.1:9232")
 
-
-chainheight = access.getblockcount()
-
-h = 0
-while  h < chainheight - 2 * 576:
-    hash = access.getblockhash(h)
+def print_checkpoint(height):
+    hash = access.getblockhash(height)
     block = access.getblock(hash)
     print('    {{ {height:6}, {{ uint256S(\"0x{hash}\"), {time} }} }},'.format(height=block['height'], hash=block['hash'], time=block['time'], bits=block['bits']))
 
-    h = h + 25000
+# checkpoints are generated at regular intervals, in addition 2 extra checkpoints are generated
+# close to the tip this is a performance optimization which is most notable right after a release with new checkpoints
+# the extra before last checkpoint helps initial partial sync, which needs 2 checkpoints for secure initialization
+chain_height = access.getblockcount()
+last_checkpoint = chain_height - 2 * 576
+extra_before_last = last_checkpoint - 2 * 576
+checkpoint_period = 25000
+
+h = 0
+while  h < extra_before_last:
+    print_checkpoint(h)
+    h = h + checkpoint_period
+
+print_checkpoint(extra_before_last)
+print_checkpoint(last_checkpoint)
