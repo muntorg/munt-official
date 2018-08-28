@@ -681,18 +681,29 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
     return false;
 }
 
-void NotifyHeaderProgress(CConnman& connman)
+void NotifyHeaderProgress(CConnman& connman, bool partialProgressed)
 {
     int probableHeight = nMaxStartingHeight;
     probableHeight = std::max(probableHeight, Checkpoints::LastCheckPointHeight());
     probableHeight = std::max(probableHeight, connman.GetBestHeight());
-
-    int currentCount = vReverseHeaders.size();
+    int currentCount = 0;
     int headerTipHeight = 0;
     int64_t headerTipTime = 0;
+
+    if (partialProgressed)
     {
         LOCK(cs_main);
-        if (pindexBestHeader != NULL) {
+        if (pindexBestPartial) {
+            currentCount = pindexBestPartial->nHeight;
+            headerTipHeight = pindexBestPartial->nHeight;
+            headerTipTime = pindexBestPartial->GetBlockTime();
+        }
+    }
+    else // headers not due to partial sync progress, ie. headers have changed normal progress
+    {
+        currentCount = vReverseHeaders.size();
+        LOCK(cs_main);
+        if (pindexBestHeader) {
             currentCount += pindexBestHeader->nHeight;
             headerTipHeight = pindexBestHeader->nHeight;
             headerTipTime = pindexBestHeader->GetBlockTime();
@@ -2753,7 +2764,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return false;
         }
 
-        NotifyHeaderProgress(connman);
+        NotifyHeaderProgress(connman, !chainActive.FindFork(mapBlockIndex.find(headers[0].hashPrevBlock)->second));
 
         {
         LOCK(cs_main);
@@ -2990,7 +3001,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
 
         if (nRHeadersConnected > 0)
-            NotifyHeaderProgress(connman);
+            NotifyHeaderProgress(connman, false);
 
         // request more reverse headers if there is still a gap between the chain tip and the reverse headers
         if (headerGap > 0) {
