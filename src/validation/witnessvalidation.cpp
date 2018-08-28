@@ -900,8 +900,6 @@ bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_p
 
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
-    DO_BENCHMARK("WIT: expectedWitnessBlockPeriod", BCLog::BENCH|BCLog::WITNESS);
-
     if (nWeight == 0 || networkTotalWeight == 0)
         return 0;
 
@@ -1193,8 +1191,6 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
 // As we need to call this from within the witness algorithm from before nReducedTotalWeight is even known. 
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight)
 {
-    DO_BENCHMARK("WIT: witnessHasExpired", BCLog::BENCH|BCLog::WITNESS);
-
     uint64_t nExpectedWitnessPeriod = expectedWitnessBlockPeriod(nWitnessWeight, nNetworkTotalWitnessWeight);
     return ( nWitnessAge > gMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );
 }
