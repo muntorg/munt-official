@@ -117,8 +117,6 @@ int GetPhase2ActivationHeight()
 
 bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    DO_BENCHMARK("WIT: IsPow2Phase2Active", BCLog::BENCH|BCLog::WITNESS);
-
     if (!pIndex)
         return false;
 
@@ -288,8 +286,6 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
 
 bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    DO_BENCHMARK("WIT: IsPow2WitnessingActive", BCLog::BENCH|BCLog::WITNESS);
-
     static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
     if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
         return false;
@@ -300,8 +296,6 @@ bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chain
 
 int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
 {
-    DO_BENCHMARK("WIT: GetPoW2Phase", BCLog::BENCH|BCLog::WITNESS);
-
     int nRet = 1;
     if (IsPow2Phase2Active(pIndex, chainparams, chain, viewOverride))
     {
@@ -320,8 +314,6 @@ int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CCh
 //NB! nAmount is already in internal monetary format (8 zeros) form when entering this function - i.e. the nAmount for 22 NLG is '2200000000' and not '22'
 int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 {
-    DO_BENCHMARK("WIT: GetPoW2RawWeightForAmount", BCLog::BENCH|BCLog::WITNESS);
-
     // We rebase the entire formula to to match internal monetary format (8 zeros), so that we can work with fixed point precision.
     // We rebase back to 10 at the end for the final weight.
     static const arith_uint256 base = arith_uint256(COIN);
@@ -338,8 +330,6 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 
 int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut)
 {
-    DO_BENCHMARK("WIT: GetPoW2LockLengthInBlocksFromOutput", BCLog::BENCH|BCLog::WITNESS);
-
     if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )
     {
         CTxOutPoW2Witness witnessDetails;
@@ -362,8 +352,6 @@ uint64_t GetPoW2RemainingLockLengthInBlocks(uint64_t lockUntilBlock, uint64_t ti
 
 int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride)
 {
-    DO_BENCHMARK("WIT: GetPoW2Phase3ActivationTime", BCLog::BENCH|BCLog::WITNESS);
-
     if (phase3ActivationHash == uint256())
         phase3ActivationHash = ppow2witdbview->GetPhase3ActivationHash();
 
