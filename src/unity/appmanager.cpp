@@ -350,7 +350,6 @@ int64_t GuldenAppManager::getRecoveryBirthTime() const
 
 void GuldenAppManager::setRecoveryBirthTime(int64_t birthTime)
 {
-    // fixme: (SPV) put checksum on birthNumber to prevent using wrong start time due to typos
     if (birthTime >= Params().GenesisBlock().nTime) {
         recoveryBirthNumber = timeToBirthNumber(birthTime);
     }
