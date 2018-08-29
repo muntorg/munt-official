@@ -296,7 +296,19 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(unitMonthsAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Months); } );
 }
 
-
+void WitnessDialog::clearLabels()
+{
+    ui->labelWeightValue->setText(tr("n/a"));
+    ui->labelNetworkWeightValue->setText(tr("n/a"));
+    ui->labelLockedFromValue->setText(tr("n/a"));
+    ui->labelLockedUntilValue->setText(tr("n/a"));
+    ui->labelLastEarningsDateValue->setText(tr("n/a"));
+    ui->labelWitnessEarningsValue->setText(tr("n/a"));
+    ui->labelLockDurationValue->setText(tr("n/a"));
+    ui->labelExpectedEarningsDurationValue->setText(tr("n/a"));
+    ui->labelEstimatedEarningsDurationValue->setText(tr("n/a"));
+    ui->labelLockTimeRemainingValue->setText(tr("n/a"));
+}
 WitnessDialog::~WitnessDialog()
 {
     LogPrint(BCLog::QT, "WitnessDialog::~WitnessDialog\n");
@@ -832,6 +844,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                             stateFundWitnessButton = false;
                             if (bAnyFinished)
                             {
+                                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
                                 stateRenewWitnessButton = false;
                                 stateEmptyWitnessButton = true;
                                 stateEmptyWitnessButton2 = false;
@@ -898,6 +911,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                         {
                             if (bAnyFinished)
                             {
+                                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
                                 stateRenewWitnessButton = false;
                                 stateEmptyWitnessButton = false;
                                 stateEmptyWitnessButton2 = false;
