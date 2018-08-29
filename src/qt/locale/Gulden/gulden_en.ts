@@ -1455,7 +1455,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location filename="../../amountfield.cpp" line="+310"/>
         <source>Max</source>
-        <translation type="unfinished"></translation>
+        <translation>Max</translation>
     </message>
     <message>
         <location line="+9"/>
