@@ -296,6 +296,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(unitMonthsAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Months); } );
 }
 
+
 WitnessDialog::~WitnessDialog()
 {
     LogPrint(BCLog::QT, "WitnessDialog::~WitnessDialog\n");
@@ -826,7 +827,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                     else
                     {
                         // We have to check for immature balance as well - otherwise accounts that have just witnessed get incorrectly marked as "empty".
-                        if ((pactiveWallet->GetBalance(forAccount, true, true) > 0) || (pactiveWallet->GetImmatureBalance(forAccount, true, true) > 0) || (pactiveWallet->GetUnconfirmedBalance(forAccount, true, true) > 0))
+                        if ((pactiveWallet->GetBalance(forAccount, true, true, true) > 0) || (pactiveWallet->GetImmatureBalance(forAccount, true, true) > 0) || (pactiveWallet->GetUnconfirmedBalance(forAccount, true, true) > 0))
                         {
                             stateFundWitnessButton = false;
                             if (bAnyFinished)
@@ -958,7 +959,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         //If we accidentally transfer non-witness funds into a witness account, show empty button to allow emptying it.
         if (setIndex == WitnessDialogStates::EMPTY)
         {
-            if (pactiveWallet->GetBalance(forAccount, true, true) > 0)
+            if (pactiveWallet->GetBalance(forAccount, true, true, true) > 0)
             {
                 stateEmptyWitnessButton = true;
             }

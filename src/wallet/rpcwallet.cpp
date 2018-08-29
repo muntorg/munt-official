@@ -955,7 +955,7 @@ UniValue movecmd(const JSONRPCRequest& request)
     CAmount nBalance = 0;
     if (fromAccount->IsPoW2Witness())
     {
-        nBalance = pwallet->GetBalance(fromAccount, false, true);
+        nBalance = pwallet->GetBalance(fromAccount, true, false, true);
     }
     else
     {

@@ -725,7 +725,7 @@ public:
     void ReacceptWalletTransactions();
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
     void GetBalances(WalletBalances& balances, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
-    CAmount GetBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
+    CAmount GetBalance(const CAccount* forAccount = nullptr, bool useCache=true, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetLockedBalance(const CAccount* forAccount = nullptr, bool includeChildren=false);
     CAmount GetUnconfirmedBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetImmatureBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
