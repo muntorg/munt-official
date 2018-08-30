@@ -454,7 +454,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     //fixme: (Post-2.1) - give user a choice here.
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true);
+    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), true, false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true);
     if (recipient.amount >= balanceToCheck)
     {
         if (showWarningDialogs)
@@ -483,6 +483,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         // Add a small buffer to give us time to enter the blockchain
         if (nLockPeriodInBlocks == 30*576)
             nLockPeriodInBlocks += 50;
+
         recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
 
         CReserveKeyOrScript keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
@@ -1011,7 +1012,7 @@ void GuldenSendCoinsEntry::nocksTimeout()
 void GuldenSendCoinsEntry::sendAllClicked()
 {
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
+    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), true, false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
     payInfoUpdateRequired();
     //Update witness value for amount.
     witnessSliderValueChanged(ui->pow2LockFundsSlider->value());

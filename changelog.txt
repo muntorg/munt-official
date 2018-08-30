@@ -2,6 +2,8 @@
 
 UI - Improve visual look of the "all" button in the send coins dialog.
 UI - Fix a problem with increasing memory consumption over time that was affecting some users.
+UI - Fix an issue where emptying an "unlocked" witness account first required restarting the wallet.
+UI - Fix an issue where an "unlocked" witness account would show incorrect statistical information.
 CORE - Reduce memory footprint and improve performance of witness validation.
 
 

@@ -4,8 +4,8 @@
     <extra-po-header-language>pl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-08-15 21:46+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-08-15 21:46+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-08-29 15:43+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-08-29 15:43+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -246,6 +246,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Send</source>
         <translation>Wyślij</translation>
+    </message>
+    <message>
+        <source>This feature is not yet available, please try again after block 797000.</source>
+        <translation>Ta funkcja nie jest jeszcze dostępna. Spróbuj ponownie po bloku 797000.</translation>
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
@@ -1709,6 +1713,10 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Skopiuj ID transakcji</translation>
     </message>
     <message>
+        <source>Generated</source>
+        <translation>Wygenerowano</translation>
+    </message>
+    <message>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
@@ -2096,6 +2104,10 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Otwórz do %1</translation>
     </message>
     <message>
+        <source>Generated</source>
+        <translation>Wygenerowano</translation>
+    </message>
+    <message>
         <source>watch-only</source>
         <translation>tylko-obserwowany</translation>
     </message>
@@ -2294,6 +2306,10 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Extend locked funds</source>
         <translation>Przedłużać zablokowane fundusze</translation>
+    </message>
+    <message>
+        <source>Generation reward</source>
+        <translation>Wygenerowana nagroda</translation>
     </message>
     <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
@@ -3565,6 +3581,10 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
 <context>
     <name>GuldenAmountField</name>
     <message>
+        <source>Max</source>
+        <translation>Maks.</translation>
+    </message>
+    <message>
         <source>Gulden</source>
         <translation>Gulden</translation>
     </message>
@@ -3672,6 +3692,14 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Total:</source>
         <translation>Ogółem:</translation>
+    </message>
+    <message>
+        <source>Generated balance in watch-only addresses that has not yet matured</source>
+        <translation>Wygenerowano saldo do wglądu w adresach które jeszcze nie zostały dojrzałe</translation>
+    </message>
+    <message>
+        <source>Generated balance that has not yet matured</source>
+        <translation>Wygenerowane saldo które jeszcze nie zostało dojrzałe</translation>
     </message>
     <message>
         <source>Mined balance that has not yet matured</source>

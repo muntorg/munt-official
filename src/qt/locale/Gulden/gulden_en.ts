@@ -877,7 +877,7 @@ The account will continue to be monitored and will be restored should it receive
         <location line="+33"/>
         <location line="+64"/>
         <source>This feature is not yet available, please try again after block 797000.</source>
-        <translation type="unfinished"></translation>
+        <translation>This feature is not yet available, please try again after block 797000.</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -1455,7 +1455,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location filename="../../amountfield.cpp" line="+310"/>
         <source>Max</source>
-        <translation type="unfinished"></translation>
+        <translation>Max</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -1471,7 +1471,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="+254"/>
+        <location line="+257"/>
         <location line="+66"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
@@ -1533,7 +1533,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-547"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-550"/>
         <source>Amount exceeds maximum for IBAN payment.</source>
         <translation>Amount exceeds maximum for IBAN payment.</translation>
     </message>
@@ -1553,7 +1553,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
     <message>
-        <location line="+255"/>
+        <location line="+258"/>
         <source>Are you sure you want to delete %1 from the address book?</source>
         <translation>Are you sure you want to delete %1 from the address book?</translation>
     </message>
@@ -2321,12 +2321,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <location line="-42"/>
         <source>Generated balance in watch-only addresses that has not yet matured</source>
-        <translation type="unfinished"></translation>
+        <translation>Generated balance in watch-only addresses that has not yet matured</translation>
     </message>
     <message>
         <location line="+58"/>
         <source>Generated balance that has not yet matured</source>
-        <translation type="unfinished"></translation>
+        <translation>Generated balance that has not yet matured</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -4143,7 +4143,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Open until %1</translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+278"/>
+        <source>Generated</source>
+        <translation>Generated</translation>
+    </message>
+    <message>
+        <location line="-118"/>
         <source>watch-only</source>
         <translation>watch-only</translation>
     </message>
@@ -4399,12 +4404,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Internal transfer to: %1</translation>
     </message>
     <message>
-        <location line="+13"/>
-        <source>Generated</source>
-        <translation type="unfinished">Generated</translation>
-    </message>
-    <message>
-        <location line="+10"/>
+        <location line="+23"/>
         <source>Internal account movement</source>
         <translation>Internal account movement</translation>
     </message>
@@ -4418,7 +4418,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="-205"/>
         <location line="+108"/>
         <source>Generation reward</source>
-        <translation type="unfinished"></translation>
+        <translation>Generation reward</translation>
     </message>
     <message>
         <location line="+416"/>
@@ -4509,7 +4509,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Copy transaction ID</translation>
     </message>
     <message>
-        <location line="+231"/>
+        <location line="-67"/>
+        <source>Generated</source>
+        <translation>Generated</translation>
+    </message>
+    <message>
+        <location line="+298"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
@@ -4574,12 +4579,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>All transaction types</translation>
     </message>
     <message>
-        <location line="+7"/>
-        <source>Generated</source>
-        <translation type="unfinished">Generated</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="+9"/>
         <source>Other</source>
         <translation>Other</translation>
     </message>
@@ -4847,7 +4847,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="+577"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="+590"/>
         <source>%1 months</source>
         <translation>%1 months</translation>
     </message>
@@ -4877,7 +4877,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="+49"/>
         <location line="+23"/>
         <location line="+23"/>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-528"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-541"/>
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
@@ -4887,7 +4887,17 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
-        <location line="+466"/>
+        <location line="+151"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+1"/>
+        <location line="+319"/>
         <source>n/a</source>
         <translation>n/a</translation>
     </message>
@@ -5006,7 +5016,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>Renew account</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-428"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-441"/>
         <source>Earnings to date</source>
         <translation>Earnings to date</translation>
     </message>
@@ -5041,7 +5051,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
         <translation>&amp;Months</translation>
     </message>
     <message>
-        <location line="+392"/>
+        <location line="+405"/>
         <source>%1 blocks</source>
         <translation>%1 blocks</translation>
     </message>

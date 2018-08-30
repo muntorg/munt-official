@@ -114,6 +114,7 @@ public Q_SLOTS:
 protected:
 
 private:
+    void clearLabels();
     void doUpdate(bool forceUpdate=false);
     Ui::WitnessDialog *ui;
     const QStyle *platformStyle;

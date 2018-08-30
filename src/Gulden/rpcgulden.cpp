@@ -770,7 +770,7 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
         CAmount balance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
         if (account->IsPoW2Witness() && account->IsFixedKeyPool())
         {
-            balance = pwallet->GetBalance(account, false, true);
+            balance = pwallet->GetBalance(account, true, false, true);
         }
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
         {

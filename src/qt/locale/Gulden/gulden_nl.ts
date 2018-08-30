@@ -4,8 +4,8 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-08-15 21:39+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-08-15 21:39+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-08-29 15:43+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-08-29 15:43+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -119,7 +119,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;flexibele priodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
+        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;Flexibele periodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
     </message>
     <message>
         <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
@@ -170,7 +170,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation>Het is aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
+        <translation>Het wordt aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
     </message>
     <message>
         <source>Save to file</source>
@@ -246,6 +246,10 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>Send</source>
         <translation>Verzenden</translation>
+    </message>
+    <message>
+        <source>This feature is not yet available, please try again after block 797000.</source>
+        <translation>Deze functie is nog niet beschikbaar, probeer het opnieuw na blok 797000.</translation>
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
@@ -377,7 +381,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
-        <translation>Lijst met gebruikt verzendadressen en labels weergeven.</translation>
+        <translation>Lijst met gebruikte verzendadressen en labels weergeven.</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
@@ -1131,7 +1135,7 @@ Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>Copy request to clipboard</source>
-        <translation>Kopieer aanvraag naar clipboard</translation>
+        <translation>Kopieer aanvraag naar klemboard</translation>
     </message>
     <message>
         <source>Request Gulden</source>
@@ -1354,7 +1358,7 @@ Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>%1 to %2</source>
-        <translation>%1 tot %2</translation>
+        <translation>%1 naar %2</translation>
     </message>
     <message>
         <source>Are you sure you want to send?</source>
@@ -1366,7 +1370,7 @@ Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>Total Amount</source>
-        <translation>Totaal bedrag</translation>
+        <translation>Totaalbedrag</translation>
     </message>
     <message>
         <source>This transaction signals replaceability (optin-RBF).</source>
@@ -1387,7 +1391,8 @@ Witness-gewicht: %5</translation>
     <message>
         <source>The amount exceeds your balance.
 If you  have recently received funds you may need to wait for them to clear before spending them.</source>
-        <translation>Als u recentelijk guldens hebt ontvangen, moet u even wachten voor u deze kunt uitgeven</translation>
+        <translation>Het bedrag overschrijdt uw saldo. 
+Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt uitgeven.</translation>
     </message>
     <message>
         <source>The total exceeds your balance when the %1 transaction fee is included.</source>
@@ -1586,15 +1591,15 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation>Adressen aan het versturen</translation>
+        <translation>Verzendadressen</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation>Adressen ontvangen</translation>
+        <translation>Ontvangstadressen</translation>
     </message>
     <message>
         <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Dit zijn uw Guldenadressen om betalingen te versturen. Controleer altijd het bedrag en adres voordat u de Guldens verstuurd.</translation>
+        <translation>Dit zijn uw Guldenadressen om betalingen naar te versturen. Controleer altijd het bedrag en adres voordat u de Guldens verstuurd.</translation>
     </message>
     <message>
         <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
@@ -1703,6 +1708,10 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Kopieer transactie-ID</translation>
     </message>
     <message>
+        <source>Generated</source>
+        <translation>Gegenereerd</translation>
+    </message>
+    <message>
         <source>Type</source>
         <translation>Type</translation>
     </message>
@@ -1752,7 +1761,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Select range</source>
-        <translation>Selecteer range</translation>
+        <translation>Selecteer periode</translation>
     </message>
     <message>
         <source>All transaction types</source>
@@ -1820,7 +1829,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>to</source>
-        <translation>naar</translation>
+        <translation>tot</translation>
     </message>
 </context>
 <context>
@@ -2090,6 +2099,10 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Open tot %1</translation>
     </message>
     <message>
+        <source>Generated</source>
+        <translation>Gegenereerd</translation>
+    </message>
+    <message>
         <source>watch-only</source>
         <translation>alleen-bekijkbaar</translation>
     </message>
@@ -2289,6 +2302,10 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Breid geblokkeerde fondsen uit</translation>
     </message>
     <message>
+        <source>Generation reward</source>
+        <translation>Genereer-beloning</translation>
+    </message>
+    <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
         <translation>Transactiestatus. Houd de muiscursor boven dit veld om het aantal bevestigingen te tonen.</translation>
     </message>
@@ -2310,7 +2327,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Amount added to balance.</source>
-        <translation>toegevoegd aan totaal bedrag</translation>
+        <translation>Toegevoegd aan totaalbedrag</translation>
     </message>
     <message>
         <source>Amount removed from balance.</source>
@@ -2370,7 +2387,7 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
     <message>
         <source>Enter a private key</source>
-        <translation>voer een private sleutel in</translation>
+        <translation>Voer een private key in</translation>
     </message>
     <message>
         <source>Enter a Gulden URL</source>
@@ -3548,6 +3565,10 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
 <context>
     <name>GuldenAmountField</name>
     <message>
+        <source>Max</source>
+        <translation>Max</translation>
+    </message>
+    <message>
         <source>Gulden</source>
         <translation>Gulden</translation>
     </message>
@@ -3655,6 +3676,14 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Total:</source>
         <translation>Totaal:</translation>
+    </message>
+    <message>
+        <source>Generated balance in watch-only addresses that has not yet matured</source>
+        <translation>Gegenereerd saldo in alleen-bekijkbare adressen dat nog niet tot wasdom is gekomen</translation>
+    </message>
+    <message>
+        <source>Generated balance that has not yet matured</source>
+        <translation>Gegenereerd saldo dat nog niet tot wasdom is gekomen</translation>
     </message>
     <message>
         <source>Mined balance that has not yet matured</source>

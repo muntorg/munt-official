@@ -348,7 +348,7 @@ CAmount CWalletTx::GetChange() const
 
 extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
 
-CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWitnesses, bool includeChildren) const
+CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool includePoW2LockedWitnesses, bool includeChildren) const
 {
     CAmount nTotal = 0;
     {
@@ -361,7 +361,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool includePoW2LockedWi
             {
                 if (pcoin->IsTrusted() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
                 {
-                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetAvailableCredit(true, forAccount);
+                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(useCache, forAccount) : pcoin->GetAvailableCredit(useCache, forAccount);
                 }
             }
 
@@ -392,8 +392,8 @@ CAmount CWallet::GetLockedBalance(const CAccount* forAccount, bool includeChildr
 
 void CWallet::GetBalances(WalletBalances& balances, const CAccount* forAccount, bool includeChildren) const
 {
-    balances.availableIncludingLocked = GetBalance(forAccount, true, includeChildren);
-    balances.availableExcludingLocked = GetBalance(forAccount, false, includeChildren);
+    balances.availableIncludingLocked = GetBalance(forAccount, true, true, includeChildren);
+    balances.availableExcludingLocked = GetBalance(forAccount, true, false, includeChildren);
     balances.availableLocked = balances.availableIncludingLocked - balances.availableExcludingLocked;
     balances.unconfirmedIncludingLocked = GetUnconfirmedBalance(forAccount, true, includeChildren);
     balances.unconfirmedExcludingLocked = GetUnconfirmedBalance(forAccount, false, includeChildren);

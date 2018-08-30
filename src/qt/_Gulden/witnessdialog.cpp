@@ -296,6 +296,19 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(unitMonthsAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Months); } );
 }
 
+void WitnessDialog::clearLabels()
+{
+    ui->labelWeightValue->setText(tr("n/a"));
+    ui->labelNetworkWeightValue->setText(tr("n/a"));
+    ui->labelLockedFromValue->setText(tr("n/a"));
+    ui->labelLockedUntilValue->setText(tr("n/a"));
+    ui->labelLastEarningsDateValue->setText(tr("n/a"));
+    ui->labelWitnessEarningsValue->setText(tr("n/a"));
+    ui->labelLockDurationValue->setText(tr("n/a"));
+    ui->labelExpectedEarningsDurationValue->setText(tr("n/a"));
+    ui->labelEstimatedEarningsDurationValue->setText(tr("n/a"));
+    ui->labelLockTimeRemainingValue->setText(tr("n/a"));
+}
 WitnessDialog::~WitnessDialog()
 {
     LogPrint(BCLog::QT, "WitnessDialog::~WitnessDialog\n");
@@ -826,11 +839,12 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                     else
                     {
                         // We have to check for immature balance as well - otherwise accounts that have just witnessed get incorrectly marked as "empty".
-                        if ((pactiveWallet->GetBalance(forAccount, true, true) > 0) || (pactiveWallet->GetImmatureBalance(forAccount, true, true) > 0) || (pactiveWallet->GetUnconfirmedBalance(forAccount, true, true) > 0))
+                        if ((pactiveWallet->GetBalance(forAccount, true, true, true) > 0) || (pactiveWallet->GetImmatureBalance(forAccount, true, true) > 0) || (pactiveWallet->GetUnconfirmedBalance(forAccount, true, true) > 0))
                         {
                             stateFundWitnessButton = false;
                             if (bAnyFinished)
                             {
+                                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
                                 stateRenewWitnessButton = false;
                                 stateEmptyWitnessButton = true;
                                 stateEmptyWitnessButton2 = false;
@@ -897,6 +911,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                         {
                             if (bAnyFinished)
                             {
+                                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
                                 stateRenewWitnessButton = false;
                                 stateEmptyWitnessButton = false;
                                 stateEmptyWitnessButton2 = false;
@@ -958,7 +973,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         //If we accidentally transfer non-witness funds into a witness account, show empty button to allow emptying it.
         if (setIndex == WitnessDialogStates::EMPTY)
         {
-            if (pactiveWallet->GetBalance(forAccount, true, true) > 0)
+            if (pactiveWallet->GetBalance(forAccount, true, true, true) > 0)
             {
                 stateEmptyWitnessButton = true;
             }

@@ -98,7 +98,7 @@ static UniValue getinfo(const JSONRPCRequest& request)
 #ifdef ENABLE_WALLET
     if (pwallet) {
         obj.push_back(Pair("walletversion", pwallet->GetVersion()));
-        obj.push_back(Pair("balance",       ValueFromAmount(pwallet->GetBalance(nullptr, false, true))));
+        obj.push_back(Pair("balance",       ValueFromAmount(pwallet->GetBalance(nullptr, true, false, true))));
     }
 #endif
     obj.push_back(Pair("blocks",        (int)chainActive.Height()));

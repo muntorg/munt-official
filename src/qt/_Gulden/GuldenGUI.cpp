@@ -327,7 +327,7 @@ void GUI::requestEmptyWitness()
     LogPrint(BCLog::QT, "GUI::requestEmptyWitness\n");
 
     CAccount* fromWitnessAccount = pactiveWallet->getActiveAccount();
-    CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, true);
+    CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, false, true);
     if (availableAmount > 0)
     {
         //fixme: (2.1) - Remove this when ready
