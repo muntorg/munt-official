@@ -14,13 +14,19 @@
 
 namespace Checkpoints {
 
+    /**
+     * Last checkpoint present in the BlockIndex which connects to the full tree
+     * So checkpoints in the partial tree which don't connect are ignored
+    */
     CBlockIndex* GetLastCheckpointIndex()
     {
         for (const auto& i: boost::adaptors::reverse(Params().Checkpoints()))
         {
             BlockMap::const_iterator t = mapBlockIndex.find(i.second.hash);
-            if (t != mapBlockIndex.end())
+            if (t != mapBlockIndex.end() && t->second->IsValid(BLOCK_VALID_TREE))
+            {
                 return t->second;
+            }
         }
         return nullptr;
     }
