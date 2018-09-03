@@ -86,6 +86,7 @@ namespace {
     /** Number of nodes with fRHeaderSyncStarted. */
     int nRHeaderSyncStarted = 0;
 
+    /** Number of nodes with fPartialSyncStarted. */
     int nPartialSyncStarted = 0;
 
     /**
@@ -211,6 +212,8 @@ struct CNodeState {
     bool fPartialSyncStarted;
     //! When to potentially disconnect peer for stalling headers download
     int64_t nHeadersSyncTimeout;
+    //! When to potentially disconnect peer for stalling partial headers download
+    int64_t nPartialHeadersSyncTimeout;
     //! Since when we're stalling block download progress (in microseconds), or 0.
     int64_t nStallingSince;
     std::list<QueuedBlock> vBlocksInFlight;
@@ -253,6 +256,7 @@ struct CNodeState {
         fRHeadersSyncStarted = false;
         fPartialSyncStarted = false;
         nHeadersSyncTimeout = 0;
+        nPartialHeadersSyncTimeout = 0;
         nStallingSince = 0;
         nDownloadingSince = 0;
         nBlocksInFlight = 0;
@@ -3535,22 +3539,22 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         if (pindexBestHeader == NULL)
             pindexBestHeader = chainActive.Tip();
         bool fFetch = state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot); // Download if this is a nice peer, or we have no nice peers and this one might do.
-        if (!state.fPartialSyncStarted && !state.fSyncStarted && !state.fRHeadersSyncStarted && !pto->fClient && !fImporting && !fReindex) {
 
+        // Partial header sync
+        if (fFetch && !state.fPartialSyncStarted && nPartialSyncStarted == 0 && IsPartialSyncActive() &&  !pto->fClient && !fImporting && !fReindex) {
+            state.fPartialSyncStarted = true;
+            nPartialSyncStarted++;
+            int64_t startTime = partialChain[partialChain.Height()]->GetBlockTime();
+            state.nPartialHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE
+                    + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - startTime)/(consensusParams.nPowTargetSpacing);
+            connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, partialChain.GetLocatorPoW2(pindexBestPartial), uint256()));
+        }
+
+        // Full header sync
+        if ((!IsPartialSyncActive() || IsPartialNearPresent()) && !state.fSyncStarted && !state.fRHeadersSyncStarted && !pto->fClient && !fImporting && !fReindex) {
             int lastCheckPointHeight = Checkpoints::LastCheckPointHeight();
-
-            // Partial header sync
-            if (fFetch && IsPartialSyncActive())
-            {
-                state.fPartialSyncStarted = true;
-                int64_t startTime = partialChain[partialChain.Height()]->GetBlockTime();
-                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE
-                        + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - startTime)/(consensusParams.nPowTargetSpacing);
-                nSyncStarted++;
-                connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, partialChain.GetLocatorPoW2(pindexBestPartial), uint256()));
-            }
             // Reverse header sync if possible
-            else if (fReverseHeaders && pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch
+            if (fReverseHeaders && pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch
                     && pto->nStartingHeight > lastCheckPointHeight
                     && pindexBestHeader->nHeight < lastCheckPointHeight - (int)vReverseHeaders.size()) {
 
@@ -3922,8 +3926,41 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 return true;
             }
         }
+
+        // Check partial header sync timeout only if timeout is active
+        if (state.fPartialSyncStarted && state.nPartialHeadersSyncTimeout < std::numeric_limits<int64_t>::max())
+        {
+            if (!IsPartialNearPresent())
+            {
+                // Trigger timeout, but not if there are no other nPreferredDownload peers
+                if (nNow > state.nPartialHeadersSyncTimeout && (nPreferredDownload - state.fPreferredDownload >= 1))
+                {
+                    if (!pto->fWhitelisted) {
+                        LogPrintf("Timeout downloading headers from peer=%d, disconnecting\n", pto->GetId());
+                        pto->fDisconnect = true;
+                        return true;
+                    } else {
+                        LogPrintf("Timeout downloading partial headers from whitelisted peer=%d, not disconnecting\n", pto->GetId());
+                        // Reset the headers sync state so that we have a
+                        // chance to try downloading from a different peer.
+                        state.fPartialSyncStarted = false;
+                        nPartialSyncStarted--;
+                        state.nPartialHeadersSyncTimeout = 0;
+                    }
+                }
+            }
+            else
+            {
+                // Timeout check occured while headers near present, perhaps there are no newer headers.
+                // Just disable the timeout. If the peer is stalled completely it will be disconnected at some point
+                // and even if not (ie. it is misbehaving) some ohter peer will send us a header announcement at
+                // some point which will then trigger us to request more headers from it.
+                state.nPartialHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
+            }
+        }
+
         // Check for headers sync timeouts
-        if ((state.fPartialSyncStarted || state.fSyncStarted || state.fRHeadersSyncStarted) && state.nHeadersSyncTimeout < std::numeric_limits<int64_t>::max()) {
+        if ((state.fSyncStarted || state.fRHeadersSyncStarted) && state.nHeadersSyncTimeout < std::numeric_limits<int64_t>::max()) {
             // Detect whether this is a stalling initial-headers-sync peer
             if (pindexBestHeader->GetBlockTime() <= GetAdjustedTime() - 24*60*60) {
                 if (nNow > state.nHeadersSyncTimeout && (nSyncStarted + nRHeaderSyncStarted) == 1 && (nPreferredDownload - state.fPreferredDownload >= 1)) {
