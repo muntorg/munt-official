@@ -2106,13 +2106,13 @@ static void UpdateChainWorkAndBlockIndexCandidates(CBlockIndex* pIndex, arith_ui
 
     // Update setBlockIndexCandidates with the new ordering, ordering depends on nChainWork so might have changed.
     if (findIter != setBlockIndexCandidates.end())
-    {
         setBlockIndexCandidates.erase(findIter);
-        pIndex->nChainWork = chainWork;
-        setBlockIndexCandidates.insert(pIndex);
-        if (!gbMinimalLogging)
-            LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
-    }
+
+    pIndex->nChainWork = chainWork;
+    setBlockIndexCandidates.insert(pIndex);
+
+    if (!gbMinimalLogging)
+        LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
 }
 
 static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBlockHeader& block)
@@ -2155,6 +2155,8 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
             setBlockIndexCandidates.insert(pindexNew);
         }
         pindexNew->RaiseValidity(BLOCK_VALID_TREE);
+        if (pindexBestHeader == nullptr || pindexBestHeader->nChainWork < pindexNew->nChainWork)
+            pindexBestHeader = pindexNew;
     }
     else
     {
