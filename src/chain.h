@@ -168,7 +168,11 @@ enum BlockStatus: uint32_t {
 
     BLOCK_OPT_WITNESS       =   128, //!< block data in blk*.data was received with a witness-enforcing client
 
-    BLOCK_PARTIAL_TREE      =  256, //! block is in partial tree
+    BLOCK_PARTIAL_TREE      =  256, //! block is in partial tree and all parents are also at least BLOCK_PARTIAL_TREE
+    BLOCK_PARTIAL_TRANSACTIONS = 512, //! Partial tree analog of BLOCK_VALID_TRANSACTION, except CBlockIndex::nChainTx is NOT set.
+
+    // All validation bits releated to partial tree validation
+    BLOCK_PARTIAL_MASK = BLOCK_PARTIAL_TREE | BLOCK_PARTIAL_TRANSACTIONS,
 };
 
 /** The block chain is a tree shaped structure starting with the

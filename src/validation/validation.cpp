@@ -2177,7 +2177,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     return pindexNew;
 }
 
-/** Mark a block as having its data received and checked (up to BLOCK_VALID_TRANSACTIONS). */
+/** Mark a block as having its data received and checked (up to BLOCK_VALID_TRANSACTIONS or BLOCK_PARTIAL_TRANSACTIONS). */
 static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& state, CBlockIndex *pindexNew, const CDiskBlockPos& pos, const Consensus::Params& consensusParams)
 {
     pindexNew->nTx = block.vtx.size();
@@ -2189,8 +2189,18 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
     if (IsSegSigEnabled(pindexNew->pprev)) {
         pindexNew->nStatus |= BLOCK_OPT_WITNESS;
     }
-    pindexNew->RaiseValidity(BLOCK_VALID_TRANSACTIONS);
-    setDirtyBlockIndex.insert(pindexNew);
+
+    if (pindexNew->nHeight == 0 || (pindexNew->pprev && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)))
+    {
+        pindexNew->RaiseValidity(BLOCK_VALID_TRANSACTIONS);
+        setDirtyBlockIndex.insert(pindexNew);
+    }
+    else if (pindexNew->pprev && pindexNew->pprev->nStatus & BLOCK_PARTIAL_TREE) {
+        pindexNew->nStatus |= BLOCK_PARTIAL_TRANSACTIONS;
+        setDirtyBlockIndex.insert(pindexNew);
+    }
+    else
+        return false;
 
     if (pindexNew->pprev == NULL || pindexNew->pprev->nChainTx) {
         // If pindexNew is the genesis block or all parents are BLOCK_VALID_TRANSACTIONS.
