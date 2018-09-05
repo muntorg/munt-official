@@ -2179,6 +2179,35 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     return pindexNew;
 }
 
+/** Promote a blockindex in the partial tree to the full tree, connecting it if needed */
+static bool PromoteBlockIndex(CBlockIndex* pindexNew)
+{
+    const auto miPrev = mapBlockIndex.find(pindexNew->GetBlockHeader().hashPrevBlock);
+    if (miPrev == mapBlockIndex.end() || !miPrev->second->IsValid(BLOCK_VALID_TREE))
+        return false;
+
+    pindexNew->pprev = miPrev->second;
+    pindexNew->nHeight = pindexNew->pprev->nHeight + 1;
+    pindexNew->BuildSkip();
+    pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
+
+    arith_uint256 chainWork = CalculateChainWork(pindexNew, Params());
+    UpdateChainWorkAndBlockIndexCandidates(pindexNew, chainWork, Params());
+    if (pindexNew->nChainTx && (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
+    {
+        if (!gbMinimalLogging)
+            LogPrintf("PromoteBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
+        setBlockIndexCandidates.insert(pindexNew);
+    }
+    pindexNew->RaiseValidity(BLOCK_VALID_TREE);
+    if (pindexBestHeader == nullptr || pindexBestHeader->nChainWork < pindexNew->nChainWork)
+        pindexBestHeader = pindexNew;
+
+    setDirtyBlockIndex.insert(pindexNew);
+
+    return true;
+}
+
 /** Mark a block as having its data received and checked (up to BLOCK_VALID_TRANSACTIONS or BLOCK_PARTIAL_TRANSACTIONS). */
 static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& state, CBlockIndex *pindexNew, const CDiskBlockPos& pos, const Consensus::Params& consensusParams)
 {
@@ -2696,6 +2725,8 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
     //fixme: (2.0.1) Double check handling of different header types.
 
+    bool promoteToFullTree = false;
+
     // Check for duplicate
     uint256 hash = block.GetHashPoW2();
     BlockMap::iterator miSelf = mapBlockIndex.find(hash);
@@ -2709,7 +2740,22 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
                 *ppindex = pindex;
             if (pindex->nStatus & BLOCK_FAILED_MASK)
                 return state.Invalid(error("%s: block %s is marked invalid", __func__, hash.ToString()), 0, "duplicate");
-            return true;
+            if (!pindex->IsValid(BLOCK_VALID_TREE) && pindex->nStatus & BLOCK_PARTIAL_TREE)
+            {
+                // check if the block can be promoted to the full tree
+                CBlockIndex* prev = nullptr;
+                if (pindex->pprev)
+                    prev = pindex->pprev;
+                else
+                {
+                    const auto prevIt = mapBlockIndex.find(block.hashPrevBlock);
+                    if (prevIt != mapBlockIndex.end())
+                        prev = prevIt->second;
+                    promoteToFullTree = prev && prev->IsValid(BLOCK_VALID_TREE);
+                }
+            }
+            else
+                return true;
         }
 
         if (!CheckBlockHeader(block, state, chainparams.GetConsensus(), !fAssumePOWGood))
@@ -2733,7 +2779,10 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
         if (doContextCheck && !ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
     }
-    if (pindex == NULL)
+
+    if (promoteToFullTree)
+        PromoteBlockIndex(pindex);
+    else if (pindex == nullptr)
         pindex = AddToBlockIndex(chainparams, block);
 
     if (ppindex)
