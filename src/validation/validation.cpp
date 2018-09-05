@@ -2180,13 +2180,23 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
 }
 
 /** Promote a blockindex in the partial tree to the full tree, connecting it if needed */
-static bool PromoteBlockIndex(CBlockIndex* pindexNew)
+static bool PromoteBlockIndex(CBlockIndex* pindexNew, const CBlockHeader& header, CBlockIndex* pindexPrev)
 {
-    const auto miPrev = mapBlockIndex.find(pindexNew->GetBlockHeader().hashPrevBlock);
-    if (miPrev == mapBlockIndex.end() || !miPrev->second->IsValid(BLOCK_VALID_TREE))
+    if (!pindexPrev->IsValid(BLOCK_VALID_TREE))
         return false;
 
-    pindexNew->pprev = miPrev->second;
+    // Partial block might not have been fully initalized if it was constructed from a checkpoint, do so here
+    pindexNew->nVersionPoW2Witness = header.nVersionPoW2Witness;
+    pindexNew->nTimePoW2Witness = header.nTimePoW2Witness;
+    pindexNew->hashMerkleRootPoW2Witness = header.hashMerkleRootPoW2Witness;
+    pindexNew->witnessHeaderPoW2Sig = header.witnessHeaderPoW2Sig;
+    pindexNew->nVersion       = header.nVersion;
+    pindexNew->hashMerkleRoot = header.hashMerkleRoot;
+    pindexNew->nTime          = header.nTime;
+    pindexNew->nBits          = header.nBits;
+    pindexNew->nNonce         = header.nNonce;
+
+    pindexNew->pprev = pindexPrev;
     pindexNew->nHeight = pindexNew->pprev->nHeight + 1;
     pindexNew->BuildSkip();
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
@@ -2725,6 +2735,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
     //fixme: (2.0.1) Double check handling of different header types.
 
+    CBlockIndex* pindexPrev = nullptr;
     bool promoteToFullTree = false;
 
     // Check for duplicate
@@ -2743,16 +2754,15 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
             if (!pindex->IsValid(BLOCK_VALID_TREE) && pindex->nStatus & BLOCK_PARTIAL_TREE)
             {
                 // check if the block can be promoted to the full tree
-                CBlockIndex* prev = nullptr;
                 if (pindex->pprev)
-                    prev = pindex->pprev;
+                    pindexPrev = pindex->pprev;
                 else
                 {
                     const auto prevIt = mapBlockIndex.find(block.hashPrevBlock);
                     if (prevIt != mapBlockIndex.end())
-                        prev = prevIt->second;
-                    promoteToFullTree = prev && prev->IsValid(BLOCK_VALID_TREE);
+                        pindexPrev = prevIt->second;
                 }
+                promoteToFullTree = pindexPrev && pindexPrev->IsValid(BLOCK_VALID_TREE);
             }
             else
                 return true;
@@ -2761,12 +2771,15 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
         if (!CheckBlockHeader(block, state, chainparams.GetConsensus(), !fAssumePOWGood))
             return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
 
-        // Get prev block index
-        CBlockIndex* pindexPrev = NULL;
-        BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
-        if (mi == mapBlockIndex.end())
-            return state.DoS(10, error("%s: prev block not found", __func__), 0, "prev-blk-not-found");
-        pindexPrev = (*mi).second;
+        // Get prev block index if we don't have it yet
+        if (!pindexPrev)
+        {
+            BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
+            if (mi == mapBlockIndex.end())
+                return state.DoS(10, error("%s: prev block not found", __func__), 0, "prev-blk-not-found");
+            pindexPrev = (*mi).second;
+        }
+
         if (pindexPrev->nStatus & BLOCK_FAILED_MASK)
             return state.DoS(100, error("%s: prev block invalid", __func__), REJECT_INVALID, "bad-prevblk");
 
@@ -2781,7 +2794,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
     }
 
     if (promoteToFullTree)
-        PromoteBlockIndex(pindex);
+        PromoteBlockIndex(pindex, block, pindexPrev);
     else if (pindex == nullptr)
         pindex = AddToBlockIndex(chainparams, block);
 
