@@ -2096,25 +2096,6 @@ static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainP
     return chainWork;
 }
 
-static void UpdateChainWorkAndBlockIndexCandidates(CBlockIndex* pIndex, arith_uint256& chainWork, const CChainParams& chainparams)
-{
-    LOCK(cs_main);
-
-    // Check if we are an existing item in the set or not
-    // NB! we must do this before we modify the index as with a custom comparator find might otherwise fail.
-    const auto& findIter = setBlockIndexCandidates.find(pIndex);
-
-    // Update setBlockIndexCandidates with the new ordering, ordering depends on nChainWork so might have changed.
-    if (findIter != setBlockIndexCandidates.end())
-        setBlockIndexCandidates.erase(findIter);
-
-    pIndex->nChainWork = chainWork;
-    setBlockIndexCandidates.insert(pIndex);
-
-    if (!gbMinimalLogging)
-        LogPrintf("SetChainWorkForIndex: New index candidate: [%s] [%d]\n", pIndex->GetBlockHashPoW2().ToString(), pIndex->nHeight);
-}
-
 static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBlockHeader& block)
 {
     // Check for duplicate
@@ -2143,12 +2124,11 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     }
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
 
-    arith_uint256 chainWork = CalculateChainWork(pindexNew, chainParams);
+    pindexNew->nChainWork = CalculateChainWork(pindexNew, chainParams);
     if ((pindexNew->nHeight > 0 && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)) || pindexNew->nHeight == 0)
     {
         // block is extending the main tree
-        UpdateChainWorkAndBlockIndexCandidates(pindexNew, chainWork, chainParams);
-        if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
+        if (pindexNew->nChainTx && (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
         {
             if (!gbMinimalLogging)
                 LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
@@ -2161,7 +2141,6 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     else
     {
         // block is not extending main tree, so it's extending the partial tree
-        pindexNew->nChainWork = chainWork;
         pindexNew->nStatus |= BLOCK_PARTIAL_TREE;
     }
 
@@ -2202,13 +2181,19 @@ static bool PromoteBlockIndex(CBlockIndex* pindexNew, const CBlockHeader& header
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
 
     arith_uint256 chainWork = CalculateChainWork(pindexNew, Params());
-    UpdateChainWorkAndBlockIndexCandidates(pindexNew, chainWork, Params());
     if (pindexNew->nChainTx && (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
     {
         if (!gbMinimalLogging)
-            LogPrintf("PromoteBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
+            LogPrintf("PromoteBlockIndex: new/updated index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
+        setBlockIndexCandidates.erase(pindexNew);
+        pindexNew->nChainWork = chainWork;
         setBlockIndexCandidates.insert(pindexNew);
     }
+    else
+    {
+        pindexNew->nChainWork = chainWork;
+    }
+
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
     if (pindexBestHeader == nullptr || pindexBestHeader->nChainWork < pindexNew->nChainWork)
         pindexBestHeader = pindexNew;
@@ -3205,12 +3190,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     for(const PAIRTYPE(int, CBlockIndex*)& item : vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
-        arith_uint256 chainwork = CalculateChainWork(pindex, chainparams);
-        if (pindex->IsValid(BLOCK_VALID_TREE))
-            UpdateChainWorkAndBlockIndexCandidates(pindex, chainwork, chainparams);
-        else
-            pindex->nChainWork = chainwork;
-
+        pindex->nChainWork = CalculateChainWork(pindex, chainparams);;
         pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.
