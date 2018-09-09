@@ -149,7 +149,7 @@ AC_DEFUN([AX_BOOST_THREAD],
                         break;
                         ;;
                     * )
-                        BOOST_THREAD_LIB="$BOOST_THREAD_LIB -lpthread"
+                        BOOST_THREAD_LIB="$BOOST_THREAD_LIB"
                         break;
                         ;;
                 esac
