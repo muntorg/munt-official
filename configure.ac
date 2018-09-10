@@ -254,11 +254,11 @@ AC_ARG_WITH([utils],
   [build_gulden_utils=$withval],
   [build_gulden_utils=yes])
 
-AC_ARG_WITH([jnilibs],
+AC_ARG_WITH([jni-libs],
   [AS_HELP_STRING([--with-jni-libs],
-  [build libraries (default=no)])],
-  [build_gulden_libs_jni=$withval],
-  [build_gulden_libs_jni=yes])
+  [build jni unity library (default=no)])],
+  [build_gulden_libs_jni=yes],
+  [build_gulden_libs_jni=no])
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
@@ -1002,7 +1002,7 @@ AM_CONDITIONAL([BUILD_GULDEN_UTILS], [test x$build_gulden_utils = xyes])
 AC_MSG_RESULT($build_gulden_utils)
 
 AC_MSG_CHECKING([whether to build jni libraries])
-AM_CONDITIONAL([BUILD_GULDEN_LIBS_JNI], [test x$build_gulden_libs_jni = xno])
+AM_CONDITIONAL([BUILD_GULDEN_LIBS_JNI], [test x$build_gulden_libs_jni = xyes])
 AC_MSG_RESULT($build_gulden_libs_jni)
 
 AC_LANG_POP
