@@ -18,6 +18,7 @@ EXTRA_LIBRARIES =
 
 if EMBEDDED_UNIVALUE
 LIBUNIVALUE = univalue/libunivalue.la
+UNIVALUE_CFLAGS = -I$(srcdir)/univalue/include
 
 $(LIBUNIVALUE): $(wildcard univalue/lib/*) $(wildcard univalue/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
@@ -43,8 +44,8 @@ LIBSECP256K1=secp256k1/libsecp256k1.la
 if ENABLE_ZMQ
 LIBGULDEN_ZMQ=libgulden_zmq.a
 endif
-if BUILD_GULDEN_LIBS
-LIBGULDENCONSENSUS=libguldenconsensus.la
+if BUILD_GULDEN_LIBS_JNI
+LIBGULDEN_UNITY_JNI=libgulden_unity_jni.la
 endif
 if ENABLE_WALLET
 LIBGULDEN_WALLET=libgulden_wallet.a
@@ -65,7 +66,7 @@ EXTRA_LIBRARIES += \
   $(LIBGULDEN_WALLET) \
   $(LIBGULDEN_ZMQ)
 
-lib_LTLIBRARIES = $(LIBGULDENCONSENSUS)
+lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
@@ -208,6 +209,7 @@ obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
 	@$(top_srcdir)/share/genbuild.sh "$(abs_top_builddir)/src/obj/build.h" \
 	  "$(abs_top_srcdir)"
+
 libgulden_util_a-clientversion.$(OBJEXT): obj/build.h
 
 # server: shared between GuldenD and Gulden
@@ -408,6 +410,7 @@ libgulden_util_a_SOURCES = \
   utiltime.cpp \
   $(GULDEN_CORE_H)
 
+
 if GLIBC_BACK_COMPAT
 libgulden_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
@@ -422,6 +425,23 @@ libgulden_cli_a_SOURCES = \
 
 nodist_libgulden_util_a_SOURCES = $(srcdir)/obj/build.h
 #
+
+# Gulden-unity library #
+if BUILD_GULDEN_LIBS_JNI
+libgulden_unity_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
+libgulden_unity_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+
+libgulden_unity_jni_la_SOURCES = \
+  $(GULDEN_CORE_H)
+
+
+libgulden_unity_jni_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) -llog
+libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE)
+libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+endif
+#
+
 
 # GuldenD binary #
 GuldenD_SOURCES = GuldenD.cpp
@@ -486,23 +506,6 @@ Gulden_tx_LDADD = \
   $(LIBSECP256K1)
 
 Gulden_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
-#
-
-# guldenconsensus library #
-if BUILD_GULDEN_LIBS
-include_HEADERS = script/guldenconsensus.h
-libguldenconsensus_la_SOURCES = $(crypto_libgulden_crypto_a_SOURCES) $(libgulden_consensus_a_SOURCES)
-
-if GLIBC_BACK_COMPAT
-  libguldenconsensus_la_SOURCES += compat/glibc_compat.cpp
-endif
-
-libguldenconsensus_la_LDFLAGS = $(AM_LDFLAGS)  $(RELDFLAGS)
-libguldenconsensus_la_LIBADD = $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS)
-libguldenconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libguldenconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-
-endif
 #
 
 CTAES_DIST =  crypto/ctaes/bench.c
