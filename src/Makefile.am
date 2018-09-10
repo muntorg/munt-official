@@ -222,16 +222,6 @@ libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPF
 libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_server_a_SOURCES = \
   Gulden/rpcgulden.cpp \
-  addrdb.cpp \
-  addrman.cpp \
-  alert.cpp \
-  Gulden/auto_checkpoints.cpp \
-  bloom.cpp \
-  blockencodings.cpp \
-  blockstore.cpp \
-  chain.cpp \
-  checkpoints.cpp \
-  consensus/tx_verify.cpp \
   httprpc.cpp \
   httpserver.cpp \
   init.cpp \
@@ -275,6 +265,16 @@ libgulden_server_a_SOURCES = \
 libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libgulden_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_node_a_SOURCES = \
+  addrdb.cpp \
+  addrman.cpp \
+  alert.cpp \
+  Gulden/auto_checkpoints.cpp \
+  bloom.cpp \
+  blockencodings.cpp \
+  blockstore.cpp \
+  chain.cpp \
+  checkpoints.cpp \
+  consensus/tx_verify.cpp \
   $(GULDEN_CORE_H)
 
 # zmq: shared between GuldenD and Gulden, only if zmq enabled
