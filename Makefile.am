@@ -19,11 +19,6 @@ endif
 GZIP_ENV="-9n"
 export PYTHONPATH
 
-if BUILD_GULDEN_LIBS
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libguldenconsensus.pc
-endif
-
 GULDEND_BIN=$(top_builddir)/src/$(GULDEN_DAEMON_NAME)$(EXEEXT)
 GULDEN_QT_BIN=$(top_builddir)/src/qt/$(GULDEN_GUI_NAME)$(EXEEXT)
 GULDEN_CLI_BIN=$(top_builddir)/src/$(GULDEN_CLI_NAME)$(EXEEXT)
