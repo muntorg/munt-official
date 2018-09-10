@@ -224,14 +224,6 @@ libgulden_server_a_SOURCES = \
   Gulden/rpcgulden.cpp \
   httprpc.cpp \
   httpserver.cpp \
-  init.cpp \
-  dbwrapper.cpp \
-  merkleblock.cpp \
-  generation/miner.cpp \
-  generation/witness.cpp \
-  net.cpp \
-  net_processing.cpp \
-  noui.cpp \
   policy/fees.cpp \
   policy/policy.cpp \
   policy/rbf.cpp \
@@ -275,6 +267,14 @@ libgulden_node_a_SOURCES = \
   chain.cpp \
   checkpoints.cpp \
   consensus/tx_verify.cpp \
+  init.cpp \
+  dbwrapper.cpp \
+  merkleblock.cpp \
+  generation/miner.cpp \
+  generation/witness.cpp \
+  net.cpp \
+  net_processing.cpp \
+  noui.cpp \
   $(GULDEN_CORE_H)
 
 # zmq: shared between GuldenD and Gulden, only if zmq enabled
