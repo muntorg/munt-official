@@ -1,0 +1,9 @@
+# This interface will be implemented in C++ and can be called from any language.
+gulden_unified_backend = interface +c {
+    #Methods
+    static InitUnityLib(data_dir : string): i32;
+
+    # Interface constants
+    const version: i32 = 1;
+}
+
