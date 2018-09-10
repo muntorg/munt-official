@@ -104,7 +104,7 @@ endif
 
 test_test_gulden_SOURCES = $(GULDEN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
 test_test_gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
-test_test_gulden_LDADD = $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
+test_test_gulden_LDADD = $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
 if ENABLE_WALLET
 test_test_gulden_LDADD += $(LIBGULDEN_WALLET)
 endif
@@ -127,7 +127,7 @@ test_test_gulden_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 test_test_gulden_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_test_gulden_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-test_test_gulden_fuzzy_LDADD = $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(MINIUPNPC_LIBS)
+test_test_gulden_fuzzy_LDADD = $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(MINIUPNPC_LIBS)
 if ENABLE_WALLET
 test_test_gulden_fuzzy_LDADD += $(LIBGULDEN_WALLET)
 endif
