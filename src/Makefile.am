@@ -224,7 +224,6 @@ libgulden_server_a_SOURCES = \
   Gulden/rpcgulden.cpp \
   httprpc.cpp \
   httpserver.cpp \
-  pow.cpp \
   rest.cpp \
   rpc/blockchain.cpp \
   rpc/mining.cpp \
@@ -232,9 +231,6 @@ libgulden_server_a_SOURCES = \
   rpc/netrpc.cpp \
   rpc/rawtransaction.cpp \
   rpc/server.cpp \
-  script/sigcache.cpp \
-  script/ismine.cpp \
-  timedata.cpp \
   torcontrol.cpp \
   $(GULDEN_CORE_H)
 
@@ -275,6 +271,10 @@ libgulden_node_a_SOURCES = \
   validation/validationinterface.cpp \
   versionbits.cpp \
   warnings.cpp \
+  script/sigcache.cpp \
+  script/ismine.cpp \
+  timedata.cpp \
+  pow.cpp \
   $(GULDEN_CORE_H)
 
 # zmq: shared between GuldenD and Gulden, only if zmq enabled
@@ -423,6 +423,7 @@ libgulden_util_a_SOURCES = \
 libgulden_generic_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_generic_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_generic_a_SOURCES = \
+  unity/generic/logging.cpp \
   $(GULDEN_CORE_H)
 
 if GLIBC_BACK_COMPAT
