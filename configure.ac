@@ -14,6 +14,7 @@ AC_CONFIG_HEADERS([src/config/gulden-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
+
 GULDEN_DAEMON_NAME=GuldenD
 GULDEN_GUI_NAME=Gulden
 GULDEN_CLI_NAME=Gulden-cli
@@ -253,11 +254,11 @@ AC_ARG_WITH([utils],
   [build_gulden_utils=$withval],
   [build_gulden_utils=yes])
 
-AC_ARG_WITH([libs],
-  [AS_HELP_STRING([--with-libs],
-  [build libraries (default=yes)])],
-  [build_gulden_libs=$withval],
-  [build_gulden_libs=yes])
+AC_ARG_WITH([jnilibs],
+  [AS_HELP_STRING([--with-jni-libs],
+  [build libraries (default=no)])],
+  [build_gulden_libs_jni=$withval],
+  [build_gulden_libs_jni=yes])
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
@@ -555,6 +556,10 @@ fi
 
 AC_CHECK_HEADERS([endian.h sys/endian.h byteswap.h stdio.h stdlib.h unistd.h strings.h sys/types.h sys/stat.h sys/select.h sys/prctl.h])
 
+AC_CHECK_DECLS([getifaddrs, freeifaddrs],,,
+    [#include <sys/types.h>
+    #include <ifaddrs.h>]
+)
 AC_CHECK_DECLS([strnlen])
 
 # Check for fork(2), unrelated to --with-daemon (although used by it)
@@ -682,7 +687,7 @@ GULDEN_QT_INIT
 dnl sets $gulden_enable_qt, $gulden_enable_qt_test, $gulden_enable_qt_dbus
 GULDEN_QT_CONFIGURE([$use_pkgconfig], [qt5])
 
-if test x$build_gulden_utils$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnonononono; then
+if test x$build_gulden_utils$build_gulden_libs_jni$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnonononono; then
     use_boost=no
 else
     use_boost=yes
@@ -996,13 +1001,9 @@ AC_MSG_CHECKING([whether to build utils (Gulden-cli Gulden-tx)])
 AM_CONDITIONAL([BUILD_GULDEN_UTILS], [test x$build_gulden_utils = xyes])
 AC_MSG_RESULT($build_gulden_utils)
 
-AC_MSG_CHECKING([whether to build libraries])
-AM_CONDITIONAL([BUILD_GULDEN_LIBS], [test x$build_gulden_libs = xyes])
-if test x$build_gulden_libs = xyes; then
-  AC_DEFINE(HAVE_CONSENSUS_LIB, 1, [Define this symbol if the consensus lib has been built])
-  AC_CONFIG_FILES([libguldenconsensus.pc:libguldenconsensus.pc.in])
-fi
-AC_MSG_RESULT($build_gulden_libs)
+AC_MSG_CHECKING([whether to build jni libraries])
+AM_CONDITIONAL([BUILD_GULDEN_LIBS_JNI], [test x$build_gulden_libs_jni = xno])
+AC_MSG_RESULT($build_gulden_libs_jni)
 
 AC_LANG_POP
 
@@ -1132,7 +1133,7 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_gulden_utils$build_gulden_libs$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnononononono; then
+if test x$build_gulden_utils$build_gulden_libs_jni$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnononononono; then
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
