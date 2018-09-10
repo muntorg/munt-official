@@ -27,6 +27,9 @@ LEVELDB_CPPFLAGS_INT += -DLEVELDB_PLATFORM_POSIX
 endif
 
 leveldb_libleveldb_a_CPPFLAGS = $(AM_CPPFLAGS) $(LEVELDB_CPPFLAGS_INT) $(LEVELDB_CPPFLAGS)
+if BUILD_GULDEN_LIBS_JNI
+leveldb_libleveldb_a_CPPFLAGS += -fPIC 
+endif
 leveldb_libleveldb_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 leveldb_libleveldb_a_SOURCES=
