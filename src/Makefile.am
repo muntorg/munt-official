@@ -387,8 +387,6 @@ libgulden_common_a_SOURCES = \
   chainparams.cpp \
   coins.cpp \
   compressor.cpp \
-  core_read.cpp \
-  core_write.cpp \
   key.cpp \
   keystore.cpp \
   netaddress.cpp \
@@ -413,7 +411,6 @@ libgulden_util_a_SOURCES = \
   compat/strnlen.cpp \
   fs.cpp \
   random.cpp \
-  rpc/protocol.cpp \
   support/cleanse.cpp \
   sync.cpp \
   threadinterrupt.cpp \
@@ -428,6 +425,9 @@ libgulden_generic_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_generic_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_generic_a_SOURCES = \
   unity/generic/logging.cpp \
+  core_read.cpp \
+  core_write.cpp \
+  rpc/protocol.cpp \
   $(GULDEN_CORE_H)
 
 if GLIBC_BACK_COMPAT
