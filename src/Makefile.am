@@ -192,7 +192,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   wallet/db.h \
   wallet/feebumper.h \
   wallet/rpcwallet.h \
-	wallet/spvscanner.h \
+  wallet/spvscanner.h \
   wallet/wallet.h \
   wallet/merkletx.h \
   wallet/wallettx.h \
@@ -289,7 +289,7 @@ libgulden_wallet_a_SOURCES = \
   wallet/feebumper.cpp \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
-	wallet/spvscanner.cpp \
+  wallet/spvscanner.cpp \
   wallet/wallet.cpp \
   wallet/wallet_ismine.cpp \
   wallet/wallet_init.cpp \
