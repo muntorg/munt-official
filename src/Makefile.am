@@ -371,7 +371,6 @@ libgulden_consensus_a_SOURCES = \
   tinyformat.h \
   uint256.cpp \
   uint256.h \
-  utilstrencodings.cpp \
   version.h
 
 # common: shared between GuldenD, and Gulden and non-server tools
