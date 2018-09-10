@@ -33,10 +33,12 @@ GULDEN_INCLUDES += -I$(srcdir)/secp256k1/include
 GULDEN_INCLUDES += $(UNIVALUE_CFLAGS)
 
 LIBGULDEN_SERVER=libgulden_server.a
+LIBGULDEN_NODE=libgulden_node.a
 LIBGULDEN_COMMON=libgulden_common.a
 LIBGULDEN_CONSENSUS=libgulden_consensus.a
 LIBGULDEN_CLI=libgulden_cli.a
 LIBGULDEN_UTIL=libgulden_util.a
+LIBGULDEN_GENERIC=libgulden_generic.a
 LIBGULDEN_CRYPTO=crypto/libgulden_crypto.a
 LIBGULDENQT=qt/libguldenqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
@@ -59,9 +61,11 @@ $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 EXTRA_LIBRARIES += \
   $(LIBGULDEN_CRYPTO) \
   $(LIBGULDEN_UTIL) \
+  $(LIBGULDEN_GENERIC) \
   $(LIBGULDEN_COMMON) \
   $(LIBGULDEN_CONSENSUS) \
   $(LIBGULDEN_SERVER) \
+  $(LIBGULDEN_NODE) \
   $(LIBGULDEN_CLI) \
   $(LIBGULDEN_WALLET) \
   $(LIBGULDEN_ZMQ)
@@ -266,6 +270,7 @@ libgulden_server_a_SOURCES = \
   warnings.cpp \
   $(GULDEN_CORE_H)
 
+# zmq: shared between GuldenD and Gulden, only if zmq enabled
 if ENABLE_ZMQ
 libgulden_zmq_a_CPPFLAGS = $(GULDEN_INCLUDES) $(ZMQ_CFLAGS)
 libgulden_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -276,8 +281,7 @@ libgulden_zmq_a_SOURCES = \
 endif
 
 
-# wallet: shared between GuldenD and Gulden, but only linked
-# when wallet enabled
+# wallet: shared between GuldenD, Gulden and unity libraries but only linked when wallet enabled
 libgulden_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_wallet_a_SOURCES = \
@@ -301,7 +305,7 @@ libgulden_wallet_a_SOURCES = \
   wallet/walletdb.cpp \
   $(GULDEN_CORE_H)
 
-# crypto primitives library
+# crypto primitives library: Shared between all binaries and unity libraries
 crypto_libgulden_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES)
 crypto_libgulden_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libgulden_crypto_a_SOURCES = \
@@ -323,7 +327,7 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/sha512.cpp \
   crypto/sha512.h
 
-# consensus: shared between all executables that validate any consensus rules.
+# consensus: All executables except gulden-cli; all unity libraries
 libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_consensus_a_SOURCES = \
@@ -386,7 +390,7 @@ libgulden_common_a_SOURCES = \
   script/standard.cpp \
   $(GULDEN_CORE_H)
 
-# util: shared between all executables.
+# util: shared between all executables and unity libraries.
 # This library *must* be included to make sure that the glibc
 # backward-compatibility objects and their sanity checks are linked.
 libgulden_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
@@ -410,6 +414,11 @@ libgulden_util_a_SOURCES = \
   utiltime.cpp \
   $(GULDEN_CORE_H)
 
+# generic: shared between everything except the unity libraries (which provide their own specialised implementations)
+libgulden_generic_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
+libgulden_generic_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libgulden_generic_a_SOURCES = \
+  $(GULDEN_CORE_H)
 
 if GLIBC_BACK_COMPAT
 libgulden_util_a_SOURCES += compat/glibc_compat.cpp
