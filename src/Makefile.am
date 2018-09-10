@@ -234,6 +234,12 @@ libgulden_server_a_SOURCES = \
   torcontrol.cpp \
   $(GULDEN_CORE_H)
 
+if ENABLE_WALLET
+libgulden_server_a_SOURCES += \
+  wallet/rpcdump.cpp \
+  wallet/rpcwallet.cpp
+endif
+
 # node: shared between GuldenD, Gulden and unity libraries.
 libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libgulden_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -299,8 +305,6 @@ libgulden_wallet_a_SOURCES = \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/feebumper.cpp \
-  wallet/rpcdump.cpp \
-  wallet/rpcwallet.cpp \
   wallet/spvscanner.cpp \
   wallet/wallet.cpp \
   wallet/wallet_ismine.cpp \
