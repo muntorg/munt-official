@@ -28,7 +28,7 @@
   #define PLATFORM_IS_LITTLE_ENDIAN (_BYTE_ORDER == _LITTLE_ENDIAN)
 #elif defined(OS_HPUX)
   #define PLATFORM_IS_LITTLE_ENDIAN false
-#elif defined(OS_ANDROID)
+#elif defined(__ANDROID__)
   // Due to a bug in the NDK x86 <sys/endian.h> definition,
   // _BYTE_ORDER must be used instead of __BYTE_ORDER on Android.
   // See http://code.google.com/p/android/issues/detail?id=39824
@@ -52,7 +52,7 @@
 
 #if defined(OS_MACOSX) || defined(OS_SOLARIS) || defined(OS_FREEBSD) ||\
     defined(OS_NETBSD) || defined(OS_OPENBSD) || defined(OS_DRAGONFLYBSD) ||\
-    defined(OS_ANDROID) || defined(OS_HPUX) || defined(CYGWIN)
+    defined(__ANDROID__) || defined(OS_HPUX) || defined(CYGWIN)
 // Use fread/fwrite/fflush on platforms without _unlocked variants
 #define fread_unlocked fread
 #define fwrite_unlocked fwrite
@@ -69,7 +69,7 @@
 #define fdatasync(fd) fcntl(fd, F_FULLFSYNC, 0)
 #endif
 
-#if defined(OS_ANDROID) && __ANDROID_API__ < 9
+#if defined(__ANDROID__) && __ANDROID_API__ < 9
 // fdatasync() was only introduced in API level 9 on Android. Use fsync()
 // when targetting older platforms.
 #define fdatasync fsync
