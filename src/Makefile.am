@@ -256,6 +256,7 @@ libgulden_node_a_SOURCES = \
   net.cpp \
   net_processing.cpp \
   noui.cpp \
+  policy/feerate.cpp \
   policy/fees.cpp \
   policy/policy.cpp \
   policy/rbf.cpp \
@@ -388,7 +389,6 @@ libgulden_common_a_SOURCES = \
   keystore.cpp \
   netaddress.cpp \
   netbase.cpp \
-  policy/feerate.cpp \
   protocol.cpp \
   scheduler.cpp \
   script/sign.cpp \
