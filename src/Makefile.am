@@ -185,6 +185,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   undo.h \
   util.h \
   utilmoneystr.h \
+  utilstrencodings.h \
   utiltime.h \
   validation/validation.h \
   validation/witnessvalidation.h \
@@ -214,7 +215,7 @@ obj/build.h: FORCE
 	@$(top_srcdir)/share/genbuild.sh "$(abs_top_builddir)/src/obj/build.h" \
 	  "$(abs_top_srcdir)"
 
-libgulden_util_a-clientversion.$(OBJEXT): obj/build.h
+clientversion.cpp: obj/build.h
 
 # server: shared between GuldenD and Gulden
 libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
@@ -371,7 +372,6 @@ libgulden_consensus_a_SOURCES = \
   uint256.cpp \
   uint256.h \
   utilstrencodings.cpp \
-  utilstrencodings.h \
   version.h
 
 # common: shared between GuldenD, and Gulden and non-server tools
