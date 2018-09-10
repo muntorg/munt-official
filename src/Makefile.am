@@ -270,6 +270,12 @@ libgulden_server_a_SOURCES = \
   warnings.cpp \
   $(GULDEN_CORE_H)
 
+# node: shared between GuldenD, Gulden and unity libraries.
+libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+libgulden_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libgulden_node_a_SOURCES = \
+  $(GULDEN_CORE_H)
+
 # zmq: shared between GuldenD and Gulden, only if zmq enabled
 if ENABLE_ZMQ
 libgulden_zmq_a_CPPFLAGS = $(GULDEN_INCLUDES) $(ZMQ_CFLAGS)
