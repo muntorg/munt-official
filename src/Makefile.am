@@ -224,9 +224,6 @@ libgulden_server_a_SOURCES = \
   Gulden/rpcgulden.cpp \
   httprpc.cpp \
   httpserver.cpp \
-  policy/fees.cpp \
-  policy/policy.cpp \
-  policy/rbf.cpp \
   pow.cpp \
   rest.cpp \
   rpc/blockchain.cpp \
@@ -263,6 +260,9 @@ libgulden_node_a_SOURCES = \
   net.cpp \
   net_processing.cpp \
   noui.cpp \
+  policy/fees.cpp \
+  policy/policy.cpp \
+  policy/rbf.cpp \
   txdb.cpp \
   txmempool.cpp \
   Gulden/util.cpp \
