@@ -239,18 +239,6 @@ libgulden_server_a_SOURCES = \
   script/ismine.cpp \
   timedata.cpp \
   torcontrol.cpp \
-  txdb.cpp \
-  txmempool.cpp \
-  Gulden/util.cpp \
-  ui_interface.cpp \
-  validation/validation.cpp \
-  validation/validation_mempool.cpp \
-  validation/validation_misc.cpp \
-  validation/witnessvalidation.cpp \
-  validation/versionbitsvalidation.cpp \
-  validation/validationinterface.cpp \
-  versionbits.cpp \
-  warnings.cpp \
   $(GULDEN_CORE_H)
 
 # node: shared between GuldenD, Gulden and unity libraries.
@@ -275,6 +263,18 @@ libgulden_node_a_SOURCES = \
   net.cpp \
   net_processing.cpp \
   noui.cpp \
+  txdb.cpp \
+  txmempool.cpp \
+  Gulden/util.cpp \
+  ui_interface.cpp \
+  validation/validation.cpp \
+  validation/validation_mempool.cpp \
+  validation/validation_misc.cpp \
+  validation/witnessvalidation.cpp \
+  validation/versionbitsvalidation.cpp \
+  validation/validationinterface.cpp \
+  versionbits.cpp \
+  warnings.cpp \
   $(GULDEN_CORE_H)
 
 # zmq: shared between GuldenD and Gulden, only if zmq enabled
