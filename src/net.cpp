@@ -1971,7 +1971,7 @@ void Discover(boost::thread_group& threadGroup)
             }
         }
     }
-#else
+#elif (HAVE_DECL_GETIFADDRS && HAVE_DECL_FREEIFADDRS)
     // Get local host ip
     struct ifaddrs* myaddrs;
     if (getifaddrs(&myaddrs) == 0)
@@ -1999,6 +1999,8 @@ void Discover(boost::thread_group& threadGroup)
         }
         freeifaddrs(myaddrs);
     }
+#else
+    //fixme: (ANDROID) - Any point in implementing this?
 #endif
 }
 
