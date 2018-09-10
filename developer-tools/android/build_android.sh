@@ -43,6 +43,9 @@ do
 done
 
 
+mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs | true
+mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs/armeabi-v7a | true
+
 cp build_android_arm-linux-androideabi/src/.libs/libgulden_unity_jni.so src/frontend/android/unity_wallet/app/src/main/jniLibs/armeabi-v7a/
 cp /opt/android-ndk-gulden/arm-linux-androideabi-clang/arm-linux-androideabi/lib/armv7-a/libc++_shared.so src/frontend/android/unity_wallet/app/src/main/jniLibs/armeabi-v7a/
 /opt/android-ndk-gulden/arm-linux-androideabi-clang/arm-linux-androideabi/bin/strip --strip-unneeded src/frontend/android/unity_wallet/app/src/main/jniLibs/armeabi-v7a/*.so
