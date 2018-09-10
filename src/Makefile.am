@@ -451,6 +451,22 @@ libgulden_unity_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_unity_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 libgulden_unity_jni_la_SOURCES = \
+  unity/libinit.cpp \
+  unity/libinit.h \
+  unity/android/logging_android.cpp \
+  $(libgulden_wallet_a_SOURCES) \
+  $(libgulden_common_a_SOURCES) \
+  $(libgulden_util_a_SOURCES) \
+  $(libgulden_node_a_SOURCES) \
+  $(libgulden_consensus_a_SOURCES) \
+  $(crypto_libgulden_crypto_a_SOURCES) \
+  unity/unity_impl.h \
+  unity/unity_impl.cpp \
+  unity/djinni/jni/NativeGuldenUnifiedBackend.hpp \
+  unity/djinni/cpp/gulden_unified_backend.hpp \
+  unity/djinni/jni/NativeGuldenUnifiedBackend.cpp \
+  unity/djinni/cpp/gulden_unified_backend.cpp \
+  ../djinni/djinni/support-lib/jni/djinni_support.cpp \
   $(GULDEN_CORE_H)
 
 
