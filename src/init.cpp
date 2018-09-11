@@ -247,12 +247,16 @@ void CoreShutdown(boost::thread_group& threadGroup)
         fFeeEstimatesInitialized = false;
     }
 
+
     LogPrintf("Core shutdown: close coin databases.\n");
     {
         LOCK(cs_main);
         if (pcoinsTip != NULL) {
             FlushStateToDisk();
         }
+
+        PruneBlockIndexForPartialSync();
+
         blockStore.CloseBlockFiles();
         delete pcoinsTip;
         pcoinsTip = NULL;

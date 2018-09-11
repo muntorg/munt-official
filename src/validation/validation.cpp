@@ -3706,6 +3706,32 @@ bool InitBlockIndex(const CChainParams& chainparams)
     return true;
 }
 
+void PruneBlockIndexForPartialSync()
+{
+    if (isFullSyncMode() || !IsPartialSyncActive())
+        return;
+
+    LogPrintf("Prune block index in partial sync only\n");
+
+    int minimalHeight = std::max(partialChain.HeightOffset(), partialChain.Height() - PARTIAL_SYNC_PRUNE_HEIGHT);
+
+    std::vector<const CBlockIndex*> removals;
+    for(const auto& it: mapBlockIndex)
+    {
+        CBlockIndex* index = it.second;
+        if (   (index->nHeight < minimalHeight || !partialChain.Contains(index))
+            && index != chainActive.Genesis())
+            removals.push_back(index);
+    }
+
+    LogPrintf("%s: deleting %d block indexes\n", __func__, removals.size());
+
+    if (removals.size() > 0)
+    {
+        pblocktree->EraseBatchSync(removals);
+    }
+}
+
 bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskBlockPos *dbp)
 {
     // Map of disk positions for blocks with unknown parent (only used for reindex)
