@@ -168,11 +168,13 @@ enum BlockStatus: uint32_t {
 
     BLOCK_OPT_WITNESS       =   128, //!< block data in blk*.data was received with a witness-enforcing client
 
-    BLOCK_PARTIAL_TREE      =  256, //! block is in partial tree and all parents are also at least BLOCK_PARTIAL_TREE
-    BLOCK_PARTIAL_TRANSACTIONS = 512, //! Partial tree analog of BLOCK_VALID_TRANSACTION, except CBlockIndex::nChainTx is NOT set.
+    BLOCK_PARTIAL_TREE         =  256, //! block is in partial tree and all parents are also at least BLOCK_PARTIAL_TREE
+    BLOCK_PARTIAL_TRANSACTIONS =  512, //! Partial tree analog of BLOCK_VALID_TRANSACTION, except CBlockIndex::nChainTx is NOT set.
+    BLOCK_PARTIAL_RESERVED1    = 1024, //! Claim bits for future partial validation levels
+    BLOCK_PARTIAL_RESERVED2    = 2048,
 
     // All validation bits releated to partial tree validation
-    BLOCK_PARTIAL_MASK = BLOCK_PARTIAL_TREE | BLOCK_PARTIAL_TRANSACTIONS,
+    xBLOCK_PARTIAL_MASK = BLOCK_PARTIAL_TREE | BLOCK_PARTIAL_TRANSACTIONS | BLOCK_PARTIAL_RESERVED1 | BLOCK_PARTIAL_RESERVED2,
 };
 
 /** The block chain is a tree shaped structure starting with the
@@ -458,6 +460,29 @@ public:
             return false;
         if ((nStatus & BLOCK_VALID_MASK) < nUpTo) {
             nStatus = (nStatus & ~BLOCK_VALID_MASK) | nUpTo;
+            return true;
+        }
+        return false;
+    }
+
+    //! Check whether this block index entry is valid up to the passed partial validity level.
+    bool IsPartialValid(enum BlockStatus nUpTo = BLOCK_PARTIAL_TREE) const
+    {
+        assert(!(nUpTo & ~xBLOCK_PARTIAL_MASK)); // Only validity flags allowed.
+        if (nStatus & BLOCK_FAILED_MASK)
+            return false;
+        return ((nStatus & xBLOCK_PARTIAL_MASK) >= nUpTo);
+    }
+
+    //! Raise the partial validity level of this block index entry.
+    //! Returns true if the partial validity was changed.
+    bool RaisePartialValidity(enum BlockStatus nUpTo)
+    {
+        assert(!(nUpTo & ~xBLOCK_PARTIAL_MASK)); // Only validity flags allowed.
+        if (nStatus & BLOCK_FAILED_MASK)
+            return false;
+        if ((nStatus & xBLOCK_PARTIAL_MASK) < nUpTo) {
+            nStatus = (nStatus & ~xBLOCK_PARTIAL_MASK) | nUpTo;
             return true;
         }
         return false;

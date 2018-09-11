@@ -2141,7 +2141,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     else
     {
         // block is not extending main tree, so it's extending the partial tree
-        pindexNew->nStatus |= BLOCK_PARTIAL_TREE;
+        pindexNew->RaisePartialValidity(BLOCK_PARTIAL_TREE);
     }
 
     if (IsPartialSyncActive() && (pindexBestPartial == nullptr || pindexBestPartial->nChainWork < pindexNew->nChainWork))
@@ -2221,8 +2221,8 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
         pindexNew->RaiseValidity(BLOCK_VALID_TRANSACTIONS);
         setDirtyBlockIndex.insert(pindexNew);
     }
-    else if (pindexNew->pprev && pindexNew->pprev->nStatus & BLOCK_PARTIAL_TREE) {
-        pindexNew->nStatus |= BLOCK_PARTIAL_TRANSACTIONS;
+    else if (pindexNew->pprev && pindexNew->pprev->IsPartialValid(BLOCK_PARTIAL_TREE)) {
+        pindexNew->RaisePartialValidity(BLOCK_PARTIAL_TRANSACTIONS);
         setDirtyBlockIndex.insert(pindexNew);
     }
     else
@@ -2736,7 +2736,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
                 *ppindex = pindex;
             if (pindex->nStatus & BLOCK_FAILED_MASK)
                 return state.Invalid(error("%s: block %s is marked invalid", __func__, hash.ToString()), 0, "duplicate");
-            if (!pindex->IsValid(BLOCK_VALID_TREE) && pindex->nStatus & BLOCK_PARTIAL_TREE)
+            if (!pindex->IsValid(BLOCK_VALID_TREE) && pindex->IsPartialValid(BLOCK_PARTIAL_TREE))
             {
                 // check if the block can be promoted to the full tree
                 if (pindex->pprev)
@@ -2773,7 +2773,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
             return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
 
         // do context check if block header connects to the full tree or when we have at least the required amount of partial tree available
-        bool doContextCheck = pindexPrev->IsValid(BLOCK_VALID_TREE) || ((pindexPrev->nStatus & BLOCK_PARTIAL_TREE) && pindexPrev->nHeight - partialChain.HeightOffset() > 576);
+        bool doContextCheck = pindexPrev->IsValid(BLOCK_VALID_TREE) || ((pindexPrev->IsPartialValid(BLOCK_PARTIAL_TREE)) && pindexPrev->nHeight - partialChain.HeightOffset() > 576);
         if (doContextCheck && !ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
     }
@@ -3219,7 +3219,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex))) {
             pindexBestHeader = pindex;
         }
-        if ((pindex->nStatus & BLOCK_PARTIAL_TREE)
+        if ((pindex->IsPartialValid(BLOCK_PARTIAL_TREE))
                 && (!pindexBestPartial || pindex->nHeight >= pindexBestPartial->nHeight))
             pindexBestPartial = pindex;
     }
@@ -3227,7 +3227,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     if (pindexBestPartial)
     {
         CBlockIndex* pindex = pindexBestPartial;
-        while (pindex->pprev && pindex->pprev->nStatus & BLOCK_PARTIAL_TREE)
+        while (pindex->pprev && pindex->pprev->IsPartialValid(BLOCK_PARTIAL_TREE))
             pindex = pindex->pprev;
         partialChain.SetHeightOffset(pindex->nHeight);
         partialChain.SetTip(pindexBestPartial);
@@ -4063,7 +4063,7 @@ void StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
     partialChain.SetHeightOffset(olderHeight);
     CBlockIndex* index = InsertBlockIndex(entry.hash);
     index->nHeight = olderHeight;
-    index->nStatus |= BLOCK_PARTIAL_TREE;
+    index->RaisePartialValidity(BLOCK_PARTIAL_TREE);
     partialChain.SetTip(index);
     pindexBestPartial = index;
 
