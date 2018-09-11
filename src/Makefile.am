@@ -222,6 +222,7 @@ libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPF
 libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_server_a_SOURCES = \
   Gulden/rpcgulden.cpp \
+  unity/generic/init_generic.cpp \
   httprpc.cpp \
   httpserver.cpp \
   rest.cpp \
@@ -454,6 +455,7 @@ libgulden_unity_jni_la_SOURCES = \
   unity/libinit.cpp \
   unity/libinit.h \
   unity/android/logging_android.cpp \
+  unity/android/init_android.cpp \
   $(libgulden_wallet_a_SOURCES) \
   $(libgulden_common_a_SOURCES) \
   $(libgulden_util_a_SOURCES) \

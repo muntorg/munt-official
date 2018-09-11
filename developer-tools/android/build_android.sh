@@ -37,7 +37,7 @@ do
   mkdir build_android_${target_host} | true
   cd build_android_${target_host}
   ../autogen.sh
-  ../configure --prefix=$PWD/../depends/$target_host ac_cv_c_bigendian=no ac_cv_sys_file_offset_bits=$bits --host=$target_host --disable-bench --enable-experimental-asm --disable-tests --disable-man --without-utils --with-libs --without-daemon --with-jni-libs
+  ../configure --prefix=$PWD/../depends/$target_host ac_cv_c_bigendian=no ac_cv_sys_file_offset_bits=$bits --host=$target_host --disable-bench --enable-experimental-asm --disable-tests --disable-man --disable-zmq --without-utils --with-libs --without-daemon --with-jni-libs
   make -j $(nproc) V=1
   cd ..
 done
