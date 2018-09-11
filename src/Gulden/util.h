@@ -105,7 +105,10 @@ inline bool IsPoW2WitnessLocked(const CTxOut& out, uint64_t nTipHeight)
  */
 bool IsPartialSyncActive();
 
-//! Requires cs_main
-bool IsPartialNearPresent();
+/**
+  * Check if the most recent block in the partial tree is near the present (if it exists)
+  * Requires cs_main
+  */
+bool IsPartialNearPresent(enum BlockStatus nUpTo = BLOCK_PARTIAL_TREE);
 
 #endif

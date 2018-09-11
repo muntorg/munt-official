@@ -3552,7 +3552,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
         // Full header sync
         if (   isFullSyncMode()
-            && ((!IsPartialSyncActive() || IsPartialNearPresent())
+            && ((!IsPartialSyncActive() || IsPartialNearPresent(BLOCK_PARTIAL_TRANSACTIONS))
             && !state.fSyncStarted && !state.fRHeadersSyncStarted
             && !pto->fClient && !fImporting && !fReindex))
         {
