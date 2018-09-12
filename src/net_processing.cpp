@@ -1932,7 +1932,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 pfrom->AddInventoryKnown(inv);
                 if (fBlocksOnly) {
                     LogPrint(BCLog::NET, "transaction (%s) inv sent in violation of protocol peer=%d\n", inv.hash.ToString(), pfrom->GetId());
-                } else if (!fAlreadyHave && !fImporting && !fReindex && !IsInitialBlockDownload()) {
+                } else if (!fAlreadyHave && !fImporting && !fReindex && (!IsInitialBlockDownload() || IsPartialSyncActive())) {
                     pfrom->AskFor(inv);
                 }
             }
