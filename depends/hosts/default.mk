@@ -2,8 +2,18 @@ ifneq ($(host),$(build))
 host_toolchain:=$(host)-
 endif
 
-default_host_CC = $(host_toolchain)clang
-default_host_CXX = $(host_toolchain)clang++
+ifeq ($(CC),)
+  default_host_CC = $(host_toolchain)gcc
+else
+  default_host_CC=$(CC)
+endif
+
+ifeq ($(CXX),)
+  default_host_CXX = $(host_toolchain)g++
+else
+  default_host_CXX =$(CXX)
+endif
+
 default_host_AR = $(host_toolchain)ar
 default_host_RANLIB = $(host_toolchain)ranlib
 default_host_STRIP = $(host_toolchain)strip
