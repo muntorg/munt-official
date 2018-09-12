@@ -3551,7 +3551,11 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         }
 
         // Full header sync
-        if ((!IsPartialSyncActive() || IsPartialNearPresent()) && !state.fSyncStarted && !state.fRHeadersSyncStarted && !pto->fClient && !fImporting && !fReindex) {
+        if (   isFullSyncMode()
+            && ((!IsPartialSyncActive() || IsPartialNearPresent(BLOCK_PARTIAL_TRANSACTIONS))
+            && !state.fSyncStarted && !state.fRHeadersSyncStarted
+            && !pto->fClient && !fImporting && !fReindex))
+        {
             int lastCheckPointHeight = Checkpoints::LastCheckPointHeight();
             // Reverse header sync if possible
             if (fReverseHeaders && pto->nVersion >= REVERSEHEADERS_VERSION && nRHeaderSyncStarted == 0 && fFetch

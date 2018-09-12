@@ -254,6 +254,14 @@ void CCoinsViewDBCursor::Next()
     }
 }
 
+bool CBlockTreeDB::EraseBatchSync(const std::vector<const CBlockIndex*>& items) {
+    CDBBatch batch(*this);
+    for (const CBlockIndex* index: items) {
+        batch.Erase(std::pair(DB_BLOCK_INDEX, index->GetBlockHashPoW2()));
+    }
+    return WriteBatch(batch, true);
+}
+
 bool CBlockTreeDB::WriteBatchSync(const std::vector<std::pair<int, const CBlockFileInfo*> >& fileInfo, int nLastFile, const std::vector<const CBlockIndex*>& blockinfo) {
     CDBBatch batch(*this);
     for (std::vector<std::pair<int, const CBlockFileInfo*> >::const_iterator it=fileInfo.begin(); it != fileInfo.end(); it++) {

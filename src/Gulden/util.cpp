@@ -474,7 +474,20 @@ bool IsPartialSyncActive()
     return partialChain.Height() >= partialChain.HeightOffset();
 }
 
-bool IsPartialNearPresent()
+bool IsPartialNearPresent(enum BlockStatus nUpTo)
 {
-    return IsPartialSyncActive() && partialChain.Tip()->GetBlockTime() > GetAdjustedTime() - Params().GetConsensus().nPowTargetSpacing * 20;
+    if (!IsPartialSyncActive())
+        return false;
+
+    CBlockIndex* index = partialChain.Tip();
+    int64_t farBack = GetAdjustedTime() - Params().GetConsensus().nPowTargetSpacing * 20;
+    while (   index
+           && index->nHeight >= partialChain.HeightOffset()
+           && (index->GetBlockTime() <= farBack || !index->IsPartialValid(nUpTo)))
+    {
+        index = index->pprev;
+    }
+
+    // index && index->nHeight >= partialChain.HeightOffset() => index->GetBlockTime() > farBack && index->IsPartialValid(nUpTo)
+    return index && index->nHeight >= partialChain.HeightOffset();
 }
