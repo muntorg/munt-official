@@ -25,7 +25,7 @@ do
   export CXX=$target_host-clang++
   export LD=$target_host-ld
   export STRIP=$target_host-strip
-  export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -mthumb"
+  export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -mthumb -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH"
   #visibility=hidden
   export CFLAGS=${CXXFLAGS}
   export LDFLAGS="-fPIC -pie -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections"
