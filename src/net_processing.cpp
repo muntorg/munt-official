@@ -2783,8 +2783,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         if (nCount == MAX_HEADERS_RESULTS) {
             // Headers message had its maximum size; the peer may have more headers.
-            // TODO: optimize: if pindexLast is an ancestor of chainActive.Tip or pindexBestHeader, continue
-            // from there instead.
+
+            // When not in any header sync state bail out and don't ask for more headers
+            if (!nodestate->fSyncStarted && !nodestate->fRHeadersSyncStarted && !nodestate->fPartialSyncStarted)
+                return true;
 
             // If there is reverse header sync in progress stop this slow forward header sync,
             // it is severly slowing down progress. Reverse header sync will go in lock step
@@ -2793,29 +2795,23 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             if (nodestate->fSyncStarted && nRHeaderSyncStarted > 0) {
                 nodestate->fSyncStarted = false;
                 nSyncStarted--;
-                LogPrintf("Giving up forward header sync in favor of reverse headers, peer=%d\n", pfrom->GetId());
+                LogPrintf("Giving up forward full header sync in favor of reverse headers, peer=%d\n", pfrom->GetId());
                 return true;
             }
+
+            if (nodestate->fSyncStarted && IsPartialSyncActive() && !IsPartialNearPresent())
+            {
+                nodestate->fSyncStarted = false;
+                nSyncStarted--;
+                LogPrintf("Giving up forward full header sync to prevent slowing down partial sync, peer=%d\n", pfrom->GetId());
+                return true;
+            }
+
             LogPrint(BCLog::NET, "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight, pfrom->GetId(), pfrom->nStartingHeight);
             LOCK(cs_main);
-            CBlockLocator locator;
             bool connectsToPartial = IsPartialSyncActive() && partialChain.FindFork(pindexLast);
-            if (IsPartialSyncActive() && !connectsToPartial && !IsPartialNearPresent())
-            {
-                // if headers we got are not connecting to partial chain and it still has way to go
-                // switch further header requests to tip of partial chain
-                locator = partialChain.GetLocatorPoW2(pindexBestPartial);
-            }
-            else if (connectsToPartial)
-            {
-                // just resume partial from what we received if received headers connect to that
-                locator = partialChain.GetLocatorPoW2(pindexLast);
-            }
-            else
-            {
-                // received headers don't connect to partial, they did connect though so resume based on activeChain
-                locator = chainActive.GetLocatorPoW2(pindexLast);
-            }
+            const CChain& chain = connectsToPartial ? partialChain : chainActive;
+            CBlockLocator locator = chain.GetLocatorPoW2(pindexLast);
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, locator, uint256()));
         }
 
