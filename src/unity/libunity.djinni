@@ -1,9 +1,13 @@
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
     #Methods
-    static InitUnityLib(data_dir : string): i32;
+    static InitUnityLib(data_dir : string, signals : gulden_unified_frontend): i32;
 
     # Interface constants
     const version: i32 = 1;
 }
 
+# This interface will be implemented in Java and ObjC and can be called from C++.
+gulden_unified_frontend = interface +j +o {
+    notifySPVProgress(start_height : i32, progess_height : i32, expected_height : i32): bool;
+}

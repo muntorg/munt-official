@@ -11,9 +11,10 @@ public abstract class GuldenUnifiedBackend {
     public static final int VERSION = 1;
 
     /**Methods */
-    public static int InitUnityLib(String dataDir)
+    public static int InitUnityLib(String dataDir, GuldenUnifiedFrontend signals)
     {
-        return CppProxy.InitUnityLib(dataDir);
+        return CppProxy.InitUnityLib(dataDir,
+                                     signals);
     }
 
     private static final class CppProxy extends GuldenUnifiedBackend
@@ -39,6 +40,6 @@ public abstract class GuldenUnifiedBackend {
             super.finalize();
         }
 
-        public static native int InitUnityLib(String dataDir);
+        public static native int InitUnityLib(String dataDir, GuldenUnifiedFrontend signals);
     }
 }

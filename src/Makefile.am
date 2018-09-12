@@ -466,9 +466,12 @@ libgulden_unity_jni_la_SOURCES = \
   unity/unity_impl.cpp \
   unity/djinni/jni/NativeGuldenUnifiedBackend.hpp \
   unity/djinni/cpp/gulden_unified_backend.hpp \
+  unity/djinni/cpp/gulden_unified_frontend.hpp \
   unity/djinni/jni/NativeGuldenUnifiedBackend.cpp \
+  unity/djinni/jni/NativeGuldenUnifiedFrontend.cpp \
   unity/djinni/cpp/gulden_unified_backend.cpp \
   ../djinni/djinni/support-lib/jni/djinni_support.cpp \
+  ../djinni/djinni/support-lib/jni/djinni_main.cpp \
   $(GULDEN_CORE_H)
 
 

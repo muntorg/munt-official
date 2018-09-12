@@ -51,10 +51,7 @@ static void WaitForShutdown()
     }
 }
 
-static void handlePostInitMain()
-{
-}
-
+extern void handlePostInitMain();
 static void handleAppInitResult(bool bResult)
 {
     if (!bResult)
@@ -79,7 +76,7 @@ int InitUnity()
 {
     SetupEnvironment();
 
-    // Connect GuldenD signal handlers
+    // Connect signal handlers
     noui_connect();
 
     GuldenAppManager appManager; 

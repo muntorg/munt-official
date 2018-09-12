@@ -70,7 +70,7 @@ static void WaitForShutdown()
     }
 }
 
-static void handlePostInitMain()
+void handlePostInitMain()
 {
 }
 
