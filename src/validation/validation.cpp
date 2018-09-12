@@ -3711,8 +3711,6 @@ void PruneBlockIndexForPartialSync()
     if (isFullSyncMode() || !IsPartialSyncActive())
         return;
 
-    LogPrintf("Prune block index in partial sync only\n");
-
     int minimalHeight = std::max(partialChain.HeightOffset(), partialChain.Height() - PARTIAL_SYNC_PRUNE_HEIGHT);
 
     std::vector<const CBlockIndex*> removals;
@@ -3724,8 +3722,10 @@ void PruneBlockIndexForPartialSync()
             removals.push_back(index);
     }
 
-    LogPrintf("%s: deleting %d block indexes\n", __func__, removals.size());
+    LogPrintf("%s: deleting %d block indexes, prune height = %d\n", __func__, removals.size(), minimalHeight);
 
+    // Will usually have at least one index to prune, because when loading the index
+    // of the previous block of partial chain start is added. This is ok.
     if (removals.size() > 0)
     {
         pblocktree->EraseBatchSync(removals);
@@ -4056,13 +4056,13 @@ void StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
 
     if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= time)
     {
-        LogPrintf("Partial sync already in progress when start requested. Sync continues.\n");
+        LogPrintf("Partial sync continues, height offset = %d.\n", partialChain.HeightOffset());
         return;
     }
 
     if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() > time)
     {
-        LogPrintf("Partial sync in progress but starting point is to fresh for requested start. Sync restarted.\n");
+        LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync restarted.\n");
         pindexBestPartial = nullptr;
         partialChain.SetTip(nullptr);
         partialChain.SetHeightOffset(0);
