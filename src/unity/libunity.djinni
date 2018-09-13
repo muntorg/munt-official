@@ -1,8 +1,14 @@
+qrcode_record = record {
+    width: i32;
+    pixel_data: binary;
+}
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
     #Methods
     static InitUnityLib(data_dir : string, signals : gulden_unified_frontend): i32;
 
+    static QRImageFromString(qr_string : string, width_hint : i32): qrcode_record;
     # Interface constants
     const version: i32 = 1;
 }
