@@ -13,6 +13,8 @@ import com.gulden.unity_wallet.SendFragment.OnFragmentInteractionListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
 
+
+
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commit()
 }
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
     }
 
     private val sendFragment : Fragment = SendFragment();
-    private val receiveFragment : Fragment = ReceiveFragment();
+    private val receiveFragment : ReceiveFragment = ReceiveFragment();
     private val transactionFragment : Fragment = TransactionFragment();
     private val settingsFragment : Fragment = SettingsFragment();
 

@@ -17,6 +17,12 @@ public abstract class GuldenUnifiedBackend {
                                      signals);
     }
 
+    public static QrcodeRecord QRImageFromString(String qrString, int widthHint)
+    {
+        return CppProxy.QRImageFromString(qrString,
+                                          widthHint);
+    }
+
     private static final class CppProxy extends GuldenUnifiedBackend
     {
         private final long nativeRef;
@@ -41,5 +47,7 @@ public abstract class GuldenUnifiedBackend {
         }
 
         public static native int InitUnityLib(String dataDir, GuldenUnifiedFrontend signals);
+
+        public static native QrcodeRecord QRImageFromString(String qrString, int widthHint);
     }
 }
