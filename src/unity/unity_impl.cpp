@@ -1,13 +1,20 @@
+// Unity specific includes
 #include "unity_impl.h"
 #include "libinit.h"
+
+// Standard gulden headers
 #include "util.h"
 #include "ui_interface.h"
-#include <qrencode.h>
+#include "wallet/wallet.h"
 
+// Djinni generated files
 #include "gulden_unified_backend.hpp"
 #include "gulden_unified_frontend.hpp"
 #include "qrcode_record.hpp"
 #include "djinni_support.hpp"
+
+// External libraries
+#include <qrencode.h>
 
 static std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 void handlePostInitMain()
@@ -63,5 +70,27 @@ QrcodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_strin
         }
         QRcode_free(code);
         return QrcodeRecord(finalWidth, dataVector);
+    }
+}
+
+std::string GuldenUnifiedBackend::GetReceiveAddress()
+{
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    if (!pactiveWallet || !pactiveWallet->activeAccount)
+        return "";
+
+    CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_EXTERNAL);
+    CPubKey pubKey;
+    if (receiveAddress->GetReservedKey(pubKey))
+    {
+        CKeyID keyID = pubKey.GetID();
+        receiveAddress->ReturnKey();
+        delete receiveAddress;
+        return CGuldenAddress(keyID).ToString();
+    }
+    else
+    {
+        return "";
     }
 }
