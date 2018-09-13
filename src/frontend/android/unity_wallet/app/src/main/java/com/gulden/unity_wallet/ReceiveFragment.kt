@@ -117,10 +117,12 @@ class ReceiveFragment : Fragment() {
     public fun updateAddress()
     {
         if (currentAddressQrView != null) {
-            var imageData = GuldenUnifiedBackend.QRImageFromString("test", 600)
+            var address = GuldenUnifiedBackend.GetReceiveAddress();
+            var imageData = GuldenUnifiedBackend.QRImageFromString("gulden://"+address, 600)
             val bitmap = Bitmap.createBitmap(imageData.width, imageData.width, Bitmap.Config.ALPHA_8);
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageData.pixelData))
             currentAddressQrView.setImageBitmap(bitmap)
+            currentAddressLabel.setText(address)
         }
     }
 }

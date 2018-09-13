@@ -17,10 +17,17 @@ public abstract class GuldenUnifiedBackend {
                                      signals);
     }
 
+    /** Generate a QR code for a string, QR code will be as close to widthHint as possible when applying simple scaling. */
     public static QrcodeRecord QRImageFromString(String qrString, int widthHint)
     {
         return CppProxy.QRImageFromString(qrString,
                                           widthHint);
+    }
+
+    /** Get a receive address from the wallet */
+    public static String GetReceiveAddress()
+    {
+        return CppProxy.GetReceiveAddress();
     }
 
     private static final class CppProxy extends GuldenUnifiedBackend
@@ -49,5 +56,7 @@ public abstract class GuldenUnifiedBackend {
         public static native int InitUnityLib(String dataDir, GuldenUnifiedFrontend signals);
 
         public static native QrcodeRecord QRImageFromString(String qrString, int widthHint);
+
+        public static native String GetReceiveAddress();
     }
 }
