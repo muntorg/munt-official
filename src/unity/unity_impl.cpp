@@ -11,20 +11,36 @@
 #include "gulden_unified_backend.hpp"
 #include "gulden_unified_frontend.hpp"
 #include "qrcode_record.hpp"
+#include "balance_record.hpp"
 #include "djinni_support.hpp"
 
 // External libraries
 #include <qrencode.h>
 
 static std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
+
+static void notifyBalanceChanged(CWallet* pwallet)
+{
+    WalletBalances balances;
+    pwallet->GetBalances(balances, nullptr, false);
+    signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+}
+
 void handlePostInitMain()
 {
+    // Update sync progress as we receive headers/blocks.
     uiInterface.NotifySPVProgress.connect(
-        [=](int startHeight, int processedHeight, int expectedHeight)
-        {
-            signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight);
-        }
+        [=](int startHeight, int processedHeight, int expectedHeight) { signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight); }
     );
+
+    // Update transaction/balance changes
+    if (pactiveWallet)
+    {
+        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status) { notifyBalanceChanged(pwallet); } );
+
+        // Fire once immediately to update with latest on load.
+        notifyBalanceChanged(pactiveWallet);
+    }
 }
 
 int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::shared_ptr<GuldenUnifiedFrontend>& signals)

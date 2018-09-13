@@ -3,6 +3,19 @@ qrcode_record = record {
     pixel_data: binary;
 }
 
+balance_record = record {
+    availableIncludingLocked: i64;
+    availableExcludingLocked: i64;
+    availableLocked: i64;
+    unconfirmedIncludingLocked: i64;
+    unconfirmedExcludingLocked: i64;
+    unconfirmedLocked: i64;
+    immatureIncludingLocked: i64;
+    immatureExcludingLocked: i64;
+    immatureLocked: i64;
+    totalLocked: i64;
+}
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
@@ -22,4 +35,5 @@ gulden_unified_backend = interface +c {
 # This interface will be implemented in Java and ObjC and can be called from C++.
 gulden_unified_frontend = interface +j +o {
     notifySPVProgress(start_height : i32, progess_height : i32, expected_height : i32): bool;
+    notifyBalanceChange(new_balance : balance_record): bool;
 }
