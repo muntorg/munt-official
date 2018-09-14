@@ -102,8 +102,6 @@ If you are sure you need to build the software yourself, please read the [build 
 |Official block explorer|blockchain.gulden.com|-|
 |Community block explorer|www.dactual.com|-|
 |Community block explorer|www.guldenchain.com|testnet.guldenchain.com|
-|Electrum server 1|electrum1.gulden.com:5038|-|
-|Electrum server 2|electrum2.gulden.com:5038|-|
 |DNS Seed 1|seed.gulden.com|-|
 |DNS Seed 2|amsterdam.gulden.com|-|
 |DNS Seed 3|rotterdam.gulden.network|-|
