@@ -533,7 +533,7 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
     for (const auto& entry : mapWallet) {
         const CWalletTx& wtx = entry.second;
         const int depth = wtx.GetDepthInMainChain();
-        if (depth < 0 || !CheckFinalTx(*wtx.tx) || wtx.GetBlocksToMaturity() > 0 || wtx.isAbandoned()) {
+        if (depth < 0 || !CheckFinalTx(*wtx.tx, chainActive) || wtx.GetBlocksToMaturity() > 0 || wtx.isAbandoned()) {
             continue;
         }
 

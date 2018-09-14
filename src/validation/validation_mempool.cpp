@@ -124,6 +124,8 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                               bool* pfMissingInputs, int64_t nAcceptTime, std::list<CTransactionRef>* plTxnReplaced,
                               bool fOverrideMempoolLimit, const CAmount& nAbsurdFee, std::vector<COutPoint>& coins_to_uncache)
 {
+    const CChain& chain = chainActive;
+
     const CTransaction& tx = *ptx;
     const uint256 hash = tx.GetHash();
     AssertLockHeld(cs_main);
@@ -134,7 +136,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return false; // state filled in by CheckTransaction
 
     std::vector<CWitnessTxBundle> witnessBundles;
-    if (!CheckTransactionContextual(tx, state, chainActive.Tip()->nHeight, &witnessBundles))
+    if (!CheckTransactionContextual(tx, state, chain.Height(), &witnessBundles))
         return false; // state filled in by CheckTransaction
 
     // Coinbase is only valid in a block, not as a loose transaction
@@ -142,7 +144,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return state.DoS(100, false, REJECT_INVALID, "coinbase");
 
     // Reject transactions with witness before segregated witness activates
-    bool segsigEnabled = IsSegSigEnabled(chainActive.TipPrev());
+    bool segsigEnabled = IsSegSigEnabled(chain.TipPrev());
     bool hasSegregatedSignatures = tx.HasSegregatedSignatures();
     if (segsigEnabled && !hasSegregatedSignatures)
     {
@@ -155,13 +157,14 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
 
     // Rather not work on nonstandard transactions (unless -testnet/-regtest)
     std::string reason;
-    if (fRequireStandard && !IsStandardTx(tx, reason, segsigEnabled))
+    int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    if (fRequireStandard && !IsStandardTx(tx, reason, nPoW2Version, segsigEnabled))
         return state.DoS(0, false, REJECT_NONSTANDARD, reason);
 
     // Only accept nLockTime-using transactions that can be mined in the next
     // block; we don't want our mempool filled up with transactions that can't
     // be mined yet.
-    if (!CheckFinalTx(tx, STANDARD_LOCKTIME_VERIFY_FLAGS))
+    if (!CheckFinalTx(tx, chain, STANDARD_LOCKTIME_VERIFY_FLAGS))
         return state.DoS(0, false, REJECT_NONSTANDARD, "non-final");
 
     // is it already in the memory pool?

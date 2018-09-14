@@ -84,7 +84,7 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool s
     return whichType != TX_NONSTANDARD;
 }
 
-bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool segsigEnabled)
+bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version, const bool segsigEnabled)
 {
     if (tx.nVersion > CTransaction::MAX_STANDARD_VERSION || tx.nVersion < 1) {
         reason = "version";
@@ -94,7 +94,6 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool segsig
     // fixme: (2.1) we can combine this with the rule above once we are locked into phase 5.
     // Refuse to relay new style transactions, or transactions pretending to be new style transactions before phase 4 starts.
     // Refuse to relay old style transactions once phase 4 is active.
-    int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
     if (nPoW2Version < 4 && !IsOldTransactionVersion(tx.nVersion))
     {
         reason = "version";

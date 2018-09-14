@@ -1415,7 +1415,7 @@ bool CWalletTx::InMempool() const
 bool CWalletTx::IsTrusted() const
 {
     // Quick answer in most cases
-    if (!CheckFinalTx(*this))
+    if (!CheckFinalTx(*this, chainActive))
         return false;
     int nDepth = GetDepthInMainChain();
     if (nDepth >= 1)
@@ -1529,7 +1529,7 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins,
             if (!::IsMine(forAccount, *pcoin))
                 continue;
 
-            if (!CheckFinalTx(*pcoin))
+            if (!CheckFinalTx(*pcoin, chainActive))
                 continue;
 
             if (pcoin->IsCoinBase() && pcoin->GetBlocksToMaturity() > 0)

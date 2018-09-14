@@ -359,7 +359,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight);
  *
  * See consensus/consensus.h for flag definitions.
  */
-bool CheckFinalTx(const CTransaction &tx, int flags = -1);
+bool CheckFinalTx(const CTransaction &tx, const CChain& chain, int flags = -1);
 
 /**
  * Test whether the LockPoints height and time are still valid on the current chain
