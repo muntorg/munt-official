@@ -3868,7 +3868,10 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                     if (!txinfo.tx) {
                         continue;
                     }
-                    if (filterrate && txinfo.feeRate.GetFeePerK() < filterrate) {
+                    // the feeperkb != 0 is a hack to ensure that entries going into the mempool
+                    // while in pure partial sync are always send out
+                    if (   (filterrate && txinfo.feeRate.GetFeePerK() < filterrate)
+                        && txinfo.feeRate.GetFeePerK() != 0) {
                         continue;
                     }
                     if (pto->pfilter && !pto->pfilter->IsRelevantAndUpdate(*txinfo.tx)) continue;

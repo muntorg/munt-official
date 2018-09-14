@@ -29,6 +29,7 @@
 #include "util.h"
 #include "utilmoneystr.h"
 #include "chainparams.h"
+#include "Gulden/util.h"
 
 static const uint64_t MEMPOOL_DUMP_VERSION = 1;
 
@@ -124,7 +125,13 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                               bool* pfMissingInputs, int64_t nAcceptTime, std::list<CTransactionRef>* plTxnReplaced,
                               bool fOverrideMempoolLimit, const CAmount& nAbsurdFee, std::vector<COutPoint>& coins_to_uncache)
 {
-    const CChain& chain = chainActive;
+    bool fPartialChecksOnly =    IsPartialSyncActive()
+                              && partialChain.Height() > chainActive.Height()
+                              // for GetMedianTimePast calculation minimum depth of 6 is required, should pass as we
+                              // keep a much longer partial chain for difficulty verification and fork recovery
+                              && partialChain.Height() - partialChain.HeightOffset() > 6;
+
+    const CChain& chain = fPartialChecksOnly ? partialChain : chainActive;
 
     const CTransaction& tx = *ptx;
     const uint256 hash = tx.GetHash();
@@ -155,11 +162,14 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         return state.DoS(0, false, REJECT_NONSTANDARD, "segregated-sigdata-before-segregated-signatures-active", true);
     }
 
-    // Rather not work on nonstandard transactions (unless -testnet/-regtest)
-    std::string reason;
-    int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
-    if (fRequireStandard && !IsStandardTx(tx, reason, nPoW2Version, segsigEnabled))
-        return state.DoS(0, false, REJECT_NONSTANDARD, reason);
+    if (!fPartialChecksOnly)
+    {
+        // Rather not work on nonstandard transactions (unless -testnet/-regtest)
+        std::string reason;
+        int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+        if (fRequireStandard && !IsStandardTx(tx, reason, nPoW2Version, segsigEnabled))
+            return state.DoS(0, false, REJECT_NONSTANDARD, reason);
+    }
 
     // Only accept nLockTime-using transactions that can be mined in the next
     // block; we don't want our mempool filled up with transactions that can't
@@ -217,6 +227,16 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     }
     }
 
+    if (fPartialChecksOnly)
+    {
+        LOCK(pool.cs);
+        CTxMemPoolEntry entry(ptx, 0, nAcceptTime, chain.Height(), false, 0, LockPoints());
+        CTxMemPool::setEntries ancestorDummy;
+
+        // Store transaction in memory pool
+        pool.addUnchecked(hash, entry, ancestorDummy, false);
+    }
+    else
     {
         CCoinsView dummy;
         CCoinsViewCache view(&dummy);
