@@ -28,6 +28,9 @@ gulden_unified_backend = interface +c {
     # Get a receive address from the wallet
     static GetReceiveAddress(): string;
 
+    # Get a receive address from the wallet
+    static GetRecoveryPhrase(): string;
+
     # Interface constants
     const version: i32 = 1;
 }

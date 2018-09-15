@@ -6,6 +6,7 @@
 #include "util.h"
 #include "ui_interface.h"
 #include "wallet/wallet.h"
+#include "unity/appmanager.h"
 
 // Djinni generated files
 #include "gulden_unified_backend.hpp"
@@ -30,16 +31,22 @@ void handlePostInitMain()
 {
     // Update sync progress as we receive headers/blocks.
     uiInterface.NotifySPVProgress.connect(
-        [=](int startHeight, int processedHeight, int expectedHeight) { signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight); }
+        [=](int startHeight, int processedHeight, int expectedHeight)
+        {
+            signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight);
+        }
     );
 
     // Update transaction/balance changes
     if (pactiveWallet)
     {
-        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status) { notifyBalanceChanged(pwallet); } );
+        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status) 
+        {
+            notifyBalanceChanged(pwallet);
+        } );
 
         // Fire once immediately to update with latest on load.
-        notifyBalanceChanged(pactiveWallet);
+        //notifyBalanceChanged(pactiveWallet);
     }
 }
 
@@ -109,4 +116,55 @@ std::string GuldenUnifiedBackend::GetReceiveAddress()
     {
         return "";
     }
+}
+
+//fixme: (Unity) - find a way to use char[] here as well as on the java side.
+std::string GuldenUnifiedBackend::GetRecoveryPhrase()
+{
+    if (!pactiveWallet || !pactiveWallet->activeAccount)
+        return "";
+
+    //fixme: (Unity) - dedup; this shares common code with backupdialog.cpp
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+    //WalletModel::UnlockContext ctx(walletModel->requestUnlock());
+    //if (ctx.isValid())
+    {
+        int64_t birthTime = 0;
+
+        // determine block time of earliest transaction (if any)
+        // if this cannot be determined for every transaction a phrase without birth time acceleration will be used
+        int64_t firstTransactionTime = std::numeric_limits<int64_t>::max();
+        for (CWallet::TxItems::const_iterator it = pactiveWallet->wtxOrdered.begin(); it != pactiveWallet->wtxOrdered.end(); ++it)
+        {
+            CWalletTx* wtx = it->second.first;
+            if (!wtx->hashUnset())
+            {
+                CBlockIndex* index = mapBlockIndex[wtx->hashBlock];
+                if (index && index->IsValid(BLOCK_VALID_HEADER))
+                    firstTransactionTime = std::min(firstTransactionTime, std::max(int64_t(0), index->GetBlockTime()));
+                else
+                {
+                    firstTransactionTime = 0;
+                    break;
+                }
+            }
+        }
+
+        int64_t tipTime;
+        const CBlockIndex* lastSPVBlock = pactiveWallet->LastSPVBlockProcessed();
+        if (lastSPVBlock)
+            tipTime = lastSPVBlock->GetBlockTime();
+        else
+            tipTime = chainActive.Tip()->GetBlockTime();
+
+        // never use a time beyond our processed tip either spv or full sync
+        birthTime = std::min(tipTime, firstTransactionTime);
+
+        std::set<SecureString> allPhrases;
+        for (const auto& seedIter : pactiveWallet->mapSeeds)
+        {
+            return GuldenAppManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime).c_str();
+        }
+    }
+    return "";
 }
