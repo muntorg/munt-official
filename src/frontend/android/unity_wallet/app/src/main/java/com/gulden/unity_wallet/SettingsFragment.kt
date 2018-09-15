@@ -3,10 +3,14 @@ package com.gulden.unity_wallet
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceFragment
 import android.support.v4.app.Fragment
+import android.support.v7.preference.Preference
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -23,30 +27,25 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class SettingsFragment : Fragment() {
+class SettingsFragment : android.support.v7.preference.PreferenceFragmentCompat() {
+    override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.layout.fragment_settings, rootKey)
+    }
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+        if (preference!!.key == "recovery_preference") {
+            val phraseView = findPreference("recovery_view_preference");
+            phraseView.title = GuldenUnifiedBackend.GetRecoveryPhrase();
         }
+        return super.onPreferenceTreeClick(preference)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false)
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

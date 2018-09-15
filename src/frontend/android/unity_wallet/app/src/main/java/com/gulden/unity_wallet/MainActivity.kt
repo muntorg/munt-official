@@ -1,12 +1,14 @@
 package com.gulden.unity_wallet
 
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.GuldenUnifiedFrontendImpl
 import com.gulden.unity_wallet.SendFragment.OnFragmentInteractionListener
@@ -23,8 +25,8 @@ fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int){
     supportFragmentManager.inTransaction { add(frameId, fragment) }
 }
 
-fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int) {
-    supportFragmentManager.inTransaction{replace(frameId, fragment)}
+fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
+    supportFragmentManager.inTransaction{replace(frameId, fragment as Fragment)}
 }
 
 class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener  {
@@ -33,10 +35,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
         TODO("not implemented")
     }
 
-    private val sendFragment : Fragment = SendFragment();
+    private val sendFragment : SendFragment = SendFragment();
     private val receiveFragment : ReceiveFragment = ReceiveFragment();
-    private val transactionFragment : Fragment = TransactionFragment();
-    private val settingsFragment : Fragment = SettingsFragment();
+    private val transactionFragment : TransactionFragment = TransactionFragment();
+    private val settingsFragment : SettingsFragment = SettingsFragment();
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -84,5 +86,13 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
     public fun updateSyncProgressPercent(percent : Float)
     {
         syncProgress.setProgress((1000000 * (percent/100)).toInt());
+    }
+
+    public fun updateBalance(balance : Long)
+    {
+        walletBalance.setText((balance.toFloat() / 100000000).toString())
+        walletBalanceLogo.visibility = View.VISIBLE;
+        walletBalance.visibility = View.VISIBLE;
+        walletLogo.visibility = View.GONE;
     }
 }

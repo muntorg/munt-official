@@ -42,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:visibility="visible"
                 app:srcCompat="@drawable/ic_gulden_logo_text" />
 
             <ImageView
@@ -50,7 +51,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:srcCompat="@drawable/ic_g_logo" />
 
             <TextView
@@ -62,7 +63,7 @@
                 android:text="0.00"
                 android:textColor="@color/colorPrimary"
                 android:textSize="22sp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 tools:textColor="@color/colorPrimary" />
 
             <Space

@@ -15,4 +15,10 @@ public class GuldenUnifiedFrontendImpl extends GuldenUnifiedFrontend {
         }
         return true;
     }
+
+    @Override
+    public boolean notifyBalanceChange(BalanceRecord newBalance) {
+        activity.updateBalance(newBalance.mAvailableIncludingLocked + newBalance.mImmatureIncludingLocked + newBalance.mUnconfirmedIncludingLocked);
+        return false;
+    }
 }

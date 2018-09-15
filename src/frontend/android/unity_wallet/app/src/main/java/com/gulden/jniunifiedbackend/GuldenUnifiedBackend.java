@@ -30,6 +30,12 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.GetReceiveAddress();
     }
 
+    /** Get a receive address from the wallet */
+    public static String GetRecoveryPhrase()
+    {
+        return CppProxy.GetRecoveryPhrase();
+    }
+
     private static final class CppProxy extends GuldenUnifiedBackend
     {
         private final long nativeRef;
@@ -58,5 +64,7 @@ public abstract class GuldenUnifiedBackend {
         public static native QrcodeRecord QRImageFromString(String qrString, int widthHint);
 
         public static native String GetReceiveAddress();
+
+        public static native String GetRecoveryPhrase();
     }
 }
