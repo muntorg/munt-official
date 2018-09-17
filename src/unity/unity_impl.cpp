@@ -65,6 +65,11 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     return InitUnity();
 }
 
+void TerminateUnityLib()
+{
+    return GuldenAppManager::gApp->shutdown()
+}
+
 QrcodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)
 {
     QRcode* code = QRcode_encodeString(qr_string.c_str(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);

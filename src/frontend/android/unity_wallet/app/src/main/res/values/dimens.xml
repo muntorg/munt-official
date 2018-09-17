@@ -6,4 +6,5 @@
     <!-- Bottom navigation bar. -->
     <dimen name="design_bottom_navigation_height">75dp</dimen>
     <dimen name="design_bottom_navigation_margin">5dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

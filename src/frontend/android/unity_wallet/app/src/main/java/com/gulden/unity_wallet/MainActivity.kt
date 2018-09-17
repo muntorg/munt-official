@@ -1,5 +1,6 @@
 package com.gulden.unity_wallet
 
+import android.content.Intent
 import android.net.Uri
 import android.opengl.Visibility
 import android.os.Bundle
@@ -9,6 +10,9 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.vision.barcode.Barcode
+import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.GuldenUnifiedFrontendImpl
 import com.gulden.unity_wallet.SendFragment.OnFragmentInteractionListener
@@ -94,5 +98,38 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
         walletBalanceLogo.visibility = View.VISIBLE;
         walletBalance.visibility = View.VISIBLE;
         walletLogo.visibility = View.GONE;
+    }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    fun handleQRScanButtonClick(view : View) {
+        val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
+        startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == BARCODE_READER_REQUEST_CODE) {
+            if (resultCode == CommonStatusCodes.SUCCESS)
+            {
+                if (data != null) {
+                    val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
+                    val p = barcode.cornerPoints
+
+                    val QRCode = barcode.displayValue;
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    companion object {
+        private val BARCODE_READER_REQUEST_CODE = 1
     }
 }

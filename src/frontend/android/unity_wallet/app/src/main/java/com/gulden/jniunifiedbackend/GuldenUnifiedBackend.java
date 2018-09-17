@@ -10,11 +10,17 @@ public abstract class GuldenUnifiedBackend {
     /** Interface constants */
     public static final int VERSION = 1;
 
-    /**Methods */
+    /** Start the library */
     public static int InitUnityLib(String dataDir, GuldenUnifiedFrontend signals)
     {
         return CppProxy.InitUnityLib(dataDir,
                                      signals);
+    }
+
+    /** Stop the library */
+    public static void TerminateUnityLib()
+    {
+        CppProxy.TerminateUnityLib();
     }
 
     /** Generate a QR code for a string, QR code will be as close to widthHint as possible when applying simple scaling. */
@@ -60,6 +66,8 @@ public abstract class GuldenUnifiedBackend {
         }
 
         public static native int InitUnityLib(String dataDir, GuldenUnifiedFrontend signals);
+
+        public static native void TerminateUnityLib();
 
         public static native QrcodeRecord QRImageFromString(String qrString, int widthHint);
 

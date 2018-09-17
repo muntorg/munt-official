@@ -19,8 +19,11 @@ balance_record = record {
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
-    #Methods
+    # Start the library
     static InitUnityLib(data_dir : string, signals : gulden_unified_frontend): i32;
+
+    # Stop the library
+    static TerminateUnityLib();
 
     # Generate a QR code for a string, QR code will be as close to width_hint as possible when applying simple scaling.
     static QRImageFromString(qr_string : string, width_hint : i32): qrcode_record;
