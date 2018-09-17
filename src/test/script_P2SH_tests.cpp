@@ -20,6 +20,7 @@
 #include "script/sign.h"
 #include "script/ismine.h"
 #include "test/test_gulden.h"
+#include "Gulden/util.h"
 
 #include <vector>
 
@@ -96,7 +97,8 @@ BOOST_AUTO_TEST_CASE(sign)
         txFrom.vout[i+4].output.scriptPubKey = standardScripts[i];
         txFrom.vout[i+4].nValue = COIN;
     }
-    BOOST_CHECK(IsStandardTx(txFrom, reason));
+    int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    BOOST_CHECK(IsStandardTx(txFrom, reason, nPoW2Version));
 
     std::vector<CMutableTransaction> txTo; // Spending transactions
     txTo.resize(8, CMutableTransaction(TEST_DEFAULT_TX_VERSION));
@@ -196,7 +198,8 @@ BOOST_AUTO_TEST_CASE(set)
         txFrom.vout[i].output.scriptPubKey = outer[i];
         txFrom.vout[i].nValue = CENT;
     }
-    BOOST_CHECK(IsStandardTx(txFrom, reason));
+    int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    BOOST_CHECK(IsStandardTx(txFrom, reason, nPoW2Version));
 
     std::vector<CMutableTransaction> txTo; // Spending transactions
     txTo.resize(4, CMutableTransaction(TEST_DEFAULT_TX_VERSION));
@@ -213,7 +216,7 @@ BOOST_AUTO_TEST_CASE(set)
     for (int i = 0; i < 4; i++)
     {
         BOOST_CHECK_MESSAGE(SignSignature(keystore, txFrom, txTo[i], 0, SIGHASH_ALL, SignType::Spend), strprintf("SignSignature %d", i));
-        BOOST_CHECK_MESSAGE(IsStandardTx(txTo[i], reason), strprintf("txTo[%d].IsStandard", i));
+        BOOST_CHECK_MESSAGE(IsStandardTx(txTo[i], reason, nPoW2Version), strprintf("txTo[%d].IsStandard", i));
     }
     #endif
 }

@@ -181,7 +181,7 @@ CCoinsViewDB *pcoinsdbview = NULL;
 CCoinsViewCache *pcoinsTip = NULL;
 CBlockTreeDB *pblocktree = NULL;
 
-bool CheckFinalTx(const CTransaction &tx, int flags)
+bool CheckFinalTx(const CTransaction &tx, const CChain& chain, int flags)
 {
     AssertLockHeld(cs_main);
 
@@ -199,7 +199,7 @@ bool CheckFinalTx(const CTransaction &tx, int flags)
     // evaluated is what is used. Thus if we want to know if a
     // transaction can be part of the *next* block, we need to call
     // IsFinalTx() with one more than chainActive.Height().
-    const int nBlockHeight = chainActive.Height() + 1;
+    const int nBlockHeight = chain.Height() + 1;
 
     // BIP113 will require that time-locked transactions have nLockTime set to
     // less than the median time of the previous block they're contained in.
@@ -207,7 +207,7 @@ bool CheckFinalTx(const CTransaction &tx, int flags)
     // chain tip, so we use that to calculate the median time passed to
     // IsFinalTx() if LOCKTIME_MEDIAN_TIME_PAST is set.
     const int64_t nBlockTime = (flags & LOCKTIME_MEDIAN_TIME_PAST)
-                             ? chainActive.Tip()->GetMedianTimePast()
+                             ? chain.Tip()->GetMedianTimePast()
                              : GetAdjustedTime();
 
     return IsFinalTx(tx, nBlockHeight, nBlockTime);
@@ -3711,8 +3711,6 @@ void PruneBlockIndexForPartialSync()
     if (isFullSyncMode() || !IsPartialSyncActive())
         return;
 
-    LogPrintf("Prune block index in partial sync only\n");
-
     int minimalHeight = std::max(partialChain.HeightOffset(), partialChain.Height() - PARTIAL_SYNC_PRUNE_HEIGHT);
 
     std::vector<const CBlockIndex*> removals;
@@ -3724,8 +3722,10 @@ void PruneBlockIndexForPartialSync()
             removals.push_back(index);
     }
 
-    LogPrintf("%s: deleting %d block indexes\n", __func__, removals.size());
+    LogPrintf("%s: deleting %d block indexes, prune height = %d\n", __func__, removals.size(), minimalHeight);
 
+    // Will usually have at least one index to prune, because when loading the index
+    // of the previous block of partial chain start is added. This is ok.
     if (removals.size() > 0)
     {
         pblocktree->EraseBatchSync(removals);
@@ -4056,13 +4056,13 @@ void StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
 
     if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= time)
     {
-        LogPrintf("Partial sync already in progress when start requested. Sync continues.\n");
+        LogPrintf("Partial sync continues, height offset = %d.\n", partialChain.HeightOffset());
         return;
     }
 
     if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() > time)
     {
-        LogPrintf("Partial sync in progress but starting point is to fresh for requested start. Sync restarted.\n");
+        LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync restarted.\n");
         pindexBestPartial = nullptr;
         partialChain.SetTip(nullptr);
         partialChain.SetHeightOffset(0);

@@ -707,7 +707,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
     for (const std::pair<uint256, CWalletTx>& pairWtx : pwallet->mapWallet)
     {
         const CWalletTx& wtx = pairWtx.second;
-        if (wtx.IsCoinBase() || !CheckFinalTx(*wtx.tx))
+        if (wtx.IsCoinBase() || !CheckFinalTx(*wtx.tx, chainActive))
             continue;
 
         for(const CTxOut& txout : wtx.tx->vout)
@@ -1305,7 +1305,7 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
     for (const std::pair<uint256, CWalletTx>& pairWtx : pwallet->mapWallet) {
         const CWalletTx& wtx = pairWtx.second;
 
-        if (wtx.IsCoinBase() || !CheckFinalTx(*wtx.tx))
+        if (wtx.IsCoinBase() || !CheckFinalTx(*wtx.tx, chainActive))
             continue;
 
         int nDepth = wtx.GetDepthInMainChain();
