@@ -3231,6 +3231,14 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             pindex = pindex->pprev;
         partialChain.SetHeightOffset(pindex->nHeight);
         partialChain.SetTip(pindexBestPartial);
+
+        // if block index loading createed an empty index in front of the partial chain it needs to be removed
+        if (partialChain[partialChain.HeightOffset()]->pprev && partialChain[partialChain.HeightOffset()]->pprev->nStatus == 0)
+        {
+            uint256 prevHash = partialChain[partialChain.HeightOffset()]->pprev->GetBlockHashPoW2();
+            mapBlockIndex.erase(prevHash);
+            partialChain[partialChain.HeightOffset()]->pprev = nullptr;
+        }
     }
 
     // Load block file info

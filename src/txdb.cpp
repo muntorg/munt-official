@@ -312,6 +312,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts(std::function<CBlockIndex*(const uint256&)
             if (pcursor->GetValue(diskindex)) {
                 // Construct block index object
                 CBlockIndex* pindexNew = insertBlockIndex(diskindex.GetBlockHashPoW2());
+                // this insertBlockIndex can create an index block that is never loaded with data
                 pindexNew->pprev          = insertBlockIndex(diskindex.hashPrev);
                 pindexNew->nHeight        = diskindex.nHeight;
                 pindexNew->nFile          = diskindex.nFile;
@@ -323,6 +324,8 @@ bool CBlockTreeDB::LoadBlockIndexGuts(std::function<CBlockIndex*(const uint256&)
                 pindexNew->nBits          = diskindex.nBits;
                 pindexNew->nNonce         = diskindex.nNonce;
                 pindexNew->nStatus        = diskindex.nStatus;
+                // nStatus later used to check if a block index was created during loading but never filled
+                assert(pindexNew->nStatus != 0);
                 pindexNew->nTx            = diskindex.nTx;
 
                 pindexNew->nVersionPoW2Witness = diskindex.nVersionPoW2Witness;
