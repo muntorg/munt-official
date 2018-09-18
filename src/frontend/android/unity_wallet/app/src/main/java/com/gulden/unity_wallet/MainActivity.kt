@@ -2,7 +2,6 @@ package com.gulden.unity_wallet
 
 import android.content.Intent
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -15,12 +14,14 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.GuldenUnifiedFrontendImpl
+import com.gulden.jniunifiedbackend.UriRecord
 import com.gulden.unity_wallet.MainActivityFragments.ReceiveFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment.OnFragmentInteractionListener
 import com.gulden.unity_wallet.MainActivityFragments.SettingsFragment
 import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import kotlin.concurrent.thread
 
 
@@ -117,16 +118,51 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
         startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
     }
 
+    fun Uri.getParameters(): HashMap<String, String> {
+        val items : HashMap<String, String> = HashMap<String, String>();
+        if (isOpaque())
+            return items;
 
+        val query = encodedQuery ?: return items;
+
+        var start = 0
+        do {
+            val nextAmpersand = query.indexOf('&', start)
+            val end = if (nextAmpersand != -1) nextAmpersand else query.length
+
+            var separator = query.indexOf('=', start)
+            if (separator > end || separator == -1) {
+                separator = end
+            }
+
+            if (separator == end) {
+                items[Uri.decode(query.substring(start, separator))] = "";
+            } else {
+                items[Uri.decode(query.substring(start, separator))] = Uri.decode(query.substring(separator + 1, end));
+            }
+
+            // Move start to end of name.
+            if (nextAmpersand != -1) {
+                start = nextAmpersand + 1
+            } else {
+                break
+            }
+        } while (true)
+        return items
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BARCODE_READER_REQUEST_CODE) {
             if (resultCode == CommonStatusCodes.SUCCESS)
             {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                    val p = barcode.cornerPoints
 
-                    val QRCode = barcode.displayValue;
+                    val parsedQRCodeURI = Uri.parse(barcode.displayValue);
+                    val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, parsedQRCodeURI.authority + parsedQRCodeURI.path , parsedQRCodeURI.getParameters())
+                    if (GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord)) {
+                        val intent = Intent(applicationContext, SendCoinsActivity::class.java)
+                        startActivityForResult(intent, SEND_COINS_RETURN_CODE)
+                    }
                 }
             }
         } else {
@@ -136,5 +172,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
 
     companion object {
         private val BARCODE_READER_REQUEST_CODE = 1
+        private val SEND_COINS_RETURN_CODE = 2
     }
 }
