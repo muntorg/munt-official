@@ -30,6 +30,10 @@
         <activity
             android:name="com.gulden.barcodereader.BarcodeCaptureActivity"
             android:label="@string/title_activity_barcode_capture"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SendCoinsActivity"
+            android:label="@string/title_activity_send_coins"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
