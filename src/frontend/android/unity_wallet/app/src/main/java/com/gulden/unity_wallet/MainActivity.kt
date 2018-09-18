@@ -15,7 +15,11 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.GuldenUnifiedFrontendImpl
-import com.gulden.unity_wallet.SendFragment.OnFragmentInteractionListener
+import com.gulden.unity_wallet.MainActivityFragments.ReceiveFragment
+import com.gulden.unity_wallet.MainActivityFragments.SendFragment
+import com.gulden.unity_wallet.MainActivityFragments.SendFragment.OnFragmentInteractionListener
+import com.gulden.unity_wallet.MainActivityFragments.SettingsFragment
+import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
 
@@ -112,6 +116,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
         val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
         startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BARCODE_READER_REQUEST_CODE) {
