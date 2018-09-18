@@ -4,130 +4,156 @@
     android:id="@+id/numeric_keypad"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:columnCount="3"
+    android:columnCount="5"
     android:orientation="horizontal"
-    android:stretchColumns="1">
+    android:stretchColumns="0, 4">
 
     <TableRow>
 
-        <com.gulden.unity_wallet.ui.SquareButton
+        <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_rounded_button"
             android:text="1"
             android:textColor="@android:color/white" />
 
-        <com.gulden.unity_wallet.ui.SquareButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/shape_rounded_button"
             android:text="2"
             android:textColor="@android:color/white" />
 
-        <com.gulden.unity_wallet.ui.SquareButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/shape_rounded_button"
             android:text="3"
             android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </TableRow>
 
     <TableRow>
 
-        <com.gulden.unity_wallet.ui.SquareButton
+        <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_rounded_button"
             android:text="4"
             android:textColor="@android:color/white" />
 
-        <com.gulden.unity_wallet.ui.SquareButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/shape_rounded_button"
             android:text="5"
             android:textColor="@android:color/white" />
 
-        <com.gulden.unity_wallet.ui.SquareButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/shape_rounded_button"
             android:text="6"
             android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </TableRow>
 
     <TableRow>
 
-        <com.gulden.unity_wallet.ui.SquareButton
+        <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_rounded_button"
             android:text="7"
             android:textColor="@android:color/white" />
 
-        <com.gulden.unity_wallet.ui.SquareButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/shape_rounded_button"
             android:text="8"
             android:textColor="@android:color/white" />
 
-        <com.gulden.unity_wallet.ui.SquareButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/shape_rounded_button"
             android:text="9"
             android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </TableRow>
 
     <TableRow>
 
-        <com.gulden.unity_wallet.ui.SquareButton
+        <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/shape_rounded_button"
             android:text="."
             android:textColor="@android:color/white" />
 
-        <com.gulden.unity_wallet.ui.SquareButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/shape_rounded_button"
             android:text="0"
             android:textColor="@android:color/white" />
 
-        <com.gulden.unity_wallet.ui.SquareButton
-            android:id="@+id/imageButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/shape_rounded_button"
             android:text="x"
             android:textColor="@android:color/white"
             app:srcCompat="@android:drawable/ic_notification_clear_all" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </TableRow>
 
 </TableLayout>
