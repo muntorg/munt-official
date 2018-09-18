@@ -16,6 +16,12 @@ balance_record = record {
     totalLocked: i64;
 }
 
+uri_record = record {
+    scheme : string;
+    path : string;
+    items: map<string, string>;
+}
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
@@ -33,6 +39,9 @@ gulden_unified_backend = interface +c {
 
     # Get a receive address from the wallet
     static GetRecoveryPhrase(): string;
+
+    # Check if text/address is something we are capable of sending money too
+    static IsValidRecipient(recipient : uri_record): bool;
 
     # Interface constants
     const version: i32 = 1;

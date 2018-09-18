@@ -13,10 +13,13 @@
 #include "gulden_unified_frontend.hpp"
 #include "qrcode_record.hpp"
 #include "balance_record.hpp"
+#include "uri_record.hpp"
 #include "djinni_support.hpp"
 
 // External libraries
+#include <boost/algorithm/string.hpp>
 #include <qrencode.h>
+
 
 static std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 
@@ -65,9 +68,9 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     return InitUnity();
 }
 
-void TerminateUnityLib()
+void GuldenUnifiedBackend::TerminateUnityLib()
 {
-    return GuldenAppManager::gApp->shutdown()
+    return GuldenAppManager::gApp->shutdown();
 }
 
 QrcodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)
@@ -172,4 +175,17 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
         }
     }
     return "";
+}
+
+bool GuldenUnifiedBackend::IsValidRecipient(const UriRecord& recipient)
+{
+     // return if URI is not valid or is no Gulden: URI
+    std::string lowerCaseScheme = boost::algorithm::to_lower_copy(recipient.scheme);
+    if (lowerCaseScheme != "guldencoin" && lowerCaseScheme != "gulden")
+        return false;
+
+    if (!CGuldenAddress(recipient.path).IsValid())
+        return false;
+
+    return true;
 }
