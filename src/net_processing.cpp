@@ -3534,7 +3534,11 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         // Start sync
         if (pindexBestHeader == NULL)
             pindexBestHeader = chainActive.Tip();
-        bool fFetch = state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot); // Download if this is a nice peer, or we have no nice peers and this one might do.
+
+        // Download if this is a nice peer, or we have no nice peers and this one might do.
+        // Don't download from peers that are behind a lot and have not even made it to the last checkpoint
+        bool fFetch =    pto->nStartingHeight > Checkpoints::LastCheckPointHeight()
+                      && state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot);
 
         // Partial header sync
         if (fFetch && !state.fPartialSyncStarted && nPartialSyncStarted == 0 && IsPartialSyncActive() &&  !pto->fClient && !fImporting && !fReindex) {
