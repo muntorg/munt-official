@@ -42,6 +42,12 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.GetRecoveryPhrase();
     }
 
+    /** Check if text/address is something we are capable of sending money too */
+    public static boolean IsValidRecipient(UriRecord recipient)
+    {
+        return CppProxy.IsValidRecipient(recipient);
+    }
+
     private static final class CppProxy extends GuldenUnifiedBackend
     {
         private final long nativeRef;
@@ -74,5 +80,7 @@ public abstract class GuldenUnifiedBackend {
         public static native String GetReceiveAddress();
 
         public static native String GetRecoveryPhrase();
+
+        public static native boolean IsValidRecipient(UriRecord recipient);
     }
 }
