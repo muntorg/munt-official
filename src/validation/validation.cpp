@@ -2124,6 +2124,9 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     }
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
 
+    // we're only called for blocks that have the header verified (or Genenis)
+    pindexNew->RaiseValidity(BLOCK_VALID_HEADER);
+
     pindexNew->nChainWork = CalculateChainWork(pindexNew, chainParams);
     if ((pindexNew->nHeight > 0 && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)) || pindexNew->nHeight == 0)
     {
