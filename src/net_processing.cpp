@@ -2822,6 +2822,15 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 return true;
             }
 
+            // Partial sync got deactivated after the partial header sync was started on this node
+            if (nodestate->fPartialSyncStarted && !IsPartialSyncActive())
+            {
+                nodestate->fPartialSyncStarted = false;
+                nPartialSyncStarted--;
+                LogPrintf("Giving up forward partial header sync, peer=%d\n", pfrom->GetId());
+                return true;
+            }
+
             LogPrint(BCLog::NET, "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight, pfrom->GetId(), pfrom->nStartingHeight);
             LOCK(cs_main);
             bool connectsToPartial = IsPartialSyncActive() && partialChain.FindFork(pindexLast);
@@ -3544,6 +3553,13 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             // we only send the big addr message once
             if (pto->vAddrToSend.capacity() > 40)
                 pto->vAddrToSend.shrink_to_fit();
+        }
+
+        // Reset partial header sync (occurs when partial sync is deactivated)
+        if (!IsPartialSyncActive() && state.fPartialSyncStarted)
+        {
+            state.fPartialSyncStarted = false;
+            nPartialSyncStarted--;
         }
 
         // Start sync
