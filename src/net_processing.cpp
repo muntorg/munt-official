@@ -4110,6 +4110,12 @@ void CancelPriorityDownload(const CBlockIndex *index, const PriorityDownloadCall
     blocksToDownloadFirst.remove_if([&index](const PriorityBlockRequest& request){ return request.pindex == index; });
 }
 
+void CancelAllPriorityDownloads()
+{
+    LOCK(cs_main);
+    blocksToDownloadFirst.clear();
+}
+
 void PreventBlockDownloadDuringHeaderSync(bool state) {
     fPreventBlockDownloadDuringHeaderSync = state;
 }

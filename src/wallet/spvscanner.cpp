@@ -159,31 +159,39 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
 
 void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
 {
-    // initialization on the first header tip notification
-    if (lastProcessed == nullptr)
+    if (pTip)
     {
-        if (partialChain.Height() >= partialChain.HeightOffset()
-                && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= startTime)
+        // initialization on the first header tip notification
+        if (lastProcessed == nullptr)
         {
-            // use start of partial chain to init lastProcessed
-            // forks are handled when requesting blocks which will also fast-forward to startTime
-            // should the headerChain be very early
-            lastProcessed = partialChain[partialChain.HeightOffset()];
+            if (partialChain.Height() >= partialChain.HeightOffset()
+                    && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= startTime)
+            {
+                // use start of partial chain to init lastProcessed
+                // forks are handled when requesting blocks which will also fast-forward to startTime
+                // should the headerChain be very early
+                lastProcessed = partialChain[partialChain.HeightOffset()];
+            }
+            else
+            {
+                // headerChain not usable, it does not start early enough or has no data. This should not happen.
+                return;
+            }
         }
-        else
-        {
-            // headerChain not usable, it does not start early enough or has no data. This should not happen.
-            return;
-        }
+
+        requestTip = lastProcessed;
+        startHeight = lastProcessed->nHeight;
+
+        LogPrint(BCLog::WALLET, "SPV init using %s (height = %d) as last processed block\n",
+                 lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
+
+        RequestBlocks();
     }
-
-    requestTip = lastProcessed;
-    startHeight = lastProcessed->nHeight;
-
-    LogPrint(BCLog::WALLET, "SPV init using %s (height = %d) as last processed block\n",
-             lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
-
-    RequestBlocks();
+    else // pTip == nullptr => partial sync stopped
+    {
+        CancelAllPriorityDownloads();
+        Persist();
+    }
 }
 
 void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
