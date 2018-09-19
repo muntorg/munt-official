@@ -4095,54 +4095,64 @@ bool isFullSyncMode() {
     return fFullSyncMode;
 }
 
-void StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
+bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
 {
-    headerTipSignal.connect(notifyCallback);
 
     if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= time)
     {
         LogPrintf("Partial sync continues, height offset = %d.\n", partialChain.HeightOffset());
-        return;
+    }
+    else {
+        if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() > time)
+        {
+            LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync reset.\n");
+            pindexBestPartial = nullptr;
+            partialChain.SetTip(nullptr);
+            partialChain.SetHeightOffset(0);
+        }
+
+        // Search checkpoint with at least a 576 block height difference to the checkpoint that is the youngest before
+        // the desired starting time. This way when we reach the latter checkpoint there will be enough data to do context checks
+        // the largest windows for context checking is the DELTA algorithm, which needs 576 blocks.
+        CheckPointEntry entry;
+        int youngestHeight = Checkpoints::LastCheckpointAt(time, entry);
+        int olderHeight = youngestHeight;
+        while (olderHeight > 0 && youngestHeight - olderHeight <= 576)
+        {
+            olderHeight = Checkpoints::LastCheckpointAt(entry.nTime - 1, entry);
+        }
+        // if no suitable checkpoint was found use Genesis
+        if (olderHeight < 0)
+        {
+            olderHeight = Checkpoints::LastCheckpointAt(Params().GenesisBlock().GetBlockTime(), entry);
+            assert(olderHeight == 0);
+        }
+
+        if (olderHeight - 576 >= chainActive.Height() || !isFullSyncMode())
+        {
+            // inititalize partial sync
+            partialChain.SetHeightOffset(olderHeight);
+            CBlockIndex* index = InsertBlockIndex(entry.hash);
+            index->nHeight = olderHeight;
+            index->RaisePartialValidity(BLOCK_PARTIAL_TREE);
+            partialChain.SetTip(index);
+            pindexBestPartial = index;
+
+            setDirtyBlockIndex.insert(index);
+
+            LogPrintf("Partial headers started from built-in checkpoint with height=%d\n", olderHeight);
+
+            // from now IsPartialSyncActive() == true, as the offset is set and the partial chain has at least one entry
+        }
+        else
+        {
+            LogPrintf("Partial headers NOT started started as full chain is ahead of required offset, height=%d offset=%d\n", chainActive.Height(), olderHeight);
+            return false;
+        }
     }
 
-    if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() > time)
-    {
-        LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync restarted.\n");
-        pindexBestPartial = nullptr;
-        partialChain.SetTip(nullptr);
-        partialChain.SetHeightOffset(0);
-    }
-
-    // Search checkpoint with at least a 576 block height difference to the checkpoint that is the youngest before
-    // the desired starting time. This way when we reach the latter checkpoint there will be enough data to do context checks
-    // the largest windows for context checking is the DELTA algorithm, which needs 576 blocks.
-    CheckPointEntry entry;
-    int youngestHeight = Checkpoints::LastCheckpointAt(time, entry);
-    int olderHeight = youngestHeight;
-    while (olderHeight > 0 && youngestHeight - olderHeight <= 576)
-    {
-        olderHeight = Checkpoints::LastCheckpointAt(entry.nTime - 1, entry);
-    }
-    // if no suitable checkpoint was found use Genesis
-    if (olderHeight < 0)
-    {
-        olderHeight = Checkpoints::LastCheckpointAt(Params().GenesisBlock().GetBlockTime(), entry);
-        assert(olderHeight == 0);
-    }
-
-    // inititalize partial sync
-    partialChain.SetHeightOffset(olderHeight);
-    CBlockIndex* index = InsertBlockIndex(entry.hash);
-    index->nHeight = olderHeight;
-    index->RaisePartialValidity(BLOCK_PARTIAL_TREE);
-    partialChain.SetTip(index);
-    pindexBestPartial = index;
-
-    setDirtyBlockIndex.insert(index);
-
-    LogPrintf("Partial headers started from built-in checkpoint with height=%d\n", olderHeight);
-
-    // from now IsPartialSyncActive() == true, as the offset is set and the partial chain has at least one entry
+    headerTipSignal.connect(notifyCallback);
+    return true;
 }
 
 class CMainCleanup
