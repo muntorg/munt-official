@@ -158,9 +158,17 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
 
                     val parsedQRCodeURI = Uri.parse(barcode.displayValue);
-                    val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, parsedQRCodeURI.authority + parsedQRCodeURI.path , parsedQRCodeURI.getParameters())
+                    var address : String = "";
+                    address += parsedQRCodeURI?.authority;
+                    address += parsedQRCodeURI?.path;
+                    val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, address , parsedQRCodeURI.getParameters())
                     if (GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord)) {
                         val intent = Intent(applicationContext, SendCoinsActivity::class.java)
+                        intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT_ADDRESS, address);
+                        if (parsedQRCodeURIRecord.items.containsKey("amount"))
+                        {
+                            intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT_AMOUNT, parsedQRCodeURIRecord.items["amount"]);
+                        }
                         startActivityForResult(intent, SEND_COINS_RETURN_CODE)
                     }
                 }
