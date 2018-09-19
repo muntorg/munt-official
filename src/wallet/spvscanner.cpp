@@ -60,9 +60,9 @@ CSPVScanner::~CSPVScanner()
 {
 }
 
-void CSPVScanner::StartScan()
+bool CSPVScanner::StartScan()
 {
-    StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1));
+    return StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1));
 }
 
 const CBlockIndex* CSPVScanner::LastBlockProcessed() const
