@@ -231,10 +231,9 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     {
         LOCK(pool.cs);
         CTxMemPoolEntry entry(ptx, 0, nAcceptTime, chain.Height(), false, 0, LockPoints());
-        CTxMemPool::setEntries ancestorDummy;
 
         // Store transaction in memory pool
-        pool.addUnchecked(hash, entry, ancestorDummy, false);
+        pool.addUnchecked(hash, entry, false);
     }
     else
     {
