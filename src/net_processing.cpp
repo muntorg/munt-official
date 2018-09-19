@@ -2811,7 +2811,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 return true;
             }
 
-            if (nodestate->fSyncStarted && IsPartialSyncActive() && !IsPartialNearPresent())
+            // If full header sync is active but partial sync is not catched up yet, give up the full header
+            // sync as it will slow down the partial sync (this is a safeguard and should not happen during normal
+            // operation as full header sync is only started when partial sync is near present
+            if (nodestate->fSyncStarted && IsPartialSyncActive() && !IsPartialNearPresent(BLOCK_PARTIAL_TRANSACTIONS))
             {
                 nodestate->fSyncStarted = false;
                 nSyncStarted--;
@@ -3550,7 +3553,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         // Download if this is a nice peer, or we have no nice peers and this one might do.
         // Don't download from peers that are behind a lot and have not even made it to the last checkpoint
         bool fFetch =    pto->nStartingHeight > Checkpoints::LastCheckPointHeight()
-                      && state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot);
+                      && (state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot));
 
         // Partial header sync
         if (fFetch && !state.fPartialSyncStarted && nPartialSyncStarted == 0 && IsPartialSyncActive() &&  !pto->fClient && !fImporting && !fReindex) {
