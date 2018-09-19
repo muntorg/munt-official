@@ -1855,6 +1855,34 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
     return true;
 }
 
+// Requires cs_main
+void DeactivatePartialSync()
+{
+    LogPrintf("Transition partial into full sync height = %d\n", chainActive.Height());
+
+    // clear partial chain => !IsPartialSyncActive()
+    partialChain.SetTip(nullptr);
+    partialChain.SetHeightOffset(0);
+    pindexBestPartial = nullptr;
+
+    // clear partial chain from blockindex (not can trigger partial sync on next session)
+    for (auto& it: mapBlockIndex) {
+        CBlockIndex* idx = it.second;
+        if (idx->IsPartialValid())
+        {
+            idx->nStatus &= ~BLOCK_PARTIAL_MASK;
+            setDirtyBlockIndex.insert(idx);
+        }
+    }
+
+    // notify and stop future notifications
+    headerTipSignal(nullptr);
+    headerTipSignal.disconnect_all_slots();
+
+    // clear mempool to avoid complexity of transitioning partial validated mempool entries
+    mempool.clear();
+}
+
 /**
  * Make the best chain active, in multiple steps. The result is either failure
  * or an activated best chain. pblock is either NULL or a pointer to a block
@@ -1918,6 +1946,9 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
             }
         }
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
+
+        if (IsPartialSyncActive() && chainActive.Height() >= partialChain.Height())
+            DeactivatePartialSync();
 
         // Notifications/callbacks that can run without cs_main
         // Notify external listeners about the new tip.
@@ -2796,6 +2827,9 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
 static void CheckAndNotifyHeaderTip()
 {
+    if (!IsPartialSyncActive())
+        return;
+
     static const CBlockIndex* pPreviousHeaderTip = nullptr;
     bool fNotify = false;
     {
