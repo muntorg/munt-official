@@ -4,9 +4,14 @@
 
 // Standard gulden headers
 #include "util.h"
+#include "Gulden/util.h"
 #include "ui_interface.h"
 #include "wallet/wallet.h"
 #include "unity/appmanager.h"
+#include "utilmoneystr.h"
+#include <chain.h>
+#include "consensus/validation.h"
+#include "net.h"
 
 // Djinni generated files
 #include "gulden_unified_backend.hpp"
@@ -200,5 +205,49 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
 
 bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & request)
 {
+    if (!pactiveWallet)
+        return false;
+
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    CGuldenAddress address(request.address);
+    if (!address.IsValid())
+    {
+        LogPrintf("performPaymentToRecipient: invalid address %s", request.address.c_str());
+        return false;
+    }
+
+    CAmount nAmount;
+    if (!ParseMoney(request.amount, nAmount))
+    {
+        LogPrintf("performPaymentToRecipient: invalid amount %s", request.amount.c_str());
+        return false;
+    }
+
+    bool fSubtractFeeFromAmount = false;
+
+    CRecipient recipient = GetRecipientForDestination(address.Get(), nAmount, false, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+    std::vector<CRecipient> vecSend;
+    vecSend.push_back(recipient);
+
+    CWalletTx wtx;
+    CAmount nFeeRequired;
+    int nChangePosRet = -1;
+    std::string strError;
+    CReserveKeyOrScript reservekey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_CHANGE);
+    if (!pactiveWallet->CreateTransaction(pactiveWallet->activeAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+    {
+        LogPrintf("performPaymentToRecipient: failed to create transaction %s",strError.c_str());
+        return false;
+    }
+
+    CValidationState state;
+    if (!pactiveWallet->CommitTransaction(wtx, reservekey, g_connman.get(), state))
+    {
+        strError = strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason());
+        LogPrintf("performPaymentToRecipient: failed to commit transaction %s",strError.c_str());
+        return false;
+    }
+
     return true;
 }

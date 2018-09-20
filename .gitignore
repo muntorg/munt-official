@@ -118,3 +118,14 @@ private.conf
 src/qt/guldenstrings.cpp
 
 src/test/test_gulden_fuzzy
+
+debug
+debug2
+release
+massif
+profile
+releasewithdebug
+foo
+foo2
+*.po
+build*
