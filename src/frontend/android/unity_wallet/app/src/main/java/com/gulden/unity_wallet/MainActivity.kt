@@ -162,13 +162,10 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
                     address += parsedQRCodeURI?.authority;
                     address += parsedQRCodeURI?.path;
                     val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, address , parsedQRCodeURI.getParameters())
-                    if (GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord)) {
+                    val recipient = GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord);
+                    if (recipient.valid) {
                         val intent = Intent(applicationContext, SendCoinsActivity::class.java)
-                        intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT_ADDRESS, address);
-                        if (parsedQRCodeURIRecord.items.containsKey("amount"))
-                        {
-                            intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT_AMOUNT, parsedQRCodeURIRecord.items["amount"]);
-                        }
+                        intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient);
                         startActivityForResult(intent, SEND_COINS_RETURN_CODE)
                     }
                 }

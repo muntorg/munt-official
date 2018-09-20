@@ -16,25 +16,31 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/button_1"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/shape_rounded_button"
+            android:onClick="handleKeypadButtonClick"
             android:text="1"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/button_2"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="2"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/button_3"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="3"
             android:textColor="@android:color/white" />
@@ -53,25 +59,31 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/button_4"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginBottom="5dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="4"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/button_5"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="5"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/button_6"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="6"
             android:textColor="@android:color/white" />
@@ -90,25 +102,31 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/button_7"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginBottom="5dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="7"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/button_8"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="8"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/button_9"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="9"
             android:textColor="@android:color/white" />
@@ -127,24 +145,30 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/button_decimal"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="."
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/button_0"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="0"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/button_backspace"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="x"
             android:textColor="@android:color/white"

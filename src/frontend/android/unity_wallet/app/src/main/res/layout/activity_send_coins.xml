@@ -58,15 +58,25 @@
             android:singleLine="false"
             android:textStyle="bold" />
 
+        <EditText
+            android:id="@+id/send_coins_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:cursorVisible="false"
+            android:drawableLeft="@drawable/ic_g_logo"
+            android:ems="10"
+            android:hint="0"
+            android:inputType="numberDecimal"
+            tools:clickable="false" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="10" />
 
         <include
-            layout="@layout/numeric_keypad"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" />
+            layout="@layout/numeric_keypad" />
 
         <Space
             android:layout_width="match_parent"
