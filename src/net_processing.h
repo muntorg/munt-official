@@ -98,6 +98,7 @@ void PreventBlockDownloadDuringHeaderSync(bool state);
 typedef std::function<void(const std::shared_ptr<const CBlock>, const CBlockIndex*)> PriorityDownloadCallback_t;
 void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload, const PriorityDownloadCallback_t& callback);
 void CancelPriorityDownload(const CBlockIndex* index, const PriorityDownloadCallback_t& callback);
+void CancelAllPriorityDownloads();
 bool FlushPriorityDownloads();
 size_t CountPriorityDownloads();
 

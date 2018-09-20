@@ -669,8 +669,9 @@ bool CWallet::InitLoadWallet()
 
 void CWallet::StartSPV()
 {
-    pSPVScanner = std::unique_ptr<CSPVScanner>(new CSPVScanner(*this));
-    pSPVScanner->StartScan();
+    auto scanner = std::make_unique<CSPVScanner>(*this);
+    if (scanner->StartScan())
+        pSPVScanner.swap(scanner);
 }
 
 std::atomic<bool> CWallet::fFlushScheduled(false);

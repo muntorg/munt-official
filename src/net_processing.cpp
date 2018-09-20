@@ -1687,6 +1687,18 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 item.second.RelayTo(pfrom);
         }
 
+#pragma message("Ban 797017 peers. Remove for relase!")
+// it's annoying and slows down getting good peer connections
+// still it is doubltful if we want to keep a thing like this in a release
+// hopefully all those nodes stuck on 797017 are quickly fixed
+        if (pfrom->nStartingHeight == 797017)
+        {
+            LogPrintf("Ban peer stuck @ 797017, peer=%d\n", pfrom->GetId());
+            LOCK(cs_main);
+            Misbehaving(pfrom->GetId(), 100);
+            return false;
+        }
+
         return true;
     }
 
@@ -2799,11 +2811,23 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 return true;
             }
 
-            if (nodestate->fSyncStarted && IsPartialSyncActive() && !IsPartialNearPresent())
+            // If full header sync is active but partial sync is not catched up yet, give up the full header
+            // sync as it will slow down the partial sync (this is a safeguard and should not happen during normal
+            // operation as full header sync is only started when partial sync is near present
+            if (nodestate->fSyncStarted && IsPartialSyncActive() && !IsPartialNearPresent(BLOCK_PARTIAL_TRANSACTIONS))
             {
                 nodestate->fSyncStarted = false;
                 nSyncStarted--;
                 LogPrintf("Giving up forward full header sync to prevent slowing down partial sync, peer=%d\n", pfrom->GetId());
+                return true;
+            }
+
+            // Partial sync got deactivated after the partial header sync was started on this node
+            if (nodestate->fPartialSyncStarted && !IsPartialSyncActive())
+            {
+                nodestate->fPartialSyncStarted = false;
+                nPartialSyncStarted--;
+                LogPrintf("Giving up forward partial header sync, peer=%d\n", pfrom->GetId());
                 return true;
             }
 
@@ -3531,10 +3555,21 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 pto->vAddrToSend.shrink_to_fit();
         }
 
+        // Reset partial header sync (occurs when partial sync is deactivated)
+        if (!IsPartialSyncActive() && state.fPartialSyncStarted)
+        {
+            state.fPartialSyncStarted = false;
+            nPartialSyncStarted--;
+        }
+
         // Start sync
         if (pindexBestHeader == NULL)
             pindexBestHeader = chainActive.Tip();
-        bool fFetch = state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot); // Download if this is a nice peer, or we have no nice peers and this one might do.
+
+        // Download if this is a nice peer, or we have no nice peers and this one might do.
+        // Don't download from peers that are behind a lot and have not even made it to the last checkpoint
+        bool fFetch =    pto->nStartingHeight > Checkpoints::LastCheckPointHeight()
+                      && (state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot));
 
         // Partial header sync
         if (fFetch && !state.fPartialSyncStarted && nPartialSyncStarted == 0 && IsPartialSyncActive() &&  !pto->fClient && !fImporting && !fReindex) {
@@ -4092,6 +4127,12 @@ void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload
 void CancelPriorityDownload(const CBlockIndex *index, const PriorityDownloadCallback_t& callback) {
     LOCK(cs_main);
     blocksToDownloadFirst.remove_if([&index](const PriorityBlockRequest& request){ return request.pindex == index; });
+}
+
+void CancelAllPriorityDownloads()
+{
+    LOCK(cs_main);
+    blocksToDownloadFirst.clear();
 }
 
 void PreventBlockDownloadDuringHeaderSync(bool state) {

@@ -16,7 +16,7 @@ public:
     CSPVScanner(CWallet& _wallet);
     ~CSPVScanner();
 
-    void StartScan();
+    bool StartScan();
 
     const CBlockIndex* LastBlockProcessed() const;
 

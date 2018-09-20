@@ -174,7 +174,7 @@ enum BlockStatus: uint32_t {
     BLOCK_PARTIAL_RESERVED2    = 2048,
 
     // All validation bits releated to partial tree validation
-    xBLOCK_PARTIAL_MASK = BLOCK_PARTIAL_TREE | BLOCK_PARTIAL_TRANSACTIONS | BLOCK_PARTIAL_RESERVED1 | BLOCK_PARTIAL_RESERVED2,
+    BLOCK_PARTIAL_MASK = BLOCK_PARTIAL_TREE | BLOCK_PARTIAL_TRANSACTIONS | BLOCK_PARTIAL_RESERVED1 | BLOCK_PARTIAL_RESERVED2,
 };
 
 /** The block chain is a tree shaped structure starting with the
@@ -468,21 +468,21 @@ public:
     //! Check whether this block index entry is valid up to the passed partial validity level.
     bool IsPartialValid(enum BlockStatus nUpTo = BLOCK_PARTIAL_TREE) const
     {
-        assert(!(nUpTo & ~xBLOCK_PARTIAL_MASK)); // Only validity flags allowed.
+        assert(!(nUpTo & ~BLOCK_PARTIAL_MASK)); // Only validity flags allowed.
         if (nStatus & BLOCK_FAILED_MASK)
             return false;
-        return ((nStatus & xBLOCK_PARTIAL_MASK) >= nUpTo);
+        return ((nStatus & BLOCK_PARTIAL_MASK) >= nUpTo);
     }
 
     //! Raise the partial validity level of this block index entry.
     //! Returns true if the partial validity was changed.
     bool RaisePartialValidity(enum BlockStatus nUpTo)
     {
-        assert(!(nUpTo & ~xBLOCK_PARTIAL_MASK)); // Only validity flags allowed.
+        assert(!(nUpTo & ~BLOCK_PARTIAL_MASK)); // Only validity flags allowed.
         if (nStatus & BLOCK_FAILED_MASK)
             return false;
-        if ((nStatus & xBLOCK_PARTIAL_MASK) < nUpTo) {
-            nStatus = (nStatus & ~xBLOCK_PARTIAL_MASK) | nUpTo;
+        if ((nStatus & BLOCK_PARTIAL_MASK) < nUpTo) {
+            nStatus = (nStatus & ~BLOCK_PARTIAL_MASK) | nUpTo;
             return true;
         }
         return false;
