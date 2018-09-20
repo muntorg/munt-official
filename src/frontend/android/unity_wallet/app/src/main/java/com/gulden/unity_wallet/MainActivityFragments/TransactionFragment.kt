@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.ui.TransactionAdapter
 import kotlinx.android.synthetic.main.fragment_transaction.*
 
 
@@ -52,7 +53,7 @@ class TransactionFragment : Fragment() {
 
         val transactions = GuldenUnifiedBackend.getTransactionHistory();
 
-        val adapter = ArrayAdapter(this.context, android.R.layout.simple_list_item_2, transactions)
+        val adapter = TransactionAdapter(this.context!!, transactions)
         transactionList.adapter = adapter;
     }
 
