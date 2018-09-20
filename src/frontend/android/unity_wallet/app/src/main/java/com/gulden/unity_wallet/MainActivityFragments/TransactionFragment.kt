@@ -7,7 +7,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
+import kotlinx.android.synthetic.main.fragment_transaction.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,9 +47,13 @@ class TransactionFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_transaction, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val transactions = GuldenUnifiedBackend.getTransactionHistory();
+
+        val adapter = ArrayAdapter(this.context, android.R.layout.simple_list_item_2, transactions)
+        transactionList.adapter = adapter;
     }
 
     override fun onAttach(context: Context) {

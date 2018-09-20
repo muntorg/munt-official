@@ -3,6 +3,7 @@
 
 package com.gulden.jniunifiedbackend;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** This interface will be implemented in C++ and can be called from any language. */
@@ -54,6 +55,12 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.performPaymentToRecipient(request);
     }
 
+    /** Get list of all transactions wallet has been involved in */
+    public static ArrayList<TransactionRecord> getTransactionHistory()
+    {
+        return CppProxy.getTransactionHistory();
+    }
+
     private static final class CppProxy extends GuldenUnifiedBackend
     {
         private final long nativeRef;
@@ -90,5 +97,7 @@ public abstract class GuldenUnifiedBackend {
         public static native UriRecipient IsValidRecipient(UriRecord request);
 
         public static native boolean performPaymentToRecipient(UriRecipient request);
+
+        public static native ArrayList<TransactionRecord> getTransactionHistory();
     }
 }

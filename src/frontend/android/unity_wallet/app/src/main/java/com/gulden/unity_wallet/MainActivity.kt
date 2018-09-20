@@ -113,6 +113,17 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
         super.onDestroy()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+    }
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
     fun handleQRScanButtonClick(view : View) {
         val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
         startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
