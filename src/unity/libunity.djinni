@@ -22,6 +22,13 @@ uri_record = record {
     items: map<string, string>;
 }
 
+uri_recipient = record {
+    valid : bool;
+    address : string;
+    label : string;
+    amount : string;
+} deriving(parcelable)
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
@@ -41,7 +48,10 @@ gulden_unified_backend = interface +c {
     static GetRecoveryPhrase(): string;
 
     # Check if text/address is something we are capable of sending money too
-    static IsValidRecipient(recipient : uri_record): bool;
+    static IsValidRecipient(request : uri_record): uri_recipient;
+
+    # Attempt to pay a recipient
+    static performPaymentToRecipient(request : uri_recipient): bool;
 
     # Interface constants
     const version: i32 = 1;

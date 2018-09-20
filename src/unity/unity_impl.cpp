@@ -14,6 +14,7 @@
 #include "qrcode_record.hpp"
 #include "balance_record.hpp"
 #include "uri_record.hpp"
+#include "uri_recipient.hpp"
 #include "djinni_support.hpp"
 
 // External libraries
@@ -177,15 +178,27 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
     return "";
 }
 
-bool GuldenUnifiedBackend::IsValidRecipient(const UriRecord& recipient)
+
+UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
 {
      // return if URI is not valid or is no Gulden: URI
-    std::string lowerCaseScheme = boost::algorithm::to_lower_copy(recipient.scheme);
+    std::string lowerCaseScheme = boost::algorithm::to_lower_copy(request.scheme);
     if (lowerCaseScheme != "guldencoin" && lowerCaseScheme != "gulden")
-        return false;
+        return UriRecipient(false, "", "", "");
 
-    if (!CGuldenAddress(recipient.path).IsValid())
-        return false;
+    if (!CGuldenAddress(request.path).IsValid())
+        return UriRecipient(false, "", "", "");
 
+    std::string address = request.path;
+    std::string label = "";
+    std::string amount = "";
+    if (request.items.find("amount") != request.items.end())
+        amount = request.items.find("amount")->second;
+
+    return UriRecipient(true, address, label, amount);
+}
+
+bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & request)
+{
     return true;
 }
