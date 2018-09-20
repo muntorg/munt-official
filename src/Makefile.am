@@ -476,6 +476,8 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeUriRecord.cpp \
   unity/djinni/jni/NativeUriRecipient.hpp \
   unity/djinni/jni/NativeUriRecipient.cpp \
+  unity/djinni/jni/NativeTransactionRecord.hpp \
+  unity/djinni/jni/NativeTransactionRecord.cpp \
   unity/djinni/cpp/gulden_unified_backend.hpp \
   unity/djinni/cpp/gulden_unified_backend.cpp \
   unity/djinni/cpp/gulden_unified_frontend.hpp \

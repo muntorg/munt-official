@@ -20,6 +20,8 @@
 #include "balance_record.hpp"
 #include "uri_record.hpp"
 #include "uri_recipient.hpp"
+#include "transaction_record.hpp"
+#include "transaction_type.hpp"
 #include "djinni_support.hpp"
 
 // External libraries
@@ -250,4 +252,54 @@ bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
     }
 
     return true;
+}
+
+std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
+{
+    std::vector<TransactionRecord> ret;
+    std::list<COutputEntry> listReceived;
+    std::list<COutputEntry> listSent;
+    CAmount nFee;
+
+    if (!pactiveWallet)
+        return ret;
+
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
+    {
+        wtx.GetAmounts(listReceived, listSent, nFee, ISMINE_SPENDABLE, nullptr);
+
+        if ((!listSent.empty() || nFee != 0) )
+        {
+            for(const COutputEntry& s : listSent)
+            {
+                std::string address;
+                CGuldenAddress addr;
+                if (addr.Set(s.destination))
+                    address = addr.ToString();
+                std::string label;
+                if (pactiveWallet->mapAddressBook.count(CGuldenAddress(s.destination).ToString())) {
+                    label = pactiveWallet->mapAddressBook[CGuldenAddress(s.destination).ToString()].name;
+                }
+                ret.push_back(TransactionRecord(TransactionType::SEND, s.amount, address, label, wtx.nTimeSmart));
+            }
+        }
+        if (listReceived.size() > 0)
+        {
+            for(const COutputEntry& r : listReceived)
+            {
+                std::string address;
+                CGuldenAddress addr;
+                if (addr.Set(r.destination))
+                    address = addr.ToString();
+                std::string label;
+                if (pactiveWallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString())) {
+                    label = pactiveWallet->mapAddressBook[CGuldenAddress(r.destination).ToString()].name;
+                }
+                ret.push_back(TransactionRecord(TransactionType::RECEIVE, r.amount, address, label, wtx.nTimeSmart));
+            }
+        }
+    }
+    return ret;
 }

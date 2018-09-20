@@ -29,6 +29,19 @@ uri_recipient = record {
     amount : string;
 } deriving(parcelable)
 
+transaction_type = enum {
+    send;
+    receive;
+}
+
+transaction_record = record {
+    type : transaction_type;
+    amount : i64;
+    address : string;
+    label : string;
+    timestamp : i64;
+}
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
@@ -52,6 +65,9 @@ gulden_unified_backend = interface +c {
 
     # Attempt to pay a recipient
     static performPaymentToRecipient(request : uri_recipient): bool;
+
+    # Get list of all transactions wallet has been involved in
+    static getTransactionHistory() : list<transaction_record>;
 
     # Interface constants
     const version: i32 = 1;
