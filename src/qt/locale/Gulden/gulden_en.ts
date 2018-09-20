@@ -1471,7 +1471,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="+257"/>
+        <location line="+255"/>
         <location line="+66"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
@@ -1533,7 +1533,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-550"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-548"/>
         <source>Amount exceeds maximum for IBAN payment.</source>
         <translation>Amount exceeds maximum for IBAN payment.</translation>
     </message>
@@ -1553,7 +1553,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
     <message>
-        <location line="+258"/>
+        <location line="+256"/>
         <source>Are you sure you want to delete %1 from the address book?</source>
         <translation>Are you sure you want to delete %1 from the address book?</translation>
     </message>

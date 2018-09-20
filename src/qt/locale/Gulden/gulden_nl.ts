@@ -1135,7 +1135,7 @@ Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>Copy request to clipboard</source>
-        <translation>Kopieer aanvraag naar klemboard</translation>
+        <translation>Kopieer aanvraag naar klembord</translation>
     </message>
     <message>
         <source>Request Gulden</source>
