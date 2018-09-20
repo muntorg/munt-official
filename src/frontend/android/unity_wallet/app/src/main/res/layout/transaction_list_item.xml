@@ -2,21 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="60dp"
+    android:layout_marginLeft="0dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="10dp">
 
     <TextView
         android:id="@+id/textViewTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0"
         android:text="10:00" />
+
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
+        android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_weight="1"
+        android:layout_weight="0"
         android:scaleType="fitEnd"
         app:srcCompat="@drawable/ic_g_logo" />
 
@@ -24,6 +32,11 @@
         android:id="@+id/textViewAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
+        android:layout_weight="0"
         android:text="0.00" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10" />
 </LinearLayout>
