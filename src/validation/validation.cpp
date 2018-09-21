@@ -4097,13 +4097,20 @@ bool isFullSyncMode() {
 
 bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
 {
+    // To ensure that context checks can be done on headers from *time* onwards, a window of
+    // at least 576 headers is required. So the youngest block that is before the requested time
+    // should have at least 576 headers before it.
+    const CBlockIndex* youngestBefore = partialChain.FindYoungest(time, [](int64_t before, const CBlockIndex* index){
+        return index->GetBlockTime() < before;
+    });
 
-    if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= time)
+    if (    IsPartialSyncActive()
+         && youngestBefore && youngestBefore->nHeight - partialChain.HeightOffset() > 576)
     {
         LogPrintf("Partial sync continues, height offset = %d.\n", partialChain.HeightOffset());
     }
     else {
-        if (IsPartialSyncActive() && partialChain[partialChain.HeightOffset()]->GetBlockTime() > time)
+        if (IsPartialSyncActive()) // IsPartialSyncActive() => above checks for time and/or 576 window failed
         {
             LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync reset.\n");
             pindexBestPartial = nullptr;
