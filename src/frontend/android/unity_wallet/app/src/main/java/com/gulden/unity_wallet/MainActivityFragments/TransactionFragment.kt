@@ -7,11 +7,16 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.ui.TransactionAdapter
 import kotlinx.android.synthetic.main.fragment_transaction.*
+import com.gulden.unity_wallet.MainActivity
+import android.content.Intent
+import android.widget.AdapterView.OnItemClickListener
+import com.gulden.jniunifiedbackend.TransactionRecord
+import com.gulden.unity_wallet.SendCoinsActivity
+import com.gulden.unity_wallet.TransactionInfoActivity
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -55,6 +60,13 @@ class TransactionFragment : Fragment() {
 
         val adapter = TransactionAdapter(this.context!!, transactions)
         transactionList.adapter = adapter;
+
+        transactionList.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
+            val transaction = parent.adapter.getItem(position) as TransactionRecord
+            val intent = Intent(this.context, TransactionInfoActivity::class.java)
+            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, transaction);
+            startActivity(intent);
+        });
     }
 
     override fun onAttach(context: Context) {

@@ -40,7 +40,7 @@ transaction_record = record {
     address : string;
     label : string;
     timestamp : i64;
-}
+} deriving(parcelable)
 
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
