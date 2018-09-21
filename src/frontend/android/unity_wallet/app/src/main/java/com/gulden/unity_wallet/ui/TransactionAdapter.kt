@@ -35,7 +35,7 @@ class TransactionAdapter(private val context: Context, private val dataSource: A
             prefix = "-";
 
         rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(transactionRecord.timestamp * 1000L))
-        rowView.textViewAmount.text = transactionRecord.amount.toString();
+        rowView.textViewAmount.text = (" "+prefix+"%.2f").format(transactionRecord.amount.toDouble() / 100000000)
         return rowView;
     }
 }
