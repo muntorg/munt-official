@@ -9,6 +9,7 @@ import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionType
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.transaction_list_item.view.*
+import kotlinx.android.synthetic.main.transaction_list_item_with_header.view.*
 
 class TransactionAdapter(private val context: Context, private val dataSource: ArrayList<TransactionRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -27,8 +28,25 @@ class TransactionAdapter(private val context: Context, private val dataSource: A
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        var rowView = inflater.inflate(R.layout.transaction_list_item, parent, false)
         val transactionRecord = getItem(position) as TransactionRecord
+        var date = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(transactionRecord.timestamp * 1000L))
+        var prevDate = "";
+        if (position != 0) {
+            val prevTransactionRecord = getItem(position-1) as TransactionRecord
+            prevDate = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(prevTransactionRecord.timestamp * 1000L))
+        }
+
+
+        var rowView : View;
+        if (date != prevDate)
+        {
+            rowView = inflater.inflate(R.layout.transaction_list_item_with_header, parent, false)
+            rowView.transactionItemHeading.text = date;
+        }
+        else
+        {
+            rowView = inflater.inflate(R.layout.transaction_list_item, parent, false)
+        }
 
         var prefix = "+";
         if (transactionRecord.type == TransactionType.SEND)

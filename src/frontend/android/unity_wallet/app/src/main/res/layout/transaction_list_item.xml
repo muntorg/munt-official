@@ -6,7 +6,8 @@
     android:layout_marginLeft="0dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="10dp">
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
     <TextView
         android:id="@+id/textViewTime"
