@@ -4120,7 +4120,8 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload, const PriorityDownloadCallback_t& callback) {
     LOCK(cs_main);
     for (const CBlockIndex* pindex: blocksToDownload) {
-        blocksToDownloadFirst.push_back({pindex, false, callback});
+        bool downloaded = pindex->nStatus & BLOCK_HAVE_DATA;
+        blocksToDownloadFirst.push_back({pindex, downloaded, callback});
     }
 }
 
