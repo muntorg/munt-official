@@ -1455,9 +1455,7 @@ static void ProcessPriorityRequests() {
             blocksToDownloadFirst.pop_front();
         }
         else {
-            // stop in case we have no block data for this request
-            // fixme (SPV): investigate if this case can happen
-            break;
+            throw std::runtime_error(std::string(__func__) + " No data for downloaded block, block index inconsistency.");
         }
     }
 }
