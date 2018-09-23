@@ -62,7 +62,13 @@ CSPVScanner::~CSPVScanner()
 
 bool CSPVScanner::StartScan()
 {
-    return StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1));
+    if (StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1)))
+    {
+        HeaderTipChanged(partialChain.Tip());
+        return true;
+    }
+    else
+        return false;
 }
 
 const CBlockIndex* CSPVScanner::LastBlockProcessed() const
