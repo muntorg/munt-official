@@ -16,7 +16,7 @@
 const int MAX_PENDING_REQUESTS = 512;
 
 // Duration (seconds) of longest fork that can be handled
-const int64_t MAX_FORK_DURATION = 2 * 24 * 3600;
+const int64_t MAX_FORK_DURATION = 1 * 12 * 3600;
 
 // Persisting wallet db updates are limited as they are very expensive
 // and updating at every processed block would give very poor performance.
@@ -62,7 +62,13 @@ CSPVScanner::~CSPVScanner()
 
 bool CSPVScanner::StartScan()
 {
-    return StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1));
+    if (StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1)))
+    {
+        HeaderTipChanged(partialChain.Tip());
+        return true;
+    }
+    else
+        return false;
 }
 
 const CBlockIndex* CSPVScanner::LastBlockProcessed() const
@@ -171,19 +177,20 @@ void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
                 // forks are handled when requesting blocks which will also fast-forward to startTime
                 // should the headerChain be very early
                 lastProcessed = partialChain[partialChain.HeightOffset()];
+                requestTip = lastProcessed;
+                startHeight = lastProcessed->nHeight;
+
+                LogPrint(BCLog::WALLET, "SPV init using %s (height = %d) as last processed block\n",
+                         lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
             }
             else
             {
-                // headerChain not usable, it does not start early enough or has no data. This should not happen.
-                return;
+                // headerChain not usable, it does not start early enough or has no data.
+                // This should not happen, as StartPartialHeaders was explicitly given the startTime
+                // so if this occurs it's a bug.
+                throw std::runtime_error("partialChain not usable, starting late or too little data");
             }
         }
-
-        requestTip = lastProcessed;
-        startHeight = lastProcessed->nHeight;
-
-        LogPrint(BCLog::WALLET, "SPV init using %s (height = %d) as last processed block\n",
-                 lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
 
         RequestBlocks();
     }

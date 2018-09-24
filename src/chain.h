@@ -677,6 +677,15 @@ public:
     /** Find the earliest block with timestamp equal or greater than the given. */
     CBlockIndex* FindEarliestAtLeast(int64_t nTime) const;
 
+    /** Find the youngest (ie. most recent) block index with comp(val, index) == true
+     *  Note that the chain should be ordered with respect to comp.
+    */
+    template<typename T, typename Compare>
+    CBlockIndex* FindYoungest(const T& val, const Compare& comp) {
+        const auto it = std::upper_bound (vChain.rbegin (), vChain.rend(), val, comp);
+        return it == vChain.rend() ? nullptr : *it;
+    }
+
     virtual ~CChain(){};
 };
 
