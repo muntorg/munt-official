@@ -251,11 +251,16 @@ void CoreShutdown(boost::thread_group& threadGroup)
     LogPrintf("Core shutdown: close coin databases.\n");
     {
         LOCK(cs_main);
-        if (pcoinsTip != NULL) {
-            FlushStateToDisk();
-        }
 
-        PruneBlockIndexForPartialSync();
+        if (!isFullSyncMode() && IsPartialSyncActive())
+            PruneForPartialSync();
+        else
+        {
+            // avoid duplicate FlushStateToDisk as PruneForPartialSync will also call it
+            if (pcoinsTip != NULL) {
+                FlushStateToDisk();
+            }
+        }
 
         blockStore.CloseBlockFiles();
         delete pcoinsTip;
@@ -1117,7 +1122,8 @@ bool AppInitParameterInteraction()
         return InitError(errortr("Prune cannot be configured with a negative value."));
     }
     nPruneTarget = (uint64_t) nPruneArg * 1024 * 1024;
-    if (nPruneArg == 1) {  // manual pruning: -prune=1
+    if (nPruneArg == 1 || (!isFullSyncMode() && GetBoolArg("-spv", DEFAULT_SPV)))
+    {  // manual pruning: -prune=1
         LogPrintf("Block pruning enabled.  Use RPC call pruneblockchain(height) to manually prune block and undo files.\n");
         nPruneTarget = std::numeric_limits<uint64_t>::max();
         fPruneMode = true;

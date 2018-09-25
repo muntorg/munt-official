@@ -702,6 +702,7 @@ public:
 
     void SetHeightOffset(int offset);
     int HeightOffset() const;
+    int Length() const;
     virtual CBlockIndex *operator[](int nHeight) const override;
     virtual int Height() const override;
     virtual void SetTip(CBlockIndex *pindex) override;

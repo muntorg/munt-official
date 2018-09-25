@@ -327,6 +327,11 @@ int CPartialChain::HeightOffset() const
     return nHeightOffset;
 }
 
+int CPartialChain::Length() const
+{
+    return vChain.size();
+}
+
 CBlockIndex *CPartialChain::operator[](int nHeight) const
 {
     if (nHeight>= nHeightOffset && nHeight <= Height())
