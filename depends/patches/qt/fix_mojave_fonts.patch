@@ -1,15 +1,15 @@
-diff --git a/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm b/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
+diff --git a/qtbase/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm b/qtbase/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
 index 6428bea24f..722a53ac20 100644
---- a/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
-+++ b/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
+--- a/qtbase/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
++++ b/qtbase/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
 @@ -332,8 +332,8 @@ static void getFontDescription(CTFontDescriptorRef font, FontDescription *fd)
      if (styles) {
          if (CFNumberRef weightValue = (CFNumberRef) CFDictionaryGetValue(styles, kCTFontWeightTrait)) {
              float normalizedWeight;
--            CFNumberGetValue(weightValue, kCFNumberFloatType, &normalizedWeight);
--            fd->weight = QCoreTextFontEngine::qtWeightFromCFWeight(normalizedWeight);
-+            if (CFNumberGetValue(weightValue, kCFNumberFloatType, &normalizedWeight))
-+                fd->weight = QCoreTextFontEngine::qtWeightFromCFWeight(normalizedWeight);
+-            if (CFNumberGetValue(weightValue, kCFNumberFloatType, &normalizedWeight))
+-                fd->weight = QCoreTextFontEngine::qtWeightFromCFWeight(normalizedWeight);
++            CFNumberGetValue(weightValue, kCFNumberFloatType, &normalizedWeight);
++            fd->weight = QCoreTextFontEngine::qtWeightFromCFWeight(normalizedWeight);
          }
          if (CFNumberRef italic = (CFNumberRef) CFDictionaryGetValue(styles, kCTFontSlantTrait)) {
              double d;
