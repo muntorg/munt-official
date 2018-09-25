@@ -1,6 +1,18 @@
+2.0.0.15
+
+UI - Fix font issues with macOS mojave
+
+
+
+
+
 2.0.0.14
 
 CORE - Fix for upstream critical vulnerability CVE-2018-17144
+
+
+
+
 
 2.0.0.12
 
