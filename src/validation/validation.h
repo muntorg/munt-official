@@ -194,15 +194,20 @@ extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
 extern CBlockPolicyEstimator feeEstimator;
 extern CTxMemPool mempool;
-typedef std::unordered_map<uint256, CBlockIndex*, BlockHasher> BlockMap;
+using BlockMap = std::unordered_map<uint256, CBlockIndex*, BlockHasher>;
+
+#if defined(__clang__)
 // Specialize BlockMap [] operator to ensure that it is only used for
 // (valid) lookup and never triggers an insert (which is considered a bug).
+// Unfortunatly this specialization won't work on GCC (why?) so it only detected on clang
 template<> inline BlockMap::mapped_type& BlockMap::operator [](const uint256& key)
 {
     const auto i = find(key);
     assert(i != end());
     return (*i).second;
 }
+#endif
+
 extern BlockMap mapBlockIndex;
 extern uint64_t nLastBlockTx;
 extern uint64_t nLastBlockSize;
