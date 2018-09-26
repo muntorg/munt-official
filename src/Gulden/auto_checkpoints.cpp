@@ -328,6 +328,9 @@ namespace Checkpoints
             return false;
         }
         const CBlockIndex* pindexSync = mapBlockIndex[hashSyncCheckpoint];
+
+        if (!mapBlockIndex.count(hashBlock))
+            return false;
         const CBlockIndex* pindex = mapBlockIndex[hashBlock];
 
         if(!pindexSync || !pindex || pindex->nHeight >= pindexSync->nHeight)

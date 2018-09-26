@@ -195,6 +195,14 @@ extern CCriticalSection cs_main;
 extern CBlockPolicyEstimator feeEstimator;
 extern CTxMemPool mempool;
 typedef std::unordered_map<uint256, CBlockIndex*, BlockHasher> BlockMap;
+// Specialize BlockMap [] operator to ensure that it is only used for
+// (valid) lookup and never triggers an insert (which is considered a bug).
+template<> inline BlockMap::mapped_type& BlockMap::operator [](const uint256& key)
+{
+    const auto i = find(key);
+    assert(i != end());
+    return (*i).second;
+}
 extern BlockMap mapBlockIndex;
 extern uint64_t nLastBlockTx;
 extern uint64_t nLastBlockSize;
