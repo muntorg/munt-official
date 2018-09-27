@@ -301,6 +301,6 @@ std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
             }
         }
     }
-    std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timestamp <= y.timestamp); });
+    std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timestamp > y.timestamp); });
     return ret;
 }
