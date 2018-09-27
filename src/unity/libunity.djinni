@@ -77,4 +77,5 @@ gulden_unified_backend = interface +c {
 gulden_unified_frontend = interface +j +o {
     notifySPVProgress(start_height : i32, progess_height : i32, expected_height : i32): bool;
     notifyBalanceChange(new_balance : balance_record): bool;
+    notifyNewTransaction(new_transaction : transaction_record): bool;
 }

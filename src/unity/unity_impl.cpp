@@ -28,6 +28,44 @@
 #include <boost/algorithm/string.hpp>
 #include <qrencode.h>
 
+void calculateTransactionRecordsForWalletTransaction(const CWalletTx& wtx, std::vector<TransactionRecord>& transactionRecords)
+{
+    std::list<COutputEntry> listReceived;
+    std::list<COutputEntry> listSent;
+    CAmount nFee;
+
+    wtx.GetAmounts(listReceived, listSent, nFee, ISMINE_SPENDABLE, nullptr);
+    if ((!listSent.empty() || nFee != 0) )
+    {
+        for(const COutputEntry& s : listSent)
+        {
+            std::string address;
+            CGuldenAddress addr;
+            if (addr.Set(s.destination))
+                address = addr.ToString();
+            std::string label;
+            if (pactiveWallet->mapAddressBook.count(CGuldenAddress(s.destination).ToString())) {
+                label = pactiveWallet->mapAddressBook[CGuldenAddress(s.destination).ToString()].name;
+            }
+            transactionRecords.push_back(TransactionRecord(TransactionType::SEND, s.amount, address, label, wtx.nTimeSmart));
+        }
+    }
+    if (listReceived.size() > 0)
+    {
+        for(const COutputEntry& r : listReceived)
+        {
+            std::string address;
+            CGuldenAddress addr;
+            if (addr.Set(r.destination))
+                address = addr.ToString();
+            std::string label;
+            if (pactiveWallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString())) {
+                label = pactiveWallet->mapAddressBook[CGuldenAddress(r.destination).ToString()].name;
+            }
+            transactionRecords.push_back(TransactionRecord(TransactionType::RECEIVE, r.amount, address, label, wtx.nTimeSmart));
+        }
+    }
+}
 
 static std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 
@@ -53,6 +91,24 @@ void handlePostInitMain()
     {
         pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status) 
         {
+            DS_LOCK2(cs_main, pwallet->cs_wallet);
+            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
+            {
+                const CWalletTx& wtx = pwallet->mapWallet[hash];
+                if (status == CT_NEW)
+                {
+                    std::vector<TransactionRecord> walletTransactions;
+                    calculateTransactionRecordsForWalletTransaction(wtx, walletTransactions);
+                    for (const auto& tx: walletTransactions)
+                    {
+                        signalHandler->notifyNewTransaction(tx);
+                    }
+                }
+                else if (status == CT_DELETED)
+                {
+                    //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
+                }
+            }
             notifyBalanceChanged(pwallet);
         } );
 
@@ -257,9 +313,6 @@ bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
 std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
 {
     std::vector<TransactionRecord> ret;
-    std::list<COutputEntry> listReceived;
-    std::list<COutputEntry> listSent;
-    CAmount nFee;
 
     if (!pactiveWallet)
         return ret;
@@ -268,38 +321,7 @@ std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
 
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
     {
-        wtx.GetAmounts(listReceived, listSent, nFee, ISMINE_SPENDABLE, nullptr);
-
-        if ((!listSent.empty() || nFee != 0) )
-        {
-            for(const COutputEntry& s : listSent)
-            {
-                std::string address;
-                CGuldenAddress addr;
-                if (addr.Set(s.destination))
-                    address = addr.ToString();
-                std::string label;
-                if (pactiveWallet->mapAddressBook.count(CGuldenAddress(s.destination).ToString())) {
-                    label = pactiveWallet->mapAddressBook[CGuldenAddress(s.destination).ToString()].name;
-                }
-                ret.push_back(TransactionRecord(TransactionType::SEND, s.amount, address, label, wtx.nTimeSmart));
-            }
-        }
-        if (listReceived.size() > 0)
-        {
-            for(const COutputEntry& r : listReceived)
-            {
-                std::string address;
-                CGuldenAddress addr;
-                if (addr.Set(r.destination))
-                    address = addr.ToString();
-                std::string label;
-                if (pactiveWallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString())) {
-                    label = pactiveWallet->mapAddressBook[CGuldenAddress(r.destination).ToString()].name;
-                }
-                ret.push_back(TransactionRecord(TransactionType::RECEIVE, r.amount, address, label, wtx.nTimeSmart));
-            }
-        }
+        calculateTransactionRecordsForWalletTransaction(wtx, ret);
     }
     std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timestamp > y.timestamp); });
     return ret;
