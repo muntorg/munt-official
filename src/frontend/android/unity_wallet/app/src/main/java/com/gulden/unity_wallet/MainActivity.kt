@@ -3,6 +3,7 @@ package com.gulden.unity_wallet
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.SyncStateContract
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -12,9 +13,7 @@ import android.view.View
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.jniunifiedbackend.GuldenUnifiedFrontendImpl
-import com.gulden.jniunifiedbackend.UriRecord
+import com.gulden.jniunifiedbackend.*
 import com.gulden.unity_wallet.MainActivityFragments.ReceiveFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment.OnFragmentInteractionListener
@@ -23,6 +22,14 @@ import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.concurrent.thread
+import android.content.ComponentName
+import android.os.IBinder
+import android.content.ServiceConnection
+import android.content.Context.BIND_AUTO_CREATE
+
+
+
+
 
 
 
@@ -38,7 +45,7 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
     supportFragmentManager.inTransaction{replace(frameId, fragment as Fragment)}
 }
 
-class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener  {
+class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler, OnFragmentInteractionListener, ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener  {
 
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented")
@@ -71,42 +78,58 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
         false
     }
 
-    private val coreSignals: GuldenUnifiedFrontendImpl?=GuldenUnifiedFrontendImpl()
+    override fun syncProgressChanged(percent: Float): Boolean {
+        syncProgress.progress = (1000000 * (percent/100)).toInt();
+        return true;
+    }
 
+    override fun walletBalanceChanged(balance: Long): Boolean {
+        walletBalance.text = (balance.toFloat() / 100000000).toString()
+        walletBalanceLogo.visibility = View.VISIBLE;
+        walletBalance.visibility = View.VISIBLE;
+        walletLogo.visibility = View.GONE;
+        return true;
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        coreSignals?.activity = this
-
-        thread(start = true) {
-            System.loadLibrary("gulden_unity_jni")
-            GuldenUnifiedBackend.InitUnityLib(applicationContext.getApplicationInfo().dataDir, coreSignals)
+        val service = Intent(this@MainActivity, UnityService::class.java)
+        if (!UnityService.IS_SERVICE_RUNNING) {
+            service.action = UnityService.START_FOREGROUND_ACTION
+            UnityService.IS_SERVICE_RUNNING = true
+            startService(service)
         }
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        syncProgress.setMax(1000000);
-        syncProgress.setProgress(0);
+        syncProgress.max = 1000000;
+        syncProgress.progress = 0;
 
         addFragment(sendFragment, R.id.mainLayout)
     }
 
-    public fun updateSyncProgressPercent(percent : Float)
-    {
-        syncProgress.setProgress((1000000 * (percent/100)).toInt());
-    }
 
-    public fun updateBalance(balance : Long)
-    {
-        walletBalance.setText((balance.toFloat() / 100000000).toString())
-        walletBalanceLogo.visibility = View.VISIBLE;
-        walletBalance.visibility = View.VISIBLE;
-        walletLogo.visibility = View.GONE;
+    private var bound = false
+    private lateinit var myService : UnityService
+    override fun onStart() {
+        super.onStart()
+
+        // Bind to service
+        val intent = Intent(this, UnityService::class.java)
+        bindService(intent, serviceConnection, BIND_AUTO_CREATE)
     }
 
     override fun onStop() {
         super.onStop()
+
+        // Unbind from service
+        if (bound) {
+            myService.signalHandler = null
+            unbindService(serviceConnection);
+            bound = false;
+        }
     }
 
     override fun onDestroy() {
@@ -183,6 +206,21 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private val serviceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            // cast the IBinder and get MyService instance
+            val binder = service as UnityService.LocalBinder
+            myService = binder.service
+            bound = true
+            myService.signalHandler = this@MainActivity // register
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            bound = false
         }
     }
 
