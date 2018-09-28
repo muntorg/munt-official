@@ -79,15 +79,19 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
     }
 
     override fun syncProgressChanged(percent: Float): Boolean {
-        syncProgress.progress = (1000000 * (percent/100)).toInt();
+        this@MainActivity.runOnUiThread {
+            syncProgress.progress = (1000000 * (percent/100)).toInt();
+        }
         return true;
     }
 
     override fun walletBalanceChanged(balance: Long): Boolean {
-        walletBalance.text = (balance.toFloat() / 100000000).toString()
-        walletBalanceLogo.visibility = View.VISIBLE;
-        walletBalance.visibility = View.VISIBLE;
-        walletLogo.visibility = View.GONE;
+        this@MainActivity.runOnUiThread{
+            walletBalance.text = (balance.toFloat() / 100000000).toString()
+            walletBalanceLogo.visibility = View.VISIBLE;
+            walletBalance.visibility = View.VISIBLE;
+            walletLogo.visibility = View.GONE;
+        }
         return true;
     }
 

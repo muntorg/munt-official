@@ -1,24 +1,19 @@
 package com.gulden.unity_wallet
 
-import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.view.View
-import com.gulden.jniunifiedbackend.BalanceRecord
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.jniunifiedbackend.GuldenUnifiedFrontend
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
-import android.Manifest.permission.FOREGROUND_SERVICE
-import android.graphics.Bitmap
+import android.app.*
 import android.support.v4.app.NotificationCompat
-import android.app.PendingIntent
-
-
+import android.app.NotificationManager
+import android.content.Context
+import android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC
+import com.gulden.jniunifiedbackend.*
 
 
 var NOTIFICATION_ID_FOREGROUND_SERVICE = 2;
+var NOTIFICATION_ID_INCOMING_TRANSACTION = 3;
 
 class UnityService : Service()
 {
@@ -30,7 +25,6 @@ class UnityService : Service()
         fun walletBalanceChanged(balance : Long) : Boolean
     }
     public var signalHandler: UnityServiceSignalHandler? = null
-
 
     // Handle signals from core library and convert them to service signals where necessary.
     private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
@@ -52,9 +46,49 @@ class UnityService : Service()
             return true;
         }
 
+        override fun notifyNewTransaction(newTransaction: TransactionRecord): Boolean
+        {
+            notifyIncomingTransaction(newTransaction)
+            return true;
+        }
 
+        override fun notifyShutdown(): Boolean
+        {
+            stopSelf();
+            return true;
+        }
     }
 
+
+    fun notifyIncomingTransaction(transactionRecord : TransactionRecord)
+    {
+        val notificationIntent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+
+        var prefix = "+";
+        if (transactionRecord.type == TransactionType.SEND)
+            prefix = "-";
+
+        val notification = NotificationCompat.Builder(this)
+                .setContentTitle("Incoming transaction")
+                .setTicker("Incoming transaction")
+                .setContentText((" "+prefix+"%.2f").format(transactionRecord.amount.toDouble() / 100000000))
+                .setSmallIcon(R.drawable.ic_g_logo)
+                //.setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
+                .setContentIntent(pendingIntent)
+                .setOngoing(false)
+                .setAutoCancel(true)
+                .setVisibility(VISIBILITY_PUBLIC)
+                //.setPublicVersion()
+                //.setTimeoutAfter()
+                .setDefaults(Notification.DEFAULT_ALL)
+                .build()
+
+
+
+        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(1, notification)
+    }
 
     // Binder given to clients
     private val binder = LocalBinder()
@@ -77,8 +111,8 @@ class UnityService : Service()
         thread(true)
         {
             System.loadLibrary("gulden_unity_jni")
-            GuldenUnifiedBackend.InitUnityLib(applicationContext.getApplicationInfo().dataDir, coreLibrarySignalHandler)
             libraryLoaded = true;
+            GuldenUnifiedBackend.InitUnityLib(applicationContext.getApplicationInfo().dataDir, coreLibrarySignalHandler)
         }
     }
 
@@ -131,7 +165,6 @@ class UnityService : Service()
         if (closeOnAppExit)
         {
             unloadLibrary();
-            stopSelf()
         }
     }
 
