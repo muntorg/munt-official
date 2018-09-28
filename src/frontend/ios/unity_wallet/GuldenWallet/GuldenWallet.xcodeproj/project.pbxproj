@@ -1,0 +1,590 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E651E9DF215E4D4D0066EEDB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9DE215E4D4D0066EEDB /* AppDelegate.m */; };
+		E651E9E2215E4D4D0066EEDB /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9E1215E4D4D0066EEDB /* FirstViewController.m */; };
+		E651E9E5215E4D4D0066EEDB /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9E4215E4D4D0066EEDB /* SecondViewController.m */; };
+		E651E9E8215E4D4D0066EEDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E651E9E6215E4D4D0066EEDB /* Main.storyboard */; };
+		E651E9EA215E4D4F0066EEDB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E651E9E9215E4D4F0066EEDB /* Assets.xcassets */; };
+		E651E9ED215E4D4F0066EEDB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E651E9EB215E4D4F0066EEDB /* LaunchScreen.storyboard */; };
+		E651E9F0215E4D4F0066EEDB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9EF215E4D4F0066EEDB /* main.m */; };
+		E651E9FA215E4D4F0066EEDB /* GuldenWalletTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9F9215E4D4F0066EEDB /* GuldenWalletTests.m */; };
+		E651EA05215E4D4F0066EEDB /* GuldenWalletUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E651EA04215E4D4F0066EEDB /* GuldenWalletUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E651E9F6215E4D4F0066EEDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E651E9D2215E4D4D0066EEDB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E651E9D9215E4D4D0066EEDB;
+			remoteInfo = GuldenWallet;
+		};
+		E651EA01215E4D4F0066EEDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E651E9D2215E4D4D0066EEDB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E651E9D9215E4D4D0066EEDB;
+			remoteInfo = GuldenWallet;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E651E9DA215E4D4D0066EEDB /* GuldenWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GuldenWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E651E9DD215E4D4D0066EEDB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E651E9DE215E4D4D0066EEDB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E651E9E0215E4D4D0066EEDB /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		E651E9E1215E4D4D0066EEDB /* FirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		E651E9E3215E4D4D0066EEDB /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
+		E651E9E4215E4D4D0066EEDB /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		E651E9E7215E4D4D0066EEDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E651E9E9215E4D4F0066EEDB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E651E9EC215E4D4F0066EEDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E651E9EE215E4D4F0066EEDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E651E9EF215E4D4F0066EEDB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E651E9F5215E4D4F0066EEDB /* GuldenWalletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GuldenWalletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E651E9F9215E4D4F0066EEDB /* GuldenWalletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GuldenWalletTests.m; sourceTree = "<group>"; };
+		E651E9FB215E4D4F0066EEDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E651EA00215E4D4F0066EEDB /* GuldenWalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GuldenWalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E651EA04215E4D4F0066EEDB /* GuldenWalletUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GuldenWalletUITests.m; sourceTree = "<group>"; };
+		E651EA06215E4D4F0066EEDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E651E9D7215E4D4D0066EEDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E651E9F2215E4D4F0066EEDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E651E9FD215E4D4F0066EEDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E651E9D1215E4D4D0066EEDB = {
+			isa = PBXGroup;
+			children = (
+				E651E9DC215E4D4D0066EEDB /* GuldenWallet */,
+				E651E9F8215E4D4F0066EEDB /* GuldenWalletTests */,
+				E651EA03215E4D4F0066EEDB /* GuldenWalletUITests */,
+				E651E9DB215E4D4D0066EEDB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E651E9DB215E4D4D0066EEDB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E651E9DA215E4D4D0066EEDB /* GuldenWallet.app */,
+				E651E9F5215E4D4F0066EEDB /* GuldenWalletTests.xctest */,
+				E651EA00215E4D4F0066EEDB /* GuldenWalletUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E651E9DC215E4D4D0066EEDB /* GuldenWallet */ = {
+			isa = PBXGroup;
+			children = (
+				E651E9DD215E4D4D0066EEDB /* AppDelegate.h */,
+				E651E9DE215E4D4D0066EEDB /* AppDelegate.m */,
+				E651E9E0215E4D4D0066EEDB /* FirstViewController.h */,
+				E651E9E1215E4D4D0066EEDB /* FirstViewController.m */,
+				E651E9E3215E4D4D0066EEDB /* SecondViewController.h */,
+				E651E9E4215E4D4D0066EEDB /* SecondViewController.m */,
+				E651E9E6215E4D4D0066EEDB /* Main.storyboard */,
+				E651E9E9215E4D4F0066EEDB /* Assets.xcassets */,
+				E651E9EB215E4D4F0066EEDB /* LaunchScreen.storyboard */,
+				E651E9EE215E4D4F0066EEDB /* Info.plist */,
+				E651E9EF215E4D4F0066EEDB /* main.m */,
+			);
+			path = GuldenWallet;
+			sourceTree = "<group>";
+		};
+		E651E9F8215E4D4F0066EEDB /* GuldenWalletTests */ = {
+			isa = PBXGroup;
+			children = (
+				E651E9F9215E4D4F0066EEDB /* GuldenWalletTests.m */,
+				E651E9FB215E4D4F0066EEDB /* Info.plist */,
+			);
+			path = GuldenWalletTests;
+			sourceTree = "<group>";
+		};
+		E651EA03215E4D4F0066EEDB /* GuldenWalletUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E651EA04215E4D4F0066EEDB /* GuldenWalletUITests.m */,
+				E651EA06215E4D4F0066EEDB /* Info.plist */,
+			);
+			path = GuldenWalletUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E651E9D9215E4D4D0066EEDB /* GuldenWallet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E651EA09215E4D4F0066EEDB /* Build configuration list for PBXNativeTarget "GuldenWallet" */;
+			buildPhases = (
+				E651E9D6215E4D4D0066EEDB /* Sources */,
+				E651E9D7215E4D4D0066EEDB /* Frameworks */,
+				E651E9D8215E4D4D0066EEDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GuldenWallet;
+			productName = GuldenWallet;
+			productReference = E651E9DA215E4D4D0066EEDB /* GuldenWallet.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E651E9F4215E4D4F0066EEDB /* GuldenWalletTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E651EA0C215E4D4F0066EEDB /* Build configuration list for PBXNativeTarget "GuldenWalletTests" */;
+			buildPhases = (
+				E651E9F1215E4D4F0066EEDB /* Sources */,
+				E651E9F2215E4D4F0066EEDB /* Frameworks */,
+				E651E9F3215E4D4F0066EEDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E651E9F7215E4D4F0066EEDB /* PBXTargetDependency */,
+			);
+			name = GuldenWalletTests;
+			productName = GuldenWalletTests;
+			productReference = E651E9F5215E4D4F0066EEDB /* GuldenWalletTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E651E9FF215E4D4F0066EEDB /* GuldenWalletUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E651EA0F215E4D4F0066EEDB /* Build configuration list for PBXNativeTarget "GuldenWalletUITests" */;
+			buildPhases = (
+				E651E9FC215E4D4F0066EEDB /* Sources */,
+				E651E9FD215E4D4F0066EEDB /* Frameworks */,
+				E651E9FE215E4D4F0066EEDB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E651EA02215E4D4F0066EEDB /* PBXTargetDependency */,
+			);
+			name = GuldenWalletUITests;
+			productName = GuldenWalletUITests;
+			productReference = E651EA00215E4D4F0066EEDB /* GuldenWalletUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E651E9D2215E4D4D0066EEDB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1000;
+				ORGANIZATIONNAME = "Gulden.com BV";
+				TargetAttributes = {
+					E651E9D9215E4D4D0066EEDB = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					E651E9F4215E4D4F0066EEDB = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = E651E9D9215E4D4D0066EEDB;
+					};
+					E651E9FF215E4D4F0066EEDB = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = E651E9D9215E4D4D0066EEDB;
+					};
+				};
+			};
+			buildConfigurationList = E651E9D5215E4D4D0066EEDB /* Build configuration list for PBXProject "GuldenWallet" */;
+			compatibilityVersion = "Xcode 10.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E651E9D1215E4D4D0066EEDB;
+			productRefGroup = E651E9DB215E4D4D0066EEDB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E651E9D9215E4D4D0066EEDB /* GuldenWallet */,
+				E651E9F4215E4D4F0066EEDB /* GuldenWalletTests */,
+				E651E9FF215E4D4F0066EEDB /* GuldenWalletUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E651E9D8215E4D4D0066EEDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E651E9ED215E4D4F0066EEDB /* LaunchScreen.storyboard in Resources */,
+				E651E9EA215E4D4F0066EEDB /* Assets.xcassets in Resources */,
+				E651E9E8215E4D4D0066EEDB /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E651E9F3215E4D4F0066EEDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E651E9FE215E4D4F0066EEDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E651E9D6215E4D4D0066EEDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E651E9E5215E4D4D0066EEDB /* SecondViewController.m in Sources */,
+				E651E9DF215E4D4D0066EEDB /* AppDelegate.m in Sources */,
+				E651E9F0215E4D4F0066EEDB /* main.m in Sources */,
+				E651E9E2215E4D4D0066EEDB /* FirstViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E651E9F1215E4D4F0066EEDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E651E9FA215E4D4F0066EEDB /* GuldenWalletTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E651E9FC215E4D4F0066EEDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E651EA05215E4D4F0066EEDB /* GuldenWalletUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E651E9F7215E4D4F0066EEDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E651E9D9215E4D4D0066EEDB /* GuldenWallet */;
+			targetProxy = E651E9F6215E4D4F0066EEDB /* PBXContainerItemProxy */;
+		};
+		E651EA02215E4D4F0066EEDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E651E9D9215E4D4D0066EEDB /* GuldenWallet */;
+			targetProxy = E651EA01215E4D4F0066EEDB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E651E9E6215E4D4D0066EEDB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E651E9E7215E4D4D0066EEDB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		E651E9EB215E4D4F0066EEDB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E651E9EC215E4D4F0066EEDB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E651EA07215E4D4F0066EEDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		E651EA08215E4D4F0066EEDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E651EA0A215E4D4F0066EEDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 33W3ADGJQH;
+				INFOPLIST_FILE = GuldenWallet/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gulden.GuldenWallet;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E651EA0B215E4D4F0066EEDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 33W3ADGJQH;
+				INFOPLIST_FILE = GuldenWallet/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gulden.GuldenWallet;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E651EA0D215E4D4F0066EEDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 33W3ADGJQH;
+				INFOPLIST_FILE = GuldenWalletTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gulden.GuldenWalletTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GuldenWallet.app/GuldenWallet";
+			};
+			name = Debug;
+		};
+		E651EA0E215E4D4F0066EEDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 33W3ADGJQH;
+				INFOPLIST_FILE = GuldenWalletTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gulden.GuldenWalletTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GuldenWallet.app/GuldenWallet";
+			};
+			name = Release;
+		};
+		E651EA10215E4D4F0066EEDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 33W3ADGJQH;
+				INFOPLIST_FILE = GuldenWalletUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gulden.GuldenWalletUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GuldenWallet;
+			};
+			name = Debug;
+		};
+		E651EA11215E4D4F0066EEDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 33W3ADGJQH;
+				INFOPLIST_FILE = GuldenWalletUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.gulden.GuldenWalletUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GuldenWallet;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E651E9D5215E4D4D0066EEDB /* Build configuration list for PBXProject "GuldenWallet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E651EA07215E4D4F0066EEDB /* Debug */,
+				E651EA08215E4D4F0066EEDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E651EA09215E4D4F0066EEDB /* Build configuration list for PBXNativeTarget "GuldenWallet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E651EA0A215E4D4F0066EEDB /* Debug */,
+				E651EA0B215E4D4F0066EEDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E651EA0C215E4D4F0066EEDB /* Build configuration list for PBXNativeTarget "GuldenWalletTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E651EA0D215E4D4F0066EEDB /* Debug */,
+				E651EA0E215E4D4F0066EEDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E651EA0F215E4D4F0066EEDB /* Build configuration list for PBXNativeTarget "GuldenWalletUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E651EA10215E4D4F0066EEDB /* Debug */,
+				E651EA11215E4D4F0066EEDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E651E9D2215E4D4D0066EEDB /* Project object */;
+}
