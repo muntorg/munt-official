@@ -71,9 +71,12 @@ static std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 
 static void notifyBalanceChanged(CWallet* pwallet)
 {
-    WalletBalances balances;
-    pwallet->GetBalances(balances, nullptr, false);
-    signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+    if (pwallet && signalHandler)
+    {
+        WalletBalances balances;
+        pwallet->GetBalances(balances, nullptr, false);
+        signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+    }
 }
 
 void handlePostInitMain()
@@ -82,7 +85,10 @@ void handlePostInitMain()
     uiInterface.NotifySPVProgress.connect(
         [=](int startHeight, int processedHeight, int expectedHeight)
         {
-            signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight);
+            if (signalHandler)
+            {
+                signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight);
+            }
         }
     );
 
@@ -91,22 +97,28 @@ void handlePostInitMain()
     {
         pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status) 
         {
-            DS_LOCK2(cs_main, pwallet->cs_wallet);
-            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
             {
-                const CWalletTx& wtx = pwallet->mapWallet[hash];
-                if (status == CT_NEW)
+                DS_LOCK2(cs_main, pwallet->cs_wallet);
+                if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
                 {
-                    std::vector<TransactionRecord> walletTransactions;
-                    calculateTransactionRecordsForWalletTransaction(wtx, walletTransactions);
-                    for (const auto& tx: walletTransactions)
+                    const CWalletTx& wtx = pwallet->mapWallet[hash];
+                    if (status == CT_NEW)
                     {
-                        signalHandler->notifyNewTransaction(tx);
+                        std::vector<TransactionRecord> walletTransactions;
+                        calculateTransactionRecordsForWalletTransaction(wtx, walletTransactions);
+                        for (const auto& tx: walletTransactions)
+                        {
+                            LogPrintf("unity: notify transaction changed [2] %s",hash.ToString().c_str());
+                            if (signalHandler)
+                            {
+                                signalHandler->notifyNewTransaction(tx);
+                            }
+                        }
                     }
-                }
-                else if (status == CT_DELETED)
-                {
-                    //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
+                    else if (status == CT_DELETED)
+                    {
+                        //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
+                    }
                 }
             }
             notifyBalanceChanged(pwallet);
