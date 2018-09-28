@@ -79,6 +79,14 @@ static void notifyBalanceChanged(CWallet* pwallet)
     }
 }
 
+void terminateUnityFrontend()
+{
+    if (signalHandler)
+    {
+        signalHandler->notifyShutdown();
+    }
+}
+
 void handlePostInitMain()
 {
     // Update sync progress as we receive headers/blocks.

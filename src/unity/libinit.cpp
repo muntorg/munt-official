@@ -38,8 +38,10 @@
 
 bool shutDownFinalised = false;
 
+extern void terminateUnityFrontend();
 static void handleFinalShutdown()
 {
+    terminateUnityFrontend();
     shutDownFinalised = true;
 }
 
