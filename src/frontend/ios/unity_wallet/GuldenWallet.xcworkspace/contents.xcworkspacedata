@@ -4,4 +4,10 @@
    <FileRef
       location = "group:GuldenWallet/GuldenWallet.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:../../../../build_ios/src/unity/libgulden_unity.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:GuldenWallet/../../../../../build_ios/djinni/djinni/support-lib/support_lib.xcodeproj">
+   </FileRef>
 </Workspace>

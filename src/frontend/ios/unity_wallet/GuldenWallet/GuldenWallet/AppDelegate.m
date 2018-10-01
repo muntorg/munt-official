@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "DBGuldenUnifiedBackend.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    DBGuldenUnifiedBackend* backend = [[DBGuldenUnifiedBackend alloc] init];
+    
+    [DBGuldenUnifiedBackend InitUnityLib:@"test" signals:nil];
+    
     return YES;
 }
 
