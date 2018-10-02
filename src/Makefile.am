@@ -49,6 +49,9 @@ endif
 if BUILD_GULDEN_LIBS_JNI
 LIBGULDEN_UNITY_JNI=libgulden_unity_jni.la
 endif
+if BUILD_GULDEN_LIBS_OBJC
+LIBGULDEN_UNITY_OBJC=libgulden_unity_objc.la
+endif
 if ENABLE_WALLET
 LIBGULDEN_WALLET=libgulden_wallet.a
 endif
@@ -70,7 +73,7 @@ EXTRA_LIBRARIES += \
   $(LIBGULDEN_WALLET) \
   $(LIBGULDEN_ZMQ)
 
-lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI)
+lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI) $(LIBGULDEN_UNITY_OBJC)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
@@ -493,6 +496,81 @@ libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 endif
 #
 
+# Gulden-unity library #
+if BUILD_GULDEN_LIBS_OBJC
+libgulden_unity_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
+libgulden_unity_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+
+#  these are now gone
+#  unity/android/logging_android.cpp
+#  unity/android/init_android.cpp
+
+libgulden_unity_objc_la_SOURCES = \
+  unity/libinit.cpp \
+  unity/libinit.h \
+  $(libgulden_wallet_a_SOURCES) \
+  $(libgulden_common_a_SOURCES) \
+  $(libgulden_util_a_SOURCES) \
+  $(libgulden_node_a_SOURCES) \
+  $(libgulden_consensus_a_SOURCES) \
+  $(crypto_libgulden_crypto_a_SOURCES) \
+  unity/unity_impl.h \
+  unity/unity_impl.cpp \
+  unity/djinni/cpp/balance_record.hpp \
+  unity/djinni/cpp/gulden_unified_backend.cpp \
+  unity/djinni/cpp/gulden_unified_backend.hpp \
+  unity/djinni/cpp/gulden_unified_frontend.hpp \
+  unity/djinni/cpp/qrcode_record.hpp \
+  unity/djinni/cpp/transaction_record.hpp \
+  unity/djinni/cpp/transaction_type.hpp \
+  unity/djinni/cpp/uri_recipient.hpp \
+  unity/djinni/cpp/uri_record.hpp \
+  unity/djinni/objc/DBBalanceRecord+Private.h \
+  unity/djinni/objc/DBBalanceRecord+Private.mm \
+  unity/djinni/objc/DBBalanceRecord.h \
+  unity/djinni/objc/DBBalanceRecord.mm \
+  unity/djinni/objc/DBGuldenUnifiedBackend+Private.h \
+  unity/djinni/objc/DBGuldenUnifiedBackend+Private.mm \
+  unity/djinni/objc/DBGuldenUnifiedBackend.h \
+  unity/djinni/objc/DBGuldenUnifiedBackend.mm \
+  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.h \
+  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.mm \
+  unity/djinni/objc/DBGuldenUnifiedFrontend.h \
+  unity/djinni/objc/DBQrcodeRecord+Private.h \
+  unity/djinni/objc/DBQrcodeRecord+Private.mm \
+  unity/djinni/objc/DBQrcodeRecord.h \
+  unity/djinni/objc/DBQrcodeRecord.mm \
+  unity/djinni/objc/DBTransactionRecord+Private.h \
+  unity/djinni/objc/DBTransactionRecord+Private.mm \
+  unity/djinni/objc/DBTransactionRecord.h \
+  unity/djinni/objc/DBTransactionRecord.mm \
+  unity/djinni/objc/DBTransactionType+Private.h \
+  unity/djinni/objc/DBTransactionType.h \
+  unity/djinni/objc/DBUriRecipient+Private.h \
+  unity/djinni/objc/DBUriRecipient+Private.mm \
+  unity/djinni/objc/DBUriRecipient.h \
+  unity/djinni/objc/DBUriRecipient.mm \
+  unity/djinni/objc/DBUriRecord+Private.h \
+  unity/djinni/objc/DBUriRecord+Private.mm \
+  unity/djinni/objc/DBUriRecord.h \
+  unity/djinni/objc/DBUriRecord.mm \
+  ../djinni/djinni/support-lib/objc/DJICppWrapperCache+Private.h \
+  ../djinni/djinni/support-lib/objc/DJIError.h \
+  ../djinni/djinni/support-lib/objc/DJIError.mm \
+  ../djinni/djinni/support-lib/objc/DJIMarshal+Private.h \
+  ../djinni/djinni/support-lib/objc/DJIObjcWrapperCache+Private.h \
+  ../djinni/djinni/support-lib/objc/DJIProxyCaches.mm \
+  $(GULDEN_CORE_H)
+
+
+# libgulden_unity_objc_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS)
+libgulden_unity_objc_la_LDFLAGS = $(AM_LDFLAGS)  $(RELDFLAGS) -rpath/libgulden_unity_objc.0.dylib
+libgulden_unity_objc_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
+libgulden_unity_objc_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_objc_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libgulden_unity_objc_la_OBJCXXFLAGS = $(AM_OBJCXXFLAGS) -fobjc-arc -I$(srcdir)/../djinni/djinni/support-lib/objc
+endif
+#
 
 # GuldenD binary #
 GuldenD_SOURCES = GuldenD.cpp

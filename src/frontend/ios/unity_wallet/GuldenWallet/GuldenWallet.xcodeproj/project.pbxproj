@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E64203FB21638D4D004A77FF /* gulden_static.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E64203FA21638D4D004A77FF /* gulden_static.framework */; };
+		E64203FC21638D4D004A77FF /* gulden_static.framework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = E64203FA21638D4D004A77FF /* gulden_static.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E651E9DF215E4D4D0066EEDB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9DE215E4D4D0066EEDB /* AppDelegate.m */; };
 		E651E9E2215E4D4D0066EEDB /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9E1215E4D4D0066EEDB /* FirstViewController.m */; };
 		E651E9E5215E4D4D0066EEDB /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9E4215E4D4D0066EEDB /* SecondViewController.m */; };
@@ -16,12 +18,17 @@
 		E651E9F0215E4D4F0066EEDB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9EF215E4D4F0066EEDB /* main.m */; };
 		E651E9FA215E4D4F0066EEDB /* GuldenWalletTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E651E9F9215E4D4F0066EEDB /* GuldenWalletTests.m */; };
 		E651EA05215E4D4F0066EEDB /* GuldenWalletUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E651EA04215E4D4F0066EEDB /* GuldenWalletUITests.m */; };
-		E651EA22215E6A030066EEDB /* libdjinni_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E651EA21215E6A030066EEDB /* libdjinni_objc.a */; };
-		E651EA24215E6A710066EEDB /* libgulden_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E651EA23215E6A710066EEDB /* libgulden_unity_objc.a */; };
 		E651EA2721620B8B0066EEDB /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E651EA2521620B8B0066EEDB /* dummy.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		E64203D521637E3E004A77FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E64203D121637E3E004A77FF /* gulden_unity.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E64203C521637E3E004A77FF;
+			remoteInfo = gulden_unity;
+		};
 		E651E9F6215E4D4F0066EEDB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E651E9D2215E4D4D0066EEDB /* Project object */;
@@ -38,7 +45,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E64203BA21636582004A77FF /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E64203FC21638D4D004A77FF /* gulden_static.framework in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		E6223C462162689F00C8E6C7 /* libgulden_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_objc.a; path = ../../../../../build/ios/src/.libs/libgulden_unity_objc.a; sourceTree = "<group>"; };
+		E64203B721636505004A77FF /* libgulden_unity_objc.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgulden_unity_objc.0.dylib; path = ../../../../../build/ios/src/.libs/libgulden_unity_objc.0.dylib; sourceTree = "<group>"; };
+		E64203D121637E3E004A77FF /* gulden_unity.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = gulden_unity.xcodeproj; path = ../../../../unity/ios/gulden_unity/gulden_unity.xcodeproj; sourceTree = "<group>"; };
+		E64203FA21638D4D004A77FF /* gulden_static.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = gulden_static.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E651E9DA215E4D4D0066EEDB /* GuldenWallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GuldenWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E651E9DD215E4D4D0066EEDB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E651E9DE215E4D4D0066EEDB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -61,6 +86,8 @@
 		E651EA23215E6A710066EEDB /* libgulden_unity_objc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libgulden_unity_objc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E651EA2521620B8B0066EEDB /* dummy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
 		E651EA2621620B8B0066EEDB /* dummy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dummy.hpp; sourceTree = "<group>"; };
+		E67D6B802162664C00580151 /* libgulden_unity_objc.la */ = {isa = PBXFileReference; lastKnownFileType = text; name = libgulden_unity_objc.la; path = ../../../../../build/ios/src/libgulden_unity_objc.la; sourceTree = "<group>"; };
+		E67D6B822162668500580151 /* libgulden_unity_objc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libgulden_unity_objc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,8 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E651EA22215E6A030066EEDB /* libdjinni_objc.a in Frameworks */,
-				E651EA24215E6A710066EEDB /* libgulden_unity_objc.a in Frameworks */,
+				E64203FB21638D4D004A77FF /* gulden_static.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,9 +116,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E64203D221637E3E004A77FF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E64203D621637E3E004A77FF /* libgulden_unity.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		E651E9D1215E4D4D0066EEDB = {
 			isa = PBXGroup;
 			children = (
+				E64203FA21638D4D004A77FF /* gulden_static.framework */,
+				E64203D121637E3E004A77FF /* gulden_unity.xcodeproj */,
 				E651E9DC215E4D4D0066EEDB /* GuldenWallet */,
 				E651E9F8215E4D4F0066EEDB /* GuldenWalletTests */,
 				E651EA03215E4D4F0066EEDB /* GuldenWalletUITests */,
@@ -152,6 +188,10 @@
 		E651EA20215E6A030066EEDB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E64203B721636505004A77FF /* libgulden_unity_objc.0.dylib */,
+				E67D6B822162668500580151 /* libgulden_unity_objc.a */,
+				E6223C462162689F00C8E6C7 /* libgulden_unity_objc.a */,
+				E67D6B802162664C00580151 /* libgulden_unity_objc.la */,
 				E651EA23215E6A710066EEDB /* libgulden_unity_objc.a */,
 				E651EA21215E6A030066EEDB /* libdjinni_objc.a */,
 			);
@@ -168,6 +208,7 @@
 				E651E9D6215E4D4D0066EEDB /* Sources */,
 				E651E9D7215E4D4D0066EEDB /* Frameworks */,
 				E651E9D8215E4D4D0066EEDB /* Resources */,
+				E64203BA21636582004A77FF /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -247,6 +288,12 @@
 			mainGroup = E651E9D1215E4D4D0066EEDB;
 			productRefGroup = E651E9DB215E4D4D0066EEDB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = E64203D221637E3E004A77FF /* Products */;
+					ProjectRef = E64203D121637E3E004A77FF /* gulden_unity.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				E651E9D9215E4D4D0066EEDB /* GuldenWallet */,
@@ -255,6 +302,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		E64203D621637E3E004A77FF /* libgulden_unity.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libgulden_unity.a;
+			remoteRef = E64203D521637E3E004A77FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E651E9D8215E4D4D0066EEDB /* Resources */ = {
@@ -380,6 +437,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMPILER_INDEX_STORE_ENABLE = NO;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -443,6 +501,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMPILER_INDEX_STORE_ENABLE = NO;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -478,6 +537,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "/Users/willem/Projects/gulden/gulden-official/build/ios/src/.libs";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gulden.GuldenWallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -495,6 +555,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "/Users/willem/Projects/gulden/gulden-official/build/ios/src/.libs";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gulden.GuldenWallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

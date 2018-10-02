@@ -22,7 +22,6 @@
 #include "uri_recipient.hpp"
 #include "transaction_record.hpp"
 #include "transaction_type.hpp"
-#include "djinni_support.hpp"
 
 // External libraries
 #include <boost/algorithm/string.hpp>

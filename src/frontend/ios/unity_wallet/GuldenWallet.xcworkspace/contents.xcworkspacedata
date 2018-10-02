@@ -2,12 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../../../unity/ios/gulden_static/gulden_static.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:GuldenWallet/GuldenWallet.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../../../../build_ios/src/unity/libgulden_unity.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:GuldenWallet/../../../../../build_ios/djinni/djinni/support-lib/support_lib.xcodeproj">
    </FileRef>
 </Workspace>
