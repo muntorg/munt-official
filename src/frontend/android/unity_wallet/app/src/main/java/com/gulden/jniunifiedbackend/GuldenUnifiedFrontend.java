@@ -12,4 +12,6 @@ public abstract class GuldenUnifiedFrontend {
     public abstract boolean notifyNewTransaction(TransactionRecord newTransaction);
 
     public abstract boolean notifyShutdown();
+
+    public abstract boolean notifyCoreReady();
 }
