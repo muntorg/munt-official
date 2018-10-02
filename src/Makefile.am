@@ -470,6 +470,8 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeGuldenUnifiedFrontend.cpp \
   unity/djinni/jni/NativeQrcodeRecord.hpp \
   unity/djinni/jni/NativeQrcodeRecord.cpp \
+  unity/djinni/jni/NativeAddressRecord.hpp \
+  unity/djinni/jni/NativeAddressRecord.cpp \
   unity/djinni/jni/NativeBalanceRecord.hpp \
   unity/djinni/jni/NativeBalanceRecord.cpp \
   unity/djinni/jni/NativeUriRecord.hpp \

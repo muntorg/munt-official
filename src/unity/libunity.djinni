@@ -42,6 +42,12 @@ transaction_record = record {
     timestamp : i64;
 } deriving(parcelable)
 
+address_record = record {
+    address : string;
+    purpose : string;
+    name : string;
+} deriving(parcelable)
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
@@ -68,6 +74,15 @@ gulden_unified_backend = interface +c {
 
     # Get list of all transactions wallet has been involved in
     static getTransactionHistory() : list<transaction_record>;
+
+    # Get list of all address book entries
+    static getAddressBookRecords() : list<address_record>;
+
+    # Add a record to the address book
+    static addAddressBookRecord(address : address_record);
+
+    # Delete a record from the address book
+    static deleteAddressBookRecord(address : address_record);
 
     # Interface constants
     const version: i32 = 1;

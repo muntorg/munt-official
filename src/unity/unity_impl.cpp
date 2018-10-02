@@ -22,6 +22,7 @@
 #include "uri_recipient.hpp"
 #include "transaction_record.hpp"
 #include "transaction_type.hpp"
+#include "address_record.hpp"
 #include "djinni_support.hpp"
 
 // External libraries
@@ -89,6 +90,7 @@ void terminateUnityFrontend()
 
 void handlePostInitMain()
 {
+
     // Update sync progress as we receive headers/blocks.
     uiInterface.NotifySPVProgress.connect(
         [=](int startHeight, int processedHeight, int expectedHeight)
@@ -278,6 +280,15 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
     if (request.items.find("amount") != request.items.end())
         amount = request.items.find("amount")->second;
 
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (pactiveWallet->mapAddressBook.find(address) != pactiveWallet->mapAddressBook.end())
+        {
+            label = pactiveWallet->mapAddressBook[address].name;
+        }
+    }
+
     return UriRecipient(true, address, label, amount);
 }
 
@@ -345,4 +356,35 @@ std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
     }
     std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timestamp > y.timestamp); });
     return ret;
+}
+
+std::vector<AddressRecord> GuldenUnifiedBackend::getAddressBookRecords()
+{
+    std::vector<AddressRecord> ret;
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        for(const auto& [address, addressData] : pactiveWallet->mapAddressBook)
+        {
+            ret.emplace_back(AddressRecord(address, addressData.purpose, addressData.name));
+        }
+    }
+
+    return ret;
+}
+
+void GuldenUnifiedBackend::addAddressBookRecord(const AddressRecord& address)
+{
+    if (pactiveWallet)
+    {
+        pactiveWallet->SetAddressBook(address.address, address.name, address.purpose);
+    }
+}
+
+void GuldenUnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
+{
+    if (pactiveWallet)
+    {
+        pactiveWallet->DelAddressBook(address.address);
+    }
 }
