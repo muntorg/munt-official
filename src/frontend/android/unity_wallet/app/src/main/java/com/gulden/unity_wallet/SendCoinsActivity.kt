@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.jniunifiedbackend.UriRecord
@@ -11,6 +12,17 @@ import com.gulden.unity_wallet.R.id.send_coins_amount
 
 import kotlinx.android.synthetic.main.activity_send_coins.*
 import kotlinx.android.synthetic.main.numeric_keypad.*
+import android.R.string.cancel
+import android.content.Context
+import android.content.DialogInterface
+import android.opengl.Visibility
+import android.support.v7.app.AlertDialog
+import android.widget.EditText
+import android.view.ViewGroup
+import android.view.LayoutInflater
+import com.gulden.unity_wallet.R.layout.text_input_address_label
+import kotlinx.android.synthetic.main.text_input_address_label.view.*
+
 
 class SendCoinsActivity : AppCompatActivity() {
 
@@ -22,7 +34,8 @@ class SendCoinsActivity : AppCompatActivity() {
         var recipient : UriRecipient = intent.getParcelableExtra(EXTRA_RECIPIENT);
         send_coins_amount.setText(recipient.amount);
         send_coins_receiving_static_address.text = recipient.address
-        send_coins_receiving_static_label.text = recipient.label
+
+        setAddressLabel(recipient.label);
 
         fab.setOnClickListener {
             view -> run {
@@ -42,7 +55,30 @@ class SendCoinsActivity : AppCompatActivity() {
         }
     }
 
-    fun handleKeypadButtonClick(view : View) {
+    fun setAddressLabel(label : String)
+    {
+        send_coins_receiving_static_label.text = label;
+        setAddressHasLabel(label.isNotEmpty());
+    }
+
+    fun setAddressHasLabel(hasLabel : Boolean)
+    {
+        if (hasLabel)
+        {
+            send_coins_receiving_static_label.visibility = View.VISIBLE;
+            labelRemoveFromAddressBook.visibility = View.VISIBLE;
+            labelAddToAddressBook.visibility = View.GONE;
+        }
+        else
+        {
+            send_coins_receiving_static_label.visibility = View.GONE;
+            labelRemoveFromAddressBook.visibility = View.GONE;
+            labelAddToAddressBook.visibility = View.VISIBLE;
+        }
+    }
+
+    fun handleKeypadButtonClick(view : View)
+    {
         when (view.id)
         {
             R.id.button_0 -> send_coins_amount.setText(send_coins_amount.text.toString() + "0");
@@ -64,7 +100,35 @@ class SendCoinsActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
+    fun handleAddToAddressBookClick(view : View)
+    {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Add address")
+        val layoutInflater : LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
+        val viewInflated : View = layoutInflater.inflate(text_input_address_label, view.rootView as ViewGroup, false);
+        viewInflated.labelAddAddressAddress.text = send_coins_receiving_static_address.text;
+        val input = viewInflated.findViewById(R.id.input) as EditText
+        builder.setView(viewInflated)
+        builder.setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener { dialog, which ->
+            dialog.dismiss()
+            val label = input.text.toString()
+            val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", label);
+            GuldenUnifiedBackend.addAddressBookRecord(record);
+            setAddressLabel(label);
+        })
+        builder.setNegativeButton(android.R.string.cancel, DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+        builder.show()
+    }
+
+    fun handleRemoveFromAddressBookClick(view : View)
+    {
+        val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", send_coins_receiving_static_label.text.toString());
+        GuldenUnifiedBackend.deleteAddressBookRecord(record);
+        setAddressLabel("");
+    }
+
+    companion object
+    {
         public val EXTRA_RECIPIENT = "recipient"
     }
 }
