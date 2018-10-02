@@ -78,19 +78,29 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
         false
     }
 
-    override fun syncProgressChanged(percent: Float): Boolean {
-        this@MainActivity.runOnUiThread {
+    override fun syncProgressChanged(percent: Float): Boolean
+    {
+        this@MainActivity.runOnUiThread{
             syncProgress.progress = (1000000 * (percent/100)).toInt();
         }
         return true;
     }
 
-    override fun walletBalanceChanged(balance: Long): Boolean {
+    override fun walletBalanceChanged(balance: Long): Boolean
+    {
         this@MainActivity.runOnUiThread{
             walletBalance.text = (balance.toFloat() / 100000000).toString()
             walletBalanceLogo.visibility = View.VISIBLE;
             walletBalance.visibility = View.VISIBLE;
             walletLogo.visibility = View.GONE;
+        }
+        return true;
+    }
+
+    override fun coreUIInit() : Boolean
+    {
+        this@MainActivity.runOnUiThread{
+            addFragment(sendFragment, R.id.mainLayout)
         }
         return true;
     }
@@ -110,8 +120,6 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
 
         syncProgress.max = 1000000;
         syncProgress.progress = 0;
-
-        addFragment(sendFragment, R.id.mainLayout)
     }
 
 
@@ -230,6 +238,6 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
 
     companion object {
         private val BARCODE_READER_REQUEST_CODE = 1
-        private val SEND_COINS_RETURN_CODE = 2
+        public val SEND_COINS_RETURN_CODE = 2
     }
 }
