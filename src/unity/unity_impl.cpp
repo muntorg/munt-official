@@ -90,7 +90,10 @@ void terminateUnityFrontend()
 
 void handlePostInitMain()
 {
-
+    if (signalHandler)
+    {
+        signalHandler->notifyCoreReady();
+    }
     // Update sync progress as we receive headers/blocks.
     uiInterface.NotifySPVProgress.connect(
         [=](int startHeight, int processedHeight, int expectedHeight)
@@ -279,7 +282,6 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
     std::string amount = "";
     if (request.items.find("amount") != request.items.end())
         amount = request.items.find("amount")->second;
-
     if (pactiveWallet)
     {
         DS_LOCK2(cs_main, pactiveWallet->cs_wallet);

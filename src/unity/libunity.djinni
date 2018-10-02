@@ -94,4 +94,5 @@ gulden_unified_frontend = interface +j +o {
     notifyBalanceChange(new_balance : balance_record): bool;
     notifyNewTransaction(new_transaction : transaction_record): bool;
     notifyShutdown(): bool;
+    notifyCoreReady(): bool;
 }
