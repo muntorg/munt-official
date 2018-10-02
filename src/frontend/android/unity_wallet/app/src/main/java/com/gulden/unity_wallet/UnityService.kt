@@ -23,6 +23,7 @@ class UnityService : Service()
     {
         fun syncProgressChanged(percent : Float) : Boolean
         fun walletBalanceChanged(balance : Long) : Boolean
+        fun coreUIInit() : Boolean
     }
     public var signalHandler: UnityServiceSignalHandler? = null
 
@@ -55,6 +56,12 @@ class UnityService : Service()
         override fun notifyShutdown(): Boolean
         {
             stopSelf();
+            return true;
+        }
+
+        override fun notifyCoreReady(): Boolean
+        {
+            signalHandler?.coreUIInit();
             return true;
         }
     }
