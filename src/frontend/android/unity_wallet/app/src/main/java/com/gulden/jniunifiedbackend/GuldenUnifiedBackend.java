@@ -61,6 +61,24 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.getTransactionHistory();
     }
 
+    /** Get list of all address book entries */
+    public static ArrayList<AddressRecord> getAddressBookRecords()
+    {
+        return CppProxy.getAddressBookRecords();
+    }
+
+    /** Add a record to the address book */
+    public static void addAddressBookRecord(AddressRecord address)
+    {
+        CppProxy.addAddressBookRecord(address);
+    }
+
+    /** Delete a record from the address book */
+    public static void deleteAddressBookRecord(AddressRecord address)
+    {
+        CppProxy.deleteAddressBookRecord(address);
+    }
+
     private static final class CppProxy extends GuldenUnifiedBackend
     {
         private final long nativeRef;
@@ -99,5 +117,11 @@ public abstract class GuldenUnifiedBackend {
         public static native boolean performPaymentToRecipient(UriRecipient request);
 
         public static native ArrayList<TransactionRecord> getTransactionHistory();
+
+        public static native ArrayList<AddressRecord> getAddressBookRecords();
+
+        public static native void addAddressBookRecord(AddressRecord address);
+
+        public static native void deleteAddressBookRecord(AddressRecord address);
     }
 }
