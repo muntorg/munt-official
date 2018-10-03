@@ -16,11 +16,8 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.ui.TransactionAdapter
 import kotlinx.android.synthetic.main.fragment_transaction.*
-import com.gulden.unity_wallet.MainActivity
 import android.content.Intent
-import android.widget.AdapterView.OnItemClickListener
 import com.gulden.jniunifiedbackend.TransactionRecord
-import com.gulden.unity_wallet.SendCoinsActivity
 import com.gulden.unity_wallet.TransactionInfoActivity
 
 

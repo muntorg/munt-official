@@ -11,12 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.gulden.jniunifiedbackend.AddressRecord
-import com.gulden.jniunifiedbackend.TransactionRecord
-import com.gulden.jniunifiedbackend.TransactionType
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.address_book_list_item.view.*
-import kotlinx.android.synthetic.main.transaction_list_item.view.*
-import kotlinx.android.synthetic.main.transaction_list_item_with_header.view.*
 
 class AddressBookAdapter(private val context: Context, private val dataSource: ArrayList<AddressRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

@@ -8,7 +8,6 @@ package com.gulden.unity_wallet
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.SyncStateContract
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -26,11 +25,9 @@ import com.gulden.unity_wallet.MainActivityFragments.SettingsFragment
 import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-import kotlin.concurrent.thread
 import android.content.ComponentName
 import android.os.IBinder
 import android.content.ServiceConnection
-import android.content.Context.BIND_AUTO_CREATE
 
 
 

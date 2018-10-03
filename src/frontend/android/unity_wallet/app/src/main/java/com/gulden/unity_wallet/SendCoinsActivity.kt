@@ -12,15 +12,9 @@ import android.view.View
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
-import com.gulden.jniunifiedbackend.UriRecord
-import com.gulden.unity_wallet.R.id.send_coins_amount
 
 import kotlinx.android.synthetic.main.activity_send_coins.*
-import kotlinx.android.synthetic.main.numeric_keypad.*
-import android.R.string.cancel
 import android.content.Context
-import android.content.DialogInterface
-import android.opengl.Visibility
 import android.support.v7.app.AlertDialog
 import android.widget.EditText
 import android.view.ViewGroup
