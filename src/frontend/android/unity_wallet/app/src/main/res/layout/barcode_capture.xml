@@ -10,7 +10,7 @@
 
     <com.gulden.barcodereader.CameraSourcePreview
         android:id="@+id/preview"
-        android:layout_width="match_parent"
+        android:layout_width="344dp"
         android:layout_height="match_parent">
 
         <com.gulden.barcodereader.GraphicOverlay

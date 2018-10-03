@@ -45,7 +45,8 @@ import java.util.Vector;
  * from the preview's coordinate system to the view coordinate system.</li>
  * </ol>
  */
-public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
+public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View
+{
     private final Object mLock = new Object();
     private int mPreviewWidth;
     private float mWidthScaleFactor = 1.0f;
@@ -59,7 +60,8 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      * this and implement the {@link Graphic#draw(Canvas)} method to define the
      * graphics element.  Add instances to the overlay using {@link GraphicOverlay#add(Graphic)}.
      */
-    public static abstract class Graphic {
+    public static abstract class Graphic
+    {
         private GraphicOverlay mOverlay;
 
         public Graphic(GraphicOverlay overlay) {
@@ -194,17 +196,20 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     /**
      * Draws the overlay with its associated graphic objects.
      */
-    @Override
-    protected void onDraw(Canvas canvas) {
+    @Override protected void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas);
 
-        synchronized (mLock) {
-            if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
+        synchronized (mLock)
+        {
+            if ((mPreviewWidth != 0) && (mPreviewHeight != 0))
+            {
                 mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
                 mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
             }
 
-            for (Graphic graphic : mGraphics) {
+            for (Graphic graphic : mGraphics)
+            {
                 graphic.draw(canvas);
             }
         }
