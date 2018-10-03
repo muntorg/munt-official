@@ -149,13 +149,32 @@ void handlePostInitMain()
 
 int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
 {
+    // Force the datadir to specific place on e.g. android devices
     if (!dataDir.empty())
         SoftSetArg("-datadir", dataDir);
+
+    // SPV wallets definitely shouldn't be listening for incoming connections at all
     SoftSetArg("-listen", "0");
+
+    // Mininmise logging for performance reasons
     SoftSetArg("-debug", "0");
+
+    // Turn SPV mode on
     SoftSetArg("-fullsync", "0");
     SoftSetArg("-spv", "1");
+
+    // Minimise lookahead size for performance reasons
     SoftSetArg("-accountpool", "1");
+
+    // Minimise background threads and memory consumption
+    SoftSetArg("-par", "-100");
+    SoftSetArg("-maxsigcachesize", "0");
+    SoftSetArg("-dbcache", "4");
+    SoftSetArg("-maxmempool", "5");
+
+    //fixme: (2.1) Reverse headers
+    // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
+    SoftSetArg("-reverseheaders", "false");
 
     signalHandler = signals;
 
