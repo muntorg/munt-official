@@ -1,3 +1,8 @@
+// Copyright (c) 2018 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 package com.gulden.unity_wallet
 
 import android.os.Bundle
@@ -109,14 +114,14 @@ class SendCoinsActivity : AppCompatActivity() {
         viewInflated.labelAddAddressAddress.text = send_coins_receiving_static_address.text;
         val input = viewInflated.findViewById(R.id.input) as EditText
         builder.setView(viewInflated)
-        builder.setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener { dialog, which ->
+        builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             dialog.dismiss()
             val label = input.text.toString()
             val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", label);
             GuldenUnifiedBackend.addAddressBookRecord(record);
             setAddressLabel(label);
-        })
-        builder.setNegativeButton(android.R.string.cancel, DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+        }
+        builder.setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
         builder.show()
     }
 

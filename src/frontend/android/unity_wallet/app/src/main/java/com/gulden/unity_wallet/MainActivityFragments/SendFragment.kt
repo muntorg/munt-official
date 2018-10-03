@@ -1,3 +1,8 @@
+// Copyright (c) 2018 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 package com.gulden.unity_wallet.MainActivityFragments
 
 import android.content.Context
@@ -49,9 +54,8 @@ class SendFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        addressBookList.setOnItemClickListener { parent, view, position, id ->
+        addressBookList.setOnItemClickListener { parent, _, position, _ ->
             val address = parent.adapter.getItem(position) as AddressRecord
-            val parsedQRCodeURIRecord = UriRecord("Gulden", address.address, HashMap<String, String>())
             val recipient = UriRecipient(true, address.address, address.name, "0")
             val intent = Intent(this.context, SendCoinsActivity::class.java)
             intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient);

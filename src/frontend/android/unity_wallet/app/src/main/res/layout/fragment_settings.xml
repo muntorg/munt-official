@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
