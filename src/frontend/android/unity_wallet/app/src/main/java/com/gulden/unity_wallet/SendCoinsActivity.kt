@@ -76,24 +76,46 @@ class SendCoinsActivity : AppCompatActivity() {
         }
     }
 
+    fun appendNumberToAmount(number : String)
+    {
+        if (send_coins_amount.text.toString() == "0")
+            send_coins_amount.setText(number)
+        else
+            send_coins_amount.setText(send_coins_amount.text.toString() + number)
+    }
+
     fun handleKeypadButtonClick(view : View)
     {
         when (view.id)
         {
-            R.id.button_0 -> send_coins_amount.setText(send_coins_amount.text.toString() + "0");
-            R.id.button_1 -> send_coins_amount.setText(send_coins_amount.text.toString() + "1");
-            R.id.button_2 -> send_coins_amount.setText(send_coins_amount.text.toString() + "2");
-            R.id.button_3 -> send_coins_amount.setText(send_coins_amount.text.toString() + "3");
-            R.id.button_4 -> send_coins_amount.setText(send_coins_amount.text.toString() + "4");
-            R.id.button_5 -> send_coins_amount.setText(send_coins_amount.text.toString() + "5");
-            R.id.button_6 -> send_coins_amount.setText(send_coins_amount.text.toString() + "6");
-            R.id.button_7 -> send_coins_amount.setText(send_coins_amount.text.toString() + "7");
-            R.id.button_8 -> send_coins_amount.setText(send_coins_amount.text.toString() + "8");
-            R.id.button_9 -> send_coins_amount.setText(send_coins_amount.text.toString() + "9");
-            R.id.button_backspace -> send_coins_amount.text.dropLast(1);
+            R.id.button_1 -> appendNumberToAmount("1")
+            R.id.button_2 -> appendNumberToAmount("2")
+            R.id.button_3 -> appendNumberToAmount("3")
+            R.id.button_4 -> appendNumberToAmount("4")
+            R.id.button_5 -> appendNumberToAmount("5")
+            R.id.button_6 -> appendNumberToAmount("6")
+            R.id.button_7 -> appendNumberToAmount("7")
+            R.id.button_8 -> appendNumberToAmount("8")
+            R.id.button_9 -> appendNumberToAmount("9")
+            R.id.button_0 -> {
+                if (send_coins_amount.text.isEmpty())
+                    send_coins_amount.setText(send_coins_amount.text.toString() + "0.")
+                else if (send_coins_amount.text.toString() != "0")
+                    send_coins_amount.setText(send_coins_amount.text.toString() + "0")
+            };
+            R.id.button_backspace -> {
+                if (send_coins_amount.text.toString() == "0.")
+                    send_coins_amount.setText("")
+                else
+                    send_coins_amount.setText(send_coins_amount.text.dropLast(1))
+            };
             R.id.button_decimal -> {
-                if (!send_coins_amount.text.contains(".")) {
-                    send_coins_amount.setText(send_coins_amount.text.toString() + ".")
+                if (!send_coins_amount.text.contains("."))
+                {
+                    if (send_coins_amount.text.isEmpty())
+                        send_coins_amount.setText("0.")
+                    else
+                        send_coins_amount.setText(send_coins_amount.text.toString() + ".")
                 }
             };
         }

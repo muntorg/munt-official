@@ -99,7 +99,8 @@ file COPYING
             android:drawableLeft="@drawable/ic_g_logo"
             android:ems="10"
             android:hint="0"
-            android:inputType="numberDecimal"
+            android:editable="false"
+            android:inputType="none"
             tools:clickable="false" />
 
         <Space
