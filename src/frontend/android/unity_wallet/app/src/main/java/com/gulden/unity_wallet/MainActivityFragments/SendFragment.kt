@@ -61,6 +61,11 @@ class SendFragment : Fragment() {
             intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient);
             startActivityForResult(intent, MainActivity.SEND_COINS_RETURN_CODE)
         };
+
+        // TODO: Only update if there has been a change, not always.
+        val addresses = GuldenUnifiedBackend.getAddressBookRecords();
+        val adapter = AddressBookAdapter(this.context!!, addresses)
+        addressBookList.adapter = adapter;
     }
 
     override fun onAttachFragment(childFragment: Fragment?)
@@ -71,11 +76,6 @@ class SendFragment : Fragment() {
     override fun onResume()
     {
         super.onResume()
-
-        // TODO: Only update if there has been a change, not always.
-        val addresses = GuldenUnifiedBackend.getAddressBookRecords();
-        val adapter = AddressBookAdapter(this.context!!, addresses)
-        addressBookList.adapter = adapter;
     }
 
     override fun onAttach(context: Context) {

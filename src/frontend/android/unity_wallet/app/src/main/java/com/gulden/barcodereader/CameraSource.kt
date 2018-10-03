@@ -326,7 +326,7 @@ private constructor()
     {
         synchronized(mCameraLock) {
             stop()
-            mFrameProcessor!!.release()
+            mFrameProcessor?.release()
         }
     }
 
@@ -360,11 +360,11 @@ private constructor()
                 mDummySurfaceView = SurfaceView(mContext)
                 mCamera!!.setPreviewDisplay(mDummySurfaceView!!.holder)
             }
-            mCamera!!.startPreview()
+            mCamera?.startPreview()
 
             mProcessingThread = Thread(mFrameProcessor)
-            mFrameProcessor!!.setActive(true)
-            mProcessingThread!!.start()
+            mFrameProcessor?.setActive(true)
+            mProcessingThread?.start()
         }
         return this
     }
@@ -387,12 +387,12 @@ private constructor()
             }
 
             mCamera = createCamera()
-            mCamera!!.setPreviewDisplay(surfaceHolder)
-            mCamera!!.startPreview()
+            mCamera?.setPreviewDisplay(surfaceHolder)
+            mCamera?.startPreview()
 
             mProcessingThread = Thread(mFrameProcessor)
-            mFrameProcessor!!.setActive(true)
-            mProcessingThread!!.start()
+            mFrameProcessor?.setActive(true)
+            mProcessingThread?.start()
         }
         return this
     }
@@ -411,7 +411,7 @@ private constructor()
     fun stop()
     {
         synchronized(mCameraLock) {
-            mFrameProcessor!!.setActive(false)
+            mFrameProcessor?.setActive(false)
             if (mProcessingThread != null)
             {
                 try
@@ -419,7 +419,7 @@ private constructor()
                     // Wait for the thread to complete to ensure that we can't have multiple threads
                     // executing at the same time (i.e., which would happen if we called start too
                     // quickly after stop).
-                    mProcessingThread!!.join()
+                    mProcessingThread?.join()
                 }
                 catch (e: InterruptedException)
                 {
@@ -434,8 +434,8 @@ private constructor()
 
             if (mCamera != null)
             {
-                mCamera!!.stopPreview()
-                mCamera!!.setPreviewCallbackWithBuffer(null)
+                mCamera?.stopPreview()
+                mCamera?.setPreviewCallbackWithBuffer(null)
                 try
                 {
                     // We want to be compatible back to Gingerbread, but SurfaceTexture
@@ -445,12 +445,12 @@ private constructor()
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                     {
-                        mCamera!!.setPreviewTexture(null)
+                        mCamera?.setPreviewTexture(null)
 
                     }
                     else
                     {
-                        mCamera!!.setPreviewDisplay(null)
+                        mCamera?.setPreviewDisplay(null)
                     }
                 }
                 catch (e: Exception)
@@ -458,7 +458,7 @@ private constructor()
                     Log.e(TAG, "Failed to clear camera preview: $e")
                 }
 
-                mCamera!!.release()
+                mCamera?.release()
                 mCamera = null
             }
         }
@@ -473,15 +473,15 @@ private constructor()
             }
             var currentZoom = 0
             val maxZoom: Int
-            val parameters = mCamera!!.parameters
-            if (!parameters.isZoomSupported)
+            val parameters = mCamera?.parameters
+            if (!parameters!!.isZoomSupported)
             {
                 Log.w(TAG, "Zoom is not supported on this device")
                 return currentZoom
             }
-            maxZoom = parameters.maxZoom
+            maxZoom = parameters!!.maxZoom
 
-            currentZoom = parameters.zoom + 1
+            currentZoom = parameters?.zoom + 1
             val newZoom: Float
             if (scale > 1)
             {
@@ -500,8 +500,8 @@ private constructor()
             {
                 currentZoom = maxZoom
             }
-            parameters.zoom = currentZoom
-            mCamera!!.parameters = parameters
+            parameters?.zoom = currentZoom
+            mCamera?.parameters = parameters
             return currentZoom
         }
     }
@@ -524,7 +524,7 @@ private constructor()
                 startCallback.mDelegate = shutter
                 val doneCallback = PictureDoneCallback()
                 doneCallback.mDelegate = jpeg
-                mCamera!!.takePicture(startCallback, null, null, doneCallback)
+                mCamera?.takePicture(startCallback, null, null, doneCallback)
             }
         }
     }
@@ -566,11 +566,11 @@ private constructor()
         synchronized(mCameraLock) {
             if (mCamera != null && mode != null)
             {
-                val parameters = mCamera!!.parameters
-                if (parameters.supportedFocusModes.contains(mode))
+                val parameters = mCamera?.parameters
+                if (parameters?.supportedFocusModes!!.contains(mode))
                 {
-                    parameters.focusMode = mode
-                    mCamera!!.parameters = parameters
+                    parameters?.focusMode = mode
+                    mCamera?.parameters = parameters
                     mFocusMode = mode
                     return true
                 }
@@ -613,11 +613,11 @@ private constructor()
         synchronized(mCameraLock) {
             if (mCamera != null && mode != null)
             {
-                val parameters = mCamera!!.parameters
-                if (parameters.supportedFlashModes.contains(mode))
+                val parameters = mCamera?.parameters
+                if (parameters?.supportedFlashModes!!.contains(mode))
                 {
-                    parameters.flashMode = mode
-                    mCamera!!.parameters = parameters
+                    parameters?.flashMode = mode
+                    mCamera?.parameters = parameters
                     mFlashMode = mode
                     return true
                 }
@@ -662,7 +662,7 @@ private constructor()
                     autoFocusCallback = CameraAutoFocusCallback()
                     autoFocusCallback.mDelegate = cb
                 }
-                mCamera!!.autoFocus(autoFocusCallback)
+                mCamera?.autoFocus(autoFocusCallback)
             }
         }
     }
@@ -680,7 +680,7 @@ private constructor()
         synchronized(mCameraLock) {
             if (mCamera != null)
             {
-                mCamera!!.cancelAutoFocus()
+                mCamera?.cancelAutoFocus()
             }
         }
     }
@@ -708,7 +708,7 @@ private constructor()
                     autoFocusMoveCallback = CameraAutoFocusMoveCallback()
                     autoFocusMoveCallback.mDelegate = cb
                 }
-                mCamera!!.setAutoFocusMoveCallback(autoFocusMoveCallback)
+                mCamera?.setAutoFocusMoveCallback(autoFocusMoveCallback)
             }
         }
 
@@ -742,7 +742,7 @@ private constructor()
             synchronized(mCameraLock) {
                 if (mCamera != null)
                 {
-                    mCamera!!.startPreview()
+                    mCamera?.startPreview()
                 }
             }
         }
@@ -1011,7 +1011,7 @@ private constructor()
     {
         override fun onPreviewFrame(data: ByteArray, camera: Camera)
         {
-            mFrameProcessor!!.setNextFrame(data, camera)
+            mFrameProcessor?.setNextFrame(data, camera)
         }
     }
 
@@ -1046,8 +1046,8 @@ private constructor()
         @SuppressLint("Assert")
         internal fun release()
         {
-            assert(mProcessingThread!!.state == State.TERMINATED)
-            mDetector!!.release()
+            assert(mProcessingThread?.state == State.TERMINATED)
+            mDetector?.release()
             mDetector = null
         }
 
@@ -1072,7 +1072,7 @@ private constructor()
             synchronized(mLock) {
                 if (mPendingFrameData != null)
                 {
-                    camera.addCallbackBuffer(mPendingFrameData!!.array())
+                    camera.addCallbackBuffer(mPendingFrameData?.array())
                     mPendingFrameData = null
                 }
 
@@ -1158,7 +1158,7 @@ private constructor()
 
                 try
                 {
-                    mDetector!!.receiveFrame(outputFrame)
+                    mDetector?.receiveFrame(outputFrame)
                 }
                 catch (t: Throwable)
                 {
@@ -1166,7 +1166,7 @@ private constructor()
                 }
                 finally
                 {
-                    mCamera!!.addCallbackBuffer(data.array())
+                    mCamera?.addCallbackBuffer(data.array())
                 }
             }
         }

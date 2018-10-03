@@ -91,7 +91,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
 
         scaleGestureDetector = ScaleGestureDetector(this, ScaleListener())
 
-        Snackbar.make(mGraphicOverlay!!, "Tap to capture. Pinch/Stretch to zoom", Snackbar.LENGTH_LONG).show()
+        Snackbar.make(mGraphicOverlay!!, "Pinch/Stretch to zoom", Snackbar.LENGTH_LONG).show()
     }
 
     /**
@@ -123,9 +123,10 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
 
     override fun onTouchEvent(e: MotionEvent): Boolean
     {
-        val b = scaleGestureDetector!!.onTouchEvent(e)
+        if (scaleGestureDetector!!.onTouchEvent(e))
+            return true;
 
-        return b || super.onTouchEvent(e)
+        return super.onTouchEvent(e)
     }
 
     /**
@@ -205,7 +206,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
         super.onPause()
         if (mPreview != null)
         {
-            mPreview!!.stop()
+            mPreview?.stop()
         }
     }
 
@@ -218,7 +219,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
         super.onDestroy()
         if (mPreview != null)
         {
-            mPreview!!.release()
+            mPreview?.release()
         }
     }
 
@@ -270,12 +271,12 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
         {
             try
             {
-                mGraphicOverlay?.let { mPreview!!.start(mCameraSource as CameraSource, it) }
+                mGraphicOverlay?.let { mPreview?.start(mCameraSource as CameraSource, it) }
             }
             catch (e: IOException)
             {
                 Log.e(TAG, "Unable to start camera source.", e)
-                mCameraSource!!.release()
+                mCameraSource?.release()
                 mCameraSource = null
             }
 
@@ -296,7 +297,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
 
         override fun onScaleEnd(detector: ScaleGestureDetector)
         {
-            mCameraSource!!.doZoom(detector.scaleFactor)
+            mCameraSource?.doZoom(detector.scaleFactor)
         }
     }
 

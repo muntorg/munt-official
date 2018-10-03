@@ -13,13 +13,12 @@ file COPYING
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    android:keepScreenOn="true"
-    android:orientation="vertical">
+    android:keepScreenOn="true">
 
     <com.gulden.barcodereader.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="match_parent">
 
         <com.gulden.barcodereader.GraphicOverlay
             android:id="@+id/graphicOverlay"
