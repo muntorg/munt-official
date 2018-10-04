@@ -171,6 +171,7 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     SoftSetArg("-maxsigcachesize", "0");
     SoftSetArg("-dbcache", "4");
     SoftSetArg("-maxmempool", "5");
+    SoftSetArg("-maxconnections", "8");
 
     //fixme: (2.1) Reverse headers
     // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
