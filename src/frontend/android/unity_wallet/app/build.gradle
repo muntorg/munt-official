@@ -7,7 +7,6 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.gulden.unity_wallet"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
@@ -16,9 +15,33 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
-        release {
-            minifyEnabled false
+        all {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            debuggable true
+        }
+    }
+    flavorDimensions "default"
+
+    productFlavors {
+        gulden_testnet {
+            applicationId 'com.gulden.testnet'
+            archivesBaseName = 'gulden'
+            resValue "string", "app_name", "Gulden-testnet"
+            buildConfigField "boolean", "TESTNET", "true"
+            versionCode 328
+            versionName = "2.0.1.0"
+        }
+        gulden_mainnet {
+            applicationId 'com.gulden.unity_wallet'
+            archivesBaseName = 'gulden'
+            resValue "string", "app_name", "Gulden"
+            buildConfigField "boolean", "TESTNET", "false"
+            versionCode 328
+            versionName = "2.0.1.0"
         }
     }
 }

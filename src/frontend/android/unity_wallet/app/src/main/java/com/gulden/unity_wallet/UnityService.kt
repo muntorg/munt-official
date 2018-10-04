@@ -15,6 +15,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC
 import com.gulden.jniunifiedbackend.*
+import com.gulden.wallet.Constants
 
 
 var NOTIFICATION_ID_FOREGROUND_SERVICE = 2;
@@ -124,7 +125,7 @@ class UnityService : Service()
         {
             System.loadLibrary("gulden_unity_jni")
             libraryLoaded = true;
-            GuldenUnifiedBackend.InitUnityLib(applicationContext.getApplicationInfo().dataDir, coreLibrarySignalHandler)
+            GuldenUnifiedBackend.InitUnityLib(applicationContext.getApplicationInfo().dataDir, Constants.TEST, coreLibrarySignalHandler)
         }
     }
 
