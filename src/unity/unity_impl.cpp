@@ -147,7 +147,7 @@ void handlePostInitMain()
     }
 }
 
-int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
+int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
 {
     // Force the datadir to specific place on e.g. android devices
     if (!dataDir.empty())
@@ -172,6 +172,13 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     SoftSetArg("-dbcache", "4");
     SoftSetArg("-maxmempool", "5");
     SoftSetArg("-maxconnections", "8");
+
+    // Testnet
+    if (testnet)
+    {
+        SoftSetArg("-testnet", "C1534687770:60");
+        SoftSetArg("-addnode", "devbak.net");
+    }
 
     //fixme: (2.1) Reverse headers
     // Temporarily disable reverse headers for mobile until memory requirements can be reduced.

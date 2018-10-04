@@ -57,7 +57,7 @@ address_record = record {
 gulden_unified_backend = interface +c {
 
     # Start the library
-    static InitUnityLib(data_dir : string, signals : gulden_unified_frontend): i32;
+    static InitUnityLib(data_dir : string, testnet : bool, signals : gulden_unified_frontend): i32;
 
     # Stop the library
     static TerminateUnityLib();
