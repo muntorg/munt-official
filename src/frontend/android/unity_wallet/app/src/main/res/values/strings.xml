@@ -13,10 +13,12 @@ file COPYING
     <string name="title_receive">Receive</string>
     <string name="title_transactions">Transactions</string>
     <string name="title_settings">Settings</string>
+    <string name="title_activity_barcode_capture">Scan QR code</string>
+    <string name="title_activity_send_coins">Send coins</string>
+    <string name="title_activity_transaction_info">Transaction info</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_barcode_capture">BarcodeCaptureActivity</string>
-    <string name="title_activity_send_coins">SendCoinsActivity</string>
-    <string name="title_activity_transaction_info">TransactionInfoActivity</string>
+    <string name="action_bar_copy">Copy</string>
+    <string name="action_bar_copylong">Copy to clipboard</string>
+    <string name="action_bar_share">Share</string>
+    <string name="action_bar_buy">Buy</string>
 </resources>

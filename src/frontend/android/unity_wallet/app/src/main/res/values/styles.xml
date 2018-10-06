@@ -15,6 +15,11 @@ file COPYING
         <item name="colorAccent">@color/colorAccent</item>
         <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
         <item name="floatingActionButtonStyle">@style/Widget.Design.FloatingActionButton</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+
+
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:actionModeStyle">@style/MyActionBar</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -25,5 +30,9 @@ file COPYING
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MyActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
 
 </resources>

@@ -30,11 +30,15 @@ file COPYING
             android:minHeight="200dp"
             android:minWidth="200dp"
             android:scaleType="fitCenter"
-            android:src="@null" />
+            android:src="@null"
+            android:onClick="setFocusOnAddress"
+            />
 
         <TextView
             android:id="@+id/currentAddressLabel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:onClick="setFocusOnAddress"
+            />
     </LinearLayout>
 </FrameLayout>

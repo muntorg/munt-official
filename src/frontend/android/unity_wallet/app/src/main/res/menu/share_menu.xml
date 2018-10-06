@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/item_buy_gulden"
+        app:showAsAction="always|withText"
+        android:title="@string/action_bar_buy"
+        android:titleCondensed="@string/action_bar_buy"
+        />
+    <item
+        android:id="@+id/item_copy_to_clipboard"
+        android:icon="@drawable/ic_glyphicons_512_copy"
+        app:showAsAction="ifRoom|withText"
+        android:title="@string/action_bar_copylong"
+        android:titleCondensed="@string/action_bar_copy"
+        />
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_glyphicons_309_share_alt"
+        app:showAsAction="ifRoom|withText"
+        android:title="@string/action_bar_share"
+        android:titleCondensed="@string/action_bar_share"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"/>
+</menu>

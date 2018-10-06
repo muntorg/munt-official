@@ -238,6 +238,11 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
         }
     }
 
+    public fun setFocusOnAddress(view : View)
+    {
+        receiveFragment?.setFocusOnAddress();
+    }
+
     companion object {
         private val BARCODE_READER_REQUEST_CODE = 1
         public val SEND_COINS_RETURN_CODE = 2
