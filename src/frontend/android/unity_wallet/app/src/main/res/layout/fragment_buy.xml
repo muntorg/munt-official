@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="com.gulden.unity_wallet.ui.buy.BuyFragment"
+              android:orientation="vertical"
+              android:weightSum="1">
+
+
+    <TextView
+        android:text="Bug page temporarily unavailable, please ensure you internet connection works and try again."
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/buyViewErrorText"
+        android:gravity="center"
+        android:onClick="onErrorRefresh"
+        />
+
+    <ProgressBar
+        style="@android:style/Widget.ProgressBar.Inverse"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:id="@+id/buyProgressIndicator"
+        />
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buyWebView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        >
+
+        <!--<Button
+            style="@style/ButtonBlue"
+            android:text="@string/cancel"
+            android:onClick="onCancelPurchase"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:textSize="@dimen/font_size_small"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            />
+
+        <Button
+            style="@style/ButtonBlue"
+            android:text="@string/buy"
+            android:onClick="onAcceptPurchase"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:textSize="@dimen/font_size_small"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            />!-->
+
+    </LinearLayout>
+
+</LinearLayout>

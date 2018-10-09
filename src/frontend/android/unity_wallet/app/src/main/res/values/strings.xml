@@ -21,4 +21,5 @@ file COPYING
     <string name="action_bar_copylong">Copy to clipboard</string>
     <string name="action_bar_share">Share</string>
     <string name="action_bar_buy">Buy</string>
+    <string name="title_activity_buy">Buy Gulden</string>
 </resources>

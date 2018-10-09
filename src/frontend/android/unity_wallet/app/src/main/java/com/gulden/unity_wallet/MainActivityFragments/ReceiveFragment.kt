@@ -22,7 +22,9 @@ import android.support.v7.widget.ShareActionProvider
 import android.text.Spannable
 import android.text.SpannableString
 import android.view.*
+import com.gulden.unity_wallet.MainActivity
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.ui.buy.BuyActivity
 import kotlinx.android.synthetic.main.fragment_receive.*
 import java.nio.ByteBuffer
 
@@ -152,7 +154,9 @@ class ReceiveFragment : Fragment()
             }
             else if (item.itemId == R.id.item_buy_gulden)
             {
-                //BuyActivity.start(activity, currentAddressString)
+                val intent = Intent(context, BuyActivity::class.java)
+                intent.putExtra(BuyActivity.ARG_BUY_ADDRESS, currentAddressLabel.text.toString())
+                activity?.startActivityForResult(intent, MainActivity.BUY_RETURN_CODE)
                 return true
             }
 

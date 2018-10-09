@@ -36,6 +36,10 @@
             android:label="@string/title_activity_send_coins"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ui.buy.BuyActivity"
+            android:label="@string/title_activity_buy"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".TransactionInfoActivity"
             android:label="@string/title_activity_transaction_info"
             android:theme="@style/AppTheme.NoActionBar" />
