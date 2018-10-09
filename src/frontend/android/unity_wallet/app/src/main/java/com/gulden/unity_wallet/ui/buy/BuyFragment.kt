@@ -1,3 +1,8 @@
+// Copyright (c) 2018 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 package com.gulden.unity_wallet.ui.buy
 
 import android.content.Intent
@@ -65,15 +70,6 @@ class BuyFragment : Fragment()
 
         // Handle page load
         LoadBuyPage()
-
-        //Sort action bar out
-        run {
-            val actionBar = (activity as AppCompatActivity).supportActionBar
-            actionBar?.setDisplayShowTitleEnabled(true)
-            actionBar?.setDisplayShowCustomEnabled(true)
-            actionBar?.setDisplayShowHomeEnabled(true)
-            actionBar?.setDisplayHomeAsUpEnabled(true)
-        }
     }
 
     fun LoadBuyPage()

@@ -1,69 +1,106 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              tools:context="com.gulden.unity_wallet.ui.buy.BuyFragment"
-              android:orientation="vertical"
-              android:weightSum="1">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context="com.gulden.unity_wallet.ui.buy.BuyFragment">
 
-
-    <TextView
-        android:text="Bug page temporarily unavailable, please ensure you internet connection works and try again."
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/buyViewErrorText"
-        android:gravity="center"
-        android:onClick="onErrorRefresh"
-        />
-
-    <ProgressBar
-        style="@android:style/Widget.ProgressBar.Inverse"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:id="@+id/buyProgressIndicator"
-        />
-
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/buyWebView"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"/>
 
     <LinearLayout
+        android:id="@+id/webViewLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        >
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!--<Button
-            style="@style/ButtonBlue"
-            android:text="@string/cancel"
-            android:onClick="onCancelPurchase"
-            android:layout_width="0px"
+        <TextView
+            android:id="@+id/buyViewErrorText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="2"
-            android:textSize="@dimen/font_size_small"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />
+            android:gravity="center"
+            android:onClick="onErrorRefresh"
+            android:text="Buy page temporarily unavailable, please ensure you internet connection works and try again." />
 
-        <Button
-            style="@style/ButtonBlue"
-            android:text="@string/buy"
-            android:onClick="onAcceptPurchase"
-            android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="2"
-            android:textSize="@dimen/font_size_small"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />!-->
+        <ProgressBar
+            android:id="@+id/buyProgressIndicator"
+            style="@android:style/Widget.ProgressBar.Inverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <WebView
+            android:id="@+id/buyWebView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="0dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rounded_button"
+            android:onClick="onCancelPurchase"
+            android:text="Cancel"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/buttonBuy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rounded_button"
+            android:onClick="onAcceptPurchase"
+            android:text="Buy"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

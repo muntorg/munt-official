@@ -1,3 +1,8 @@
+// Copyright (c) 2018 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 package com.gulden.unity_wallet.ui.buy
 
 import android.os.Bundle
@@ -26,10 +31,6 @@ class BuyActivity : AppCompatActivity()
         ft.replace(R.id.buy_fragment_placeholder, fragment!! as Fragment)
         // Complete the changes added above
         ft.commit()
-
-        title = "Buy Gulden"
-
-        setSupportActionBar(toolbar)
     }
 
     fun onErrorRefresh(view: View)
