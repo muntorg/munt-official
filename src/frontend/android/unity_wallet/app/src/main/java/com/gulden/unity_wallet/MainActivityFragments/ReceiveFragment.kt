@@ -19,8 +19,6 @@ import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.ShareActionProvider
-import android.text.Spannable
-import android.text.SpannableString
 import android.view.*
 import com.gulden.unity_wallet.MainActivity
 import com.gulden.unity_wallet.R
@@ -177,7 +175,7 @@ class ReceiveFragment : Fragment()
 
             // Handle share button
             val itemShare = menu.findItem(R.id.action_share)
-            shareActionProvider = ShareActionProvider(activity)
+            shareActionProvider = MenuItemCompat.getActionProvider(itemShare) as ShareActionProvider;
             MenuItemCompat.setActionProvider(itemShare, shareActionProvider)
 
             updateAddress()
