@@ -4,7 +4,7 @@ ifneq ($(host_os),ios)
 packages += libevent zeromq
 endif
 
-ios_packages = qrencode
+ios_packages = qrencode djinni
 
 qt_native_packages = native_protobuf
 qt_packages = qrencode protobuf zlib openssl icu
