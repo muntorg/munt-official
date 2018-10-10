@@ -1,4 +1,10 @@
-packages:=boost openssl libevent zeromq
+packages:=boost openssl
+
+ifneq ($(host_os),ios)
+packages += libevent zeromq
+endif
+
+ios_packages = qrencode
 
 qt_native_packages = native_protobuf
 qt_packages = qrencode protobuf zlib openssl icu
