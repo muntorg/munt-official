@@ -19,6 +19,18 @@ public abstract class GuldenUnifiedBackend {
                                      signals);
     }
 
+    /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
+    public static boolean InitWalletFromRecoveryPhrase(String phrase)
+    {
+        return CppProxy.InitWalletFromRecoveryPhrase(phrase);
+    }
+
+    /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
+    public static boolean InitWalletLinkedFromURI(String linkedUri)
+    {
+        return CppProxy.InitWalletLinkedFromURI(linkedUri);
+    }
+
     /** Stop the library */
     public static void TerminateUnityLib()
     {
@@ -104,6 +116,10 @@ public abstract class GuldenUnifiedBackend {
         }
 
         public static native int InitUnityLib(String dataDir, boolean testnet, GuldenUnifiedFrontend signals);
+
+        public static native boolean InitWalletFromRecoveryPhrase(String phrase);
+
+        public static native boolean InitWalletLinkedFromURI(String linkedUri);
 
         public static native void TerminateUnityLib();
 

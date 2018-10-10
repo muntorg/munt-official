@@ -11,6 +11,10 @@ public abstract class GuldenUnifiedFrontend {
 
     public abstract boolean notifyNewTransaction(TransactionRecord newTransaction);
 
+    public abstract void notifyInitWithExistingWallet();
+
+    public abstract void notifyInitWithoutExistingWallet();
+
     public abstract boolean notifyShutdown();
 
     public abstract boolean notifyCoreReady();

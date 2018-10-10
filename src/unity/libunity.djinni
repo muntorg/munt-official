@@ -58,6 +58,10 @@ gulden_unified_backend = interface +c {
 
     # Start the library
     static InitUnityLib(data_dir : string, testnet : bool, signals : gulden_unified_frontend): i32;
+    # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
+    static InitWalletFromRecoveryPhrase(phrase : string): bool;
+    # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
+    static InitWalletLinkedFromURI(linked_uri : string): bool;
 
     # Stop the library
     static TerminateUnityLib();
@@ -98,6 +102,8 @@ gulden_unified_frontend = interface +j +o {
     notifySPVProgress(start_height : i32, progess_height : i32, expected_height : i32): bool;
     notifyBalanceChange(new_balance : balance_record): bool;
     notifyNewTransaction(new_transaction : transaction_record): bool;
+    notifyInitWithExistingWallet();
+    notifyInitWithoutExistingWallet();
     notifyShutdown(): bool;
     notifyCoreReady(): bool;
 }

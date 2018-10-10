@@ -17,6 +17,7 @@
 #include <chain.h>
 #include "consensus/validation.h"
 #include "net.h"
+#include "Gulden/mnemonic.h"
 
 // Djinni generated files
 #include "gulden_unified_backend.hpp"
@@ -145,6 +146,48 @@ void handlePostInitMain()
         // Fire once immediately to update with latest on load.
         //notifyBalanceChanged(pactiveWallet);
     }
+}
+
+void handleInitWithExistingWallet()
+{
+    if (signalHandler)
+    {
+        signalHandler->notifyInitWithExistingWallet();
+    }
+    GuldenAppManager::gApp->initialize();
+}
+
+void handleInitWithoutExistingWallet()
+{
+    signalHandler->notifyInitWithoutExistingWallet();
+}
+
+bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase)
+{
+    // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement
+    if (phrase.length() < 16)
+        return false;
+
+    //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
+    SecureString phraseOnly;
+    int phraseBirthNumber = 0;
+    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
+    if (phraseBirthNumber == 0 || !checkMnemonic(phraseOnly))
+        return false;
+
+    //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
+    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
+    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    GuldenAppManager::gApp->isRecovery = true;
+    GuldenAppManager::gApp->initialize();
+    return true;
+}
+
+bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri)
+{
+    //fixme: (SPV) - Implement
+    GuldenAppManager::gApp->initialize();
+    return true;
 }
 
 int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
