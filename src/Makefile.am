@@ -50,7 +50,7 @@ if BUILD_GULDEN_LIBS_JNI
 LIBGULDEN_UNITY_JNI=libgulden_unity_jni.la
 endif
 if BUILD_GULDEN_LIBS_OBJC
-LIBGULDEN_UNITY_OBJC=libgulden_unity_objc.la
+LIBGULDEN_UNITY_OBJC=libgulden_unity_objc.a
 endif
 if ENABLE_WALLET
 LIBGULDEN_WALLET=libgulden_wallet.a
@@ -73,10 +73,11 @@ EXTRA_LIBRARIES += \
   $(LIBGULDEN_WALLET) \
   $(LIBGULDEN_ZMQ)
 
-lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI) $(LIBGULDEN_UNITY_OBJC)
+lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
+noinst_LIBRARIES =
 TESTS =
 BENCHMARKS =
 
@@ -498,16 +499,20 @@ endif
 
 # Gulden-unity library #
 if BUILD_GULDEN_LIBS_OBJC
-libgulden_unity_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-libgulden_unity_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+
+noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)
+
+libgulden_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(srcdir)/unity/djinni/cpp
+libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(srcdir)/unity/djinni/cpp -I$(srcdir)/../djinni/djinni/support-lib/objc
 
 #  these are now gone
-#  unity/android/logging_android.cpp
-#  unity/android/init_android.cpp
 
-libgulden_unity_objc_la_SOURCES = \
+libgulden_unity_objc_a_SOURCES = \
   unity/libinit.cpp \
   unity/libinit.h \
+  unity/ios/logging_ios.cpp \
+  unity/ios/init_ios.cpp \
   $(libgulden_wallet_a_SOURCES) \
   $(libgulden_common_a_SOURCES) \
   $(libgulden_util_a_SOURCES) \
@@ -564,11 +569,11 @@ libgulden_unity_objc_la_SOURCES = \
 
 
 # libgulden_unity_objc_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS)
-libgulden_unity_objc_la_LDFLAGS = $(AM_LDFLAGS)  $(RELDFLAGS) -rpath/libgulden_unity_objc.0.dylib
-libgulden_unity_objc_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
-libgulden_unity_objc_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_objc_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_unity_objc_la_OBJCXXFLAGS = $(AM_OBJCXXFLAGS) -fobjc-arc -I$(srcdir)/../djinni/djinni/support-lib/objc
+#libgulden_unity_objc_la_LDFLAGS = $(AM_LDFLAGS)  $(RELDFLAGS) -rpath/libgulden_unity_objc.0.dylib
+#libgulden_unity_objc_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
+#libgulden_unity_objc_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/#include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+#libgulden_unity_objc_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+#libgulden_unity_objc_la_OBJCXXFLAGS = $(AM_OBJCXXFLAGS) -fobjc-arc -I$(srcdir)/../djinni/djinni/support-lib/objc
 endif
 #
 
