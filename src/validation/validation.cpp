@@ -1308,13 +1308,28 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     return true;
 }
 
+void FindFilesToPruneExplicit(std::set<int>& setFilesToPrune, unsigned int nPruneHeight)
+{
+    LOCK2(cs_main, cs_LastBlockFile);
+
+    int count=0;
+    for (int fileNumber = 0; fileNumber < nLastBlockFile; fileNumber++) {
+        if (vinfoBlockFile[fileNumber].nSize == 0 || vinfoBlockFile[fileNumber].nHeightLast >= nPruneHeight)
+            continue;
+        PruneOneBlockFile(fileNumber);
+        setFilesToPrune.insert(fileNumber);
+        count++;
+    }
+    LogPrintf("Prune (Manual): prune_height=%d removed %d blk/rev pairs\n", nPruneHeight, count);
+}
+
 /**
  * Update the on-disk chain state.
  * The caches and indexes are flushed depending on the mode we're called with
  * if they're too large, if it's been a while since the last write,
  * or always and in all cases if we're in prune mode and are deleting files.
  */
-bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, FlushStateMode mode, int nManualPruneHeight) {
+bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, FlushStateMode mode, int nManualPruneHeight, bool fFlushPartialSync) {
     int64_t nMempoolUsage = mempool.DynamicMemoryUsage();
     LOCK2(cs_main, cs_LastBlockFile);
     static int64_t nLastWrite = 0;
@@ -1323,13 +1338,22 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
     std::set<int> setFilesToPrune;
     bool fFlushForPrune = false;
     try {
-    if (fPruneMode && (fCheckForPruning || nManualPruneHeight > 0) && !fReindex) {
-        if (nManualPruneHeight > 0) {
+    if (fPruneMode && (fCheckForPruning || nManualPruneHeight > 0) && !fReindex)
+    {
+        if (nManualPruneHeight > 0 && !fFlushPartialSync)
+        {
             FindFilesToPruneManual(setFilesToPrune, nManualPruneHeight);
-        } else {
+        }
+        else if (nManualPruneHeight > 0 && fFlushPartialSync)
+        {
+            FindFilesToPruneExplicit(setFilesToPrune, nManualPruneHeight);
+        }
+        else
+        {
             FindFilesToPrune(setFilesToPrune, chainparams.PruneAfterHeight());
             fCheckForPruning = false;
         }
+
         if (!setFilesToPrune.empty()) {
             fFlushForPrune = true;
             if (!fHavePruned) {
@@ -1377,6 +1401,31 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                 vFiles.push_back(std::pair(*it, &vinfoBlockFile[*it]));
                 setDirtyFileInfo.erase(it++);
             }
+
+            // prune block index for partial sync
+            if (fFlushPartialSync) {
+                std::vector<const CBlockIndex*> removals;
+                for(const auto& it: mapBlockIndex)
+                {
+                    CBlockIndex* index = it.second;
+                    if (   (index->nHeight < nManualPruneHeight || !partialChain.Contains(index))
+                           && index != chainActive.Genesis())
+                    {
+                        removals.push_back(index);
+                        setDirtyBlockIndex.erase(index); // prevent pruned indexes to be rewritten
+                    }
+                }
+
+                LogPrintf("%s: deleting %d block indexes, prune height = %d\n", __func__, removals.size(), nManualPruneHeight);
+
+                // Will usually have at least one index to prune, because when loading the index
+                // of the previous block of partial chain start is added. This is ok.
+                if (removals.size() > 0)
+                {
+                    pblocktree->EraseBatchSync(removals);
+                }
+            }
+
             std::vector<const CBlockIndex*> vBlocks;
             vBlocks.reserve(setDirtyBlockIndex.size());
             for (std::set<CBlockIndex*>::iterator it = setDirtyBlockIndex.begin(); it != setDirtyBlockIndex.end(); ) {
@@ -1406,7 +1455,8 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
             return AbortNode(state, "Failed to write to coin database");
         nLastFlush = nNow;
     }
-    if (fDoFullFlush || ((mode == FLUSH_STATE_ALWAYS || mode == FLUSH_STATE_PERIODIC) && nNow > nLastSetChain + (int64_t)DATABASE_WRITE_INTERVAL * 1000000)) {
+    if (   !fFlushPartialSync
+        && (fDoFullFlush || ((mode == FLUSH_STATE_ALWAYS || mode == FLUSH_STATE_PERIODIC) && nNow > nLastSetChain + (int64_t)DATABASE_WRITE_INTERVAL * 1000000))) {
         // Update best block in wallet (so we can detect restored wallets).
         GetMainSignals().SetBestChain(chainActive.GetLocatorPoW2());
         nLastSetChain = nNow;
@@ -3081,15 +3131,8 @@ void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeig
 
     // last block to prune is the lesser of (user-specified height, MIN_BLOCKS_TO_KEEP from the tip)
     unsigned int nLastBlockWeCanPrune = std::min((unsigned)nManualPruneHeight, chainActive.Tip()->nHeight - MIN_BLOCKS_TO_KEEP);
-    int count=0;
-    for (int fileNumber = 0; fileNumber < nLastBlockFile; fileNumber++) {
-        if (vinfoBlockFile[fileNumber].nSize == 0 || vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
-            continue;
-        PruneOneBlockFile(fileNumber);
-        setFilesToPrune.insert(fileNumber);
-        count++;
-    }
-    LogPrintf("Prune (Manual): prune_height=%d removed %d blk/rev pairs\n", nLastBlockWeCanPrune, count);
+
+    FindFilesToPruneExplicit(setFilesToPrune, nLastBlockWeCanPrune);
 }
 
 /* This function is called from the RPC code for pruneblockchain */
@@ -3751,30 +3794,21 @@ bool InitBlockIndex(const CChainParams& chainparams)
     return true;
 }
 
-void PruneBlockIndexForPartialSync()
+void PruneForPartialSync()
 {
+    // prune for partial sync prunes block files AND block index!
+    // should be run at shutdown so that the block index remains small and
+    // next startup stays fast
+
+    LOCK(cs_main);
+
     if (isFullSyncMode() || !IsPartialSyncActive())
         return;
 
-    int minimalHeight = std::max(partialChain.HeightOffset(), partialChain.Height() - PARTIAL_SYNC_PRUNE_HEIGHT);
+    int pruneHeight = std::max(partialChain.HeightOffset(), partialChain.Height() - PARTIAL_SYNC_PRUNE_HEIGHT);
 
-    std::vector<const CBlockIndex*> removals;
-    for(const auto& it: mapBlockIndex)
-    {
-        CBlockIndex* index = it.second;
-        if (   (index->nHeight < minimalHeight || !partialChain.Contains(index))
-            && index != chainActive.Genesis())
-            removals.push_back(index);
-    }
-
-    LogPrintf("%s: deleting %d block indexes, prune height = %d\n", __func__, removals.size(), minimalHeight);
-
-    // Will usually have at least one index to prune, because when loading the index
-    // of the previous block of partial chain start is added. This is ok.
-    if (removals.size() > 0)
-    {
-        pblocktree->EraseBatchSync(removals);
-    }
+    CValidationState state;
+    FlushStateToDisk(Params(), state, FlushStateMode::FLUSH_STATE_ALWAYS, pruneHeight, true);
 }
 
 bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskBlockPos *dbp)

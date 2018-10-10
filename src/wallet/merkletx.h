@@ -30,6 +30,13 @@ public:
     CTransactionRef tx;
     uint256 hashBlock;
 
+    /*
+     * nHeight introduced in 2.1 for SPV. In pure SPV we don't have the full block index
+     * and so the height cannot be found using hashBlock.
+     * nHeight < 0, blockheight unkown
+     */
+    int nHeight;
+
     /* An nIndex == -1 means that hashBlock (in nonzero) refers to the earliest
      * block in the chain we know this or any in-wallet dependency conflicts
      * with. Older clients interpret nIndex == -1 as unconfirmed for backward
@@ -57,6 +64,7 @@ public:
     {
         hashBlock = uint256();
         nIndex = -1;
+        nHeight = -1;
     }
 
     void SetTx(CTransactionRef arg)
@@ -71,6 +79,14 @@ public:
         std::vector<uint256> vMerkleBranch; // For compatibility with older versions.
         READWRITE(tx);
         READWRITE(hashBlock);
+
+        // blockHeight from 2.1
+        if (   (s.GetType() & SER_DISK)
+            && (!ser_action.ForRead() || s.GetVersion() >= 2010000))
+        {
+            READWRITE(nHeight);
+        }
+
         READWRITECOMPACTSIZEVECTOR(vMerkleBranch);
         READWRITE(nIndex);
     }
