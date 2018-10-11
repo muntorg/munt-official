@@ -212,7 +212,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                     GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);
                     LogPrintf("Using phrase argument for new wallet seed\n");
                 }
-                else
+                else if (GuldenAppManager::gApp->getRecoveryPhrase().size() == 0)
                 {
                     std::vector<unsigned char> entropy(16);
                     GetStrongRandBytes(&entropy[0], 16);
