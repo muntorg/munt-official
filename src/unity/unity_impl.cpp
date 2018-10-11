@@ -166,21 +166,47 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
 {
     // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement
     if (phrase.length() < 16)
+    {
         return false;
+    }
 
     //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     SecureString phraseOnly;
     int phraseBirthNumber = 0;
     GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
     if (phraseBirthNumber == 0 || !checkMnemonic(phraseOnly))
+    {
         return false;
+    }
 
     //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
     GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
     GuldenAppManager::gApp->isRecovery = true;
     GuldenAppManager::gApp->initialize();
+
     return true;
+}
+
+bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
+{
+    if (phrase.length() < 16)
+        return false;
+
+    SecureString phraseOnly;
+    int phraseBirthNumber = 0;
+    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
+    if (phraseBirthNumber == 0 || !checkMnemonic(phraseOnly))
+        return false;
+
+    return true;
+}
+
+std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
+{
+    std::vector<unsigned char> entropy(16);
+    GetStrongRandBytes(&entropy[0], 16);
+    return GuldenAppManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), GetAdjustedTime()).c_str();
 }
 
 bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri)
