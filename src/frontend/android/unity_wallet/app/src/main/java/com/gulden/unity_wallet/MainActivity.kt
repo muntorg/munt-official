@@ -28,11 +28,8 @@ import java.util.*
 import android.content.ComponentName
 import android.os.IBinder
 import android.content.ServiceConnection
-
-
-
-
-
+import com.gulden.unity_wallet.ui.buy.BuyActivity
+import kotlinx.android.synthetic.main.fragment_receive.*
 
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
@@ -177,6 +174,18 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
     fun handleQRScanButtonClick(view : View) {
         val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
         startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
+    }
+
+    fun gotoBuyActivity(_view : View)
+    {
+        gotoBuyActivity()
+    }
+
+    fun gotoBuyActivity()
+    {
+        val intent = Intent(this, BuyActivity::class.java)
+        intent.putExtra(BuyActivity.ARG_BUY_ADDRESS, GuldenUnifiedBackend.GetReceiveAddress().toString())
+        startActivityForResult(intent, BUY_RETURN_CODE)
     }
 
     fun Uri.getParameters(): HashMap<String, String> {

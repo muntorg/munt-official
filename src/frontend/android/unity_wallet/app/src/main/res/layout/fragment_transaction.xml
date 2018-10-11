@@ -19,4 +19,28 @@ file COPYING
         android:dividerHeight="0dp"
         />
 
+    <LinearLayout
+        android:id="@+id/emptyTransactionListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="gotoBuyActivity"
+            android:text="@string/transaction_list_empty_title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:onClick="gotoBuyActivity"
+            android:text="@string/transaction_list_empty_message" />
+
+    </LinearLayout>
+
 </FrameLayout>

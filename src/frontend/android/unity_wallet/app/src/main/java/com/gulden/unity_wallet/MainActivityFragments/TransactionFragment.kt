@@ -58,6 +58,8 @@ class TransactionFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        transactionList?.emptyView = emptyTransactionListView
+
         val transactions = GuldenUnifiedBackend.getTransactionHistory();
 
         val adapter = TransactionAdapter(this.context!!, transactions)

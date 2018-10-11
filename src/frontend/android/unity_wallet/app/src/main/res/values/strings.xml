@@ -37,4 +37,6 @@ file COPYING
     <string name="recovery_phrase_copy">Recovery phrase copied to clipboard</string>
     <string name="address_book_empty_message">To add an address, start a payment and tap \"Add to address book\".</string>
     <string name="address_book_empty_title">Empty address book</string>
+    <string name="transaction_list_empty_title">No Gulden received so far.</string>
+    <string name="transaction_list_empty_message">Touch here to buy your first Gulden.</string>
 </resources>
