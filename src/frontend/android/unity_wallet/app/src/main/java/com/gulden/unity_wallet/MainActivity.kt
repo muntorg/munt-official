@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
     private val settingsFragment : SettingsFragment = SettingsFragment();
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
+         when (item.itemId) {
             R.id.navigation_send -> {
                 replaceFragment(sendFragment, R.id.mainLayout)
                 return@OnNavigationItemSelectedListener true

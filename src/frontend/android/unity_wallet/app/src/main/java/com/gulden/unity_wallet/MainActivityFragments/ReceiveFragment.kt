@@ -79,6 +79,7 @@ class ReceiveFragment : Fragment()
     override fun onDetach()
     {
         super.onDetach()
+        dismissActionBar()
         listener = null
     }
 
@@ -210,7 +211,10 @@ class ReceiveFragment : Fragment()
 
     private fun dismissActionBar()
     {
-        if (storedMode != null) storedMode!!.finish()
+        if (storedMode != null)
+        {
+            storedMode!!.finish()
+        }
         shareActionProvider = null
         actionBarCallback = null
     }
