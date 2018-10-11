@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context="com.gulden.unity_wallet.ui.WelcomeActivity"
+              android:background="@color/colorPrimary"
+              android:orientation="vertical"
+              android:baselineAligned="false"
+              android:gravity="center_vertical|center_horizontal">
+
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:onClick="onCreateNewWallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_activity_create_new_wallet"
+            android:id="@+id/new_wallet_button"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:background="@drawable/shape_rounded_button_with_border"
+            android:textColor="@android:color/white" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:onClick="onRecoverExistingWallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_activity_recover_existing_wallet"
+            android:layout_below="@+id/new_wallet_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:padding="10dp"
+            android:background="@drawable/shape_rounded_button_with_border"
+            android:textColor="@android:color/white" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:onClick="onSyncWithDesktop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_activity_sync_with_desktop"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:padding="10dp"
+            android:background="@drawable/shape_rounded_button_with_border"
+            android:textColor="@android:color/white" />
+    </TableLayout>
+
+</LinearLayout>
