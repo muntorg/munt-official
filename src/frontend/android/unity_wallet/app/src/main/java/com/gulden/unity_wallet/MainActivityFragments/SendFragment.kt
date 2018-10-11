@@ -43,7 +43,8 @@ class SendFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_send, container, false)
+        val inflatedView = inflater.inflate(R.layout.fragment_send, container, false)
+        return inflatedView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -53,6 +54,8 @@ class SendFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        addressBookList?.emptyView = emptyAddressBookView;
 
         addressBookList.setOnItemClickListener { parent, _, position, _ ->
             val address = parent.adapter.getItem(position) as AddressRecord

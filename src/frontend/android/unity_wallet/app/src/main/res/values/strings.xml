@@ -35,4 +35,6 @@ file COPYING
     <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</string>
     <string name="recovery_phrase_acknowledge_writing_down">I wrote it down</string>
     <string name="recovery_phrase_copy">Recovery phrase copied to clipboard</string>
+    <string name="address_book_empty_message">To add an address, start a payment and tap \"Add to address book\".</string>
+    <string name="address_book_empty_title">Empty address book</string>
 </resources>
