@@ -219,10 +219,18 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
 
-                    val parsedQRCodeURI = Uri.parse(barcode.displayValue);
+                    var barcodeText = barcode.displayValue;
+                    var parsedQRCodeURI = Uri.parse(barcodeText);
                     var address : String = "";
-                    address += parsedQRCodeURI?.authority;
-                    address += parsedQRCodeURI?.path;
+
+                    // Handle all possible scheme variations (foo: foo:// etc.)
+                    if ((parsedQRCodeURI?.authority == null) && (parsedQRCodeURI?.path == null))
+                    {
+                        parsedQRCodeURI = Uri.parse(barcodeText.replaceFirst(":", "://"));
+                    }
+                    if (parsedQRCodeURI?.authority != null) address += parsedQRCodeURI?.authority;
+                    if (parsedQRCodeURI?.path != null) address += parsedQRCodeURI?.path;
+
                     val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, address , parsedQRCodeURI.getParameters())
                     val recipient = GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord);
                     if (recipient.valid) {
