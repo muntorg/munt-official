@@ -107,6 +107,19 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
         return true;
     }
 
+    override fun createWallet() : Boolean
+    {
+        this@MainActivity.runOnUiThread{
+            // Show the 'welcome' activity.
+            val intent = Intent(this, WelcomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+
+            finish()
+        }
+        return true;
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -198,6 +211,7 @@ class MainActivity : AppCompatActivity(), UnityService.UnityServiceSignalHandler
         } while (true)
         return items
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BARCODE_READER_REQUEST_CODE) {
             if (resultCode == CommonStatusCodes.SUCCESS)

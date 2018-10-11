@@ -31,6 +31,18 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.InitWalletLinkedFromURI(linkedUri);
     }
 
+    /** Check if a possible recovery phrase is valid or not */
+    public static boolean IsValidRecoveryPhrase(String phrase)
+    {
+        return CppProxy.IsValidRecoveryPhrase(phrase);
+    }
+
+    /** Generate a new recovery mnemonic */
+    public static String GenerateRecoveryMnemonic()
+    {
+        return CppProxy.GenerateRecoveryMnemonic();
+    }
+
     /** Stop the library */
     public static void TerminateUnityLib()
     {
@@ -120,6 +132,10 @@ public abstract class GuldenUnifiedBackend {
         public static native boolean InitWalletFromRecoveryPhrase(String phrase);
 
         public static native boolean InitWalletLinkedFromURI(String linkedUri);
+
+        public static native boolean IsValidRecoveryPhrase(String phrase);
+
+        public static native String GenerateRecoveryMnemonic();
 
         public static native void TerminateUnityLib();
 

@@ -77,8 +77,8 @@ file COPYING
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_rounded_button"
             android:text="Clipboard"
+            android:background="@drawable/shape_rounded_button"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
