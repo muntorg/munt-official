@@ -28,6 +28,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.ShowRecoveryPhraseActivity"
+            android:label="@string/title_activity_enter_recovery_phrase"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name="com.gulden.barcodereader.BarcodeCaptureActivity"
             android:label="@string/title_activity_barcode_capture"
             android:theme="@style/AppTheme.NoActionBar" />
