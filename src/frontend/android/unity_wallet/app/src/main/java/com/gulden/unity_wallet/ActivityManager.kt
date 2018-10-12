@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity
 class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
 {
     var mainActivity : MainActivity ?= null;
+    var introActivity : IntroActivity ?= null;
     override fun syncProgressChanged(percent: Float): Boolean
     {
         mainActivity?.runOnUiThread{ mainActivity?.setSyncProgress(percent); }
@@ -30,9 +31,14 @@ class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
         mainActivity?.runOnUiThread{ mainActivity?.coreUIInit(); }
         return true;
     }
-    override fun createWallet() : Boolean
+    override fun haveExistingWallet() : Boolean
     {
-        mainActivity?.runOnUiThread{ mainActivity?.createWallet(); }
+        introActivity?.runOnUiThread{ introActivity?.gotoMainActivity(); }
+        return true;
+    }
+    override fun createNewWallet() : Boolean
+    {
+        introActivity?.runOnUiThread{ introActivity?.gotoWelcomeActivity(); }
         return true;
     }
 

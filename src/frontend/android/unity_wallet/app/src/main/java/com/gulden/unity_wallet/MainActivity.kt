@@ -43,6 +43,60 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
 
 class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener
 {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        syncProgress.max = 1000000;
+        syncProgress.progress = 0;
+
+        (application as ActivityManager).mainActivity = this;
+    }
+
+    override fun onFragmentInteraction(uri: Uri)
+    {
+
+    }
+
+    private var sendFragment : SendFragment ?= null;
+    private var receiveFragment : ReceiveFragment ?= null;
+    private var transactionFragment : TransactionFragment ?= null;
+    private var settingsFragment : SettingsFragment ?= null;
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+         when (item.itemId) {
+            R.id.navigation_send -> {
+                if (sendFragment == null)
+                    sendFragment = SendFragment()
+                replaceFragment(sendFragment!!, R.id.mainLayout)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_receive -> {
+                if (receiveFragment == null)
+                    receiveFragment = ReceiveFragment()
+                replaceFragment(receiveFragment!!, R.id.mainLayout)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_transactions -> {
+                if (transactionFragment == null)
+                    transactionFragment = TransactionFragment()
+                replaceFragment(transactionFragment!!, R.id.mainLayout)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_settings -> {
+                if (settingsFragment == null)
+                    settingsFragment = SettingsFragment()
+                replaceFragment(settingsFragment!!, R.id.mainLayout)
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
+
+
     fun setSyncProgress(percent: Float)
     {
         syncProgress.progress = (1000000 * (percent/100)).toInt();
@@ -58,63 +112,9 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
 
     fun coreUIInit()
     {
-        addFragment(sendFragment, R.id.mainLayout)
-    }
-
-    fun createWallet()
-    {
-        // Show the 'welcome' activity.
-        val intent = Intent(this, WelcomeActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-
-        finish()
-    }
-
-    override fun onFragmentInteraction(uri: Uri)
-    {
-
-    }
-
-    private val sendFragment : SendFragment = SendFragment();
-    private val receiveFragment : ReceiveFragment = ReceiveFragment();
-    private val transactionFragment : TransactionFragment = TransactionFragment();
-    private val settingsFragment : SettingsFragment = SettingsFragment();
-
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-         when (item.itemId) {
-            R.id.navigation_send -> {
-                replaceFragment(sendFragment, R.id.mainLayout)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_receive -> {
-                replaceFragment(receiveFragment, R.id.mainLayout)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_transactions -> {
-                replaceFragment(transactionFragment, R.id.mainLayout)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_settings -> {
-                replaceFragment(settingsFragment, R.id.mainLayout)
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
-
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-        syncProgress.max = 1000000;
-        syncProgress.progress = 0;
-
-        (application as ActivityManager).mainActivity = this;
+        if (sendFragment == null)
+            sendFragment = SendFragment();
+        addFragment(sendFragment!!, R.id.mainLayout)
     }
 
     fun handleQRScanButtonClick(view : View) {

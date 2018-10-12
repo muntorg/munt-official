@@ -30,7 +30,8 @@ class UnityService : Service()
         fun syncProgressChanged(percent : Float) : Boolean
         fun walletBalanceChanged(balance : Long) : Boolean
         fun coreUIInit() : Boolean
-        fun createWallet() : Boolean
+        fun createNewWallet() : Boolean
+        fun haveExistingWallet() : Boolean
     }
     public var signalHandler: UnityServiceSignalHandler? = null
 
@@ -74,12 +75,13 @@ class UnityService : Service()
 
         override fun notifyInitWithExistingWallet()
         {
+            signalHandler?.haveExistingWallet();
             return;
         }
 
         override fun notifyInitWithoutExistingWallet()
         {
-            signalHandler?.createWallet();
+            signalHandler?.createNewWallet();
             return;
         }
     }
