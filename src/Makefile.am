@@ -9,6 +9,8 @@
 # Distributed under the GULDEN software license, see the accompanying
 # file COPYING
 
+DJINNI_RUN = ../../../depends/aarch64-ios/bin/djinni-run
+
 DIST_SUBDIRS = secp256k1 univalue
 
 AM_LDFLAGS = $(PTHREAD_CFLAGS) $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
@@ -503,52 +505,57 @@ if BUILD_GULDEN_LIBS_OBJC
 noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)
 
 libgulden_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(abs_top_builddir)/src/unity/djinni/cpp
-libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/unity/djinni/cpp -I$(srcdir)/../djinni/djinni/support-lib/objc
+libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(abs_top_builddir)/src/djinni_generated/cpp
+libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/djinni_generated/cpp -I$(srcdir)/../djinni/djinni/support-lib/objc
 
 DJINNI_CPP_GEN = \
-  unity/djinni/cpp/balance_record.hpp \
-  unity/djinni/cpp/gulden_unified_backend.cpp \
-  unity/djinni/cpp/gulden_unified_backend.hpp \
-  unity/djinni/cpp/gulden_unified_frontend.hpp \
-  unity/djinni/cpp/qrcode_record.hpp \
-  unity/djinni/cpp/transaction_record.hpp \
-  unity/djinni/cpp/transaction_type.hpp \
-  unity/djinni/cpp/uri_recipient.hpp \
-  unity/djinni/cpp/uri_record.hpp
+  djinni_generated/cpp/balance_record.hpp \
+  djinni_generated/cpp/gulden_unified_backend.cpp \
+  djinni_generated/cpp/gulden_unified_backend.hpp \
+  djinni_generated/cpp/gulden_unified_frontend.hpp \
+  djinni_generated/cpp/qrcode_record.hpp \
+  djinni_generated/cpp/transaction_record.hpp \
+  djinni_generated/cpp/transaction_type.hpp \
+  djinni_generated/cpp/uri_recipient.hpp \
+  djinni_generated/cpp/uri_record.hpp
 
 DJINNI_OBJC_GEN = \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBBalanceRecord+Private.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBBalanceRecord+Private.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBBalanceRecord.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBBalanceRecord.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedBackend+Private.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedBackend+Private.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedBackend.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedBackend.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedFrontend+Private.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedFrontend+Private.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedFrontend.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBQrcodeRecord+Private.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBQrcodeRecord+Private.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBQrcodeRecord.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBQrcodeRecord.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionRecord+Private.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionRecord+Private.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionRecord.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionRecord.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionType+Private.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionType.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecipient+Private.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecipient+Private.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecipient.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecipient.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecord+Private.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecord+Private.mm \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecord.h \
-  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecord.mm
+  $(abs_top_builddir)/src/djinni_generated/objc/DBBalanceRecord+Private.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBBalanceRecord+Private.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBBalanceRecord.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBBalanceRecord.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedBackend+Private.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedBackend+Private.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedBackend.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedBackend.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedFrontend+Private.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedFrontend+Private.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedFrontend.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBQrcodeRecord+Private.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBQrcodeRecord+Private.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBQrcodeRecord.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBQrcodeRecord.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionRecord+Private.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionRecord+Private.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionRecord.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionRecord.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionType+Private.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionType.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecipient+Private.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecipient+Private.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecipient.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecipient.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecord+Private.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecord+Private.mm \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecord.h \
+  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecord.mm
 
-nodist_libgulden_unity_objc_a_SOURCES = $(DJINNI_CPP_GEN) $(DJINNI_OBJC_GEN)
+generate_djinni.stamp: unity/libunity.djinni
+	@echo Generating Djinni source
+	$(DJINNI_RUN) --objc-type-prefix DB --objc-out djinni_generated/objc --objcpp-out djinni_generated/objc --cpp-out djinni_generated/cpp --idl $(srcdir)/unity/libunity.djinni
+	touch $@
+
+# nodist_libgulden_unity_objc_a_SOURCES = $(DJINNI_CPP_GEN) $(DJINNI_OBJC_GEN)
 
 libgulden_unity_objc_a_SOURCES = \
   unity/libinit.cpp \
@@ -563,6 +570,8 @@ libgulden_unity_objc_a_SOURCES = \
   $(crypto_libgulden_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  $(DJINNI_CPP_GEN) \
+  $(DJINNI_OBJC_GEN) \
   ../djinni/djinni/support-lib/objc/DJICppWrapperCache+Private.h \
   ../djinni/djinni/support-lib/objc/DJIError.h \
   ../djinni/djinni/support-lib/objc/DJIError.mm \
@@ -570,6 +579,8 @@ libgulden_unity_objc_a_SOURCES = \
   ../djinni/djinni/support-lib/objc/DJIObjcWrapperCache+Private.h \
   ../djinni/djinni/support-lib/objc/DJIProxyCaches.mm \
   $(GULDEN_CORE_H)
+
+$(libgulden_unity_objc_a_SOURCES): generate_djinni.stamp
 
 # libgulden_unity_objc_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS)
 #libgulden_unity_objc_la_LDFLAGS = $(AM_LDFLAGS)  $(RELDFLAGS) -rpath/libgulden_unity_objc.0.dylib
@@ -697,6 +708,8 @@ clean-local:
 	-rm -f leveldb/*/*.gcda leveldb/*/*.gcno leveldb/helpers/memenv/*.gcda leveldb/helpers/memenv/*.gcno
 	-rm -f config.h
 	-rm -rf test/__pycache__
+	-rm -f generate_djinni.stamp
+	-rm -rf djinni_generated
 
 .rc.o:
 	@test -f $(WINDRES)
