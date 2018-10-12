@@ -367,6 +367,13 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
     return "";
 }
 
+void GuldenUnifiedBackend::DoRescan()
+{
+    if (pactiveWallet)
+    {
+        boost::thread t(rescanThread); // thread runs free
+    }
+}
 
 UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
 {

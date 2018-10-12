@@ -81,6 +81,9 @@ gulden_unified_backend = interface +c {
     # Get a receive address from the wallet
     static GetRecoveryPhrase(): string;
 
+    # Rescan blockchain for wallet transactions
+    static DoRescan();
+
     # Check if text/address is something we are capable of sending money too
     static IsValidRecipient(request : uri_record): uri_recipient;
 

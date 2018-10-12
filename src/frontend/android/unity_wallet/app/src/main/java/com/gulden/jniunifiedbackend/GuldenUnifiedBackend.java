@@ -68,6 +68,12 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.GetRecoveryPhrase();
     }
 
+    /** Rescan blockchain for wallet transactions */
+    public static void DoRescan()
+    {
+        CppProxy.DoRescan();
+    }
+
     /** Check if text/address is something we are capable of sending money too */
     public static UriRecipient IsValidRecipient(UriRecord request)
     {
@@ -144,6 +150,8 @@ public abstract class GuldenUnifiedBackend {
         public static native String GetReceiveAddress();
 
         public static native String GetRecoveryPhrase();
+
+        public static native void DoRescan();
 
         public static native UriRecipient IsValidRecipient(UriRecord request);
 
