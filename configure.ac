@@ -89,6 +89,7 @@ AC_PATH_PROG(HEXDUMP,hexdump)
 AC_PATH_TOOL(READELF, readelf)
 AC_PATH_TOOL(CPPFILT, c++filt)
 AC_PATH_TOOL(OBJCOPY, objcopy)
+AC_PATH_PROG(DJINNI_RUN, djinni-run,, $prefix/bin)
 
 AC_ARG_VAR(PYTHONPATH, Augments the default search path for python module files)
 

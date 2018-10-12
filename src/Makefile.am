@@ -9,8 +9,6 @@
 # Distributed under the GULDEN software license, see the accompanying
 # file COPYING
 
-DJINNI_RUN = ../../../depends/aarch64-ios/bin/djinni-run
-
 DIST_SUBDIRS = secp256k1 univalue
 
 AM_LDFLAGS = $(PTHREAD_CFLAGS) $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
