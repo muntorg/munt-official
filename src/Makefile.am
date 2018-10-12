@@ -503,10 +503,52 @@ if BUILD_GULDEN_LIBS_OBJC
 noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)
 
 libgulden_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(srcdir)/unity/djinni/cpp
-libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(srcdir)/unity/djinni/cpp -I$(srcdir)/../djinni/djinni/support-lib/objc
+libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(abs_top_builddir)/src/unity/djinni/cpp
+libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/unity/djinni/cpp -I$(srcdir)/../djinni/djinni/support-lib/objc
 
-#  these are now gone
+DJINNI_CPP_GEN = \
+  unity/djinni/cpp/balance_record.hpp \
+  unity/djinni/cpp/gulden_unified_backend.cpp \
+  unity/djinni/cpp/gulden_unified_backend.hpp \
+  unity/djinni/cpp/gulden_unified_frontend.hpp \
+  unity/djinni/cpp/qrcode_record.hpp \
+  unity/djinni/cpp/transaction_record.hpp \
+  unity/djinni/cpp/transaction_type.hpp \
+  unity/djinni/cpp/uri_recipient.hpp \
+  unity/djinni/cpp/uri_record.hpp
+
+DJINNI_OBJC_GEN = \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBBalanceRecord+Private.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBBalanceRecord+Private.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBBalanceRecord.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBBalanceRecord.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedBackend+Private.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedBackend+Private.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedBackend.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedBackend.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedFrontend+Private.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedFrontend+Private.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBGuldenUnifiedFrontend.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBQrcodeRecord+Private.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBQrcodeRecord+Private.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBQrcodeRecord.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBQrcodeRecord.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionRecord+Private.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionRecord+Private.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionRecord.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionRecord.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionType+Private.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBTransactionType.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecipient+Private.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecipient+Private.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecipient.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecipient.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecord+Private.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecord+Private.mm \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecord.h \
+  $(abs_top_builddir)/src/unity/djinni/objc/DBUriRecord.mm
+
+nodist_libgulden_unity_objc_a_SOURCES = $(DJINNI_CPP_GEN) $(DJINNI_OBJC_GEN)
 
 libgulden_unity_objc_a_SOURCES = \
   unity/libinit.cpp \
@@ -521,44 +563,6 @@ libgulden_unity_objc_a_SOURCES = \
   $(crypto_libgulden_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
-  unity/djinni/cpp/balance_record.hpp \
-  unity/djinni/cpp/gulden_unified_backend.cpp \
-  unity/djinni/cpp/gulden_unified_backend.hpp \
-  unity/djinni/cpp/gulden_unified_frontend.hpp \
-  unity/djinni/cpp/qrcode_record.hpp \
-  unity/djinni/cpp/transaction_record.hpp \
-  unity/djinni/cpp/transaction_type.hpp \
-  unity/djinni/cpp/uri_recipient.hpp \
-  unity/djinni/cpp/uri_record.hpp \
-  unity/djinni/objc/DBBalanceRecord+Private.h \
-  unity/djinni/objc/DBBalanceRecord+Private.mm \
-  unity/djinni/objc/DBBalanceRecord.h \
-  unity/djinni/objc/DBBalanceRecord.mm \
-  unity/djinni/objc/DBGuldenUnifiedBackend+Private.h \
-  unity/djinni/objc/DBGuldenUnifiedBackend+Private.mm \
-  unity/djinni/objc/DBGuldenUnifiedBackend.h \
-  unity/djinni/objc/DBGuldenUnifiedBackend.mm \
-  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.h \
-  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.mm \
-  unity/djinni/objc/DBGuldenUnifiedFrontend.h \
-  unity/djinni/objc/DBQrcodeRecord+Private.h \
-  unity/djinni/objc/DBQrcodeRecord+Private.mm \
-  unity/djinni/objc/DBQrcodeRecord.h \
-  unity/djinni/objc/DBQrcodeRecord.mm \
-  unity/djinni/objc/DBTransactionRecord+Private.h \
-  unity/djinni/objc/DBTransactionRecord+Private.mm \
-  unity/djinni/objc/DBTransactionRecord.h \
-  unity/djinni/objc/DBTransactionRecord.mm \
-  unity/djinni/objc/DBTransactionType+Private.h \
-  unity/djinni/objc/DBTransactionType.h \
-  unity/djinni/objc/DBUriRecipient+Private.h \
-  unity/djinni/objc/DBUriRecipient+Private.mm \
-  unity/djinni/objc/DBUriRecipient.h \
-  unity/djinni/objc/DBUriRecipient.mm \
-  unity/djinni/objc/DBUriRecord+Private.h \
-  unity/djinni/objc/DBUriRecord+Private.mm \
-  unity/djinni/objc/DBUriRecord.h \
-  unity/djinni/objc/DBUriRecord.mm \
   ../djinni/djinni/support-lib/objc/DJICppWrapperCache+Private.h \
   ../djinni/djinni/support-lib/objc/DJIError.h \
   ../djinni/djinni/support-lib/objc/DJIError.mm \
@@ -566,7 +570,6 @@ libgulden_unity_objc_a_SOURCES = \
   ../djinni/djinni/support-lib/objc/DJIObjcWrapperCache+Private.h \
   ../djinni/djinni/support-lib/objc/DJIProxyCaches.mm \
   $(GULDEN_CORE_H)
-
 
 # libgulden_unity_objc_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS)
 #libgulden_unity_objc_la_LDFLAGS = $(AM_LDFLAGS)  $(RELDFLAGS) -rpath/libgulden_unity_objc.0.dylib
