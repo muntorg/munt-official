@@ -55,6 +55,13 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
         (application as ActivityManager).walletActivity = this;
     }
 
+    override fun onStop()
+    {
+        super.onStop()
+
+        (application as ActivityManager).walletActivity = null;
+    }
+
     override fun onFragmentInteraction(uri: Uri)
     {
 

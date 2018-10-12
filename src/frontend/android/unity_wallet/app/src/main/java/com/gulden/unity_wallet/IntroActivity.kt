@@ -17,12 +17,17 @@ class IntroActivity : Activity()
         (application as ActivityManager).introActivity = this;
     }
 
+    override fun onStop()
+    {
+        super.onStop()
+        (application as ActivityManager).introActivity = null;
+    }
+
     fun showActivityForIntent(intent : Intent)
     {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
 
-        (application as ActivityManager).introActivity = null
         finish()
     }
 

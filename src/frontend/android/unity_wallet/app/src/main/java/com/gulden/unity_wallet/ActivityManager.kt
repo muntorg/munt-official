@@ -14,8 +14,19 @@ import android.support.v7.app.AppCompatActivity
 
 class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
 {
-    var walletActivity : WalletActivity ?= null;
-    var introActivity : IntroActivity ?= null;
+    var walletActivity : WalletActivity ?= null
+        set(value)
+        {
+            field = value
+            unbindServiceIfAllActivitiesStopped()
+        }
+    var introActivity : IntroActivity ?= null
+        set(value)
+        {
+            field = value
+            unbindServiceIfAllActivitiesStopped()
+        }
+
     override fun syncProgressChanged(percent: Float): Boolean
     {
         walletActivity?.runOnUiThread{ walletActivity?.setSyncProgress(percent); }
@@ -60,32 +71,33 @@ class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
         bindService(intent, serviceConnection, AppCompatActivity.BIND_AUTO_CREATE)
     }
 
-    //TODO: when to unbind service?
-    /*
-    override fun onStop() {
-        super.onStop()
-
-        // Unbind from service
-        if (bound) {
-            myService.signalHandler = null
-            unbindService(serviceConnection);
-            bound = false;
-        }
-    }*/
-
-    private val serviceConnection = object : ServiceConnection
+    fun unbindServiceIfAllActivitiesStopped()
     {
-
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            // cast the IBinder and get MyService instance
-            val binder = service as UnityService.LocalBinder
-            myService = binder.service
-            bound = true
-            myService.signalHandler = (this@ActivityManager) // register
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            bound = false
+        if (walletActivity == null && introActivity == null)
+        {
+            // Unbind from service
+            if (bound)
+            {
+                myService.signalHandler = null
+                unbindService(serviceConnection);
+                bound = false;
+            }
         }
     }
+
+private val serviceConnection = object : ServiceConnection
+{
+
+    override fun onServiceConnected(className: ComponentName, service: IBinder) {
+        // cast the IBinder and get MyService instance
+        val binder = service as UnityService.LocalBinder
+        myService = binder.service
+        bound = true
+        myService.signalHandler = (this@ActivityManager) // register
+    }
+
+    override fun onServiceDisconnected(arg0: ComponentName) {
+        bound = false
+    }
+}
 }
