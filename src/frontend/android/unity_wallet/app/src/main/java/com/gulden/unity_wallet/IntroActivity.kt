@@ -6,18 +6,8 @@
 package com.gulden.unity_wallet
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.view.View
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.vision.barcode.Barcode
-import com.gulden.barcodereader.BarcodeCaptureActivity
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity
-import com.gulden.unity_wallet.ui.ShowRecoveryPhraseActivity
 
 class IntroActivity : Activity()
 {
@@ -41,8 +31,8 @@ class IntroActivity : Activity()
         showActivityForIntent(Intent(this, WelcomeActivity::class.java))
     }
 
-    fun gotoMainActivity()
+    fun gotoWalletActivity()
     {
-        showActivityForIntent(Intent(this, MainActivity::class.java))
+        showActivityForIntent(Intent(this, WalletActivity::class.java))
     }
 }

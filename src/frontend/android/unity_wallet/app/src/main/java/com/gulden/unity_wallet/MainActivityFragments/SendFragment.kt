@@ -14,7 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.gulden.jniunifiedbackend.*
-import com.gulden.unity_wallet.MainActivity
+import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.SendCoinsActivity
 import com.gulden.unity_wallet.ui.AddressBookAdapter
@@ -62,7 +62,7 @@ class SendFragment : Fragment() {
             val recipient = UriRecipient(true, address.address, address.name, "0")
             val intent = Intent(this.context, SendCoinsActivity::class.java)
             intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient);
-            startActivityForResult(intent, MainActivity.SEND_COINS_RETURN_CODE)
+            startActivityForResult(intent, WalletActivity.SEND_COINS_RETURN_CODE)
         };
 
         // TODO: Only update if there has been a change, not always.

@@ -21,9 +21,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 
-import com.gulden.unity_wallet.MainActivity
+import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
-import kotlinx.android.synthetic.main.fragment_receive.*
 
 class ShowRecoveryPhraseActivity : AppCompatActivity()
 {
@@ -106,7 +105,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity()
             GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase);
 
             // Proceed to main activity
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, WalletActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
         }

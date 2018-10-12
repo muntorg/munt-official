@@ -5,7 +5,6 @@
 
 package com.gulden.unity_wallet
 
-import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -41,7 +40,7 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
     supportFragmentManager.inTransaction{replace(frameId, fragment as Fragment)}
 }
 
-class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener
+class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener
 {
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener, Receive
         syncProgress.max = 1000000;
         syncProgress.progress = 0;
 
-        (application as ActivityManager).mainActivity = this;
+        (application as ActivityManager).walletActivity = this;
     }
 
     override fun onFragmentInteraction(uri: Uri)

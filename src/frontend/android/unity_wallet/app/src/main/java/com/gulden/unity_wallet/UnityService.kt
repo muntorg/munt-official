@@ -89,7 +89,7 @@ class UnityService : Service()
 
     fun notifyIncomingTransaction(transactionRecord : TransactionRecord)
     {
-        val notificationIntent = Intent(this, MainActivity::class.java)
+        val notificationIntent = Intent(this, WalletActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
         var prefix = "+";
@@ -156,7 +156,7 @@ class UnityService : Service()
     {
         loadLibrary()
 
-        val notificationIntent = Intent(this, MainActivity::class.java)
+        val notificationIntent = Intent(this, WalletActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
         val notification = NotificationCompat.Builder(this)

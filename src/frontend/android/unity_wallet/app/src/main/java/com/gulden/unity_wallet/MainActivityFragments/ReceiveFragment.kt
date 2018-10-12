@@ -20,7 +20,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.ShareActionProvider
 import android.view.*
-import com.gulden.unity_wallet.MainActivity
+import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.fragment_receive.*
 import java.nio.ByteBuffer
@@ -152,7 +152,7 @@ class ReceiveFragment : Fragment()
             }
             else if (item.itemId == R.id.item_buy_gulden)
             {
-                (activity as MainActivity).gotoBuyActivity();
+                (activity as WalletActivity).gotoBuyActivity();
                 return true
             }
 

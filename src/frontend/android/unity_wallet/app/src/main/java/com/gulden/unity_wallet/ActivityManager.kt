@@ -14,26 +14,26 @@ import android.support.v7.app.AppCompatActivity
 
 class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
 {
-    var mainActivity : MainActivity ?= null;
+    var walletActivity : WalletActivity ?= null;
     var introActivity : IntroActivity ?= null;
     override fun syncProgressChanged(percent: Float): Boolean
     {
-        mainActivity?.runOnUiThread{ mainActivity?.setSyncProgress(percent); }
+        walletActivity?.runOnUiThread{ walletActivity?.setSyncProgress(percent); }
         return true;
     }
     override fun walletBalanceChanged(balance: Long): Boolean
     {
-        mainActivity?.runOnUiThread{ mainActivity?.setWalletBalance(balance); }
+        walletActivity?.runOnUiThread{ walletActivity?.setWalletBalance(balance); }
         return true;
     }
     override fun coreUIInit() : Boolean
     {
-        mainActivity?.runOnUiThread{ mainActivity?.coreUIInit(); }
+        walletActivity?.runOnUiThread{ walletActivity?.coreUIInit(); }
         return true;
     }
     override fun haveExistingWallet() : Boolean
     {
-        introActivity?.runOnUiThread{ introActivity?.gotoMainActivity(); }
+        introActivity?.runOnUiThread{ introActivity?.gotoWalletActivity(); }
         return true;
     }
     override fun createNewWallet() : Boolean

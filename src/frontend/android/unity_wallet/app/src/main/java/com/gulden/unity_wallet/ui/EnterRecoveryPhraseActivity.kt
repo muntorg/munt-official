@@ -2,23 +2,20 @@ package com.gulden.unity_wallet.ui
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.MainActivity
+import com.gulden.unity_wallet.WalletActivity
 
 import com.gulden.unity_wallet.R
 
@@ -168,7 +165,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity()
         if (GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
         {
             // Proceed to main activity
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, WalletActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
