@@ -3,4 +3,6 @@
 
 #include "gulden_unified_backend.hpp"
 
+extern std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
+
 #endif

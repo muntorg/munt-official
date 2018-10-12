@@ -28,7 +28,7 @@
 #include <qrencode.h>
 
 
-static std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
+std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 
 static void notifyBalanceChanged(CWallet* pwallet)
 {
