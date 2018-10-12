@@ -23,10 +23,36 @@ class SettingsFragment : android.support.v7.preference.PreferenceFragmentCompat(
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
     {
-        if (preference?.key == "recovery_preference")
-        {
-            val phraseView = findPreference("recovery_view_preference");
-            phraseView.title = GuldenUnifiedBackend.GetRecoveryPhrase();
+        when (preference?.key){
+            "recovery_preference" ->
+            {
+                val phraseView = findPreference("recovery_view_preference")
+                phraseView.title = GuldenUnifiedBackend.GetRecoveryPhrase()
+            }
+            "preference_link_wallet" ->
+            {
+                //TODO: Implement
+            }
+            "preference_change_passcode" ->
+            {
+                //TODO: Implement
+            }
+            "preference_rescan_wallet" ->
+            {
+                GuldenUnifiedBackend.DoRescan()
+            }
+            "preference_remove_wallet" ->
+            {
+                //TODO: Implement
+            }
+            "preference_select_local_currency" ->
+            {
+                //TODO: Implement
+            }
+            "preference_notify_transaction_activity" ->
+            {
+                //TODO: Implement
+            }
         }
         return super.onPreferenceTreeClick(preference)
     }
