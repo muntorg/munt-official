@@ -30,6 +30,10 @@
 #include <pthread_np.h>
 #endif
 
+#if defined(__APPLE__) && defined(__MACH__)
+#include <TargetConditionals.h>
+#endif
+
 #ifndef WIN32
 // for posix_fallocate
 #ifdef __linux__
@@ -743,9 +747,13 @@ fs::path GetSpecialFolderPath(int nFolder, bool fCreate)
 
 void runCommand(const std::string& strCommand)
 {
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0 // it's defined, but as 0 on macOS
+        LogPrintf("runCommand not supported on iOS!\n");
+#else
     int nErr = ::system(strCommand.c_str());
     if (nErr)
         LogPrintf("runCommand error: system(%s) returned %d\n", strCommand, nErr);
+#endif
 }
 
 void RenameThread([[maybe_unused]] const char* name)
