@@ -10,7 +10,7 @@
 		E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */; };
 		E61A12862171360F000069F0 /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E61A12852171360F000069F0 /* dummy.cpp */; };
 		E61A1288217136DE000069F0 /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A1287217136DE000069F0 /* dummy.m */; };
-		E64203F121638CD6004A77FF /* gulden_static.h in Headers */ = {isa = PBXBuildFile; fileRef = E64203EF21638CD6004A77FF /* gulden_static.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E64203F121638CD6004A77FF /* GuldenCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E64203EF21638CD6004A77FF /* GuldenCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E68FADBC216C91750038C745 /* libgulden_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADBB216C91750038C745 /* libgulden_unity_objc.a */; };
 		E68FAE04216C964E0038C745 /* libdb-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF8216C964D0038C745 /* libdb-4.8.a */; };
 		E68FAE05216C964E0038C745 /* libboost_system-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */; };
@@ -41,8 +41,8 @@
 		E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_support_lib_UNIVERSAL.a; path = "../../../../depends/aarch64-ios/lib/libdjinni_support_lib_UNIVERSAL.a"; sourceTree = "<group>"; };
 		E61A12852171360F000069F0 /* dummy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
 		E61A1287217136DE000069F0 /* dummy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dummy.m; sourceTree = "<group>"; };
-		E64203EC21638CD6004A77FF /* gulden_static.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = gulden_static.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E64203EF21638CD6004A77FF /* gulden_static.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gulden_static.h; sourceTree = "<group>"; };
+		E64203EC21638CD6004A77FF /* GuldenCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GuldenCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E64203EF21638CD6004A77FF /* GuldenCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCore.h; sourceTree = "<group>"; };
 		E64203F021638CD6004A77FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E65D48092163A3C500033ED1 /* libboost_chrono-mt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_chrono-mt.a"; path = "../../../../depends/x86_64-darwin/lib/libboost_chrono-mt.a"; sourceTree = "<group>"; };
 		E65D480B2163A48700033ED1 /* libboost_system-mt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-mt.a"; path = "../../../../depends/x86_64-darwin/lib/libboost_system-mt.a"; sourceTree = "<group>"; };
@@ -104,7 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				E65D47B021639AF100033ED1 /* source */,
-				E64203EE21638CD6004A77FF /* gulden_static */,
+				E64203EE21638CD6004A77FF /* GuldenCore */,
 				E64203ED21638CD6004A77FF /* Products */,
 				E64203F721638D34004A77FF /* Frameworks */,
 			);
@@ -113,12 +113,12 @@
 		E64203ED21638CD6004A77FF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E64203EC21638CD6004A77FF /* gulden_static.framework */,
+				E64203EC21638CD6004A77FF /* GuldenCore.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E64203EE21638CD6004A77FF /* gulden_static */ = {
+		E64203EE21638CD6004A77FF /* GuldenCore */ = {
 			isa = PBXGroup;
 			children = (
 				E68FAE1F2170F1410038C745 /* DBBalanceRecord.h */,
@@ -129,10 +129,10 @@
 				E68FAE222170F1410038C745 /* DBUriRecipient.h */,
 				E68FAE212170F1410038C745 /* DBUriRecord.h */,
 				E68FAE1A2170F09F0038C745 /* DBGuldenUnifiedBackend.h */,
-				E64203EF21638CD6004A77FF /* gulden_static.h */,
+				E64203EF21638CD6004A77FF /* GuldenCore.h */,
 				E64203F021638CD6004A77FF /* Info.plist */,
 			);
-			path = gulden_static;
+			path = GuldenCore;
 			sourceTree = "<group>";
 		};
 		E64203F721638D34004A77FF /* Frameworks */ = {
@@ -185,16 +185,16 @@
 				E68FAE292170F1410038C745 /* DBUriRecord.h in Headers */,
 				E68FAE272170F1410038C745 /* DBBalanceRecord.h in Headers */,
 				E68FAE1B2170F09F0038C745 /* DBGuldenUnifiedBackend.h in Headers */,
-				E64203F121638CD6004A77FF /* gulden_static.h in Headers */,
+				E64203F121638CD6004A77FF /* GuldenCore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		E64203EB21638CD6004A77FF /* gulden_static */ = {
+		E64203EB21638CD6004A77FF /* GuldenCore */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E64203F421638CD6004A77FF /* Build configuration list for PBXNativeTarget "gulden_static" */;
+			buildConfigurationList = E64203F421638CD6004A77FF /* Build configuration list for PBXNativeTarget "GuldenCore" */;
 			buildPhases = (
 				E64203E721638CD6004A77FF /* Headers */,
 				E64203E821638CD6004A77FF /* Sources */,
@@ -205,9 +205,9 @@
 			);
 			dependencies = (
 			);
-			name = gulden_static;
+			name = GuldenCore;
 			productName = gulden_static;
-			productReference = E64203EC21638CD6004A77FF /* gulden_static.framework */;
+			productReference = E64203EC21638CD6004A77FF /* GuldenCore.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -224,7 +224,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E64203E621638CD6004A77FF /* Build configuration list for PBXProject "gulden_static" */;
+			buildConfigurationList = E64203E621638CD6004A77FF /* Build configuration list for PBXProject "GuldenCore" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -236,7 +236,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E64203EB21638CD6004A77FF /* gulden_static */,
+				E64203EB21638CD6004A77FF /* GuldenCore */,
 			);
 		};
 /* End PBXProject section */
@@ -414,7 +414,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = gulden_static/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/GuldenCore/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -439,7 +439,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = gulden_static/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/GuldenCore/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -457,7 +457,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E64203E621638CD6004A77FF /* Build configuration list for PBXProject "gulden_static" */ = {
+		E64203E621638CD6004A77FF /* Build configuration list for PBXProject "GuldenCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E64203F221638CD6004A77FF /* Debug */,
@@ -466,7 +466,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E64203F421638CD6004A77FF /* Build configuration list for PBXNativeTarget "gulden_static" */ = {
+		E64203F421638CD6004A77FF /* Build configuration list for PBXNativeTarget "GuldenCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E64203F521638CD6004A77FF /* Debug */,
