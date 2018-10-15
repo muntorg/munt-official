@@ -25,14 +25,13 @@ android {
         }
     }
     flavorDimensions "default"
-
     productFlavors {
         gulden_testnet {
             applicationId 'com.gulden.testnet'
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
-            versionCode 328
+            versionCode 331
             versionName = "2.0.1.0"
         }
         gulden_mainnet {
@@ -40,14 +39,14 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
-            versionCode 328
+            versionCode 331
             versionName = "2.0.1.0"
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
     implementation 'com.android.support:preference-v7:28.0.0-rc02'
