@@ -8,7 +8,7 @@
     android:background="@color/colorPrimary"
     android:baselineAligned="false"
     android:gravity="center_vertical|center_horizontal"
-    tools:context="com.gulden.unity_wallet.ui.WelcomeActivity">
+    tools:context=".WalletActivity">
 
 
     <TableLayout
