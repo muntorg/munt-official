@@ -9,6 +9,7 @@ import android.app.Application
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
 
@@ -60,10 +61,18 @@ class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
         super.onCreate()
 
         val service = Intent(this, UnityService::class.java)
-        if (!UnityService.IS_SERVICE_RUNNING) {
+        if (!UnityService.IS_SERVICE_RUNNING)
+        {
             service.action = UnityService.START_FOREGROUND_ACTION
             UnityService.IS_SERVICE_RUNNING = true
-            startService(service)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                startForegroundService(service)
+            }
+            else
+            {
+                startService(service)
+            }
         }
 
         // Bind to service
