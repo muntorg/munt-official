@@ -16,6 +16,10 @@ import android.content.Context
 import android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC
 import com.gulden.jniunifiedbackend.*
 import com.gulden.wallet.Constants
+import android.app.NotificationChannel
+import android.app.NotificationManager.IMPORTANCE_LOW
+import android.graphics.Color
+import android.os.Build
 
 
 var NOTIFICATION_ID_FOREGROUND_SERVICE = 2;
@@ -152,6 +156,7 @@ class UnityService : Service()
         }
     }
 
+    val channelID = "com.gulden.unity_wallet.service.channel"
     fun startInForeground()
     {
         loadLibrary()
@@ -159,12 +164,20 @@ class UnityService : Service()
         val notificationIntent = Intent(this, WalletActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-        val notification = NotificationCompat.Builder(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            val notificationChannel = NotificationChannel(channelID, "Gulden service", IMPORTANCE_LOW);
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)?.createNotificationChannel(notificationChannel);
+            notificationChannel.enableLights(false);
+            notificationChannel.setShowBadge(false);
+        }
+
+
+        val notification = NotificationCompat.Builder(this, channelID)
                 .setContentTitle("Gulden")
                 .setTicker("Gulden")
                 .setContentText("Gulden")
                 .setSmallIcon(R.drawable.ic_g_logo)
-                //.setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .build()
