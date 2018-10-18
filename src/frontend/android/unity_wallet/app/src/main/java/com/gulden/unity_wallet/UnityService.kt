@@ -22,8 +22,8 @@ import android.graphics.Color
 import android.os.Build
 
 
-var NOTIFICATION_ID_FOREGROUND_SERVICE = 2;
-var NOTIFICATION_ID_INCOMING_TRANSACTION = 3;
+var NOTIFICATION_ID_FOREGROUND_SERVICE = 2
+var NOTIFICATION_ID_INCOMING_TRANSACTION = 3
 
 class UnityService : Service()
 {
@@ -37,56 +37,57 @@ class UnityService : Service()
         fun createNewWallet() : Boolean
         fun haveExistingWallet() : Boolean
     }
-    public var signalHandler: UnityServiceSignalHandler? = null
+
+    var signalHandler: UnityServiceSignalHandler? = null
 
     // Handle signals from core library and convert them to service signals where necessary.
     private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
         override fun notifySPVProgress(startHeight: Int, progessHeight: Int, expectedHeight: Int): Boolean {
             if (expectedHeight - startHeight == 0)
             {
-                signalHandler?.syncProgressChanged(0f);
+                signalHandler?.syncProgressChanged(0f)
             }
             else
             {
-                signalHandler?.syncProgressChanged((java.lang.Float.valueOf(progessHeight.toFloat()) - startHeight) / (expectedHeight - startHeight) * 100f);
+                signalHandler?.syncProgressChanged((java.lang.Float.valueOf(progessHeight.toFloat()) - startHeight) / (expectedHeight - startHeight) * 100f)
             }
-            return true;
+            return true
         }
 
         override fun notifyBalanceChange(newBalance: BalanceRecord): Boolean
         {
-            signalHandler?.walletBalanceChanged(newBalance.availableIncludingLocked + newBalance.immatureIncludingLocked + newBalance.unconfirmedIncludingLocked);
-            return true;
+            signalHandler?.walletBalanceChanged(newBalance.availableIncludingLocked + newBalance.immatureIncludingLocked + newBalance.unconfirmedIncludingLocked)
+            return true
         }
 
         override fun notifyNewTransaction(newTransaction: TransactionRecord): Boolean
         {
             notifyIncomingTransaction(newTransaction)
-            return true;
+            return true
         }
 
         override fun notifyShutdown(): Boolean
         {
-            stopSelf();
-            return true;
+            stopSelf()
+            return true
         }
 
         override fun notifyCoreReady(): Boolean
         {
-            signalHandler?.coreUIInit();
-            return true;
+            signalHandler?.coreUIInit()
+            return true
         }
 
         override fun notifyInitWithExistingWallet()
         {
-            signalHandler?.haveExistingWallet();
-            return;
+            signalHandler?.haveExistingWallet()
+            return
         }
 
         override fun notifyInitWithoutExistingWallet()
         {
-            signalHandler?.createNewWallet();
-            return;
+            signalHandler?.createNewWallet()
+            return
         }
     }
 
@@ -96,9 +97,9 @@ class UnityService : Service()
         val notificationIntent = Intent(this, WalletActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-        var prefix = "+";
+        var prefix = "+"
         if (transactionRecord.type == TransactionType.SEND)
-            prefix = "-";
+            prefix = "-"
 
         val notification = NotificationCompat.Builder(this)
                 .setContentTitle("Incoming transaction")
@@ -132,18 +133,13 @@ class UnityService : Service()
         val service: UnityService get() = this@UnityService
     }
 
-    override fun onCreate()
-    {
-        super.onCreate()
-    }
-
     fun loadLibrary()
     {
         thread(true)
         {
             System.loadLibrary("gulden_unity_jni")
-            libraryLoaded = true;
-            GuldenUnifiedBackend.InitUnityLib(applicationContext.getApplicationInfo().dataDir, Constants.TEST, coreLibrarySignalHandler)
+            libraryLoaded = true
+            GuldenUnifiedBackend.InitUnityLib(applicationContext.applicationInfo.dataDir, Constants.TEST, coreLibrarySignalHandler)
         }
     }
 
@@ -152,7 +148,7 @@ class UnityService : Service()
         if (libraryLoaded)
         {
             GuldenUnifiedBackend.TerminateUnityLib()
-            libraryLoaded = false;
+            libraryLoaded = false
         }
     }
 
@@ -166,10 +162,10 @@ class UnityService : Service()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            val notificationChannel = NotificationChannel(channelID, "Gulden service", IMPORTANCE_LOW);
-            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)?.createNotificationChannel(notificationChannel);
-            notificationChannel.enableLights(false);
-            notificationChannel.setShowBadge(false);
+            val notificationChannel = NotificationChannel(channelID, "Gulden service", IMPORTANCE_LOW)
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(notificationChannel)
+            notificationChannel.enableLights(false)
+            notificationChannel.setShowBadge(false)
         }
 
 
@@ -186,9 +182,9 @@ class UnityService : Service()
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int
     {
-        if (intent?.getAction().equals(START_FOREGROUND_ACTION))
+        if (intent?.action.equals(START_FOREGROUND_ACTION))
         {
-            startInForeground();
+            startInForeground()
         }
 
         return super.onStartCommand(intent, flags, startId)
@@ -196,7 +192,7 @@ class UnityService : Service()
 
     override fun onDestroy()
     {
-        unloadLibrary();
+        unloadLibrary()
         super.onDestroy()
     }
 
@@ -204,20 +200,21 @@ class UnityService : Service()
     {
         if (closeOnAppExit)
         {
-            unloadLibrary();
+            unloadLibrary()
         }
     }
 
     override fun onBind(intent: Intent?): IBinder?
     {
-        return binder;
+        return binder
     }
 
-    var libraryLoaded = false;
-    var closeOnAppExit = true;
+    var libraryLoaded = false
+    var closeOnAppExit = true
+
     companion object
     {
-        public var IS_SERVICE_RUNNING = false
-        public var START_FOREGROUND_ACTION = "com.gulden.UnityService.startforegroundaction"
+        var IS_SERVICE_RUNNING = false
+        var START_FOREGROUND_ACTION = "com.gulden.UnityService.startforegroundaction"
     }
 }

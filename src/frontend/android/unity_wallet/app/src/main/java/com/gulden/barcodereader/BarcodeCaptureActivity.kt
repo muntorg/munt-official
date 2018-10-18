@@ -124,7 +124,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
     override fun onTouchEvent(e: MotionEvent): Boolean
     {
         if (scaleGestureDetector!!.onTouchEvent(e))
-            return true;
+            return true
 
         return super.onTouchEvent(e)
     }

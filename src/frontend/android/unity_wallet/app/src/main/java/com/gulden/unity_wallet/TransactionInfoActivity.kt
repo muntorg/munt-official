@@ -20,6 +20,6 @@ class TransactionInfoActivity : AppCompatActivity() {
     }
 
     companion object {
-        public val EXTRA_TRANSACTION = "transaction"
+        val EXTRA_TRANSACTION = "transaction"
     }
 }

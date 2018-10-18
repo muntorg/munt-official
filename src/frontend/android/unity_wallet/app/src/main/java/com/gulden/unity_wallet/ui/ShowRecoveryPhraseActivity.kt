@@ -102,7 +102,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity()
         if (isNewWallet!!)
         {
             // Create the new wallet
-            GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase);
+            GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
 
             // Proceed to main activity
             val intent = Intent(this, WalletActivity::class.java)
@@ -140,7 +140,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity()
                 val clip = ClipData.newPlainText("backup", recoveryPhrase)
                 clipboard.primaryClip = clip
                 mode.finish()
-                Toast.makeText(applicationContext, R.string.recovery_phrase_copy, Toast.LENGTH_LONG).show();
+                Toast.makeText(applicationContext, R.string.recovery_phrase_copy, Toast.LENGTH_LONG).show()
                 true
             }
             else false

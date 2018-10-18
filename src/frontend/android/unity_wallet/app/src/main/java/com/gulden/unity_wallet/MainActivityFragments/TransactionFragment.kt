@@ -22,14 +22,10 @@ import com.gulden.unity_wallet.TransactionInfoActivity
 
 
 class TransactionFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        return inflater.inflate(R.layout.fragment_transaction, container, false);
+        return inflater.inflate(R.layout.fragment_transaction, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)
@@ -38,17 +34,17 @@ class TransactionFragment : Fragment() {
 
         transactionList?.emptyView = emptyTransactionListView
 
-        val transactions = GuldenUnifiedBackend.getTransactionHistory();
+        val transactions = GuldenUnifiedBackend.getTransactionHistory()
 
         val adapter = TransactionAdapter(this.context!!, transactions)
-        transactionList.adapter = adapter;
+        transactionList.adapter = adapter
 
         transactionList.setOnItemClickListener { parent, _, position, _ ->
             val transaction = parent.adapter.getItem(position) as TransactionRecord
             val intent = Intent(this.context, TransactionInfoActivity::class.java)
-            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, transaction);
-            startActivity(intent);
-        };
+            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, transaction)
+            startActivity(intent)
+        }
     }
 
     override fun onAttach(context: Context)

@@ -23,44 +23,30 @@ import kotlinx.android.synthetic.main.fragment_send.*
 
 class SendFragment : Fragment()
 {
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        return inflater.inflate(R.layout.fragment_send, container, false);
+        return inflater.inflate(R.layout.fragment_send, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)
     {
         super.onActivityCreated(savedInstanceState)
 
-        addressBookList?.emptyView = emptyAddressBookView;
+        addressBookList?.emptyView = emptyAddressBookView
 
         addressBookList.setOnItemClickListener { parent, _, position, _ ->
             val address = parent.adapter.getItem(position) as AddressRecord
             val recipient = UriRecipient(true, address.address, address.name, "0")
             val intent = Intent(this.context, SendCoinsActivity::class.java)
-            intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient);
+            intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient)
             startActivityForResult(intent, WalletActivity.SEND_COINS_RETURN_CODE)
-        };
+        }
 
         // TODO: Only update if there has been a change, not always.
-        val addresses = GuldenUnifiedBackend.getAddressBookRecords();
+        val addresses = GuldenUnifiedBackend.getAddressBookRecords()
         val adapter = AddressBookAdapter(this.context!!, addresses)
-        addressBookList.adapter = adapter;
-    }
-
-    override fun onAttachFragment(childFragment: Fragment?)
-    {
-        super.onAttachFragment(childFragment)
-    }
-
-    override fun onResume()
-    {
-        super.onResume()
+        addressBookList.adapter = adapter
     }
 
     override fun onAttach(context: Context)

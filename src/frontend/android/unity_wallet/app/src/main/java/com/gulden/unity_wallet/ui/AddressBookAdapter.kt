@@ -33,8 +33,8 @@ class AddressBookAdapter(private val context: Context, private val dataSource: A
 
         val addressRecord = getItem(position) as AddressRecord
         val rowView = inflater.inflate(R.layout.address_book_list_item, parent, false)
-        rowView.textViewLabel.text = addressRecord.name;
-        return rowView;
+        rowView.textViewLabel.text = addressRecord.name
+        return rowView
     }
 }
 

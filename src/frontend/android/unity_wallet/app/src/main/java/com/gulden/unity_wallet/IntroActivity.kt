@@ -14,13 +14,13 @@ class IntroActivity : Activity()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        (application as ActivityManager).introActivity = this;
+        (application as ActivityManager).introActivity = this
     }
 
     override fun onStop()
     {
         super.onStop()
-        (application as ActivityManager).introActivity = null;
+        (application as ActivityManager).introActivity = null
     }
 
     fun showActivityForIntent(intent : Intent)

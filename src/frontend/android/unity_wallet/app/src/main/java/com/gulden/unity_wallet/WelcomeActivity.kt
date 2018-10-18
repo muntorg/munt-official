@@ -17,6 +17,7 @@ import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity
 import com.gulden.unity_wallet.ui.ShowRecoveryPhraseActivity
+import kotlin.concurrent.thread
 
 class WelcomeActivity : Activity()
 {
@@ -31,11 +32,17 @@ class WelcomeActivity : Activity()
 
     fun onCreateNewWallet(view: View)
     {
-        val recoveryPhrase = GuldenUnifiedBackend.GenerateRecoveryMnemonic();
-        var newIntent = Intent(this, ShowRecoveryPhraseActivity::class.java);
-        //TODO: (GULDEN) Probably not the greatest way to do this - snooping?
-        newIntent.putExtra(this.getPackageName() + "recovery_phrase", recoveryPhrase);
-        startActivity(newIntent);
+        thread(true)
+        {
+            val recoveryPhrase = GuldenUnifiedBackend.GenerateRecoveryMnemonic()
+            this.runOnUiThread()
+            {
+                var newIntent = Intent(this, ShowRecoveryPhraseActivity::class.java)
+                //TODO: (GULDEN) Probably not the greatest way to do this - snooping?
+                newIntent.putExtra(this.packageName + "recovery_phrase", recoveryPhrase)
+                startActivity(newIntent)
+            }
+        }
     }
 
     fun onSyncWithDesktop(view: View)
@@ -67,7 +74,7 @@ class WelcomeActivity : Activity()
                 if (data != null)
                 {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                    val parsedQRCodeURI = Uri.parse(barcode.displayValue);
+                    val parsedQRCodeURI = Uri.parse(barcode.displayValue)
 
                     //TODO: Implement this
                 }
@@ -81,7 +88,7 @@ class WelcomeActivity : Activity()
 
     fun onRecoverExistingWallet(view: View)
     {
-        startActivity(Intent(this, EnterRecoveryPhraseActivity::class.java));
+        startActivity(Intent(this, EnterRecoveryPhraseActivity::class.java))
     }
 
     companion object

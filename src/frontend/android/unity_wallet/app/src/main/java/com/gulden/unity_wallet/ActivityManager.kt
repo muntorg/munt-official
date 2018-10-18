@@ -31,27 +31,27 @@ class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
     override fun syncProgressChanged(percent: Float): Boolean
     {
         walletActivity?.runOnUiThread{ walletActivity?.setSyncProgress(percent); }
-        return true;
+        return true
     }
     override fun walletBalanceChanged(balance: Long): Boolean
     {
         walletActivity?.runOnUiThread{ walletActivity?.setWalletBalance(balance); }
-        return true;
+        return true
     }
     override fun coreUIInit() : Boolean
     {
         walletActivity?.runOnUiThread{ walletActivity?.coreUIInit(); }
-        return true;
+        return true
     }
     override fun haveExistingWallet() : Boolean
     {
         introActivity?.runOnUiThread{ introActivity?.gotoWalletActivity(); }
-        return true;
+        return true
     }
     override fun createNewWallet() : Boolean
     {
         introActivity?.runOnUiThread{ introActivity?.gotoWelcomeActivity(); }
-        return true;
+        return true
     }
 
     private var bound = false
@@ -88,8 +88,8 @@ class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
             if (bound)
             {
                 myService.signalHandler = null
-                unbindService(serviceConnection);
-                bound = false;
+                unbindService(serviceConnection)
+                bound = false
             }
         }
     }

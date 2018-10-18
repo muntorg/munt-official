@@ -35,31 +35,31 @@ class TransactionAdapter(private val context: Context, private val dataSource: A
 
         val transactionRecord = getItem(position) as TransactionRecord
         var date = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(transactionRecord.timestamp * 1000L))
-        var prevDate = "";
+        var prevDate = ""
         if (position != 0) {
             val prevTransactionRecord = getItem(position-1) as TransactionRecord
             prevDate = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(prevTransactionRecord.timestamp * 1000L))
         }
 
 
-        var rowView : View;
+        var rowView : View
         if (date != prevDate)
         {
             rowView = inflater.inflate(R.layout.transaction_list_item_with_header, parent, false)
-            rowView.transactionItemHeading.text = date;
+            rowView.transactionItemHeading.text = date
         }
         else
         {
             rowView = inflater.inflate(R.layout.transaction_list_item, parent, false)
         }
 
-        var prefix = "+";
+        var prefix = "+"
         if (transactionRecord.type == TransactionType.SEND)
-            prefix = "-";
+            prefix = "-"
 
         rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(transactionRecord.timestamp * 1000L))
         rowView.textViewAmount.text = (" "+prefix+"%.2f").format(transactionRecord.amount.toDouble() / 100000000)
-        return rowView;
+        return rowView
     }
 }
 

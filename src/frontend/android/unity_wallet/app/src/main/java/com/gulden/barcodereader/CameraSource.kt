@@ -479,9 +479,9 @@ private constructor()
                 Log.w(TAG, "Zoom is not supported on this device")
                 return currentZoom
             }
-            maxZoom = parameters!!.maxZoom
+            maxZoom = parameters.maxZoom
 
-            currentZoom = parameters?.zoom + 1
+            currentZoom = parameters.zoom + 1
             val newZoom: Float
             if (scale > 1)
             {
@@ -500,7 +500,7 @@ private constructor()
             {
                 currentZoom = maxZoom
             }
-            parameters?.zoom = currentZoom
+            parameters.zoom = currentZoom
             mCamera?.parameters = parameters
             return currentZoom
         }
@@ -569,7 +569,7 @@ private constructor()
                 val parameters = mCamera?.parameters
                 if (parameters?.supportedFocusModes!!.contains(mode))
                 {
-                    parameters?.focusMode = mode
+                    parameters.focusMode = mode
                     mCamera?.parameters = parameters
                     mFocusMode = mode
                     return true
@@ -616,7 +616,7 @@ private constructor()
                 val parameters = mCamera?.parameters
                 if (parameters?.supportedFlashModes!!.contains(mode))
                 {
-                    parameters?.flashMode = mode
+                    parameters.flashMode = mode
                     mCamera?.parameters = parameters
                     mFlashMode = mode
                     return true

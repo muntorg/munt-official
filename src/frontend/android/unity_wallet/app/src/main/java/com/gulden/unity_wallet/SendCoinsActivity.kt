@@ -30,11 +30,11 @@ class SendCoinsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_send_coins)
         setSupportActionBar(toolbar)
 
-        var recipient : UriRecipient = intent.getParcelableExtra(EXTRA_RECIPIENT);
-        send_coins_amount.setText(recipient.amount);
+        var recipient : UriRecipient = intent.getParcelableExtra(EXTRA_RECIPIENT)
+        send_coins_amount.setText(recipient.amount)
         send_coins_receiving_static_address.text = recipient.address
 
-        setAddressLabel(recipient.label);
+        setAddressLabel(recipient.label)
 
         fab.setOnClickListener {
             view -> run {
@@ -56,23 +56,23 @@ class SendCoinsActivity : AppCompatActivity() {
 
     fun setAddressLabel(label : String)
     {
-        send_coins_receiving_static_label.text = label;
-        setAddressHasLabel(label.isNotEmpty());
+        send_coins_receiving_static_label.text = label
+        setAddressHasLabel(label.isNotEmpty())
     }
 
     fun setAddressHasLabel(hasLabel : Boolean)
     {
         if (hasLabel)
         {
-            send_coins_receiving_static_label.visibility = View.VISIBLE;
-            labelRemoveFromAddressBook.visibility = View.VISIBLE;
-            labelAddToAddressBook.visibility = View.GONE;
+            send_coins_receiving_static_label.visibility = View.VISIBLE
+            labelRemoveFromAddressBook.visibility = View.VISIBLE
+            labelAddToAddressBook.visibility = View.GONE
         }
         else
         {
-            send_coins_receiving_static_label.visibility = View.GONE;
-            labelRemoveFromAddressBook.visibility = View.GONE;
-            labelAddToAddressBook.visibility = View.VISIBLE;
+            send_coins_receiving_static_label.visibility = View.GONE
+            labelRemoveFromAddressBook.visibility = View.GONE
+            labelAddToAddressBook.visibility = View.VISIBLE
         }
     }
 
@@ -102,13 +102,13 @@ class SendCoinsActivity : AppCompatActivity() {
                     send_coins_amount.setText(send_coins_amount.text.toString() + "0.")
                 else if (send_coins_amount.text.toString() != "0")
                     send_coins_amount.setText(send_coins_amount.text.toString() + "0")
-            };
+            }
             R.id.button_backspace -> {
                 if (send_coins_amount.text.toString() == "0.")
                     send_coins_amount.setText("")
                 else
                     send_coins_amount.setText(send_coins_amount.text.dropLast(1))
-            };
+            }
             R.id.button_decimal -> {
                 if (!send_coins_amount.text.contains("."))
                 {
@@ -117,7 +117,7 @@ class SendCoinsActivity : AppCompatActivity() {
                     else
                         send_coins_amount.setText(send_coins_amount.text.toString() + ".")
                 }
-            };
+            }
         }
     }
 
@@ -125,17 +125,17 @@ class SendCoinsActivity : AppCompatActivity() {
     {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add address")
-        val layoutInflater : LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
-        val viewInflated : View = layoutInflater.inflate(text_input_address_label, view.rootView as ViewGroup, false);
-        viewInflated.labelAddAddressAddress.text = send_coins_receiving_static_address.text;
+        val layoutInflater : LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val viewInflated : View = layoutInflater.inflate(text_input_address_label, view.rootView as ViewGroup, false)
+        viewInflated.labelAddAddressAddress.text = send_coins_receiving_static_address.text
         val input = viewInflated.findViewById(R.id.input) as EditText
         builder.setView(viewInflated)
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             dialog.dismiss()
             val label = input.text.toString()
-            val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", label);
-            GuldenUnifiedBackend.addAddressBookRecord(record);
-            setAddressLabel(label);
+            val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", label)
+            GuldenUnifiedBackend.addAddressBookRecord(record)
+            setAddressLabel(label)
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
         builder.show()
@@ -143,13 +143,13 @@ class SendCoinsActivity : AppCompatActivity() {
 
     fun handleRemoveFromAddressBookClick(view : View)
     {
-        val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", send_coins_receiving_static_label.text.toString());
-        GuldenUnifiedBackend.deleteAddressBookRecord(record);
-        setAddressLabel("");
+        val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", send_coins_receiving_static_label.text.toString())
+        GuldenUnifiedBackend.deleteAddressBookRecord(record)
+        setAddressLabel("")
     }
 
     companion object
     {
-        public val EXTRA_RECIPIENT = "recipient"
+        val EXTRA_RECIPIENT = "recipient"
     }
 }

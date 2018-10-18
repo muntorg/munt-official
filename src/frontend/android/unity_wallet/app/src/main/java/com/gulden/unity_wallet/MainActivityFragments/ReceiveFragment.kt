@@ -29,10 +29,6 @@ import java.nio.ByteBuffer
 /* Handle display of current address; as well as copying/sharing of address */
 class ReceiveFragment : Fragment()
 {
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -43,7 +39,7 @@ class ReceiveFragment : Fragment()
     {
         super.onActivityCreated(savedInstanceState)
 
-        updateAddress();
+        updateAddress()
     }
 
     override fun onAttach(context: Context)
@@ -72,17 +68,17 @@ class ReceiveFragment : Fragment()
         fun onFragmentInteraction(uri: Uri)
     }
 
-    public fun updateAddress()
+    fun updateAddress()
     {
         if (currentAddressQrView != null)
         {
-            var address = GuldenUnifiedBackend.GetReceiveAddress();
+            var address = GuldenUnifiedBackend.GetReceiveAddress()
             var imageData = GuldenUnifiedBackend.QRImageFromString("gulden://"+address, 600)
-            val bitmap = Bitmap.createBitmap(imageData.width, imageData.width, Bitmap.Config.ALPHA_8);
+            val bitmap = Bitmap.createBitmap(imageData.width, imageData.width, Bitmap.Config.ALPHA_8)
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageData.pixelData))
             currentAddressQrView.setImageBitmap(bitmap)
-            currentAddressLabel.setText(address)
-            updateShareActionProvider(address);
+            currentAddressLabel.text = address
+            updateShareActionProvider(address)
         }
     }
 
@@ -116,7 +112,7 @@ class ReceiveFragment : Fragment()
             }
             else if (item.itemId == R.id.item_buy_gulden)
             {
-                (activity as WalletActivity).gotoBuyActivity();
+                (activity as WalletActivity).gotoBuyActivity()
                 return true
             }
 
@@ -137,7 +133,7 @@ class ReceiveFragment : Fragment()
 
             // Handle share button
             val itemShare = menu.findItem(R.id.action_share)
-            shareActionProvider = MenuItemCompat.getActionProvider(itemShare) as ShareActionProvider;
+            shareActionProvider = MenuItemCompat.getActionProvider(itemShare) as ShareActionProvider
             MenuItemCompat.setActionProvider(itemShare, shareActionProvider)
 
             updateAddress()
@@ -157,7 +153,7 @@ class ReceiveFragment : Fragment()
         }
     }
 
-    public fun setFocusOnAddress()
+    fun setFocusOnAddress()
     {
         if (actionBarCallback == null)
         {

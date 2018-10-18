@@ -49,17 +49,17 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        syncProgress.max = 1000000;
-        syncProgress.progress = 0;
+        syncProgress.max = 1000000
+        syncProgress.progress = 0
 
-        (application as ActivityManager).walletActivity = this;
+        (application as ActivityManager).walletActivity = this
     }
 
     override fun onStop()
     {
         super.onStop()
 
-        (application as ActivityManager).walletActivity = null;
+        (application as ActivityManager).walletActivity = null
     }
 
     override fun onFragmentInteraction(uri: Uri)
@@ -67,10 +67,10 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
 
     }
 
-    private var sendFragment : SendFragment ?= null;
-    private var receiveFragment : ReceiveFragment ?= null;
-    private var transactionFragment : TransactionFragment ?= null;
-    private var settingsFragment : SettingsFragment ?= null;
+    private var sendFragment : SendFragment ?= null
+    private var receiveFragment : ReceiveFragment ?= null
+    private var transactionFragment : TransactionFragment ?= null
+    private var settingsFragment : SettingsFragment ?= null
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
          when (item.itemId) {
@@ -105,21 +105,21 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
 
     fun setSyncProgress(percent: Float)
     {
-        syncProgress.progress = (1000000 * (percent/100)).toInt();
+        syncProgress.progress = (1000000 * (percent/100)).toInt()
     }
 
     fun setWalletBalance(balance : Long)
     {
         walletBalance.text = (balance.toFloat() / 100000000).toString()
-        walletBalanceLogo.visibility = View.VISIBLE;
-        walletBalance.visibility = View.VISIBLE;
-        walletLogo.visibility = View.GONE;
+        walletBalanceLogo.visibility = View.VISIBLE
+        walletBalance.visibility = View.VISIBLE
+        walletLogo.visibility = View.GONE
     }
 
     fun coreUIInit()
     {
         if (sendFragment == null)
-            sendFragment = SendFragment();
+            sendFragment = SendFragment()
         addFragment(sendFragment!!, R.id.mainLayout)
     }
 
@@ -141,11 +141,11 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
     }
 
     fun Uri.getParameters(): HashMap<String, String> {
-        val items : HashMap<String, String> = HashMap<String, String>();
-        if (isOpaque())
-            return items;
+        val items : HashMap<String, String> = HashMap<String, String>()
+        if (isOpaque)
+            return items
 
-        val query = encodedQuery ?: return items;
+        val query = encodedQuery ?: return items
 
         var start = 0
         do {
@@ -158,9 +158,9 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
             }
 
             if (separator == end) {
-                items[Uri.decode(query.substring(start, separator))] = "";
+                items[Uri.decode(query.substring(start, separator))] = ""
             } else {
-                items[Uri.decode(query.substring(start, separator))] = Uri.decode(query.substring(separator + 1, end));
+                items[Uri.decode(query.substring(start, separator))] = Uri.decode(query.substring(separator + 1, end))
             }
 
             // Move start to end of name.
@@ -180,23 +180,23 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
 
-                    var barcodeText = barcode.displayValue;
-                    var parsedQRCodeURI = Uri.parse(barcodeText);
-                    var address : String = "";
+                    var barcodeText = barcode.displayValue
+                    var parsedQRCodeURI = Uri.parse(barcodeText)
+                    var address : String = ""
 
                     // Handle all possible scheme variations (foo: foo:// etc.)
                     if ((parsedQRCodeURI?.authority == null) && (parsedQRCodeURI?.path == null))
                     {
-                        parsedQRCodeURI = Uri.parse(barcodeText.replaceFirst(":", "://"));
+                        parsedQRCodeURI = Uri.parse(barcodeText.replaceFirst(":", "://"))
                     }
-                    if (parsedQRCodeURI?.authority != null) address += parsedQRCodeURI?.authority;
-                    if (parsedQRCodeURI?.path != null) address += parsedQRCodeURI?.path;
+                    if (parsedQRCodeURI?.authority != null) address += parsedQRCodeURI.authority
+                    if (parsedQRCodeURI?.path != null) address += parsedQRCodeURI.path
 
                     val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, address , parsedQRCodeURI.getParameters())
-                    val recipient = GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord);
+                    val recipient = GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord)
                     if (recipient.valid) {
                         val intent = Intent(applicationContext, SendCoinsActivity::class.java)
-                        intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient);
+                        intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient)
                         startActivityForResult(intent, SEND_COINS_RETURN_CODE)
                     }
                 }
@@ -206,14 +206,14 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
         }
     }
 
-    public fun setFocusOnAddress(view : View)
+    fun setFocusOnAddress(view : View)
     {
-        receiveFragment?.setFocusOnAddress();
+        receiveFragment?.setFocusOnAddress()
     }
 
     companion object {
         private val BARCODE_READER_REQUEST_CODE = 1
-        public val SEND_COINS_RETURN_CODE = 2
-        public val BUY_RETURN_CODE = 3
+        val SEND_COINS_RETURN_CODE = 2
+        val BUY_RETURN_CODE = 3
     }
 }
