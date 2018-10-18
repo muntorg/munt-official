@@ -4,6 +4,8 @@ set -x
 
 mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs | true
 
+NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
+
 for i in $( dirname ${BASH_SOURCE[0]} )/build_targets/*
 do
   source ${i}
@@ -21,7 +23,7 @@ do
   export LDFLAGS="-fPIC -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections"
 
   cd depends
-  make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES=qrencode -j 2 V=1
+  make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES=qrencode -j ${NUM_PROCS}
   cd ..
 
   mkdir build_android_${target_host} | true
@@ -29,7 +31,7 @@ do
   ../autogen.sh
   ${RANLIB} ../depends/$target_host/lib/*.a
   ../configure --prefix=$PWD/../depends/$target_host ac_cv_c_bigendian=no ac_cv_sys_file_offset_bits=$target_bits --host=$target_host --disable-bench --enable-experimental-asm --disable-tests --disable-man --disable-zmq --without-utils --with-libs --without-daemon --with-jni-libs --with-qrencode
-  make -j 2 V=1
+  make -j ${NUM_PROCS}
   cd ..
 
   mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib} | true
