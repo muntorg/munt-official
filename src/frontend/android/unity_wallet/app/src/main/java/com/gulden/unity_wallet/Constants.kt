@@ -3,7 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-package com.gulden.wallet
+package com.gulden.unity_wallet
 
 import com.gulden.unity_wallet.BuildConfig
 

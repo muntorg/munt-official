@@ -58,17 +58,17 @@ file COPYING
                 android:id="@+id/send_coins_receiving_static_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:singleLine="false"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
             <TextView
                 android:id="@+id/send_coins_receiving_static_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                />
 
         </LinearLayout>
 

@@ -15,7 +15,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC
 import com.gulden.jniunifiedbackend.*
-import com.gulden.wallet.Constants
 import android.app.NotificationChannel
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.graphics.Color
