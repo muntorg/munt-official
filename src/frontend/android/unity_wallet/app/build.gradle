@@ -31,7 +31,7 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
-            versionCode 331
+            versionCode 333
             versionName = "2.0.1.0"
         }
         gulden_mainnet {
@@ -39,8 +39,20 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
-            versionCode 331
+            versionCode 333
             versionName = "2.0.1.0"
+        }
+    }
+
+    // Build a seperate apk for each native architecture we support.
+    splits
+    {
+        abi
+        {
+            enable true
+            reset()
+            include "x86", "armeabi-v7a", "armeabi-v8a", "x86_64"
+            universalApk false
         }
     }
 }
@@ -59,3 +71,24 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+
+// Map for the version code that gives each ABI a value.
+ext.abiCodes = ['armeabi-v7a':1, 'x86':2, 'x86_64':3, 'armeabi-v8a':4]
+
+import com.android.build.OutputFile
+
+android.applicationVariants.all { variant ->
+    // Assigns a different version code for each output APK
+    // other than the universal APK.
+    variant.outputs.each { output ->
+        // Stores the value of ext.abiCodes that is associated with the ABI for this variant.
+        def baseAbiVersionCode = project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+
+        if (baseAbiVersionCode != null)
+        {
+            output.versionCodeOverride = baseAbiVersionCode * 100000 + variant.versionCode
+        }
+    }
+}
+
