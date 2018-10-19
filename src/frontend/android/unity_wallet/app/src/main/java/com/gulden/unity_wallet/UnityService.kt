@@ -37,7 +37,20 @@ class UnityService : Service()
         fun haveExistingWallet() : Boolean
     }
 
+    // Store state of some signals so we can re-trigger them if they fired before the handler was actually set.
+    var coreReady = false;
     var signalHandler: UnityServiceSignalHandler? = null
+        set(value)
+        {
+            field = value
+            if (field != null)
+            {
+                if (coreReady)
+                {
+                    value?.coreUIInit()
+                }
+            }
+        }
 
     // Handle signals from core library and convert them to service signals where necessary.
     private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
@@ -73,6 +86,7 @@ class UnityService : Service()
 
         override fun notifyCoreReady(): Boolean
         {
+            coreReady = true
             signalHandler?.coreUIInit()
             return true
         }

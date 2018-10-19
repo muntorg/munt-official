@@ -19,13 +19,15 @@ class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
         set(value)
         {
             field = value
-            unbindServiceIfAllActivitiesStopped()
+            if (field == null)
+            {
+                unbindServiceIfAllActivitiesStopped()
+            }
         }
     var introActivity : IntroActivity ?= null
         set(value)
         {
             field = value
-            unbindServiceIfAllActivitiesStopped()
         }
 
     override fun syncProgressChanged(percent: Float): Boolean
