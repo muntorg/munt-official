@@ -15,6 +15,7 @@ define $(package)_stage_cmds
   ln -s ../djinni/run-assume-built $($(package)_staging_prefix_dir)/bin/djinni-run && \
   mkdir -p $($(package)_staging_prefix_dir)/lib && \
   cp support-lib/out/apple/libdjinni_support_lib_UNIVERSAL.a $($(package)_staging_prefix_dir)/lib/ && \
-  mkdir -p $($(package)_staging_prefix_dir)/include && \
-  cp support-lib/objc/*.h $($(package)_staging_prefix_dir)/include/
+  mkdir -p $($(package)_staging_prefix_dir)/include/objc && \
+	cp support-lib/*.hpp $($(package)_staging_prefix_dir)/include && \
+  cp support-lib/objc/*.h $($(package)_staging_prefix_dir)/include/objc
 endef

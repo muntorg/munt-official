@@ -128,4 +128,4 @@ releasewithdebug
 foo
 foo2
 *.po
-build*
+/build*

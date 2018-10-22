@@ -692,6 +692,14 @@ if test x$use_upnp != xno; then
   )
 fi
 
+dnl Check for Djinni
+if test x$build_gulden_libs_objc != xno; then
+  if test x$DJINNI_OBJCXXFLAGS = x; then
+    DJINNI_OBJCXXFLAGS=-I$prefix/include/objc
+  fi
+  AC_SUBST(DJINNI_OBJCXXFLAGS)
+fi
+
 GULDEN_QT_INIT
 
 dnl sets $gulden_enable_qt, $gulden_enable_qt_test, $gulden_enable_qt_dbus

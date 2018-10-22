@@ -504,7 +504,7 @@ noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)
 
 libgulden_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(abs_top_builddir)/src/djinni_generated/cpp
-libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/djinni_generated/cpp -I$(srcdir)/../djinni/djinni/support-lib/objc
+libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/djinni_generated/cpp $(DJINNI_OBJCXXFLAGS)
 
 DJINNI_CPP_GEN = \
   djinni_generated/cpp/balance_record.hpp \
@@ -553,8 +553,6 @@ generate_djinni.stamp: unity/libunity.djinni
 	$(DJINNI_RUN) --objc-type-prefix DB --objc-out djinni_generated/objc --objcpp-out djinni_generated/objc --cpp-out djinni_generated/cpp --idl $(srcdir)/unity/libunity.djinni
 	touch $@
 
-# nodist_libgulden_unity_objc_a_SOURCES = $(DJINNI_CPP_GEN) $(DJINNI_OBJC_GEN)
-
 libgulden_unity_objc_a_SOURCES = \
   unity/libinit.cpp \
   unity/libinit.h \
@@ -570,24 +568,10 @@ libgulden_unity_objc_a_SOURCES = \
   unity/unity_impl.cpp \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_OBJC_GEN) \
-  ../djinni/djinni/support-lib/objc/DJICppWrapperCache+Private.h \
-  ../djinni/djinni/support-lib/objc/DJIError.h \
-  ../djinni/djinni/support-lib/objc/DJIError.mm \
-  ../djinni/djinni/support-lib/objc/DJIMarshal+Private.h \
-  ../djinni/djinni/support-lib/objc/DJIObjcWrapperCache+Private.h \
-  ../djinni/djinni/support-lib/objc/DJIProxyCaches.mm \
   $(GULDEN_CORE_H)
 
 $(libgulden_unity_objc_a_SOURCES): generate_djinni.stamp
-
-# libgulden_unity_objc_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS)
-#libgulden_unity_objc_la_LDFLAGS = $(AM_LDFLAGS)  $(RELDFLAGS) -rpath/libgulden_unity_objc.0.dylib
-#libgulden_unity_objc_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
-#libgulden_unity_objc_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/#include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-#libgulden_unity_objc_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-#libgulden_unity_objc_la_OBJCXXFLAGS = $(AM_OBJCXXFLAGS) -fobjc-arc -I$(srcdir)/../djinni/djinni/support-lib/objc
 endif
-#
 
 # GuldenD binary #
 GuldenD_SOURCES = GuldenD.cpp
