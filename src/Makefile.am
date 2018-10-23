@@ -571,6 +571,9 @@ libgulden_unity_objc_a_SOURCES = \
   $(GULDEN_CORE_H)
 
 $(libgulden_unity_objc_a_SOURCES): generate_djinni.stamp
+
+$(LIBGULDEN_UNITY_OBJC): $(LIBSECP256K1) $(LIBLEVELDB) $(LIBMEMENV)
+
 endif
 
 # GuldenD binary #
