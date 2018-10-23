@@ -9,8 +9,9 @@ define $(package)_set_vars
 $(package)_config_opts=--disable-shared --enable-cxx --disable-replication
 $(package)_config_opts_mingw32=--enable-mingw
 $(package)_config_opts_linux=--with-pic
-$(package)_config_opts_ios=--host=$(ios_HOST) --disable-mutexsupport
+$(package)_config_opts_ios=--host=$(ios_HOST) --enable-posixmutexes
 $(package)_cxxflags=-std=c++11
+$(package)_cflags_ios=-Wno-implicit-function-declaration
 endef
 
 define $(package)_preprocess_cmds
