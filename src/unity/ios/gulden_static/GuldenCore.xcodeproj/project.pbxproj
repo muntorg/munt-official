@@ -317,14 +317,11 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GULDEN_BUILD = "../../../../build/aarch64-ios";
 				GULDEN_DEPENDS = "../../../../depends/aarch64-ios";
-				HEADER_SEARCH_PATHS = (
-					"$(GULDEN_BUILD)/src",
-					"/Users/willem/Projects/gulden/gulden-official/depends/x86_64-darwin/include",
-				);
+				HEADER_SEARCH_PATHS = "$(GULDEN_BUILD)/src";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(GULDEN_DEPENDS)/lib",
-					"/Users/willem/Projects/gulden/gulden-official/build_ios_aarch64-ios/src/**",
+					"$(GULDEN_BUILD)/src/**",
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -386,14 +383,11 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GULDEN_BUILD = "../../../../build/aarch64-ios";
 				GULDEN_DEPENDS = "../../../../depends/aarch64-ios";
-				HEADER_SEARCH_PATHS = (
-					"$(GULDEN_BUILD)/src",
-					"/Users/willem/Projects/gulden/gulden-official/depends/x86_64-darwin/include",
-				);
+				HEADER_SEARCH_PATHS = "$(GULDEN_BUILD)/src";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(GULDEN_DEPENDS)/lib",
-					"/Users/willem/Projects/gulden/gulden-official/build_ios_aarch64-ios/src/**",
+					"$(GULDEN_BUILD)/src/**",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
