@@ -29,7 +29,9 @@
 #include "transaction_record.hpp"
 #include "transaction_type.hpp"
 #include "address_record.hpp"
+#ifdef __ANDROID__
 #include "djinni_support.hpp"
+#endif
 
 // External libraries
 #include <boost/algorithm/string.hpp>
