@@ -12,16 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file contains modifications by The Gulden developers
+ * All modifications copyright (C) The Gulden developers
  */
-package com.gulden.barcodereader;
+package com.gulden.barcodereader
 
-import android.content.Context;
-import android.support.annotation.UiThread;
+import android.content.Context
+import android.support.annotation.UiThread
 
-import com.gulden.barcodereader.GraphicOverlay;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.Tracker;
-import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.Detector
+import com.google.android.gms.vision.Tracker
+import com.google.android.gms.vision.barcode.Barcode
 
 /**
  * Generic tracker which is used for tracking or reading a barcode (and can really be used for
@@ -29,48 +31,49 @@ import com.google.android.gms.vision.barcode.Barcode;
  * to an overlay, update the graphics as the item changes, and remove the graphics when the item
  * goes away.
  */
-public class BarcodeGraphicTracker extends Tracker<Barcode> {
-    private GraphicOverlay<BarcodeGraphic> mOverlay;
-    private BarcodeGraphic mGraphic;
+class BarcodeGraphicTracker internal constructor(private val mOverlay: GraphicOverlay<BarcodeGraphic>, private val mGraphic: BarcodeGraphic, context: Context) : Tracker<Barcode>()
+{
 
-    private BarcodeUpdateListener mBarcodeUpdateListener;
+    private var mBarcodeUpdateListener: BarcodeUpdateListener? = null
 
     /**
      * Consume the item instance detected from an Activity or Fragment level by implementing the
      * BarcodeUpdateListener interface method onBarcodeDetected.
      */
-    public interface BarcodeUpdateListener {
+    interface BarcodeUpdateListener
+    {
         @UiThread
-        void onBarcodeDetected(Barcode barcode);
+        fun onBarcodeDetected(barcode: Barcode?)
     }
 
-    BarcodeGraphicTracker(GraphicOverlay<BarcodeGraphic> mOverlay, BarcodeGraphic mGraphic,
-                          Context context) {
-        this.mOverlay = mOverlay;
-        this.mGraphic = mGraphic;
-        if (context instanceof BarcodeUpdateListener) {
-            this.mBarcodeUpdateListener = (BarcodeUpdateListener) context;
-        } else {
-            throw new RuntimeException("Hosting activity must implement BarcodeUpdateListener");
+    init
+    {
+        if (context is BarcodeUpdateListener)
+        {
+            this.mBarcodeUpdateListener = context
+        }
+        else
+        {
+            throw RuntimeException("Hosting activity must implement BarcodeUpdateListener")
         }
     }
 
     /**
      * Start tracking the detected item instance within the item overlay.
      */
-    @Override
-    public void onNewItem(int id, Barcode item) {
-        mGraphic.setId(id);
-        mBarcodeUpdateListener.onBarcodeDetected(item);
+    override fun onNewItem(id: Int, item: Barcode?)
+    {
+        mGraphic.id = id
+        mBarcodeUpdateListener?.onBarcodeDetected(item)
     }
 
     /**
      * Update the position/characteristics of the item within the overlay.
      */
-    @Override
-    public void onUpdate(Detector.Detections<Barcode> detectionResults, Barcode item) {
-        mOverlay.add(mGraphic);
-        mGraphic.updateItem(item);
+    override fun onUpdate(detectionResults: Detector.Detections<Barcode>?, item: Barcode?)
+    {
+        mOverlay.add(mGraphic)
+        mGraphic.updateItem(item!!)
     }
 
     /**
@@ -78,17 +81,17 @@ public class BarcodeGraphicTracker extends Tracker<Barcode> {
      * intermediate frames temporarily, for example if the object was momentarily blocked from
      * view.
      */
-    @Override
-    public void onMissing(Detector.Detections<Barcode> detectionResults) {
-        mOverlay.remove(mGraphic);
+    override fun onMissing(detectionResults: Detector.Detections<Barcode>?)
+    {
+        mOverlay.remove(mGraphic)
     }
 
     /**
      * Called when the item is assumed to be gone for good. Remove the graphic annotation from
      * the overlay.
      */
-    @Override
-    public void onDone() {
-        mOverlay.remove(mGraphic);
+    override fun onDone()
+    {
+        mOverlay.remove(mGraphic)
     }
 }

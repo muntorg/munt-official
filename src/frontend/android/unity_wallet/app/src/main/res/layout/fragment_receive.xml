@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical"
     android:padding="15dp"
     tools:context=".MainActivityFragments.ReceiveFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <LinearLayout
+    <ImageView
+        android:id="@+id/currentAddressQrView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:maxHeight="200dp"
+        android:maxWidth="200dp"
+        android:minHeight="200dp"
+        android:minWidth="200dp"
+        android:scaleType="fitCenter"
+        android:src="@null"
+        android:onClick="setFocusOnAddress"
+        />
 
-        <ImageView
-            android:id="@+id/currentAddressQrView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="200dp"
-            android:maxWidth="200dp"
-            android:minHeight="200dp"
-            android:minWidth="200dp"
-            android:scaleType="fitCenter"
-            android:src="@null" />
-
-        <TextView
-            android:id="@+id/currentAddressLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</FrameLayout>
+    <TextView
+        android:id="@+id/currentAddressLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="setFocusOnAddress"
+        />
+</LinearLayout>

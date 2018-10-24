@@ -1,6 +1,8 @@
 #bin/bash
 
-djinni/djinni/src/run \
+git clone https://github.com/mjmacleod/djinni.git
+
+djinni/src/run \
    --java-out ./src/frontend/android/unity_wallet/app/src/main/java/com/gulden/jniunifiedbackend/ \
    --java-package com.gulden.jniunifiedbackend \
    --java-implement-android-os-parcelable true \

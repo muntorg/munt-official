@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -21,49 +27,42 @@
         android:title="" />
 
     <Preference
-        android:key="basic_preference"
-        android:iconSpaceReserved="false"
-        android:persistent="false"
-        android:summary=""
-        android:title="Link wallet" />
-
-    <Preference
-        android:key="basic_preference"
+        android:key="preference_link_wallet"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="Link your mobile wallet with your desktop wallet"
         android:title="Link wallet" />
 
     <Preference
-        android:key="basic_preference"
+        android:key="preference_change_passcode"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
         android:title="Change passcode" />
 
     <Preference
-        android:key="basic_preference"
+        android:key="preference_rescan_wallet"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
-        android:title="Restart wallet" />
+        android:title="Rescan wallet" />
 
     <Preference
-        android:key="basic_preference"
+        android:key="preference_remove_wallet"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="Remove this wallet in order to start or recover another wallet"
         android:title="Remove wallet" />
 
     <Preference
-        android:key="basic_preference"
+        android:key="preference_select_local_currency"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="Local currency"
         android:title="" />
 
     <SwitchPreference
-        android:key="notification_preference"
+        android:key="preference_notify_transaction_activity"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""

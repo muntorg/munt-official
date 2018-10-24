@@ -1,3 +1,8 @@
+// Copyright (c) 2018 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 // Unity specific includes
 #include "unity_impl.h"
 #include "libinit.h"
@@ -12,6 +17,7 @@
 #include <chain.h>
 #include "consensus/validation.h"
 #include "net.h"
+#include "Gulden/mnemonic.h"
 
 // Djinni generated files
 #include "gulden_unified_backend.hpp"
@@ -22,36 +28,118 @@
 #include "uri_recipient.hpp"
 #include "transaction_record.hpp"
 #include "transaction_type.hpp"
+#include "address_record.hpp"
+#include "djinni_support.hpp"
 
 // External libraries
 #include <boost/algorithm/string.hpp>
 #include <qrencode.h>
 
-
 std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
+
+void calculateTransactionRecordsForWalletTransaction(const CWalletTx& wtx, std::vector<TransactionRecord>& transactionRecords)
+{
+    std::list<COutputEntry> listReceived;
+    std::list<COutputEntry> listSent;
+    CAmount nFee;
+
+    wtx.GetAmounts(listReceived, listSent, nFee, ISMINE_SPENDABLE, nullptr);
+    if ((!listSent.empty() || nFee != 0) )
+    {
+        for(const COutputEntry& s : listSent)
+        {
+            std::string address;
+            CGuldenAddress addr;
+            if (addr.Set(s.destination))
+                address = addr.ToString();
+            std::string label;
+            if (pactiveWallet->mapAddressBook.count(CGuldenAddress(s.destination).ToString())) {
+                label = pactiveWallet->mapAddressBook[CGuldenAddress(s.destination).ToString()].name;
+            }
+            transactionRecords.push_back(TransactionRecord(TransactionType::SEND, s.amount, address, label, wtx.nTimeSmart));
+        }
+    }
+    if (listReceived.size() > 0)
+    {
+        for(const COutputEntry& r : listReceived)
+        {
+            std::string address;
+            CGuldenAddress addr;
+            if (addr.Set(r.destination))
+                address = addr.ToString();
+            std::string label;
+            if (pactiveWallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString())) {
+                label = pactiveWallet->mapAddressBook[CGuldenAddress(r.destination).ToString()].name;
+            }
+            transactionRecords.push_back(TransactionRecord(TransactionType::RECEIVE, r.amount, address, label, wtx.nTimeSmart));
+        }
+    }
+}
 
 static void notifyBalanceChanged(CWallet* pwallet)
 {
-    WalletBalances balances;
-    pwallet->GetBalances(balances, nullptr, false);
-    signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+    if (pwallet && signalHandler)
+    {
+        WalletBalances balances;
+        pwallet->GetBalances(balances, nullptr, false);
+        signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+    }
+}
+
+void terminateUnityFrontend()
+{
+    if (signalHandler)
+    {
+        signalHandler->notifyShutdown();
+    }
 }
 
 void handlePostInitMain()
 {
+    if (signalHandler)
+    {
+        signalHandler->notifyCoreReady();
+    }
     // Update sync progress as we receive headers/blocks.
     uiInterface.NotifySPVProgress.connect(
         [=](int startHeight, int processedHeight, int expectedHeight)
         {
-            signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight);
+            if (signalHandler)
+            {
+                signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight);
+            }
         }
     );
 
     // Update transaction/balance changes
     if (pactiveWallet)
     {
-        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status) 
+        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status)
         {
+            {
+                DS_LOCK2(cs_main, pwallet->cs_wallet);
+                if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
+                {
+                    const CWalletTx& wtx = pwallet->mapWallet[hash];
+                    if (status == CT_NEW)
+                    {
+                        std::vector<TransactionRecord> walletTransactions;
+                        calculateTransactionRecordsForWalletTransaction(wtx, walletTransactions);
+                        for (const auto& tx: walletTransactions)
+                        {
+                            LogPrintf("unity: notify transaction changed [2] %s",hash.ToString().c_str());
+                            if (signalHandler)
+                            {
+                                signalHandler->notifyNewTransaction(tx);
+                            }
+                        }
+                    }
+                    else if (status == CT_DELETED)
+                    {
+                        //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
+                    }
+                }
+            }
             notifyBalanceChanged(pwallet);
         } );
 
@@ -60,15 +148,110 @@ void handlePostInitMain()
     }
 }
 
-int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
+void handleInitWithExistingWallet()
 {
+    if (signalHandler)
+    {
+        signalHandler->notifyInitWithExistingWallet();
+    }
+    GuldenAppManager::gApp->initialize();
+}
+
+void handleInitWithoutExistingWallet()
+{
+    signalHandler->notifyInitWithoutExistingWallet();
+}
+
+bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase)
+{
+    // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement
+    if (phrase.length() < 16)
+    {
+        return false;
+    }
+
+    //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
+    SecureString phraseOnly;
+    int phraseBirthNumber = 0;
+    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
+    if (phraseBirthNumber == 0 || !checkMnemonic(phraseOnly))
+    {
+        return false;
+    }
+
+    //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
+    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
+    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    GuldenAppManager::gApp->isRecovery = true;
+    GuldenAppManager::gApp->initialize();
+
+    return true;
+}
+
+bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
+{
+    if (phrase.length() < 16)
+        return false;
+
+    SecureString phraseOnly;
+    int phraseBirthNumber = 0;
+    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
+    if (phraseBirthNumber == 0 || !checkMnemonic(phraseOnly))
+        return false;
+
+    return true;
+}
+
+std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
+{
+    std::vector<unsigned char> entropy(16);
+    GetStrongRandBytes(&entropy[0], 16);
+    return GuldenAppManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), GetAdjustedTime()).c_str();
+}
+
+bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri)
+{
+    //fixme: (SPV) - Implement
+    GuldenAppManager::gApp->initialize();
+    return true;
+}
+
+int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
+{
+    // Force the datadir to specific place on e.g. android devices
     if (!dataDir.empty())
         SoftSetArg("-datadir", dataDir);
+
+    // SPV wallets definitely shouldn't be listening for incoming connections at all
     SoftSetArg("-listen", "0");
+
+    // Mininmise logging for performance reasons
     SoftSetArg("-debug", "0");
+
+    // Turn SPV mode on
     SoftSetArg("-fullsync", "0");
     SoftSetArg("-spv", "1");
+
+    // Minimise lookahead size for performance reasons
     SoftSetArg("-accountpool", "1");
+
+    // Minimise background threads and memory consumption
+    SoftSetArg("-par", "-100");
+    SoftSetArg("-maxsigcachesize", "0");
+    SoftSetArg("-dbcache", "4");
+    SoftSetArg("-maxmempool", "5");
+    SoftSetArg("-maxconnections", "8");
+
+    // Testnet
+    if (testnet)
+    {
+        SoftSetArg("-testnet", "C1534687770:60");
+        SoftSetArg("-addnode", "devbak.net");
+    }
+
+    //fixme: (2.1) Reverse headers
+    // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
+    SoftSetArg("-reverseheaders", "false");
 
     signalHandler = signals;
 
@@ -184,6 +367,13 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
     return "";
 }
 
+void GuldenUnifiedBackend::DoRescan()
+{
+    if (pactiveWallet)
+    {
+        boost::thread t(rescanThread); // thread runs free
+    }
+}
 
 UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
 {
@@ -200,6 +390,14 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
     std::string amount = "";
     if (request.items.find("amount") != request.items.end())
         amount = request.items.find("amount")->second;
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (pactiveWallet->mapAddressBook.find(address) != pactiveWallet->mapAddressBook.end())
+        {
+            label = pactiveWallet->mapAddressBook[address].name;
+        }
+    }
 
     return UriRecipient(true, address, label, amount);
 }
@@ -256,9 +454,6 @@ bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
 std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
 {
     std::vector<TransactionRecord> ret;
-    std::list<COutputEntry> listReceived;
-    std::list<COutputEntry> listSent;
-    CAmount nFee;
 
     if (!pactiveWallet)
         return ret;
@@ -267,38 +462,39 @@ std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
 
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
     {
-        wtx.GetAmounts(listReceived, listSent, nFee, ISMINE_SPENDABLE, nullptr);
+        calculateTransactionRecordsForWalletTransaction(wtx, ret);
+    }
+    std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timestamp > y.timestamp); });
+    return ret;
+}
 
-        if ((!listSent.empty() || nFee != 0) )
+std::vector<AddressRecord> GuldenUnifiedBackend::getAddressBookRecords()
+{
+    std::vector<AddressRecord> ret;
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        for(const auto& [address, addressData] : pactiveWallet->mapAddressBook)
         {
-            for(const COutputEntry& s : listSent)
-            {
-                std::string address;
-                CGuldenAddress addr;
-                if (addr.Set(s.destination))
-                    address = addr.ToString();
-                std::string label;
-                if (pactiveWallet->mapAddressBook.count(CGuldenAddress(s.destination).ToString())) {
-                    label = pactiveWallet->mapAddressBook[CGuldenAddress(s.destination).ToString()].name;
-                }
-                ret.push_back(TransactionRecord(TransactionType::SEND, s.amount, address, label, wtx.nTimeSmart));
-            }
-        }
-        if (listReceived.size() > 0)
-        {
-            for(const COutputEntry& r : listReceived)
-            {
-                std::string address;
-                CGuldenAddress addr;
-                if (addr.Set(r.destination))
-                    address = addr.ToString();
-                std::string label;
-                if (pactiveWallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString())) {
-                    label = pactiveWallet->mapAddressBook[CGuldenAddress(r.destination).ToString()].name;
-                }
-                ret.push_back(TransactionRecord(TransactionType::RECEIVE, r.amount, address, label, wtx.nTimeSmart));
-            }
+            ret.emplace_back(AddressRecord(address, addressData.purpose, addressData.name));
         }
     }
+
     return ret;
+}
+
+void GuldenUnifiedBackend::addAddressBookRecord(const AddressRecord& address)
+{
+    if (pactiveWallet)
+    {
+        pactiveWallet->SetAddressBook(address.address, address.name, address.purpose);
+    }
+}
+
+void GuldenUnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
+{
+    if (pactiveWallet)
+    {
+        pactiveWallet->DelAddressBook(address.address);
+    }
 }

@@ -1455,9 +1455,7 @@ static void ProcessPriorityRequests() {
             blocksToDownloadFirst.pop_front();
         }
         else {
-            // stop in case we have no block data for this request
-            // fixme (SPV): investigate if this case can happen
-            break;
+            throw std::runtime_error(std::string(__func__) + " No data for downloaded block, block index inconsistency.");
         }
     }
 }
@@ -3077,9 +3075,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
         bool fNewBlock = false;
         ProcessNewBlock(chainparams, pblock, forceProcessing, &fNewBlock, fAssumePOWGood, !result.fPriorityRequest);
-        if (result.fPriorityRequest) {
-            ProcessPriorityRequests();
-        }
         if (fNewBlock)
             pfrom->nLastBlockTime = GetTime();
     }
@@ -3446,6 +3441,9 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
         if (!gbMinimalLogging || strCommand != NetMsgType::VERSION)
             LogPrintf("%s(%s, %u bytes) FAILED peer=%d\n", __func__, SanitizeString(strCommand), nMessageSize, pfrom->GetId());
     }
+
+    // msg might have fullfilled priority request(s), deliver it
+    ProcessPriorityRequests();
 
     LOCK(cs_main);
     SendRejectsAndCheckIfBanned(pfrom, connman);
@@ -4120,7 +4118,8 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload, const PriorityDownloadCallback_t& callback) {
     LOCK(cs_main);
     for (const CBlockIndex* pindex: blocksToDownload) {
-        blocksToDownloadFirst.push_back({pindex, false, callback});
+        bool downloaded = pindex->nStatus & BLOCK_HAVE_DATA;
+        blocksToDownloadFirst.push_back({pindex, downloaded, callback});
     }
 }
 

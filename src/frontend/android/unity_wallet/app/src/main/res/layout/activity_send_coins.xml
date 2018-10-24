@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -42,21 +48,47 @@
             android:text="Pay to"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/send_coins_receiving_static_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/send_coins_receiving_static_label"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:singleLine="false"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/send_coins_receiving_static_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:singleLine="false"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/send_coins_receiving_static_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/labelAddToAddressBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add to address book"
+            android:onClick="handleAddToAddressBookClick"
+            />
+
+        <TextView
+            android:id="@+id/labelRemoveFromAddressBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Remove from address book"
+            android:onClick="handleRemoveFromAddressBookClick"
+            />
 
         <EditText
             android:id="@+id/send_coins_amount"
@@ -67,7 +99,8 @@
             android:drawableLeft="@drawable/ic_g_logo"
             android:ems="10"
             android:hint="0"
-            android:inputType="numberDecimal"
+            android:editable="false"
+            android:inputType="none"
             tools:clickable="false" />
 
         <Space

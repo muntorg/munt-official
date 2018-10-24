@@ -3,7 +3,7 @@
 
 package com.gulden.jniunifiedbackend;
 
-public final class TransactionRecord {
+public final class TransactionRecord implements android.os.Parcelable {
 
 
     /*package*/ final TransactionType mType;
@@ -58,6 +58,42 @@ public final class TransactionRecord {
                 "," + "mLabel=" + mLabel +
                 "," + "mTimestamp=" + mTimestamp +
         "}";
+    }
+
+
+    public static final android.os.Parcelable.Creator<TransactionRecord> CREATOR
+        = new android.os.Parcelable.Creator<TransactionRecord>() {
+        @Override
+        public TransactionRecord createFromParcel(android.os.Parcel in) {
+            return new TransactionRecord(in);
+        }
+
+        @Override
+        public TransactionRecord[] newArray(int size) {
+            return new TransactionRecord[size];
+        }
+    };
+
+    public TransactionRecord(android.os.Parcel in) {
+        this.mType = TransactionType.values()[in.readInt()];
+        this.mAmount = in.readLong();
+        this.mAddress = in.readString();
+        this.mLabel = in.readString();
+        this.mTimestamp = in.readLong();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel out, int flags) {
+        out.writeInt(this.mType.ordinal());
+        out.writeLong(this.mAmount);
+        out.writeString(this.mAddress);
+        out.writeString(this.mLabel);
+        out.writeLong(this.mTimestamp);
     }
 
 }

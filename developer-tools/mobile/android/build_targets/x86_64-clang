@@ -1,0 +1,6 @@
+toolchain=x86_64-clang
+target_host=x86_64-linux-android
+target_bits=64
+jni_lib=x86_64
+lib_dir=lib64
+march_flags="-march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel"

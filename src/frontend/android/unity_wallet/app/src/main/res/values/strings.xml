@@ -1,5 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
 <resources>
-    <string name="app_name">unity_wallet</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -7,9 +13,30 @@
     <string name="title_receive">Receive</string>
     <string name="title_transactions">Transactions</string>
     <string name="title_settings">Settings</string>
+    <string name="title_activity_barcode_capture">Scan QR code</string>
+    <string name="title_activity_send_coins">Send coins</string>
+    <string name="title_activity_transaction_info">Transaction info</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_barcode_capture">BarcodeCaptureActivity</string>
-    <string name="title_activity_send_coins">SendCoinsActivity</string>
+    <string name="action_bar_copy">Copy</string>
+    <string name="action_bar_copylong">Copy to clipboard</string>
+    <string name="action_bar_share">Share</string>
+    <string name="action_bar_buy">Buy</string>
+    <string name="title_activity_buy">Buy Gulden</string>
+    <string name="welcome_activity_create_new_wallet">New wallet</string>
+    <string name="welcome_activity_recover_existing_wallet">Recover wallet</string>
+    <string name="welcome_activity_sync_with_desktop">Link wallet</string>
+    <string name="title_activity_welcome">Welcome activity</string>
+    <string name="recover_from_phrase_intro">Enter your recovery phrase from which to perform a recovery</string>
+    <string name="show_recovery_phrase_EULA">By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.</string>
+    <string name="enter_recovery_phrase_overwrite_warning">This will overwrite your existing wallet, if you don\\\'t have a backup of your existing wallet any Gulden in it will be lost.</string>
+    <string name="confirm_overwrite_wallet">Overwrite wallet</string>
+    <string name="recovery_phrase_continue">Continue</string>
+    <string name="title_activity_enter_recovery_phrase">Enter recovery phrase</string>
+    <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">I wrote it down</string>
+    <string name="recovery_phrase_copy">Recovery phrase copied to clipboard</string>
+    <string name="address_book_empty_message">To add an address, start a payment and tap \"Add to address book\".</string>
+    <string name="address_book_empty_title">Empty address book</string>
+    <string name="transaction_list_empty_title">No Gulden received so far.</string>
+    <string name="transaction_list_empty_message">Touch here to buy your first Gulden.</string>
 </resources>

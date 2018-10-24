@@ -11,3 +11,7 @@
 -keep class android.support.v7.internal.** { *; }
 -keep interface android.support.v7.internal.** { *; }
 -keep class android.support.v7.** { *; }
+
+# unity backend
+-keep class com.gulden.jniunifiedbackend.** { *; }
+-keep interface com.gulden.jniunifiedbackend.** { *; }

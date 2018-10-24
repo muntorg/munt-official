@@ -474,6 +474,8 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeGuldenUnifiedFrontend.cpp \
   unity/djinni/jni/NativeQrcodeRecord.hpp \
   unity/djinni/jni/NativeQrcodeRecord.cpp \
+  unity/djinni/jni/NativeAddressRecord.hpp \
+  unity/djinni/jni/NativeAddressRecord.cpp \
   unity/djinni/jni/NativeBalanceRecord.hpp \
   unity/djinni/jni/NativeBalanceRecord.cpp \
   unity/djinni/jni/NativeUriRecord.hpp \
@@ -485,14 +487,14 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/cpp/gulden_unified_backend.hpp \
   unity/djinni/cpp/gulden_unified_backend.cpp \
   unity/djinni/cpp/gulden_unified_frontend.hpp \
-  ../djinni/djinni/support-lib/jni/djinni_support.cpp \
-  ../djinni/djinni/support-lib/jni/djinni_main.cpp \
+  ../djinni/support-lib/jni/djinni_support.cpp \
+  ../djinni/support-lib/jni/djinni_main.cpp \
   $(GULDEN_CORE_H)
 
 
 libgulden_unity_jni_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) -llog
 libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
-libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 endif
 #

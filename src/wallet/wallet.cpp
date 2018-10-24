@@ -934,12 +934,14 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         if (!wtxIn.hashUnset() && wtxIn.hashBlock != wtx.hashBlock)
         {
             wtx.hashBlock = wtxIn.hashBlock;
+            wtx.nHeight = wtxIn.nHeight;
             fUpdated = true;
         }
         // If no longer abandoned, update
         if (wtxIn.hashBlock.IsNull() && wtx.isAbandoned())
         {
             wtx.hashBlock = wtxIn.hashBlock;
+            wtx.nHeight = wtxIn.nHeight;
             fUpdated = true;
         }
         if (wtxIn.nIndex != -1 && (wtxIn.nIndex != wtx.nIndex))

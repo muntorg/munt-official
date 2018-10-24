@@ -12,10 +12,35 @@ public abstract class GuldenUnifiedBackend {
     public static final int VERSION = 1;
 
     /** Start the library */
-    public static int InitUnityLib(String dataDir, GuldenUnifiedFrontend signals)
+    public static int InitUnityLib(String dataDir, boolean testnet, GuldenUnifiedFrontend signals)
     {
         return CppProxy.InitUnityLib(dataDir,
+                                     testnet,
                                      signals);
+    }
+
+    /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
+    public static boolean InitWalletFromRecoveryPhrase(String phrase)
+    {
+        return CppProxy.InitWalletFromRecoveryPhrase(phrase);
+    }
+
+    /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
+    public static boolean InitWalletLinkedFromURI(String linkedUri)
+    {
+        return CppProxy.InitWalletLinkedFromURI(linkedUri);
+    }
+
+    /** Check if a possible recovery phrase is valid or not */
+    public static boolean IsValidRecoveryPhrase(String phrase)
+    {
+        return CppProxy.IsValidRecoveryPhrase(phrase);
+    }
+
+    /** Generate a new recovery mnemonic */
+    public static String GenerateRecoveryMnemonic()
+    {
+        return CppProxy.GenerateRecoveryMnemonic();
     }
 
     /** Stop the library */
@@ -43,6 +68,12 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.GetRecoveryPhrase();
     }
 
+    /** Rescan blockchain for wallet transactions */
+    public static void DoRescan()
+    {
+        CppProxy.DoRescan();
+    }
+
     /** Check if text/address is something we are capable of sending money too */
     public static UriRecipient IsValidRecipient(UriRecord request)
     {
@@ -59,6 +90,24 @@ public abstract class GuldenUnifiedBackend {
     public static ArrayList<TransactionRecord> getTransactionHistory()
     {
         return CppProxy.getTransactionHistory();
+    }
+
+    /** Get list of all address book entries */
+    public static ArrayList<AddressRecord> getAddressBookRecords()
+    {
+        return CppProxy.getAddressBookRecords();
+    }
+
+    /** Add a record to the address book */
+    public static void addAddressBookRecord(AddressRecord address)
+    {
+        CppProxy.addAddressBookRecord(address);
+    }
+
+    /** Delete a record from the address book */
+    public static void deleteAddressBookRecord(AddressRecord address)
+    {
+        CppProxy.deleteAddressBookRecord(address);
     }
 
     private static final class CppProxy extends GuldenUnifiedBackend
@@ -84,7 +133,15 @@ public abstract class GuldenUnifiedBackend {
             super.finalize();
         }
 
-        public static native int InitUnityLib(String dataDir, GuldenUnifiedFrontend signals);
+        public static native int InitUnityLib(String dataDir, boolean testnet, GuldenUnifiedFrontend signals);
+
+        public static native boolean InitWalletFromRecoveryPhrase(String phrase);
+
+        public static native boolean InitWalletLinkedFromURI(String linkedUri);
+
+        public static native boolean IsValidRecoveryPhrase(String phrase);
+
+        public static native String GenerateRecoveryMnemonic();
 
         public static native void TerminateUnityLib();
 
@@ -94,10 +151,18 @@ public abstract class GuldenUnifiedBackend {
 
         public static native String GetRecoveryPhrase();
 
+        public static native void DoRescan();
+
         public static native UriRecipient IsValidRecipient(UriRecord request);
 
         public static native boolean performPaymentToRecipient(UriRecipient request);
 
         public static native ArrayList<TransactionRecord> getTransactionHistory();
+
+        public static native ArrayList<AddressRecord> getAddressBookRecords();
+
+        public static native void addAddressBookRecord(AddressRecord address);
+
+        public static native void deleteAddressBookRecord(AddressRecord address);
     }
 }

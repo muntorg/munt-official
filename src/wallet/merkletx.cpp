@@ -14,6 +14,7 @@
 #include "wallet/merkletx.h"
 #include "validation/validation.h" //cs_main
 #include <consensus/consensus.h>
+#include "Gulden/util.h"
 
 const uint256 CMerkleTx::ABANDON_HASH(uint256S("0000000000000000000000000000000000000000000000000000000000000001"));
 
@@ -21,6 +22,9 @@ void CMerkleTx::SetMerkleBranch(const CBlockIndex* pindex, int posInBlock)
 {
     // Update the tx's hashBlock
     hashBlock = pindex->GetBlockHashPoW2();
+
+    // Record block height
+    nHeight = pindex->nHeight;
 
     // set the position of the transaction in the block
     nIndex = posInBlock;
@@ -33,19 +37,35 @@ int CMerkleTx::GetDepthInMainChain(const CBlockIndex* &pindexRet) const
 
     AssertLockHeld(cs_main);
 
+
     // Find the block it claims to be in
     BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
-    if (mi == mapBlockIndex.end())
-        return 0;
+    if (mi != mapBlockIndex.end())
+    {
 
-    const CChain& chain = fSPV ? partialChain : chainActive;
+        // It is in the index so it must be in one of the chains to have a depth > 0
+        CBlockIndex* pindex = (*mi).second;
+        if (!pindex || (!chainActive.Contains(pindex) && !partialChain.Contains(pindex)))
+            return 0;
 
-    CBlockIndex* pindex = (*mi).second;
-    if (!pindex || !chain.Contains(pindex))
-        return 0;
+        pindexRet = pindex;
 
-    pindexRet = pindex;
-    return ((nIndex == -1) ? (-1) : 1) * (chain.Height() - pindex->nHeight + 1);
+        CChain& chain = IsPartialSyncActive() ? partialChain : chainActive;
+        return ((nIndex == -1) ? (-1) : 1) * (chain.Height() - pindex->nHeight + 1);
+    }
+    else
+    {
+        // fall back to using nHeight, only allowed in spv/partial sync
+        if (IsPartialSyncActive() && nHeight >= 0)
+        {
+            pindexRet = nullptr;
+
+            CChain& chain = IsPartialSyncActive() ? partialChain : chainActive;
+            return ((nIndex == -1) ? (-1) : 1) * (chain.Height() - nHeight + 1);
+        }
+        else
+            return 0;
+    }
 }
 
 int CMerkleTx::GetBlocksToMaturity() const

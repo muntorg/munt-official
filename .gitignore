@@ -128,4 +128,11 @@ releasewithdebug
 foo
 foo2
 *.po
+
+# In tree build files take form of /build/<build-type> and/or /build_<build-type>
 /build*
+
+# In tree files auto generated and/or downloaded for the Android build
+/developer-tools/android-ndk-gulden/
+/djinni/
+/src/unity/djinni/

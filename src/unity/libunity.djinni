@@ -1,3 +1,8 @@
+# Copyright (c) 2018 The Gulden developers
+# Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+# Distributed under the GULDEN software license, see the accompanying
+# file COPYING
+
 qrcode_record = record {
     width: i32;
     pixel_data: binary;
@@ -40,13 +45,29 @@ transaction_record = record {
     address : string;
     label : string;
     timestamp : i64;
-}
+} deriving(parcelable)
+
+address_record = record {
+    address : string;
+    purpose : string;
+    name : string;
+} deriving(parcelable)
 
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
     # Start the library
-    static InitUnityLib(data_dir : string, signals : gulden_unified_frontend): i32;
+    static InitUnityLib(data_dir : string, testnet : bool, signals : gulden_unified_frontend): i32;
+    # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
+    static InitWalletFromRecoveryPhrase(phrase : string): bool;
+    # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
+    static InitWalletLinkedFromURI(linked_uri : string): bool;
+
+    # Check if a possible recovery phrase is valid or not
+    static IsValidRecoveryPhrase(phrase: string): bool;
+
+    # Generate a new recovery mnemonic
+    static GenerateRecoveryMnemonic(): string;
 
     # Stop the library
     static TerminateUnityLib();
@@ -60,6 +81,9 @@ gulden_unified_backend = interface +c {
     # Get a receive address from the wallet
     static GetRecoveryPhrase(): string;
 
+    # Rescan blockchain for wallet transactions
+    static DoRescan();
+
     # Check if text/address is something we are capable of sending money too
     static IsValidRecipient(request : uri_record): uri_recipient;
 
@@ -69,6 +93,15 @@ gulden_unified_backend = interface +c {
     # Get list of all transactions wallet has been involved in
     static getTransactionHistory() : list<transaction_record>;
 
+    # Get list of all address book entries
+    static getAddressBookRecords() : list<address_record>;
+
+    # Add a record to the address book
+    static addAddressBookRecord(address : address_record);
+
+    # Delete a record from the address book
+    static deleteAddressBookRecord(address : address_record);
+
     # Interface constants
     const version: i32 = 1;
 }
@@ -77,6 +110,11 @@ gulden_unified_backend = interface +c {
 gulden_unified_frontend = interface +j +o {
     notifySPVProgress(start_height : i32, progess_height : i32, expected_height : i32): bool;
     notifyBalanceChange(new_balance : balance_record): bool;
+    notifyNewTransaction(new_transaction : transaction_record): bool;
+    notifyInitWithExistingWallet();
+    notifyInitWithoutExistingWallet();
+    notifyShutdown(): bool;
+    notifyCoreReady(): bool;
 
     logPrint(str : string);
 }

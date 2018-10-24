@@ -8,4 +8,14 @@ public abstract class GuldenUnifiedFrontend {
     public abstract boolean notifySPVProgress(int startHeight, int progessHeight, int expectedHeight);
 
     public abstract boolean notifyBalanceChange(BalanceRecord newBalance);
+
+    public abstract boolean notifyNewTransaction(TransactionRecord newTransaction);
+
+    public abstract void notifyInitWithExistingWallet();
+
+    public abstract void notifyInitWithoutExistingWallet();
+
+    public abstract boolean notifyShutdown();
+
+    public abstract boolean notifyCoreReady();
 }

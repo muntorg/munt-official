@@ -983,7 +983,8 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
                 status.status = TransactionStatus::Abandoned;
         }
         //fixme: (2.1) (CHECKPOINTS)- Remove this when we remove checkpoints.
-        else if (status.depth < RecommendedNumConfirmations || (!IsArgSet("-testnet") && !Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock)))
+        else if (   status.depth < RecommendedNumConfirmations
+                 || (!IsArgSet("-testnet") && !IsPartialSyncActive() && !Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock)))
         {
             status.status = TransactionStatus::Confirming;
         }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              tools:context="com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity"
+              android:layout_width="match_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:gravity="center_vertical|center_horizontal"
+              android:paddingBottom="20dp"
+              android:paddingTop="20dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/recover_from_phrase_intro"
+            android:layout_marginBottom="20dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:textColor="#000000"
+            android:focusableInTouchMode="false"
+            android:enabled="false"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            />
+
+        <com.gulden.unity_wallet.ui.widgets.ActionMultiAutoCompleteTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recover_from_phrase_text_view"
+            android:imeOptions="actionDone"
+            android:height="150dp"
+            android:enabled="true"
+            android:inputType="textAutoComplete|textImeMultiLine|textAutoCorrect|text|textMultiLine"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxLines="4"
+            android:minLines="4"
+            android:background="@android:color/white"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@android:color/darker_gray"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/show_recovery_phrase_EULA"
+            android:id="@+id/recoverFromPhraseEULA"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:enabled="false"
+            android:textColor="@android:color/darker_gray"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/enter_recovery_phrase_overwrite_warning"
+            android:id="@+id/recoverFromPhraseWipeText"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:enabled="false"
+            android:textColor="@android:color/darker_gray"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="20dp"
+            />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_overwrite_wallet"
+            android:id="@+id/recovery_phrase_acknowledge_wallet_overwrite"
+            android:textColor="#000000"
+            android:singleLine="true"
+            android:gravity="left|center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:onClick="onAcknowledgeOverwrite"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:checked="false"
+            />
+
+        <Button
+            android:id="@+id/recover_from_phrase_proceed_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recovery_phrase_continue"
+            android:onClick="onAcceptRecoverFromPhrase"
+            android:padding="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:textColor="@android:color/white"
+            android:background="@drawable/shape_rounded_button"
+            />
+
+    </RelativeLayout>
+</LinearLayout>

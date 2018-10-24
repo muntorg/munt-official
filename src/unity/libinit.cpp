@@ -25,6 +25,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 #include "net.h"
+#include "wallet/wallet.h"
 #include <unity/appmanager.h>
 
 #include <boost/thread.hpp>
@@ -38,8 +39,10 @@
 
 bool shutDownFinalised = false;
 
+extern void terminateUnityFrontend();
 static void handleFinalShutdown()
 {
+    terminateUnityFrontend();
     shutDownFinalised = true;
 }
 
@@ -67,6 +70,11 @@ static bool handlePreInitMain()
 {
     return true;
 }
+
+
+
+extern void handleInitWithExistingWallet();
+extern void handleInitWithoutExistingWallet();
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -146,7 +154,15 @@ int InitUnity()
             }
         }
 
-        appManager.initialize();
+        std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
+        if (!fs::exists(GetDataDir() / walletFile))
+        {
+            handleInitWithoutExistingWallet();
+        }
+        else
+        {
+            handleInitWithExistingWallet();
+        }
     }
     catch (const std::exception& e)
     {

@@ -1,0 +1,198 @@
+package com.gulden.unity_wallet.ui
+
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.support.v4.view.MenuItemCompat
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.ActionMode
+import android.support.v7.widget.ShareActionProvider
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.TextView
+import android.widget.Toast
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+
+import com.gulden.unity_wallet.WalletActivity
+import com.gulden.unity_wallet.R
+
+class ShowRecoveryPhraseActivity : AppCompatActivity()
+{
+
+    internal var recoveryPhraseView: TextView? = null
+    internal var recoveryPhraseAcknowledgeCheckBox: CheckBox? = null
+    internal var recoveryPhraseAcceptButton: Button? = null
+    //fixme: (GULDEN) Change to char[] to we can securely wipe.
+    internal var recoveryPhrase: String? = null
+
+    val isNewWallet: Boolean?
+        get() = !intent.hasExtra(this.packageName + "dont_start_wallet_activity_on_close")
+
+    private var shareActionProvider: ShareActionProvider? = null
+
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_show_recovery_phrase)
+
+        recoveryPhraseAcknowledgeCheckBox = findViewById(R.id.acknowledge_recovery_phrase)
+
+        recoveryPhraseAcceptButton = findViewById(R.id.button_accept_recovery_phrase)
+
+        recoveryPhraseView = findViewById(R.id.recovery_phrase_text_view)
+
+        recoveryPhrase = intent.getStringExtra(this.packageName + "recovery_phrase")
+        recoveryPhraseView!!.text = recoveryPhrase
+        recoveryPhraseView!!.setOnClickListener { setFocusOnRecoveryPhrase() }
+
+
+        // If we are not coming here from the 'welcome page' then we want a back button in title bar.
+        if (!(isNewWallet!!))
+        {
+            //Sort action bar out
+            run {
+                supportActionBar?.setDisplayShowTitleEnabled(false)
+                supportActionBar?.setDisplayShowCustomEnabled(true)
+                supportActionBar?.setDisplayShowHomeEnabled(true)
+                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            }
+
+            recoveryPhraseAcceptButton?.visibility = View.GONE
+        }
+        else
+        {
+            supportActionBar?.hide()
+        }
+
+        updateView()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        when (item.itemId)
+        {
+            android.R.id.home ->
+            {
+                finish()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy()
+    {
+        //fixme: (GULDEN) Securely wipe.
+        recoveryPhrase = ""
+        super.onDestroy()
+    }
+
+    fun onAcceptRecoveryPhrase(view: View)
+    {
+        if (isNewWallet!!)
+        {
+            // Create the new wallet
+            GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
+
+            // Proceed to main activity
+            val intent = Intent(this, WalletActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+        }
+        finish()
+    }
+
+    fun onAcknowledgeRecoveryPhrase(view: View)
+    {
+        updateView()
+    }
+
+    fun updateView()
+    {
+        if (isNewWallet!!)
+        {
+            // Only allow user to move on once they have acknowledged writing the recovery phrase down.
+            recoveryPhraseAcceptButton!!.isEnabled = recoveryPhraseAcknowledgeCheckBox!!.isChecked
+        }
+        else
+        {
+            recoveryPhraseAcknowledgeCheckBox?.visibility = View.INVISIBLE
+        }
+    }
+
+    internal inner class ActionBarCallBack : ActionMode.Callback
+    {
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean
+        {
+            return if (item.itemId == R.id.item_copy_to_clipboard)
+            {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("backup", recoveryPhrase)
+                clipboard.primaryClip = clip
+                mode.finish()
+                Toast.makeText(applicationContext, R.string.recovery_phrase_copy, Toast.LENGTH_LONG).show()
+                true
+            }
+            else false
+
+        }
+
+
+        override fun onCreateActionMode(mode: android.support.v7.view.ActionMode, menu: Menu): Boolean
+        {
+            mode.menuInflater.inflate(R.menu.share_menu, menu)
+
+            // Handle buy button
+            val itemBuy = menu.findItem(R.id.item_buy_gulden)
+            itemBuy.isVisible = false
+
+            // Handle copy button
+            //MenuItem itemCopy = menu.findItem(R.id.item_copy_to_clipboard);
+
+            // Handle share button
+            val itemShare = menu.findItem(R.id.action_share)
+            shareActionProvider = ShareActionProvider(this@ShowRecoveryPhraseActivity)
+            MenuItemCompat.setActionProvider(itemShare, shareActionProvider)
+
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_TEXT, recoveryPhrase)
+            shareActionProvider!!.setShareIntent(intent)
+
+            val color = resources.getColor(R.color.colorPrimary)
+            val spannableString = SpannableString(recoveryPhraseView!!.text)
+            spannableString.setSpan(BackgroundColorSpan(color), 0, recoveryPhraseView!!.text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            recoveryPhraseView!!.text = spannableString
+
+            return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode)
+        {
+            shareActionProvider = null
+
+            recoveryPhraseView!!.text = recoveryPhrase
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean
+        {
+            return false
+        }
+    }
+
+    fun setFocusOnRecoveryPhrase()
+    {
+        startSupportActionMode(ActionBarCallBack())
+    }
+
+}

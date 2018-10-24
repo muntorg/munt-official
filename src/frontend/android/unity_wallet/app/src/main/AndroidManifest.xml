@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature
@@ -13,20 +14,39 @@
 
     <application
         android:allowBackup="true"
+        android:extractNativeLibs="false"
+        android:name="ActivityManager"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:name=".IntroActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Transparent">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".WalletActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".WelcomeActivity"
+            android:label="@string/title_activity_welcome"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.EnterRecoveryPhraseActivity"
+            android:label="@string/title_activity_enter_recovery_phrase"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.ShowRecoveryPhraseActivity"
+            android:label="@string/title_activity_enter_recovery_phrase"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.gulden.barcodereader.BarcodeCaptureActivity"
             android:label="@string/title_activity_barcode_capture"
@@ -34,7 +54,20 @@
         <activity
             android:name=".SendCoinsActivity"
             android:label="@string/title_activity_send_coins"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.buy.BuyActivity"
+            android:label="@string/title_activity_buy"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TransactionInfoActivity"
+            android:label="@string/title_activity_transaction_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".UnityService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
