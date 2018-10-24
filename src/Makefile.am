@@ -520,35 +520,35 @@ DJINNI_CPP_GEN = \
   djinni_generated/cpp/uri_record.hpp
 
 DJINNI_OBJC_GEN = \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBBalanceRecord+Private.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBBalanceRecord+Private.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBBalanceRecord.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBBalanceRecord.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedBackend+Private.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedBackend+Private.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedBackend.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedBackend.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedFrontend+Private.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedFrontend+Private.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBGuldenUnifiedFrontend.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBQrcodeRecord+Private.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBQrcodeRecord+Private.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBQrcodeRecord.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBQrcodeRecord.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionRecord+Private.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionRecord+Private.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionRecord.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionRecord.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionType+Private.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBTransactionType.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecipient+Private.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecipient+Private.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecipient.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecipient.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecord+Private.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecord+Private.mm \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecord.h \
-  $(abs_top_builddir)/src/djinni_generated/objc/DBUriRecord.mm
+  djinni_generated/objc/DBBalanceRecord+Private.h \
+  djinni_generated/objc/DBBalanceRecord+Private.mm \
+  djinni_generated/objc/DBBalanceRecord.h \
+  djinni_generated/objc/DBBalanceRecord.mm \
+  djinni_generated/objc/DBGuldenUnifiedBackend+Private.h \
+  djinni_generated/objc/DBGuldenUnifiedBackend+Private.mm \
+  djinni_generated/objc/DBGuldenUnifiedBackend.h \
+  djinni_generated/objc/DBGuldenUnifiedBackend.mm \
+  djinni_generated/objc/DBGuldenUnifiedFrontend+Private.h \
+  djinni_generated/objc/DBGuldenUnifiedFrontend+Private.mm \
+  djinni_generated/objc/DBGuldenUnifiedFrontend.h \
+  djinni_generated/objc/DBQrcodeRecord+Private.h \
+  djinni_generated/objc/DBQrcodeRecord+Private.mm \
+  djinni_generated/objc/DBQrcodeRecord.h \
+  djinni_generated/objc/DBQrcodeRecord.mm \
+  djinni_generated/objc/DBTransactionRecord+Private.h \
+  djinni_generated/objc/DBTransactionRecord+Private.mm \
+  djinni_generated/objc/DBTransactionRecord.h \
+  djinni_generated/objc/DBTransactionRecord.mm \
+  djinni_generated/objc/DBTransactionType+Private.h \
+  djinni_generated/objc/DBTransactionType.h \
+  djinni_generated/objc/DBUriRecipient+Private.h \
+  djinni_generated/objc/DBUriRecipient+Private.mm \
+  djinni_generated/objc/DBUriRecipient.h \
+  djinni_generated/objc/DBUriRecipient.mm \
+  djinni_generated/objc/DBUriRecord+Private.h \
+  djinni_generated/objc/DBUriRecord+Private.mm \
+  djinni_generated/objc/DBUriRecord.h \
+  djinni_generated/objc/DBUriRecord.mm
 
 generate_djinni.stamp: unity/libunity.djinni
 	@echo Generating Djinni source
