@@ -11,6 +11,7 @@
 		E61A12862171360F000069F0 /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E61A12852171360F000069F0 /* dummy.cpp */; };
 		E61A1288217136DE000069F0 /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A1287217136DE000069F0 /* dummy.m */; };
 		E64203F121638CD6004A77FF /* GuldenCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E64203EF21638CD6004A77FF /* GuldenCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E651B8802180C65200256327 /* DBAddressRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E651B87F2180C65200256327 /* DBAddressRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E68FADBC216C91750038C745 /* libgulden_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADBB216C91750038C745 /* libgulden_unity_objc.a */; };
 		E68FAE04216C964E0038C745 /* libdb-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF8216C964D0038C745 /* libdb-4.8.a */; };
 		E68FAE05216C964E0038C745 /* libboost_system-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */; };
@@ -44,6 +45,7 @@
 		E64203EC21638CD6004A77FF /* GuldenCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GuldenCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64203EF21638CD6004A77FF /* GuldenCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCore.h; sourceTree = "<group>"; };
 		E64203F021638CD6004A77FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E651B87F2180C65200256327 /* DBAddressRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBAddressRecord.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBAddressRecord.h"; sourceTree = "<group>"; };
 		E65D48092163A3C500033ED1 /* libboost_chrono-mt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_chrono-mt.a"; path = "../../../../depends/x86_64-darwin/lib/libboost_chrono-mt.a"; sourceTree = "<group>"; };
 		E65D480B2163A48700033ED1 /* libboost_system-mt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-mt.a"; path = "../../../../depends/x86_64-darwin/lib/libboost_system-mt.a"; sourceTree = "<group>"; };
 		E68FADBB216C91750038C745 /* libgulden_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_objc.a; path = "../../../../build_ios_aarch64-ios/src/libgulden_unity_objc.a"; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 		E64203EE21638CD6004A77FF /* GuldenCore */ = {
 			isa = PBXGroup;
 			children = (
+				E651B87F2180C65200256327 /* DBAddressRecord.h */,
 				E68FAE1F2170F1410038C745 /* DBBalanceRecord.h */,
 				E68FAE1D2170F1410038C745 /* DBGuldenUnifiedFrontend.h */,
 				E68FAE232170F1410038C745 /* DBQrcodeRecord.h */,
@@ -177,6 +180,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E651B8802180C65200256327 /* DBAddressRecord.h in Headers */,
 				E68FAE252170F1410038C745 /* DBGuldenUnifiedFrontend.h in Headers */,
 				E68FAE262170F1410038C745 /* DBTransactionType.h in Headers */,
 				E68FAE2A2170F1410038C745 /* DBUriRecipient.h in Headers */,
