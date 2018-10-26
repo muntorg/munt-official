@@ -10,8 +10,8 @@ endif
 ios_TARGET=$(ios_ARCH)-apple-ios
 ios_HOST=$(host_arch)-apple-ios
 
-ios_CC=clang -target $(ios_TARGET) --sysroot $(ios_SDK)
-ios_CXX=clang++ -target $(ios_TARGET) --sysroot $(ios_SDK) -stdlib=libc++
+ios_CC=clang -target $(ios_TARGET) -isysroot $(ios_SDK)
+ios_CXX=clang++ -target $(ios_TARGET) -isysroot $(ios_SDK) -stdlib=libc++
 
 ios_CFLAGS=-pipe
 ios_CXXFLAGS=$(ios_CFLAGS)
