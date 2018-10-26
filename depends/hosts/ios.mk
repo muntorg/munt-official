@@ -22,4 +22,4 @@ ios_release_CXXFLAGS=$(ios_release_CFLAGS)
 ios_debug_CFLAGS=-O1
 ios_debug_CXXFLAGS=$(ios_debug_CFLAGS)
 
-ios_native_toolchain=native_cctools
+ios_native_toolchain=
