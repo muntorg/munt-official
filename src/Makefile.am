@@ -509,6 +509,7 @@ libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(abs_top_buildd
 libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/djinni_generated/cpp $(DJINNI_OBJCXXFLAGS)
 
 DJINNI_CPP_GEN = \
+  djinni_generated/cpp/address_record.hpp \
   djinni_generated/cpp/balance_record.hpp \
   djinni_generated/cpp/gulden_unified_backend.cpp \
   djinni_generated/cpp/gulden_unified_backend.hpp \
@@ -520,6 +521,10 @@ DJINNI_CPP_GEN = \
   djinni_generated/cpp/uri_record.hpp
 
 DJINNI_OBJC_GEN = \
+  djinni_generated/objc/DBAddressRecord+Private.h \
+  djinni_generated/objc/DBAddressRecord+Private.mm \
+  djinni_generated/objc/DBAddressRecord.h \
+  djinni_generated/objc/DBAddressRecord.mm \
   djinni_generated/objc/DBBalanceRecord+Private.h \
   djinni_generated/objc/DBBalanceRecord+Private.mm \
   djinni_generated/objc/DBBalanceRecord.h \
