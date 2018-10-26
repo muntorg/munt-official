@@ -115,4 +115,6 @@ gulden_unified_frontend = interface +j +o {
     notifyInitWithoutExistingWallet();
     notifyShutdown(): bool;
     notifyCoreReady(): bool;
+
+    logPrint(str : string);
 }

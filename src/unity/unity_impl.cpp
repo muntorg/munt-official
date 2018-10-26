@@ -29,11 +29,15 @@
 #include "transaction_record.hpp"
 #include "transaction_type.hpp"
 #include "address_record.hpp"
+#ifdef __ANDROID__
 #include "djinni_support.hpp"
+#endif
 
 // External libraries
 #include <boost/algorithm/string.hpp>
 #include <qrencode.h>
+
+std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 
 void calculateTransactionRecordsForWalletTransaction(const CWalletTx& wtx, std::vector<TransactionRecord>& transactionRecords)
 {
@@ -74,8 +78,6 @@ void calculateTransactionRecordsForWalletTransaction(const CWalletTx& wtx, std::
     }
 }
 
-static std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
-
 static void notifyBalanceChanged(CWallet* pwallet)
 {
     if (pwallet && signalHandler)
@@ -114,7 +116,7 @@ void handlePostInitMain()
     // Update transaction/balance changes
     if (pactiveWallet)
     {
-        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status) 
+        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status)
         {
             {
                 DS_LOCK2(cs_main, pwallet->cs_wallet);

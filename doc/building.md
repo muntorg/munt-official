@@ -86,6 +86,27 @@ Required dependencies:
 Optional dependencies (depending on configure - e.g. qt only for GUI builds):
 > dbus fontconfig freetype icu libevent libX11 libXau libxcb libXext libXrender  qrencode &gt;=qt-5.6.1 renderproto xcb_proto xextproto xproto xtrans
 
+
+GuldenCore framework for iOS
+-----
+
+Prerequisites:
+
+* Xcode 10
+* [Java JDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html), needed by Djinni to generate the ObjC - C++ bridging code.
+* [Homebrew](https://brew.sh) to install required build tools
+
+In Xcode preferences select the Xcode Command Line Tools.
+
+Use Homebrew to install build tools:
+
+> brew install cmake autoconf automake libtool pkgconfig
+
+Build the framework library:
+
+> ./developer-tools/mobile/ios/build_ios_core.sh
+
+
 Troubleshooting
 -----
 

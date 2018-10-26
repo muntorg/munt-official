@@ -18,4 +18,6 @@ public abstract class GuldenUnifiedFrontend {
     public abstract boolean notifyShutdown();
 
     public abstract boolean notifyCoreReady();
+
+    public abstract void logPrint(String str);
 }

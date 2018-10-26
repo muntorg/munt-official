@@ -26,30 +26,6 @@
     #define BIGINT_MULTIPLY(x, y) x.multiply(y)
     #define BIGINT_DIVIDE(x, y) x.divide(y)
     #define BIGINT_GREATER_THAN(x, y) (x.compareTo(y) == 1)
-#elif defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0 // it's defined, but as 0 on macOS
-    @class BRMerkleBlock;
-    #define BUILD_IOS
-    #define fDebug false
-    #define LogPrintf(...)
-    #define BLOCK_TYPE BRMerkleBlock*
-    #define BLOCK_TIME(block) (int64_t)block.timestamp
-    #define INDEX_TYPE BRMerkleBlock*
-    #define INDEX_HEIGHT(block) block.height
-    //fixme: (2.0.1) (Mobile)
-    #define INDEX_TIME(block) (int64_t)block.timestamp
-    #define INDEX_PREV(block) [[BRPeerManager sharedInstance] blockForHash:(block.prevBlock)]
-    #define INDEX_TARGET(block) block.target
-    #ifdef GULDEN_TESTNET
-        #define DIFF_SWITCHOVER(T, M) T
-    #else
-        #define DIFF_SWITCHOVER(T, M) M
-    #endif
-    #define DIFF_ABS llabs
-    #define SET_COMPACT(EXPANDED, COMPACT) EXPANDED.SetCompact(COMPACT)
-    #define GET_COMPACT(EXPANDED) EXPANDED.GetCompact()
-    #define BIGINT_MULTIPLY(x, y) x * y
-    #define BIGINT_DIVIDE(x, y) x / y
-    #define BIGINT_GREATER_THAN(x, y) (x > y)
 #else
     #include <consensus/params.h>
     #include <arith_uint256.h>

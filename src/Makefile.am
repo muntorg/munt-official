@@ -49,6 +49,9 @@ endif
 if BUILD_GULDEN_LIBS_JNI
 LIBGULDEN_UNITY_JNI=libgulden_unity_jni.la
 endif
+if BUILD_GULDEN_LIBS_OBJC
+LIBGULDEN_UNITY_OBJC=libgulden_unity_objc.a
+endif
 if ENABLE_WALLET
 LIBGULDEN_WALLET=libgulden_wallet.a
 endif
@@ -74,6 +77,7 @@ lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
+noinst_LIBRARIES =
 TESTS =
 BENCHMARKS =
 
@@ -495,6 +499,89 @@ libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 endif
 #
 
+# Gulden-unity library #
+if BUILD_GULDEN_LIBS_OBJC
+
+noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)
+
+libgulden_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(abs_top_builddir)/src/djinni_generated/cpp
+libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/djinni_generated/cpp $(DJINNI_OBJCXXFLAGS)
+
+DJINNI_CPP_GEN = \
+  djinni_generated/cpp/address_record.hpp \
+  djinni_generated/cpp/balance_record.hpp \
+  djinni_generated/cpp/gulden_unified_backend.cpp \
+  djinni_generated/cpp/gulden_unified_backend.hpp \
+  djinni_generated/cpp/gulden_unified_frontend.hpp \
+  djinni_generated/cpp/qrcode_record.hpp \
+  djinni_generated/cpp/transaction_record.hpp \
+  djinni_generated/cpp/transaction_type.hpp \
+  djinni_generated/cpp/uri_recipient.hpp \
+  djinni_generated/cpp/uri_record.hpp
+
+DJINNI_OBJC_GEN = \
+  djinni_generated/objc/DBAddressRecord+Private.h \
+  djinni_generated/objc/DBAddressRecord+Private.mm \
+  djinni_generated/objc/DBAddressRecord.h \
+  djinni_generated/objc/DBAddressRecord.mm \
+  djinni_generated/objc/DBBalanceRecord+Private.h \
+  djinni_generated/objc/DBBalanceRecord+Private.mm \
+  djinni_generated/objc/DBBalanceRecord.h \
+  djinni_generated/objc/DBBalanceRecord.mm \
+  djinni_generated/objc/DBGuldenUnifiedBackend+Private.h \
+  djinni_generated/objc/DBGuldenUnifiedBackend+Private.mm \
+  djinni_generated/objc/DBGuldenUnifiedBackend.h \
+  djinni_generated/objc/DBGuldenUnifiedBackend.mm \
+  djinni_generated/objc/DBGuldenUnifiedFrontend+Private.h \
+  djinni_generated/objc/DBGuldenUnifiedFrontend+Private.mm \
+  djinni_generated/objc/DBGuldenUnifiedFrontend.h \
+  djinni_generated/objc/DBQrcodeRecord+Private.h \
+  djinni_generated/objc/DBQrcodeRecord+Private.mm \
+  djinni_generated/objc/DBQrcodeRecord.h \
+  djinni_generated/objc/DBQrcodeRecord.mm \
+  djinni_generated/objc/DBTransactionRecord+Private.h \
+  djinni_generated/objc/DBTransactionRecord+Private.mm \
+  djinni_generated/objc/DBTransactionRecord.h \
+  djinni_generated/objc/DBTransactionRecord.mm \
+  djinni_generated/objc/DBTransactionType+Private.h \
+  djinni_generated/objc/DBTransactionType.h \
+  djinni_generated/objc/DBUriRecipient+Private.h \
+  djinni_generated/objc/DBUriRecipient+Private.mm \
+  djinni_generated/objc/DBUriRecipient.h \
+  djinni_generated/objc/DBUriRecipient.mm \
+  djinni_generated/objc/DBUriRecord+Private.h \
+  djinni_generated/objc/DBUriRecord+Private.mm \
+  djinni_generated/objc/DBUriRecord.h \
+  djinni_generated/objc/DBUriRecord.mm
+
+generate_djinni.stamp: unity/libunity.djinni
+	@echo Generating Djinni source
+	$(DJINNI_RUN) --objc-type-prefix DB --objc-out djinni_generated/objc --objcpp-out djinni_generated/objc --cpp-out djinni_generated/cpp --idl $(srcdir)/unity/libunity.djinni
+	touch $@
+
+libgulden_unity_objc_a_SOURCES = \
+  unity/libinit.cpp \
+  unity/libinit.h \
+  unity/ios/logging_ios.cpp \
+  unity/ios/init_ios.cpp \
+  $(libgulden_wallet_a_SOURCES) \
+  $(libgulden_common_a_SOURCES) \
+  $(libgulden_util_a_SOURCES) \
+  $(libgulden_node_a_SOURCES) \
+  $(libgulden_consensus_a_SOURCES) \
+  $(crypto_libgulden_crypto_a_SOURCES) \
+  unity/unity_impl.h \
+  unity/unity_impl.cpp \
+  $(DJINNI_CPP_GEN) \
+  $(DJINNI_OBJC_GEN) \
+  $(GULDEN_CORE_H)
+
+$(libgulden_unity_objc_a_SOURCES): generate_djinni.stamp
+
+$(LIBGULDEN_UNITY_OBJC): $(LIBSECP256K1) $(LIBLEVELDB) $(LIBMEMENV)
+
+endif
 
 # GuldenD binary #
 GuldenD_SOURCES = GuldenD.cpp
@@ -613,6 +700,8 @@ clean-local:
 	-rm -f leveldb/*/*.gcda leveldb/*/*.gcno leveldb/helpers/memenv/*.gcda leveldb/helpers/memenv/*.gcno
 	-rm -f config.h
 	-rm -rf test/__pycache__
+	-rm -f generate_djinni.stamp
+	-rm -rf djinni_generated
 
 .rc.o:
 	@test -f $(WINDRES)
