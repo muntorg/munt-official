@@ -31,7 +31,7 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
-            versionCode 333
+            versionCode 335
             versionName = "2.0.1.0"
         }
         gulden_mainnet {
@@ -39,7 +39,7 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
-            versionCode 333
+            versionCode 335
             versionName = "2.0.1.0"
         }
     }
