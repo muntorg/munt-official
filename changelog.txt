@@ -1,5 +1,4 @@
 2.0.0.16
-
 RPC - Introduce new debug command verifywitnessaddress
 UI - Update styling and graphics
 
@@ -7,21 +6,18 @@ UI - Update styling and graphics
 
 
 2.0.0.15
-
 UI - Fix font issues with macOS mojave
 
 
 
 
 2.0.0.14
-
 CORE - Fix for upstream critical vulnerability CVE-2018-17144
 
 
 
 
 2.0.0.12
-
 UI - Improve visual look of the "all" button in the send coins dialog.
 UI - Fix a problem with increasing memory consumption over time that was affecting some users.
 UI - Fix an issue where emptying an "unlocked" witness account first required restarting the wallet.
@@ -32,7 +28,6 @@ CORE - Reduce memory footprint and improve performance of witness validation.
 
 
 2.0.0.11
-
 UI - Display full converted balance in upper left for forex (Euro or other currency) display instead of only available balance; Add a tooltip to break down the different amounts when hovered over.
 UI - Fix an issue where the transaction list would sometimes show confusing more recent timestamps when importing a witness-only key or recovering from phrase.
 RPC - New command "getaddress" as a way to easily get Gulden address(es) from a pubkey or script.
@@ -49,7 +44,6 @@ ZMQ - Add new message "stalledwitness" which can be used by services to monitor 
 
 
 2.0.0.10
-
 RPC - Make "getrescanprogress" command more responsive.
 UI - Fix an issue with "orphaned" witness earnings incorrectly showing as part of account balance.
 UI - Add a user alert message if number of witnesses on the network drops below 100 as a precaution to help keep the number of witnesses high.
@@ -70,7 +64,6 @@ CORE - Fix a block relay issue that combined with other factors was occasionally
 
 
 2.0.0.9
-
 CORE - Major witness validation performance improvement and memory usage reduction due to partial chain cloning
 CORE - Move some invalid block logic earlier in the block check process, this should help address some issues users have been experiencing as well as further stabalise the network.
 CORE - Simplify phase2/phase3 checks now that we know the final blocks where they activated; This will help performance in various ways and simplifies the code.
@@ -85,14 +78,12 @@ CMDFLAG - Add new "minimallogging" flag for the benefit of users with limited di
 
 
 2.0.0.7
-
 CORE - Fix a crash for users who run with -disablewallet
 
 
 
 
 2.0.0.6
-
 CORE - Stability fix for a minor crash issue some users might otherwise experience in phase 3.
 UI - Some very minor localisation and UI cleanups
 UI - Fix a balance display issue
@@ -104,7 +95,6 @@ NET - No longer advertise or establish outgoing connections to outdated (1.6.x) 
 
 
 2.0.0.4
-
 UI - Fix a (phase 3 only) issue where the transaction list sometimes displaying unnecessary duplicate "rejected" earning messages for every valid earning message.
 RPC - Add two commands disablewitnessing/enablewitnessing - useful for various testing scenarios and some other fringe use cases.
 NET - Fix an annoying instability issue (crash) in the networking code that is triggered by the checkpoint system in some scenarios.
@@ -113,7 +103,6 @@ NET - Fix an annoying instability issue (crash) in the networking code that is t
 
 
 2.0.0.2
-
 UI - Implement an improved "new account" page; which makes witnessing more visible as well as better displays and advertizes various other capabilities of our wallets.
 UI - Resolve a minor issue where old Legacy accounts were incorrectly hidden by UI in some circumstances, due to an old already fixed issue that was in some older 1.6.x wallets.
 CMDFLAG - Add a new command line flag "-resyncforblockindexupgrade" for the benefit of some devices that may be having trouble upgrading.
@@ -123,7 +112,6 @@ CORE - Various code quality improvements; travis now running with '-Werror -Wall
 
 
 2.0.0.1
-
 RPC - Fix a small issue with rescan progress percentage
 CORE - Fix an issue with locked wallets and account indexes that was triggering assertions in some cases.
 UI - Fix a possible minor crash that some users may have been encountering during upgrade.
@@ -133,7 +121,6 @@ UI - Fix an issue with GuldenD and repeated unlock requests, limit to a single u
 
 
 2.0.0
-
 This release incorporates three new major feature branches, which combined involve over a year of intense development effort:
 * PoW² - See https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf for technical information
 Highlights include: Ability to lock funds for a period of time and earn rewards while securing the network. Drastically enhanced network security.
@@ -208,7 +195,6 @@ And many more changes and bug fixes, for a comprehensive list view the commit hi
 
 
 1.6.4.8
-
 Minor maintenence release.
 UI - Introduce a new informational widget and other minor UI improvements that make it move obvious to users that the wallet is not yet available during initial sync.
 UI - Add a new menu item for setting the currency.
@@ -220,28 +206,24 @@ CORE - Update checkpoints, static difficulties, static seeds and other static in
 
 
 1.6.4.7
-
 Minor testnet related release.
 
 
 
 
 1.6.4.6
-
 RPC - Fix an issue introduced in 1.6.4.3 which can cause users running with "-disablewallet" to experience RPC freezes when calling certain RPC commands.
 
 
 
 
 1.6.4.5
-
 UI - Fix "run on boot" links that were broken by testnet changes and other minor "run on boot" corrections.
 
 
 
 
 1.6.4.1
-
 Minor bugfix release.
 UI - Some small translation changes
 RPC - Add an HDIndex flag to 'listaccounts' RPC output, useful for debugging HD wallet issues.
@@ -251,7 +233,6 @@ CORE - Speed up address allocation when -keypool is set to a larger than default
 
 
 1.6.4
-
 CMDFLAG - Add new command line flag '-coinbasesignature' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
 CMDFLAG - Add new command line flag '-accountpool' to increase the default account look ahead size. (Needed in some cases to find accounts on rescan when large account gaps are present)
 UI - Add a special warning if the users wallet.dat is readonly (instead of displaying a generic/scary 'corrupted wallet' message)
@@ -275,7 +256,6 @@ CORE - Assorted other minor bug fixes.
 
 
 1.6.3
-
 RPC - Fix incorrect getaddressesbyaccount output.
 Fix a possible crash in the checkpoint system.
 
@@ -283,7 +263,6 @@ Fix a possible crash in the checkpoint system.
 
 
 1.6.2
-
 RPC - Bring back command that was removed in 1.6.0, adapted to the new account system - getaccount "Guldenaddress"
 RPC - Bring back command that was removed in 1.6.0, adapted to the new account system - getaddressesbyaccount "account"
 
@@ -291,14 +270,12 @@ RPC - Bring back command that was removed in 1.6.0, adapted to the new account s
 
 
 1.6.1
-
 Minor bugfix release.
 
 
 
 
 1.6.0
-
 UI - New user interface with drastic improvements over the old user interface.
 UI - Ticker/Exchange rate integration into app.
 UI - In wallet support for buying coins with euro via nocks.
@@ -314,7 +291,6 @@ RPC - Change 'rpconlylistsecuredtransactions' to be on by default.
 
 
 1.5.5
-
 CORE - Introduce a checkpoint system to protect against 50% attacks.
 UI - Update the UI so that only checkpointed transactions are marked as 'final'
 RPC - Update several commands so that exchanges can make use of the checkpoint system to be double spend proof.
@@ -323,21 +299,18 @@ RPC - Update several commands so that exchanges can make use of the checkpoint s
 
 
 1.5.4
-
 Minor bugfix release.
 
 
 
 
 1.5.3
-
 Minor bugfix release.
 
 
 
 
 1.5.2
-
 Minor bugfix release.
 CORE - Updated to new seed nodes.
 UI - Fixed an issue with some external URIs not working on OSX machines.
@@ -347,7 +320,6 @@ CORE - Add the KGW fix to all platforms.
 
 
 1.5.1
-
 UI - Rebrand to Gulden, updated UI.
 CORE - Implement a fix for KGW difficulty algorithm on 32 bit systems - linux only.
 
@@ -355,6 +327,5 @@ CORE - Implement a fix for KGW difficulty algorithm on 32 bit systems - linux on
 
 
 1.5.0
-
 CORE- New updated codebase based on bitcoin 0.10/0.11
 CORE - Impement a new difficulty adjustment algorithm named DELTA.
