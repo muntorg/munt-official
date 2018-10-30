@@ -46,10 +46,10 @@ class QMenu;
 
 
 #define GULDEN_DIALOG_CANCEL_BUTTON_STYLE "QPushButton{color: #e02121; margin-left: 40px; padding-left: 0px}"
-#define GULDEN_DIALOG_CONFIRM_BUTTON_STYLE "QPushButton{color: #fff; background-color: #007aff; margin-right: 40px}"
+#define GULDEN_DIALOG_CONFIRM_BUTTON_STYLE "QPushButton{color: #fff; background-color: #111444; margin-right: 40px}"
 #define GULDEN_DIALOG_HLINE_STYLE "QFrame{max-height: 1px; margin: 0px; padding: 0px; background-color: #ebebeb; margin-left: 40px; margin-right: 40px; margin-bottom: 18px;}"
 #define GULDEN_DIALOG_CANCEL_BUTTON_STYLE_NOMARGIN "QPushButton{color: #e02121; padding-left: 0px}"
-#define GULDEN_DIALOG_CONFIRM_BUTTON_STYLE_NOMARGIN "QPushButton{color: #fff; background-color: #007aff;}"
+#define GULDEN_DIALOG_CONFIRM_BUTTON_STYLE_NOMARGIN "QPushButton{color: #fff; background-color: #111444;}"
 #define GULDEN_DIALOG_HLINE_STYLE_NOMARGIN "QFrame{max-height: 1px; margin: 0px; padding: 0px; background-color: #ebebeb; margin-bottom: 18px;}"
 extern std::string CurrencySymbolForCurrencyCode(const std::string& currencyCode);
 

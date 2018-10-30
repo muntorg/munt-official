@@ -87,8 +87,8 @@ const char* SMALL_BUTTON_FONT_SIZE = "14px";
 const char* MINOR_LABEL_FONT_SIZE = "12px";
 
 //Colors
-const char* ACCENT_COLOR_1 = "#007aff";
-const char* ACCENT_COLOR_2 = "#0067d9";
+const char* ACCENT_COLOR_1 = "#111444";
+const char* ACCENT_COLOR_2 = "#080a28";
 const char* TEXT_COLOR_1 = "#999";
 const char* COLOR_VALIDATION_FAILED = "#FF8080";
 
