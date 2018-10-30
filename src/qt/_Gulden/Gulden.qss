@@ -22,7 +22,7 @@ QMainWindow *
 
 QMainWindow, QDialog
 {
-    border-image: url(':/Gulden/main_background') 0 0 0 0 stretch stretch;
+    background-color: #ffffff;
 }
 
 QMainWindow QMenu
@@ -170,7 +170,7 @@ QMainWindow #home_button
 /*Popup dialogs*/
 GUI QDialog:window, QDialog:window
 {
-    border-image: url(':/Gulden/dialog_background') 0 0 0 0 stretch stretch;
+    background-color: #ffffff;
     color: black;
 }
 
@@ -188,19 +188,19 @@ GUI QDialog, GUI QFrame, #dialogAccountSettings, #frameAccountSettings, #newAcco
 
 GUI #NewAccountDialog, GUI #AccountSettingsDialog, GUI #walletFrame, GUI > QToolBar, GUI > QDialog, GUI > QFrame, #progress_bar_spacer_left, #progress_bar_spacer_right, #status_bar_frame_blocks, GUI #progress_bar
 {
-    background-color: rgba(255, 255, 255, 50%);
+    background-color: #ffffff;
     border-image: url(none.jpg);
 }
 
 #account_bar, #gulden_bar,  #account_bar *, #gulden_bar *, #status_bar, #status_bar_status_area
 {
-    background-color: rgba(255, 255, 255, 0%);
+    background-color: #f3f3f5;
 }
 
 
 #menuBarSpaceFiller
 {
-    background-color: rgba(255, 255, 255, 0%);
+    background-color: #ffffff;
     border-image: url(none.jpg);
 }
 
