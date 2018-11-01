@@ -118,6 +118,9 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *pa
     ui->accountBuyGuldenButton->setCursor(Qt::PointingHandCursor);
     ui->accountBuyButton->setCursor(Qt::PointingHandCursor);
     ui->accountSaveQRButton->setCursor(Qt::PointingHandCursor);
+    ui->accountSaveQRButton->setTextFormat( Qt::RichText );
+    ui->accountSaveQRButton->setText( GUIUtil::fontAwesomeRegular("\uf0c7") );
+    ui->accountSaveQRButton->setContentsMargins(0, 0, 0, 0);
     ui->accountCopyToClipboardButton->setCursor(Qt::PointingHandCursor);
     ui->accountCopyToClipboardButton->setTextFormat( Qt::RichText );
     ui->accountCopyToClipboardButton->setText( GUIUtil::fontAwesomeRegular("\uf0c5") );

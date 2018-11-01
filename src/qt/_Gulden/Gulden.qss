@@ -503,7 +503,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
 
 
 /*Normal buttons*/
-#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2, #copyButton
+#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2, #copyButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -529,12 +529,12 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     margin-bottom: 10px;
 }
 
-#accountRequestPaymentButton, #accountSaveQRButton, #generateAnotherRequestButton
+#accountRequestPaymentButton, #generateAnotherRequestButton
 {
     margin-left: 0px;
     margin-right: 0px;
 }
-#editButton:pressed, #syncWithMobileButton:pressed, #buttonSaveToFile:pressed, #resetButton:pressed, #accountRequestPaymentButton:pressed, #accountSaveQRButton:pressed, #generateAnotherRequestButton:pressed, #unitButton:pressed, #renewWitnessButton:pressed, #copyButton:pressed
+#editButton:pressed, #syncWithMobileButton:pressed, #buttonSaveToFile:pressed, #resetButton:pressed, #accountRequestPaymentButton:pressed, #generateAnotherRequestButton:pressed, #unitButton:pressed, #renewWitnessButton:pressed, #copyButton:pressed
 {
     color: ACCENT_COLOR_2;
 }
@@ -1145,7 +1145,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin-top: 20px;
 }
 
-#accountAddress, #addressQRContents, #accountCopyToClipboardButton
+#accountAddress, #addressQRContents, #accountCopyToClipboardButton, #accountSaveQRButton
 {
     margin: 0px;
     padding: 0px;
@@ -1153,6 +1153,11 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     height:20px;
     font-size: MINOR_LABEL_FONT_SIZE;
     color: black;
+}
+
+#accountCopyToClipboardButton, #accountSaveQRButton
+{
+    margin-left: 18px;
 }
 
 #horizontalLine
@@ -1319,12 +1324,12 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     color: ACCENT_COLOR_1;
 }
 
-#accountCopyToClipboardButton[hover=true]
+#accountCopyToClipboardButton[hover=true], #accountSaveQRButton[hover=true]
 {
     color: ACCENT_COLOR_1;
 }
 
-#accountCopyToClipboardButton[pressed=true]
+#accountCopyToClipboardButton[pressed=true], #accountSaveQRButton[pressed=true]
 {
     color: ACCENT_COLOR_2;
 }
