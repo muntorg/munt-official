@@ -35,6 +35,9 @@ SetCompressor /SOLID lzma
 # Variables
 Var StartMenuGroup
 
+# Custom font color
+!define MUI_PAGE_CUSTOMFUNCTION_PRE ChangeTitleFGColor
+
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_DIRECTORY
@@ -68,6 +71,10 @@ VIAddVersionKey FileDescription ""
 VIAddVersionKey LegalCopyright ""
 InstallDirRegKey HKCU "${REGKEY}" Path
 ShowUninstDetails show
+
+function ChangeTitleFGColor
+ SetCtlColors $mui.WelcomePage.Title "FFFFFF" "111444" 
+functionend
 
 # Installer sections
 Section -Main SEC0000
