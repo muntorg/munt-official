@@ -774,7 +774,11 @@ void GUI::hideToolBars()
     if (tabsBar) tabsBar->setVisible(false);
     if (spacerBarR) spacerBarR->setVisible(false);
     if (accountInfoBar) accountInfoBar->setVisible(false);
-    if (statusToolBar) statusToolBar->setVisible(false);
+    if (statusToolBar)
+    {
+        statusToolBar->setVisible(false);
+        statusToolBarPlaceholder->setVisible(true);
+    }
 }
 
 void GUI::showToolBars()
@@ -789,7 +793,12 @@ void GUI::showToolBars()
     if (tabsBar) tabsBar->setVisible(true);
     if (spacerBarR) spacerBarR->setVisible(true);
     if (accountInfoBar) accountInfoBar->setVisible(true);
-    if (statusToolBar) statusToolBar->setVisible(progressBarLabel ? progressBarLabel->isVisible() : false);
+    if (statusToolBar)
+    {
+        bool visibility = (progressBarLabel ? progressBarLabel->isVisible() : false);
+        statusToolBar->setVisible(visibility);
+        statusToolBarPlaceholder->setVisible(!visibility);
+    }
 }
 
 
@@ -944,7 +953,13 @@ void GUI::doPostInit()
 
             addToolBar( Qt::BottomToolBarArea, statusToolBar );
 
+            statusToolBarPlaceholder = new QToolBar( QCoreApplication::translate( "toolbar", "Status toolbar placeholder" ), this);
+            statusToolBarPlaceholder->setObjectName( "status_bar_placeholder" );
+            statusToolBarPlaceholder->setMovable( false );
+            addToolBar( Qt::BottomToolBarArea, statusToolBarPlaceholder );
+
             statusToolBar->setVisible(false);
+            statusToolBarPlaceholder->setVisible(true);
         }
     }
 
@@ -993,7 +1008,10 @@ void GUI::hideProgressBarLabel()
         progressBarLabel->setVisible(false);
     }
     if(statusToolBar)
+    {
         statusToolBar->setVisible(false);
+        statusToolBarPlaceholder->setVisible(true);
+    }
 }
 
 void GUI::showProgressBarLabel()

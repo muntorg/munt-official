@@ -119,6 +119,9 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *pa
     ui->accountBuyButton->setCursor(Qt::PointingHandCursor);
     ui->accountSaveQRButton->setCursor(Qt::PointingHandCursor);
     ui->accountCopyToClipboardButton->setCursor(Qt::PointingHandCursor);
+    ui->accountCopyToClipboardButton->setTextFormat( Qt::RichText );
+    ui->accountCopyToClipboardButton->setText( GUIUtil::fontAwesomeRegular("\uf0c5") );
+    ui->accountCopyToClipboardButton->setContentsMargins(0, 0, 0, 0);
     ui->cancelButton->setCursor(Qt::PointingHandCursor);
     ui->closeButton->setCursor(Qt::PointingHandCursor);
     ui->generateRequestButton->setCursor(Qt::PointingHandCursor);
@@ -292,7 +295,7 @@ void ReceiveCoinsDialog::gotoReceievePage()
 
     ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton);
 
-    ui->accountCopyToClipboardButton->setText(tr("Copy address to clipboard"));
+    ui->accountCopyToClipboardButton->setToolTip(tr("Copy address to clipboard"));
 }
 
 
@@ -398,7 +401,7 @@ void ReceiveCoinsDialog::generateRequest()
     ui->generateAnotherRequestButton->setVisible(true);
     ui->accountBuyButton->setVisible(false);
 
-    ui->accountCopyToClipboardButton->setText(tr("Copy request to clipboard"));
+    ui->accountCopyToClipboardButton->setToolTip(tr("Copy request to clipboard"));
 
     CAmount amount = ui->requestAmount->amount();
     if (amount > 0)

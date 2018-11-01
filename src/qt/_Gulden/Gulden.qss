@@ -115,6 +115,13 @@ QMainWindow #home_button
     width: 0px;
 }
 
+#status_bar_placeholder
+{
+    height: 8px;
+    min-height: 8px;
+    max-height: 8px;
+}
+
 #status_bar
 {
     height: 32px;
@@ -496,7 +503,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
 
 
 /*Normal buttons*/
-#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2, #copyButton
+#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2, #copyButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -506,7 +513,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     padding: 0px;
     margin-right: 30px;
     margin-left: 20px;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 
 #unitButton, #viewWitnessGraphButton
@@ -519,15 +526,15 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     padding: 0px;
     margin-right: 30px;
     margin-left: 0px;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 
-#accountRequestPaymentButton, #accountSaveQRButton, #accountCopyToClipboardButton, #generateAnotherRequestButton
+#accountRequestPaymentButton, #accountSaveQRButton, #generateAnotherRequestButton
 {
     margin-left: 0px;
     margin-right: 0px;
 }
-#editButton:pressed, #syncWithMobileButton:pressed, #buttonSaveToFile:pressed, #resetButton:pressed, #accountRequestPaymentButton:pressed, #accountSaveQRButton:pressed, #accountCopyToClipboardButton:pressed, #generateAnotherRequestButton:pressed, #unitButton:pressed, #renewWitnessButton:pressed, #copyButton:pressed
+#editButton:pressed, #syncWithMobileButton:pressed, #buttonSaveToFile:pressed, #resetButton:pressed, #accountRequestPaymentButton:pressed, #accountSaveQRButton:pressed, #generateAnotherRequestButton:pressed, #unitButton:pressed, #renewWitnessButton:pressed, #copyButton:pressed
 {
     color: ACCENT_COLOR_2;
 }
@@ -544,7 +551,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     padding: 0px;
     padding-left: 20px;
     padding-right: 20px;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 #accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #withdrawEarningsButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed, #maxButton[pressed=true]
 {
@@ -1138,12 +1145,12 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin-top: 20px;
 }
 
-#accountAddress, #addressQRContents
+#accountAddress, #addressQRContents, #accountCopyToClipboardButton
 {
     margin: 0px;
     padding: 0px;
     margin-top: 6px;
-    height:20px;;
+    height:20px;
     font-size: MINOR_LABEL_FONT_SIZE;
     color: black;
 }
@@ -1310,6 +1317,16 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 {
     border: 1px solid ACCENT_COLOR_1;
     color: ACCENT_COLOR_1;
+}
+
+#accountCopyToClipboardButton[hover=true]
+{
+    color: ACCENT_COLOR_1;
+}
+
+#accountCopyToClipboardButton[pressed=true]
+{
+    color: ACCENT_COLOR_2;
 }
 
 #add_account_type_label_mobile[pressed=true], #add_account_type_label_transactional[pressed=true], #add_account_type_label_witness[pressed=true], #add_account_type_label_witnessonly[pressed=true], #add_account_type_label_privkey[pressed=true]
