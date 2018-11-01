@@ -43,27 +43,13 @@ SyncOverlay::SyncOverlay(QWidget *parent)
     ui->verticalLayoutMain->setSpacing(0);
     ui->verticalLayoutMain->setContentsMargins( 0, 0, 0, 0 );
 
-    ui->verticalLayoutSub->setSpacing(0);
-    ui->verticalLayoutSub->setContentsMargins( 0, 0, 0, 0 );
-
-    ui->verticalLayout->setSpacing(0);
-    ui->verticalLayout->setContentsMargins(0,0,0,0);
-
     ui->infoText->setContentsMargins(0,0,0,0);
     ui->infoText->setIndent(0);
 
     ui->closeButton->setContentsMargins(0,0,0,0);
     ui->closeButton->setCursor(Qt::PointingHandCursor);
 
-    ui->bgWidget->setStyleSheet("");
-    ui->contentWidget->setStyleSheet("");
-
-    ui->bgWidget->setPalette( QApplication::palette( ui->bgWidget ) );
-    ui->contentWidget->setPalette( QApplication::palette( ui->contentWidget ) );
-
-    ui->verticalLayout->insertStretch(0, 1);
-    ui->verticalLayout->setStretch(1, 0);
-    ui->verticalLayout->setStretch(2, 0);
+    ui->syncOverlayContent->setStyleSheet("");
 
     ui->infoText->setText("");
 }

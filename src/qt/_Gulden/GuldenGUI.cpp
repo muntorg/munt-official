@@ -908,6 +908,8 @@ void GUI::doPostInit()
             progressBarWrapper->setContentsMargins( 0, 0, 0, 0);
             QHBoxLayout* layoutProgressBarWrapper = new QHBoxLayout;
             progressBarWrapper->setLayout(layoutProgressBarWrapper);
+            layoutProgressBarWrapper->setSpacing(0);
+            layoutProgressBarWrapper->setContentsMargins( 0, 0, 0, 0 );
             layoutProgressBarWrapper->addWidget(progressBar);
             statusToolBar->addWidget(progressBarWrapper);
             progressBar->setVisible(false);
@@ -926,12 +928,13 @@ void GUI::doPostInit()
             frameBlocksSpacerL->setContentsMargins( 0, 0, 0, 0);
             ((QHBoxLayout*)frameBlocks->layout())->insertWidget(0, frameBlocksSpacerL, 1);
             statusToolBar->addWidget(frameBlocks);
+
             //Right margin to match rest of UI
-            QFrame* frameBlocksSpacerR = new QFrame(frameBlocks);
-            frameBlocksSpacerR->setObjectName("rightMargin");
+            QFrame* frameBlocksSpacerR = new QFrame(statusToolBar);
+            frameBlocksSpacerR->setObjectName("status_bar_right_margin");
             frameBlocksSpacerR->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
             frameBlocksSpacerR->setContentsMargins( 0, 0, 0, 0);
-            ((QHBoxLayout*)frameBlocks->layout())->addWidget(frameBlocksSpacerR);
+            statusToolBar->addWidget(frameBlocksSpacerR);
 
             //Use our own styling - clear the styling that is already applied
             progressBar->setStyleSheet("");

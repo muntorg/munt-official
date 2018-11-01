@@ -117,10 +117,9 @@ QMainWindow #home_button
 
 #status_bar
 {
-    border-top: 1px solid rgba(0, 0, 0, 5%);
-    height: 30px;
-    min-height: 30px;
-    max-height: 30px;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
 }
 
 #status_bar_status_area
@@ -186,7 +185,7 @@ GUI QDialog, GUI QFrame, #dialogAccountSettings, #frameAccountSettings, #newAcco
 }
 
 
-GUI #NewAccountDialog, GUI #AccountSettingsDialog, GUI #walletFrame, GUI > QToolBar, GUI > QDialog, GUI > QFrame, #progress_bar_spacer_left, #progress_bar_spacer_right, #status_bar_frame_blocks, GUI #progress_bar
+GUI #NewAccountDialog, GUI #AccountSettingsDialog, GUI #walletFrame, GUI > QToolBar, GUI > QDialog, GUI > QFrame, #progress_bar_spacer_left, #progress_bar_spacer_right, #status_bar_frame_blocks, GUI #progress_bar, #status_bar_right_margin
 {
     background-color: #ffffff;
     border-image: url(none.jpg);
@@ -198,19 +197,9 @@ GUI #NewAccountDialog, GUI #AccountSettingsDialog, GUI #walletFrame, GUI > QTool
 }
 
 
-#menuBarSpaceFiller
-{
-    background-color: #ffffff;
-    border-image: url(none.jpg);
-}
-
-GUI QMenuBar
-{
-    background-color: rgba(0, 0, 0, 5%);
-}
-
 GUI QMenuBar,#menuBarSpaceFiller
 {
+    background-color: rgba(0, 0, 0, 5%);
     border: 0px;
 }
 
@@ -278,7 +267,7 @@ GUI > QToolBar > QToolButton:checked
     margin-bottom: 18px;
 }
 
-#warningOverlayContent
+#warningOverlayContent, #syncOverlayContent
 {
     background-color: white;
 }
@@ -381,12 +370,16 @@ GUI > QToolBar > QToolButton:checked
     padding-left: 4px;
 }
 
+#leftMargin, #status_bar_right_margin, #gulden_bar_right_margin, #gulden_bar_left_margin
+{
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+}
+
 #gulden_bar_right_margin, #gulden_bar_left_margin
 {
     height: 44px;
-    width: 40px;
-    max-width: 40px;
-    min-width: 40px;
 }
 
 
@@ -1076,21 +1069,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin-bottom: 10px;
 }
 
-#leftMargin
-{
-    width: 40px;
-    min-width: 40px;
-    max-width: 40px;
-}
-
 #progress_bar_spacer_left
-{
-    width: 29px;
-    min-width: 29px;
-    max-width: 29px;
-}
-
-#rightMargin
 {
     width: 40px;
     min-width: 40px;
@@ -1175,6 +1154,11 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin: 0px;
     padding: 0px;
     background-color: #ebebeb;
+}
+
+#progress_bar_spacer_right, #status_bar_frame_blocks, #progress_bar
+{
+    border-top: 1px solid #ebebeb;
 }
 
 
