@@ -305,7 +305,7 @@ GuldenAmountField::GuldenAmountField(QWidget *parent) :
     layout->addWidget(primaryAmountDisplay);
 
     {
-        ClickableLabel* maxButton = new ClickableLabel(this);
+        maxButton = new ClickableLabel(this);
         maxButton->setObjectName("maxButton");
         maxButton->setText(tr("Max"));
         maxButton->setCursor(Qt::PointingHandCursor);
@@ -461,6 +461,11 @@ void GuldenAmountField::setOptionsModel(OptionsModel* optionsModel_)
         amountLocal = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Local));
         updateAuxilaryFromData();
     }
+}
+
+void GuldenAmountField::setDisplayMaxButton(bool shouldDisplay)
+{
+    maxButton->setVisible(shouldDisplay);
 }
 
 QWidget *GuldenAmountField::setupTabChain(QWidget *prev)

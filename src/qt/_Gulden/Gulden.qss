@@ -494,7 +494,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     color: #e02121;
     margin: 0px;
     padding: 0px;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 #clearButton:pressed, #deleteButton:pressed, #cancelButton:pressed, #cancelButton2:pressed, #deleteButton:pressed, GUI #closeButton:pressed, #buttonDone:pressed, #buttonCancel:pressed
 {
@@ -646,9 +646,7 @@ QComboBox
     height: 28px;
     color: TEXT_COLOR_1;
     background-color: white;
-    border-left: 1px solid #ebebeb;
-    border-top: 1px solid #ebebeb;
-    border-bottom: 1px solid #ebebeb;
+    border: 1px solid #ebebeb;
     border-radius: 2px;
 }
 
@@ -706,9 +704,7 @@ QComboBox::down-arrow:hover
     height: 28px;
     color: TEXT_COLOR_1;
     background-color: white;
-    border-left: 1px solid #ebebeb;
-    border-top: 1px solid #ebebeb;
-    border-bottom: 1px solid #ebebeb;
+    border: 1px solid #ebebeb;
     border-radius: 2px;
     margin: 0px;
     margin-left: 10px;
@@ -801,7 +797,6 @@ QHeaderView::up-arrow:hover
     color: black;
     border: 1px solid #ebebeb;
     border-radius: 2px;
-    border-left: 0px;
     margin-bottom: 10px;
 }
 
@@ -949,7 +944,7 @@ OptionsDialog QSpinBox
     border-radius: 2px;
 }
 
-#addressQRImage, #scanQRCode
+#addressQRImage, #scanQRCode, #requestQRImage
 {
     color: #2f93ff;
     font-size: SMALL_BUTTON_FONT_SIZE;
@@ -1089,7 +1084,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     padding-right: 40px;
 }
 
-#addressQRImage
+#addressQRImage, #requestQRImage
 {
     border: 1px solid #ebebeb;
     margin-top: 10px;
@@ -1145,7 +1140,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin-top: 20px;
 }
 
-#accountAddress, #addressQRContents, #accountCopyToClipboardButton
+#accountAddress, #addressQRContents, #accountCopyToClipboardButton, #requestCopyToClipboardButton, #labelPaymentRequest
 {
     margin: 0px;
     padding: 0px;
@@ -1153,6 +1148,11 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     height:20px;
     font-size: MINOR_LABEL_FONT_SIZE;
     color: black;
+}
+
+#accountCopyToClipboardButton, #requestCopyToClipboardButton
+{
+    margin-left: 10px;
 }
 
 #horizontalLine
@@ -1319,12 +1319,12 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     color: ACCENT_COLOR_1;
 }
 
-#accountCopyToClipboardButton[hover=true]
+#accountCopyToClipboardButton[hover=true], #requestCopyToClipboardButton[hover=true]
 {
     color: ACCENT_COLOR_1;
 }
 
-#accountCopyToClipboardButton[pressed=true]
+#accountCopyToClipboardButton[pressed=true], #requestCopyToClipboardButton[pressed=true]
 {
     color: ACCENT_COLOR_2;
 }
