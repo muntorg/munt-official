@@ -73,7 +73,14 @@ InstallDirRegKey HKCU "${REGKEY}" Path
 ShowUninstDetails show
 
 function ChangeTitleFGColor
- SetCtlColors $mui.WelcomePage.Title "FFFFFF" "111444" 
+    GetDlgItem $0 $HWNDPARENT 0x40A             ; MUI2 header background
+    SetCtlColors $0 0xFFFFFF 0x111444
+
+    GetDlgItem $0 $HWNDPARENT 0x40D             ; MUI2 header title
+    SetCtlColors $0 0xFFFFFF 0x111444
+
+    GetDlgItem $0 $HWNDPARENT 0x40E             ; MUI2 header subtitle
+    SetCtlColors $0 0xFFFFFF 0x111444
 functionend
 
 # Installer sections
