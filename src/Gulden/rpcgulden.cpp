@@ -2255,8 +2255,6 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     // Get the current witness details
     CTxOutPoW2Witness currentWitnessDetails;
     GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
-    currentWitnessDetails.witnessKeyID;
-    currentWitnessDetails.spendingKeyID;
 
     CPubKey pubKey;
     if (!witnessAccount->GetPubKey(currentWitnessDetails.witnessKeyID, pubKey))

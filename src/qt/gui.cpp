@@ -1319,12 +1319,13 @@ void GUI::resizeEvent(QResizeEvent* event)
     // Other languages may in turn be different.
     // If we are working with limited horizontal spacing then hide some non-essential UI elements to help things fit more comfortably.
     bool restrictedHorizontalSpace = (event->size().width() < 980) ? true : false;
+    bool extraRestrictedHorizontalSpace = (event->size().width() < 780) ? true : false;
     if (accountSummaryWidget)
         accountSummaryWidget->showForexBalance(!restrictedHorizontalSpace);
     if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->receiveCoinsPage)
-        walletFrame->currentWalletView()->receiveCoinsPage->setShowCopyQRAsImageButton(!restrictedHorizontalSpace);
+        walletFrame->currentWalletView()->receiveCoinsPage->setShowCopyQRAsImageButton(!extraRestrictedHorizontalSpace);
     else
-        ReceiveCoinsDialog::showCopyQRAsImagebutton = !restrictedHorizontalSpace;
+        ReceiveCoinsDialog::showCopyQRAsImagebutton = !extraRestrictedHorizontalSpace;
 }
 
 
