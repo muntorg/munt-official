@@ -2244,6 +2244,8 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
 
     // Find the account
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    (unused) currentWitnessHeight;
+    (unused) currentWitnessOutpoint;
     CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
     if (!witnessAccount)
     {
