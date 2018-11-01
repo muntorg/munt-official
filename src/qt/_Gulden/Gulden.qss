@@ -466,7 +466,7 @@ GUI QDialog:window QPushButton
     padding: 0px;
     padding-left: 20px;
     padding-right: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 GUI QDialog:window ClickableLabel
@@ -832,12 +832,7 @@ QHeaderView::up-arrow:hover
     margin-top: 18px;
 }
 
-#labelPaymentRequestHeading
-{
-    color: black;
-}
-
-#labelDescribeRecoveryPhrase, #labelPaymentRequestHeading2, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation, #labelPrivKey, #pow2LockFundsHeading, #pow2LockFundsSliderMaxLabel, #pow2LockFundsSliderMinLabel, #pow2LockFundsInfoLabel
+#labelDescribeRecoveryPhrase, #labelPaymentRequestHeading, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation, #labelPrivKey, #pow2LockFundsHeading, #pow2LockFundsSliderMaxLabel, #pow2LockFundsSliderMinLabel, #pow2LockFundsInfoLabel
 {
     color: TEXT_COLOR_1;
 }
@@ -929,7 +924,7 @@ OptionsDialog QSpinBox
     padding-bottom: 10px;
 }
 
-#labelPaymentRequestHeading, #labelPaymentRequestHeading2
+#labelPaymentRequestHeading
 {
     margin-bottom: 18px;
 }
