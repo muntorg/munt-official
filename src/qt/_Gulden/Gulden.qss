@@ -243,7 +243,7 @@ GUI *
 
 GUI > QToolBar
 {
-	spacing: 0px;
+    spacing: 0px;
 }
 
 GUI > QToolBar > QToolButton
@@ -260,12 +260,13 @@ GUI > QToolBar > QToolButton
 GUI > QToolBar > QToolButton:hover
 {
     color: #555;
-    height: 44px;
+    height: 41px;
 }
 
 GUI > QToolBar > QToolButton:checked
 {
     color: #000;
+    height: 41px;
 }
 
 #warningOverlayHeading
@@ -924,11 +925,6 @@ OptionsDialog QSpinBox
     padding-bottom: 10px;
 }
 
-#labelPaymentRequestHeading
-{
-    margin-bottom: 18px;
-}
-
 #labelBackupPhrase, #labelShowBackupPhrase
 {
     color: #2f93ff;
@@ -1091,15 +1087,19 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     padding-top: 10px;
 }
 
-#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading
+#accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading
 {
     margin: 0px;
     padding: 0px;
-    margin-top: 6px;
     height:20px;
     font-size: MINOR_LABEL_FONT_SIZE;
     color: TEXT_COLOR_1;
     text-transform: uppercase;
+}
+
+#labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading
+{
+    margin-top: 6px;
 }
 
 #labelInactiveWitnessAccountInfo, #labelPendingWitnessAccountInfo, #labelUsedAccountInfo
