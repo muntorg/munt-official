@@ -74,13 +74,13 @@ ShowUninstDetails show
 
 function ChangeTitleFGColor
     GetDlgItem $0 $HWNDPARENT 0x40A             ; MUI2 header background
-    SetCtlColors $0 0xfffaf1 0x111444
+    SetCtlColors $0 0xFFFFFF 0x111444
 
     GetDlgItem $0 $HWNDPARENT 0x40D             ; MUI2 header title
-    SetCtlColors $0 0xfffaf1 0x111444
+    SetCtlColors $0 0xFFFFFF 0x111444
 
     GetDlgItem $0 $HWNDPARENT 0x40E             ; MUI2 header subtitle
-    SetCtlColors $0 0xfffaf1 0x111444
+    SetCtlColors $0 0xFFFFFF 0x111444
 functionend
 
 # Installer sections

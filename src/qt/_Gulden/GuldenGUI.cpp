@@ -755,6 +755,9 @@ void GUI::createToolBars()
     //Hide all toolbars and menus until UI fully loaded
     hideToolBars();
     appMenuBar->setVisible(false);
+    #ifndef MAC_OSX
+    menuBarSpaceFiller->setVisible(false);
+    #endif
 
 
     //Init the welcome dialog inside walletFrame

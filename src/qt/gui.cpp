@@ -724,6 +724,9 @@ bool GUI::setCurrentWallet(const QString& name)
     // Now that we have an active wallet it is safe to show the toolbars and menubars again.
     showToolBars();
     appMenuBar->setVisible(true);
+    #ifndef MAC_OSX
+    menuBarSpaceFiller->setVisible(true);
+    #endif
 
     refreshAccountControls();
 
