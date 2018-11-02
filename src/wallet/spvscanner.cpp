@@ -214,8 +214,14 @@ void CSPVScanner::Persist()
 {
     if (lastProcessed != nullptr)
     {
-        CWalletDB walletdb(*wallet.dbw);
-        walletdb.WriteLastSPVBlockProcessed(partialChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
+        {
+            // scoped here to ensure that the walletdb is flushed before assuming a new prune height
+            CWalletDB walletdb(*wallet.dbw);
+            walletdb.WriteLastSPVBlockProcessed(partialChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
+        }
+        int maxPruneHeight = lastProcessed->nHeight - PARTIAL_SYNC_PRUNE_HEIGHT;
+        if (maxPruneHeight > 0)
+            SetMaxSPVPruneHeight(maxPruneHeight);
 
         lastPersistTime = GetAdjustedTime();
         blocksSincePersist = 0;

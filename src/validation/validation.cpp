@@ -135,7 +135,7 @@ namespace {
      *  or if we allocate more file space when we're in prune mode
      */
     bool fCheckForPruning = false;
-
+    std::atomic<int> nMaxSPVPruneHeight = 0;
     /**
      * Every received block is assigned a unique and increasing identifier, so we
      * know which one to give priority in case of a fork.
@@ -3805,7 +3805,11 @@ void PruneForPartialSync()
     if (isFullSyncMode() || !IsPartialSyncActive())
         return;
 
+    // keep at least PARTIAL_SYNC_PRUNE_HEIGHT of history, also pruning before start of the partial chain
+    // makes little sense
     int pruneHeight = std::max(partialChain.HeightOffset(), partialChain.Height() - PARTIAL_SYNC_PRUNE_HEIGHT);
+    // never use a pruning height above what has been spv processed
+    pruneHeight = std::min(nMaxSPVPruneHeight.load(), pruneHeight);
 
     CValidationState state;
     FlushStateToDisk(Params(), state, FlushStateMode::FLUSH_STATE_ALWAYS, pruneHeight, true);
@@ -4194,6 +4198,11 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
 
     headerTipSignal.connect(notifyCallback);
     return true;
+}
+
+void SetMaxSPVPruneHeight(int height)
+{
+    nMaxSPVPruneHeight = height;
 }
 
 class CMainCleanup

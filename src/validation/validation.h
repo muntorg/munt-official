@@ -607,5 +607,6 @@ void SetFullSyncMode(bool state);
 bool isFullSyncMode();
 
 bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback);
+void SetMaxSPVPruneHeight(int height);
 
 #endif // GULDEN_VALIDATION_H
