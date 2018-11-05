@@ -102,6 +102,9 @@ gulden_unified_backend = interface +c {
     # Delete a record from the address book
     static deleteAddressBookRecord(address : address_record);
 
+    # Interim persist and prune of state. Use at key moments like app backgrounding.
+    static PersistAndPruneForSPV();
+
     # Interface constants
     const version: i32 = 1;
 }

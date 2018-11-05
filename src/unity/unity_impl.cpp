@@ -500,3 +500,8 @@ void GuldenUnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
         pactiveWallet->DelAddressBook(address.address);
     }
 }
+
+void GuldenUnifiedBackend::PersistAndPruneForSPV()
+{
+    PersistAndPruneForPartialSync();
+}
