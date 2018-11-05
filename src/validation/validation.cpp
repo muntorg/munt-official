@@ -2911,6 +2911,9 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidatio
 
     CheckAndNotifyHeaderTip();
 
+    if (IsPartialSyncActive() && !isFullSyncMode())
+        PersistAndPruneForPartialSync(true);
+
     return true;
 }
 
@@ -3794,11 +3797,12 @@ bool InitBlockIndex(const CChainParams& chainparams)
     return true;
 }
 
-void PruneForPartialSync()
+void PersistAndPruneForPartialSync(bool periodic)
 {
-    // prune for partial sync prunes block files AND block index!
     // should be run at shutdown so that the block index remains small and
     // next startup stays fast
+    // also run periodically (and on demand at key points, ie. app to background)
+    // to prevent loss of data and needing to re-dowload
 
     LOCK(cs_main);
 
@@ -3812,7 +3816,9 @@ void PruneForPartialSync()
     pruneHeight = std::min(nMaxSPVPruneHeight.load(), pruneHeight);
 
     CValidationState state;
-    FlushStateToDisk(Params(), state, FlushStateMode::FLUSH_STATE_ALWAYS, pruneHeight, true);
+    FlushStateToDisk(Params(), state,
+                     periodic ? FlushStateMode::FLUSH_STATE_PERIODIC : FlushStateMode::FLUSH_STATE_ALWAYS,
+                     pruneHeight, true);
 }
 
 bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskBlockPos *dbp)

@@ -364,12 +364,13 @@ void PruneAndFlush();
 /** Prune block files up to a given height */
 void PruneBlockFilesManual(int nManualPruneHeight);
 /**
- * Prune block index and blk/rev files if using partial sync only
+ * Persist and prune block index and blk/rev files if using partial sync only
  * Deleting block indexes unnesesary for partial sync reduces database size, memory usage and
  * results in faster startup times.
- * Only call at program shutdown to avoid state inconsistencies.
+ * Call periodically to prevent re-download after forced kill (= normal iOS behavior) or crash
+ * also call at shutdown.
 */
-void PruneForPartialSync();
+void PersistAndPruneForPartialSync(bool periodic=false);
 /** (try to) add transaction to memory pool
  * plTxnReplaced will be appended to with all transactions replaced from mempool **/
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx, bool fLimitFree,

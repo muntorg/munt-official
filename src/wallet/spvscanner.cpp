@@ -225,5 +225,7 @@ void CSPVScanner::Persist()
 
         lastPersistTime = GetAdjustedTime();
         blocksSincePersist = 0;
+
+        PersistAndPruneForPartialSync(true);
     }
 }

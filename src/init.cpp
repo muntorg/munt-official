@@ -242,7 +242,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
         LOCK(cs_main);
 
         if (!isFullSyncMode() && IsPartialSyncActive())
-            PruneForPartialSync();
+            PersistAndPruneForPartialSync();
         else
         {
             // avoid duplicate FlushStateToDisk as PruneForPartialSync will also call it
