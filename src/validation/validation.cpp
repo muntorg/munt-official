@@ -4148,10 +4148,13 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
         return index->GetBlockTime() < before;
     });
 
+    if (IsPartialSyncActive())
+        LogPrintf("Partial chain height = %d offset = %d.\n", partialChain.Height(), partialChain.HeightOffset());
+
     if (    IsPartialSyncActive()
          && youngestBefore && youngestBefore->nHeight - partialChain.HeightOffset() > 576)
     {
-        LogPrintf("Partial sync continues, height offset = %d.\n", partialChain.HeightOffset());
+        LogPrintf("Partial sync continues.\n");
     }
     else {
         if (IsPartialSyncActive()) // IsPartialSyncActive() => above checks for time and/or 576 window failed
