@@ -105,6 +105,12 @@ gulden_unified_backend = interface +c {
     # Interim persist and prune of state. Use at key moments like app backgrounding.
     static PersistAndPruneForSPV();
 
+    # Reset progress notification. In cases where there has been no progress for a long time, but the process
+    # is still running the progress can be reset and will represent work to be done from this reset onwards.
+    # For example when the process is in the background on iOS for a long long time (but has not been terminated
+    # by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
+    static ResetUnifiedProgress();
+
     # Interface constants
     const version: i32 = 1;
 }
@@ -112,6 +118,9 @@ gulden_unified_backend = interface +c {
 # This interface will be implemented in Java and ObjC and can be called from C++.
 gulden_unified_frontend = interface +j +o {
     notifySPVProgress(start_height : i32, progess_height : i32, expected_height : i32): bool;
+    # Fraction of work done since session start or last progress reset [0..1]
+    # Unified progress combines connection state, header and block sync
+    notifyUnifiedProgress(progress : f32);
     notifyBalanceChange(new_balance : balance_record): bool;
     notifyNewTransaction(new_transaction : transaction_record): bool;
     notifyInitWithExistingWallet();

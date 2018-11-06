@@ -223,6 +223,14 @@ void CSPVScanner::OnHeaderProgressChanged(int, int _probableHeight, int, int64_t
     probableHeight = _probableHeight;
 }
 
+void CSPVScanner::ResetUnifiedProgressNotification()
+{
+    lastProgressReported = -1.0f;
+    if (lastProcessed)
+        startHeight = lastProcessed->nHeight;
+    NotifyUnifiedProgress();
+}
+
 void CSPVScanner::NotifyUnifiedProgress()
 {
     const float CONNECTION_WEIGHT = 0.05f;

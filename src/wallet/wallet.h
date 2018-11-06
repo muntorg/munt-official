@@ -931,6 +931,8 @@ public:
     //! Chain height for wallets (height used depends on SPV).
     static int ChainHeight();
 
+    static void ResetUnifiedSPVProgressNotification();
+
 private:
     int nTransactionScanProgressPercent;
 

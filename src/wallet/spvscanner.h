@@ -26,6 +26,8 @@ public:
     // write locator for lastProcessed to db for resuming next session, call sparingly
     void Persist();
 
+    void ResetUnifiedProgressNotification();
+
 private:
     CWallet& wallet;
 

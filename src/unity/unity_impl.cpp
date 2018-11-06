@@ -113,6 +113,12 @@ void handlePostInitMain()
         }
     );
 
+    // unified progress notification
+    uiInterface.NotifyUnifiedProgress.connect([=](float progress) {
+        if (signalHandler)
+            signalHandler->notifyUnifiedProgress(progress);
+    });
+
     // Update transaction/balance changes
     if (pactiveWallet)
     {
@@ -504,4 +510,9 @@ void GuldenUnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
 void GuldenUnifiedBackend::PersistAndPruneForSPV()
 {
     PersistAndPruneForPartialSync();
+}
+
+void GuldenUnifiedBackend::ResetUnifiedProgress()
+{
+    CWallet::ResetUnifiedSPVProgressNotification();
 }
