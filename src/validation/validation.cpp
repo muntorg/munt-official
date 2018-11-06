@@ -1320,7 +1320,7 @@ void FindFilesToPruneExplicit(std::set<int>& setFilesToPrune, unsigned int nPrun
         setFilesToPrune.insert(fileNumber);
         count++;
     }
-    LogPrintf("Prune (Manual): prune_height=%d removed %d blk/rev pairs\n", nPruneHeight, count);
+    LogPrint(BCLog::PRUNE, "Prune (Manual): prune_height=%d removed %d blk/rev pairs\n", nPruneHeight, count);
 }
 
 /**

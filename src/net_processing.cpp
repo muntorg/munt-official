@@ -714,6 +714,8 @@ void NotifyHeaderProgress(CConnman& connman, bool partialProgressed)
         }
     }
 
+    probableHeight = std::max(probableHeight, headerTipHeight);
+
     uiInterface.NotifyHeaderProgress(currentCount, probableHeight, headerTipHeight, headerTipTime);
 }
 

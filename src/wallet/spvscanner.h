@@ -44,6 +44,18 @@ private:
 
     void HeaderTipChanged(const CBlockIndex* pTip);
 
+    // Number of connections for progress reporting
+    // (mirrored from net using NotifyNumConnectionsChanged signal)
+    int numConnections;
+    void OnNumConnectionsChanged(int newNumConnections);
+
+    int probableHeight;
+    void OnHeaderProgressChanged(int, int _probableHeight, int, int64_t);
+
+    // Calculate unified progress and trigger
+    float lastProgressReported;
+    void NotifyUnifiedProgress();
+
     void RequestBlocks();
 
     // Update value of lastProcessed to pindex and persist it to the wallet db
