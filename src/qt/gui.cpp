@@ -99,7 +99,6 @@ const std::string GUI::DEFAULT_UIPLATFORM =
         "other"
 #endif
         ;
-
 static void NotifyRequestUnlockS(GUI* parent, CWallet* wallet, std::string reason)
 {
     QMetaObject::invokeMethod(parent, "NotifyRequestUnlock", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)));
@@ -725,6 +724,7 @@ bool GUI::setCurrentWallet(const QString& name)
     showToolBars();
     appMenuBar->setVisible(true);
     #ifndef MAC_OSX
+    menuBarSpaceFiller->setFixedSize(20000, appMenuBar->height());
     menuBarSpaceFiller->setVisible(true);
     #endif
 
