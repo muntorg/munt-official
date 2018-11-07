@@ -90,15 +90,6 @@
 #include <QUrlQuery>
 #endif
 
-const std::string GUI::DEFAULT_UIPLATFORM =
-#if defined(Q_OS_MAC)
-        "macosx"
-#elif defined(Q_OS_WIN)
-        "windows"
-#else
-        "other"
-#endif
-        ;
 static void NotifyRequestUnlockS(GUI* parent, CWallet* wallet, std::string reason)
 {
     QMetaObject::invokeMethod(parent, "NotifyRequestUnlock", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)));
