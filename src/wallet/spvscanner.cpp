@@ -239,27 +239,35 @@ void CSPVScanner::NotifyUnifiedProgress()
 
     float newProgress = 0.0f;
 
-    if (numConnections>0)
+    // Only calculate progress if there are connections. Without connections progress is reported as zero
+    // which is the only case where progress can decrease during a session (ie. if all connections are lost)
+    if (numConnections > 0) {
         newProgress += CONNECTION_WEIGHT;
 
-    if (probableHeight > 0 && startHeight > 0 && lastProcessed != nullptr && lastProcessed->nHeight > 0) {
-        float pgs = (lastProcessed->nHeight - startHeight)/float(probableHeight - startHeight);
-        newProgress += (1.0f - CONNECTION_WEIGHT) * pgs;
+        if (probableHeight > 0 && startHeight > 0 &&
+            probableHeight != startHeight &&
+            lastProcessed != nullptr && lastProcessed->nHeight > 0)
+        {
+            float pgs = (lastProcessed->nHeight - startHeight)/float(probableHeight - startHeight);
+            newProgress += (1.0f - CONNECTION_WEIGHT) * pgs;
+        }
+        else if (probableHeight == startHeight)
+            newProgress = 1.0f;
+
+        // silently ignore progress decrease, this can occur if the chain grew
+        // faster then the synchronisation (this would be a very short lived situation)
+        // and reporting will continue normally when catching up
+        if (newProgress <= lastProgressReported)
+            return;
+
+        // limit processing overhead and only report if a reasonable amount of progress was made since last report
+        if (newProgress - lastProgressReported <= MIN_REPORTING_DELTA && newProgress < ALWAYS_REPORT_THRESHOLD)
+            return;
     }
 
-    // silently ignore progress decrease, this can occur if the chain grew
-    // faster then the synchronisation (this would be a very short live situation)
-    // and reporting will continue normally when we're catching up again
-    if (newProgress <= lastProgressReported)
-        return;
-
-    // limit processing overhead and only report if a reasonable amount of progress was made since last report
-    if (newProgress - lastProgressReported <= MIN_REPORTING_DELTA && newProgress < ALWAYS_REPORT_THRESHOLD)
-        return;
-
-    uiInterface.NotifyUnifiedProgress(newProgress);
-
-    LogPrintf("====== progress = %10.7f\n", newProgress);
+    if (newProgress != lastProgressReported) {
+        uiInterface.NotifyUnifiedProgress(newProgress);
+    }
 
     lastProgressReported = newProgress;
 }
