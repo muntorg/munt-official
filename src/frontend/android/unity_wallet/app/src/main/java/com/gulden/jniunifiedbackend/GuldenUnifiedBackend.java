@@ -110,6 +110,23 @@ public abstract class GuldenUnifiedBackend {
         CppProxy.deleteAddressBookRecord(address);
     }
 
+    /** Interim persist and prune of state. Use at key moments like app backgrounding. */
+    public static void PersistAndPruneForSPV()
+    {
+        CppProxy.PersistAndPruneForSPV();
+    }
+
+    /**
+     * Reset progress notification. In cases where there has been no progress for a long time, but the process
+     * is still running the progress can be reset and will represent work to be done from this reset onwards.
+     * For example when the process is in the background on iOS for a long long time (but has not been terminated
+     * by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
+     */
+    public static void ResetUnifiedProgress()
+    {
+        CppProxy.ResetUnifiedProgress();
+    }
+
     private static final class CppProxy extends GuldenUnifiedBackend
     {
         private final long nativeRef;
@@ -164,5 +181,9 @@ public abstract class GuldenUnifiedBackend {
         public static native void addAddressBookRecord(AddressRecord address);
 
         public static native void deleteAddressBookRecord(AddressRecord address);
+
+        public static native void PersistAndPruneForSPV();
+
+        public static native void ResetUnifiedProgress();
     }
 }

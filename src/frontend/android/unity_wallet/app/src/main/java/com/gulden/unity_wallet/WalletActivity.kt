@@ -105,7 +105,7 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
 
     fun setSyncProgress(percent: Float)
     {
-        syncProgress.progress = (1000000 * (percent/100)).toInt()
+        syncProgress.progress = (syncProgress.max * (percent/100)).toInt()
     }
 
     fun setWalletBalance(balance : Long)

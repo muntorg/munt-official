@@ -117,7 +117,6 @@ gulden_unified_backend = interface +c {
 
 # This interface will be implemented in Java and ObjC and can be called from C++.
 gulden_unified_frontend = interface +j +o {
-    notifySPVProgress(start_height : i32, progess_height : i32, expected_height : i32): bool;
     # Fraction of work done since session start or last progress reset [0..1]
     # Unified progress combines connection state, header and block sync
     notifyUnifiedProgress(progress : f32);

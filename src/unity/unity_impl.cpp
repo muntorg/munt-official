@@ -102,16 +102,6 @@ void handlePostInitMain()
     {
         signalHandler->notifyCoreReady();
     }
-    // Update sync progress as we receive headers/blocks.
-    uiInterface.NotifySPVProgress.connect(
-        [=](int startHeight, int processedHeight, int expectedHeight)
-        {
-            if (signalHandler)
-            {
-                signalHandler->notifySPVProgress(startHeight, processedHeight, expectedHeight);
-            }
-        }
-    );
 
     // unified progress notification
     uiInterface.NotifyUnifiedProgress.connect([=](float progress) {

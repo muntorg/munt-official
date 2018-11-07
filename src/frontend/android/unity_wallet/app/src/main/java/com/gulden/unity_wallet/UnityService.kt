@@ -54,16 +54,12 @@ class UnityService : Service()
 
     // Handle signals from core library and convert them to service signals where necessary.
     private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
-        override fun notifySPVProgress(startHeight: Int, progessHeight: Int, expectedHeight: Int): Boolean {
-            if (expectedHeight - startHeight == 0)
-            {
-                signalHandler?.syncProgressChanged(0f)
-            }
-            else
-            {
-                signalHandler?.syncProgressChanged((java.lang.Float.valueOf(progessHeight.toFloat()) - startHeight) / (expectedHeight - startHeight) * 100f)
-            }
-            return true
+        override fun logPrint(str: String?) {
+            // logging already done at C++ level
+        }
+
+        override fun notifyUnifiedProgress(progress: Float) {
+            signalHandler?.syncProgressChanged( 100 * progress)
         }
 
         override fun notifyBalanceChange(newBalance: BalanceRecord): Boolean

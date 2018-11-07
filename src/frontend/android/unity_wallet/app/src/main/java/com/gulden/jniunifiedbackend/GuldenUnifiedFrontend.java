@@ -5,7 +5,11 @@ package com.gulden.jniunifiedbackend;
 
 /** This interface will be implemented in Java and ObjC and can be called from C++. */
 public abstract class GuldenUnifiedFrontend {
-    public abstract boolean notifySPVProgress(int startHeight, int progessHeight, int expectedHeight);
+    /**
+     * Fraction of work done since session start or last progress reset [0..1]
+     * Unified progress combines connection state, header and block sync
+     */
+    public abstract void notifyUnifiedProgress(float progress);
 
     public abstract boolean notifyBalanceChange(BalanceRecord newBalance);
 
