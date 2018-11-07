@@ -51,9 +51,6 @@ private:
     int numConnections;
     void OnNumConnectionsChanged(int newNumConnections);
 
-    int probableHeight;
-    void OnHeaderProgressChanged(int, int _probableHeight, int, int64_t);
-
     // Calculate unified progress and trigger
     float lastProgressReported;
     void NotifyUnifiedProgress();

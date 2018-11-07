@@ -687,9 +687,6 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
 
 void NotifyHeaderProgress(CConnman& connman, bool partialProgressed)
 {
-    int probableHeight = nMaxStartingHeight;
-    probableHeight = std::max(probableHeight, Checkpoints::LastCheckPointHeight());
-    probableHeight = std::max(probableHeight, connman.GetBestHeight());
     int currentCount = 0;
     int headerTipHeight = 0;
     int64_t headerTipTime = 0;
@@ -714,12 +711,23 @@ void NotifyHeaderProgress(CConnman& connman, bool partialProgressed)
         }
     }
 
-    probableHeight = std::max(probableHeight, headerTipHeight);
-
-    uiInterface.NotifyHeaderProgress(currentCount, probableHeight, headerTipHeight, headerTipTime);
+    uiInterface.NotifyHeaderProgress(currentCount, GetProbableHeight(), headerTipHeight, headerTipTime);
 }
 
 } // anon namespace
+
+int GetProbableHeight()
+{
+    int probableHeight = nMaxStartingHeight;
+    probableHeight = std::max(probableHeight, Checkpoints::LastCheckPointHeight());
+    if (g_connman)
+        probableHeight = std::max(probableHeight, g_connman->GetBestHeight());
+    if (pindexBestHeader)
+        probableHeight = std::max(probableHeight, pindexBestHeader->nHeight);
+    if (pindexBestPartial)
+        probableHeight = std::max(probableHeight, pindexBestPartial->nHeight);
+    return probableHeight;
+}
 
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats) {
     LOCK(cs_main);

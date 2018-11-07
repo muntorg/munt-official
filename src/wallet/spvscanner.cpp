@@ -39,7 +39,6 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
     startTime(0),
     lastProcessed(nullptr),
     numConnections(0),
-    probableHeight(0),
     lastProgressReported(-1.0f),
     lastPersistTime(0)
 {
@@ -62,7 +61,6 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
 CSPVScanner::~CSPVScanner()
 {
     uiInterface.NotifyNumConnectionsChanged.disconnect(boost::bind(&CSPVScanner::OnNumConnectionsChanged, this, _1));
-    uiInterface.NotifyHeaderProgress.disconnect(boost::bind(&CSPVScanner::OnHeaderProgressChanged, this, _1, _2, _3, _4));
 }
 
 bool CSPVScanner::StartScan()
@@ -70,7 +68,6 @@ bool CSPVScanner::StartScan()
     if (StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1)))
     {
         uiInterface.NotifyNumConnectionsChanged.connect(boost::bind(&CSPVScanner::OnNumConnectionsChanged, this, _1));
-        uiInterface.NotifyHeaderProgress.connect(boost::bind(&CSPVScanner::OnHeaderProgressChanged, this, _1, _2, _3, _4));
         HeaderTipChanged(partialChain.Tip());
         NotifyUnifiedProgress();
         return true;
@@ -218,11 +215,6 @@ void CSPVScanner::OnNumConnectionsChanged(int newNumConnections)
     NotifyUnifiedProgress();
 }
 
-void CSPVScanner::OnHeaderProgressChanged(int, int _probableHeight, int, int64_t)
-{
-    probableHeight = _probableHeight;
-}
-
 void CSPVScanner::ResetUnifiedProgressNotification()
 {
     lastProgressReported = -1.0f;
@@ -243,6 +235,8 @@ void CSPVScanner::NotifyUnifiedProgress()
     // which is the only case where progress can decrease during a session (ie. if all connections are lost)
     if (numConnections > 0) {
         newProgress += CONNECTION_WEIGHT;
+
+        int probableHeight = GetProbableHeight();
 
         if (probableHeight > 0 && startHeight > 0 &&
             probableHeight != startHeight &&
