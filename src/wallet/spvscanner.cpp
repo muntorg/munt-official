@@ -65,6 +65,7 @@ CSPVScanner::~CSPVScanner()
 
 bool CSPVScanner::StartScan()
 {
+    LOCK(cs_main);
     if (StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1)))
     {
         uiInterface.NotifyNumConnectionsChanged.connect(boost::bind(&CSPVScanner::OnNumConnectionsChanged, this, _1));
@@ -78,6 +79,7 @@ bool CSPVScanner::StartScan()
 
 const CBlockIndex* CSPVScanner::LastBlockProcessed() const
 {
+    LOCK(cs_main);
     return lastProcessed;
 }
 
@@ -171,6 +173,7 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
 
 void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
 {
+    LOCK(cs_main);
     if (pTip)
     {
         // initialization on the first header tip notification
@@ -211,12 +214,16 @@ void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
 
 void CSPVScanner::OnNumConnectionsChanged(int newNumConnections)
 {
+    LOCK(cs_main);
+
     numConnections = newNumConnections;
     NotifyUnifiedProgress();
 }
 
 void CSPVScanner::ResetUnifiedProgressNotification()
 {
+    LOCK(cs_main);
+
     lastProgressReported = -1.0f;
     if (lastProcessed)
         startHeight = lastProcessed->nHeight;
@@ -225,6 +232,8 @@ void CSPVScanner::ResetUnifiedProgressNotification()
 
 void CSPVScanner::NotifyUnifiedProgress()
 {
+    AssertLockHeld(cs_main);
+
     const float CONNECTION_WEIGHT = 0.05f;
     const float MIN_REPORTING_DELTA = 0.002f;
     const float ALWAYS_REPORT_THRESHOLD = 0.9995f;
@@ -268,6 +277,8 @@ void CSPVScanner::NotifyUnifiedProgress()
 
 void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
 {
+    AssertLockHeld(cs_main);
+
     lastProcessed = pindex;
 
     int64_t now = GetAdjustedTime();
@@ -277,6 +288,8 @@ void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
 
 void CSPVScanner::Persist()
 {
+    LOCK(cs_main);
+
     if (lastProcessed != nullptr)
     {
         {

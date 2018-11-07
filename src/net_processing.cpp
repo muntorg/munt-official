@@ -718,6 +718,8 @@ void NotifyHeaderProgress(CConnman& connman, bool partialProgressed)
 
 int GetProbableHeight()
 {
+    LOCK(cs_main);
+
     int probableHeight = nMaxStartingHeight;
     probableHeight = std::max(probableHeight, Checkpoints::LastCheckPointHeight());
     if (g_connman)
