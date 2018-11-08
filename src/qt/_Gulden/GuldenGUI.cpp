@@ -1023,7 +1023,7 @@ void GUI::hideProgressBarLabel()
     if(statusToolBar)
     {
         statusToolBar->setVisible(false);
-        statusToolBarPlaceholder->setVisible(true);
+        statusToolBarPlaceholder->setVisible(appMenuBar->isVisible()?true:false);
     }
 }
 
@@ -1034,7 +1034,10 @@ void GUI::showProgressBarLabel()
     if (progressBarLabel)
         progressBarLabel->setVisible(true);
     if(statusToolBar)
+    {
         statusToolBar->setVisible(true);
+        statusToolBarPlaceholder->setVisible(false);
+    }
 }
 
 void GUI::hideBalances()
