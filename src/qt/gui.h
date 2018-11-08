@@ -197,7 +197,6 @@ private:
     QToolBar* tabsBar = nullptr;
     QToolBar* accountInfoBar = nullptr;
     QToolBar* statusToolBar = nullptr;
-    QToolBar* statusToolBarPlaceholder = nullptr;
     QFrame* menuBarSpaceFiller = nullptr;
     QFrame* balanceContainer = nullptr;
     WelcomeDialog* welcomeScreen = nullptr;

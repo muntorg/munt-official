@@ -329,6 +329,8 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     ui->generateAnotherRequestButton->setVisible(false);
     ui->accountBuyButton->setVisible(true);
 
+    ui->accountSaveQRButton->setVisible(false);
+
 
 
     QMovie *movie = new QMovie(":/Gulden/loading_animation");
@@ -378,6 +380,8 @@ void ReceiveCoinsDialog::gotoRequestPaymentPage()
     ui->generateRequestButton->setVisible(true);
     ui->generateAnotherRequestButton->setVisible(false);
     ui->accountBuyButton->setVisible(false);
+
+    ui->accountSaveQRButton->setVisible(false);
 }
 
 void ReceiveCoinsDialog::generateRequest()
@@ -404,6 +408,8 @@ void ReceiveCoinsDialog::generateRequest()
     ui->generateRequestButton->setVisible(false);
     ui->generateAnotherRequestButton->setVisible(true);
     ui->accountBuyButton->setVisible(false);
+
+    ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton);
 
     CAmount amount = ui->requestAmount->amount();
     if (amount > 0)

@@ -780,7 +780,6 @@ void GUI::hideToolBars()
     if (statusToolBar)
     {
         statusToolBar->setVisible(false);
-        statusToolBarPlaceholder->setVisible(true);
     }
 }
 
@@ -800,7 +799,6 @@ void GUI::showToolBars()
     {
         bool visibility = (progressBarLabel ? progressBarLabel->isVisible() : false);
         statusToolBar->setVisible(visibility);
-        statusToolBarPlaceholder->setVisible(!visibility);
     }
 }
 
@@ -956,23 +954,7 @@ void GUI::doPostInit()
 
             addToolBar( Qt::BottomToolBarArea, statusToolBar );
 
-            statusToolBarPlaceholder = new QToolBar( QCoreApplication::translate( "toolbar", "Status toolbar placeholder" ), this);
-            statusToolBarPlaceholder->setObjectName( "status_bar_placeholder" );
-            statusToolBarPlaceholder->setMovable( false );
-
-            QFrame* statusBarPlaceholderStatusArea = new QFrame(statusToolBarPlaceholder);
-            statusBarPlaceholderStatusArea->setObjectName("status_bar_status_area");
-            statusBarPlaceholderStatusArea->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
-            statusBarPlaceholderStatusArea->setContentsMargins( 0, 0, 0, 0);
-            QHBoxLayout* statusBarStatusPlaceholderAreaLayout = new QHBoxLayout();
-            statusBarPlaceholderStatusArea->setLayout(statusBarStatusPlaceholderAreaLayout);
-            statusBarStatusPlaceholderAreaLayout->setSpacing(0);
-            statusBarStatusPlaceholderAreaLayout->setContentsMargins( 0, 0, 0, 0 );
-            statusToolBarPlaceholder->addWidget(statusBarPlaceholderStatusArea);
-            addToolBar( Qt::BottomToolBarArea, statusToolBarPlaceholder );
-
             statusToolBar->setVisible(false);
-            statusToolBarPlaceholder->setVisible(false);
         }
     }
 
@@ -1023,7 +1005,6 @@ void GUI::hideProgressBarLabel()
     if(statusToolBar)
     {
         statusToolBar->setVisible(false);
-        statusToolBarPlaceholder->setVisible(appMenuBar->isVisible()?true:false);
     }
 }
 
@@ -1036,7 +1017,6 @@ void GUI::showProgressBarLabel()
     if(statusToolBar)
     {
         statusToolBar->setVisible(true);
-        statusToolBarPlaceholder->setVisible(false);
     }
 }
 
