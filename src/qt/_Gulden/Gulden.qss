@@ -1097,7 +1097,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     text-transform: uppercase;
 }
 
-#labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading
+#labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelSaveToDiskDescription
 {
     margin-top: 6px;
 }
