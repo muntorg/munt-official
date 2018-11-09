@@ -27,6 +27,7 @@ GuldenAppManager* GuldenAppManager::gApp = nullptr;
 
 GuldenAppManager::GuldenAppManager()
 : fShutDownHasBeenInitiated(false),
+  shutdownDidFinish(false),
   recoveryBirthNumber(0)
 {
     if (gApp)
@@ -128,6 +129,12 @@ void GuldenAppManager::shutdown()
     #pragma GCC diagnostic pop
 
     #endif
+}
+
+void GuldenAppManager::waitForShutDown()
+{
+    std::unique_lock<std::mutex> lock(shutdownFinishMutex);
+    shutdownFinishCondition.wait(lock, [&]{ return shutdownDidFinish; });
 }
 
 #if HAVE_DECL_FORK
@@ -261,6 +268,13 @@ void GuldenAppManager::shutdownThread()
             LogPrintf("shutdown thread: Core shutdown finished, signaling UI to shut itself down\n");
             signalAppShutdownFinished();
             MilliSleep(50);
+
+            // signal threads blocked on waitForShutDown()
+            {
+                std::lock_guard<std::mutex> lock(shutdownFinishMutex);
+                shutdownDidFinish = true;
+            }
+            shutdownFinishCondition.notify_all();
 
             LogPrintf("shutdown thread: Exiting shutdown thread\n");
         }

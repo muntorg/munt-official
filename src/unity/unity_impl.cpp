@@ -258,7 +258,8 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, bool test
 
 void GuldenUnifiedBackend::TerminateUnityLib()
 {
-    return GuldenAppManager::gApp->shutdown();
+    GuldenAppManager::gApp->shutdown();
+    GuldenAppManager::gApp->waitForShutDown();
 }
 
 QrcodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)

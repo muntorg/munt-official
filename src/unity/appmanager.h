@@ -37,6 +37,9 @@ public:
     //! All actual work takes places inside shutdownThread which is a detached thread
     void shutdown();
 
+    //! Explicitly wait for shutdown to complete
+    void waitForShutDown();
+
     //! This places the app in a daemonised state.
     //! NB! Always call this before calling initialise.
     bool daemonise();
@@ -52,6 +55,10 @@ public:
     boost::signals2::signal<void ()> signalAppShutdownFinished;
     boost::signals2::signal<void (std::string exceptionMessage)> signalRunawayException;
 private:
+    std::mutex shutdownFinishMutex;
+    std::condition_variable shutdownFinishCondition;
+    bool shutdownDidFinish;
+
     std::mutex appManagerInitShutDownMutex;
     #ifdef WIN32
     std::condition_variable sigtermCv;
