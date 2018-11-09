@@ -14,10 +14,7 @@
 #include <thread>
 #include <boost/signals2/signal.hpp>
 #include <boost/thread.hpp>
-
-#ifdef WIN32
 #include <condition_variable>
-#endif
 
 /** Class encapsulating Gulden startup and shutdown.
  * Allows running startup and shutdown in a different thread from the UI thread.
