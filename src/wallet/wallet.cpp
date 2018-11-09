@@ -439,9 +439,6 @@ bool CWallet::HasWalletSpend(const uint256& txid) const
 
 void CWallet::Flush(bool shutdown)
 {
-    if (shutdown && pSPVScanner)
-        pSPVScanner->Persist();
-
     dbw->Flush(shutdown);
 }
 
