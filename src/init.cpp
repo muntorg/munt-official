@@ -236,12 +236,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
         if (!isFullSyncMode() && IsPartialSyncActive())
             PersistAndPruneForPartialSync();
         else
-        {
-            // avoid duplicate FlushStateToDisk as PruneForPartialSync will also call it
-            if (pcoinsTip != NULL) {
-                FlushStateToDisk();
-            }
-        }
+            FlushStateToDisk();
 
         blockStore.CloseBlockFiles();
         delete pcoinsTip;
