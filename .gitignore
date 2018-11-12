@@ -138,3 +138,6 @@ foo2
 /src/unity/djinni/
 
 xcuserdata
+
+# Android Studio/IntelliJ IDE
+.idea
