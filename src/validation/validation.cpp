@@ -1403,8 +1403,8 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
             }
 
             // prune block index for partial sync
+            std::vector<const CBlockIndex*> removals;
             if (fFlushPartialSync) {
-                std::vector<const CBlockIndex*> removals;
                 for(const auto& it: mapBlockIndex)
                 {
                     CBlockIndex* index = it.second;
@@ -1416,14 +1416,6 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                     }
                 }
 
-                LogPrintf("%s: deleting %d block indexes, prune height = %d\n", __func__, removals.size(), nManualPruneHeight);
-
-                // Will usually have at least one index to prune, because when loading the index
-                // of the previous block of partial chain start is added. This is ok.
-                if (removals.size() > 0)
-                {
-                    pblocktree->EraseBatchSync(removals);
-                }
             }
 
             std::vector<const CBlockIndex*> vBlocks;
@@ -1432,7 +1424,8 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                 vBlocks.push_back(*it);
                 setDirtyBlockIndex.erase(it++);
             }
-            if (!pblocktree->WriteBatchSync(vFiles, nLastBlockFile, vBlocks)) {
+            LogPrintf("%s: updating %d and deleting %d block indexes, prune height = %d\n", __func__, vBlocks.size(), removals.size(), nManualPruneHeight);
+            if (!pblocktree->UpdateBatchSync(vFiles, nLastBlockFile, vBlocks, removals)) {
                 return AbortNode(state, "Failed to write to block index database");
             }
         }
@@ -3498,7 +3491,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
         delete pblock;
 
         FlushBlockFile();
-        if (!pblocktree->WriteBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks))
+        if (!pblocktree->UpdateBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks, std::vector<const CBlockIndex*>()))
         {
             return error("UpgradeBlockIndex: Failed to write to block index database");
         }
