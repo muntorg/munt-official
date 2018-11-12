@@ -156,6 +156,9 @@ namespace {
 
     std::atomic<bool> fFullSyncMode(DEFAULT_FULL_SYNC_MODE);
 
+    /** Track pruning of partial chain to optimize & prevent duplicate erase */
+    int nPartialPruneHeightDone = 0;
+
     boost::signals2::signal<void (const CBlockIndex *pTip)> headerTipSignal;
 } // anon namespace
 
@@ -1408,14 +1411,15 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                 for(const auto& it: mapBlockIndex)
                 {
                     CBlockIndex* index = it.second;
-                    if (   (index->nHeight < nManualPruneHeight || !partialChain.Contains(index))
-                           && index != chainActive.Genesis())
+                    if ((index->nHeight < nManualPruneHeight || !partialChain.Contains(index))
+                        && index->nHeight >= nPartialPruneHeightDone
+                        && index != chainActive.Genesis())
                     {
                         removals.push_back(index);
                         setDirtyBlockIndex.erase(index); // prevent pruned indexes to be rewritten
                     }
                 }
-
+                nPartialPruneHeightDone = std::max(nManualPruneHeight, nPartialPruneHeightDone);
             }
 
             std::vector<const CBlockIndex*> vBlocks;
@@ -4153,6 +4157,7 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
         if (IsPartialSyncActive()) // IsPartialSyncActive() => above checks for time and/or 576 window failed
         {
             LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync reset.\n");
+            assert(false);
             pindexBestPartial = nullptr;
             partialChain.SetTip(nullptr);
             partialChain.SetHeightOffset(0);
