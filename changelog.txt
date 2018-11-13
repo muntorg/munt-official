@@ -1,4 +1,4 @@
-2.0.0.16
+2.0.0.17
 RPC - Introduce new debug command verifywitnessaddress
 UI - Update styling and graphics
 
