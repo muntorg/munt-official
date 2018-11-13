@@ -23,8 +23,9 @@ void CMerkleTx::SetMerkleBranch(const CBlockIndex* pindex, int posInBlock)
     // Update the tx's hashBlock
     hashBlock = pindex->GetBlockHashPoW2();
 
-    // Record block height
+    // Record block height and timestamp
     nHeight = pindex->nHeight;
+    nBlockTime = pindex->nTime;
 
     // set the position of the transaction in the block
     nIndex = posInBlock;

@@ -932,6 +932,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         {
             wtx.hashBlock = wtxIn.hashBlock;
             wtx.nHeight = wtxIn.nHeight;
+            wtx.nBlockTime = wtxIn.nBlockTime;
             fUpdated = true;
         }
         // If no longer abandoned, update
@@ -939,6 +940,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         {
             wtx.hashBlock = wtxIn.hashBlock;
             wtx.nHeight = wtxIn.nHeight;
+            wtx.nBlockTime = wtxIn.nBlockTime;
             fUpdated = true;
         }
         if (wtxIn.nIndex != -1 && (wtxIn.nIndex != wtx.nIndex))
