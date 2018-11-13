@@ -58,11 +58,17 @@ void BackupDialog::showBackupPhrase()
             CWalletTx* wtx = it->second.first;
             if (!wtx->hashUnset())
             {
-                CBlockIndex* index = mapBlockIndex[wtx->hashBlock];
+                CBlockIndex* index = mapBlockIndex.count(wtx->hashBlock) ? mapBlockIndex[wtx->hashBlock] : nullptr;
+                // try to get time from block timestamp
                 if (index && index->IsValid(BLOCK_VALID_HEADER))
                     firstTransactionTime = std::min(firstTransactionTime, std::max(int64_t(0), index->GetBlockTime()));
+                else if (wtx->nBlockTime > 0)
+                {
+                    firstTransactionTime = std::min(firstTransactionTime, int64_t(wtx->nBlockTime));
+                }
                 else
                 {
+                    // can't determine transaction time, only safe option left
                     firstTransactionTime = 0;
                     break;
                 }
