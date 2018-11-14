@@ -17,6 +17,10 @@ import android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC
 import com.gulden.jniunifiedbackend.*
 import android.app.NotificationChannel
 import android.app.NotificationManager.IMPORTANCE_LOW
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
+import android.arch.lifecycle.ProcessLifecycleOwner
 import android.graphics.Color
 import android.os.Build
 
@@ -24,7 +28,7 @@ import android.os.Build
 var NOTIFICATION_ID_FOREGROUND_SERVICE = 2
 var NOTIFICATION_ID_INCOMING_TRANSACTION = 3
 
-class UnityService : Service()
+class UnityService : Service(), LifecycleObserver
 {
 
     // All signal are broadcast to main program via this handler.
@@ -76,6 +80,7 @@ class UnityService : Service()
 
         override fun notifyShutdown(): Boolean
         {
+            ProcessLifecycleOwner.get().lifecycle.removeObserver(this@UnityService)
             stopSelf()
             return true
         }
@@ -84,6 +89,9 @@ class UnityService : Service()
         {
             coreReady = true
             signalHandler?.coreUIInit()
+
+            ProcessLifecycleOwner.get().lifecycle.addObserver(this@UnityService)
+
             return true
         }
 
@@ -225,5 +233,11 @@ class UnityService : Service()
     {
         var IS_SERVICE_RUNNING = false
         var START_FOREGROUND_ACTION = "com.gulden.UnityService.startforegroundaction"
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun allActivitiesStopped()
+    {
+        GuldenUnifiedBackend.PersistAndPruneForSPV();
     }
 }
