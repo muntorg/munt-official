@@ -1411,9 +1411,9 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                 for(const auto& it: mapBlockIndex)
                 {
                     CBlockIndex* index = it.second;
-                    if ((index->nHeight < nManualPruneHeight || !partialChain.Contains(index))
-                        && index->nHeight >= nPartialPruneHeightDone
-                        && index != chainActive.Genesis())
+                    if (   (   index->nHeight < nManualPruneHeight // remove below prune height
+                            && index->nHeight >= nPartialPruneHeightDone  && nPartialPruneHeightDone > 0) // don't remove again what was removed before (and avoid removing height 0)
+                        || index->nStatus & BLOCK_FAILED_MASK ) // remove invalid blocks (if it changes they will be dirty again)
                     {
                         removals.push_back(index);
                         setDirtyBlockIndex.erase(index); // prevent pruned indexes to be rewritten
