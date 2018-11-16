@@ -62,6 +62,9 @@ private:
 
     void ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex);
 
+    // timestamp of peristed last processed block
+    int64_t lastPersistedBlockTime;
+
     // last time when scan progress was persisted to the db
     int64_t lastPersistTime;
 

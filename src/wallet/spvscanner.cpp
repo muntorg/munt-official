@@ -40,6 +40,7 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
     lastProcessed(nullptr),
     numConnections(0),
     lastProgressReported(-1.0f),
+    lastPersistedBlockTime(0),
     lastPersistTime(0)
 {
     LOCK(cs_main);
@@ -50,9 +51,8 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
     // forward scan starting time to last block processed if available
     CWalletDB walletdb(*wallet.dbw);
     CBlockLocator locator;
-    int64_t lastBlockTime;
-    if (walletdb.ReadLastSPVBlockProcessed(locator, lastBlockTime))
-        startTime = lastBlockTime;
+    if (walletdb.ReadLastSPVBlockProcessed(locator, lastPersistedBlockTime))
+        startTime = lastPersistedBlockTime;
 
     // rewind scan starting time by maximum handled fork duration
     startTime = std::max(Params().GenesisBlock().GetBlockTime(), startTime - MAX_FORK_DURATION);
@@ -290,20 +290,23 @@ void CSPVScanner::Persist()
 {
     LOCK(cs_main);
 
-    if (lastProcessed != nullptr)
+    if (lastProcessed != nullptr && lastProcessed->GetBlockTime() > lastPersistedBlockTime)
     {
-        {
-            // scoped here to ensure that the walletdb is flushed before assuming a new prune height
-            CWalletDB walletdb(*wallet.dbw);
-            walletdb.WriteLastSPVBlockProcessed(partialChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
-        }
+        // persist & prune block index
+        PersistAndPruneForPartialSync();
+
+        // persist lastProcessed
+        CWalletDB walletdb(*wallet.dbw);
+        walletdb.WriteLastSPVBlockProcessed(partialChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
+
+        // now that we are sure both the index and lastProcessed time locator have been saved
+        // compute the new pruning height for the next iteration
         int maxPruneHeight = lastProcessed->nHeight - PARTIAL_SYNC_PRUNE_HEIGHT;
         if (maxPruneHeight > 0)
             SetMaxSPVPruneHeight(maxPruneHeight);
 
         lastPersistTime = GetAdjustedTime();
+        lastPersistedBlockTime = lastProcessed->GetBlockTime();
         blocksSincePersist = 0;
-
-        PersistAndPruneForPartialSync(true);
     }
 }
