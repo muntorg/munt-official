@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za) & Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -9,35 +9,41 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 
-class IntroActivity : Activity()
+class IntroActivity : Activity(), UnityCore.Observer
 {
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun createNewWallet(): Boolean {
+        gotoActivity(WelcomeActivity::class.java)
+        return true
+    }
+
+    override fun haveExistingWallet(): Boolean {
+        gotoActivity(WalletActivity::class.java)
+        return true
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as ActivityManager).introActivity = this
+
+        val core = UnityCore.instance
+
+        core.addObserver(this)
+        core.startCore()
     }
 
-    override fun onStop()
-    {
-        super.onStop()
-        (application as ActivityManager).introActivity = null
+    override fun onDestroy() {
+        super.onDestroy()
+
+        UnityCore.instance.removeObserver(this)
     }
 
-    fun showActivityForIntent(intent : Intent)
+    fun gotoActivity(cls: Class<*> )
     {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
+        runOnUiThread {
+            val intent = Intent(this, cls)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
 
-        finish()
-    }
-
-    fun gotoWelcomeActivity()
-    {
-        showActivityForIntent(Intent(this, WelcomeActivity::class.java))
-    }
-
-    fun gotoWalletActivity()
-    {
-        showActivityForIntent(Intent(this, WalletActivity::class.java))
+            finish()
+        }
     }
 }

@@ -40,8 +40,21 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
     supportFragmentManager.inTransaction{replace(frameId, fragment as Fragment)}
 }
 
-class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener
+class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentInteractionListener,
+        ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener
 {
+    override fun syncProgressChanged(percent: Float): Boolean {
+        runOnUiThread {
+            setSyncProgress(percent)
+        }
+        return true
+    }
+
+    override fun walletBalanceChanged(balance: Long): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -50,16 +63,19 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         syncProgress.max = 1000000
-        syncProgress.progress = 0
-
-        (application as ActivityManager).walletActivity = this
     }
 
-    override fun onStop()
-    {
+    override fun onStart() {
+        super.onStart()
+
+        syncProgress.progress = 0
+        UnityCore.instance.addObserver(this)
+    }
+
+    override fun onStop() {
         super.onStop()
 
-        (application as ActivityManager).walletActivity = null
+        UnityCore.instance.removeObserver(this)
     }
 
     override fun onFragmentInteraction(uri: Uri)
@@ -116,11 +132,14 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
         walletLogo.visibility = View.GONE
     }
 
-    fun coreUIInit()
+    override fun onCoreReady(): Boolean
     {
-        if (sendFragment == null)
-            sendFragment = SendFragment()
-        addFragment(sendFragment!!, R.id.mainLayout)
+        runOnUiThread {
+            if (sendFragment == null)
+                sendFragment = SendFragment()
+            addFragment(sendFragment!!, R.id.mainLayout)
+        }
+        return true
     }
 
     fun handleQRScanButtonClick(view : View) {

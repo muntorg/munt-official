@@ -63,11 +63,6 @@
             android:name=".TransactionInfoActivity"
             android:label="@string/title_activity_transaction_info"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <service
-            android:name=".UnityService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

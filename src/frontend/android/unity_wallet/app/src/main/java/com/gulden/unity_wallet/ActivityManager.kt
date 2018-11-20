@@ -1,114 +1,50 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za) & Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
 package com.gulden.unity_wallet
 
 import android.app.Application
-import android.content.ComponentName
-import android.content.Intent
-import android.content.ServiceConnection
-import android.os.Build
-import android.os.IBinder
-import android.support.v7.app.AppCompatActivity
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
+import android.arch.lifecycle.ProcessLifecycleOwner
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 
-class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
+class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer
 {
-    var walletActivity : WalletActivity ?= null
-        set(value)
-        {
-            field = value
-            if (field == null)
-            {
-                unbindServiceIfAllActivitiesStopped()
-            }
-        }
-    var introActivity : IntroActivity ?= null
-        set(value)
-        {
-            field = value
-        }
-
-    override fun syncProgressChanged(percent: Float): Boolean
-    {
-        walletActivity?.runOnUiThread{ walletActivity?.setSyncProgress(percent); }
-        return true
-    }
-    override fun walletBalanceChanged(balance: Long): Boolean
-    {
-        walletActivity?.runOnUiThread{ walletActivity?.setWalletBalance(balance); }
-        return true
-    }
-    override fun coreUIInit() : Boolean
-    {
-        walletActivity?.runOnUiThread{ walletActivity?.coreUIInit(); }
-        return true
-    }
-    override fun haveExistingWallet() : Boolean
-    {
-        introActivity?.runOnUiThread{ introActivity?.gotoWalletActivity(); }
-        return true
-    }
-    override fun createNewWallet() : Boolean
-    {
-        introActivity?.runOnUiThread{ introActivity?.gotoWelcomeActivity(); }
-        return true
-    }
-
-    private var bound = false
-    private lateinit var myService : UnityService
     override fun onCreate()
     {
         super.onCreate()
 
-        val service = Intent(this, UnityService::class.java)
-        if (!UnityService.IS_SERVICE_RUNNING)
-        {
-            service.action = UnityService.START_FOREGROUND_ACTION
-            UnityService.IS_SERVICE_RUNNING = true
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            {
-                startForegroundService(service)
-            }
-            else
-            {
-                startService(service)
-            }
-        }
+        UnityCore.instance.configure(
+                UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, testnet = Constants.TEST)
+        )
 
-        // Bind to service
-        val intent = Intent(this, UnityService::class.java)
-        bindService(intent, serviceConnection, AppCompatActivity.BIND_AUTO_CREATE)
+        UnityCore.instance.addObserver(this)
     }
 
-    fun unbindServiceIfAllActivitiesStopped()
+    override fun onCoreReady(): Boolean {
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        return true
+    }
+
+    override fun onCoreShutdown(): Boolean {
+        ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
+        return true
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun allActivitiesStopped()
     {
-        if (walletActivity == null && introActivity == null)
-        {
-            // Unbind from service
-            if (bound)
-            {
-                myService.signalHandler = null
-                unbindService(serviceConnection)
-                bound = false
-            }
-        }
+        GuldenUnifiedBackend.PersistAndPruneForSPV();
     }
 
-private val serviceConnection = object : ServiceConnection
-{
-
-    override fun onServiceConnected(className: ComponentName, service: IBinder) {
-        // cast the IBinder and get MyService instance
-        val binder = service as UnityService.LocalBinder
-        myService = binder.service
-        bound = true
-        myService.signalHandler = (this@ActivityManager) // register
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun firstActivityStarted()
+    {
+        GuldenUnifiedBackend.ResetUnifiedProgress()
     }
 
-    override fun onServiceDisconnected(arg0: ComponentName) {
-        bound = false
-    }
-}
 }

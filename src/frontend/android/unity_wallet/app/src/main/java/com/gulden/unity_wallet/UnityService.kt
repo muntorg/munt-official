@@ -24,11 +24,10 @@ import android.arch.lifecycle.ProcessLifecycleOwner
 import android.graphics.Color
 import android.os.Build
 
-
 var NOTIFICATION_ID_FOREGROUND_SERVICE = 2
 var NOTIFICATION_ID_INCOMING_TRANSACTION = 3
 
-class UnityService : Service(), LifecycleObserver
+class UnityService : Service()
 {
 
     // All signal are broadcast to main program via this handler.
@@ -80,7 +79,6 @@ class UnityService : Service(), LifecycleObserver
 
         override fun notifyShutdown(): Boolean
         {
-            ProcessLifecycleOwner.get().lifecycle.removeObserver(this@UnityService)
             stopSelf()
             return true
         }
@@ -89,8 +87,6 @@ class UnityService : Service(), LifecycleObserver
         {
             coreReady = true
             signalHandler?.coreUIInit()
-
-            ProcessLifecycleOwner.get().lifecycle.addObserver(this@UnityService)
 
             return true
         }
@@ -239,5 +235,15 @@ class UnityService : Service(), LifecycleObserver
     fun allActivitiesStopped()
     {
         GuldenUnifiedBackend.PersistAndPruneForSPV();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun firstActivityStarted()
+    {
+        if (coreReady)
+        {
+            GuldenUnifiedBackend.ResetUnifiedProgress()
+            signalHandler?.syncProgressChanged(0.0F)
+        }
     }
 }
