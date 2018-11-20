@@ -28,6 +28,9 @@ class IntroActivity : Activity(), UnityCore.Observer
 
         core.addObserver(this)
         core.startCore()
+
+        if (core.isCoreReady())
+            gotoActivity(WalletActivity::class.java)
     }
 
     override fun onDestroy() {
