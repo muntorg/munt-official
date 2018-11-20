@@ -328,12 +328,12 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="requestCopyToClipboardButton">
+              <widget class="ClickableLabel" name="requestCopyToClipboardButton">
                <property name="toolTip">
                 <string>Copy request to clipboard</string>
                </property>
                <property name="text">
-                <string>TextLabel</string>
+                <string>Copy request to clipboard</string>
                </property>
                <property name="indent">
                 <number>0</number>

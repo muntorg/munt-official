@@ -29,6 +29,7 @@
 #include <QTextDocument>
 #include <QDesktopWidget>
 #include <QDesktopServices>
+#include <QToolTip>
 
 #include "GuldenGUI.h"
 
@@ -261,10 +262,12 @@ void ReceiveCoinsDialog::copyAddressToClipboard()
     if (ui->receiveCoinsStackedWidget->currentIndex() == 0)
     {
         GUIUtil::setClipboard(accountAddress);
+        QToolTip::showText(ui->accountCopyToClipboardButton->mapToGlobal(QPoint(0,0)), tr("Address copied to clipboard"),ui->accountCopyToClipboardButton);
     }
     else if (ui->receiveCoinsStackedWidget->currentIndex() == 3)
     {
         GUIUtil::setClipboard(ui->labelPaymentRequest->text());
+        QToolTip::showText(ui->requestCopyToClipboardButton->mapToGlobal(QPoint(0,0)), tr("Request copied to clipboard"),ui->requestCopyToClipboardButton);
     }
 }
 
