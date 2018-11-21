@@ -64,7 +64,8 @@ file COPYING
     <SwitchPreference
         android:key="preference_notify_transaction_activity"
         android:iconSpaceReserved="false"
-        android:persistent="false"
+        android:persistent="true"
+        android:defaultValue="true"
         android:summary=""
         android:title="Notifications" />
 </PreferenceScreen>
