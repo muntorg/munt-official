@@ -21,7 +21,6 @@ import android.support.v7.preference.PreferenceManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionType
-import java.util.prefs.PreferenceChangeListener
 
 class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -53,7 +52,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         when (key) {
             "preference_background_sync" -> {
                 val syncType = sharedPreferences!!.getString(key, getString(R.string.background_sync_default))
-                setupBackgroundSync(syncType)
+                setupBackgroundSync(this, syncType)
             }
         }
     }
