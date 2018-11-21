@@ -15,13 +15,15 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v4.app.NotificationCompat
 import android.support.v7.preference.PreferenceManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionType
+import java.util.prefs.PreferenceChangeListener
 
-class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer
+class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
 {
     override fun onCreate()
     {
@@ -32,6 +34,9 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer
         )
 
         UnityCore.instance.addObserver(this)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onCoreReady(): Boolean {
@@ -42,6 +47,15 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer
     override fun onCoreShutdown(): Boolean {
         ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
         return true
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        when (key) {
+            "preference_background_sync" -> {
+                val syncType = sharedPreferences!!.getString(key, getString(R.string.background_sync_default))
+                setupBackgroundSync(syncType)
+            }
+        }
     }
 
     override fun incomingTransaction(transaction: TransactionRecord): Boolean {

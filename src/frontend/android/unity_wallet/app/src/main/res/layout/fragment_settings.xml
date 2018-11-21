@@ -68,4 +68,13 @@ file COPYING
         android:defaultValue="true"
         android:summary=""
         android:title="Notifications" />
+
+    <ListPreference
+        android:key="preference_background_sync"
+        android:title="Background synchronisation"
+        android:summary="Synchonize blockchain while not using the app. Receive notifications while the app is not use. May reduce battery life."
+        android:entries="@array/background_sync_entries"
+        android:entryValues="@array/background_sync_values"
+        android:defaultValue="@string/background_sync_default" />
+
 </PreferenceScreen>

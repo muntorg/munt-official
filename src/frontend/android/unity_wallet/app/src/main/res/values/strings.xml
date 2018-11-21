@@ -39,4 +39,17 @@ file COPYING
     <string name="address_book_empty_title">Empty address book</string>
     <string name="transaction_list_empty_title">No Gulden received so far.</string>
     <string name="transaction_list_empty_message">Touch here to buy your first Gulden.</string>
+
+    <string-array name="background_sync_entries">
+        <item>Off</item>
+        <item>Daily</item>
+        <item>Always</item>
+    </string-array>
+    <string-array name="background_sync_values">
+        <item>BACKGROUND_SYNC_OFF</item>
+        <item>BACKGROUND_SYNC_DAILY</item>
+        <item>BACKGROUND_SYNC_CONTINUOUS</item>
+    </string-array>
+    <string name="background_sync_default">BACKGROUND_SYNC_OFF</string>
+
 </resources>
