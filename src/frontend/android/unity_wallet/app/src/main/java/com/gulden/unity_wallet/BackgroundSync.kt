@@ -6,39 +6,39 @@
 package com.gulden.unity_wallet
 
 import android.app.*
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import android.content.Intent
-import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat.startForegroundService
 import android.util.Log
-import com.gulden.jniunifiedbackend.*
-import kotlin.concurrent.thread
+import android.content.BroadcastReceiver
+import android.support.v7.preference.PreferenceManager
+import android.support.v4.content.ContextCompat
 
 private val TAG = "backgroundsync"
 
-fun setupBackgroundSync(context: Context, syncType: String) {
+fun setupBackgroundSync(context: Context) {
+
+    // get syncType from preferences
+    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val syncType = sharedPreferences.getString("preference_background_sync", context.getString(R.string.background_sync_default))!!
 
     val serviceIntent = Intent(context, SyncService::class.java)
-    context.stopService(serviceIntent)
 
     Log.i(TAG, "Starting background sync: " + syncType)
 
     when (syncType) {
         "BACKGROUND_SYNC_OFF" -> {
-            // nothing to be done here
+            context.stopService(serviceIntent)
         }
 
         "BACKGROUND_SYNC_DAILY" -> {
-            TODO(reason = "BACKGROUND_SYNC_DAILY")
+            context.stopService(serviceIntent)
         }
 
         "BACKGROUND_SYNC_CONTINUOUS" -> {
-            context.startService(serviceIntent)
+            ContextCompat.startForegroundService(context, serviceIntent)
         }
     }
 }
@@ -104,10 +104,21 @@ class SyncService : Service(), UnityCore.Observer
         super.onCreate()
 
         UnityCore.instance.addObserver(this)
+        UnityCore.instance.startCore()
     }
     override fun onDestroy() {
         super.onDestroy()
 
         UnityCore.instance.removeObserver(this)
     }
+}
+
+class BootReceiver : BroadcastReceiver() {
+
+    override fun onReceive(context: Context, intent: Intent) {
+        if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
+            setupBackgroundSync(context)
+        }
+    }
+
 }

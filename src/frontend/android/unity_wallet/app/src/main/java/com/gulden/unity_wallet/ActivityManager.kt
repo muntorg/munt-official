@@ -36,6 +36,8 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
+
+        setupBackgroundSync(this)
     }
 
     override fun onCoreReady(): Boolean {
@@ -51,8 +53,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
             "preference_background_sync" -> {
-                val syncType = sharedPreferences!!.getString(key, getString(R.string.background_sync_default))
-                setupBackgroundSync(this, syncType)
+                setupBackgroundSync(this)
             }
         }
     }
