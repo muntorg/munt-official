@@ -80,6 +80,20 @@ class UnityCore {
     private var observersLock: Lock = ReentrantLock()
     private var observers: MutableSet<Observer> = mutableSetOf()
 
+    private var stateTrackLock:  Lock = ReentrantLock()
+
+    var progressPercent: Float = 0F
+        set(value) {
+            stateTrackLock.withLock {
+                field = value
+            }
+        }
+        get() {
+            stateTrackLock.withLock {
+                return field
+            }
+        }
+
     // Handle signals from core library, convert and broadcast to all registered observers
     private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
         override fun logPrint(str: String?) {
@@ -87,8 +101,10 @@ class UnityCore {
         }
 
         override fun notifyUnifiedProgress(progress: Float) {
+            val percent: Float = 100 * progress
+            progressPercent = percent
+
             observersLock.withLock {
-                val percent: Float = 100 * progress
                 observers.forEach {
                     it.syncProgressChanged(percent)
                 }

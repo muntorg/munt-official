@@ -13,8 +13,11 @@ import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.content.BroadcastReceiver
+import android.os.SystemClock.sleep
 import android.support.v7.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
+import androidx.work.*
+import java.util.concurrent.TimeUnit
 
 private val TAG = "backgroundsync"
 
@@ -24,17 +27,26 @@ fun setupBackgroundSync(context: Context) {
     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     val syncType = sharedPreferences.getString("preference_background_sync", context.getString(R.string.background_sync_default))!!
 
+    Log.i(TAG, "Starting background sync: " + syncType)
+
     val serviceIntent = Intent(context, SyncService::class.java)
 
-    Log.i(TAG, "Starting background sync: " + syncType)
+    val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
 
     when (syncType) {
         "BACKGROUND_SYNC_OFF" -> {
             context.stopService(serviceIntent)
+            WorkManager.getInstance().cancelAllWorkByTag(GULDEN_PERIODIC_SYNC)
         }
 
         "BACKGROUND_SYNC_DAILY" -> {
             context.stopService(serviceIntent)
+            WorkManager.getInstance().cancelAllWorkByTag(GULDEN_PERIODIC_SYNC)
+
+            val work = PeriodicWorkRequestBuilder<SyncWorker>(24, TimeUnit.HOURS)
+                    .addTag(GULDEN_PERIODIC_SYNC)
+                    .build()
+            WorkManager.getInstance().enqueue(work)
         }
 
         "BACKGROUND_SYNC_CONTINUOUS" -> {
@@ -121,4 +133,33 @@ class BootReceiver : BroadcastReceiver() {
         }
     }
 
+}
+
+class SyncWorker(context : Context, params : WorkerParameters)
+    : UnityCore.Observer, Worker(context, params) {
+
+    override fun syncProgressChanged(percent: Float): Boolean {
+        Log.i(TAG, "periodic sync progress = " + percent)
+        return true
+    }
+
+    override fun doWork(): ListenableWorker.Result {
+        Log.i(TAG, "Periodic sync started")
+
+        UnityCore.instance.addObserver(this)
+        UnityCore.instance.startCore()
+
+        // wait until sync is complete (or get killed by the OS which ever comes first)
+        while (UnityCore.instance.progressPercent < 100.0) {
+            sleep(5000)
+        }
+
+        Log.i(TAG, "Periodic sync finished")
+
+        // Indicate success or failure with your return value:
+        return ListenableWorker.Result.SUCCESS
+
+        // (Returning RETRY tells WorkManager to try this task again
+        // later; FAILURE says not to try again.)
+    }
 }
