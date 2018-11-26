@@ -59,6 +59,11 @@ file COPYING
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_gulden_logo_text" />
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10000" />
+
             <ImageView
                 android:id="@+id/walletBalanceLogo"
                 android:layout_width="20dp"
@@ -79,11 +84,6 @@ file COPYING
                 android:textSize="22sp"
                 android:visibility="invisible"
                 tools:textColor="@color/colorPrimary" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="10000" />
         </LinearLayout>
 
         <ProgressBar

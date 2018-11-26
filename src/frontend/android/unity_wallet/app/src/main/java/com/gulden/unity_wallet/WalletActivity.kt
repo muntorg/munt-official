@@ -51,10 +51,6 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         return true
     }
 
-    override fun walletBalanceChanged(balance: Long): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -63,6 +59,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         syncProgress.max = 1000000
+        setWalletBalance(UnityCore.instance.balanceAmount)
     }
 
     override fun onStart() {
@@ -126,10 +123,10 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
 
     fun setWalletBalance(balance : Long)
     {
-        walletBalance.text = (balance.toFloat() / 100000000).toString()
+        val coins = balance.toFloat() / 100000000
+        walletBalance.text = String.format("%.2f", coins)
         walletBalanceLogo.visibility = View.VISIBLE
         walletBalance.visibility = View.VISIBLE
-        walletLogo.visibility = View.GONE
     }
 
     override fun onCoreReady(): Boolean
@@ -139,6 +136,11 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
                 sendFragment = SendFragment()
             addFragment(sendFragment!!, R.id.mainLayout)
         }
+        return true
+    }
+
+    override fun walletBalanceChanged(balance: Long): Boolean {
+        setWalletBalance(balance)
         return true
     }
 

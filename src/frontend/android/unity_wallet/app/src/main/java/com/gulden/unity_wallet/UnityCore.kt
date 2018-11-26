@@ -94,6 +94,18 @@ class UnityCore {
             }
         }
 
+    var balanceAmount: Long = 0
+        set(value) {
+            stateTrackLock.withLock {
+                field = value
+            }
+        }
+        get() {
+            stateTrackLock.withLock {
+                return field
+            }
+        }
+
     // Handle signals from core library, convert and broadcast to all registered observers
     private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
         override fun logPrint(str: String?) {
@@ -112,10 +124,10 @@ class UnityCore {
         }
 
         override fun notifyBalanceChange(newBalance: BalanceRecord): Boolean {
-            val balance: Long = newBalance.availableIncludingLocked + newBalance.immatureIncludingLocked + newBalance.unconfirmedIncludingLocked
+            balanceAmount = newBalance.availableIncludingLocked + newBalance.immatureIncludingLocked + newBalance.unconfirmedIncludingLocked
             observersLock.withLock {
                 observers.forEach {
-                    it.walletBalanceChanged(balance)
+                    it.walletBalanceChanged(balanceAmount)
                 }
             }
             return true
