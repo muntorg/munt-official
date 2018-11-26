@@ -191,7 +191,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity()
 
             proceedButton?.isEnabled = true
 
-            if (!overwriteWalletCheckbox!!.isChecked && (isNewWallet!!))
+            if (!isNewWallet!! && !overwriteWalletCheckbox!!.isChecked)
             {
                 proceedButton?.isEnabled = false
             }
