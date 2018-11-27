@@ -60,6 +60,10 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
 
         syncProgress.max = 1000000
         setWalletBalance(UnityCore.instance.balanceAmount)
+
+        if (sendFragment == null)
+            sendFragment = SendFragment()
+        addFragment(sendFragment!!, R.id.mainLayout)
     }
 
     override fun onStart() {
@@ -127,16 +131,6 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         walletBalance.text = String.format("%.2f", coins)
         walletBalanceLogo.visibility = View.VISIBLE
         walletBalance.visibility = View.VISIBLE
-    }
-
-    override fun onCoreReady(): Boolean
-    {
-        runOnUiThread {
-            if (sendFragment == null)
-                sendFragment = SendFragment()
-            addFragment(sendFragment!!, R.id.mainLayout)
-        }
-        return true
     }
 
     override fun walletBalanceChanged(balance: Long): Boolean {
