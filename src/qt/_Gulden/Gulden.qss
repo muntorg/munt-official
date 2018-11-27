@@ -297,12 +297,12 @@ GUI > QToolBar > QToolButton:checked
     border-bottom: 1px solid #ebebeb;
 }
 
-#account_bar QLabel[hover=true], #account_bar QPushButton:hover, #labelWalletSettings[hover=true], #accountSettings[hover=true], #gulden_label_balance_forex[hover=true], #accountBalanceForex[hover=true], #home_button[hover=true], #secondaryAmountDisplay[hover=true], #tertiaryAmountDisplay[hover=true], #quadAmountDisplay[hover=true]
+#account_bar QLabel[hover=true], #account_bar QPushButton:hover, #labelWalletSettings[hover=true], #accountSettings[hover=true], #gulden_label_balance_forex[hover=true], #accountBalanceForexIndicator[hover=true],#accountBalanceForex[hover=true], #home_button[hover=true], #secondaryAmountDisplay[hover=true], #tertiaryAmountDisplay[hover=true], #quadAmountDisplay[hover=true]
 {
     color: #777;
 }
 
-#account_bar QLabel[pressed=true], #account_bar QPushButton:pressed, #labelWalletSettings[pressed=true], #accountSettings[pressed=true], #gulden_label_balance_forex[pressed=true], #accountBalanceForex[pressed=true], #home_button[pressed=true], #secondaryAmountDisplay[pressed=true], #tertiaryAmountDisplay[pressed=true], #quadAmountDisplay[pressed=true]
+#account_bar QLabel[pressed=true], #account_bar QPushButton:pressed, #labelWalletSettings[pressed=true], #accountSettings[pressed=true], #gulden_label_balance_forex[pressed=true], #accountBalanceForexIndicator[pressed=true],#accountBalanceForex[pressed=true], #home_button[pressed=true], #secondaryAmountDisplay[pressed=true], #tertiaryAmountDisplay[pressed=true], #quadAmountDisplay[pressed=true]
 {
     color: #333;
 }
@@ -1050,7 +1050,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin-bottom: 10px;
 }
 
-#accountBalanceForex
+#accountBalanceForex, #accountBalanceForexIndicator
 {
     margin: 0px;
     padding: 0px;
