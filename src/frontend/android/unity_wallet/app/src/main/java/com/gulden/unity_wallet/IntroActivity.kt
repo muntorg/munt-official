@@ -11,6 +11,8 @@ import android.os.Bundle
 
 class IntroActivity : Activity(), UnityCore.Observer
 {
+    private val coreObserverProxy = CoreObserverProxy(this, this)
+
     override fun createNewWallet(): Boolean {
         gotoActivity(WelcomeActivity::class.java)
         return true
@@ -33,7 +35,7 @@ class IntroActivity : Activity(), UnityCore.Observer
 
         val core = UnityCore.instance
 
-        core.addObserver(this)
+        core.addObserver(coreObserverProxy)
         core.startCore()
 
         // if core is already ready we are resuming a session and can go directly to the wallet
@@ -45,18 +47,16 @@ class IntroActivity : Activity(), UnityCore.Observer
     override fun onDestroy() {
         super.onDestroy()
 
-        UnityCore.instance.removeObserver(this)
+        UnityCore.instance.removeObserver(coreObserverProxy)
     }
 
     fun gotoActivity(cls: Class<*> )
     {
-        runOnUiThread {
             val intent = Intent(this, cls)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
 
             finish()
-        }
     }
 
     private var receivedExisitingWalletEvent: Boolean = false

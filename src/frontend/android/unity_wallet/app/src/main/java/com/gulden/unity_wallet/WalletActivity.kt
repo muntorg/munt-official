@@ -44,10 +44,10 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener
 {
+    private val coreObserverProxy = CoreObserverProxy(this, this)
+
     override fun syncProgressChanged(percent: Float): Boolean {
-        runOnUiThread {
-            setSyncProgress(percent)
-        }
+        setSyncProgress(percent)
         return true
     }
 
@@ -70,13 +70,13 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         super.onStart()
 
         syncProgress.progress = 0
-        UnityCore.instance.addObserver(this)
+        UnityCore.instance.addObserver(coreObserverProxy)
     }
 
     override fun onStop() {
         super.onStop()
 
-        UnityCore.instance.removeObserver(this)
+        UnityCore.instance.removeObserver(coreObserverProxy)
     }
 
     override fun onFragmentInteraction(uri: Uri)
