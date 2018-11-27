@@ -142,7 +142,7 @@ void handlePostInitMain()
         } );
 
         // Fire once immediately to update with latest on load.
-        //notifyBalanceChanged(pactiveWallet);
+        notifyBalanceChanged(pactiveWallet);
     }
 }
 
