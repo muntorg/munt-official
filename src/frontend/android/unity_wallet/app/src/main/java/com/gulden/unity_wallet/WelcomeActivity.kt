@@ -30,6 +30,14 @@ class WelcomeActivity : Activity()
         context = this
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        // finish and kill myself so a next session is properly started
+        finish();
+        System.exit(0);
+    }
+
     fun onCreateNewWallet(view: View)
     {
         thread(true)
