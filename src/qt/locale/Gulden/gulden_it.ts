@@ -241,6 +241,41 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
+    <name>GUI</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Invia</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Invia</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>&amp;Ricevi</translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation>&amp;Transazioni</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation>&amp;Esci</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation>&amp;Opzioni...</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Finestra di debug</translation>
+    </message>
+</context>
+<context>
     <name>ImportWitnessDialog</name>
     <message>
         <source>Cancel</source>
@@ -877,13 +912,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Impossibile creare una cartella dati qui.</translation>
-    </message>
-</context>
-<context>
-    <name>GUI</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Finestra di debug</translation>
     </message>
 </context>
 <context>

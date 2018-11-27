@@ -9,192 +9,74 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>AccountSettingsDialog</name>
+    <name>AccountSummaryWidget</name>
     <message>
-        <source>Change name of account</source>
-        <translation>Wijzig rekeningnaam</translation>
+        <source>Account balances</source>
+        <translation>Account balans</translation>
     </message>
     <message>
-        <source>Enter name of account.</source>
-        <translation>Voer rekeningnaam in </translation>
+        <source>Total</source>
+        <translation>Totaal</translation>
     </message>
     <message>
-        <source>Delete account</source>
-        <translation>Verwijder rekening</translation>
+        <source>Locked</source>
+        <translation>Geblokkkeerd</translation>
     </message>
     <message>
-        <source>Copy sync code</source>
-        <translation>Kopieer sync-code</translation>
+        <source>Pending</source>
+        <translation>In behandeling</translation>
     </message>
     <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
+        <source>Spendable</source>
+        <translation>Besteedbaar</translation>
     </message>
     <message>
-        <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation>Scan QR-code om te linken met uw mobiele Gulden-app</translation>
+        <source>Conversion estimate</source>
+        <translation>Schatting conversie</translation>
     </message>
     <message>
-        <source>Click here to make QR code visible.
-WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Klik hier om uw QR-code zichtbaar te maken. WAARSCHUWING: Houdt deze QR-code voor uzelf om te voorkomen dat iemand anders toegang krijgt tot uw Guldens.</translation>
+        <source>Total funds: </source>
+        <translation>Totaalbedrag: </translation>
     </message>
     <message>
-        <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation>Scan QR-code met een witness-apparaat om het apparaat aan uw portemonnee te koppelen</translation>
+        <source>Locked funds: </source>
+        <translation>Geblokkeerd bedrag: </translation>
     </message>
     <message>
-        <source>Click here to make QR code visible.
-WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
-        <translation>Klik hier om de QR-code zichtbaar te maken.
-WAARSCHUWING: zorg dat u de enige persoon bent die deze QR-code kan zien omdat anders een ander persoon tot uw verdiensten toegang heeft en de witness-inkomsten kan stelen.</translation>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Bedragen in afwachting van bevestiging: </translation>
     </message>
     <message>
-        <source>Please fund the witness account first.</source>
-        <translation>Vul eerst uw witness-rekening aan</translation>
-    </message>
-    <message>
-        <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation>Account is niet leeg. Maak eerst uw Guldens over alvorens u dit account verwijdert.</translation>
-    </message>
-    <message>
-        <source>Okay</source>
-        <translation>Oké</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %1 from your account list?
-</source>
-        <translation>Weet u zeker dat u %1 wil verwijderen uit het adresboek?
-</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %1 from your account list?
-The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation>Weet u zeker dat u %1 van uw accountlijst wilt verwijderen? De adressen van dit account blijven actief.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleren</translation>
-    </message>
-</context>
-<context>
-    <name>NewAccountDialog</name>
-    <message>
-        <source>Enter name of account.</source>
-        <translation>Voer naam in van rekening</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
-    </message>
-    <message>
-        <source>Click here to make QR code visible.
-WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Klik hier om uw QR code zichtbaar te maken. 
-WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot uw Guldens.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source>Account name</source>
-        <translation>Rekening naam</translation>
-    </message>
-    <message>
-        <source>Create account type</source>
-        <translation>Kies een rekening type</translation>
-    </message>
-    <message>
-        <source>Import account type</source>
-        <translation>Importeer een rekening type</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;&lt;li&gt;Verstuur geld naar een IBAN bankrekening&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Mobiele portemonnee beheren en aanvullen vanuit uw desktop&lt;/li&gt;&lt;li&gt;Leeg eenvoudig uw mobiele wallet mocht deze gestolen worden of defect raken&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;Flexibele periodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importeer een witness rekening van een ander apparaat&lt;/li&gt;&lt;li&gt;Laat dit apparaat fungeren als uw backup van uw witness rekening zodat hij altijd beschikbaar is om te kunnen witnessen&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importeer een private key vanuit een &quot;cold storage&quot;&lt;/li&gt;&lt;li&gt;Wordt niet beschermd door uw herstelzin&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>Standard</source>
-        <translation>Standaard</translation>
-    </message>
-    <message>
-        <source>Linked mobile</source>
-        <translation>Gelinkte mobiel</translation>
-    </message>
-    <message>
-        <source>Witness</source>
-        <translation>Witness</translation>
-    </message>
-    <message>
-        <source>Witness-only</source>
-        <translation>Alleen witness</translation>
-    </message>
-    <message>
-        <source>Private key</source>
-        <translation>Private key</translation>
-    </message>
-    <message>
-        <source>Scan QR to connect your mobile Gulden app</source>
-        <translation>Scan QR om met uw mobiele Gulden app te verbinden</translation>
-    </message>
-</context>
-<context>
-    <name>BackupDialog</name>
-    <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
-    </message>
-    <message>
-        <source>Backup phrase</source>
-        <translation>Herstelzin</translation>
-    </message>
-    <message>
-        <source>Show backup phrase</source>
-        <translation>Toon herstelzin</translation>
-    </message>
-    <message>
-        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation>Het wordt aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
-    </message>
-    <message>
-        <source>Save to file</source>
-        <translation>Bewaar als bestand</translation>
-    </message>
-    <message>
-        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit is uw herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
-    </message>
-    <message>
-        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit zijn uw herstelzinnen, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
-    </message>
-    <message>
-        <source>No recovery phrases present for this wallet.</source>
-        <translation>Geen herstelzin aanwezig voor deze portemonnee</translation>
-    </message>
-    <message>
-        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation>Uw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
+        <source>Spendable funds: </source>
+        <translation>Besteedbaar bedrag</translation>
     </message>
 </context>
 <context>
     <name>GUI</name>
+    <message>
+        <source>Total</source>
+        <translation>Totaal</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Geblokkeerd</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>In behandeling</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Besteedbaar</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Schatting conversie</translation>
+    </message>
+    <message>
+        <source>Wallet balances</source>
+        <translation>Balans portemonnee</translation>
+    </message>
     <message>
         <source>Okay</source>
         <translation>Ok</translation>
@@ -541,8 +423,8 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
         <translation>
-            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
-            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
+            <numerusform>%n blok(ken) verwerkt van de transactiehistorie</numerusform>
+            <numerusform>%n blok(ken) verwerkt van de transactiehistorie</numerusform>
         </translation>
     </message>
     <message>
@@ -628,6 +510,350 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
         <translation>Er is een fatale fout opgetreden. Gulden kan niet langer veilig doorgaan en zal stoppen.</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>Request copied to clipboard</source>
+        <translation>Verzoek gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleer</translation>
+    </message>
+    <message>
+        <source>Enter label</source>
+        <translation>Voer beschrijving in</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nee</translation>
+    </message>
+    <message>
+        <source>My receiving address</source>
+        <translation>Mijn ontvangstadres</translation>
+    </message>
+    <message>
+        <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
+        <translation>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
+    </message>
+    <message>
+        <source>Request %1 Gulden</source>
+        <translation>Aanvraag voor %1 Gulden</translation>
+    </message>
+    <message>
+        <source>Payment request URI</source>
+        <translation>Betaalverzoek URI</translation>
+    </message>
+    <message>
+        <source>QR code</source>
+        <translation>QR-code</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Sluiten</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopieer adres naar klembord</translation>
+    </message>
+    <message>
+        <source>Save QR as image</source>
+        <translation>Bewaar QR als afbeelding</translation>
+    </message>
+    <message>
+        <source>Request payment</source>
+        <translation>Verzoek betaling</translation>
+    </message>
+    <message>
+        <source>Generate request</source>
+        <translation>Genereer verzoek</translation>
+    </message>
+    <message>
+        <source>New request</source>
+        <translation>Nieuwe aanvraag</translation>
+    </message>
+    <message>
+        <source>Buy Gulden</source>
+        <translation>Koop Gulden</translation>
+    </message>
+    <message>
+        <source>Buy</source>
+        <translation>Koop</translation>
+    </message>
+    <message>
+        <source>Choose amount</source>
+        <translation>Kies bedrag</translation>
+    </message>
+    <message>
+        <source>1000</source>
+        <translation>1000</translation>
+    </message>
+    <message>
+        <source>€ 10.00</source>
+        <translation>€ 10,00</translation>
+    </message>
+    <message>
+        <source></source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>2500</source>
+        <translation>2500</translation>
+    </message>
+    <message>
+        <source>€ 25.00</source>
+        <translation>€ 25,00</translation>
+    </message>
+    <message>
+        <source>5000</source>
+        <translation>5000</translation>
+    </message>
+    <message>
+        <source>€ 50.00</source>
+        <translation>€ 50.00</translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>Meer</translation>
+    </message>
+    <message>
+        <source>Your details</source>
+        <translation>Uw gegevens</translation>
+    </message>
+    <message>
+        <source>Enter email address</source>
+        <translation>Voer e-mailadres in</translation>
+    </message>
+    <message>
+        <source>Did you buy for more than 40 Gulden in the past week?</source>
+        <translation>Heeft u in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
+    </message>
+    <message>
+        <source>Request 10 000 Gulden</source>
+        <translation>Verzoek 10 000 Gulden</translation>
+    </message>
+    <message>
+        <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
+        <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulterende URI te lang, probeer de tekst korter te maken voor het label/bericht.</translation>
+    </message>
+    <message>
+        <source>Copy request to clipboard</source>
+        <translation>Kopieer aanvraag naar klembord</translation>
+    </message>
+    <message>
+        <source>Request Gulden</source>
+        <translation>betalingsaanvraag</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for the label.</source>
+        <translation>Resulterende URI te lang, Kort de text in voor dit label</translation>
+    </message>
+    <message>
+        <source>Error loading the buy page, please check your connection and try again later.</source>
+        <translation>Error tijdens het laden van de betaal pagina, controleer uw verbinding en probeer het (op een later moment) opnieuw</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSettingsDialog</name>
+    <message>
+        <source>Change name of account</source>
+        <translation>Wijzig rekeningnaam</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Voer rekeningnaam in </translation>
+    </message>
+    <message>
+        <source>Delete account</source>
+        <translation>Verwijder rekening</translation>
+    </message>
+    <message>
+        <source>Copy sync code</source>
+        <translation>Kopieer sync-code</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Klaar</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation>Scan QR-code om te linken met uw mobiele Gulden-app</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation>Klik hier om uw QR-code zichtbaar te maken. WAARSCHUWING: Houdt deze QR-code voor uzelf om te voorkomen dat iemand anders toegang krijgt tot uw Guldens.</translation>
+    </message>
+    <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation>Scan QR-code met een witness-apparaat om het apparaat aan uw portemonnee te koppelen</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
+        <translation>Klik hier om de QR-code zichtbaar te maken.
+WAARSCHUWING: zorg dat u de enige persoon bent die deze QR-code kan zien omdat anders een ander persoon tot uw verdiensten toegang heeft en de witness-inkomsten kan stelen.</translation>
+    </message>
+    <message>
+        <source>Please fund the witness account first.</source>
+        <translation>Vul eerst uw witness-rekening aan</translation>
+    </message>
+    <message>
+        <source>Account not empty, please first empty your account before trying to delete it.</source>
+        <translation>Account is niet leeg. Maak eerst uw Guldens over alvorens u dit account verwijdert.</translation>
+    </message>
+    <message>
+        <source>Okay</source>
+        <translation>Oké</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation>Weet u zeker dat u %1 wil verwijderen uit het adresboek?
+</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+The account will continue to be monitored and will be restored should it receive new funds in future.</source>
+        <translation>Weet u zeker dat u %1 van uw accountlijst wilt verwijderen? De adressen van dit account blijven actief.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleren</translation>
+    </message>
+</context>
+<context>
+    <name>NewAccountDialog</name>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Voer naam in van rekening</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Klaar</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation>Klik hier om uw QR code zichtbaar te maken. 
+WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot uw Guldens.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleer</translation>
+    </message>
+    <message>
+        <source>Account name</source>
+        <translation>Rekening naam</translation>
+    </message>
+    <message>
+        <source>Create account type</source>
+        <translation>Kies een rekening type</translation>
+    </message>
+    <message>
+        <source>Import account type</source>
+        <translation>Importeer een rekening type</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;&lt;li&gt;Verstuur geld naar een IBAN bankrekening&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Mobiele portemonnee beheren en aanvullen vanuit uw desktop&lt;/li&gt;&lt;li&gt;Leeg eenvoudig uw mobiele wallet mocht deze gestolen worden of defect raken&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;Flexibele periodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importeer een witness rekening van een ander apparaat&lt;/li&gt;&lt;li&gt;Laat dit apparaat fungeren als uw backup van uw witness rekening zodat hij altijd beschikbaar is om te kunnen witnessen&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importeer een private key vanuit een &quot;cold storage&quot;&lt;/li&gt;&lt;li&gt;Wordt niet beschermd door uw herstelzin&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Standard</source>
+        <translation>Standaard</translation>
+    </message>
+    <message>
+        <source>Linked mobile</source>
+        <translation>Gelinkte mobiel</translation>
+    </message>
+    <message>
+        <source>Witness</source>
+        <translation>Witness</translation>
+    </message>
+    <message>
+        <source>Witness-only</source>
+        <translation>Alleen witness</translation>
+    </message>
+    <message>
+        <source>Private key</source>
+        <translation>Private key</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect your mobile Gulden app</source>
+        <translation>Scan QR om met uw mobiele Gulden app te verbinden</translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Klaar</translation>
+    </message>
+    <message>
+        <source>Backup phrase</source>
+        <translation>Herstelzin</translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation>Toon herstelzin</translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>Het wordt aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation>Bewaar als bestand</translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Dit is uw herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Dit zijn uw herstelzinnen, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation>Geen herstelzin aanwezig voor deze portemonnee</translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>Uw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
     </message>
 </context>
 <context>
@@ -1004,153 +1230,6 @@ Witness-gewicht: %5</translation>
     </message>
 </context>
 <context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source>Enter label</source>
-        <translation>Voer beschrijving in</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nee</translation>
-    </message>
-    <message>
-        <source>My receiving address</source>
-        <translation>Mijn ontvangstadres</translation>
-    </message>
-    <message>
-        <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
-        <translation>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
-    </message>
-    <message>
-        <source>Request %1 Gulden</source>
-        <translation>Aanvraag voor %1 Gulden</translation>
-    </message>
-    <message>
-        <source>Payment request URI</source>
-        <translation>Betaalverzoek URI</translation>
-    </message>
-    <message>
-        <source>QR code</source>
-        <translation>QR-code</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation>Sluiten</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Kopieer adres naar klembord</translation>
-    </message>
-    <message>
-        <source>Save QR as image</source>
-        <translation>Bewaar QR als afbeelding</translation>
-    </message>
-    <message>
-        <source>Request payment</source>
-        <translation>Verzoek betaling</translation>
-    </message>
-    <message>
-        <source>Generate request</source>
-        <translation>Genereer verzoek</translation>
-    </message>
-    <message>
-        <source>New request</source>
-        <translation>Nieuwe aanvraag</translation>
-    </message>
-    <message>
-        <source>Buy Gulden</source>
-        <translation>Koop Gulden</translation>
-    </message>
-    <message>
-        <source>Buy</source>
-        <translation>Koop</translation>
-    </message>
-    <message>
-        <source>Choose amount</source>
-        <translation>Kies bedrag</translation>
-    </message>
-    <message>
-        <source>1000</source>
-        <translation>1000</translation>
-    </message>
-    <message>
-        <source>€ 10.00</source>
-        <translation>€ 10,00</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>2500</source>
-        <translation>2500</translation>
-    </message>
-    <message>
-        <source>€ 25.00</source>
-        <translation>€ 25,00</translation>
-    </message>
-    <message>
-        <source>5000</source>
-        <translation>5000</translation>
-    </message>
-    <message>
-        <source>€ 50.00</source>
-        <translation>€ 50.00</translation>
-    </message>
-    <message>
-        <source>More</source>
-        <translation>Meer</translation>
-    </message>
-    <message>
-        <source>Your details</source>
-        <translation>Uw gegevens</translation>
-    </message>
-    <message>
-        <source>Enter email address</source>
-        <translation>Voer e-mailadres in</translation>
-    </message>
-    <message>
-        <source>Did you buy for more than 40 Gulden in the past week?</source>
-        <translation>Heeft u in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
-    </message>
-    <message>
-        <source>Request 10 000 Gulden</source>
-        <translation>Verzoek 10 000 Gulden</translation>
-    </message>
-    <message>
-        <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
-        <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resulterende URI te lang, probeer de tekst korter te maken voor het label/bericht.</translation>
-    </message>
-    <message>
-        <source>Copy request to clipboard</source>
-        <translation>Kopieer aanvraag naar klembord</translation>
-    </message>
-    <message>
-        <source>Request Gulden</source>
-        <translation>betalingsaanvraag</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for the label.</source>
-        <translation>Resulterende URI te lang, Kort de text in voor dit label</translation>
-    </message>
-    <message>
-        <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation>Error tijdens het laden van de betaal pagina, controleer uw verbinding en probeer het (op een later moment) opnieuw</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Cancel</source>
@@ -1514,25 +1593,6 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     <message>
         <source>I understand</source>
         <translation>Ik begrijp het</translation>
-    </message>
-</context>
-<context>
-    <name>AccountSummaryWidget</name>
-    <message>
-        <source>Total funds: </source>
-        <translation>Totaalbedrag: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Geblokkeerd bedrag: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Bedragen in afwachting van bevestiging: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Besteedbaar bedrag</translation>
     </message>
 </context>
 <context>

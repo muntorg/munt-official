@@ -123,7 +123,7 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     </message>
     <message>
         <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importuj konto witness z innego urządzenia&lt;/li&gt; &lt;li&gt;Pozwól temu urządzeniu działać jako zapasowe urządzenie świadków, dzięki czemu będziesz zawsze dostępny dla witness&lt;/li&gt;</translation>
+        <translation>&lt;li&gt;Importuj konto witness z innego urządzenia&lt;/li&gt; &lt;li&gt;Pozwól temu urządzeniu działać jako zapasowe urządzenie witness, dzięki czemu będziesz zawsze dostępny dla witness&lt;/li&gt;</translation>
     </message>
     <message>
         <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
@@ -700,11 +700,11 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation>Kwota do wysłania przekracza saldo, kwota została automatycznie skorygowana w dół, aby dopasować saldo. Upewnij się że to jest to czego chcesz, zanim podejmiesz próbę płatności swojego odbiorcy.</translation>
+        <translation>Kwota do wysłania przekracza saldo, kwota została automatycznie skorygowana w dół, aby dopasować saldo. Upewnij się że jest to poprawna suma, zanim podejmiesz próbę płatności swojego odbiorcy.</translation>
     </message>
     <message>
         <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
-        <translation>Kwota, którą chcesz wysłać, równa się saldu, zostanie skorygowana o opłatę transakcyjną. Upewnij się, że to jest to, czego chcesz, zanim podejmiesz próbę uniknięcia krótkiej płatności swojego odbiorcy.</translation>
+        <translation>Kwota, którą chcesz wysłać, równa się saldu, zostanie skorygowana o opłatę transakcyjną. Upewnij się, że jest to poprawna suma, zanim podejmiesz próbę uniknięcia krótkiej płatności swojego odbiorcy.</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %1 from the address book?</source>

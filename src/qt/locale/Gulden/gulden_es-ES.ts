@@ -9,6 +9,203 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AccountSettingsDialog</name>
+    <message>
+        <source>Change name of account</source>
+        <translation>Cambiar el nombre de la cuenta</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Ingrese el nombre de la cuenta.</translation>
+    </message>
+    <message>
+        <source>Delete account</source>
+        <translation>Borrar cuenta</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Terminado</translation>
+    </message>
+    <message>
+        <source>Please fund the witness account first.</source>
+        <translation>Por favor, deposite fondos en la cuenta de witness primero.</translation>
+    </message>
+    <message>
+        <source>Okay</source>
+        <translation>Bueno</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Terminado</translation>
+    </message>
+</context>
+<context>
+    <name>EditAddressDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Edit Address</source>
+        <translation>Editar Dirección</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etiqueta</translation>
+    </message>
+    <message>
+        <source>The label associated with this address list entry</source>
+        <translation>La etiqueta asociada con esta entrada de la lista de direcciones</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Dirección</translation>
+    </message>
+    <message>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation>La dirección asociada con esta entrada de la lista de direcciones. Solo puede ser modificada para direcciones de envío.</translation>
+    </message>
+    <message>
+        <source>New receiving address</source>
+        <translation>Nueva dirección de recivimiento</translation>
+    </message>
+    <message>
+        <source>New sending address</source>
+        <translation>Nueva dirección de envío</translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>Editar dirección de recivimiento</translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>Editar dirección de envío</translation>
+    </message>
+    <message>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>La dirección introducida &quot;%1&quot; está ya en la agenda.</translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>Podría no desbloquear el monedero.</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>Falló la generación de la nueva clave.</translation>
+    </message>
+</context>
+<context>
+    <name>GUI</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Total funds: </source>
+        <translation>Fondos totales: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Fondos bloqueados: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Fondos en espera de la confirmación: </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Fondos disponibles: </translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Enviar</translation>
+    </message>
+    <message>
+        <source>My accounts</source>
+        <translation>Mis cuentas</translation>
+    </message>
+    <message>
+        <source>Add account</source>
+        <translation>Agregar cuentas</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Enviar</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>&amp;Recibir</translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation>&amp;Transacciones</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation>Navegar historial de transacciones</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation>S&amp;alir</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation>Salir de la aplicación</translation>
+    </message>
+    <message>
+        <source>&amp;Select currency</source>
+        <translation>&amp;Seleccionar moneda</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>&amp;Archivo</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;Ayuda</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Información</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation>Fecha: %1
+</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSummaryWidget</name>
+    <message>
+        <source>Total funds: </source>
+        <translation>Fondos totales: </translation>
+    </message>
+    <message>
+        <source>Locked funds: </source>
+        <translation>Fondos bloqueados: </translation>
+    </message>
+    <message>
+        <source>Funds awaiting confirmation: </source>
+        <translation>Fondos en espera de la confirmación: </translation>
+    </message>
+    <message>
+        <source>Spendable funds: </source>
+        <translation>Fondos disponibles: </translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -471,6 +668,10 @@
     <message>
         <source>yes</source>
         <translation>sí</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>no</translation>
     </message>
     <message>
         <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
@@ -1099,54 +1300,10 @@
     </message>
 </context>
 <context>
-    <name>EditAddressDialog</name>
+    <name>ExchangeRateDialog</name>
     <message>
-        <source>Edit Address</source>
-        <translation>Editar Dirección</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;Etiqueta</translation>
-    </message>
-    <message>
-        <source>The label associated with this address list entry</source>
-        <translation>La etiqueta asociada con esta entrada de la lista de direcciones</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>&amp;Dirección</translation>
-    </message>
-    <message>
-        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation>La dirección asociada con esta entrada de la lista de direcciones. Solo puede ser modificada para direcciones de envío.</translation>
-    </message>
-    <message>
-        <source>New receiving address</source>
-        <translation>Nueva dirección de recivimiento</translation>
-    </message>
-    <message>
-        <source>New sending address</source>
-        <translation>Nueva dirección de envío</translation>
-    </message>
-    <message>
-        <source>Edit receiving address</source>
-        <translation>Editar dirección de recivimiento</translation>
-    </message>
-    <message>
-        <source>Edit sending address</source>
-        <translation>Editar dirección de envío</translation>
-    </message>
-    <message>
-        <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation>La dirección introducida &quot;%1&quot; está ya en la agenda.</translation>
-    </message>
-    <message>
-        <source>Could not unlock wallet.</source>
-        <translation>Podría no desbloquear el monedero.</translation>
-    </message>
-    <message>
-        <source>New key generation failed.</source>
-        <translation>Falló la generación de la nueva clave.</translation>
+        <source>Select currency</source>
+        <translation>Seleccionar moneda</translation>
     </message>
 </context>
 <context>
