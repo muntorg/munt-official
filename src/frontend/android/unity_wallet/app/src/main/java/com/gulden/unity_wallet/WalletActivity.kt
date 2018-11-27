@@ -123,6 +123,10 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
     fun setSyncProgress(percent: Float)
     {
         syncProgress.progress = (syncProgress.max * (percent/100)).toInt()
+        if (percent < 100.0)
+            syncProgress.visibility = View.VISIBLE
+        else
+            syncProgress.visibility = View.INVISIBLE
     }
 
     fun setWalletBalance(balance : Long)
