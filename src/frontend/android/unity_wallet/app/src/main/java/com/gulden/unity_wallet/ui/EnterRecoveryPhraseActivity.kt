@@ -186,9 +186,6 @@ class EnterRecoveryPhraseActivity : AppCompatActivity()
     {
         if (GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
         {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(recoveryPhraseEditText!!.windowToken, 0)
-
             proceedButton?.isEnabled = true
 
             if (!isNewWallet!! && !overwriteWalletCheckbox!!.isChecked)
