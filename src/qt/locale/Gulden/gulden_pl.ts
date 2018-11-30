@@ -204,6 +204,26 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Anuluj</translation>
     </message>
     <message>
+        <source>Total</source>
+        <translation>Ogółem</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Zablokowany</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>W toku</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Możliwe do wydania</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Oszacowanie konwersji</translation>
+    </message>
+    <message>
         <source>Total funds: </source>
         <translation>Razem środki: </translation>
     </message>
@@ -218,6 +238,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Spendable funds: </source>
         <translation>Dostępne środki: </translation>
+    </message>
+    <message>
+        <source>Wallet balances</source>
+        <translation>Saldo portfela</translation>
     </message>
     <message>
         <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
@@ -1025,6 +1049,18 @@ Witness waga: %5</translation>
         <translation>Nie</translation>
     </message>
     <message>
+        <source>address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres skopiowany do schowka</translation>
+    </message>
+    <message>
+        <source>Request copied to clipboard</source>
+        <translation>Żądanie skopiowane do schowka</translation>
+    </message>
+    <message>
         <source>My receiving address</source>
         <translation>Mój adres odbiorczy</translation>
     </message>
@@ -1523,6 +1559,30 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
 </context>
 <context>
     <name>AccountSummaryWidget</name>
+    <message>
+        <source>Account balances</source>
+        <translation>Saldo konta</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Ogółem</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Zablokowany</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>W toku</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Możliwe do wydania</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Oszacowanie konwersji</translation>
+    </message>
     <message>
         <source>Total funds: </source>
         <translation>Razem środki: </translation>

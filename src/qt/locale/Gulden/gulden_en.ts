@@ -822,7 +822,19 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+210"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+306"/>
+        <location line="+64"/>
+        <location line="+38"/>
+        <source>Okay</source>
+        <translation>Okay</translation>
+    </message>
+    <message>
+        <location line="-136"/>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location line="-62"/>
         <location line="+29"/>
         <source>Total</source>
         <translation>Total</translation>
@@ -856,18 +868,6 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Wallet balances</translation>
     </message>
     <message>
-        <location line="+69"/>
-        <location line="+64"/>
-        <location line="+38"/>
-        <source>Okay</source>
-        <translation>Okay</translation>
-    </message>
-    <message>
-        <location line="-136"/>
-        <source>Cancel</source>
-        <translation>Cancel</translation>
-    </message>
-    <message>
         <location filename="../../gui.cpp" line="+503"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
@@ -888,7 +888,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Software update</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-4"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+31"/>
         <source>Renewing witness account will incur a transaction fee: </source>
         <translation>Renewing witness account will incur a transaction fee: </translation>
     </message>
@@ -3152,22 +3152,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
-        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="+91"/>
-        <source>address</source>
-        <translation>address</translation>
-    </message>
-    <message>
-        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+265"/>
-        <source>Address copied to clipboard</source>
-        <translation>Address copied to clipboard</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Request copied to clipboard</source>
-        <translation>Request copied to clipboard</translation>
-    </message>
-    <message>
-        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="+372"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="+463"/>
         <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+588"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
@@ -3189,7 +3174,22 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-187"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-169"/>
+        <source>address</source>
+        <translation>address</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+265"/>
+        <source>Address copied to clipboard</source>
+        <translation>Address copied to clipboard</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Request copied to clipboard</source>
+        <translation>Request copied to clipboard</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-18"/>
         <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-364"/>
         <source>My receiving address</source>
         <translation>My receiving address</translation>
