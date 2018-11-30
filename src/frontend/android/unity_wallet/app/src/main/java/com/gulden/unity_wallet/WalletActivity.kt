@@ -23,10 +23,12 @@ import com.gulden.unity_wallet.MainActivityFragments.SendFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment.OnFragmentInteractionListener
 import com.gulden.unity_wallet.MainActivityFragments.SettingsFragment
 import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
+import com.gulden.unity_wallet.currency.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import com.gulden.unity_wallet.ui.buy.BuyActivity
-
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commit()
@@ -42,8 +44,10 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
 
 class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentInteractionListener,
         ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener
+        SettingsFragment.OnFragmentInteractionListener, CoroutineScope
 {
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+
     private val coreObserverProxy = CoreObserverProxy(this, this)
 
     override fun syncProgressChanged(percent: Float): Boolean {
@@ -64,6 +68,11 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         if (sendFragment == null)
             sendFragment = SendFragment()
         addFragment(sendFragment!!, R.id.mainLayout)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutineContext[Job]!!.cancel()
     }
 
     override fun onStart() {
@@ -135,6 +144,22 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         walletBalance.text = String.format("%.2f", coins)
         walletBalanceLogo.visibility = View.VISIBLE
         walletBalance.visibility = View.VISIBLE
+
+        this.launch( Dispatchers.Main) {
+            try {
+                // TODO: get from preferences
+                val code = "EUR"
+                val short = "€"
+                val digits = 2
+                val rate = fetchCurrencyRate(code)
+                walletBalanceLocal.text = String.format(" (${short} %.${digits}f)", balance * rate)
+                walletBalanceLocal.visibility = View.VISIBLE
+            }
+            catch (e: Throwable) {
+                walletBalanceLocal.text = ""
+                walletBalanceLocal.visibility = View.GONE
+            }
+        }
     }
 
     override fun walletBalanceChanged(balance: Long): Boolean {

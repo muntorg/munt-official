@@ -84,6 +84,18 @@ file COPYING
                 android:textSize="22sp"
                 android:visibility="invisible"
                 tools:textColor="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/walletBalanceLocal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="€0.00"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                android:visibility="invisible"
+                tools:textColor="@color/colorPrimary" />
         </LinearLayout>
 
         <ProgressBar
