@@ -40,6 +40,32 @@ file COPYING
     <string name="transaction_list_empty_title">No Gulden received so far.</string>
     <string name="transaction_list_empty_message">Touch here to buy your first Gulden.</string>
 
+    <string-array name="currency_description_entries">
+        <item>EUR - Euro</item>
+        <item>BTC - Bitcoin</item>
+        <item>AUD - Australian dollar</item>
+        <item>BRL - Brazilian real</item>
+        <!--<item>CNY - Chinese yuan</item>-->
+        <item>GBP - British Pound</item>
+        <!--<item>RUB - Russian roebel</item>-->
+        <item>USD - US dollar</item>
+        <item>ZAR - South African rand</item>
+        <item>KRW - South Korean Won</item>
+        <item>JPY - Yapanese yen</item>
+    </string-array>
+    <string-array name="currency_codes">
+        <item>EUR</item>
+        <item>BTC</item>
+        <item>AUD</item>
+        <item>BRL</item>
+        <!--<item>CNY</item>-->
+        <item>GBP</item>
+        <!--<item>RUB</item>-->
+        <item>USD</item>
+        <item>ZAR</item>
+        <item>KRW</item>
+        <item>JPY</item>
+    </string-array>
     <string-array name="background_sync_entries">
         <item>Off</item>
         <item>Daily</item>
