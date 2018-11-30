@@ -40,6 +40,8 @@ file COPYING
     <string name="transaction_list_empty_title">No Gulden received so far.</string>
     <string name="transaction_list_empty_message">Touch here to buy your first Gulden.</string>
 
+    <string name="default_currency">EUR</string>
+
     <string-array name="currency_description_entries">
         <item>EUR - Euro</item>
         <item>BTC - Bitcoin</item>

@@ -61,7 +61,7 @@ file COPYING
         android:iconSpaceReserved="false"
         android:entries="@array/currency_description_entries"
         android:entryValues="@array/currency_codes"
-        android:defaultValue="EUR" />
+        android:defaultValue="@string/default_currency" />
 
     <SwitchPreference
         android:key="preference_notify_transaction_activity"

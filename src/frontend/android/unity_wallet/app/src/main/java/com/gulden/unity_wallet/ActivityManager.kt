@@ -28,6 +28,8 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     {
         super.onCreate()
 
+        AppContext.instance = baseContext
+
         UnityCore.instance.configure(
                 UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, testnet = Constants.TEST)
         )
