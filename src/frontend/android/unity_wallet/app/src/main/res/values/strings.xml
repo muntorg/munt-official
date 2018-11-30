@@ -68,6 +68,47 @@ file COPYING
         <item>KRW</item>
         <item>JPY</item>
     </string-array>
+    <string-array name="currency_names">
+        <item>Euro</item>
+        <item>Bitcoin</item>
+        <item>Australian dollar</item>
+        <item>Brazilian real</item>
+        <!--<item>Chinese yuan</item>-->
+        <item>British Pound</item>
+        <!--<item>Russian roebel</item>-->
+        <item>US dollar</item>
+        <item>South African rand</item>
+        <item>South Korean Won</item>
+        <item>Yapanese yen</item>
+    </string-array>
+    <string-array name="currency_shorts">
+        <item>€</item>
+        <item>BTC</item>
+        <item>AU$</item>
+        <item>R$</item>
+        <!--<item>CN¥</item>-->
+        <item>£</item>
+        <!--<item>₽</item>-->
+        <item>US$</item>
+        <item>ZAR</item>
+        <item>₩</item>
+        <item>JP¥</item>
+    </string-array>
+    <integer-array
+        name="currency_precisions">
+        <item>2</item>
+        <item>8</item>
+        <item>2</item>
+        <item>2</item>
+        <!--<item>CN¥</item>-->
+        <item>2</item>
+        <!--<item>₽</item>-->
+        <item>2</item>
+        <item>2</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
+
     <string-array name="background_sync_entries">
         <item>Off</item>
         <item>Daily</item>

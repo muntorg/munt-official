@@ -6,6 +6,7 @@
 package com.gulden.unity_wallet
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -13,6 +14,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.preference.PreferenceManager
 import android.view.View
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
@@ -44,7 +46,8 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
 
 class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentInteractionListener,
         ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener, CoroutineScope
+        SettingsFragment.OnFragmentInteractionListener, CoroutineScope,
+        SharedPreferences.OnSharedPreferenceChangeListener
 {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
@@ -68,11 +71,18 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         if (sendFragment == null)
             sendFragment = SendFragment()
         addFragment(sendFragment!!, R.id.mainLayout)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         coroutineContext[Job]!!.cancel()
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        preferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onStart() {
@@ -91,6 +101,14 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
     override fun onFragmentInteraction(uri: Uri)
     {
 
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        when (key) {
+            "preference_local_currency" -> {
+                setWalletBalance(UnityCore.instance.balanceAmount)
+            }
+        }
     }
 
     private var sendFragment : SendFragment ?= null
@@ -140,19 +158,16 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
 
     fun setWalletBalance(balance : Long)
     {
-        val coins = balance.toFloat() / 100000000
+        val coins = balance.toDouble() / Config.COIN
         walletBalance.text = String.format("%.2f", coins)
         walletBalanceLogo.visibility = View.VISIBLE
         walletBalance.visibility = View.VISIBLE
 
         this.launch( Dispatchers.Main) {
             try {
-                // TODO: get from preferences
-                val code = "EUR"
-                val short = "€"
-                val digits = 2
-                val rate = fetchCurrencyRate(code)
-                walletBalanceLocal.text = String.format(" (${short} %.${digits}f)", balance * rate)
+                val rate = fetchCurrencyRate(localCurrency.code)
+                walletBalanceLocal.text = String.format(" (${localCurrency.short} %.${localCurrency.precision}f)",
+                        coins * rate)
                 walletBalanceLocal.visibility = View.VISIBLE
             }
             catch (e: Throwable) {

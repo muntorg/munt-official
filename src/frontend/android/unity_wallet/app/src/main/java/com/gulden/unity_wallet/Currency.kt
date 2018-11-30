@@ -1,6 +1,10 @@
 package com.gulden.unity_wallet.currency
 
+import android.preference.PreferenceManager
 import android.util.Log
+import com.gulden.unity_wallet.AppContext
+import com.gulden.unity_wallet.Config
+import com.gulden.unity_wallet.R
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URL
@@ -53,3 +57,30 @@ suspend fun fetchCurrencyRate(code: String): Double
 
     return rates.getValue(code)
 }
+
+data class Currency (val code: String, val name: String, val short: String, val precision: Int )
+
+class Currencies {
+    companion object {
+        var knownCurrencies = TreeMap<String, Currency>()
+
+        init {
+            val codes = AppContext.instance.getResources().getStringArray(R.array.currency_codes)
+            val names = AppContext.instance.getResources().getStringArray(R.array.currency_names)
+            val shorts = AppContext.instance.getResources().getStringArray(R.array.currency_shorts)
+            val precisions = AppContext.instance.getResources().getIntArray(R.array.currency_precisions)
+
+            for (i in 0 until codes.size) {
+                val c = Currency(code = codes[i], name = names[i], short = shorts[i], precision = precisions[i])
+                knownCurrencies[codes[i]] = c
+            }
+        }
+    }
+}
+
+val localCurrency: Currency
+    get() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AppContext.instance)
+        val code = sharedPreferences.getString("preference_local_currency", Config.DEFAULT_CURRENCY_CODE)!!
+        return Currencies.knownCurrencies[code]!!
+    }
