@@ -19,17 +19,19 @@ import android.view.View
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
-import com.gulden.jniunifiedbackend.*
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.UriRecord
 import com.gulden.unity_wallet.MainActivityFragments.ReceiveFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment.OnFragmentInteractionListener
 import com.gulden.unity_wallet.MainActivityFragments.SettingsFragment
 import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
-import com.gulden.unity_wallet.currency.*
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
+import com.gulden.unity_wallet.currency.fetchCurrencyRate
+import com.gulden.unity_wallet.currency.localCurrency
 import com.gulden.unity_wallet.ui.buy.BuyActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
