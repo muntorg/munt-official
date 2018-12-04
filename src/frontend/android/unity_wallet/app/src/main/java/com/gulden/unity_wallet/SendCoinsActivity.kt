@@ -20,10 +20,19 @@ import android.widget.EditText
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import com.gulden.unity_wallet.R.layout.text_input_address_label
+import com.gulden.unity_wallet.currency.fetchCurrencyRate
+import com.gulden.unity_wallet.currency.localCurrency
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
+import kotlin.text.*
 
 
-class SendCoinsActivity : AppCompatActivity() {
+class SendCoinsActivity : AppCompatActivity(), CoroutineScope {
+
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+    private lateinit var activeAmount: EditText
+    private var localRate: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +40,16 @@ class SendCoinsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         var recipient : UriRecipient = intent.getParcelableExtra(EXTRA_RECIPIENT)
-        send_coins_amount.setText(recipient.amount)
+        activeAmount = send_coins_amount
+        activeAmount.setText(recipient.amount)
         send_coins_receiving_static_address.text = recipient.address
 
         setAddressLabel(recipient.label)
 
         fab.setOnClickListener {
             view -> run {
-                if (send_coins_amount.text.length > 0) {
-                    var paymentRequest : UriRecipient = UriRecipient(true, recipient.address, recipient.label, send_coins_amount.text.toString())
+                if (activeAmount.text.length > 0) {
+                    var paymentRequest : UriRecipient = UriRecipient(true, recipient.address, recipient.label, activeAmount.text.toString())
                     if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
                         finish()
                     }
@@ -51,6 +61,63 @@ class SendCoinsActivity : AppCompatActivity() {
                     Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG).setAction("Action", null).show()
                 }
             }
+        }
+
+        send_coins_amount.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) activeAmount = send_coins_amount
+        }
+
+        send_coins_local_amount.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) activeAmount = send_coins_local_amount
+        }
+
+        setupRate()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        coroutineContext[Job]!!.cancel()
+    }
+
+    fun setupRate()
+    {
+        this.launch( Dispatchers.Main) {
+            try {
+                localRate = fetchCurrencyRate(localCurrency.code)
+                send_coins_local_label.text = localCurrency.short
+                send_coins_local_group.visibility = View.VISIBLE
+
+                // TODO for IBAN payment activate Euro entry when rate is available
+
+                updateConversion()
+            }
+            catch (e: Throwable) {
+                send_coins_local_group.visibility = View.GONE
+            }
+        }
+    }
+
+    fun updateConversion()
+    {
+        if (localRate <= 0.0)
+            return
+
+        if (activeAmount == send_coins_amount) {
+            // update local from Gulden
+            var amount = send_coins_amount.text.toString().toDoubleOrNull()
+            if (amount == null)
+                amount = 0.0
+            val localAmount = localRate * amount
+            send_coins_local_amount.setText(String.format("%.${localCurrency.precision}f", localAmount))
+        }
+        else {
+            // update Gulden from local
+            var localAmount = send_coins_local_amount.text.toString().toDoubleOrNull()
+            if (localAmount == null)
+                localAmount = 0.0
+            val amount = localAmount / localRate
+            send_coins_amount.setText(String.format("%.${Config.PRECISION_SHORT}f", amount))
         }
     }
 
@@ -78,10 +145,10 @@ class SendCoinsActivity : AppCompatActivity() {
 
     fun appendNumberToAmount(number : String)
     {
-        if (send_coins_amount.text.toString() == "0")
-            send_coins_amount.setText(number)
+        if (activeAmount.text.toString() == "0")
+            activeAmount.setText(number)
         else
-            send_coins_amount.setText(send_coins_amount.text.toString() + number)
+            activeAmount.setText(activeAmount.text.toString() + number)
     }
 
     fun handleKeypadButtonClick(view : View)
@@ -98,27 +165,28 @@ class SendCoinsActivity : AppCompatActivity() {
             R.id.button_8 -> appendNumberToAmount("8")
             R.id.button_9 -> appendNumberToAmount("9")
             R.id.button_0 -> {
-                if (send_coins_amount.text.isEmpty())
-                    send_coins_amount.setText(send_coins_amount.text.toString() + "0.")
-                else if (send_coins_amount.text.toString() != "0")
-                    send_coins_amount.setText(send_coins_amount.text.toString() + "0")
+                if (activeAmount.text.isEmpty())
+                    activeAmount.setText(activeAmount.text.toString() + "0.")
+                else if (activeAmount.text.toString() != "0")
+                    activeAmount.setText(activeAmount.text.toString() + "0")
             }
             R.id.button_backspace -> {
-                if (send_coins_amount.text.toString() == "0.")
-                    send_coins_amount.setText("")
+                if (activeAmount.text.toString() == "0.")
+                    activeAmount.setText("")
                 else
-                    send_coins_amount.setText(send_coins_amount.text.dropLast(1))
+                    activeAmount.setText(activeAmount.text.dropLast(1))
             }
             R.id.button_decimal -> {
-                if (!send_coins_amount.text.contains("."))
+                if (!activeAmount.text.contains("."))
                 {
-                    if (send_coins_amount.text.isEmpty())
-                        send_coins_amount.setText("0.")
+                    if (activeAmount.text.isEmpty())
+                        activeAmount.setText("0.")
                     else
-                        send_coins_amount.setText(send_coins_amount.text.toString() + ".")
+                        activeAmount.setText(activeAmount.text.toString() + ".")
                 }
             }
         }
+        updateConversion()
     }
 
     fun handleAddToAddressBookClick(view : View)

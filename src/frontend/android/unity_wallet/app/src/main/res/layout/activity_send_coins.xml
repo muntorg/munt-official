@@ -90,18 +90,50 @@ file COPYING
             android:onClick="handleRemoveFromAddressBookClick"
             />
 
-        <EditText
-            android:id="@+id/send_coins_amount"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:cursorVisible="false"
-            android:drawableLeft="@drawable/ic_g_logo"
-            android:ems="10"
-            android:hint="0"
-            android:editable="false"
-            android:inputType="none"
-            tools:clickable="false" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/send_coins_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:cursorVisible="false"
+                android:drawableLeft="@drawable/ic_g_logo"
+                android:hint="0"
+                android:editable="false"
+                android:inputType="none"
+                tools:clickable="false" />
+
+
+            <LinearLayout
+                android:id="@+id/send_coins_local_group"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/send_coins_local_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="€" />
+
+                <EditText
+                    android:id="@+id/send_coins_local_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cursorVisible="false"
+                    android:editable="false"
+                    android:hint="0"
+                    android:inputType="none"
+                    tools:clickable="false" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"

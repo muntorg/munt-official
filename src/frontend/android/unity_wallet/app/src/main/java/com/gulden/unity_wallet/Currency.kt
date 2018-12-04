@@ -47,7 +47,8 @@ suspend fun fetchCurrencyRate(code: String): Double
         for (i in 0 until json.length()) {
             val cCode: String = json.getJSONObject(i).getString("code")
             val cRate: Double = json.getJSONObject(i).getString("rate").toDouble()
-            rates[cCode] = cRate
+            if (cRate > 0.0)
+                rates[cCode] = cRate
         }
     }
     catch (e: Throwable) {
