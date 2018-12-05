@@ -1,3 +1,12 @@
+2.1.0.0
+
+CORE - Implement a few consensus level changes for witnessing, these are minor improvements but are better to make now before phase 4 activation for the sake of future code cleanliness.
+These changes will, these changes will activate at block 881000 (Estimated around 17-18th January 2019) all 2.0.x users should attempt to update before then, all 1.6.x users can remain on 1.6.x - contact developers for assistance if in doubt.
+UI - Minor UI fixes
+
+
+
+
 2.0.0.17
 RPC - Introduce new debug command verifywitnessaddress
 UI - Update styling and graphics
