@@ -1480,11 +1480,11 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
                 // Push a single true onto the stack
                 stack.push_back(valtype(1, 1));
             }
-            else if (stack.size() != 2)
+            else if (stack.size() == 0)
             {
-                return false;
+                return true;
             }
-            else
+            else if (stack.size() == 2)
             {
                 if (flags & SCRIPT_VERIFY_P2SH)
                 stackCopy = stack;
@@ -1493,6 +1493,10 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
                     // serror is set
                     return false;
                 }
+            }
+            else
+            {
+                return false;
             }
         }
         else
