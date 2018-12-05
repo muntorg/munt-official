@@ -5,12 +5,12 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2020 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Copyright (c) 2016-2018 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "wallet.h"
+#include "wallet/wallet.h"
 #include "wallet/wallettx.h"
 
 #include "consensus/validation.h"
@@ -46,17 +46,15 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         if(!prev || input.prevout.n >= prev->tx->vout.size()) {
             return false;
         }
-        const CAmount& amount = prev->tx->vout[input.prevout.n].nValue;
-        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(prev->tx->vout[input.prevout.n], type);
+        const CAmount& amount = mi->second.tx->vout[input.prevout.n].nValue;
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(mi->second.tx->vout[input.prevout.n], type);
         SignatureData sigdata;
         CAccount *signAccount=fromAccount;
         if (!signAccount)
-            signAccount = FindAccountForTransaction(prev->tx->vout[input.prevout.n]);
+            signAccount = FindAccountForTransaction(mi->second.tx->vout[input.prevout.n]);
         if (!signAccount)
             return false;
-        std::vector<CKeyStore*> accountsToTry;
-        accountsToTry.push_back(signAccount);
-        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, amount, SIGHASH_ALL), prev->tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, signAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -67,12 +65,12 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
 
 CAccount* CWallet::FindAccountForTransaction(const CTxOut& out)
 {
-    for (const auto& [accountUUID, forAccount] : mapAccounts)
+    for (const auto& accountItem : mapAccounts)
     {
-        (unused) accountUUID;
-        if (::IsMine(*forAccount, out) == ISMINE_SPENDABLE)
+        CAccount* childAccount = accountItem.second;
+        if (::IsMine(*childAccount, out) == ISMINE_SPENDABLE)
         {
-            return forAccount;
+            return childAccount;
         }
     }
     return NULL;
@@ -162,7 +160,7 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
         }
         else if(tx.nLockTime == 0)
         {
-            //fixme: (PHASE4) (SEGSIG) - Do we have to set relative lock time on the inputs?
+            //fixme: (2.1) (SEGSIG) - Do we have to set relative lock time on the inputs?
             //Whats the relationship between relative and absolute locktime?
             //nFlags |= CTxInFlags::OptInRBF;
         }
@@ -185,24 +183,6 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
         strFailReason = _("Can't send from read only (watch) account.");
         return false;
     }
-    std::vector<CKeyStore*> accountsToTry;
-    accountsToTry.push_back(forAccount);
-    return CreateTransaction(accountsToTry, vecSend, wtxNew, reservekey, nFeeRet, nChangePosInOut, strFailReason, coinControl, sign);
-}
-
-bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CAmount& nFeeRet,
-                                int& nChangePosInOut, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
-{
-
-    //fixme: (HIGH) (UNITY)
-    //for (const auto& forAccount : accountsToTry)
-    //{
-        //if (forAccount->IsReadOnly())
-        //{
-            //strFailReason = _("Can't send from read only (watch) account.");
-            //return false;
-        //}
-    //}
 
     CAmount nValue = 0;
     int nChangePosRequest = nChangePosInOut;
@@ -249,7 +229,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
-    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (PHASE5) (only set this for high fee [per byte] transactions?)
+    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (2.1) (only set this for high fee [per byte] transactions?)
         txNew.nLockTime = chainActive.Height();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
@@ -267,7 +247,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
         LOCK2(cs_main, cs_wallet);
         {
             std::vector<COutput> vAvailableCoins;
-            AvailableCoins(accountsToTry, vAvailableCoins, true, coinControl);
+            AvailableCoins(forAccount, vAvailableCoins, true, coinControl);
 
             nFeeRet = 0;
             // Start with no fee and loop until there is enough fee
@@ -302,10 +282,13 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                     {
                         if (recipient.fSubtractFeeFromAmount && nFeeRet > 0)
                         {
-                            if (txout.nValue < 0) { strFailReason = _("The transaction amount is too small to pay the fee"); }
-                            else { strFailReason = _("The transaction amount is too small to send after the fee has been deducted"); }
+                            if (txout.nValue < 0)
+                                strFailReason = _("The transaction amount is too small to pay the fee");
+                            else
+                                strFailReason = _("The transaction amount is too small to send after the fee has been deducted");
                         }
-                        else { strFailReason = _("Transaction amount too small"); }
+                        else
+                            strFailReason = _("Transaction amount too small");
                         return false;
                     }
                     txNew.vout.push_back(txout);
@@ -324,7 +307,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                 if (nChange > 0)
                 {
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
-                    //fixme: (FUT) (COIN_CONTROL)
+                    //fixme: (COINCONTROL)
                     //We might want to allow coincontrol to produce script transactions even though segsig is enabled.
                     if (!IsOldTransactionVersion(txNew.nVersion))
                     {
@@ -334,7 +317,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                         ret = reservekey.GetReservedKey(vchPubKey);
                         if (!ret)
                         {
-                            if (reservekey.account && (reservekey.account->IsFixedKeyPool() || reservekey.account->IsMinimalKeyPool()))
+                            if (reservekey.account && reservekey.account->IsFixedKeyPool())
                             {
                                 std::string strFailReason = _("This type of account only supports emptying the entire balance in one go, no partial transactions.");
                                 CAlert::Notify(strFailReason, true, true);
@@ -373,18 +356,11 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
 
                             // Reserve a new key pair from key pool
                             CPubKey vchPubKey;
-                            bool ret = false;
-                            try
-                            {
-                                ret = reservekey.GetReservedKey(vchPubKey);
-                            }
-                            catch(...)
-                            {
-                                
-                            }
+                            bool ret;
+                            ret = reservekey.GetReservedKey(vchPubKey);
                             if (!ret)
                             {
-                                if (reservekey.account && (reservekey.account->IsFixedKeyPool() || reservekey.account->IsMinimalKeyPool()))
+                                if (reservekey.account && reservekey.account->IsFixedKeyPool())
                                 {
                                     std::string strFailReason = _("This type of account only supports emptying the entire balance in one go, no partial transactions.");
                                     CAlert::Notify(strFailReason, true, true);
@@ -448,9 +424,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                         std::vector<CTxOut>::iterator position = txNew.vout.begin()+nChangePosInOut;
                         txNew.vout.insert(position, *newTxOut);
                     }
-                }
-                else
-                {
+                } else {
                     reservekey.ReturnKey();
                     nChangePosInOut = -1;
                 }
@@ -469,9 +443,9 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                 AddTxInputs(txNew, setCoins , rbf);
 
                 // Fill in dummy signatures for fee calculation.
-                if (!DummySignTx(accountsToTry, txNew, setCoins, Spend)) {
+                if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
-                    if (!ProduceSignature(DummySignatureCreator(accountsToTry), CTxOut(), sigdata, Spend, txNew.nVersion))
+                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
                         return false;
@@ -551,15 +525,14 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
             {
                 SignatureData sigdata;
 
+                //fixme: (2.1) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
-                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
+                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;
-                }
-                else
-                {
+                } else {
                     UpdateTransaction(txNew, nIn, sigdata);
                 }
 
@@ -604,13 +577,13 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
             CKey privWitnessKey;
             if (!recipient.witnessForAccount->GetKey(recipient.witnessDetails.witnessKeyID, privWitnessKey))
             {
-                //fixme: (FUT) Localise
+                //fixme: (2.1) Localise
                 strFailReason = strprintf("Wallet error, failed to retrieve private witness key.");
                 return false;
             }
             if (!AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *recipient.witnessForAccount, KEYCHAIN_WITNESS))
             {
-                //fixme: (FUT) Localise
+                //fixme: (2.1) Localise
                 strFailReason = strprintf("Wallet error, failed to store witness key.");
                 return false;
             }
@@ -622,9 +595,6 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
 
 bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKeyOrScript& reservekey, CAmount& nFeeOut, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
 {
-    std::vector<CKeyStore*> accountsToTry;
-    accountsToTry.push_back(forAccount);
-                
     CWalletTx wtxNew;
     if (forAccount->IsReadOnly())
     {
@@ -662,7 +632,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 const CAmount nChange = nValueSelected - nFeeOut;
                 if (nChange > 0)
                 {
-                    //fixme: (FUT) (COIN_CONTROL)
+                    //fixme: (COINCONTROL)
                     //We might want to allow coincontrol to produce script transactions even though segsig is enabled.
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
                     if (!IsOldTransactionVersion(txNew.nVersion))
@@ -738,9 +708,9 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 AddTxInputs(txNew, setCoins, false);
 
                 // Fill in dummy signatures for fee calculation.
-                if (!DummySignTx(accountsToTry, txNew, setCoins, Spend)) {
+                if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
-                    if (!ProduceSignature(DummySignatureCreator(accountsToTry), CTxOut(), sigdata, Spend, txNew.nVersion))
+                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
                         return false;
@@ -820,9 +790,10 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
             {
                 SignatureData sigdata;
 
+                //fixme: (2.1) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
-                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
+                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;
@@ -868,7 +839,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
-    //fixme: (FUT) (COIN_CONTROL)
+    //fixme: (COINCONTORL)
     CCoinControl coinControl;
 
     CGetWitnessInfo witnessInfo;
@@ -946,68 +917,6 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     return false;
 }
 
-void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut)
-{
-    LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
-
-    if (!IsSegSigEnabled(chainActive.TipPrev()))
-        throw std::runtime_error("Cannot use this command before segsig activates");
-
-    //fixme: (FUT) (COIN_CONTROL)
-    CCoinControl coinControl;
-
-    CGetWitnessInfo witnessInfo;
-    CBlock block;
-    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
-        throw std::runtime_error("Error reading block from disk.");
-
-    GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight);
-    for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
-    {
-        if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
-        {
-            // Add witness input
-            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
-
-            // Add witness output
-            CTxOut renewedWitnessTxOutput;
-            CTxOutPoW2Witness witnessDestination;
-            if (!GetPow2WitnessOutput(witCoin.coin.out, witnessDestination))
-                throw std::runtime_error("Unable to correctly retrieve data");
-
-            // Increment fail count appropriately
-            // Note that for upgrade there was no real failure, but the fail count needs to be incremented for the upgrade to pass
-            // validation as a renewal
-            IncrementWitnessFailCount(witnessDestination.failCount);
-
-            // Ensure consistent lock from
-            if (witnessDestination.lockFromBlock == 0)
-            {
-                witnessDestination.lockFromBlock = witCoin.coin.nHeight;
-            }
-
-            renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-            renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;
-            renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = witnessDestination.witnessKeyID;
-            renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
-            renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
-            renewedWitnessTxOutput.output.witnessDetails.failCount = witnessDestination.failCount;
-            renewedWitnessTxOutput.output.witnessDetails.actionNonce = witnessDestination.actionNonce+1;
-            renewedWitnessTxOutput.nValue = witCoin.coin.out.nValue;
-            tx.vout.push_back(renewedWitnessTxOutput);
-
-            // Add fee input and change output
-            std::string sFailReason;
-            if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, &coinControl))
-                throw std::runtime_error("Unable to add fee");
-
-            return;
-        }
-    }
-
-    throw std::runtime_error("Could not find suitable witness to upgrade");
-}
-
 bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut)
 {
     if (!SignTransaction(nullptr, tx, SignType::Spend))
@@ -1041,26 +950,20 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservek
     {
         LOCK2(cs_main, cs_wallet);
         LogPrintf("CommitTransaction:\n%s", wtxNew.tx->ToString());
-        CDataStream ssTx(SER_NETWORK, 0);
-        ssTx << wtxNew.tx;
-        LogPrintf("TransactionHex[%s]\n", HexStr(ssTx.begin(), ssTx.end()));
         {
             // Take key pair from key pool so it won't be used again
             reservekey.KeepKey();
 
             // Add tx to wallet, because if it has change it's also ours,
             // otherwise just for transaction history.
-            AddToWallet(wtxNew, true, true);
+            AddToWallet(wtxNew);
 
             // Notify that old coins are spent
             for(const CTxIn& txin : wtxNew.tx->vin)
             {
-                CWalletTx* prev = GetWalletTx(txin.prevout);
-                if (prev)
-                {
-                    prev->BindWallet(this);
-                    NotifyTransactionChanged(this, prev->GetHash(), CT_UPDATED, false);
-                }
+                CWalletTx &coin = mapWallet[txin.prevout.getHash()];
+                coin.BindWallet(this);
+                NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED);
             }
         }
 

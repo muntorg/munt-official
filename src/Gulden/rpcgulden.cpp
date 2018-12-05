@@ -39,6 +39,7 @@
 #include "coins.h"
 #include "blockfilter.h"
 #include "primitives/transaction.h"
+#include "core_io.h"
 
 #include <Gulden/util.h>
 #include "utilmoneystr.h"
@@ -2721,6 +2722,147 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
     return result;
 }
 
+static UniValue fixwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet)
+{
+    if (unspentWitnessOutputs.size() > 1)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Too many witness outputs cannot rotate."));
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+        throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    CTxDestination address;
+    if (!ExtractDestination(currentWitnessTxOut, address))
+        throw std::runtime_error("Could not extract PoW² witness for output.");
+
+    std::string sWitnessAddress = CGuldenAddress(address).ToString();
+    if (!haveStaticFundingAddress(sWitnessAddress, chainActive.Height()))
+    {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Witness address not in table of bad addresses"));
+    }
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    //fixme: (2.1) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction fixWitnessTransaction(CURRENT_TX_VERSION_POW2);
+    CTxOut rotatedWitnessTxOutput;
+    {
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(fixWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness output
+        CPoW2WitnessDestination destinationPoW2Witness;
+        // As we are rotating the witness key we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
+        destinationPoW2Witness.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        destinationPoW2Witness.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+        CGuldenAddress(getStaticFundingAddress(sWitnessAddress, chainActive.Height())).GetKeyID(destinationPoW2Witness.spendingKey);
+        destinationPoW2Witness.witnessKey = currentWitnessDetails.witnessKeyID;
+        destinationPoW2Witness.failCount = currentWitnessDetails.failCount;
+        IncrementWitnessFailCount(destinationPoW2Witness.failCount);
+        destinationPoW2Witness.actionNonce = currentWitnessDetails.actionNonce+1;
+        rotatedWitnessTxOutput.SetType(CTxOutType::ScriptLegacyOutput);
+        rotatedWitnessTxOutput.output.scriptPubKey = GetScriptForDestination(destinationPoW2Witness);
+        rotatedWitnessTxOutput.nValue = currentWitnessTxOut.nValue;
+        fixWitnessTransaction.vout.push_back(rotatedWitnessTxOutput);
+
+        // Add fee input and change output
+        std::string sFailReason;
+        CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
+        CAmount transactionFee;
+        if (!pactiveWallet->AddFeeForTransaction(fundingAccount, fixWitnessTransaction, changeReserveKey, transactionFee, false, sFailReason, nullptr))
+        {
+            sFailReason = "Unable to add fee";
+            return false;
+        }
+
+
+        // Fund the additional amount in the transaction (including fees)
+        //int changeOutputPosition = 1;
+        //std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        //CCoinControl coincontrol;
+        //if (!pwallet->FundTransaction(fundingAccount, fixWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        //{
+            //throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        //}
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+        if (!pwallet->SignAndSubmitTransaction(reservekey, fixWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair("txid", finalTransactionHash.GetHex()));
+    result.push_back(Pair("fee_amount", ValueFromAmount(transactionFee)));
+    result.push_back(Pair("transaction", EncodeHexTx(fixWitnessTransaction)));
+    return result;
+}
+
+static UniValue fixwitnessaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "fixwitnessaddress \"funding_account\" \"witness_address\" \n"
+            "\nRepair a witness address that has identical spending/witness key. \n"
+            "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed to pay for the transaction fee.\n"
+            "2. \"witness_address\"  (string, required) The Gulden address for the witness key.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\":\"txid\",   (string) The txid of the created transaction\n"
+            "     \"fee_amount\":n   (number) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    // arg1 - 'from' account.
+    CAccount* fundingAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!fundingAccount)
+        throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
+
+    // arg2 - 'to' address.
+    CGuldenAddress witnessAddress(request.params[1].get_str());
+    bool isValid = witnessAddress.IsValidWitness(Params());
+
+    if (!isValid)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Not a valid witness address [%s].", request.params[1].get_str()));
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
+    if (unspentWitnessOutputs.size() == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address does not contain any witness outputs [%s].", request.params[1].get_str()));
+
+    return fixwitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet);
+}
+
 static UniValue splitwitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -3500,6 +3642,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "rotatewitnessaddress",            &rotatewitnessaddress,           true,    {"funding_account", "witness_address"} },
     { "witness",                 "rotatewitnessaccount",            &rotatewitnessaccount,           true,    {"funding_account", "witness_account"} },
     { "witness",                 "renewwitnessaccount",             &renewwitnessaccount,            true,    {"funding_account", "witness_account"} },
+    { "witness",                 "fixwitnessaddress",               &fixwitnessaddress,              true,    {"funding_account", "witness_account"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
     { "witness",                 "setwitnessrewardtemplate",        &setwitnessrewardtemplate,       true,    {"witness_account", "reward_template"} },
