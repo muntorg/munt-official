@@ -490,7 +490,7 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 {
     //fixme: (2.2) - Remove in future once all problem addresses are cleaned up
     //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
-    if (nSpendHeight > 881000 || (IsArgSet("-testnet") && nSpendHeight > 100))
+    if (nSpendHeight > 881000 || (IsArgSet("-testnet") && nSpendHeight > 91300))
     {
         if (IsUnSigned(input))
         {

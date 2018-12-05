@@ -714,7 +714,7 @@ extern bool haveStaticFundingAddress(std::string sLookupAddress, uint64_t nHeigh
 {
     if(IsArgSet("-testnet"))
     {
-        if (nHeight > 100)
+        if (nHeight > 91300)
         {
             return true;
         }
@@ -727,7 +727,7 @@ extern bool haveStaticFundingAddress(std::string sLookupAddress, uint64_t nHeigh
 
 extern std::string getStaticFundingAddress(std::string sLookupAddress, uint64_t nHeight)
 {
-    if(IsArgSet("-testnet") && nHeight > 100)
+    if(IsArgSet("-testnet") && nHeight > 91300)
     {
         return "TSUjGh249nDKhn7huWwxofZrMGn9k9Rzo1";
     }
@@ -1081,7 +1081,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
         if (witnessInfo.witnessSelectionPoolFiltered.size() < 100)
         {
-            if(!IsArgSet("-testnet") && nBlockHeight > 788000)
+            if(!IsArgSet("-testnet") && nBlockHeight > 880000)
                 CAlert::Notify("Warning network is experiencing low levels of witnessing participants!", true, true);
 
 
@@ -1121,8 +1121,15 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    //fixme: (2.1) This should be using nTotalWeightEligibleRaw
-    witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightRaw / 100;
+    if ((!IsArgSet("-testnet") && nBlockHeight > 881000 ) || (!IsArgSet("-testnet") && nBlockHeight > 91300 ))
+    {
+        witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightEligibleRaw / 100;
+    }
+    else
+    {
+        //fixme: (2.2) Original 2.0 behaviour, since patched to use nTotalWeightEligibleRaw - at phase 4 we can get rid of this backwards compatible code.
+        witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightRaw / 100;
+    }
     witnessInfo.nTotalWeightEligibleAdjusted = 0;
     for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
@@ -1132,7 +1139,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
         item.nCumulativeWeight = witnessInfo.nTotalWeightEligibleAdjusted;
     }
 
-    /** sha256 as random roulette spin/seed - NB! We deliritely use sha256 and -not- the normal PoW hash here as the normal PoW hash is biased towards certain number ranges by -design- (block target) so is not a good RNG... **/
+    /** sha256 as random roulette spin/seed - NB! We delibritely use sha256 and -not- the normal PoW hash here as the normal PoW hash is biased towards certain number ranges by -design- (block target) so is not a good RNG... **/
     arith_uint256 rouletteSelectionSeed = UintToArith256(blockHash);
 
     //fixme: (2.0.1) Update whitepaper.
