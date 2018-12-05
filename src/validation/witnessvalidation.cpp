@@ -720,7 +720,7 @@ extern bool haveStaticFundingAddress(std::string sLookupAddress, uint64_t nHeigh
         }
         return false;
     }
-    if (nHeight > 855970 && sLookupAddress == "2pFYf2EoQgRKXdb4fJCePcSdFRU3kD8cpMCiQszJzbnsedS4iBWw1Q4GuoG6Ac")
+    if (nHeight > 881000 && sLookupAddress == "2pFYf2EoQgRKXdb4fJCePcSdFRU3kD8cpMCiQszJzbnsedS4iBWw1Q4GuoG6Ac")
         return true;
     return staticFundingAddressLookupTable.count(sLookupAddress);
 }
@@ -731,7 +731,7 @@ extern std::string getStaticFundingAddress(std::string sLookupAddress, uint64_t 
     {
         return "TSUjGh249nDKhn7huWwxofZrMGn9k9Rzo1";
     }
-    if (nHeight > 855970 && sLookupAddress == "2pFYf2EoQgRKXdb4fJCePcSdFRU3kD8cpMCiQszJzbnsedS4iBWw1Q4GuoG6Ac")
+    if (nHeight > 881000 && sLookupAddress == "2pFYf2EoQgRKXdb4fJCePcSdFRU3kD8cpMCiQszJzbnsedS4iBWw1Q4GuoG6Ac")
         return "GgyC2SmboGT9AW5uoEeozQYJDzBKFhSoYQ";
     return staticFundingAddressLookupTable[sLookupAddress];
 }

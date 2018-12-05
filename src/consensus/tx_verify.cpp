@@ -490,35 +490,38 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 {
     //fixme: (2.2) - Remove in future once all problem addresses are cleaned up
     //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
-    if (IsUnSigned(input))
+    if (nSpendHeight > 881000 || (IsArgSet("-testnet") && nSpendHeight > 100))
     {
-        if (inputDetails.witnessKeyID == inputDetails.spendingKeyID)
+        if (IsUnSigned(input))
         {
-            std::string sDest1 = CGuldenAddress(inputDetails.spendingKeyID).ToString();
-            std::string sDest2 = CGuldenAddress(outputDetails.spendingKeyID).ToString();
-            if (haveStaticFundingAddress(sDest1, nSpendHeight) <= 0)
-                return false;
+            if (inputDetails.witnessKeyID == inputDetails.spendingKeyID)
+            {
+                std::string sDest1 = CGuldenAddress(inputDetails.spendingKeyID).ToString();
+                std::string sDest2 = CGuldenAddress(outputDetails.spendingKeyID).ToString();
+                if (haveStaticFundingAddress(sDest1, nSpendHeight) <= 0)
+                    return false;
 
-            // Amount keys and lock unchanged.
-            if (nInputAmount != nOutputAmount)
+                // Amount keys and lock unchanged.
+                if (nInputAmount != nOutputAmount)
+                    return false;
+                // Action nonce always increment
+                if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
+                    return false;
+                if (getStaticFundingAddress(sDest1, nSpendHeight) != sDest2)
+                    return false;
+                if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
+                    return false;
+                if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
+                    return false;
+                if (!IsLockFromConsistent(inputDetails, outputDetails, nInputHeight))
+                    return false;
+                // Fail count must be incremented appropriately
+                uint64_t compFailCount = inputDetails.failCount;
+                IncrementWitnessFailCount(compFailCount);
+                if (compFailCount == outputDetails.failCount)
+                    return true;
                 return false;
-            // Action nonce always increment
-            if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
-                return false;
-            if (getStaticFundingAddress(sDest1, nSpendHeight) != sDest2)
-                return false;
-            if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
-                return false;
-            if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
-                return false;
-            if (!IsLockFromConsistent(inputDetails, outputDetails, nInputHeight))
-                return false;
-            // Fail count must be incremented appropriately
-            uint64_t compFailCount = inputDetails.failCount;
-            IncrementWitnessFailCount(compFailCount);
-            if (compFailCount == outputDetails.failCount)
-                return true;
-            return false;
+            }
         }
     }
 
