@@ -20,6 +20,17 @@
 #include <QVariant>
 #include <QSslError>
 
+//fixme: (2.1) - Set from autotools
+#define HAVE_WEBKIT
+
+//Uncomment the below to build without either webkit or webengine - see https://github.com/Gulden/gulden-official/issues/96
+//#undef HAVE_WEBKIT
+//#undef HAVE_WEBENGINE_VIEW
+
+//fixme: (Post-2.1) - mingw doesn't work with web engine view - for now we just use webkit everywhere but in future we should use web engine view where available and only webkit where absolutely needed.
+#ifndef WIN32
+//#define HAVE_WEBENGINE_VIEW
+#endif
 class OptionsModel;
 class QStyle;
 class WalletModel;
@@ -81,7 +92,9 @@ private Q_SLOTS:
   void loadBuyViewFinished(bool bOk);
   void generateRequest();
   void buyGulden();
+  #ifdef HAVE_WEBKIT
   void sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist);
+  #endif
 };
 
 #endif // GULDEN_QT_GULDENRECEIVECOINSDIALOG_H
