@@ -204,6 +204,22 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
         <translation>Abbrechen</translation>
     </message>
     <message>
+        <source>Total</source>
+        <translation>Insgesamt</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Verschlossen</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>Ausstehend</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Verfügbar</translation>
+    </message>
+    <message>
         <source>Total funds: </source>
         <translation>Gesamtbetrag: </translation>
     </message>
@@ -1519,6 +1535,26 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
 </context>
 <context>
     <name>AccountSummaryWidget</name>
+    <message>
+        <source>Account balances</source>
+        <translation>Kontostände</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Insgesamt</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Verschlossen</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>Ausstehend</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Verfügbar</translation>
+    </message>
     <message>
         <source>Total funds: </source>
         <translation>Gesamtbetrag: </translation>
