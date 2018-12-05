@@ -569,6 +569,9 @@ bool CWallet::IsSpent(const uint256& hash, unsigned int n) const
                     auto prevtx = mapWallet.find(mit->second.tx->vin[0].prevout.getHash());
                     if (prevtx != mapWallet.end())
                     {
+                        if (prevtx->second.tx->vout.size() == 0)
+                            return true;
+
                         const auto& prevOut = prevtx->second.tx->vout[mit->second.tx->vin[0].prevout.n].output;
                         if ( prevOut.nType == ScriptLegacyOutput )
                         {
@@ -1035,7 +1038,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     if (range.first->second != tx.GetHash())
                     {
                         std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
-                        if (mi != mapWallet.end() && GetPoW2Phase(chainActive.Tip(), Params(), chainActive) == 3 && (*mi).second.tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
+                        if (mi != mapWallet.end() && GetPoW2Phase(chainActive.Tip(), Params(), chainActive) == 3 && (*mi).second.tx->vout.size() > 0 && (*mi).second.tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
                         {
                             LogPrintf("Updated phase 3 witness transaction %s (in block %s) replace wallet transaction %s\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString());
                             if (mapWallet.find(range.first->second)->second.mapValue.count("replaced_by_txid") == 0)
@@ -1429,7 +1432,7 @@ bool CWalletTx::IsTrusted() const
     {
         // Transactions not sent by us: not trusted
         const CWalletTx* parent = pwallet->GetWalletTx(txin.prevout.getHash());
-        if (parent == NULL)
+        if (parent == NULL || parent->tx->vout.size() == 0)
             return false;
         const CTxOut& parentOut = parent->tx->vout[txin.prevout.n];
         if (pwallet->IsMine(parentOut) != ISMINE_SPENDABLE)
