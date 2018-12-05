@@ -39,6 +39,7 @@ file COPYING
     <string name="address_book_empty_title">Empty address book</string>
     <string name="transaction_list_empty_title">No Gulden received so far.</string>
     <string name="transaction_list_empty_message">Touch here to buy your first Gulden.</string>
+    <string name="send_coins_confirm_template">&lt;b>%1$s NLG&lt;/b>&lt;br/>&lt;br/>to %2$s</string>
 
     <string name="default_currency">EUR</string>
 

@@ -15,9 +15,12 @@ import com.gulden.jniunifiedbackend.UriRecipient
 
 import kotlinx.android.synthetic.main.activity_send_coins.*
 import android.content.Context
+import android.os.Build
 import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
+import android.support.v4.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import android.support.v7.app.AlertDialog
+import android.text.Html
 import android.widget.EditText
 import android.view.ViewGroup
 import android.view.LayoutInflater
@@ -52,8 +55,22 @@ class SendCoinsConfirmDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
+
+            // create styled message from resource template and arguments bundle
+            val message = getString(R.string.send_coins_confirm_template,
+                    arguments?.getString("nlg"),
+                    arguments?.getString("to"))
+
+            val styledMessage =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Html.fromHtml(message, FROM_HTML_MODE_LEGACY)
+                    } else {
+                        Html.fromHtml(message)
+                    }
+
             val builder = AlertDialog.Builder(it)
-            builder.setMessage("Send Gulden?")
+            builder.setTitle("Send Gulden?")
+                    .setMessage(styledMessage)
                     .setPositiveButton("Send") { _, _ ->
                         mListener.onConfirmDialogPositive(this)
                     }
@@ -88,6 +105,17 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
     private lateinit var activeAmount: EditText
     private var localRate: Double = 0.0
     private lateinit var recipient: UriRecipient
+    private val amount: Double
+        get() {
+            var a = send_coins_amount.text.toString().toDoubleOrNull()
+            if (a == null)
+                a = 0.0
+            return a
+        }
+    private val amountFractional: Long
+        get() {
+            return (amount * Config.COIN).toLong()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +139,13 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
                 }
 
                 val dialog = SendCoinsConfirmDialog()
+
+                // pass arguments to dialog for user message composition
+                val bundle = Bundle()
+                bundle.putString("nlg", String.format("%.${Config.PRECISION_SHORT}f", amount))
+                bundle.putString("to", if (recipient.label.isEmpty()) recipient.address else "${recipient.label} (${recipient.address})")
+                dialog.arguments = bundle
+
                 dialog.show(supportFragmentManager, "SendCoinsConfirmFragment")
             }
         }
