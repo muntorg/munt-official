@@ -5,8 +5,8 @@
 
 package com.gulden.unity_wallet
 
+import android.app.Dialog
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.gulden.jniunifiedbackend.AddressRecord
@@ -15,6 +15,8 @@ import com.gulden.jniunifiedbackend.UriRecipient
 
 import kotlinx.android.synthetic.main.activity_send_coins.*
 import android.content.Context
+import android.support.design.widget.Snackbar
+import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.widget.EditText
 import android.view.ViewGroup
@@ -28,38 +30,88 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.text.*
 
 
-class SendCoinsActivity : AppCompatActivity(), CoroutineScope {
+class SendCoinsConfirmDialog : DialogFragment() {
+
+    private lateinit var mListener: ConfirmDialogListener
+
+    interface ConfirmDialogListener {
+        fun onConfirmDialogPositive(dialog: DialogFragment)
+        fun onConfirmDialogNegative(dialog: DialogFragment)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Verify that the host activity implements the callback interface
+        try {
+            mListener = context as ConfirmDialogListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException((context.toString() +
+                    " must implement ConfirmDialogListener"))
+        }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setMessage("Send Gulden?")
+                    .setPositiveButton("Send") { _, _ ->
+                        mListener.onConfirmDialogPositive(this)
+                    }
+                    .setNegativeButton("Cancel") { _, _ ->
+                        mListener.onConfirmDialogNegative(this)
+                    }
+            builder.create()
+        } ?: throw IllegalStateException("Activity cannot be null")
+    }
+}
+
+class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
+        SendCoinsConfirmDialog.ConfirmDialogListener
+{
+    override fun onConfirmDialogPositive(dialog: DialogFragment) {
+            val paymentRequest = UriRecipient(true, recipient.address, recipient.label, activeAmount.text.toString())
+            if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
+                finish()
+            }
+            else {
+                val view =
+                Snackbar.make(findViewById<View>(android.R.id.content),
+                        "Payment failed", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show()
+            }
+    }
+
+    override fun onConfirmDialogNegative(dialog: DialogFragment) {}
 
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
     private lateinit var activeAmount: EditText
     private var localRate: Double = 0.0
+    private lateinit var recipient: UriRecipient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_coins)
         setSupportActionBar(toolbar)
 
-        var recipient : UriRecipient = intent.getParcelableExtra(EXTRA_RECIPIENT)
+        recipient = intent.getParcelableExtra(EXTRA_RECIPIENT)
         activeAmount = send_coins_amount
         activeAmount.setText(recipient.amount)
         send_coins_receiving_static_address.text = recipient.address
 
         setAddressLabel(recipient.label)
 
-        fab.setOnClickListener {
-            view -> run {
-                if (activeAmount.text.length > 0) {
-                    var paymentRequest : UriRecipient = UriRecipient(true, recipient.address, recipient.label, activeAmount.text.toString())
-                    if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
-                        finish()
-                    }
-                    else {
-                        Snackbar.make(view, "Payment failed", Snackbar.LENGTH_LONG).setAction("Action", null).show()
-                    }
+        send_coins_send_btn.setOnClickListener { view ->
+            run {
+                if (activeAmount.text.length <= 0) {
+                    Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null)
+                            .show()
+                    return@run
                 }
-                else {
-                    Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG).setAction("Action", null).show()
-                }
+
+                val dialog = SendCoinsConfirmDialog()
+                dialog.show(supportFragmentManager, "SendCoinsConfirmFragment")
             }
         }
 
