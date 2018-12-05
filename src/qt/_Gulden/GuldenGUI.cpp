@@ -87,8 +87,8 @@ const char* SMALL_BUTTON_FONT_SIZE = "14px";
 const char* MINOR_LABEL_FONT_SIZE = "12px";
 
 //Colors
-const char* ACCENT_COLOR_1 = "#007aff";
-const char* ACCENT_COLOR_2 = "#0067d9";
+const char* ACCENT_COLOR_1 = "#111444";
+const char* ACCENT_COLOR_2 = "#080a28";
 const char* TEXT_COLOR_1 = "#999";
 const char* COLOR_VALIDATION_FAILED = "#FF8080";
 
@@ -202,12 +202,16 @@ void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBal
     labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
     if (displayBalanceTotal > 0 && optionsModel)
     {
-        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
-        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceLocked, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceImmatureOrUnconfirmed, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        labelBalanceForex->setToolTip(toolTip);
+        QString forexLabel = QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2);
+        labelBalanceForex->setText(QString("(") + forexLabel + QString(")"));
+        QString forexToolTip;
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"><b>%1</b>&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Conversion estimate")).arg("");
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"></td><td style=\"white-space: nowrap;\" align=\"right\"></td></tr>");
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceLocked, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Pending")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceImmatureOrUnconfirmed, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        labelBalanceForex->setToolTip(forexToolTip);
         if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);
     }
@@ -229,10 +233,13 @@ void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBal
         resizeToolBarsGulden();
     }
 
-    QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
-    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceLocked, false, GuldenUnits::separatorStandard, 2));
-    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
-    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceAvailable, false, GuldenUnits::separatorStandard, 2));
+    QString toolTip;
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"><b>%1</b>&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Wallet balances")).arg("");
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"></td><td style=\"white-space: nowrap;\" align=\"right\"></td></tr>");
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceLocked, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Pending")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceAvailable, false, GuldenUnits::separatorStandard, 2));
     labelBalance->setToolTip(toolTip);
 }
 
@@ -755,6 +762,9 @@ void GUI::createToolBars()
     //Hide all toolbars and menus until UI fully loaded
     hideToolBars();
     appMenuBar->setVisible(false);
+    #ifndef MAC_OSX
+    menuBarSpaceFiller->setVisible(false);
+    #endif
 
 
     //Init the welcome dialog inside walletFrame
@@ -774,7 +784,10 @@ void GUI::hideToolBars()
     if (tabsBar) tabsBar->setVisible(false);
     if (spacerBarR) spacerBarR->setVisible(false);
     if (accountInfoBar) accountInfoBar->setVisible(false);
-    if (statusToolBar) statusToolBar->setVisible(false);
+    if (statusToolBar)
+    {
+        statusToolBar->setVisible(false);
+    }
 }
 
 void GUI::showToolBars()
@@ -789,7 +802,11 @@ void GUI::showToolBars()
     if (tabsBar) tabsBar->setVisible(true);
     if (spacerBarR) spacerBarR->setVisible(true);
     if (accountInfoBar) accountInfoBar->setVisible(true);
-    if (statusToolBar) statusToolBar->setVisible(progressBarLabel ? progressBarLabel->isVisible() : false);
+    if (statusToolBar)
+    {
+        bool visibility = (progressBarLabel ? progressBarLabel->isVisible() : false);
+        statusToolBar->setVisible(visibility);
+    }
 }
 
 
@@ -908,6 +925,8 @@ void GUI::doPostInit()
             progressBarWrapper->setContentsMargins( 0, 0, 0, 0);
             QHBoxLayout* layoutProgressBarWrapper = new QHBoxLayout;
             progressBarWrapper->setLayout(layoutProgressBarWrapper);
+            layoutProgressBarWrapper->setSpacing(0);
+            layoutProgressBarWrapper->setContentsMargins( 0, 0, 0, 0 );
             layoutProgressBarWrapper->addWidget(progressBar);
             statusToolBar->addWidget(progressBarWrapper);
             progressBar->setVisible(false);
@@ -926,12 +945,13 @@ void GUI::doPostInit()
             frameBlocksSpacerL->setContentsMargins( 0, 0, 0, 0);
             ((QHBoxLayout*)frameBlocks->layout())->insertWidget(0, frameBlocksSpacerL, 1);
             statusToolBar->addWidget(frameBlocks);
+
             //Right margin to match rest of UI
-            QFrame* frameBlocksSpacerR = new QFrame(frameBlocks);
-            frameBlocksSpacerR->setObjectName("rightMargin");
+            QFrame* frameBlocksSpacerR = new QFrame(statusToolBar);
+            frameBlocksSpacerR->setObjectName("status_bar_right_margin");
             frameBlocksSpacerR->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
             frameBlocksSpacerR->setContentsMargins( 0, 0, 0, 0);
-            ((QHBoxLayout*)frameBlocks->layout())->addWidget(frameBlocksSpacerR);
+            statusToolBar->addWidget(frameBlocksSpacerR);
 
             //Use our own styling - clear the styling that is already applied
             progressBar->setStyleSheet("");
@@ -990,7 +1010,9 @@ void GUI::hideProgressBarLabel()
         progressBarLabel->setVisible(false);
     }
     if(statusToolBar)
+    {
         statusToolBar->setVisible(false);
+    }
 }
 
 void GUI::showProgressBarLabel()
@@ -1000,7 +1022,9 @@ void GUI::showProgressBarLabel()
     if (progressBarLabel)
         progressBarLabel->setVisible(true);
     if(statusToolBar)
+    {
         statusToolBar->setVisible(true);
+    }
 }
 
 void GUI::hideBalances()

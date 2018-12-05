@@ -99,6 +99,58 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Annuler</translation>
     </message>
     <message>
+        <source>Account name</source>
+        <translation>Nom du compte</translation>
+    </message>
+    <message>
+        <source>Create account type</source>
+        <translation>Créer un type de compte</translation>
+    </message>
+    <message>
+        <source>Import account type</source>
+        <translation>Importé un type de compte</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Gestion quotidienne des fonds&lt;/li&gt;&lt;li&gt;Envoyer et recevoir Gulden&lt;/li&gt;&lt;li&gt;Envoyer des fonds à n&apos;importe quel compte IBAN intelligible&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Augmentez, gérez et contrôlez vos fonds mobiles à partir du bureau&lt;/li&gt;&lt;li&gt;Vider vos fonds mobiles avec facilité si le téléphone est cassé ou volé&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Augmenter votre argent &lt;/li&gt;&lt;li&gt;Période flexible de 1 mois à 3 ans&lt;/li&gt;&lt;li&gt;Aider à sécuriser le réseau avec un minimum d&apos;équipements matériels&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importer un compte témoin à partir d&apos;un autre dispositif&lt;/li&gt;&lt;li&gt;Laisser ce dispositif agir en tant que dispositif de witness de secours de sorte que vous soyez toujours disponible pour witnessing&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importer une clé privée de l&apos;entrepôt frigorifique&lt;/li&gt;&lt;li&gt;Non sauvegardé en tant que partie de votre phrase de récupération&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Standard</source>
+        <translation>défaut</translation>
+    </message>
+    <message>
+        <source>Linked mobile</source>
+        <translation>Mobile lié</translation>
+    </message>
+    <message>
+        <source>Witness</source>
+        <translation>Witness</translation>
+    </message>
+    <message>
+        <source>Witness-only</source>
+        <translation>Witness-seulement</translation>
+    </message>
+    <message>
+        <source>Private key</source>
+        <translation>Clé privée</translation>
+    </message>
+    <message>
         <source>Scan QR to connect your mobile Gulden app</source>
         <translation>Scannez QR pour connecter votre application mobile Gulden</translation>
     </message>
@@ -169,6 +221,10 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Fonds disponibles : </translation>
     </message>
     <message>
+        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
+        <translation>Cette fonction n&apos;est pas disponible dans les premières semaines de &quot;witness&quot;, veuillez mettre à jour à la dernière version et réessayer, ou demander de l&apos;aide.</translation>
+    </message>
+    <message>
         <source>Check for Updates</source>
         <translation>Vérifier les mises à jour</translation>
     </message>
@@ -191,6 +247,10 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>Send</source>
         <translation>Envoyer</translation>
+    </message>
+    <message>
+        <source>This feature is not yet available, please try again after block 797000.</source>
+        <translation>Cette fonction n&apos;est pas encore disponible, veuillez réessayer après le bloc 797000.</translation>
     </message>
     <message>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
@@ -223,6 +283,14 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>Backup wallet</source>
         <translation>Sauvegarder le portefeuille</translation>
+    </message>
+    <message>
+        <source>Imported key</source>
+        <translation>Clé importée</translation>
+    </message>
+    <message>
+        <source>Imported witness</source>
+        <translation>Witness importé</translation>
     </message>
     <message>
         <source>&amp;Overview</source>
@@ -1642,6 +1710,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation>Copier l&apos;ID de la transaction</translation>
     </message>
     <message>
+        <source>Generated</source>
+        <translation>Généré</translation>
+    </message>
+    <message>
         <source>Type</source>
         <translation>Type </translation>
     </message>
@@ -2029,6 +2101,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation>Ouvert jusqu&apos;à %1</translation>
     </message>
     <message>
+        <source>Generated</source>
+        <translation>Généré</translation>
+    </message>
+    <message>
         <source>watch-only</source>
         <translation>juste-regarder</translation>
     </message>
@@ -2226,6 +2302,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Extend locked funds</source>
         <translation>Prolonger les fonds bloqués</translation>
+    </message>
+    <message>
+        <source>Generation reward</source>
+        <translation>Récompense de génération</translation>
     </message>
     <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
@@ -3411,6 +3491,10 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
         <translation>Chargement terminé</translation>
     </message>
     <message>
+        <source>Erasing block index...</source>
+        <translation>Effacer l&apos;index des blocs.....</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Erreur de lecture de la base de données, arrêt.</translation>
     </message>
@@ -3481,6 +3565,10 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
 </context>
 <context>
     <name>GuldenAmountField</name>
+    <message>
+        <source>Max</source>
+        <translation>Max</translation>
+    </message>
     <message>
         <source>Gulden</source>
         <translation>Gulden</translation>
@@ -3589,6 +3677,14 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>Total:</source>
         <translation>Total :</translation>
+    </message>
+    <message>
+        <source>Generated balance in watch-only addresses that has not yet matured</source>
+        <translation>Solde généré dans les adresses de veille qui n&apos;a pas encore mûri.</translation>
+    </message>
+    <message>
+        <source>Generated balance that has not yet matured</source>
+        <translation>Solde généré qui n&apos;a pas encore mûri</translation>
     </message>
     <message>
         <source>Mined balance that has not yet matured</source>

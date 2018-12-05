@@ -2169,6 +2169,128 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     return rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet);
 }
 
+static UniValue verifywitnessaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "verifywitnessaddress \"witness_address\" \n"
+            "\nVerify that a witness address is in good working order. Wallet must have both public keys, witness key must be available to sign in an unencrypted form so that wallet can witness while locked.\n"
+            "1. \"witness_address\"  (string, required) The Gulden address for the witness key.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"validity\",   (boolean) True if all keys are present and in correct form, false otherwise.\n"
+            "     \"info\",       (string)  Information on the error.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("rotatewitnessaddress \"My account\" 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    UniValue result(UniValue::VOBJ);
+    // NB! Wallet should be locked for this test
+    if (!pwallet->IsCrypted())
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "verifywitnessaddress can only be used on encrypted wallets"));
+        return result;
+    }
+    if (!pwallet->IsLocked())
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "verifywitnessaddress can only be used on locked wallets"));
+        return result;
+    }
+
+    // arg1 - 'to' address.
+    CGuldenAddress witnessAddress(request.params[1].get_str());
+    bool isValid = witnessAddress.IsValidWitness(Params());
+
+    if (!isValid)
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Not a valid witness address"));
+        return result;
+    }
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
+    if (unspentWitnessOutputs.size() == 0)
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Not an active witness address"));
+        return result;
+    }
+
+    if (unspentWitnessOutputs.size() > 1)
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Too many outputs for account so unsure which one to validate, aborting."));
+        return result;
+    }
+
+    // Find the account
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    (unused) currentWitnessHeight;
+    (unused) currentWitnessOutpoint;
+    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    if (!witnessAccount)
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Unable to determine account for witness address."));
+        return result;
+    }
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    CPubKey pubKey;
+    if (!witnessAccount->GetPubKey(currentWitnessDetails.witnessKeyID, pubKey))
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Unable to retrieve public witness key"));
+        return result;
+    }
+    if (!witnessAccount->GetPubKey(currentWitnessDetails.spendingKeyID, pubKey))
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Unable to retrieve public spending key"));
+        return result;
+    }
+
+    CKey privKey;
+    if (!witnessAccount->GetKey(currentWitnessDetails.witnessKeyID, privKey))
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Able to retrieve witness signing key; this should not be possible as key should be encrypted."));
+        return result;
+    }
+    if (witnessAccount->GetKey(currentWitnessDetails.spendingKeyID, privKey))
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Unable to retrieve spending signing key; key may be incorrectly encrypted."));
+        return result;
+    }
+
+    result.push_back(Pair("validity", true));
+    result.push_back(Pair("info", ""));
+    return result;
+}
+
 static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -3035,6 +3157,7 @@ static const CRPCCommand commands[] =
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
     { "developer",               "dumpdiffarray",                   &dumpdiffarray,                  true,    {"height"} },
+    { "developer",               "verifywitnessaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
 
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
     { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },

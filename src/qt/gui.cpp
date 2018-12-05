@@ -90,16 +90,6 @@
 #include <QUrlQuery>
 #endif
 
-const std::string GUI::DEFAULT_UIPLATFORM =
-#if defined(Q_OS_MAC)
-        "macosx"
-#elif defined(Q_OS_WIN)
-        "windows"
-#else
-        "other"
-#endif
-        ;
-
 static void NotifyRequestUnlockS(GUI* parent, CWallet* wallet, std::string reason)
 {
     QMetaObject::invokeMethod(parent, "NotifyRequestUnlock", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)));
@@ -724,6 +714,10 @@ bool GUI::setCurrentWallet(const QString& name)
     // Now that we have an active wallet it is safe to show the toolbars and menubars again.
     showToolBars();
     appMenuBar->setVisible(true);
+    #ifndef MAC_OSX
+    menuBarSpaceFiller->setFixedSize(20000, appMenuBar->height());
+    menuBarSpaceFiller->setVisible(true);
+    #endif
 
     refreshAccountControls();
 
@@ -1319,12 +1313,13 @@ void GUI::resizeEvent(QResizeEvent* event)
     // Other languages may in turn be different.
     // If we are working with limited horizontal spacing then hide some non-essential UI elements to help things fit more comfortably.
     bool restrictedHorizontalSpace = (event->size().width() < 980) ? true : false;
+    bool extraRestrictedHorizontalSpace = (event->size().width() < 780) ? true : false;
     if (accountSummaryWidget)
         accountSummaryWidget->showForexBalance(!restrictedHorizontalSpace);
     if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->receiveCoinsPage)
-        walletFrame->currentWalletView()->receiveCoinsPage->setShowCopyQRAsImageButton(!restrictedHorizontalSpace);
+        walletFrame->currentWalletView()->receiveCoinsPage->setShowCopyQRAsImageButton(!extraRestrictedHorizontalSpace);
     else
-        ReceiveCoinsDialog::showCopyQRAsImagebutton = !restrictedHorizontalSpace;
+        ReceiveCoinsDialog::showCopyQRAsImagebutton = !extraRestrictedHorizontalSpace;
 }
 
 

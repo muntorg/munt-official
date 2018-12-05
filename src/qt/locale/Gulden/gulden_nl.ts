@@ -204,6 +204,26 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
         <translation>Annuleren</translation>
     </message>
     <message>
+        <source>Total</source>
+        <translation>Totaal</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Geblokkeerd</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>In behandeling</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Besteedbaar</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Schatting conversie</translation>
+    </message>
+    <message>
         <source>Total funds: </source>
         <translation>Totaalbedrag: </translation>
     </message>
@@ -218,6 +238,10 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>Spendable funds: </source>
         <translation>Besteedbare bedragen: </translation>
+    </message>
+    <message>
+        <source>Wallet balances</source>
+        <translation>Balans portemonnee</translation>
     </message>
     <message>
         <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
@@ -541,8 +565,8 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
         <translation>
-            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
-            <numerusform>%n blok(ken) verwekt van de transactiehistorie</numerusform>
+            <numerusform>%n blok(ken) verwerkt van de transactiehistorie</numerusform>
+            <numerusform>%n blok(ken) verwerkt van de transactiehistorie</numerusform>
         </translation>
     </message>
     <message>
@@ -1022,6 +1046,18 @@ Witness-gewicht: %5</translation>
         <translation>Nee</translation>
     </message>
     <message>
+        <source>address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>Request copied to clipboard</source>
+        <translation>Verzoek gekopieerd naar klembord</translation>
+    </message>
+    <message>
         <source>My receiving address</source>
         <translation>Mijn ontvangstadres</translation>
     </message>
@@ -1135,7 +1171,7 @@ Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>Copy request to clipboard</source>
-        <translation>Kopieer aanvraag naar klemboard</translation>
+        <translation>Kopieer aanvraag naar klembord</translation>
     </message>
     <message>
         <source>Request Gulden</source>
@@ -1518,6 +1554,30 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
 </context>
 <context>
     <name>AccountSummaryWidget</name>
+    <message>
+        <source>Account balances</source>
+        <translation>Account balans</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Totaal</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Geblokkkeerd</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>In behandeling</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Besteedbaar</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Schatting conversie</translation>
+    </message>
     <message>
         <source>Total funds: </source>
         <translation>Totaalbedrag: </translation>

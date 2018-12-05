@@ -223,7 +223,7 @@ void Notificator::notifyDBus(Class cls, const QString &title, const QString &tex
         case Critical: sicon = QStyle::SP_MessageBoxCritical; break;
         default: break;
         }*/
-        tmpicon = QIcon(":/Gulden/logo_blue");
+        tmpicon = QIcon(":/icons/gulden");
     }
     else
     {
@@ -281,7 +281,7 @@ void Notificator::notifyGrowl(Class cls, const QString &title, const QString &te
         case Critical: sicon = QStyle::SP_MessageBoxCritical; break;
         }
         notificationIconPixmap = QApplication::style()->standardPixmap(sicon);*/
-        QIcon notificationIcon = QIcon(":/Gulden/logo_blue");
+        QIcon notificationIcon = QIcon(":/icons/gulden");
         notificationIconPixmap = notificationIcon.pixmap(icon.actualSize(QSize(48, 48)));
     }
     else {

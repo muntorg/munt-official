@@ -71,6 +71,8 @@ public:
     */
     void setOptionsModel(OptionsModel* optionsModel_);
 
+    void setDisplayMaxButton(bool shouldDisplay);
+
     /** Qt messes up the tab chain by default in some cases (issue https://bugreports.qt-project.org/browse/QTBUG-10907),
         in these cases we have to set it up manually.
     */
@@ -102,11 +104,12 @@ private:
     CAmount amountLocal;
 
     // UI widgets
-    AmountSpinBox* primaryAmountDisplay;
-    QLabel* primaryAmountName;
-    ClickableLabel* firstAuxAmountDisplay;
-    ClickableLabel* amountSeperator;
-    ClickableLabel* secondAuxAmountDisplay;
+    AmountSpinBox* primaryAmountDisplay = nullptr;
+    QLabel* primaryAmountName = nullptr;
+    ClickableLabel* firstAuxAmountDisplay = nullptr;
+    ClickableLabel* amountSeperator = nullptr;;
+    ClickableLabel* secondAuxAmountDisplay = nullptr;
+    ClickableLabel* maxButton = nullptr;
 
     // external sources
     OptionsModel* optionsModel;
