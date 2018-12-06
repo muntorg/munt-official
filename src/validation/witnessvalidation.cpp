@@ -1121,7 +1121,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    if ((!IsArgSet("-testnet") && nBlockHeight > 881000 ) || (!IsArgSet("-testnet") && nBlockHeight > 91300 ))
+    if ((!IsArgSet("-testnet") && nBlockHeight > 881000 ) || (IsArgSet("-testnet") && nBlockHeight > 91300 ))
     {
         witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightEligibleRaw / 100;
     }
