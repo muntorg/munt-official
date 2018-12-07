@@ -105,6 +105,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
     private lateinit var activeAmount: EditText
     private var localRate: Double = 0.0
     private lateinit var recipient: UriRecipient
+    private var foreignCurrency = localCurrency
     private val amount: Double
         get() {
             var a = send_coins_amount.text.toString().toDoubleOrNull()
@@ -171,8 +172,8 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
     {
         this.launch( Dispatchers.Main) {
             try {
-                localRate = fetchCurrencyRate(localCurrency.code)
-                send_coins_local_label.text = localCurrency.short
+                localRate = fetchCurrencyRate(foreignCurrency.code)
+                send_coins_local_label.text = foreignCurrency.short
                 send_coins_local_group.visibility = View.VISIBLE
 
                 // TODO for IBAN payment activate Euro entry when rate is available
@@ -196,7 +197,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
             if (amount == null)
                 amount = 0.0
             val localAmount = localRate * amount
-            send_coins_local_amount.setText(String.format("%.${localCurrency.precision}f", localAmount))
+            send_coins_local_amount.setText(String.format("%.${foreignCurrency.precision}f", localAmount))
         }
         else {
             // update Gulden from local
