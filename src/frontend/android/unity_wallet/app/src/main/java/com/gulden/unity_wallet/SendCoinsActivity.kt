@@ -25,10 +25,12 @@ import android.widget.EditText
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import com.gulden.unity_wallet.R.layout.text_input_address_label
+import com.gulden.unity_wallet.currency.Currencies
 import com.gulden.unity_wallet.currency.fetchCurrencyRate
 import com.gulden.unity_wallet.currency.localCurrency
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
+import org.apache.commons.validator.routines.IBANValidator
 import kotlin.coroutines.CoroutineContext
 import kotlin.text.*
 
@@ -102,10 +104,12 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
     override fun onConfirmDialogNegative(dialog: DialogFragment) {}
 
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+    private var nocksJob: Job? = null
     private lateinit var activeAmount: EditText
     private var localRate: Double = 0.0
     private lateinit var recipient: UriRecipient
     private var foreignCurrency = localCurrency
+    private var isIBAN = false
     private val amount: Double
         get() {
             var a = send_coins_amount.text.toString().toDoubleOrNull()
@@ -113,9 +117,12 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
                 a = 0.0
             return a
         }
-    private val amountFractional: Long
+    private val foreignAmount: Double
         get() {
-            return (amount * Config.COIN).toLong()
+            var a = send_coins_local_amount.text.toString().toDoubleOrNull()
+            if (a == null)
+                a = 0.0
+            return a
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -159,6 +166,15 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
             if (hasFocus) activeAmount = send_coins_local_amount
         }
 
+        if (IBANValidator.getInstance().isValid(recipient.address)) {
+            foreignCurrency = Currencies.knownCurrencies["EUR"]!!
+            isIBAN = true
+        }
+        else {
+            foreignCurrency = localCurrency
+            isIBAN = false
+        }
+
         setupRate()
     }
 
@@ -176,9 +192,10 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
                 send_coins_local_label.text = foreignCurrency.short
                 send_coins_local_group.visibility = View.VISIBLE
 
-                // TODO for IBAN payment activate Euro entry when rate is available
-
                 updateConversion()
+
+                if (isIBAN)
+                    send_coins_local_amount.requestFocus()
             }
             catch (e: Throwable) {
                 send_coins_local_group.visibility = View.GONE
@@ -193,19 +210,50 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
 
         if (activeAmount == send_coins_amount) {
             // update local from Gulden
-            var amount = send_coins_amount.text.toString().toDoubleOrNull()
-            if (amount == null)
-                amount = 0.0
-            val localAmount = localRate * amount
-            send_coins_local_amount.setText(String.format("%.${foreignCurrency.precision}f", localAmount))
+            send_coins_local_amount.setText(
+                    if (amount != 0.0)
+                        String.format("%.${foreignCurrency.precision}f", localRate * amount)
+                    else
+                        ""
+            )
         }
         else {
             // update Gulden from local
-            var localAmount = send_coins_local_amount.text.toString().toDoubleOrNull()
-            if (localAmount == null)
-                localAmount = 0.0
-            val amount = localAmount / localRate
-            send_coins_amount.setText(String.format("%.${Config.PRECISION_SHORT}f", amount))
+            send_coins_amount.setText(
+                    if (foreignAmount != 0.0)
+                        String.format("%.${Config.PRECISION_SHORT}f", foreignAmount / localRate)
+                    else
+                        ""
+            )
+        }
+    }
+
+    private fun updateNocksEstimate() {
+        nocksJob?.cancel()
+        send_coins_nocks_estimate.text = " "
+        if (isIBAN && foreignAmount != 0.0) {
+            val prevJob = nocksJob
+            nocksJob = this.launch(Dispatchers.Main) {
+                try {
+                    send_coins_nocks_estimate.text = "..."
+
+                    // delay a bit so quick typing will make a limited number of requests
+                    // (this job will be canceled by the next key typed
+                    delay(700)
+
+                    prevJob?.join()
+
+                    val quote = nocksQuote(send_coins_local_amount.text.toString())
+                    val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG.toDouble())
+                    send_coins_nocks_estimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
+                }
+                catch (_: CancellationException) {
+                    // silently pass job cancelation
+                }
+                catch (e: Throwable) {
+                    send_coins_nocks_estimate.text = "Could not fetch transaction quote"
+                }
+            }
         }
     }
 
@@ -275,6 +323,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
             }
         }
         updateConversion()
+        updateNocksEstimate()
     }
 
     fun handleAddToAddressBookClick(view : View)

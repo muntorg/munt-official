@@ -135,6 +135,14 @@ file COPYING
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/send_coins_nocks_estimate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
