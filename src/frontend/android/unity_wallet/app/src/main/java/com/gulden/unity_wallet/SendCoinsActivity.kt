@@ -236,17 +236,17 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
 
                 // pass arguments to dialog for user message composition
                 val bundle = Bundle()
-                bundle.putString("nlg", String.format("%.${Config.PRECISION_SHORT}f", amount))
                 bundle.putString("eur", String.format("%.${foreignCurrency.precision}f", foreignAmount))
                 bundle.putString("to", if (recipient.label.isEmpty()) recipient.address else "${recipient.label} (${recipient.address})")
 
                 if (isIBAN) {
                     this.launch {
                         try {
-                            orderResult = nocksOrder(
+                            val orderResult = nocksOrder(
                                     amountEuro = String.format("%.${foreignCurrency.precision}f", foreignAmount),
                                     iban = recipient.address)
                             val dialog = SendCoinsConfirmIBANDialog()
+                            bundle.putString("nlg", String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG.toDouble()))
                             dialog.arguments = bundle
                             dialog.show(supportFragmentManager, "SendCoinsConfirmFragment")
                         }
@@ -254,11 +254,13 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
                             Snackbar.make(view, "IBAN order failed", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null)
                                     .show()
+                            send_coins_send_btn.isEnabled = true
                         }
                     }
                 }
                 else {
                     val dialog = SendCoinsConfirmDialog()
+                    bundle.putString("nlg", String.format("%.${Config.PRECISION_SHORT}f", amount))
                     dialog.arguments = bundle
                     dialog.show(supportFragmentManager, "SendCoinsConfirmFragment")
                 }
