@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -70,6 +72,9 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha11"
     implementation "commons-validator:commons-validator:1.6"
+    implementation "com.squareup.okhttp3:okhttp:3.12.0"
+    implementation "com.squareup.moshi:moshi:1.8.0"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
     kapt "android.arch.lifecycle:compiler:1.1.1"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

@@ -5,6 +5,7 @@
 
 package com.gulden.unity_wallet
 
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -19,5 +20,14 @@ class ExampleUnitTest
     @Test fun addition_isCorrect()
     {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test fun liveNockQuote()
+    {
+        var amount = -1.0
+        runBlocking {
+            amount = nocksQuote("5.0").amountNLG.toDouble()
+        }
+        assertTrue(amount > 0.0)
     }
 }
