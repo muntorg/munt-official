@@ -5,189 +5,34 @@
 
 package com.gulden.unity_wallet
 
-import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
-
-import kotlinx.android.synthetic.main.activity_send_coins.*
-import android.content.Context
-import android.os.Build
-import com.google.android.material.snackbar.Snackbar
-import androidx.fragment.app.DialogFragment
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
-import androidx.appcompat.app.AlertDialog
-import android.text.Html
-import android.widget.EditText
-import android.view.ViewGroup
-import android.view.LayoutInflater
 import com.gulden.unity_wallet.R.layout.text_input_address_label
 import com.gulden.unity_wallet.currency.Currencies
 import com.gulden.unity_wallet.currency.fetchCurrencyRate
 import com.gulden.unity_wallet.currency.localCurrency
+import kotlinx.android.synthetic.main.activity_send_coins.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.appcompat.v7.Appcompat
+import org.jetbrains.anko.design.longSnackbar
 import kotlin.coroutines.CoroutineContext
-import kotlin.text.*
 
 
-class SendCoinsConfirmDialog : androidx.fragment.app.DialogFragment() {
-
-    private lateinit var mListener: ConfirmDialogListener
-
-    interface ConfirmDialogListener {
-        fun onConfirmDialogPositive(dialog: androidx.fragment.app.DialogFragment)
-        fun onConfirmDialogNegative(dialog: androidx.fragment.app.DialogFragment)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        // Verify that the host activity implements the callback interface
-        try {
-            mListener = context as ConfirmDialogListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException((context.toString() +
-                    " must implement SendCoinsConfirmDialog"))
-        }
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
-
-            // create styled message from resource template and arguments bundle
-            val message = getString(R.string.send_coins_confirm_template,
-                    arguments?.getString("nlg"),
-                    arguments?.getString("to"))
-
-            val styledMessage =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        Html.fromHtml(message, FROM_HTML_MODE_LEGACY)
-                    } else {
-                        Html.fromHtml(message)
-                    }
-
-            val builder = AlertDialog.Builder(it)
-            builder.setTitle("Send Gulden?")
-                    .setMessage(styledMessage)
-                    .setPositiveButton("Send") { _, _ ->
-                        mListener.onConfirmDialogPositive(this)
-                    }
-                    .setNegativeButton("Cancel") { _, _ ->
-                        mListener.onConfirmDialogNegative(this)
-                    }
-            builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mListener.onConfirmDialogNegative(this)
-    }
-}
-
-
-class SendCoinsConfirmIBANDialog : androidx.fragment.app.DialogFragment() {
-
-    private lateinit var mListener: ConfirmIBANDialogListener
-
-    interface ConfirmIBANDialogListener {
-        fun onConfirmIBANDialogPositive(dialog: androidx.fragment.app.DialogFragment)
-        fun onConfirmIBANDialogNegative(dialog: androidx.fragment.app.DialogFragment)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        // Verify that the host activity implements the callback interface
-        try {
-            mListener = context as ConfirmIBANDialogListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException((context.toString() +
-                    " must implement ConfirmIBANDialogListener"))
-        }
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
-
-            // create styled message from resource template and arguments bundle
-            val message = getString(R.string.send_coins_iban_confirm_template,
-                    arguments?.getString("eur"),
-                    arguments?.getString("nlg"),
-                    arguments?.getString("to"))
-
-            val styledMessage =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        Html.fromHtml(message, FROM_HTML_MODE_LEGACY)
-                    } else {
-                        Html.fromHtml(message)
-                    }
-
-            val builder = AlertDialog.Builder(it)
-            builder.setTitle("Send Gulden to IBAN?")
-                    .setMessage(styledMessage)
-                    .setPositiveButton("Send") { _, _ ->
-                        mListener.onConfirmIBANDialogPositive(this)
-                    }
-                    .setNegativeButton("Cancel") { _, _ ->
-                        mListener.onConfirmIBANDialogNegative(this)
-                    }
-            builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mListener.onConfirmIBANDialogNegative(this)
-    }
-}
-
-
-class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
-        SendCoinsConfirmDialog.ConfirmDialogListener,
-        SendCoinsConfirmIBANDialog.ConfirmIBANDialogListener
+class SendCoinsActivity : AppCompatActivity(), CoroutineScope
 {
-    override fun onConfirmDialogPositive(dialog: androidx.fragment.app.DialogFragment) {
-        send_coins_send_btn.isEnabled = true
-        val paymentRequest = UriRecipient(true, recipient.address, recipient.label, activeAmount.text.toString())
-            if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
-                finish()
-            }
-            else {
-                val view =
-                Snackbar.make(findViewById<View>(android.R.id.content),
-                        "Payment failed", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null)
-                        .show()
-            }
-    }
-
-    override fun onConfirmDialogNegative(dialog: androidx.fragment.app.DialogFragment) {
-        send_coins_send_btn.isEnabled = true
-    }
-
-    override fun onConfirmIBANDialogPositive(dialog: androidx.fragment.app.DialogFragment) {
-        send_coins_send_btn.isEnabled = true
-        val paymentRequest = UriRecipient(true, orderResult!!.depositAddress, recipient.label, orderResult!!.depositAmountNLG)
-        if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
-            finish()
-        }
-        else {
-            val view =
-                    Snackbar.make(findViewById<View>(android.R.id.content),
-                            "IBAN payment failed", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null)
-                            .show()
-        }
-    }
-
-    override fun onConfirmIBANDialogNegative(dialog: androidx.fragment.app.DialogFragment) {
-        send_coins_send_btn.isEnabled = true
-    }
-
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
     private var nocksJob: Job? = null
     private var orderResult: NocksOrderResult? = null
@@ -210,6 +55,11 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
                 a = 0.0
             return a
         }
+    private val recipientDisplayAddress: String
+        get () {
+            return if (recipient.label.isEmpty()) recipient.address else "${recipient.label} (${recipient.address})"
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -225,44 +75,19 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
 
         send_coins_send_btn.setOnClickListener { view ->
             run {
-                if (activeAmount.text.length <= 0) {
+                if (activeAmount.text.isEmpty()) {
                     Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG)
                             .setAction("Action", null)
                             .show()
                     return@run
                 }
 
-                send_coins_send_btn.isEnabled = false
 
-                // pass arguments to dialog for user message composition
-                val bundle = Bundle()
-                bundle.putString("eur", String.format("%.${foreignCurrency.precision}f", foreignAmount))
-                bundle.putString("to", if (recipient.label.isEmpty()) recipient.address else "${recipient.label} (${recipient.address})")
 
                 if (isIBAN) {
-                    this.launch {
-                        try {
-                            val orderResult = nocksOrder(
-                                    amountEuro = String.format("%.${foreignCurrency.precision}f", foreignAmount),
-                                    iban = recipient.address)
-                            val dialog = SendCoinsConfirmIBANDialog()
-                            bundle.putString("nlg", String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG.toDouble()))
-                            dialog.arguments = bundle
-                            dialog.show(supportFragmentManager, "SendCoinsConfirmFragment")
-                        }
-                        catch (e: Throwable) {
-                            Snackbar.make(view, "IBAN order failed", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null)
-                                    .show()
-                            send_coins_send_btn.isEnabled = true
-                        }
-                    }
-                }
-                else {
-                    val dialog = SendCoinsConfirmDialog()
-                    bundle.putString("nlg", String.format("%.${Config.PRECISION_SHORT}f", amount))
-                    dialog.arguments = bundle
-                    dialog.show(supportFragmentManager, "SendCoinsConfirmFragment")
+                    confirmAndCommitIBANPayment(view)
+                } else {
+                    confirmAndCommitGuldenPaymnet(view)
                 }
             }
         }
@@ -285,6 +110,69 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
         }
 
         setupRate()
+    }
+
+    private fun confirmAndCommitGuldenPaymnet(view: View) {
+        // create styled message from resource template and arguments bundle
+        val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amount)
+        val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
+
+        // alert dialog for confirmation
+        alert(Appcompat, message, "Send Gulden?") {
+
+            // on confirmation compose recipient and execute payment
+            positiveButton("Send") {
+                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, send_coins_amount.text.toString())
+                if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
+                    finish()
+                } else {
+                    view.longSnackbar("Payment failed")
+                }
+            }
+
+            negativeButton("Cancel") {}
+        }.show()
+    }
+
+    private fun confirmAndCommitIBANPayment(view: View) {
+        send_coins_send_btn.isEnabled = false
+        this.launch {
+            try {
+                // request order from Nocks
+                val orderResult = nocksOrder(
+                        amountEuro = String.format("%.${foreignCurrency.precision}f", foreignAmount),
+                        iban = recipient.address)
+
+                // create styled message from resource template and arguments bundle
+                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG.toDouble())
+                val message = getString(R.string.send_coins_iban_confirm_template,
+                        String.format("%.${foreignCurrency.precision}f", foreignAmount),
+                        nlgStr, recipientDisplayAddress)
+
+                // alert dialog for confirmation
+                alert(Appcompat, message, "Send Gulden to IBAN?") {
+
+                    // on confirmation compose recipient and execute payment
+                    positiveButton("Send") {
+                        send_coins_send_btn.isEnabled = true
+                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG)
+                        if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
+                            finish()
+                        } else {
+                            view.longSnackbar("IBAN payment failed")
+                        }
+                    }
+
+                    negativeButton("Cancel") {}
+                }
+                        .show()
+                send_coins_send_btn.isEnabled = true
+
+            } catch (e: Throwable) {
+                view.longSnackbar("IBAN order failed")
+                send_coins_send_btn.isEnabled = true
+            }
+        }
     }
 
     override fun onDestroy() {

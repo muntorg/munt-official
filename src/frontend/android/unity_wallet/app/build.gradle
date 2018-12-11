@@ -74,6 +74,11 @@ dependencies {
     implementation "commons-validator:commons-validator:1.6"
     implementation "com.squareup.okhttp3:okhttp:3.12.0"
     implementation "com.squareup.moshi:moshi:1.8.0"
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation "org.jetbrains.anko:anko-design:$anko_version"
+//    implementation "org.jetbrains.anko:anko-sdk15:$anko_version" // sdk15, sdk19, sdk21, sdk23 and more are also available, pick highest one which is at most minSdkVersion
+//    implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
     kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
     testImplementation 'junit:junit:4.12'
