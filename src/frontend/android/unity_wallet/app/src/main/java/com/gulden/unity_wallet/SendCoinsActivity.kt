@@ -7,7 +7,7 @@ package com.gulden.unity_wallet
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
@@ -16,10 +16,10 @@ import com.gulden.jniunifiedbackend.UriRecipient
 import kotlinx.android.synthetic.main.activity_send_coins.*
 import android.content.Context
 import android.os.Build
-import android.support.design.widget.Snackbar
-import android.support.v4.app.DialogFragment
-import android.support.v4.text.HtmlCompat.FROM_HTML_MODE_LEGACY
-import android.support.v7.app.AlertDialog
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.DialogFragment
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
+import androidx.appcompat.app.AlertDialog
 import android.text.Html
 import android.widget.EditText
 import android.view.ViewGroup
@@ -35,13 +35,13 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.text.*
 
 
-class SendCoinsConfirmDialog : DialogFragment() {
+class SendCoinsConfirmDialog : androidx.fragment.app.DialogFragment() {
 
     private lateinit var mListener: ConfirmDialogListener
 
     interface ConfirmDialogListener {
-        fun onConfirmDialogPositive(dialog: DialogFragment)
-        fun onConfirmDialogNegative(dialog: DialogFragment)
+        fun onConfirmDialogPositive(dialog: androidx.fragment.app.DialogFragment)
+        fun onConfirmDialogNegative(dialog: androidx.fragment.app.DialogFragment)
     }
 
     override fun onAttach(context: Context) {
@@ -90,13 +90,13 @@ class SendCoinsConfirmDialog : DialogFragment() {
 }
 
 
-class SendCoinsConfirmIBANDialog : DialogFragment() {
+class SendCoinsConfirmIBANDialog : androidx.fragment.app.DialogFragment() {
 
     private lateinit var mListener: ConfirmIBANDialogListener
 
     interface ConfirmIBANDialogListener {
-        fun onConfirmIBANDialogPositive(dialog: DialogFragment)
-        fun onConfirmIBANDialogNegative(dialog: DialogFragment)
+        fun onConfirmIBANDialogPositive(dialog: androidx.fragment.app.DialogFragment)
+        fun onConfirmIBANDialogNegative(dialog: androidx.fragment.app.DialogFragment)
     }
 
     override fun onAttach(context: Context) {
@@ -150,7 +150,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
         SendCoinsConfirmDialog.ConfirmDialogListener,
         SendCoinsConfirmIBANDialog.ConfirmIBANDialogListener
 {
-    override fun onConfirmDialogPositive(dialog: DialogFragment) {
+    override fun onConfirmDialogPositive(dialog: androidx.fragment.app.DialogFragment) {
         send_coins_send_btn.isEnabled = true
         val paymentRequest = UriRecipient(true, recipient.address, recipient.label, activeAmount.text.toString())
             if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
@@ -165,11 +165,11 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
             }
     }
 
-    override fun onConfirmDialogNegative(dialog: DialogFragment) {
+    override fun onConfirmDialogNegative(dialog: androidx.fragment.app.DialogFragment) {
         send_coins_send_btn.isEnabled = true
     }
 
-    override fun onConfirmIBANDialogPositive(dialog: DialogFragment) {
+    override fun onConfirmIBANDialogPositive(dialog: androidx.fragment.app.DialogFragment) {
         send_coins_send_btn.isEnabled = true
         val paymentRequest = UriRecipient(true, orderResult!!.depositAddress, recipient.label, orderResult!!.depositAmountNLG)
         if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
@@ -184,7 +184,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope,
         }
     }
 
-    override fun onConfirmIBANDialogNegative(dialog: DialogFragment) {
+    override fun onConfirmIBANDialogNegative(dialog: androidx.fragment.app.DialogFragment) {
         send_coins_send_btn.isEnabled = true
     }
 

@@ -9,12 +9,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import android.view.View
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
@@ -34,16 +34,16 @@ import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
+inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
     beginTransaction().func().commit()
 }
 
-fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int){
+fun AppCompatActivity.addFragment(fragment: androidx.fragment.app.Fragment, frameId: Int){
     supportFragmentManager.inTransaction { add(frameId, fragment) }
 }
 
 fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
-    supportFragmentManager.inTransaction{replace(frameId, fragment as Fragment)}
+    supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
 }
 
 class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentInteractionListener,

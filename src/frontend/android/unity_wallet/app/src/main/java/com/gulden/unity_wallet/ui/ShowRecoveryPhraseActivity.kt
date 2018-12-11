@@ -5,10 +5,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
-import android.support.v7.widget.ShareActionProvider
+import androidx.core.view.MenuItemCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.ShareActionProvider
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
@@ -161,7 +161,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         }
 
 
-        override fun onCreateActionMode(mode: android.support.v7.view.ActionMode, menu: Menu): Boolean
+        override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode, menu: Menu): Boolean
         {
             mode.menuInflater.inflate(R.menu.share_menu, menu)
 

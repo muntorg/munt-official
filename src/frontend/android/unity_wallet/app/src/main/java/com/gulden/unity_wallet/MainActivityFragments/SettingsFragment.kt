@@ -8,12 +8,12 @@ package com.gulden.unity_wallet.MainActivityFragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.preference.Preference
+import androidx.preference.Preference
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 
 
-class SettingsFragment : android.support.v7.preference.PreferenceFragmentCompat()
+class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 {
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {

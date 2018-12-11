@@ -11,14 +11,14 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import android.graphics.Bitmap
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
-import android.support.v7.widget.ShareActionProvider
+import androidx.core.view.MenuItemCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.ShareActionProvider
 import android.view.*
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
@@ -27,7 +27,7 @@ import java.nio.ByteBuffer
 
 
 /* Handle display of current address; as well as copying/sharing of address */
-class ReceiveFragment : Fragment()
+class ReceiveFragment : androidx.fragment.app.Fragment()
 {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?

@@ -28,8 +28,8 @@ import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
 import android.os.Build
 import android.os.SystemClock
-import android.support.annotation.RequiresPermission
-import android.support.annotation.StringDef
+import androidx.annotation.RequiresPermission
+import androidx.annotation.StringDef
 import android.util.Log
 import android.view.Surface
 import android.view.SurfaceHolder
