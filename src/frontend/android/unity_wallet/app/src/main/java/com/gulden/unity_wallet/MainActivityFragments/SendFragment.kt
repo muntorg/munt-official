@@ -10,21 +10,22 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.gulden.jniunifiedbackend.*
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.SendCoinsActivity
 import com.gulden.unity_wallet.ui.AddressBookAdapter
+import com.gulden.unity_wallet.uriRecicpient
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
 
 
-class SendFragment : androidx.fragment.app.Fragment()
+class SendFragment : Fragment()
 {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -37,9 +38,21 @@ class SendFragment : androidx.fragment.app.Fragment()
 
         clipboardButton.setOnClickListener {
             val intent = Intent(context, SendCoinsActivity::class.java)
-            val recipient = UriRecipient(false, clipboardText(), "", "")
-            intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient)
-            startActivityForResult(intent, WalletActivity.SEND_COINS_RETURN_CODE)
+            val text = clipboardText()
+            val recipient = when {
+                IBANValidator.getInstance().isValid(text) ->
+                    UriRecipient(false, text, "", "")
+                GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid ->
+                    GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>()))
+                uriRecicpient(text).valid ->
+                    uriRecicpient(text)
+                else ->
+                    null
+            }
+            if (recipient != null) {
+                intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient)
+                startActivityForResult(intent, WalletActivity.SEND_COINS_RETURN_CODE)
+            }
         }
 
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
@@ -103,9 +116,13 @@ class SendFragment : androidx.fragment.app.Fragment()
 
     fun checkClipboardEnable()
     {
-        // Enable clipboard button if it contains a valid IBAN
-        // TODO: enable button if there is a valid Gulden address (or URI) on the clipboard
-        val address = clipboardText()
-        clipboardButton.isEnabled = IBANValidator.getInstance().isValid(address)
+        // Enable clipboard button if it contains a valid IBAN, Gulden address or Uri
+        val text = clipboardText()
+        clipboardButton.isEnabled = when {
+            IBANValidator.getInstance().isValid(text) -> true
+            GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid -> true
+            uriRecicpient(text).valid -> true
+            else -> false
+        }
     }
 }

@@ -201,60 +201,13 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         startActivityForResult(intent, BUY_RETURN_CODE)
     }
 
-    fun Uri.getParameters(): HashMap<String, String> {
-        val items : HashMap<String, String> = HashMap<String, String>()
-        if (isOpaque)
-            return items
-
-        val query = encodedQuery ?: return items
-
-        var start = 0
-        do {
-            val nextAmpersand = query.indexOf('&', start)
-            val end = if (nextAmpersand != -1) nextAmpersand else query.length
-
-            var separator = query.indexOf('=', start)
-            if (separator > end || separator == -1) {
-                separator = end
-            }
-
-            if (separator == end) {
-                items[Uri.decode(query.substring(start, separator))] = ""
-            } else {
-                items[Uri.decode(query.substring(start, separator))] = Uri.decode(query.substring(separator + 1, end))
-            }
-
-            // Move start to end of name.
-            if (nextAmpersand != -1) {
-                start = nextAmpersand + 1
-            } else {
-                break
-            }
-        } while (true)
-        return items
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BARCODE_READER_REQUEST_CODE) {
             if (resultCode == CommonStatusCodes.SUCCESS)
             {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-
-                    var barcodeText = barcode.displayValue
-                    var parsedQRCodeURI = Uri.parse(barcodeText)
-                    var address : String = ""
-
-                    // Handle all possible scheme variations (foo: foo:// etc.)
-                    if ((parsedQRCodeURI?.authority == null) && (parsedQRCodeURI?.path == null))
-                    {
-                        parsedQRCodeURI = Uri.parse(barcodeText.replaceFirst(":", "://"))
-                    }
-                    if (parsedQRCodeURI?.authority != null) address += parsedQRCodeURI.authority
-                    if (parsedQRCodeURI?.path != null) address += parsedQRCodeURI.path
-
-                    val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, address , parsedQRCodeURI.getParameters())
-                    val recipient = GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord)
+                    val recipient = uriRecicpient(barcode.displayValue)
                     if (recipient.valid) {
                         val intent = Intent(applicationContext, SendCoinsActivity::class.java)
                         intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient)
