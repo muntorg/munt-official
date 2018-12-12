@@ -48,42 +48,7 @@ void BackupDialog::showBackupPhrase()
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (ctx.isValid())
     {
-        int64_t birthTime = 0;
-
-        // determine block time of earliest transaction (if any)
-        // if this cannot be determined for every transaction a phrase without birth time acceleration will be used
-        int64_t firstTransactionTime = std::numeric_limits<int64_t>::max();
-        for (CWallet::TxItems::const_iterator it = pactiveWallet->wtxOrdered.begin(); it != pactiveWallet->wtxOrdered.end(); ++it)
-        {
-            CWalletTx* wtx = it->second.first;
-            if (!wtx->hashUnset())
-            {
-                CBlockIndex* index = mapBlockIndex.count(wtx->hashBlock) ? mapBlockIndex[wtx->hashBlock] : nullptr;
-                // try to get time from block timestamp
-                if (index && index->IsValid(BLOCK_VALID_HEADER))
-                    firstTransactionTime = std::min(firstTransactionTime, std::max(int64_t(0), index->GetBlockTime()));
-                else if (wtx->nBlockTime > 0)
-                {
-                    firstTransactionTime = std::min(firstTransactionTime, int64_t(wtx->nBlockTime));
-                }
-                else
-                {
-                    // can't determine transaction time, only safe option left
-                    firstTransactionTime = 0;
-                    break;
-                }
-            }
-        }
-
-        int64_t tipTime;
-        const CBlockIndex* lastSPVBlock = pactiveWallet->LastSPVBlockProcessed();
-        if (lastSPVBlock)
-            tipTime = lastSPVBlock->GetBlockTime();
-        else
-            tipTime = chainActive.Tip()->GetBlockTime();
-
-        // never use a time beyond our processed tip either spv or full sync
-        birthTime = std::min(tipTime, firstTransactionTime);
+        int64_t birthTime = pactiveWallet->birthTime();
 
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)

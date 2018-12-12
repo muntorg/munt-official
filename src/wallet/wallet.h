@@ -933,6 +933,13 @@ public:
 
     static void ResetUnifiedSPVProgressNotification();
 
+    /**
+     * Birthtime computed from wallet transactions
+     * If there are no transactions the tip of the known chain is used
+     * If birthtime cannot be succesfully computed it will return 0
+     */
+    int64_t birthTime() const;
+
 private:
     int nTransactionScanProgressPercent;
 

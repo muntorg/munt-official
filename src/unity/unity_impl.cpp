@@ -318,41 +318,11 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
     if (!pactiveWallet || !pactiveWallet->activeAccount)
         return "";
 
-    //fixme: (Unity) - dedup; this shares common code with backupdialog.cpp
     LOCK2(cs_main, pactiveWallet->cs_wallet);
     //WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     //if (ctx.isValid())
     {
-        int64_t birthTime = 0;
-
-        // determine block time of earliest transaction (if any)
-        // if this cannot be determined for every transaction a phrase without birth time acceleration will be used
-        int64_t firstTransactionTime = std::numeric_limits<int64_t>::max();
-        for (CWallet::TxItems::const_iterator it = pactiveWallet->wtxOrdered.begin(); it != pactiveWallet->wtxOrdered.end(); ++it)
-        {
-            CWalletTx* wtx = it->second.first;
-            if (!wtx->hashUnset())
-            {
-                CBlockIndex* index = mapBlockIndex[wtx->hashBlock];
-                if (index && index->IsValid(BLOCK_VALID_HEADER))
-                    firstTransactionTime = std::min(firstTransactionTime, std::max(int64_t(0), index->GetBlockTime()));
-                else
-                {
-                    firstTransactionTime = 0;
-                    break;
-                }
-            }
-        }
-
-        int64_t tipTime;
-        const CBlockIndex* lastSPVBlock = pactiveWallet->LastSPVBlockProcessed();
-        if (lastSPVBlock)
-            tipTime = lastSPVBlock->GetBlockTime();
-        else
-            tipTime = chainActive.Tip()->GetBlockTime();
-
-        // never use a time beyond our processed tip either spv or full sync
-        birthTime = std::min(tipTime, firstTransactionTime);
+        int64_t birthTime = pactiveWallet->birthTime();
 
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)
