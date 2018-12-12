@@ -63,7 +63,6 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         syncProgress.max = 1000000
-        setWalletBalance(UnityCore.instance.balanceAmount)
 
         if (sendFragment == null)
             sendFragment = SendFragment()
@@ -87,6 +86,9 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
 
         syncProgress.progress = 0
         UnityCore.instance.addObserver(coreObserverProxy)
+
+        setWalletBalance(UnityCore.instance.balanceAmount)
+
     }
 
     override fun onStop() {
