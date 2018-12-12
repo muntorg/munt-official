@@ -194,10 +194,7 @@ bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
     SecureString phraseOnly;
     int phraseBirthNumber = 0;
     GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
-    if (phraseBirthNumber == 0 || !checkMnemonic(phraseOnly))
-        return false;
-
-    return true;
+    return checkMnemonic(phraseOnly) && (phraseBirthNumber == 0 || Base10ChecksumDecode(phraseBirthNumber, nullptr));
 }
 
 std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
