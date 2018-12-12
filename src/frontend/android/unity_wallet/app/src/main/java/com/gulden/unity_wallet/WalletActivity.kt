@@ -9,18 +9,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import android.view.View
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.jniunifiedbackend.UriRecord
 import com.gulden.unity_wallet.MainActivityFragments.ReceiveFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment.OnFragmentInteractionListener
@@ -31,7 +27,6 @@ import com.gulden.unity_wallet.currency.localCurrency
 import com.gulden.unity_wallet.ui.buy.BuyActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
-import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {

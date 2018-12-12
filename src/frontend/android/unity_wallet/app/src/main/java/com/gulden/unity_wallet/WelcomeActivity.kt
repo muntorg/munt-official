@@ -5,12 +5,12 @@
 
 package com.gulden.unity_wallet
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
@@ -19,7 +19,7 @@ import com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity
 import com.gulden.unity_wallet.ui.ShowRecoveryPhraseActivity
 import kotlin.concurrent.thread
 
-class WelcomeActivity : Activity()
+class WelcomeActivity : AppCompatActivity()
 {
     private var context: Context? = null
 

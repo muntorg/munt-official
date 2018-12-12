@@ -5,11 +5,11 @@
 
 package com.gulden.unity_wallet
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
-class IntroActivity : Activity(), UnityCore.Observer
+class IntroActivity : AppCompatActivity(), UnityCore.Observer
 {
     private val coreObserverProxy = CoreObserverProxy(this, this)
 
