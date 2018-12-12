@@ -21,6 +21,7 @@ import androidx.preference.PreferenceManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionType
+import org.jetbrains.anko.runOnUiThread
 
 class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -61,32 +62,34 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     }
 
     override fun incomingTransaction(transaction: TransactionRecord): Boolean {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        if (preferences.getBoolean("preference_notify_transaction_activity", true)) {
-            val notificationIntent = Intent(this, WalletActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        runOnUiThread {
+            val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+            if (preferences.getBoolean("preference_notify_transaction_activity", true)) {
+                val notificationIntent = Intent(this, WalletActivity::class.java)
+                val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-            var prefix = "+"
-            if (transaction.type == TransactionType.SEND)
-                prefix = "-"
+                var prefix = "+"
+                if (transaction.type == TransactionType.SEND)
+                    prefix = "-"
 
-            val notification = NotificationCompat.Builder(this)
-                    .setContentTitle("Incoming transaction")
-                    .setTicker("Incoming transaction")
-                    .setContentText((" "+prefix+"%.2f").format(transaction.amount.toDouble() / 100000000))
-                    .setSmallIcon(R.drawable.ic_g_logo)
-                    //.setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
-                    .setContentIntent(pendingIntent)
-                    .setOngoing(false)
-                    .setAutoCancel(true)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    //.setPublicVersion()
-                    //.setTimeoutAfter()
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .build()
+                val notification = NotificationCompat.Builder(this)
+                        .setContentTitle("Incoming transaction")
+                        .setTicker("Incoming transaction")
+                        .setContentText((" "+prefix+"%.2f").format(transaction.amount.toDouble() / 100000000))
+                        .setSmallIcon(R.drawable.ic_g_logo)
+                        //.setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
+                        .setContentIntent(pendingIntent)
+                        .setOngoing(false)
+                        .setAutoCancel(true)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        //.setPublicVersion()
+                        //.setTimeoutAfter()
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .build()
 
-            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(1, notification)
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(1, notification)
+            }
         }
 
         return true
