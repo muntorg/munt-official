@@ -79,4 +79,11 @@ file COPYING
         android:entryValues="@array/background_sync_values"
         android:defaultValue="@string/background_sync_default" />
 
+    <Preference
+        android:key="preference_monitor"
+        android:iconSpaceReserved="false"
+        android:persistent="false"
+        android:summary=""
+        android:title="Network monitor" />
+
 </PreferenceScreen>

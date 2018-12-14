@@ -43,6 +43,12 @@ file COPYING
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
     <string name="send_coins_nocks_estimate_template">Approx. G %1$s including IBAN service fee</string>
 
+    <string name="network_monitor_activity_title">Network monitor</string>
+    <string name="network_monitor_peer_list_title">Peers</string>
+    <string name="network_monitor_block_list_title">Blocks</string>
+    <string name="peer_list_fragment_empty">No peers connected</string>
+    <string name="peer_list_row_ping_time">⇆ %d&#x2009;ms</string>
+
     <string name="default_currency">EUR</string>
 
     <string-array name="currency_description_entries">
