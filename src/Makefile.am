@@ -472,6 +472,8 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeGuldenUnifiedBackend.cpp \
   unity/djinni/jni/NativeGuldenUnifiedFrontend.hpp \
   unity/djinni/jni/NativeGuldenUnifiedFrontend.cpp \
+  unity/djinni/jni/NativePeerRecord.hpp \
+  unity/djinni/jni/NativePeerRecord.cpp \
   unity/djinni/jni/NativeQrcodeRecord.hpp \
   unity/djinni/jni/NativeQrcodeRecord.cpp \
   unity/djinni/jni/NativeAddressRecord.hpp \
@@ -514,6 +516,7 @@ DJINNI_CPP_GEN = \
   djinni_generated/cpp/gulden_unified_backend.cpp \
   djinni_generated/cpp/gulden_unified_backend.hpp \
   djinni_generated/cpp/gulden_unified_frontend.hpp \
+  djinni_generated/cpp/peer_record.hpp \
   djinni_generated/cpp/qrcode_record.hpp \
   djinni_generated/cpp/transaction_record.hpp \
   djinni_generated/cpp/transaction_type.hpp \
@@ -536,6 +539,10 @@ DJINNI_OBJC_GEN = \
   djinni_generated/objc/DBGuldenUnifiedFrontend+Private.h \
   djinni_generated/objc/DBGuldenUnifiedFrontend+Private.mm \
   djinni_generated/objc/DBGuldenUnifiedFrontend.h \
+  djinni_generated/objc/DBPeerRecord+Private.h \
+  djinni_generated/objc/DBPeerRecord+Private.mm \
+  djinni_generated/objc/DBPeerRecord.h \
+  djinni_generated/objc/DBPeerRecord.mm \
   djinni_generated/objc/DBQrcodeRecord+Private.h \
   djinni_generated/objc/DBQrcodeRecord+Private.mm \
   djinni_generated/objc/DBQrcodeRecord.h \

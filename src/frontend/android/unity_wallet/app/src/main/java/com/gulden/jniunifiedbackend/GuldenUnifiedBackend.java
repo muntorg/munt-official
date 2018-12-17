@@ -31,7 +31,10 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.InitWalletLinkedFromURI(linkedUri);
     }
 
-    /** Check if a possible recovery phrase is valid or not */
+    /**
+     * Check recovery phrase for (syntactic) validity
+     * Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
+     */
     public static boolean IsValidRecoveryPhrase(String phrase)
     {
         return CppProxy.IsValidRecoveryPhrase(phrase);
@@ -127,6 +130,11 @@ public abstract class GuldenUnifiedBackend {
         CppProxy.ResetUnifiedProgress();
     }
 
+    public static ArrayList<PeerRecord> getPeers()
+    {
+        return CppProxy.getPeers();
+    }
+
     private static final class CppProxy extends GuldenUnifiedBackend
     {
         private final long nativeRef;
@@ -185,5 +193,7 @@ public abstract class GuldenUnifiedBackend {
         public static native void PersistAndPruneForSPV();
 
         public static native void ResetUnifiedProgress();
+
+        public static native ArrayList<PeerRecord> getPeers();
     }
 }

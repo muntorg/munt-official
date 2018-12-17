@@ -29,6 +29,7 @@
 #include "transaction_record.hpp"
 #include "transaction_type.hpp"
 #include "address_record.hpp"
+#include "peer_record.hpp"
 #ifdef __ANDROID__
 #include "djinni_support.hpp"
 #endif
@@ -473,4 +474,20 @@ void GuldenUnifiedBackend::PersistAndPruneForSPV()
 void GuldenUnifiedBackend::ResetUnifiedProgress()
 {
     CWallet::ResetUnifiedSPVProgressNotification();
+}
+
+std::vector<PeerRecord> GuldenUnifiedBackend::getPeers()
+{
+    std::vector<PeerRecord> ret;
+
+    if (g_connman) {
+        std::vector<CNodeStats> vstats;
+        g_connman->GetNodeStats(vstats);
+        for (CNodeStats& nstat: vstats) {
+            ret.push_back(PeerRecord(nstat.addr.ToString(), nstat.addr.HostnameLookup(), nstat.nStartingHeight,
+                                 int32_t(nstat.dPingTime * 1000), nstat.cleanSubVer, nstat.nVersion));
+        }
+    }
+
+    return ret;
 }

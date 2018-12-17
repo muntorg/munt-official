@@ -36,6 +36,7 @@
 		E68FAE292170F1410038C745 /* DBUriRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E68FAE212170F1410038C745 /* DBUriRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E68FAE2A2170F1410038C745 /* DBUriRecipient.h in Headers */ = {isa = PBXBuildFile; fileRef = E68FAE222170F1410038C745 /* DBUriRecipient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E68FAE2B2170F1410038C745 /* DBQrcodeRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E68FAE232170F1410038C745 /* DBQrcodeRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6ABF78721C7A97300065823 /* DBPeerRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6ABF78621C7A97300065823 /* DBPeerRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		E68FAE212170F1410038C745 /* DBUriRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecord.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBUriRecord.h"; sourceTree = "<group>"; };
 		E68FAE222170F1410038C745 /* DBUriRecipient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecipient.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBUriRecipient.h"; sourceTree = "<group>"; };
 		E68FAE232170F1410038C745 /* DBQrcodeRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBQrcodeRecord.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBQrcodeRecord.h"; sourceTree = "<group>"; };
+		E6ABF78621C7A97300065823 /* DBPeerRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBPeerRecord.h; path = "../../../../build/aarch64-ios/src/djinni_generated/objc/DBPeerRecord.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 		E64203E221638CD6004A77FF = {
 			isa = PBXGroup;
 			children = (
+				E6ABF78621C7A97300065823 /* DBPeerRecord.h */,
 				E65D47B021639AF100033ED1 /* source */,
 				E64203EE21638CD6004A77FF /* GuldenCore */,
 				E64203ED21638CD6004A77FF /* Products */,
@@ -181,6 +184,7 @@
 				E68FAE262170F1410038C745 /* DBTransactionType.h in Headers */,
 				E68FAE2A2170F1410038C745 /* DBUriRecipient.h in Headers */,
 				E68FAE242170F1410038C745 /* DBTransactionRecord.h in Headers */,
+				E6ABF78721C7A97300065823 /* DBPeerRecord.h in Headers */,
 				E68FAE2B2170F1410038C745 /* DBQrcodeRecord.h in Headers */,
 				E68FAE292170F1410038C745 /* DBUriRecord.h in Headers */,
 				E68FAE272170F1410038C745 /* DBBalanceRecord.h in Headers */,

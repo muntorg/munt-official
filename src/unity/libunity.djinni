@@ -53,6 +53,15 @@ address_record = record {
     name : string;
 } deriving(parcelable)
 
+peer_record = record {
+    ip : string;
+    hostname : string;
+    height : i32;
+    latency : i32;
+    userAgent : string;
+    protocol : i64;
+}
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
@@ -63,7 +72,8 @@ gulden_unified_backend = interface +c {
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletLinkedFromURI(linked_uri : string): bool;
 
-    # Check if a possible recovery phrase is valid or not
+    # Check recovery phrase for (syntactic) validity
+    # Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
     static IsValidRecoveryPhrase(phrase: string): bool;
 
     # Generate a new recovery mnemonic
@@ -110,6 +120,8 @@ gulden_unified_backend = interface +c {
     # For example when the process is in the background on iOS for a long long time (but has not been terminated
     # by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
     static ResetUnifiedProgress();
+
+    static getPeers() : list<peer_record>;
 
     # Interface constants
     const version: i32 = 1;
