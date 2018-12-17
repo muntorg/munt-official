@@ -10,6 +10,7 @@
 		E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */; };
 		E61A12862171360F000069F0 /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E61A12852171360F000069F0 /* dummy.cpp */; };
 		E61A1288217136DE000069F0 /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A1287217136DE000069F0 /* dummy.m */; };
+		E641A6FD21C7E60800D0F557 /* DBBlockinfoRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E641A6FC21C7E60800D0F557 /* DBBlockinfoRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E64203F121638CD6004A77FF /* GuldenCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E64203EF21638CD6004A77FF /* GuldenCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E65180AE218A1080009283A8 /* libgulden_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65180AD218A1080009283A8 /* libgulden_unity_objc.a */; };
 		E651B8802180C65200256327 /* DBAddressRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E651B87F2180C65200256327 /* DBAddressRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -43,6 +44,7 @@
 		E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_support_lib_UNIVERSAL.a; path = "../../../../depends/aarch64-ios/lib/libdjinni_support_lib_UNIVERSAL.a"; sourceTree = "<group>"; };
 		E61A12852171360F000069F0 /* dummy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
 		E61A1287217136DE000069F0 /* dummy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dummy.m; sourceTree = "<group>"; };
+		E641A6FC21C7E60800D0F557 /* DBBlockinfoRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBBlockinfoRecord.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBBlockinfoRecord.h"; sourceTree = "<group>"; };
 		E64203EC21638CD6004A77FF /* GuldenCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GuldenCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64203EF21638CD6004A77FF /* GuldenCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCore.h; sourceTree = "<group>"; };
 		E64203F021638CD6004A77FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -71,7 +73,7 @@
 		E68FAE212170F1410038C745 /* DBUriRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecord.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBUriRecord.h"; sourceTree = "<group>"; };
 		E68FAE222170F1410038C745 /* DBUriRecipient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecipient.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBUriRecipient.h"; sourceTree = "<group>"; };
 		E68FAE232170F1410038C745 /* DBQrcodeRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBQrcodeRecord.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBQrcodeRecord.h"; sourceTree = "<group>"; };
-		E6ABF78621C7A97300065823 /* DBPeerRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBPeerRecord.h; path = "../../../../build/aarch64-ios/src/djinni_generated/objc/DBPeerRecord.h"; sourceTree = "<group>"; };
+		E6ABF78621C7A97300065823 /* DBPeerRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBPeerRecord.h; path = "../../../../../build/aarch64-ios/src/djinni_generated/objc/DBPeerRecord.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +107,6 @@
 		E64203E221638CD6004A77FF = {
 			isa = PBXGroup;
 			children = (
-				E6ABF78621C7A97300065823 /* DBPeerRecord.h */,
 				E65D47B021639AF100033ED1 /* source */,
 				E64203EE21638CD6004A77FF /* GuldenCore */,
 				E64203ED21638CD6004A77FF /* Products */,
@@ -126,7 +127,9 @@
 			children = (
 				E651B87F2180C65200256327 /* DBAddressRecord.h */,
 				E68FAE1F2170F1410038C745 /* DBBalanceRecord.h */,
+				E641A6FC21C7E60800D0F557 /* DBBlockinfoRecord.h */,
 				E68FAE1D2170F1410038C745 /* DBGuldenUnifiedFrontend.h */,
+				E6ABF78621C7A97300065823 /* DBPeerRecord.h */,
 				E68FAE232170F1410038C745 /* DBQrcodeRecord.h */,
 				E68FAE1C2170F1400038C745 /* DBTransactionRecord.h */,
 				E68FAE1E2170F1410038C745 /* DBTransactionType.h */,
@@ -180,6 +183,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E651B8802180C65200256327 /* DBAddressRecord.h in Headers */,
+				E68FAE272170F1410038C745 /* DBBalanceRecord.h in Headers */,
+				E641A6FD21C7E60800D0F557 /* DBBlockinfoRecord.h in Headers */,
 				E68FAE252170F1410038C745 /* DBGuldenUnifiedFrontend.h in Headers */,
 				E68FAE262170F1410038C745 /* DBTransactionType.h in Headers */,
 				E68FAE2A2170F1410038C745 /* DBUriRecipient.h in Headers */,
@@ -187,7 +192,6 @@
 				E6ABF78721C7A97300065823 /* DBPeerRecord.h in Headers */,
 				E68FAE2B2170F1410038C745 /* DBQrcodeRecord.h in Headers */,
 				E68FAE292170F1410038C745 /* DBUriRecord.h in Headers */,
-				E68FAE272170F1410038C745 /* DBBalanceRecord.h in Headers */,
 				E68FAE1B2170F09F0038C745 /* DBGuldenUnifiedBackend.h in Headers */,
 				E64203F121638CD6004A77FF /* GuldenCore.h in Headers */,
 			);

@@ -130,9 +130,16 @@ public abstract class GuldenUnifiedBackend {
         CppProxy.ResetUnifiedProgress();
     }
 
+    /** Get connected peer info */
     public static ArrayList<PeerRecord> getPeers()
     {
         return CppProxy.getPeers();
+    }
+
+    /** Get info of last blocks (at most 32) in SPV chain */
+    public static ArrayList<BlockinfoRecord> getLastSPVBlockinfos()
+    {
+        return CppProxy.getLastSPVBlockinfos();
     }
 
     private static final class CppProxy extends GuldenUnifiedBackend
@@ -195,5 +202,7 @@ public abstract class GuldenUnifiedBackend {
         public static native void ResetUnifiedProgress();
 
         public static native ArrayList<PeerRecord> getPeers();
+
+        public static native ArrayList<BlockinfoRecord> getLastSPVBlockinfos();
     }
 }

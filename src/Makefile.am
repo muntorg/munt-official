@@ -468,6 +468,8 @@ libgulden_unity_jni_la_SOURCES = \
   $(crypto_libgulden_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/djinni/jni/NativeBlockinfoRecord.hpp \
+  unity/djinni/jni/NativeBlockinfoRecord.cpp \
   unity/djinni/jni/NativeGuldenUnifiedBackend.hpp \
   unity/djinni/jni/NativeGuldenUnifiedBackend.cpp \
   unity/djinni/jni/NativeGuldenUnifiedFrontend.hpp \
@@ -513,6 +515,7 @@ libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/djinni
 DJINNI_CPP_GEN = \
   djinni_generated/cpp/address_record.hpp \
   djinni_generated/cpp/balance_record.hpp \
+  djinni_generated/cpp/blockinfo_record.hpp \
   djinni_generated/cpp/gulden_unified_backend.cpp \
   djinni_generated/cpp/gulden_unified_backend.hpp \
   djinni_generated/cpp/gulden_unified_frontend.hpp \
@@ -532,6 +535,10 @@ DJINNI_OBJC_GEN = \
   djinni_generated/objc/DBBalanceRecord+Private.mm \
   djinni_generated/objc/DBBalanceRecord.h \
   djinni_generated/objc/DBBalanceRecord.mm \
+  djinni_generated/objc/DBBlockinfoRecord+Private.h \
+  djinni_generated/objc/DBBlockinfoRecord+Private.mm \
+  djinni_generated/objc/DBBlockinfoRecord.h \
+  djinni_generated/objc/DBBlockinfoRecord.mm \
   djinni_generated/objc/DBGuldenUnifiedBackend+Private.h \
   djinni_generated/objc/DBGuldenUnifiedBackend+Private.mm \
   djinni_generated/objc/DBGuldenUnifiedBackend.h \

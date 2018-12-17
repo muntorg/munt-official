@@ -30,6 +30,7 @@
 #include "transaction_type.hpp"
 #include "address_record.hpp"
 #include "peer_record.hpp"
+#include "blockinfo_record.hpp"
 #ifdef __ANDROID__
 #include "djinni_support.hpp"
 #endif
@@ -487,6 +488,22 @@ std::vector<PeerRecord> GuldenUnifiedBackend::getPeers()
             ret.push_back(PeerRecord(nstat.addr.ToString(), nstat.addr.HostnameLookup(), nstat.nStartingHeight,
                                  int32_t(nstat.dPingTime * 1000), nstat.cleanSubVer, nstat.nVersion));
         }
+    }
+
+    return ret;
+}
+
+std::vector<BlockinfoRecord> GuldenUnifiedBackend::getLastSPVBlockinfos()
+{
+    std::vector<BlockinfoRecord> ret;
+
+    LOCK(cs_main);
+
+    int height = partialChain.Height();
+    while (ret.size() < 32 && height > partialChain.HeightOffset()) {
+        const CBlockIndex* pindex = partialChain[height];
+        ret.push_back(BlockinfoRecord(pindex->nHeight, pindex->GetBlockTime(), pindex->GetBlockHashPoW2().ToString()));
+        height--;
     }
 
     return ret;

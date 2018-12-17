@@ -17,6 +17,8 @@ FOUNDATION_EXPORT const unsigned char gulden_staticVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <gulden_static/PublicHeader.h>
 
 #import "DBAddressRecord.h"
+#import "DBBalanceRecord.h"
+#import "DBBlockinfoRecord.h"
 #import "DBGuldenUnifiedBackend.h"
 #import "DBGuldenUnifiedFrontend.h"
 #import "DBBalanceRecord.h"

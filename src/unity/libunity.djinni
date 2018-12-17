@@ -62,6 +62,12 @@ peer_record = record {
     protocol : i64;
 }
 
+blockinfo_record = record {
+    height : i32;
+    timestamp : i64;
+    blockhash : string;
+}
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
@@ -121,7 +127,11 @@ gulden_unified_backend = interface +c {
     # by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
     static ResetUnifiedProgress();
 
+    # Get connected peer info
     static getPeers() : list<peer_record>;
+
+    # Get info of last blocks (at most 32) in SPV chain
+    static getLastSPVBlockinfos() : list<blockinfo_record>;
 
     # Interface constants
     const version: i32 = 1;
