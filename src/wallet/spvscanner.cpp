@@ -34,6 +34,8 @@ const int PERSIST_BLOCK_COUNT = 500;
 // limit UI update notifications (except when catched up)
 const int UI_UPDATE_LIMIT = 50;
 
+std::atomic<int> CSPVScanner::lastProcessedHeight = 0;
+
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet),
     startTime(0),
@@ -281,6 +283,8 @@ void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
 
     lastProcessed = pindex;
 
+    lastProcessedHeight = lastProcessed ? lastProcessed->nHeight : 0;
+
     int64_t now = GetAdjustedTime();
     if (now - lastPersistTime > PERSIST_INTERVAL_SEC || blocksSincePersist >= PERSIST_BLOCK_COUNT)
         Persist();
@@ -309,4 +313,9 @@ void CSPVScanner::Persist()
         lastPersistedBlockTime = lastProcessed->GetBlockTime();
         blocksSincePersist = 0;
     }
+}
+
+int CSPVScanner::getProcessedHeight()
+{
+    return lastProcessedHeight;
 }

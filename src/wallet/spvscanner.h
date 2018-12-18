@@ -7,6 +7,7 @@
 #define SPVSCANNER_H
 
 #include "../validation/validationinterface.h"
+#include <atomic>
 
 class CWallet;
 
@@ -27,6 +28,8 @@ public:
     void Persist();
 
     void ResetUnifiedProgressNotification();
+
+    static int getProcessedHeight();
 
 private:
     CWallet& wallet;
@@ -70,6 +73,9 @@ private:
 
     // blocks processed since last persist
     int blocksSincePersist;
+
+    // bookeeping for monitoring
+    static std::atomic<int> lastProcessedHeight;
 };
 
 #endif // SPVSCANNER_H

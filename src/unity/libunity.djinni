@@ -133,6 +133,11 @@ gulden_unified_backend = interface +c {
     # Get info of last blocks (at most 32) in SPV chain
     static getLastSPVBlockinfos() : list<blockinfo_record>;
 
+    static getMonitoringStats(): monitor_record;
+
+    static RegisterMonitorListener(listener : gulden_monitor_listener);
+    static UnregisterMonitorListener(listener : gulden_monitor_listener);
+
     # Interface constants
     const version: i32 = 1;
 }
@@ -150,4 +155,19 @@ gulden_unified_frontend = interface +j +o {
     notifyCoreReady(): bool;
 
     logPrint(str : string);
+}
+
+# monitoring stats
+monitor_record = record {
+    partialHeight: i32;
+    partialOffset: i32;
+    prunedHeight: i32;
+    processedSPVHeight: i32;
+}
+
+# Monitoring events
+gulden_monitor_listener = interface +j +o {
+    onPartialChain(height : i32, probable_height : i32, offset : i32);
+    onPruned(height : i32);
+    onProcessedSPVBlocks(height : i32);
 }

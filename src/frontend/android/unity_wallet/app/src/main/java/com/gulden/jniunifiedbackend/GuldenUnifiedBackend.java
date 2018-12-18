@@ -142,6 +142,21 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.getLastSPVBlockinfos();
     }
 
+    public static MonitorRecord getMonitoringStats()
+    {
+        return CppProxy.getMonitoringStats();
+    }
+
+    public static void RegisterMonitorListener(GuldenMonitorListener listener)
+    {
+        CppProxy.RegisterMonitorListener(listener);
+    }
+
+    public static void UnregisterMonitorListener(GuldenMonitorListener listener)
+    {
+        CppProxy.UnregisterMonitorListener(listener);
+    }
+
     private static final class CppProxy extends GuldenUnifiedBackend
     {
         private final long nativeRef;
@@ -204,5 +219,11 @@ public abstract class GuldenUnifiedBackend {
         public static native ArrayList<PeerRecord> getPeers();
 
         public static native ArrayList<BlockinfoRecord> getLastSPVBlockinfos();
+
+        public static native MonitorRecord getMonitoringStats();
+
+        public static native void RegisterMonitorListener(GuldenMonitorListener listener);
+
+        public static native void UnregisterMonitorListener(GuldenMonitorListener listener);
     }
 }

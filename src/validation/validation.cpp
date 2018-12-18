@@ -95,6 +95,7 @@ bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
 size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
+int nPartialPruneHeightDone;
 bool fAlerts = DEFAULT_ALERTS;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
@@ -155,9 +156,6 @@ namespace {
     std::set<int> setDirtyFileInfo;
 
     std::atomic<bool> fFullSyncMode(DEFAULT_FULL_SYNC_MODE);
-
-    /** Track pruning of partial chain to optimize & prevent duplicate erase */
-    int nPartialPruneHeightDone = 0;
 
     boost::signals2::signal<void (const CBlockIndex *pTip)> headerTipSignal;
 } // anon namespace
@@ -1432,6 +1430,7 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
             if (!pblocktree->UpdateBatchSync(vFiles, nLastBlockFile, vBlocks, removals)) {
                 return AbortNode(state, "Failed to write to block index database");
             }
+            uiInterface.NotifySPVPrune(nPartialPruneHeightDone);
         }
         // Finally remove any pruned files
         if (fFlushForPrune)
