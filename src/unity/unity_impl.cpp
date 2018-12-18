@@ -20,6 +20,7 @@
 #include "Gulden/mnemonic.h"
 #include "net_processing.h"
 #include "wallet/spvscanner.h"
+#include "sync.h"
 
 // Djinni generated files
 #include "gulden_unified_backend.hpp"
@@ -45,6 +46,8 @@
 #include <memory>
 
 std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
+
+CCriticalSection cs_monitoringListeners;
 std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
 
 void calculateTransactionRecordsForWalletTransaction(const CWalletTx& wtx, std::vector<TransactionRecord>& transactionRecords)
@@ -117,6 +120,7 @@ void handlePostInitMain()
             signalHandler->notifyUnifiedProgress(progress);
     });
 
+    // monitoring listeners notifications
     uiInterface.NotifyHeaderProgress.connect([=](int, int, int, int64_t) {
         int32_t height, probable_height, offset;
         {
@@ -125,18 +129,21 @@ void handlePostInitMain()
             probable_height = GetProbableHeight();
             offset = partialChain.HeightOffset();
         }
+        LOCK(cs_monitoringListeners);
         for (const auto &listener: monitoringListeners) {
             listener->onPartialChain(height, probable_height, offset);
         }
     });
 
     uiInterface.NotifySPVPrune.connect([=](int height) {
+        LOCK(cs_monitoringListeners);
         for (const auto &listener: monitoringListeners) {
             listener->onPruned(height);
         }
     });
 
     uiInterface.NotifySPVProgress.connect([=](int /*start_height*/, int processed_height, int /*probable_height*/) {
+        LOCK(cs_monitoringListeners);
         for (const auto &listener: monitoringListeners) {
             listener->onProcessedSPVBlocks(processed_height);
         }
@@ -547,19 +554,23 @@ MonitorRecord GuldenUnifiedBackend::getMonitoringStats()
     int32_t partialOffset_ = partialChain.HeightOffset();
     int32_t prunedHeight_ = nPartialPruneHeightDone;
     int32_t processedSPVHeight_ = CSPVScanner::getProcessedHeight();
+    int32_t probableHeight_ = GetProbableHeight();
 
     return MonitorRecord(partialHeight_,
                          partialOffset_,
                          prunedHeight_,
-                         processedSPVHeight_);
+                         processedSPVHeight_,
+                         probableHeight_);
 }
 
 void GuldenUnifiedBackend::RegisterMonitorListener(const std::shared_ptr<GuldenMonitorListener> & listener)
 {
+    LOCK(cs_monitoringListeners);
     monitoringListeners.insert(listener);
 }
 
 void GuldenUnifiedBackend::UnregisterMonitorListener(const std::shared_ptr<GuldenMonitorListener> & listener)
 {
+    LOCK(cs_monitoringListeners);
     monitoringListeners.erase(listener);
 }

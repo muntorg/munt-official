@@ -15,15 +15,19 @@ public final class MonitorRecord {
 
     /*package*/ final int mProcessedSPVHeight;
 
+    /*package*/ final int mProbableHeight;
+
     public MonitorRecord(
             int partialHeight,
             int partialOffset,
             int prunedHeight,
-            int processedSPVHeight) {
+            int processedSPVHeight,
+            int probableHeight) {
         this.mPartialHeight = partialHeight;
         this.mPartialOffset = partialOffset;
         this.mPrunedHeight = prunedHeight;
         this.mProcessedSPVHeight = processedSPVHeight;
+        this.mProbableHeight = probableHeight;
     }
 
     public int getPartialHeight() {
@@ -42,6 +46,10 @@ public final class MonitorRecord {
         return mProcessedSPVHeight;
     }
 
+    public int getProbableHeight() {
+        return mProbableHeight;
+    }
+
     @Override
     public String toString() {
         return "MonitorRecord{" +
@@ -49,6 +57,7 @@ public final class MonitorRecord {
                 "," + "mPartialOffset=" + mPartialOffset +
                 "," + "mPrunedHeight=" + mPrunedHeight +
                 "," + "mProcessedSPVHeight=" + mProcessedSPVHeight +
+                "," + "mProbableHeight=" + mProbableHeight +
         "}";
     }
 

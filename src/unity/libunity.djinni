@@ -163,6 +163,7 @@ monitor_record = record {
     partialOffset: i32;
     prunedHeight: i32;
     processedSPVHeight: i32;
+    probableHeight: i32;
 }
 
 # Monitoring events
