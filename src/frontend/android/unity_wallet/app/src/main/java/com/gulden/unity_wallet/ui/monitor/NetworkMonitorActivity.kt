@@ -57,9 +57,7 @@ class NetworkMonitorActivity : AppCompatActivity() {
             return if (position == 0)
                 PeerListFragment()
             else
-                // TODO: properly implement BlockListFragment
-                // BlockListFragment()
-                Fragment()
+                BlockListFragment()
         }
     }
 }

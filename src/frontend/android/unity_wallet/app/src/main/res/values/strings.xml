@@ -48,6 +48,8 @@ file COPYING
     <string name="network_monitor_block_list_title">Blocks</string>
     <string name="peer_list_fragment_empty">No peers connected</string>
     <string name="peer_list_row_ping_time">⇆ %d&#x2009;ms</string>
+    <string name="block_row_now">just now</string>
+    <string name="action_browse">Browse</string>
 
     <string name="default_currency">EUR</string>
 
