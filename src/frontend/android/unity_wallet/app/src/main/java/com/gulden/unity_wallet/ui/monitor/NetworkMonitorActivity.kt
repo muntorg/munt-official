@@ -38,7 +38,9 @@ class NetworkMonitorActivity : AppCompatActivity() {
         network_monitor_pager.let { pager ->
             network_monitor_pager_tabs.addTabLabels(
                     R.string.network_monitor_peer_list_title,
-                    R.string.network_monitor_block_list_title)
+                    R.string.network_monitor_block_list_title,
+                    R.string.network_monitor_processing_title
+                    )
 
             pager.adapter = PagerAdapter(supportFragmentManager)
             pager.setOnPageChangeListener(network_monitor_pager_tabs)
@@ -50,14 +52,18 @@ class NetworkMonitorActivity : AppCompatActivity() {
     private class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getCount(): Int {
-            return 2
+            return 3
         }
 
         override fun getItem(position: Int): Fragment {
-            return if (position == 0)
-                PeerListFragment()
-            else
-                BlockListFragment()
+            return when (position) {
+                0 -> PeerListFragment()
+                1 -> BlockListFragment()
+                2 -> ProcessingFragment()
+                else -> {
+                    throw Exception("No such fragment page!")
+                }
+            }
         }
     }
 }
