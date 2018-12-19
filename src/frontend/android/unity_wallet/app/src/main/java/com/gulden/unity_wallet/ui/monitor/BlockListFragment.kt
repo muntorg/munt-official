@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gulden.jniunifiedbackend.GuldenMonitorListener
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.block_list_fragment.*
@@ -23,13 +24,14 @@ import kotlin.coroutines.CoroutineContext
 
 class BlockListFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+    private lateinit var viewModel: BlockListViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         val adapter = BlockListAdapter()
 
-        val viewModel = ViewModelProviders.of(this).get(BlockListViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(BlockListViewModel::class.java)
 
         // observe changes
         viewModel.getBlocks().observe(this, Observer { blocks ->
@@ -41,15 +43,9 @@ class BlockListFragment : Fragment(), CoroutineScope {
             }
         })
 
-        // periodically update data
+        // update data once
         this.launch {
-            while (isActive) {
-                val data = withContext(Dispatchers.IO) {
-                    GuldenUnifiedBackend.getLastSPVBlockinfos()
-                }
-                viewModel.setBlocks(data)
-                delay(3000)
-            }
+           updateBlocks()
         }
 
         val view = inflater.inflate(R.layout.block_list_fragment, container, false)
@@ -62,4 +58,36 @@ class BlockListFragment : Fragment(), CoroutineScope {
 
         return view
     }
+
+    private suspend fun updateBlocks() {
+        val data = withContext(Dispatchers.IO) {
+            GuldenUnifiedBackend.getLastSPVBlockinfos()
+        }
+        viewModel.setBlocks(data)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        GuldenUnifiedBackend.RegisterMonitorListener(monitoringListener)
+    }
+
+    override fun onPause() {
+        GuldenUnifiedBackend.UnregisterMonitorListener(monitoringListener)
+
+        super.onPause()
+    }
+
+    private val monitoringListener = object: GuldenMonitorListener() {
+        override fun onPruned(height: Int) {}
+
+        override fun onProcessedSPVBlocks(height: Int) {}
+
+        override fun onPartialChain(height: Int, probableHeight: Int, offset: Int) {
+            this@BlockListFragment.launch(Dispatchers.Main) {
+                updateBlocks()
+            }
+        }
+    }
+
 }
