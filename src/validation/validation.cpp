@@ -3377,16 +3377,56 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         partialChain.SetTip(pindexBestPartial);
 
 #ifdef DEBUG_PARTIAL_SYNC
-        assert(checkBlockIndexForPartialSync());
+        checkBlockIndexForPartialSync();
 #endif
 
-        // if block index loading createed an empty index in front of the partial chain it needs to be removed
-        if (partialChain[partialChain.HeightOffset()]->pprev && partialChain[partialChain.HeightOffset()]->pprev->nStatus == 0)
-        {
-            uint256 prevHash = partialChain[partialChain.HeightOffset()]->pprev->GetBlockHashPoW2();
-            mapBlockIndex.erase(prevHash);
-            partialChain[partialChain.HeightOffset()]->pprev = nullptr;
+        // Kill link before partial chain offset unless it is linked:
+        // a) beyond pindex->pprev in which case it connects to the main chain.
+        // b)  to the genesis
+        if (pindex->pprev && !pindex->pprev->pprev && pindex->pprev->GetBlockHashPoW2() != Params().GenesisBlock().GetHashPoW2()) {
+            pindex->pprev = 0;
         }
+
+        // if we are not in full sync mode any index block not in the partial chain is useless and can and should be removed
+        // if our partial chain is on a fork and blocks (now known) to be on the main chain are removed by this they will be
+        // re-requested (so that is ok)
+        if (!isFullSyncMode())
+        {
+            // collect orphans
+            std::vector<uint256> removals;
+            for (auto it = mapBlockIndex.begin(); it != mapBlockIndex.end(); )
+            {
+                const CBlockIndex* pindex = it->second;
+                if (!partialChain.Contains(pindex) && (pindex->nHeight != 0 || pindex->GetBlockHashPoW2() != Params().GenesisBlock().GetHashPoW2()))
+                {
+                    // important to get hash for removals here first before erasing from mapBlockIndex
+                    // as the erase will invalidate the internal hash block ptr
+                    removals.push_back(pindex->GetBlockHashPoW2());
+                    it = mapBlockIndex.erase(it);
+
+                    // Reclaim memory now that it's not used anymore.
+                    delete pindex;
+                }
+                else {
+                    it++;
+                }
+            }
+
+            if (!removals.empty())
+            {
+                LogPrintf("Collected %d orphans from block index which will be removed\n", removals.size());
+
+                // remove them from disk
+                if (!pblocktree->EraseBatchSync(removals)) {
+                    LogPrintf("Failed to erase orphans from block index database");
+                    return false;
+                }
+            }
+        }
+
+#ifdef DEBUG_PARTIAL_SYNC
+        assert(checkBlockIndexForPartialSync());
+#endif
     }
 
     // Load block file info
