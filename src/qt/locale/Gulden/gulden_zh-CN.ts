@@ -1942,16 +1942,8 @@
         <translation>尚未确认的交易总额，未计入当前余额</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>观察地址(watch-only address)中尚未成熟(matured)的挖矿收入余额：</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>总额：</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>尚未成熟的挖矿收入余额</translation>
     </message>
     <message>
         <source>Immature:</source>

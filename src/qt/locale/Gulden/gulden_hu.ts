@@ -784,10 +784,6 @@
         <translation>Összesen:</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Bányászott egyenleg amely még nem érett be.</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>Éretlen:</translation>
     </message>

@@ -1490,16 +1490,8 @@
         <translation>전체 거래들은 아직 확인되지 않았고, 그리고 현재 잔액에 아직 반영되지 않았습니다.</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>모니터링 지갑의 채굴된 잔액 중 숙성되지 않은 것</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>총액:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>아직 사용 가능하지 않은 채굴된 잔액</translation>
     </message>
     <message>
         <source>Immature:</source>

@@ -647,10 +647,6 @@
         <translation>სულ:</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>მოპოვებული თანხა, რომელიც ჯერ არ არის მზადყოფნაში</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>მოუმზადებელია:</translation>
     </message>

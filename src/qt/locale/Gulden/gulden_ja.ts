@@ -1957,16 +1957,8 @@
         <translation>未検証の取引で利用可能残高に反映されていない数</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>ウォッチオンリーアドレスの採掘された残高のうち、成熟していないもの</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>合計:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>完成していない採掘された残高</translation>
     </message>
     <message>
         <source>Immature:</source>

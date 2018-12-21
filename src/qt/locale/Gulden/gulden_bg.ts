@@ -1533,10 +1533,6 @@
         <translation>Общо:</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Миниран баланс,който все още не се е развил</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>Неразвит:</translation>
     </message>

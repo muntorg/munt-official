@@ -936,16 +936,8 @@
         <translation>Skupni znesek sredstev s katerimi še ne razpolagate prosto, ker so del še nepotrjenih transakcij.</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Nedozoreli narudarjeni znesek na opazovanih naslovih</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Skupaj:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Nedozorel narudarjeni znesek</translation>
     </message>
     <message>
         <source>Immature:</source>

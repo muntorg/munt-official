@@ -1014,16 +1014,8 @@
         <translation>Сума монет у непідтверджених транзакціях</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Баланс видобутих та ще недозрілих монет на адресах для спостереження</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Всього:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Баланс видобутих та ще недозрілих монет</translation>
     </message>
     <message>
         <source>Immature:</source>

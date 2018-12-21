@@ -1939,16 +1939,8 @@
         <translation>Total de transacciones pendientes de confirmar y que aún no contribuye al saldo disponible</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Saldo minado en direcciones watch-only que aún no ha madurado</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Total:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Saldo recién minado que aún no ha madurado.</translation>
     </message>
     <message>
         <source>Immature:</source>

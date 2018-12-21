@@ -1024,16 +1024,8 @@
         <translation>Totalt antall ubekreftede transaksjoner som ikke teller med i saldo</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Utvunnet balanse i kun observerbare adresser som ennå ikke har modnet</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Totalt:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Minet saldo har ikke modnet enda</translation>
     </message>
     <message>
         <source>Immature:</source>

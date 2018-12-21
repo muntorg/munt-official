@@ -1073,10 +1073,6 @@
         <translation>Kokku:</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Mitte aegunud mine&apos;itud jääk</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>Ebaküps:</translation>
     </message>

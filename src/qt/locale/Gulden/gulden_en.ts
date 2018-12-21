@@ -863,12 +863,17 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Conversion estimate</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location filename="../../gui.cpp" line="+388"/>
+        <source>&amp;Address</source>
+        <translation>&amp;Address</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+29"/>
         <source>Wallet balances</source>
         <translation>Wallet balances</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+513"/>
+        <location filename="../../gui.cpp" line="+125"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
     </message>
@@ -944,7 +949,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Backup wallet</translation>
     </message>
     <message>
-        <location line="+940"/>
+        <location line="+942"/>
         <source>Imported key</source>
         <translation>Imported key</translation>
     </message>
@@ -970,12 +975,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Show general overview of wallet</translation>
     </message>
     <message>
-        <location line="+6"/>
-        <source>&amp;Address</source>
-        <translation type="unfinished">&amp;Address</translation>
-    </message>
-    <message>
-        <location line="+8"/>
+        <location line="+14"/>
         <location line="+8"/>
         <source>&amp;Send</source>
         <translation>&amp;Send</translation>
@@ -4705,34 +4705,34 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>ViewAddressDialog</name>
     <message>
-        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="+69"/>
-        <source>My witness address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+18"/>
+        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="+86"/>
         <source>address</source>
-        <translation type="unfinished">address</translation>
+        <translation>address</translation>
     </message>
     <message>
-        <location line="+13"/>
-        <source>Copy address to clipboard</source>
-        <translation type="unfinished">Copy address to clipboard</translation>
-    </message>
-    <message>
-        <location filename="../../_Gulden/viewaddressdialog.cpp" line="+62"/>
-        <source>No valid witness address has been generated for this account</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+30"/>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation type="unfinished">Resulting URI too long, try to reduce the text for label / message.</translation>
-    </message>
-    <message>
-        <location line="+29"/>
+        <location filename="../../_Gulden/viewaddressdialog.cpp" line="+121"/>
         <source>Address copied to clipboard</source>
-        <translation type="unfinished">Address copied to clipboard</translation>
+        <translation>Address copied to clipboard</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="+13"/>
+        <source>Copy address to clipboard</source>
+        <translation>Copy address to clipboard</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/viewaddressdialog.cpp" line="-29"/>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulting URI too long, try to reduce the text for label / message.</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="-31"/>
+        <source>My witness address</source>
+        <translation>My witness address</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/viewaddressdialog.cpp" line="-30"/>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>No valid witness address has been generated for this account</translation>
     </message>
 </context>
 <context>
@@ -5145,7 +5145,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
 <context>
     <name>toolbar</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1177"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1179"/>
         <source>Account toolbar</source>
         <translation>Account toolbar</translation>
     </message>

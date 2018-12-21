@@ -224,28 +224,12 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
         <translation>Schatting conversie</translation>
     </message>
     <message>
-        <source>Total funds: </source>
-        <translation>Totaalbedrag: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Vastgezet bedrag: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Bedragen in afwachting van bevestiging: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Besteedbare bedragen: </translation>
+        <source>&amp;Address</source>
+        <translation>&amp;Adres</translation>
     </message>
     <message>
         <source>Wallet balances</source>
         <translation>Balans portemonnee</translation>
-    </message>
-    <message>
-        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
-        <translation>Deze optie is niet beschikbaar in de eerste weken van het witnessen. Update naar de laatste versie en probeer nogmaals of vraag om assistentie.</translation>
     </message>
     <message>
         <source>Check for Updates</source>
@@ -667,10 +651,6 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>My accounts</source>
         <translation>Mijn accounts</translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation>Alles</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -1578,22 +1558,6 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
         <source>Conversion estimate</source>
         <translation>Schatting conversie</translation>
     </message>
-    <message>
-        <source>Total funds: </source>
-        <translation>Totaalbedrag: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Geblokkeerd bedrag: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Bedragen in afwachting van bevestiging: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Besteedbaar bedrag</translation>
-    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -1786,10 +1750,6 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     <message>
         <source>Internal transfer</source>
         <translation>Interne transactie</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Mining-beloning</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -2248,10 +2208,6 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     <message>
         <source>Internal transfer</source>
         <translation>Interne transactie</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Mining-beloning</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -3730,10 +3686,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
         <translation>De som van de transacties die nog bevestigd moeten worden, en nog niet meetellen in uw beschikbare saldo</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Gedolven saldo dat nog niet tot wasdom is gekomen</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Totaal:</translation>
     </message>
@@ -3744,10 +3696,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Generated balance that has not yet matured</source>
         <translation>Gegenereerd saldo dat nog niet tot wasdom is gekomen</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Gedolven saldo dat nog niet tot wasdom is gekomen</translation>
     </message>
     <message>
         <source>Immature:</source>
@@ -3965,6 +3913,33 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Yes</source>
         <translation>Ja</translation>
+    </message>
+</context>
+<context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>address</source>
+        <translation>adres</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Adres naar klembord kopiëren</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulterend URI te lang, probeer de tekst voor het etiket / bericht te verkleinen.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Mijn Witness adres</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Er is geen geldig Witness adres voor deze account aangemaakt</translation>
     </message>
 </context>
 <context>

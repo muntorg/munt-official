@@ -127,14 +127,6 @@
         <translation>अझै पुष्टि हुन बाँकी र खर्च गर्न मिल्ने ब्यालेन्समा गणना गर्न नमिल्ने जम्मा कारोबार</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>अहिलेसम्म परिपक्व नभएको खनन गरिएको, हेर्ने-मात्र ठेगानामा रहेको ब्यालेन्स</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>अझै परिपक्व नभएको खनन गरिएको ब्यालेन्स</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>अपरिपक्व:</translation>
     </message>

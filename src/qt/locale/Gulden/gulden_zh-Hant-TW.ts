@@ -1951,16 +1951,8 @@
         <translation>還沒被確認的交易的總金額，可用餘額不包含這些金額</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>所有只能看位址還沒成熟的開採金額</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>總金額:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>還沒成熟的開採金額</translation>
     </message>
     <message>
         <source>Immature:</source>

@@ -379,10 +379,6 @@
         <translation>Schema</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Fossum pendendum quod nondum maturum est</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>Immatura:</translation>
     </message>

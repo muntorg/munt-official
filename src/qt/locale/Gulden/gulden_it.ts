@@ -287,25 +287,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>AccountSummaryWidget</name>
-    <message>
-        <source>Total funds: </source>
-        <translation>Fondi totali: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Fondi bloccati: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Fondi in attesa di conferma: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Fondi spendibili: </translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1441,10 +1422,6 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <source>All</source>
-        <translation>Tutti</translation>
-    </message>
-    <message>
         <source>Amount exceeds maximum for IBAN payment.</source>
         <translation>L&apos;importo supera il massimo per il pagamento IBAN</translation>
     </message>
@@ -1557,16 +1534,8 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
         <translation>Totale delle transazioni in corso di conferma e che non sono ancora conteggiate nel saldo spendibile</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Importo generato dal mining su indirizzi di sola lettura e non ancora maturato</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Totale:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Importo generato dal mining e non ancora maturato</translation>
     </message>
     <message>
         <source>Immature:</source>

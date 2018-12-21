@@ -706,10 +706,6 @@
         <translation>Totalo:</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Minita saldo, kiu ankoraŭ ne maturiĝis</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>Nematura:</translation>
     </message>

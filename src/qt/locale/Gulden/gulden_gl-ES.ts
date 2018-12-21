@@ -515,10 +515,6 @@
         <translation>Total de transaccións que aínda teñen que ser confirmadas, e non contan todavía dentro do balance gastable</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>O balance minado todavía non madurou</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>Inmaduro:</translation>
     </message>

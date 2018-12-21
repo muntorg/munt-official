@@ -1377,16 +1377,8 @@ Var vänlig och försök igen.</translation>
         <translation>Totalt antal transaktioner som ännu inte bekräftats, och som ännu inte räknas med i aktuellt saldo</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Den genererade balansen i granska-bara adresser som ännu inte har mognat</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Totalt:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Den genererade balansen som ännu inte har mognat</translation>
     </message>
     <message>
         <source>Immature:</source>

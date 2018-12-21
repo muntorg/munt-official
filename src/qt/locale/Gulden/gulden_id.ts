@@ -836,10 +836,6 @@
         <translation>Jumlah:</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Saldo ditambang yang masih terlalu muda</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>Terlalu Muda:</translation>
     </message>
