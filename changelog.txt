@@ -1,3 +1,10 @@
+2.1.0.1
+
+UI - Implement an address tab for witness accounts, for easier access of the current active witness account address and for better integration with third party monitoring apps.
+
+
+
+
 2.1.0.0
 
 CORE - Implement a few consensus level changes for witnessing, these are minor improvements but are better to make now before phase 4 activation for the sake of future code cleanliness.
