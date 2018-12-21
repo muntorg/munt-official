@@ -868,7 +868,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Wallet balances</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+503"/>
+        <location filename="../../gui.cpp" line="+511"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
     </message>
@@ -954,7 +954,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Imported witness</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="-1250"/>
+        <location filename="../../gui.cpp" line="-1258"/>
         <location line="+6"/>
         <source>&amp;Overview</source>
         <translation>&amp;Overview</translation>
@@ -970,7 +970,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Show general overview of wallet</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+14"/>
         <location line="+8"/>
         <source>&amp;Send</source>
         <translation>&amp;Send</translation>
@@ -987,12 +987,18 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Receive</translation>
     </message>
     <message>
-        <location line="-6"/>
+        <location line="-27"/>
+        <location line="+21"/>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
         <translation>Request payments (generates QR codes and gulden: URIs)</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="-23"/>
+        <source>&amp;Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+34"/>
         <source>&amp;Transactions</source>
         <translation>&amp;Transactions</translation>
     </message>
