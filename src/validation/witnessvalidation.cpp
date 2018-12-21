@@ -714,7 +714,7 @@ extern bool haveStaticFundingAddress(std::string sLookupAddress, uint64_t nHeigh
 {
     if(IsArgSet("-testnet"))
     {
-        if (nHeight > 91300)
+        if (nHeight > 96400)
         {
             return true;
         }
@@ -727,7 +727,7 @@ extern bool haveStaticFundingAddress(std::string sLookupAddress, uint64_t nHeigh
 
 extern std::string getStaticFundingAddress(std::string sLookupAddress, uint64_t nHeight)
 {
-    if(IsArgSet("-testnet") && nHeight > 91300)
+    if(IsArgSet("-testnet") && nHeight > 96400)
     {
         return "TSUjGh249nDKhn7huWwxofZrMGn9k9Rzo1";
     }
@@ -1121,7 +1121,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    if ((!IsArgSet("-testnet") && nBlockHeight > 881000 ) || (!IsArgSet("-testnet") && nBlockHeight > 91300 ))
+    if ((!IsArgSet("-testnet") && nBlockHeight > 881000 ) || (IsArgSet("-testnet") && nBlockHeight > 96400 ))
     {
         witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightEligibleRaw / 100;
     }

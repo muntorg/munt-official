@@ -205,6 +205,26 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Annuler</translation>
     </message>
     <message>
+        <source>Total</source>
+        <translation>Total</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Verrouillé</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>En attente</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Consommable</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Conversion estimation</translation>
+    </message>
+    <message>
         <source>Total funds: </source>
         <translation>Total des fonds : </translation>
     </message>
@@ -219,6 +239,10 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>Spendable funds: </source>
         <translation>Fonds disponibles : </translation>
+    </message>
+    <message>
+        <source>Wallet balances</source>
+        <translation>Soldes de portefeuille</translation>
     </message>
     <message>
         <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
@@ -1024,6 +1048,18 @@ Poids du Witness : %5</translation>
         <translation>Non</translation>
     </message>
     <message>
+        <source>address</source>
+        <translation>adresse</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse copiée dans le presse-papiers</translation>
+    </message>
+    <message>
+        <source>Request copied to clipboard</source>
+        <translation>Demande copiée dans le presse-papiers</translation>
+    </message>
+    <message>
         <source>My receiving address</source>
         <translation>Mon adresse de réception</translation>
     </message>
@@ -1520,6 +1556,30 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
 </context>
 <context>
     <name>AccountSummaryWidget</name>
+    <message>
+        <source>Account balances</source>
+        <translation>Soldes des comptes</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Total</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Verrouillé</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>En attente</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Consommable</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Conversion estimation</translation>
+    </message>
     <message>
         <source>Total funds: </source>
         <translation>Total des fonds: </translation>

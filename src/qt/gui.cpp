@@ -385,6 +385,14 @@ void GUI::createActions()
     overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
     tabGroup->addAction(overviewAction);
 
+    viewAddressAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f6), tr("&Address"), this);
+    viewAddressAction->setObjectName("action_view_address");
+    viewAddressAction->setStatusTip(tr("Request payments (generates QR codes and gulden: URIs)"));
+    viewAddressAction->setToolTip(viewAddressAction->statusTip());
+    viewAddressAction->setCheckable(true);
+    viewAddressAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_2));
+    tabGroup->addAction(viewAddressAction);
+
     sendCoinsAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f5), tr("&Send"), this);
     sendCoinsAction->setObjectName("action_send_coins");
     sendCoinsAction->setStatusTip(tr("Send coins to a Gulden address"));
@@ -426,6 +434,8 @@ void GUI::createActions()
     connect(witnessDialogAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
+    connect(viewAddressAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(viewAddressAction, SIGNAL(triggered()), this, SLOT(gotoViewAddressPage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
     connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -759,6 +769,7 @@ void GUI::setWalletActionsEnabled(bool enabled)
 
     witnessDialogAction->setEnabled(enabled);
     overviewAction->setEnabled(enabled);
+    viewAddressAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
     sendCoinsMenuAction->setEnabled(enabled);
     receiveCoinsAction->setEnabled(enabled);
@@ -970,6 +981,15 @@ void GUI::gotoHistoryPage()
     historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
     //if (walletFrame) walletFrame->currentWalletView()->historyPage->update();
+}
+
+void GUI::gotoViewAddressPage()
+{
+    LogPrint(BCLog::QT, "GUI::gotoReceiveCoinsPage\n");
+
+    viewAddressAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoViewAddressPage();
+    //if (walletFrame) walletFrame->currentWalletView()->receiveCoinsPage->update();
 }
 
 void GUI::gotoReceiveCoinsPage()
