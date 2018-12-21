@@ -20,6 +20,7 @@ class GUI;
 class ClientModel;
 class OverviewPage;
 class QStyle;
+class ViewAddressDialog;
 class ReceiveCoinsDialog;
 class SendCoinsDialog;
 class WitnessDialog;
@@ -44,40 +45,41 @@ class WalletView : public QStackedWidget
     Q_OBJECT
 
 public:
-    explicit WalletView(const QStyle *platformStyle, QWidget *parent);
+    explicit WalletView(const QStyle* platformStyle, QWidget* parent);
     virtual ~WalletView();
 
-    void setGUI(GUI *gui);
+    void setGUI(GUI* gui);
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
-    void setClientModel(ClientModel *clientModel);
+    void setClientModel(ClientModel* clientModel);
     /** Set the wallet model.
         The wallet model represents a Gulden wallet, and offers access to the list of transactions, address book and sending
         functionality.
     */
-    void setWalletModel(WalletModel *walletModel);
+    void setWalletModel(WalletModel* walletModel);
 
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
     void showOutOfSyncWarning(bool fShow);
 
 private:
-    ClientModel *clientModel;
-    WalletModel *walletModel;
+    ClientModel* clientModel = nullptr;
+    WalletModel* walletModel = nullptr;
 
-    OverviewPage *overviewPage;
-    QWidget *transactionsPage;
-    ReceiveCoinsDialog *receiveCoinsPage;
-    SendCoinsDialog *sendCoinsPage;
-    WitnessDialog *witnessDialogPage;
-    AddressBookPage *usedSendingAddressesPage;
-    AddressBookPage *usedReceivingAddressesPage;
+    OverviewPage* overviewPage = nullptr;
+    QWidget* transactionsPage = nullptr;
+    ViewAddressDialog* viewAddressPage = nullptr;
+    ReceiveCoinsDialog* receiveCoinsPage = nullptr;
+    SendCoinsDialog* sendCoinsPage = nullptr;
+    WitnessDialog* witnessDialogPage = nullptr;
+    AddressBookPage* usedSendingAddressesPage = nullptr;
+    AddressBookPage* usedReceivingAddressesPage = nullptr;
 
-    TransactionView *transactionView;
+    TransactionView* transactionView = nullptr;
 
-    QProgressDialog *progressDialog;
-    const QStyle *platformStyle;
+    QProgressDialog* progressDialog = nullptr;
+    const QStyle* platformStyle = nullptr;
 
     friend class GuldenGUI;
     friend class GUI;
@@ -87,6 +89,8 @@ public Q_SLOTS:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to view address page */
+    void gotoViewAddressPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to witness information page */
@@ -117,7 +121,7 @@ public Q_SLOTS:
     void updateEncryptionStatus();
 
     /** Show progress dialog e.g. for rescan */
-    void showProgress(const QString &title, int nProgress);
+    void showProgress(const QString& title, int nProgress);
 
     /** User has requested more information about the out of sync state */
     void requestedSyncWarningInfo();
@@ -126,7 +130,7 @@ Q_SIGNALS:
     /** Signal that we want to show the main window */
     void showNormalIfMinimized();
     /**  Fired when a message should be reported to the user */
-    void message(const QString &title, const QString &message, unsigned int style);
+    void message(const QString& title, const QString& message, unsigned int style);
     /** Encryption status of wallet changed */
     void encryptionStatusChanged(int status);
     /** HD-Enabled status of wallet changed (only possible during startup) */

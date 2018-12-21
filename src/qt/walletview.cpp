@@ -18,6 +18,7 @@
 #include "guiutil.h"
 #include "optionsmodel.h"
 #include "overviewpage.h"
+#include "qt/_Gulden/viewaddressdialog.h"
 #include "qt/_Gulden/receivecoinsdialog.h"
 #include "qt/_Gulden/witnessdialog.h"
 #include "sendcoinsdialog.h"
@@ -78,6 +79,7 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
     vbox->setSpacing(0);
 
 
+    viewAddressPage = new ViewAddressDialog(platformStyle);
     receiveCoinsPage = new ReceiveCoinsDialog(platformStyle);
     sendCoinsPage = new SendCoinsDialog(platformStyle);
     witnessDialogPage = new WitnessDialog(platformStyle);
@@ -87,6 +89,7 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
 
     addWidget(overviewPage);
     addWidget(transactionsPage);
+    addWidget(viewAddressPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(witnessDialogPage);
@@ -227,6 +230,12 @@ void WalletView::gotoOverviewPage()
 void WalletView::gotoHistoryPage()
 {
     setCurrentWidget(transactionsPage);
+}
+
+
+void WalletView::gotoViewAddressPage()
+{
+    setCurrentWidget(viewAddressPage);
 }
 
 void WalletView::gotoReceiveCoinsPage()

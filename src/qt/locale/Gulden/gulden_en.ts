@@ -822,7 +822,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+306"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+309"/>
         <location line="+64"/>
         <location line="+38"/>
         <source>Okay</source>
@@ -868,7 +868,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Wallet balances</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+511"/>
+        <location filename="../../gui.cpp" line="+513"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
     </message>
@@ -878,7 +878,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Check for software updates</translation>
     </message>
     <message>
-        <location line="+1115"/>
+        <location line="+1125"/>
         <source>Software update warning</source>
         <translation>Software update warning</translation>
     </message>
@@ -914,7 +914,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Tabs toolbar</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+42"/>
         <source>My accounts</source>
         <translation>My accounts</translation>
     </message>
@@ -924,7 +924,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Add account</translation>
     </message>
     <message>
-        <location line="+127"/>
+        <location line="+129"/>
         <source>&amp;Password</source>
         <translation>&amp;Password</translation>
     </message>
@@ -944,7 +944,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Backup wallet</translation>
     </message>
     <message>
-        <location line="+891"/>
+        <location line="+940"/>
         <source>Imported key</source>
         <translation>Imported key</translation>
     </message>
@@ -954,7 +954,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Imported witness</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="-1258"/>
+        <location filename="../../gui.cpp" line="-1270"/>
         <location line="+6"/>
         <source>&amp;Overview</source>
         <translation>&amp;Overview</translation>
@@ -970,7 +970,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Show general overview of wallet</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+6"/>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Address</translation>
+    </message>
+    <message>
+        <location line="+8"/>
         <location line="+8"/>
         <source>&amp;Send</source>
         <translation>&amp;Send</translation>
@@ -993,12 +998,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Request payments (generates QR codes and gulden: URIs)</translation>
     </message>
     <message>
-        <location line="-23"/>
-        <source>&amp;Addresses</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+34"/>
+        <location line="+11"/>
         <source>&amp;Transactions</source>
         <translation>&amp;Transactions</translation>
     </message>
@@ -1008,7 +1008,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Browse transaction history</translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+27"/>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Show / Hide</translation>
     </message>
@@ -1198,7 +1198,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+180"/>
         <source>%1 client</source>
         <translation>%1 client</translation>
     </message>
@@ -1208,7 +1208,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Debug window</translation>
     </message>
     <message numerus="yes">
-        <location line="+135"/>
+        <location line="+144"/>
         <source>%n active connection(s) to Gulden network</source>
         <translation>
             <numerusform>%n active connection(s) to Gulden network</numerusform>
@@ -4703,6 +4703,39 @@ If you  have recently received funds you may need to wait for them to clear befo
     </message>
 </context>
 <context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="+69"/>
+        <source>My witness address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>address</source>
+        <translation type="unfinished">address</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Copy address to clipboard</source>
+        <translation type="unfinished">Copy address to clipboard</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/viewaddressdialog.cpp" line="+62"/>
+        <source>No valid witness address has been generated for this account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+30"/>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation type="unfinished">Resulting URI too long, try to reduce the text for label / message.</translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>Address copied to clipboard</source>
+        <translation type="unfinished">Address copied to clipboard</translation>
+    </message>
+</context>
+<context>
     <name>WalletModel</name>
     <message>
         <location filename="../../walletmodel.cpp" line="+931"/>
@@ -4755,12 +4788,12 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletView</name>
     <message>
-        <location filename="../../walletview.cpp" line="+64"/>
+        <location filename="../../walletview.cpp" line="+65"/>
         <source>&amp;Export</source>
         <translation>&amp;Export</translation>
     </message>
     <message>
-        <location line="+216"/>
+        <location line="+224"/>
         <source>Backup Wallet</source>
         <translation>Backup Wallet</translation>
     </message>
@@ -5112,7 +5145,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
 <context>
     <name>toolbar</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1126"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1177"/>
         <source>Account toolbar</source>
         <translation>Account toolbar</translation>
     </message>
@@ -5123,7 +5156,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
     </message>
     <message>
         <location line="+79"/>
-        <location line="+120"/>
+        <location line="+126"/>
         <source>Spacer  toolbar</source>
         <translation>Spacer  toolbar</translation>
     </message>

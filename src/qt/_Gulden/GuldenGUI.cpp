@@ -71,6 +71,9 @@
 #include "units.h"
 #include "optionsmodel.h"
 #include "askpassphrasedialog.h"
+#include "transactiontablemodel.h"
+#include "transactionrecord.h"
+#include "viewaddressdialog.h"
 
 
 //Font sizes - NB! We specifically use 'px' and not 'pt' for all font sizes, as qt scales 'pt' dynamically in a way that makes our fonts unacceptably small on OSX etc. it doesn't do this with px so we use px instead.
@@ -444,6 +447,7 @@ void GUI::createToolBars()
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->addAction(witnessDialogAction);
     toolbar->addAction(overviewAction);
+    toolbar->addAction(viewAddressAction);
     toolbar->addAction(sendCoinsAction);
     toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(historyAction);
@@ -647,16 +651,18 @@ void GUI::createToolBars()
     tabsBar->setMovable( false );
     tabsBar->setToolButtonStyle( Qt::ToolButtonTextOnly );
     //Remove all the actions so we can add them again in a different order
-    tabsBar->removeAction( historyAction );
-    tabsBar->removeAction( overviewAction );
-    tabsBar->removeAction( sendCoinsAction );
-    tabsBar->removeAction( receiveCoinsAction );
-    tabsBar->removeAction( witnessDialogAction );
+    tabsBar->removeAction(historyAction);
+    tabsBar->removeAction(overviewAction);
+    tabsBar->removeAction(viewAddressAction);
+    tabsBar->removeAction(receiveCoinsAction);
+    tabsBar->removeAction(sendCoinsAction);
+    tabsBar->removeAction(witnessDialogAction);
     //Setup the tab toolbar
-    tabsBar->addAction( witnessDialogAction );
-    tabsBar->addAction( receiveCoinsAction );
-    tabsBar->addAction( sendCoinsAction );
-    tabsBar->addAction( historyAction );
+    tabsBar->addAction(witnessDialogAction);
+    tabsBar->addAction(viewAddressAction);
+    tabsBar->addAction(receiveCoinsAction);
+    tabsBar->addAction(sendCoinsAction);
+    tabsBar->addAction(historyAction);
 
     passwordAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf084), tr("&Password"), this);
     passwordAction->setObjectName("action_password");
@@ -688,6 +694,9 @@ void GUI::createToolBars()
     tabsBar->widgetForAction( backupAction )->setObjectName( "backup_button" );
     tabsBar->widgetForAction( backupAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( backupAction )->setCursor( Qt::PointingHandCursor );
+    tabsBar->widgetForAction( viewAddressAction )->setObjectName( "view_address_button" );
+    tabsBar->widgetForAction( viewAddressAction )->setContentsMargins( 0, 0, 0, 0 );
+    tabsBar->widgetForAction( viewAddressAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( receiveCoinsAction )->setObjectName( "receive_coins_button" );
     tabsBar->widgetForAction( receiveCoinsAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( receiveCoinsAction )->setCursor( Qt::PointingHandCursor );
@@ -712,6 +721,7 @@ void GUI::createToolBars()
         tabsBar->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     }
     //Only show the actions we want
+    viewAddressAction->setVisible( true );
     receiveCoinsAction->setVisible( true );
     sendCoinsAction->setVisible( true );
     historyAction->setVisible( true );
@@ -969,6 +979,7 @@ void GUI::doPostInit()
 
     //Change shortcut keys because we have hidden overview pane and changed tab orders
     overviewAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_0 ) );
+    viewAddressAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_0 ) );
     sendCoinsAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_2 ) );
     receiveCoinsAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_3 ) );
     historyAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_1 ) );
@@ -1203,18 +1214,12 @@ void GUI::refreshTabVisibilities()
 {
     LogPrint(BCLog::QT, "GUI::refreshTabVisibilities\n");
 
-    receiveCoinsAction->setVisible( true );
-    sendCoinsAction->setVisible( true );
-
-    //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
-    if (pactiveWallet->getActiveAccount()->IsReadOnly())
-        sendCoinsAction->setVisible( false );
-
     if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
     {
-        receiveCoinsAction->setVisible( false );
-        sendCoinsAction->setVisible( false );
-        witnessDialogAction->setVisible( true );
+        viewAddressAction->setVisible(true);
+        receiveCoinsAction->setVisible(false);
+        sendCoinsAction->setVisible(false);
+        witnessDialogAction->setVisible(true);
         if ( walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage )
         {
             showWitnessDialog();
@@ -1222,7 +1227,17 @@ void GUI::refreshTabVisibilities()
     }
     else
     {
-        witnessDialogAction->setVisible( false );
+        viewAddressAction->setVisible(false);
+        receiveCoinsAction->setVisible(true);
+        sendCoinsAction->setVisible(true);
+        witnessDialogAction->setVisible(false);
+
+        //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
+        if (pactiveWallet->getActiveAccount()->IsReadOnly())
+        {
+            sendCoinsAction->setVisible( false );
+        }
+
         if (walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage)
         {
             gotoReceiveCoinsPage();
@@ -1355,21 +1370,63 @@ void GUI::updateAccount(CAccount* account)
     LogPrint(BCLog::QT, "GUI::updateAccount\n");
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, account, KEYCHAIN_EXTERNAL);
-    CPubKey pubKey;
-    if (receiveAddress->GetReservedKey(pubKey))
+    if (!walletFrame)
+        return;
+    if (!walletFrame->currentWalletView())
+        return;
+
+    walletFrame->currentWalletView()->viewAddressPage->updateAddress("");
+    if (account->IsPoW2Witness())
     {
-        CKeyID keyID = pubKey.GetID();
-        walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CGuldenAddress(keyID).ToString()) );
+        if (!walletFrame->currentWalletView()->viewAddressPage)
+            return;
+        if (!walletFrame->currentWalletView()->walletModel)
+            return;
+
+        //fixme: (2.1) - Look into improving performance here, also better way to handle multiple addresses?
+        std::unique_ptr<TransactionFilterProxy> filter;
+        filter.reset(new TransactionFilterProxy);
+        filter->setSourceModel(walletFrame->currentWalletView()->walletModel->getTransactionTableModel());
+        filter->setDynamicSortFilter(true);
+        filter->setSortRole(Qt::EditRole);
+        filter->setShowInactive(false);
+        filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
+
+        filter->setAccountFilter(account);
+        int rows = filter->rowCount();
+        for (int row = 0; row < rows; ++row)
+        {
+            QModelIndex index = filter->index(row, 0);
+
+            int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
+            if ( (nType == TransactionRecord::WitnessFundRecv) || (nType == TransactionRecord::WitnessRenew) )
+            {
+                walletFrame->currentWalletView()->viewAddressPage->updateAddress(filter->data(index, TransactionTableModel::AddressRole).toString());
+                return;
+            }
+        }
     }
     else
     {
-        LogPrint(BCLog::ALL, "Keypool exhausted for account.\n");
-        walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
+        if (!walletFrame->currentWalletView()->receiveCoinsPage)
+            return;
+
+        CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, account, KEYCHAIN_EXTERNAL);
+        CPubKey pubKey;
+        if (receiveAddress->GetReservedKey(pubKey))
+        {
+            CKeyID keyID = pubKey.GetID();
+            walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CGuldenAddress(keyID).ToString()) );
+        }
+        else
+        {
+            LogPrint(BCLog::ALL, "Keypool exhausted for account.\n");
+            walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
+        }
+        walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
+        receiveAddress->ReturnKey();
+        delete receiveAddress;
     }
-    walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
-    receiveAddress->ReturnKey();
-    delete receiveAddress;
 }
 
 void GUI::balanceChanged()
@@ -1694,6 +1751,8 @@ void GUI::restoreCachedWidgetIfNeeded()
         cacheCurrentWidget = NULL;
     }
 
+    if (viewAddressAction)
+        receiveCoinsAction->setVisible(!stateReceiveCoinsAction);
     if (receiveCoinsAction)
         receiveCoinsAction->setVisible( stateReceiveCoinsAction );
     if (sendCoinsAction)
