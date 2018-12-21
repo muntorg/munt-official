@@ -69,6 +69,8 @@
 # error "Gulden cannot be compiled without assertions."
 #endif
 
+#define DEBUG_PARTIAL_SYNC
+
 /**
  * Global state
  */
@@ -1406,6 +1408,9 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
             // prune block index for partial sync
             std::vector<const CBlockIndex*> removals;
             if (fFlushPartialSync) {
+#ifdef DEBUG_PARTIAL_SYNC
+                int numNotOnPartialChain = 0;
+#endif
                 for(const auto& it: mapBlockIndex)
                 {
                     CBlockIndex* index = it.second;
@@ -1418,8 +1423,19 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                         removals.push_back(index);
                         setDirtyBlockIndex.erase(index); // prevent pruned indexes to be rewritten
                     }
+#ifdef DEBUG_PARTIAL_SYNC
+                    if (!partialChain.Contains(index)) {
+                        LogPrintf("Index not on partial chain [%s] during prune.\n", index->GetBlockHashPoW2().ToString());
+                        numNotOnPartialChain++;
+                    }
+#endif
                 }
                 nPartialPruneHeightDone = std::max(nManualPruneHeight, nPartialPruneHeightDone);
+#ifdef DEBUG_PARTIAL_SYNC
+                int numOrphans = mapBlockIndex.size() - (partialChain.Height()-partialChain.HeightOffset()) - 1;
+                LogPrintf("Number of orphans in index %d vs not on chain %d should match.\n", numOrphans, numNotOnPartialChain);
+                assert(numOrphans == numNotOnPartialChain);
+#endif
             }
 
             std::vector<const CBlockIndex*> vBlocks;
@@ -3236,8 +3252,6 @@ CBlockIndex * InsertBlockIndex(uint256 hash)
 
     return pindexNew;
 }
-
-#define DEBUG_PARTIAL_SYNC
 
 #ifdef DEBUG_PARTIAL_SYNC
 bool static checkBlockIndexForPartialSync()
