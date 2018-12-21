@@ -171,7 +171,8 @@ private:
 public:
     bool UpdateBatchSync(const std::vector<std::pair<int, const CBlockFileInfo*> >& fileInfo, int nLastFile,
                          const std::vector<const CBlockIndex*>& vWriteIndices,
-                         const std::vector<const CBlockIndex*>& vEraseIndices);
+                         const std::vector<uint256>& vEraseHashes);
+    bool EraseBatchSync(const std::vector<uint256>& vEraseHashes);
     bool ReadBlockFileInfo(int nFile, CBlockFileInfo &fileinfo);
     bool ReadLastBlockFile(int &nFile);
     bool WriteReindexing(bool fReindex);

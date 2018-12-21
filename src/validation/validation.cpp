@@ -1406,7 +1406,7 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
             }
 
             // prune block index for partial sync
-            std::vector<const CBlockIndex*> removals;
+            std::vector<uint256> removals;
             if (fFlushPartialSync) {
 #ifdef DEBUG_PARTIAL_SYNC
                 int numNotOnPartialChain = 0;
@@ -1420,7 +1420,7 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                         )
                         || index->nStatus & BLOCK_FAILED_MASK) // always prune invalid blocks (if it changes they will be dirty again)
                     {
-                        removals.push_back(index);
+                        removals.push_back(index->GetBlockHashPoW2());
                         setDirtyBlockIndex.erase(index); // prevent pruned indexes to be rewritten
                     }
 #ifdef DEBUG_PARTIAL_SYNC
@@ -3563,7 +3563,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
         delete pblock;
 
         FlushBlockFile();
-        if (!pblocktree->UpdateBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks, std::vector<const CBlockIndex*>()))
+        if (!pblocktree->UpdateBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks, std::vector<uint256>()))
         {
             return error("UpgradeBlockIndex: Failed to write to block index database");
         }
