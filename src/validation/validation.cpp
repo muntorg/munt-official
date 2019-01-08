@@ -1409,9 +1409,11 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                 for(const auto& it: mapBlockIndex)
                 {
                     CBlockIndex* index = it.second;
-                    if (   (   index->nHeight < nManualPruneHeight // remove below prune height
-                            && index->nHeight >= nPartialPruneHeightDone  && nPartialPruneHeightDone > 0) // don't remove again what was removed before (and avoid removing height 0)
-                        || index->nStatus & BLOCK_FAILED_MASK ) // remove invalid blocks (if it changes they will be dirty again)
+                    if ((index->nHeight < nManualPruneHeight && // prune anything below prune-height
+                         (index->nHeight !=0 || index->GetBlockHashPoW2() != Params().GenesisBlock().GetHashPoW2()) && // that is not the Genesis
+                         index->nHeight >= nPartialPruneHeightDone // skip pruning below height that was already pruned this session
+                        )
+                        || index->nStatus & BLOCK_FAILED_MASK) // always prune invalid blocks (if it changes they will be dirty again)
                     {
                         removals.push_back(index);
                         setDirtyBlockIndex.erase(index); // prevent pruned indexes to be rewritten
@@ -3858,11 +3860,9 @@ void PersistAndPruneForPartialSync(bool periodic)
     if (isFullSyncMode() || !IsPartialSyncActive())
         return;
 
-    // keep at least PARTIAL_SYNC_PRUNE_HEIGHT of history, also pruning before start of the partial chain
-    // makes little sense
-    int pruneHeight = std::max(partialChain.HeightOffset(), partialChain.Height() - PARTIAL_SYNC_PRUNE_HEIGHT);
-    // never use a pruning height above what has been spv processed
-    pruneHeight = std::min(nMaxSPVPruneHeight.load(), pruneHeight);
+    // never use a pruning height above what has been spv processed, if it has been set at all
+    // there is no point in keeping blocks below the partial chain offset
+    int pruneHeight = std::max(nMaxSPVPruneHeight.load(), partialChain.HeightOffset());
 
     CValidationState state;
     FlushStateToDisk(Params(), state,
