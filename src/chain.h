@@ -185,7 +185,8 @@ enum BlockStatus: uint32_t {
 class CBlockIndex
 {
 public:
-    //! pointer to the hash of the block, if any. Memory is owned by this CBlockIndex
+    //! pointer to the hash of the block, if any. IMPORTANT: Memory is owned by the mapBlockIndex!
+    //! So the hash pointer can only be valid if this CBlockIndex is in mapBlockIndex!
     const uint256* phashBlock;
 
     //! pointer to the index of the predecessor of this block
