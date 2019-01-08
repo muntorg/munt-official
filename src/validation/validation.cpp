@@ -3235,6 +3235,55 @@ CBlockIndex * InsertBlockIndex(uint256 hash)
     return pindexNew;
 }
 
+#define DEBUG_PARTIAL_SYNC
+
+#ifdef DEBUG_PARTIAL_SYNC
+bool static checkBlockIndexForPartialSync()
+{
+    LogPrintf("Checking block index for partial sync integrity\n");
+
+    bool integrityOK = true;
+
+    // test for blocks with nHeight == 0 and nStatus == 0
+    int num00 = 0;
+    CBlockIndex* theOne = nullptr;
+    for(const PAIRTYPE(uint256, CBlockIndex*)& item : mapBlockIndex)
+    {
+        CBlockIndex* pindex = item.second;
+        if (pindex->nHeight == 0 && pindex->nStatus == 0)
+        {
+            theOne = pindex;
+            LogPrintf("  Index with height 0 and status 0: %s\n", pindex->GetBlockHashPoW2().ToString());
+            num00++;
+        }
+    }
+    LogPrintf("  Number of indexes with height 0 and status 0: %d\n", num00);
+
+    // there can be at most one index with height 0 and status 0 (this is the index that precedes
+    // the start of the partial chain and was automtically creted during loading of the block-index
+    if (num00 > 1)
+        integrityOK = false;
+
+    // check that the one block with height 0 & status 0 precedes the partial chain
+    if (integrityOK && num00 == 1) {
+        if (partialChain[partialChain.HeightOffset()]->pprev == theOne) {
+            LogPrintf("  Exactly one index with height 0 and status 0 and it precedes the partial chain.\n");
+        }
+        else {
+            LogPrintf("  Exactly one index with height 0 and status 0 but is does NOT precede the partial chain, this and is a BUG!\n");
+            integrityOK = false;
+        }
+    }
+
+    // note for case where num00 == 0 there is no partial chain (yet) and no further check is needed
+
+    LogPrintf(integrityOK ? "  integrity is OK.\n"
+                          : "  integrity check FAILED! Block index has invalid state.\n");
+
+    return integrityOK;
+}
+#endif
+
 bool static LoadBlockIndexDB(const CChainParams& chainparams)
 {
     LOCK(cs_main);
@@ -3310,6 +3359,10 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             pindex = pindex->pprev;
         partialChain.SetHeightOffset(pindex->nHeight);
         partialChain.SetTip(pindexBestPartial);
+
+#ifdef DEBUG_PARTIAL_SYNC
+        assert(checkBlockIndexForPartialSync());
+#endif
 
         // if block index loading createed an empty index in front of the partial chain it needs to be removed
         if (partialChain[partialChain.HeightOffset()]->pprev && partialChain[partialChain.HeightOffset()]->pprev->nStatus == 0)
