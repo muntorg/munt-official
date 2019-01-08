@@ -2790,7 +2790,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return false;
         }
 
-        NotifyHeaderProgress(connman, !chainActive.FindFork(mapBlockIndex.find(headers[0].hashPrevBlock)->second));
+        bool notifyAsPartialProgress = isFullSyncMode()
+                ? !chainActive.FindFork(mapBlockIndex.find(headers[0].hashPrevBlock)->second)
+                : true;
+        NotifyHeaderProgress(connman, notifyAsPartialProgress);
 
         {
         LOCK(cs_main);
