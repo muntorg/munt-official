@@ -50,6 +50,11 @@ fun uriRecicpient(text: String): UriRecipient {
     if (parsedQRCodeURI?.authority != null) address += parsedQRCodeURI.authority
     if (parsedQRCodeURI?.path != null) address += parsedQRCodeURI.path
 
-    val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, address, parsedQRCodeURI.getParameters())
-    return GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord)
+    return GuldenUnifiedBackend.IsValidRecipient(
+            UriRecord(
+                    if (parsedQRCodeURI.scheme != null) parsedQRCodeURI.scheme else "",
+                    address,
+                    parsedQRCodeURI.getParameters()
+            )
+    )
 }
