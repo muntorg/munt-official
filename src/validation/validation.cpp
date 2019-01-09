@@ -3300,24 +3300,16 @@ bool static checkBlockIndexForPartialSync()
 }
 #endif
 
-bool static LoadBlockIndexDB(const CChainParams& chainparams)
+void static heightSortedBlockIndex(std::vector<std::pair<int, CBlockIndex*> >& vSorted)
 {
-    LOCK(cs_main);
-
-    if (!pblocktree->LoadBlockIndexGuts(InsertBlockIndex))
-        return false;
-
-    boost::this_thread::interruption_point();
-
-    // Calculate nChainWork
-    std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
-    vSortedByHeight.reserve(mapBlockIndex.size());
+    vSorted.clear();
+    vSorted.reserve(mapBlockIndex.size());
     for(const PAIRTYPE(uint256, CBlockIndex*)& item : mapBlockIndex)
     {
         CBlockIndex* pindex = item.second;
-        vSortedByHeight.push_back(std::pair(pindex->nHeight, pindex));
+        vSorted.push_back(std::pair(pindex->nHeight, pindex));
     }
-    sort(vSortedByHeight.begin(), vSortedByHeight.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool 
+    sort(vSorted.begin(), vSorted.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool
     {
         //Ensure PoW block always comes first in sort before witness block of same height.
         if (a.first == b.first)
@@ -3329,8 +3321,22 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             return a.second < b.second;
         }
         return a.first < b.first;
-    }
-    );
+    });
+}
+
+bool static LoadBlockIndexDB(const CChainParams& chainparams)
+{
+    LOCK(cs_main);
+
+    if (!pblocktree->LoadBlockIndexGuts(InsertBlockIndex))
+        return false;
+
+    boost::this_thread::interruption_point();
+
+    std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
+
+    // Calculate nChainWork
+    heightSortedBlockIndex(vSortedByHeight);
     for(const PAIRTYPE(int, CBlockIndex*)& item : vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
@@ -3358,8 +3364,6 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         }
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
-        if (pindex->pprev)
-            pindex->BuildSkip();
         if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex))) {
             pindexBestHeader = pindex;
         }
@@ -3368,6 +3372,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             pindexBestPartial = pindex;
     }
 
+    // initialize partial chain and cleanup block index
     if (pindexBestPartial)
     {
         CBlockIndex* pindex = pindexBestPartial;
@@ -3427,6 +3432,14 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
 #ifdef DEBUG_PARTIAL_SYNC
         assert(checkBlockIndexForPartialSync());
 #endif
+    }
+
+    // build skiplist now as no more block indexes will be erased from here on
+    heightSortedBlockIndex(vSortedByHeight);
+    for(const auto& item: vSortedByHeight)
+    {
+        CBlockIndex* pindex = item.second;
+        pindex->BuildSkip();
     }
 
     // Load block file info
