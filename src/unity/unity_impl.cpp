@@ -408,10 +408,10 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
     return UriRecipient(true, address, label, amount);
 }
 
-bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & request)
+void GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & request)
 {
     if (!pactiveWallet)
-        return false;
+        throw std::runtime_error(_("No active internal wallet."));
 
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -419,14 +419,14 @@ bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
     if (!address.IsValid())
     {
         LogPrintf("performPaymentToRecipient: invalid address %s", request.address.c_str());
-        return false;
+        throw std::runtime_error(_("Invalid address"));
     }
 
     CAmount nAmount;
     if (!ParseMoney(request.amount, nAmount))
     {
         LogPrintf("performPaymentToRecipient: invalid amount %s", request.amount.c_str());
-        return false;
+        throw std::runtime_error(_("Invalid amount"));
     }
 
     bool fSubtractFeeFromAmount = false;
@@ -443,7 +443,7 @@ bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
     if (!pactiveWallet->CreateTransaction(pactiveWallet->activeAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
     {
         LogPrintf("performPaymentToRecipient: failed to create transaction %s",strError.c_str());
-        return false;
+        throw std::runtime_error(strprintf(_("Failed to create transaction\n%s"), strError));
     }
 
     CValidationState state;
@@ -451,10 +451,8 @@ bool GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
     {
         strError = strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason());
         LogPrintf("performPaymentToRecipient: failed to commit transaction %s",strError.c_str());
-        return false;
+        throw std::runtime_error(strprintf(_("Transaction rejected, reason: %s"), state.GetRejectReason()));
     }
-
-    return true;
 }
 
 std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()

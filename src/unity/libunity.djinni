@@ -103,8 +103,8 @@ gulden_unified_backend = interface +c {
     # Check if text/address is something we are capable of sending money too
     static IsValidRecipient(request : uri_record): uri_recipient;
 
-    # Attempt to pay a recipient
-    static performPaymentToRecipient(request : uri_recipient): bool;
+    # Attempt to pay a recipient, will throw on failure with descriptiopn
+    static performPaymentToRecipient(request : uri_recipient);
 
     # Get list of all transactions wallet has been involved in
     static getTransactionHistory() : list<transaction_record>;
