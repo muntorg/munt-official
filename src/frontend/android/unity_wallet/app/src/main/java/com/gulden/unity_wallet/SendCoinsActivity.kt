@@ -123,10 +123,12 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
             // on confirmation compose recipient and execute payment
             positiveButton("Send") {
                 val paymentRequest = UriRecipient(true, recipient.address, recipient.label, send_coins_amount.text.toString())
-                if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
+                try {
+                    GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
                     finish()
-                } else {
-                    view.longSnackbar("Payment failed")
+                }
+                catch (exception: RuntimeException) {
+                    view.longSnackbar(exception.message!!)
                 }
             }
 
@@ -156,11 +158,14 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
                     positiveButton("Send") {
                         send_coins_send_btn.isEnabled = true
                         val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG)
-                        if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
+                        try {
+                            GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
                             finish()
-                        } else {
-                            view.longSnackbar("IBAN payment failed")
                         }
+                        catch (exception: RuntimeException) {
+                            view.longSnackbar(exception.message!!)
+                        }
+
                     }
 
                     negativeButton("Cancel") {}
