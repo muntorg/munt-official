@@ -380,6 +380,13 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransa
                         bool* pfMissingInputs, std::list<CTransactionRef>* plTxnReplaced = NULL,
                         bool fOverrideMempoolLimit=false, const CAmount nAbsurdFee=0);
 
+/**
+ * In pure partial sync expire transactions that stay in the memorypool too long.
+ * It's for example possible that created transaction pass local spv validation but are
+ * rejected by the full validation.
+ */
+int ExpireMempoolForPartialSync(const CBlockIndex* tip);
+
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);
 
