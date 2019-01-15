@@ -155,7 +155,6 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
     if (pindex->pprev == lastProcessed) {
         LogPrint(BCLog::WALLET, "SPV processing block %d\n", pindex->nHeight);
 
-        // TODO handle mempool effects
 
         std::vector<CTransactionRef> vtxConflicted; // dummy for now
         wallet.BlockConnected(block, pindex, vtxConflicted);

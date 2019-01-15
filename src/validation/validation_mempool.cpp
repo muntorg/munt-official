@@ -734,8 +734,14 @@ int ExpireMempoolForPartialSync(const CBlockIndex* tip)
     }
 
     // if enough blocks passed expire from mempool
-    if (numBlocks >= PARTIALSYNC_MEMPOOL_BLOCKS)
-        return mempool.Expire(expireTime);
+    if (numBlocks >= PARTIALSYNC_MEMPOOL_BLOCKS) {
+        std::vector<uint256> removed;
+        int numExpired = mempool.Expire(expireTime, &removed);
+        for (const auto& txHash: removed) {
+            GetMainSignals().TransactionDeletedFromMempool(txHash, MemPoolRemovalReason::EXPIRY);
+        }
+        return numExpired;
+    }
     else
         return 0;
 }

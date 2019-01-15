@@ -1292,6 +1292,19 @@ void CWallet::TransactionAddedToMempool(const CTransactionRef& ptx) {
     SyncTransaction(ptx);
 }
 
+void CWallet::TransactionDeletedFromMempool(const uint256& hash, MemPoolRemovalReason reason)
+{
+    LOCK2(cs_main, cs_wallet);
+
+    if (!isFullSyncMode() && IsPartialSyncActive() && MemPoolRemovalReason::EXPIRY == reason) {
+        const auto& it = mapWallet.find(hash);
+        if (it != mapWallet.end()) {
+            if (TransactionCanBeAbandoned(hash))
+                AbandonTransaction(hash);
+        }
+    }
+}
+
 void CWallet::BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) {
     LOCK2(cs_main, cs_wallet);
     // TODO: Temporarily ensure that mempool removals are notified before
@@ -1386,7 +1399,7 @@ bool CWalletTx::RelayWalletTransaction(CConnman* connman)
                 CInv inv(MSG_TX, GetHash());
                 connman->ForEachNode([&inv](CNode* pnode)
                 {
-                    pnode->PushInventory(inv);
+                    // pnode->PushInventory(inv); REMARK
                 });
                 return true;
             }
