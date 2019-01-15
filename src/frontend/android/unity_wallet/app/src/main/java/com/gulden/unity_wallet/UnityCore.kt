@@ -26,6 +26,7 @@ class UnityCore {
         fun createNewWallet(): Boolean { return false }
         fun haveExistingWallet(): Boolean { return false }
         fun incomingTransaction(transaction: TransactionRecord): Boolean { return false }
+        fun updatedTransaction(transaction: TransactionRecord): Boolean { return false }
     }
 
     companion object {
@@ -137,6 +138,15 @@ class UnityCore {
             observersLock.withLock {
                 observers.forEach {
                     it.incomingTransaction(newTransaction)
+                }
+            }
+            return true
+        }
+
+        override fun notifyUpdatedTransaction(transaction: TransactionRecord): Boolean {
+            observersLock.withLock {
+                observers.forEach {
+                    it.updatedTransaction(transaction)
                 }
             }
             return true

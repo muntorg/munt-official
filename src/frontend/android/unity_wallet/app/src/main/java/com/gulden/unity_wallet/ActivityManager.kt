@@ -16,12 +16,15 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionType
 import org.jetbrains.anko.runOnUiThread
+
+private val TAG = "activity-manager"
 
 class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -92,6 +95,13 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
             }
         }
 
+        return true
+    }
+
+    override fun updatedTransaction(transaction: TransactionRecord): Boolean {
+        runOnUiThread {
+            Log.i(TAG, "updatedTransaction: " + transaction.toString())
+        }
         return true
     }
 
