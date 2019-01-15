@@ -933,7 +933,7 @@ void CTxMemPool::RemoveStaged(setEntries &stage, bool updateDescendants, MemPool
     }
 }
 
-int CTxMemPool::Expire(int64_t time) {
+int CTxMemPool::Expire(int64_t time, std::vector<uint256>* removed) {
     LOCK(cs);
     indexed_transaction_set::index<entry_time>::type::iterator it = mapTx.get<entry_time>().begin();
     setEntries toremove;
@@ -941,11 +941,21 @@ int CTxMemPool::Expire(int64_t time) {
         toremove.insert(mapTx.project<0>(it));
         it++;
     }
+
     setEntries stage;
     for(txiter removeit : toremove) {
         CalculateDescendants(removeit, stage);
     }
+
+    // Collect transaction hashes for mempool entries that will be removed.
+    if (removed != nullptr) {
+        for (txiter it: stage) {
+            removed->push_back(it->GetTx().GetHash());
+        }
+    }
+
     RemoveStaged(stage, false, MemPoolRemovalReason::EXPIRY);
+
     return stage.size();
 }
 

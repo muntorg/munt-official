@@ -602,8 +602,11 @@ public:
       */
     void TrimToSize(size_t sizelimit, std::vector<COutPoint>* pvNoSpendsRemaining=NULL);
 
-    /** Expire all transaction (and their dependencies) in the mempool older than time. Return the number of removed transactions. */
-    int Expire(int64_t time);
+    /** Expire all transaction (and their dependencies) in the mempool older than time.
+     * Return the number of removed transactions and optiallay their hashes.
+     * Note removed hashes is not cleared up front.
+     */
+    int Expire(int64_t time, std::vector<uint256>* removed = nullptr);
 
     /** Returns false if the transaction is in the mempool and not within the chain limit specified. */
     bool TransactionWithinChainLimit(const uint256& txid, size_t chainLimit) const;
