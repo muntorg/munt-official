@@ -149,6 +149,7 @@ gulden_unified_frontend = interface +j +o {
     notifyUnifiedProgress(progress : f32);
     notifyBalanceChange(new_balance : balance_record): bool;
     notifyNewTransaction(new_transaction : transaction_record): bool;
+    notifyUpdatedTransaction(transaction : transaction_record): bool;
     notifyInitWithExistingWallet();
     notifyInitWithoutExistingWallet();
     notifyShutdown(): bool;

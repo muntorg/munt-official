@@ -159,7 +159,7 @@ void handlePostInitMain()
                 if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
                 {
                     const CWalletTx& wtx = pwallet->mapWallet[hash];
-                    if (status == CT_NEW)
+                    if (status == CT_NEW || status == CT_UPDATED)
                     {
                         std::vector<TransactionRecord> walletTransactions;
                         calculateTransactionRecordsForWalletTransaction(wtx, walletTransactions);
@@ -168,7 +168,10 @@ void handlePostInitMain()
                             LogPrintf("unity: notify transaction changed [2] %s",hash.ToString().c_str());
                             if (signalHandler)
                             {
-                                signalHandler->notifyNewTransaction(tx);
+                                if (status == CT_NEW)
+                                    signalHandler->notifyNewTransaction(tx);
+                                else // status == CT_UPDATED
+                                    signalHandler->notifyUpdatedTransaction(tx);
                             }
                         }
                     }
