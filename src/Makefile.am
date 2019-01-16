@@ -513,79 +513,74 @@ if BUILD_GULDEN_LIBS_OBJC
 noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)
 
 libgulden_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(abs_top_builddir)/src/djinni_generated/cpp
-libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc -I$(abs_top_builddir)/src/djinni_generated/cpp $(DJINNI_OBJCXXFLAGS)
+libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(srcdir)/unity/djinni/cpp
+libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc  -I$(srcdir)/unity/djinni/cpp $(DJINNI_OBJCXXFLAGS)
 
 DJINNI_CPP_GEN = \
-  djinni_generated/cpp/address_record.hpp \
-  djinni_generated/cpp/balance_record.hpp \
-  djinni_generated/cpp/blockinfo_record.hpp \
-  djinni_generated/cpp/gulden_unified_backend.cpp \
-  djinni_generated/cpp/gulden_unified_backend.hpp \
-  djinni_generated/cpp/gulden_unified_frontend.hpp \
-  djinni_generated/cpp/gulden_monitor_listener.hpp \
-  djinni_generated/cpp/monitor_record.hpp \
-  djinni_generated/cpp/peer_record.hpp \
-  djinni_generated/cpp/qrcode_record.hpp \
-  djinni_generated/cpp/transaction_record.hpp \
-  djinni_generated/cpp/transaction_type.hpp \
-  djinni_generated/cpp/uri_recipient.hpp \
-  djinni_generated/cpp/uri_record.hpp
+  unity/djinni/cpp/address_record.hpp \
+  unity/djinni/cpp/balance_record.hpp \
+  unity/djinni/cpp/blockinfo_record.hpp \
+  unity/djinni/cpp/gulden_unified_backend.cpp \
+  unity/djinni/cpp/gulden_unified_backend.hpp \
+  unity/djinni/cpp/gulden_unified_frontend.hpp \
+  unity/djinni/cpp/gulden_monitor_listener.hpp \
+  unity/djinni/cpp/monitor_record.hpp \
+  unity/djinni/cpp/peer_record.hpp \
+  unity/djinni/cpp/qrcode_record.hpp \
+  unity/djinni/cpp/transaction_record.hpp \
+  unity/djinni/cpp/transaction_type.hpp \
+  unity/djinni/cpp/uri_recipient.hpp \
+  unity/djinni/cpp/uri_record.hpp
 
 DJINNI_OBJC_GEN = \
-  djinni_generated/objc/DBAddressRecord+Private.h \
-  djinni_generated/objc/DBAddressRecord+Private.mm \
-  djinni_generated/objc/DBAddressRecord.h \
-  djinni_generated/objc/DBAddressRecord.mm \
-  djinni_generated/objc/DBBalanceRecord+Private.h \
-  djinni_generated/objc/DBBalanceRecord+Private.mm \
-  djinni_generated/objc/DBBalanceRecord.h \
-  djinni_generated/objc/DBBalanceRecord.mm \
-  djinni_generated/objc/DBBlockinfoRecord+Private.h \
-  djinni_generated/objc/DBBlockinfoRecord+Private.mm \
-  djinni_generated/objc/DBBlockinfoRecord.h \
-  djinni_generated/objc/DBBlockinfoRecord.mm \
-  djinni_generated/objc/DBGuldenUnifiedBackend+Private.h \
-  djinni_generated/objc/DBGuldenUnifiedBackend+Private.mm \
-  djinni_generated/objc/DBGuldenUnifiedBackend.h \
-  djinni_generated/objc/DBGuldenUnifiedBackend.mm \
-  djinni_generated/objc/DBGuldenUnifiedFrontend+Private.h \
-  djinni_generated/objc/DBGuldenUnifiedFrontend+Private.mm \
-  djinni_generated/objc/DBGuldenUnifiedFrontend.h \
-  djinni_generated/objc/DBGuldenMonitorListener+Private.h \
-  djinni_generated/objc/DBGuldenMonitorListener+Private.mm \
-  djinni_generated/objc/DBGuldenMonitorListener.h \
-  djinni_generated/objc/DBMonitorRecord+Private.h \
-  djinni_generated/objc/DBMonitorRecord+Private.mm \
-  djinni_generated/objc/DBMonitorRecord.h \
-  djinni_generated/objc/DBMonitorRecord.mm \
-  djinni_generated/objc/DBPeerRecord+Private.h \
-  djinni_generated/objc/DBPeerRecord+Private.mm \
-  djinni_generated/objc/DBPeerRecord.h \
-  djinni_generated/objc/DBPeerRecord.mm \
-  djinni_generated/objc/DBQrcodeRecord+Private.h \
-  djinni_generated/objc/DBQrcodeRecord+Private.mm \
-  djinni_generated/objc/DBQrcodeRecord.h \
-  djinni_generated/objc/DBQrcodeRecord.mm \
-  djinni_generated/objc/DBTransactionRecord+Private.h \
-  djinni_generated/objc/DBTransactionRecord+Private.mm \
-  djinni_generated/objc/DBTransactionRecord.h \
-  djinni_generated/objc/DBTransactionRecord.mm \
-  djinni_generated/objc/DBTransactionType+Private.h \
-  djinni_generated/objc/DBTransactionType.h \
-  djinni_generated/objc/DBUriRecipient+Private.h \
-  djinni_generated/objc/DBUriRecipient+Private.mm \
-  djinni_generated/objc/DBUriRecipient.h \
-  djinni_generated/objc/DBUriRecipient.mm \
-  djinni_generated/objc/DBUriRecord+Private.h \
-  djinni_generated/objc/DBUriRecord+Private.mm \
-  djinni_generated/objc/DBUriRecord.h \
-  djinni_generated/objc/DBUriRecord.mm
-
-generate_djinni.stamp: unity/libunity.djinni
-	@echo Generating Djinni source
-	$(DJINNI_RUN) --objc-type-prefix DB --objc-out djinni_generated/objc --objcpp-out djinni_generated/objc --cpp-out djinni_generated/cpp --idl $(srcdir)/unity/libunity.djinni
-	touch $@
+  unity/djinni/objc/DBAddressRecord+Private.h \
+  unity/djinni/objc/DBAddressRecord+Private.mm \
+  unity/djinni/objc/DBAddressRecord.h \
+  unity/djinni/objc/DBAddressRecord.mm \
+  unity/djinni/objc/DBBalanceRecord+Private.h \
+  unity/djinni/objc/DBBalanceRecord+Private.mm \
+  unity/djinni/objc/DBBalanceRecord.h \
+  unity/djinni/objc/DBBalanceRecord.mm \
+  unity/djinni/objc/DBBlockinfoRecord+Private.h \
+  unity/djinni/objc/DBBlockinfoRecord+Private.mm \
+  unity/djinni/objc/DBBlockinfoRecord.h \
+  unity/djinni/objc/DBBlockinfoRecord.mm \
+  unity/djinni/objc/DBGuldenUnifiedBackend+Private.h \
+  unity/djinni/objc/DBGuldenUnifiedBackend+Private.mm \
+  unity/djinni/objc/DBGuldenUnifiedBackend.h \
+  unity/djinni/objc/DBGuldenUnifiedBackend.mm \
+  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.h \
+  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.mm \
+  unity/djinni/objc/DBGuldenUnifiedFrontend.h \
+  unity/djinni/objc/DBGuldenMonitorListener+Private.h \
+  unity/djinni/objc/DBGuldenMonitorListener+Private.mm \
+  unity/djinni/objc/DBGuldenMonitorListener.h \
+  unity/djinni/objc/DBMonitorRecord+Private.h \
+  unity/djinni/objc/DBMonitorRecord+Private.mm \
+  unity/djinni/objc/DBMonitorRecord.h \
+  unity/djinni/objc/DBMonitorRecord.mm \
+  unity/djinni/objc/DBPeerRecord+Private.h \
+  unity/djinni/objc/DBPeerRecord+Private.mm \
+  unity/djinni/objc/DBPeerRecord.h \
+  unity/djinni/objc/DBPeerRecord.mm \
+  unity/djinni/objc/DBQrcodeRecord+Private.h \
+  unity/djinni/objc/DBQrcodeRecord+Private.mm \
+  unity/djinni/objc/DBQrcodeRecord.h \
+  unity/djinni/objc/DBQrcodeRecord.mm \
+  unity/djinni/objc/DBTransactionRecord+Private.h \
+  unity/djinni/objc/DBTransactionRecord+Private.mm \
+  unity/djinni/objc/DBTransactionRecord.h \
+  unity/djinni/objc/DBTransactionRecord.mm \
+  unity/djinni/objc/DBTransactionType+Private.h \
+  unity/djinni/objc/DBTransactionType.h \
+  unity/djinni/objc/DBUriRecipient+Private.h \
+  unity/djinni/objc/DBUriRecipient+Private.mm \
+  unity/djinni/objc/DBUriRecipient.h \
+  unity/djinni/objc/DBUriRecipient.mm \
+  unity/djinni/objc/DBUriRecord+Private.h \
+  unity/djinni/objc/DBUriRecord+Private.mm \
+  unity/djinni/objc/DBUriRecord.h \
+  unity/djinni/objc/DBUriRecord.mm
 
 libgulden_unity_objc_a_SOURCES = \
   unity/libinit.cpp \
@@ -603,8 +598,6 @@ libgulden_unity_objc_a_SOURCES = \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_OBJC_GEN) \
   $(GULDEN_CORE_H)
-
-$(libgulden_unity_objc_a_SOURCES): generate_djinni.stamp
 
 $(LIBGULDEN_UNITY_OBJC): $(LIBSECP256K1) $(LIBLEVELDB) $(LIBMEMENV)
 
@@ -727,8 +720,6 @@ clean-local:
 	-rm -f leveldb/*/*.gcda leveldb/*/*.gcno leveldb/helpers/memenv/*.gcda leveldb/helpers/memenv/*.gcno
 	-rm -f config.h
 	-rm -rf test/__pycache__
-	-rm -f generate_djinni.stamp
-	-rm -rf djinni_generated
 
 .rc.o:
 	@test -f $(WINDRES)

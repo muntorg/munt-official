@@ -135,7 +135,6 @@ foo2
 # In tree files auto generated and/or downloaded for the Android build
 /developer-tools/android-ndk-gulden/
 /djinni/
-/src/unity/djinni/
 
 xcuserdata
 
