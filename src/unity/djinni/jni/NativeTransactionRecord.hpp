@@ -25,12 +25,13 @@ private:
     friend ::djinni::JniClass<NativeTransactionRecord>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/TransactionRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Lcom/gulden/jniunifiedbackend/TransactionType;JLjava/lang/String;Ljava/lang/String;J)V") };
-    const jfieldID field_mType { ::djinni::jniGetFieldID(clazz.get(), "mType", "Lcom/gulden/jniunifiedbackend/TransactionType;") };
-    const jfieldID field_mAmount { ::djinni::jniGetFieldID(clazz.get(), "mAmount", "J") };
-    const jfieldID field_mAddress { ::djinni::jniGetFieldID(clazz.get(), "mAddress", "Ljava/lang/String;") };
-    const jfieldID field_mLabel { ::djinni::jniGetFieldID(clazz.get(), "mLabel", "Ljava/lang/String;") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;JJJLjava/util/ArrayList;Ljava/util/ArrayList;)V") };
+    const jfieldID field_mTxHash { ::djinni::jniGetFieldID(clazz.get(), "mTxHash", "Ljava/lang/String;") };
     const jfieldID field_mTimestamp { ::djinni::jniGetFieldID(clazz.get(), "mTimestamp", "J") };
+    const jfieldID field_mAmount { ::djinni::jniGetFieldID(clazz.get(), "mAmount", "J") };
+    const jfieldID field_mFee { ::djinni::jniGetFieldID(clazz.get(), "mFee", "J") };
+    const jfieldID field_mReceivedOutputs { ::djinni::jniGetFieldID(clazz.get(), "mReceivedOutputs", "Ljava/util/ArrayList;") };
+    const jfieldID field_mSentOutputs { ::djinni::jniGetFieldID(clazz.get(), "mSentOutputs", "Ljava/util/ArrayList;") };
 };
 
 }  // namespace djinni_generated

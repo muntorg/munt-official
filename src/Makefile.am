@@ -492,6 +492,8 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeUriRecipient.cpp \
   unity/djinni/jni/NativeTransactionRecord.hpp \
   unity/djinni/jni/NativeTransactionRecord.cpp \
+  unity/djinni/jni/NativeOutputRecord.hpp \
+  unity/djinni/jni/NativeOutputRecord.cpp \
   unity/djinni/cpp/gulden_unified_backend.hpp \
   unity/djinni/cpp/gulden_unified_backend.cpp \
   unity/djinni/cpp/gulden_unified_frontend.hpp \
@@ -528,7 +530,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/peer_record.hpp \
   unity/djinni/cpp/qrcode_record.hpp \
   unity/djinni/cpp/transaction_record.hpp \
-  unity/djinni/cpp/transaction_type.hpp \
+  unity/djinni/cpp/output_record.hpp \
   unity/djinni/cpp/uri_recipient.hpp \
   unity/djinni/cpp/uri_record.hpp
 
@@ -559,6 +561,10 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBMonitorRecord+Private.mm \
   unity/djinni/objc/DBMonitorRecord.h \
   unity/djinni/objc/DBMonitorRecord.mm \
+  unity/djinni/objc/DBOutputRecord+Private.h \
+  unity/djinni/objc/DBOutputRecord+Private.mm \
+  unity/djinni/objc/DBOutputRecord.h \
+  unity/djinni/objc/DBOutputRecord.mm \
   unity/djinni/objc/DBPeerRecord+Private.h \
   unity/djinni/objc/DBPeerRecord+Private.mm \
   unity/djinni/objc/DBPeerRecord.h \
@@ -571,8 +577,6 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBTransactionRecord+Private.mm \
   unity/djinni/objc/DBTransactionRecord.h \
   unity/djinni/objc/DBTransactionRecord.mm \
-  unity/djinni/objc/DBTransactionType+Private.h \
-  unity/djinni/objc/DBTransactionType.h \
   unity/djinni/objc/DBUriRecipient+Private.h \
   unity/djinni/objc/DBUriRecipient+Private.mm \
   unity/djinni/objc/DBUriRecipient.h \

@@ -3,27 +3,31 @@
 
 #pragma once
 
-#include "transaction_type.hpp"
+#include "output_record.hpp"
 #include <cstdint>
 #include <string>
 #include <utility>
+#include <vector>
 
 struct TransactionRecord final {
-    TransactionType type;
-    int64_t amount;
-    std::string address;
-    std::string label;
+    std::string txHash;
     int64_t timestamp;
+    int64_t amount;
+    int64_t fee;
+    std::vector<OutputRecord> receivedOutputs;
+    std::vector<OutputRecord> sentOutputs;
 
-    TransactionRecord(TransactionType type_,
+    TransactionRecord(std::string txHash_,
+                      int64_t timestamp_,
                       int64_t amount_,
-                      std::string address_,
-                      std::string label_,
-                      int64_t timestamp_)
-    : type(std::move(type_))
-    , amount(std::move(amount_))
-    , address(std::move(address_))
-    , label(std::move(label_))
+                      int64_t fee_,
+                      std::vector<OutputRecord> receivedOutputs_,
+                      std::vector<OutputRecord> sentOutputs_)
+    : txHash(std::move(txHash_))
     , timestamp(std::move(timestamp_))
+    , amount(std::move(amount_))
+    , fee(std::move(fee_))
+    , receivedOutputs(std::move(receivedOutputs_))
+    , sentOutputs(std::move(sentOutputs_))
     {}
 };

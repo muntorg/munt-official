@@ -25,7 +25,7 @@ FOUNDATION_EXPORT const unsigned char gulden_staticVersionString[];
 #import "DBPeerRecord.h"
 #import "DBQrcodeRecord.h"
 #import "DBTransactionRecord.h"
-#import "DBTransactionType.h"
+#import "DBOutputRecord.h"
 #import "DBUriRecipient.h"
 #import "DBUriRecord.h"
 #import "DBGuldenMonitorListener.h"

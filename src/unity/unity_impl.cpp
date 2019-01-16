@@ -30,7 +30,7 @@
 #include "uri_record.hpp"
 #include "uri_recipient.hpp"
 #include "transaction_record.hpp"
-#include "transaction_type.hpp"
+#include "output_record.hpp"
 #include "address_record.hpp"
 #include "peer_record.hpp"
 #include "blockinfo_record.hpp"
@@ -50,8 +50,11 @@ std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 CCriticalSection cs_monitoringListeners;
 std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
 
-void calculateTransactionRecordsForWalletTransaction(const CWalletTx& wtx, std::vector<TransactionRecord>& transactionRecords)
+TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx& wtx)
 {
+    std::vector<OutputRecord> sentOutputs;
+    std::vector<OutputRecord> receivedOutputs;
+
     std::list<COutputEntry> listReceived;
     std::list<COutputEntry> listSent;
     CAmount nFee;
@@ -69,7 +72,7 @@ void calculateTransactionRecordsForWalletTransaction(const CWalletTx& wtx, std::
             if (pactiveWallet->mapAddressBook.count(CGuldenAddress(s.destination).ToString())) {
                 label = pactiveWallet->mapAddressBook[CGuldenAddress(s.destination).ToString()].name;
             }
-            transactionRecords.push_back(TransactionRecord(TransactionType::SEND, s.amount, address, label, wtx.nTimeSmart));
+            sentOutputs.push_back(OutputRecord(s.amount, address, label));
         }
     }
     if (listReceived.size() > 0)
@@ -84,9 +87,13 @@ void calculateTransactionRecordsForWalletTransaction(const CWalletTx& wtx, std::
             if (pactiveWallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString())) {
                 label = pactiveWallet->mapAddressBook[CGuldenAddress(r.destination).ToString()].name;
             }
-            transactionRecords.push_back(TransactionRecord(TransactionType::RECEIVE, r.amount, address, label, wtx.nTimeSmart));
+            receivedOutputs.push_back(OutputRecord(r.amount, address, label));
         }
     }
+
+    return TransactionRecord(wtx.GetHash().ToString(), wtx.nTimeSmart,
+                             wtx.GetCredit(ISMINE_SPENDABLE) - wtx.GetDebit(ISMINE_SPENDABLE),
+                             nFee, receivedOutputs, sentOutputs);
 }
 
 static void notifyBalanceChanged(CWallet* pwallet)
@@ -161,18 +168,14 @@ void handlePostInitMain()
                     const CWalletTx& wtx = pwallet->mapWallet[hash];
                     if (status == CT_NEW || status == CT_UPDATED)
                     {
-                        std::vector<TransactionRecord> walletTransactions;
-                        calculateTransactionRecordsForWalletTransaction(wtx, walletTransactions);
-                        for (const auto& tx: walletTransactions)
+                        LogPrintf("unity: notify transaction changed [2] %s",hash.ToString().c_str());
+                        if (signalHandler)
                         {
-                            LogPrintf("unity: notify transaction changed [2] %s",hash.ToString().c_str());
-                            if (signalHandler)
-                            {
-                                if (status == CT_NEW)
-                                    signalHandler->notifyNewTransaction(tx);
-                                else // status == CT_UPDATED
-                                    signalHandler->notifyUpdatedTransaction(tx);
-                            }
+                            TransactionRecord walletTransactions = calculateTransactionRecordForWalletTransaction(wtx);
+                            if (status == CT_NEW)
+                                signalHandler->notifyNewTransaction(walletTransactions);
+                            else // status == CT_UPDATED
+                                signalHandler->notifyUpdatedTransaction(walletTransactions);
                         }
                     }
                     else if (status == CT_DELETED)
@@ -469,7 +472,8 @@ std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
 
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
     {
-        calculateTransactionRecordsForWalletTransaction(wtx, ret);
+        TransactionRecord tx = calculateTransactionRecordForWalletTransaction(wtx);
+        ret.push_back(tx);
     }
     std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timestamp > y.timestamp); });
     return ret;

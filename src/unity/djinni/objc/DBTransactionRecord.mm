@@ -6,38 +6,42 @@
 
 @implementation DBTransactionRecord
 
-- (nonnull instancetype)initWithType:(DBTransactionType)type
-                              amount:(int64_t)amount
-                             address:(nonnull NSString *)address
-                               label:(nonnull NSString *)label
-                           timestamp:(int64_t)timestamp
+- (nonnull instancetype)initWithTxHash:(nonnull NSString *)txHash
+                             timestamp:(int64_t)timestamp
+                                amount:(int64_t)amount
+                                   fee:(int64_t)fee
+                       receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
+                           sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs
 {
     if (self = [super init]) {
-        _type = type;
-        _amount = amount;
-        _address = [address copy];
-        _label = [label copy];
+        _txHash = [txHash copy];
         _timestamp = timestamp;
+        _amount = amount;
+        _fee = fee;
+        _receivedOutputs = [receivedOutputs copy];
+        _sentOutputs = [sentOutputs copy];
     }
     return self;
 }
 
-+ (nonnull instancetype)transactionRecordWithType:(DBTransactionType)type
-                                           amount:(int64_t)amount
-                                          address:(nonnull NSString *)address
-                                            label:(nonnull NSString *)label
-                                        timestamp:(int64_t)timestamp
++ (nonnull instancetype)transactionRecordWithTxHash:(nonnull NSString *)txHash
+                                          timestamp:(int64_t)timestamp
+                                             amount:(int64_t)amount
+                                                fee:(int64_t)fee
+                                    receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
+                                        sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs
 {
-    return [[self alloc] initWithType:type
-                               amount:amount
-                              address:address
-                                label:label
-                            timestamp:timestamp];
+    return [[self alloc] initWithTxHash:txHash
+                              timestamp:timestamp
+                                 amount:amount
+                                    fee:fee
+                        receivedOutputs:receivedOutputs
+                            sentOutputs:sentOutputs];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p type:%@ amount:%@ address:%@ label:%@ timestamp:%@>", self.class, (void *)self, @(self.type), @(self.amount), self.address, self.label, @(self.timestamp)];
+    return [NSString stringWithFormat:@"<%@ %p txHash:%@ timestamp:%@ amount:%@ fee:%@ receivedOutputs:%@ sentOutputs:%@>", self.class, (void *)self, self.txHash, @(self.timestamp), @(self.amount), @(self.fee), self.receivedOutputs, self.sentOutputs];
 }
 
 @end

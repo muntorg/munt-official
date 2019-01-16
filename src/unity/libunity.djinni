@@ -34,17 +34,19 @@ uri_recipient = record {
     amount : string;
 } deriving(parcelable)
 
-transaction_type = enum {
-    send;
-    receive;
-}
-
 transaction_record = record {
-    type : transaction_type;
+    txHash: string;
+    timestamp : i64;
+    amount : i64;
+    fee : i64;
+    receivedOutputs : list<output_record>;
+    sentOutputs : list<output_record>;
+} deriving(parcelable)
+
+output_record = record {
     amount : i64;
     address : string;
     label : string;
-    timestamp : i64;
 } deriving(parcelable)
 
 address_record = record {
