@@ -111,13 +111,24 @@ void WarningOverlay::showHide(bool hide, bool userRequested)
 
     setGeometry(0, hide ? 0 : height(), width(), height());
 
+    int effectDuration = 3500;
+
     QPropertyAnimation* animation = new QPropertyAnimation(this, "pos");
-    animation->setDuration(3500);
+    animation->setDuration(effectDuration);
     animation->setStartValue(QPoint(0, hide ? 0 : this->height()));
     animation->setEndValue(QPoint(0, hide ? this->height() : 0));
     animation->setEasingCurve(QEasingCurve::OutQuad);
     animation->start(QAbstractAnimation::DeleteWhenStopped);
     layerIsVisible = !hide;
+
+    if (hide)
+    {
+         QTimer::singleShot(effectDuration, [this]{ setVisible(false); });
+    }
+    else
+    {
+        setVisible(true);
+    }
 }
 
 void WarningOverlay::closeClicked()

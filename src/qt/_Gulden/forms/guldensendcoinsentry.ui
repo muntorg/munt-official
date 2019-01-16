@@ -39,7 +39,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,1,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,1">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -58,22 +58,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="ClickableLabel" name="sendAll">
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="text">
-        <string>All</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="indent">
-        <number>0</number>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
@@ -503,11 +487,6 @@
    <extends>QLineEdit</extends>
    <header>amountfield.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ClickableLabel</class>
-   <extends>QLabel</extends>
-   <header location="global">qt/_Gulden/clickablelabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>

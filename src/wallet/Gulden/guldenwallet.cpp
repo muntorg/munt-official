@@ -281,7 +281,7 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
     {
         LOCK(cs_wallet);
         const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.getHash());
-        if (prev)
+        if (prev && prev->tx->vout.size() != 0)
         {
             if (txin.prevout.n < prev->tx->vout.size())
                 return ::IsMine(keystore, prev->tx->vout[txin.prevout.n]);

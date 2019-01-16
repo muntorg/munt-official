@@ -92,7 +92,7 @@ CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinCo
     if (cachedBalances.availableExcludingLocked != -1)
         return cachedBalances.availableExcludingLocked;
     else if (wallet)
-        return wallet->GetBalance(forAccount, true, false);
+        return wallet->GetBalance(forAccount, true, true, false);
     else
         return 0;
 }

@@ -37,7 +37,7 @@ public:
 
     // parent should be QApplication object
     NocksRequest(QObject* parent);
-    ~NocksRequest();
+    virtual ~NocksRequest();
 
     /** Start request.
         Connect to the requestProcessed() signal BEFORE starting the request. Though the request

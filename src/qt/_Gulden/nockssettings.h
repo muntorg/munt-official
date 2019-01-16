@@ -28,7 +28,7 @@ class NocksSettings : public QObject
 public:
     // parent should be QApplication object
     NocksSettings(QObject* parent);
-    ~NocksSettings();
+    virtual ~NocksSettings();
 
     // OptionsModel is used for getting proxy settings and display unit
     void setOptionsModel(OptionsModel *optionsModel);

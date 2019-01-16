@@ -304,12 +304,25 @@ GuldenAmountField::GuldenAmountField(QWidget *parent) :
     primaryAmountDisplay->setButtonSymbols(QAbstractSpinBox::NoButtons);
     layout->addWidget(primaryAmountDisplay);
 
+    {
+        maxButton = new ClickableLabel(this);
+        maxButton->setObjectName("maxButton");
+        maxButton->setText(tr("Max"));
+        maxButton->setCursor(Qt::PointingHandCursor);
+        maxButton->setContentsMargins(0,0,0,0);
+        maxButton->setIndent(0);
+        layout->addWidget(maxButton);
+        connect(maxButton, SIGNAL(clicked()), this, SIGNAL(maxButtonClicked()));
+    }
+
     primaryAmountName = new QLabel(this);
     primaryAmountName->setText(tr("Gulden"));
+    primaryAmountName->setContentsMargins(16,0,0,0);
+    primaryAmountName->setIndent(0);
     layout->addWidget(primaryAmountName);
 
     amountSeperator = new ClickableLabel(this);
-    amountSeperator->setTextFormat( Qt::RichText );
+    amountSeperator->setTextFormat(Qt::RichText);
     amountSeperator->setText(GUIUtil::fontAwesomeRegular("\uf0EC"));
     amountSeperator->setObjectName("amountSeperator");
     amountSeperator->setCursor(Qt::PointingHandCursor);
@@ -338,6 +351,7 @@ GuldenAmountField::GuldenAmountField(QWidget *parent) :
 
     layout->addStretch(1);
     layout->setContentsMargins(0,0,0,0);
+    layout->setSpacing(0);
 
     setLayout(layout);
 
@@ -447,6 +461,11 @@ void GuldenAmountField::setOptionsModel(OptionsModel* optionsModel_)
         amountLocal = ticker->convertGuldenToForex(amountGulden, CurrencyCode(Currency::Local));
         updateAuxilaryFromData();
     }
+}
+
+void GuldenAmountField::setDisplayMaxButton(bool shouldDisplay)
+{
+    maxButton->setVisible(shouldDisplay);
 }
 
 QWidget *GuldenAmountField::setupTabChain(QWidget *prev)

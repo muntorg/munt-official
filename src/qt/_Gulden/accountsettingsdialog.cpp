@@ -217,7 +217,7 @@ void AccountSettingsDialog::deleteAccount()
         CAmount balance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
         if (activeAccount->IsPoW2Witness() && activeAccount->IsFixedKeyPool())
         {
-            balance = pactiveWallet->GetBalance(activeAccount, false, true); 
+            balance = pactiveWallet->GetBalance(activeAccount, true, false, true); 
         }
         if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT)
         {

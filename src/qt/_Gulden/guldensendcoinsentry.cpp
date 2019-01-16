@@ -76,10 +76,6 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     ui->addressBookTabTable->setContentsMargins(0, 0, 0, 0);
     ui->myAccountsTabTable->setContentsMargins(0, 0, 0, 0);
 
-    ui->sendAll->setContentsMargins(0, 0, 0, 0);
-    ui->sendAll->setIndent(0);
-    ui->sendAll->setCursor(Qt::PointingHandCursor);
-
     ui->pow2LockFundsSlider->setMinimum(30);
     ui->pow2LockFundsSlider->setMaximum(365*3);
     ui->pow2LockFundsSlider->setValue(30);
@@ -98,7 +94,7 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SLOT(payAmountChanged()));
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SIGNAL(valueChanged()));
 
-    connect(ui->sendAll, SIGNAL(clicked()), this, SLOT(sendAllClicked()));
+    connect(ui->payAmount, SIGNAL(maxButtonClicked()), this, SLOT(sendAllClicked()));
 
     ui->receivingAddress->setProperty("valid", true);
     //ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
@@ -458,7 +454,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     //fixme: (Post-2.1) - give user a choice here.
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true);
+    CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), true, false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true);
     if (recipient.amount >= balanceToCheck)
     {
         if (showWarningDialogs)
@@ -487,6 +483,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
         // Add a small buffer to give us time to enter the blockchain
         if (nLockPeriodInBlocks == 30*576)
             nLockPeriodInBlocks += 50;
+
         recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
 
         CReserveKeyOrScript keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
@@ -1015,7 +1012,7 @@ void GuldenSendCoinsEntry::nocksTimeout()
 void GuldenSendCoinsEntry::sendAllClicked()
 {
     //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
-    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
+    ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), true, false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
     payInfoUpdateRequired();
     //Update witness value for amount.
     witnessSliderValueChanged(ui->pow2LockFundsSlider->value());

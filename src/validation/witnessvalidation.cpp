@@ -710,6 +710,31 @@ std::map<std::string, std::string> staticFundingAddressLookupTable = {
 {"2pHrY2GMgmPz2fJThFGeWhyXUjUQWJcGE2S3DtUy3SkNNh3FowsmP2R1q54AaW", "GZ5FVkded2r5BmefZfai16Zd9sLApNnyb4"},
 };
 
+extern bool haveStaticFundingAddress(std::string sLookupAddress, uint64_t nHeight)
+{
+    if(IsArgSet("-testnet"))
+    {
+        if (nHeight > 96400)
+        {
+            return true;
+        }
+        return false;
+    }
+    if (nHeight > 881000 && sLookupAddress == "2pFYf2EoQgRKXdb4fJCePcSdFRU3kD8cpMCiQszJzbnsedS4iBWw1Q4GuoG6Ac")
+        return true;
+    return staticFundingAddressLookupTable.count(sLookupAddress);
+}
+
+extern std::string getStaticFundingAddress(std::string sLookupAddress, uint64_t nHeight)
+{
+    if(IsArgSet("-testnet") && nHeight > 96400)
+    {
+        return "TSUjGh249nDKhn7huWwxofZrMGn9k9Rzo1";
+    }
+    if (nHeight > 881000 && sLookupAddress == "2pFYf2EoQgRKXdb4fJCePcSdFRU3kD8cpMCiQszJzbnsedS4iBWw1Q4GuoG6Ac")
+        return "GgyC2SmboGT9AW5uoEeozQYJDzBKFhSoYQ";
+    return staticFundingAddressLookupTable[sLookupAddress];
+}
 
 CAmount GetBlockSubsidyWitness(int nHeight)
 {
@@ -900,8 +925,6 @@ bool ForceActivateChainWithBlockAsTip(CBlockIndex* pActivateIndex, std::shared_p
 
 uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight)
 {
-    DO_BENCHMARK("WIT: expectedWitnessBlockPeriod", BCLog::BENCH|BCLog::WITNESS);
-
     if (nWeight == 0 || networkTotalWeight == 0)
         return 0;
 
@@ -956,13 +979,12 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     // NB!!! - It is important that we don't flush either of these before destructing, we want to throw the result away.
     CCoinsViewCache viewNew(viewOverride?viewOverride:pcoinsTip);
 
-    if (pPreviousIndexChain_->nHeight < GetPow2ValidationCloneHeight())
+    if (pPreviousIndexChain_->nHeight < GetPhase2ActivationHeight())
         return true;
 
-    // fixme: (2.1) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     CBlockIndex* pPreviousIndexChain = nullptr;
-    CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(), pPreviousIndexChain_, pPreviousIndexChain);
+    CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(chain, pPreviousIndexChain_, 2), pPreviousIndexChain_, pPreviousIndexChain);
     CValidationState state;
     assert(pPreviousIndexChain);
 
@@ -1059,7 +1081,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
         if (witnessInfo.witnessSelectionPoolFiltered.size() < 100)
         {
-            if(!IsArgSet("-testnet") && nBlockHeight > 788000)
+            if(!IsArgSet("-testnet") && nBlockHeight > 880000)
                 CAlert::Notify("Warning network is experiencing low levels of witnessing participants!", true, true);
 
 
@@ -1099,8 +1121,15 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    //fixme: (2.1) This should be using nTotalWeightEligibleRaw
-    witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightRaw / 100;
+    if ((!IsArgSet("-testnet") && nBlockHeight > 881000 ) || (IsArgSet("-testnet") && nBlockHeight > 96400 ))
+    {
+        witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightEligibleRaw / 100;
+    }
+    else
+    {
+        //fixme: (2.2) Original 2.0 behaviour, since patched to use nTotalWeightEligibleRaw - at phase 4 we can get rid of this backwards compatible code.
+        witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightRaw / 100;
+    }
     witnessInfo.nTotalWeightEligibleAdjusted = 0;
     for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
@@ -1110,7 +1139,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
         item.nCumulativeWeight = witnessInfo.nTotalWeightEligibleAdjusted;
     }
 
-    /** sha256 as random roulette spin/seed - NB! We deliritely use sha256 and -not- the normal PoW hash here as the normal PoW hash is biased towards certain number ranges by -design- (block target) so is not a good RNG... **/
+    /** sha256 as random roulette spin/seed - NB! We delibritely use sha256 and -not- the normal PoW hash here as the normal PoW hash is biased towards certain number ranges by -design- (block target) so is not a good RNG... **/
     arith_uint256 rouletteSelectionSeed = UintToArith256(blockHash);
 
     //fixme: (2.0.1) Update whitepaper.
@@ -1194,8 +1223,6 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
 // As we need to call this from within the witness algorithm from before nReducedTotalWeight is even known. 
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight)
 {
-    DO_BENCHMARK("WIT: witnessHasExpired", BCLog::BENCH|BCLog::WITNESS);
-
     uint64_t nExpectedWitnessPeriod = expectedWitnessBlockPeriod(nWitnessWeight, nNetworkTotalWitnessWeight);
     return ( nWitnessAge > gMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );
 }
@@ -1326,7 +1353,7 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     // We work on a clone of the chain to prevent modifying the actual chain.
     {
         CBlockIndex* pPreviousIndexChain = nullptr;
-        CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(), pindexPrev->pprev, pPreviousIndexChain);
+        CCloneChain tempChain(chain, GetPow2ValidationCloneHeight(chain, pindexPrev->pprev, 1), pindexPrev->pprev, pPreviousIndexChain);
         CValidationState state;
         CCoinsViewCache viewNew(&view);
         // Force the tip of the chain to the block that comes before the block we are examining.

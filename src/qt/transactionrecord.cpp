@@ -70,7 +70,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 continue;
 
             const CWalletTx* txPrev = wallet->GetWalletTx(txInRef.prevout.getHash());
-            if (!txPrev)
+            if (!txPrev || txPrev->tx->vout.size() == 0)
                 break;
 
             if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nWalletTxBlockHeight, nWalletTxBlockHeight))
@@ -133,7 +133,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             {
                                 CTxDestination getAddress;
                                 const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
-                                if (parent != NULL)
+                                if (parent && parent->tx->vout.size() != 0)
                                 {
                                     if (ExtractDestination(parent->tx->vout[inputs[0].prevout.n], getAddress))
                                     {
@@ -214,7 +214,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             if (mine)
                             {
                                 const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
-                                if (parent != NULL)
+                                if (parent && parent->tx->vout.size() != 0)
                                 {
                                     CTxDestination getAddress;
                                     if (ExtractDestination(parent->tx->vout[inputs[0].prevout.n], getAddress))
@@ -323,7 +323,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 if (mine)
                                 {
                                     const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
-                                    if (parent != NULL)
+                                    if (parent && parent->tx->vout.size() != 0)
                                     {
                                         subReceive.debit = parent->tx->vout[inputs[0].prevout.n].nValue;
                                     }
@@ -352,7 +352,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             {
                                 CTxDestination getAddress;
                                 const CWalletTx* parent = wallet->GetWalletTx(inputs[1].prevout.getHash());
-                                if (parent != NULL)
+                                if (parent && parent->tx->vout.size() != 0)
                                 {
                                     if (ExtractDestination(parent->tx->vout[inputs[1].prevout.n], getAddress))
                                     {
@@ -564,7 +564,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         }
 
                         const CWalletTx* parent = wallet->GetWalletTx(txin.prevout.getHash());
-                        if (parent != NULL)
+                        if (parent && parent->tx->vout.size() != 0)
                         {
                             CTxDestination senderAddress;
                             if (ExtractDestination(parent->tx->vout[txin.prevout.n], senderAddress))

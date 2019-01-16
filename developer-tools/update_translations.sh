@@ -5,7 +5,7 @@ source private.conf
 
 #Generate non-ui translatables
 #fixme: In future there are a few other files that belong here. 
-python3.5 developer-tools/translations/extract_strings_qt.py src/init.cpp src/net.cpp src/wallet/wallet_init.cpp
+python3.6 developer-tools/translations/extract_strings_qt.py src/init.cpp src/net.cpp src/wallet/wallet_init.cpp
 
 #Cleanup
 cd src/qt/locale/Gulden
@@ -30,6 +30,9 @@ lupdate ../../../../src -locations relative -no-obsolete -ts gulden_en.ts
 lconvert -locations relative gulden_en.ts -o `dirname gulden_en.ts`/`basename gulden_en .ts`.po
 python ../../../../developer-tools/translations/push_translations.py ${ONESKY_API_KEY} || true
 
+
+sed -i 's|<extra-po-header-po_revision_date>.*</extra-po-header-po_revision_date>|<extra-po-header-po_revision_date>2018-08-29 15:43+0000</extra-po-header-po_revision_date>|' *.ts
+sed -i 's|<extra-po-header-pot_creation_date>.*</extra-po-header-pot_creation_date>|<extra-po-header-pot_creation_date>2018-08-29 15:43+0000</extra-po-header-pot_creation_date>|' *.ts
 
 #The below would do the same for other languages (if we needed it)
 #lupdate ../../../../src -locations none -no-obsolete -ts `ls *.ts | grep -v src/qt/locale/Gulden/gulden_en.ts`

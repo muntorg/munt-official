@@ -4,8 +4,8 @@
     <extra-po-header-language>it</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-08-15 21:43+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-08-15 21:43+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-08-29 15:43+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-08-29 15:43+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -238,6 +238,41 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>New receiving address</source>
         <translation>Nuovo indirizzo di ricezione</translation>
+    </message>
+</context>
+<context>
+    <name>GUI</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Invia</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Invia</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>&amp;Ricevi</translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation>&amp;Transazioni</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation>&amp;Esci</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation>&amp;Opzioni...</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Finestra di debug</translation>
     </message>
 </context>
 <context>
@@ -877,13 +912,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Impossibile creare una cartella dati qui.</translation>
-    </message>
-</context>
-<context>
-    <name>GUI</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Finestra di debug</translation>
     </message>
 </context>
 <context>

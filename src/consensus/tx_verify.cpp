@@ -359,12 +359,9 @@ void IncrementWitnessFailCount(uint64_t& failCount)
 
 inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 {
-    //fixme: (2.0.x) - We can get rid of this threshold check as soon as we pass block 797000.
-    uint64_t nCheckThreshold = IsArgSet("-testnet") ? 100 : 797000;
-
     //fixme: (2.1) - Retest this for phase 4 switchover (that it doesn't cause any issues at switchover)
     //fixme: (2.1) - Remove this check for phase 4.
-    if (nSpendHeight >= nCheckThreshold && input.segregatedSignatureData.stack.size() == 0)
+    if (input.segregatedSignatureData.stack.size() == 0)
     {
         // At this point we only need to check here that the scriptSig is push only and that it has 4 items as a result, the rest is checked by later parts of the code.
         if (!input.scriptSig.IsPushOnly())
@@ -455,13 +452,32 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
             return false;
         std::string sDest1 = CGuldenAddress(destIn).ToString();
         std::string sDest2 = CGuldenAddress(destOut).ToString();
-        if (staticFundingAddressLookupTable.count(sDest1) <= 0)
+        if (haveStaticFundingAddress(sDest1, nCheckHeight) <= 0)
             return false;
-        if (sDest2 != staticFundingAddressLookupTable[sDest1])
+        if (sDest2 != getStaticFundingAddress(sDest1, nCheckHeight))
             return false;
     }
 
     return true;
+}
+
+inline bool IsUnSigned(const CTxIn& input)
+{
+    //fixme: (2.2) - Remove this check for phase 4.
+    if (input.segregatedSignatureData.stack.size() == 0)
+    {
+        // At this point we only need to check here that the scriptSig is push only and that it has 0 items as a result, the rest is checked by later parts of the code.
+        if (input.scriptSig.IsPushOnly())
+        {
+            std::vector<std::vector<unsigned char>> stack;
+            if (EvalScript(stack, input.scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE))
+            {
+                if (stack.size() == 0)
+                    return true;
+            }
+        }
+    }
+    return false;
 }
 
 /*
@@ -472,6 +488,43 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
 */
 inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
+    //fixme: (2.2) - Remove in future once all problem addresses are cleaned up
+    //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
+    if (nSpendHeight > 881000 || (IsArgSet("-testnet") && nSpendHeight > 96400))
+    {
+        if (IsUnSigned(input))
+        {
+            if (inputDetails.witnessKeyID == inputDetails.spendingKeyID)
+            {
+                std::string sDest1 = CGuldenAddress(inputDetails.spendingKeyID).ToString();
+                std::string sDest2 = CGuldenAddress(outputDetails.spendingKeyID).ToString();
+                if (haveStaticFundingAddress(sDest1, nSpendHeight) <= 0)
+                    return false;
+
+                // Amount keys and lock unchanged.
+                if (nInputAmount != nOutputAmount)
+                    return false;
+                // Action nonce always increment
+                if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
+                    return false;
+                if (getStaticFundingAddress(sDest1, nSpendHeight) != sDest2)
+                    return false;
+                if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
+                    return false;
+                if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
+                    return false;
+                if (!IsLockFromConsistent(inputDetails, outputDetails, nInputHeight))
+                    return false;
+                // Fail count must be incremented appropriately
+                uint64_t compFailCount = inputDetails.failCount;
+                IncrementWitnessFailCount(compFailCount);
+                if (compFailCount == outputDetails.failCount)
+                    return true;
+                return false;
+            }
+        }
+    }
+
     // Needs 2 signature (spending key)
     if (!HasSpendKey(input, nSpendHeight))
         return false;
