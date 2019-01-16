@@ -1402,7 +1402,7 @@ bool CWalletTx::RelayWalletTransaction(CConnman* connman)
                 CInv inv(MSG_TX, GetHash());
                 connman->ForEachNode([&inv](CNode* pnode)
                 {
-                    // pnode->PushInventory(inv); REMARK
+                    pnode->PushInventory(inv);
                 });
                 return true;
             }
