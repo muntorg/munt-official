@@ -21,7 +21,6 @@ import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
-import com.gulden.jniunifiedbackend.TransactionType
 import org.jetbrains.anko.runOnUiThread
 
 private val TAG = "activity-manager"
@@ -71,14 +70,10 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                 val notificationIntent = Intent(this, WalletActivity::class.java)
                 val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-                var prefix = "+"
-                if (transaction.type == TransactionType.SEND)
-                    prefix = "-"
-
                 val notification = NotificationCompat.Builder(this)
                         .setContentTitle("Incoming transaction")
                         .setTicker("Incoming transaction")
-                        .setContentText((" "+prefix+"%.2f").format(transaction.amount.toDouble() / 100000000))
+                        .setContentText((" %.2f").format(transaction.amount.toDouble() / 100000000))
                         .setSmallIcon(R.drawable.ic_g_logo)
                         //.setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
                         .setContentIntent(pendingIntent)
