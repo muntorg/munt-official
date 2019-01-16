@@ -55,6 +55,7 @@ $(package)_config_opts_powerpc_linux=linux-generic32
 $(package)_config_opts_x86_64_darwin=darwin64-x86_64-cc
 $(package)_config_opts_x86_64_mingw32=mingw64
 $(package)_config_opts_i686_mingw32=mingw
+$(package)_config_opts_x86_64_ios=darwin64-x86_64-cc
 $(package)_config_opts_aarch64_ios=iphoneos-cross-arm64
 $(package)_config_env_aarch64_ios=CROSS_TOP="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer" CROSS_SDK="iPhoneOS12.0.sdk"
 endef

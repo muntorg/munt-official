@@ -8,6 +8,7 @@ define $(package)_set_vars
 $(package)_config_opts=--disable-shared -without-tools --disable-sdltest
 $(package)_config_opts_linux=--with-pic
 $(package)_config_opts_aarch64_ios=--host aarch64-darwin
+$(package)_config_opts_x86_64_ios=--host x86_64-darwin
 endef
 
 define $(package)_config_cmds

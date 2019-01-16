@@ -7,8 +7,12 @@ ifeq ($(host_arch),aarch64)
 ios_ARCH=arm64
 endif
 
-ios_TARGET=$(ios_ARCH)-apple-ios
-ios_HOST=$(host_arch)-apple-ios
+aarch64_ios_SYSTEM=apple-ios
+x86_64_ios_SYSTEM=apple-darwin
+ios_SYSTEM=$($(host_arch)_ios_SYSTEM)
+
+ios_TARGET=$(ios_ARCH)-$(ios_SYSTEM)
+ios_HOST=$(host_arch)-$(ios_SYSTEM)
 
 ios_CC=clang -target $(ios_TARGET) -isysroot $(ios_SDK)
 ios_CXX=clang++ -target $(ios_TARGET) -isysroot $(ios_SDK) -stdlib=libc++
