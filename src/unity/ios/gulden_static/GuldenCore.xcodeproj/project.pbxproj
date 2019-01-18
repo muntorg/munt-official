@@ -25,7 +25,6 @@
 		E68FAE0B216C964E0038C745 /* libboost_chrono-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */; };
 		E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE00216C964E0038C745 /* libcrypto.a */; };
 		E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE01216C964E0038C745 /* libssl.a */; };
-		E68FAE0E216C964E0038C745 /* libboost_atomic-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE02216C964E0038C745 /* libboost_atomic-mt-s.a */; };
 		E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */; };
 		E6AE404921EF4A500019A54A /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AE404821EF4A500019A54A /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -63,7 +62,6 @@
 		E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_chrono-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_chrono-mt-s.a"; sourceTree = "<group>"; };
 		E68FAE00216C964E0038C745 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../../depends/aarch64-ios/lib/libcrypto.a"; sourceTree = "<group>"; };
 		E68FAE01216C964E0038C745 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../depends/aarch64-ios/lib/libssl.a"; sourceTree = "<group>"; };
-		E68FAE02216C964E0038C745 /* libboost_atomic-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_atomic-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_atomic-mt-s.a"; sourceTree = "<group>"; };
 		E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb_cxx-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb_cxx-4.8.a"; sourceTree = "<group>"; };
 		E6AE404821EF4A500019A54A /* DBOutputRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBOutputRecord.h; path = ../../djinni/objc/DBOutputRecord.h; sourceTree = "<group>"; };
 		E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMonitorRecord.h; path = ../../../djinni/objc/DBMonitorRecord.h; sourceTree = "<group>"; };
@@ -100,7 +98,6 @@
 				E68FAE0B216C964E0038C745 /* libboost_chrono-mt-s.a in Frameworks */,
 				E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */,
 				E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */,
-				E68FAE0E216C964E0038C745 /* libboost_atomic-mt-s.a in Frameworks */,
 				E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -156,7 +153,6 @@
 				E65D1677218A22540080637D /* libsecp256k1.a */,
 				E65180AD218A1080009283A8 /* libgulden_unity_objc.a */,
 				E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */,
-				E68FAE02216C964E0038C745 /* libboost_atomic-mt-s.a */,
 				E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */,
 				E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */,
 				E68FADFB216C964D0038C745 /* libboost_program_options-mt-s.a */,
@@ -424,6 +420,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"GULDEN_BUILD[sdk=iphoneos*]" = "../../../../build/aarch64-ios";
+				"GULDEN_BUILD[sdk=iphonesimulator*]" = "../../../../build/x86_64-ios";
+				"GULDEN_DEPENDS[sdk=iphoneos*]" = "../../../../depends/aarch64-ios";
+				"GULDEN_DEPENDS[sdk=iphonesimulator*]" = "../../../../depends/x86_64-ios";
 				INFOPLIST_FILE = "$(SRCROOT)/GuldenCore/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -449,6 +449,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"GULDEN_BUILD[sdk=iphoneos*]" = "../../../../build/aarch64-ios";
+				"GULDEN_BUILD[sdk=iphonesimulator*]" = "../../../../build/x86_64-ios";
+				"GULDEN_DEPENDS[sdk=iphoneos*]" = "../../../../depends/aarch64-ios";
+				"GULDEN_DEPENDS[sdk=iphonesimulator*]" = "../../../../depends/x86_64-ios";
 				INFOPLIST_FILE = "$(SRCROOT)/GuldenCore/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
