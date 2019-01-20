@@ -37,7 +37,7 @@
   <tr border=0>
     <td>
       <a href="https://github.com/Gulden/gulden-official/commits/master">
-        <img height="20px" src="https://img.shields.io/github/commit-activity/4w/gulden/gulden-official.svg" alt="commits 4w"/>
+        <img height="20px" src="https://img.shields.io/github/commit-activity/y/gulden/gulden-official.svg" alt="commits 1y"/>
       </a>
     </td>
   </tr>
