@@ -3185,7 +3185,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>address</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+265"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+156"/>
         <source>Address copied to clipboard</source>
         <translation>Address copied to clipboard</translation>
     </message>
@@ -3207,7 +3207,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="+226"/>
-        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+150"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+115"/>
         <source>Request %1 Gulden</source>
         <translation>Request %1 Gulden</translation>
     </message>
@@ -3264,13 +3264,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Buy Gulden</translation>
     </message>
     <message>
-        <location line="+7"/>
         <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+7"/>
         <source>Buy</source>
         <translation>Buy</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-504"/>
+        <location line="-504"/>
         <source>Choose amount</source>
         <translation>Choose amount</translation>
     </message>
@@ -3343,18 +3342,18 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="-188"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="-153"/>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation>Resulting URI too long, try to reduce the text for label / message.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-395"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-388"/>
         <location line="+3"/>
         <source>Copy request to clipboard</source>
         <translation>Copy request to clipboard</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+192"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+157"/>
         <source>Request Gulden</source>
         <translation>Request Gulden</translation>
     </message>
@@ -3362,11 +3361,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <location line="+44"/>
         <source>Resulting URI too long, try to reduce the text for the label.</source>
         <translation>Resulting URI too long, try to reduce the text for the label.</translation>
-    </message>
-    <message>
-        <location line="+113"/>
-        <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation>Error loading the buy page, please check your connection and try again later.</translation>
     </message>
 </context>
 <context>
@@ -4710,7 +4704,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>address</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/viewaddressdialog.cpp" line="+121"/>
+        <location filename="../../_Gulden/viewaddressdialog.cpp" line="+122"/>
         <source>Address copied to clipboard</source>
         <translation>Address copied to clipboard</translation>
     </message>
@@ -4730,7 +4724,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>My witness address</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/viewaddressdialog.cpp" line="-30"/>
+        <location filename="../../_Gulden/viewaddressdialog.cpp" line="-31"/>
         <source>No valid witness address has been generated for this account</source>
         <translation>No valid witness address has been generated for this account</translation>
     </message>
