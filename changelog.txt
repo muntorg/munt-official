@@ -1,3 +1,12 @@
+2.1.0.2
+
+UI - Modify witness QR for better interoperability with external apps.
+UI - Remove embedded webkit for buy page in favour of simply launching buy page in an external browser.
+RPC - Minor RPC fixes.
+
+
+
+
 2.1.0.1
 
 UI - Implement an address tab for witness accounts, for easier access of the current active witness account address and for better integration with third party monitoring apps.
