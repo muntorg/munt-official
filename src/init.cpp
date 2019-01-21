@@ -600,7 +600,7 @@ std::string LicenseInfo()
     //fixme: (2.1) Mention additional libraries, boost etc.
     //fixme: (2.1) Translate
     //fixme: (2.1) Add code to ensure translations never strip copyrights
-    return helptr("Copyright (C) 2014-2018 The Gulden developers")+ "\n"
+    return helptr("Copyright (C) 2014-2019 The Gulden developers")+ "\n"
            + helptr("Licensed under the Gulden license")+ "\n"
            + "\n"
            + helptr("This is experimental software.")+ "\n"
