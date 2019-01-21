@@ -4,7 +4,7 @@ $(package)_download_path=http://download.qt.io/official_releases/qt/5.7/$($(pack
 $(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
-$(package)_dependencies=openssl zlib icu
+$(package)_dependencies=openssl zlib
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
@@ -57,6 +57,7 @@ $(package)_config_opts += -no-feature-style-windowsmobile
 $(package)_config_opts += -no-feature-style-windowsce
 $(package)_config_opts += -no-freetype
 $(package)_config_opts += -no-glib
+$(package)_config_opts += -no-icu
 $(package)_config_opts += -no-gstreamer
 $(package)_config_opts += -no-iconv
 $(package)_config_opts += -no-kms
@@ -186,7 +187,7 @@ define $(package)_config_cmds
   export PKG_CONFIG_LIBDIR=$(host_prefix)/lib/pkgconfig && \
   export PKG_CONFIG_PATH=$(host_prefix)/share/pkgconfig  && \
   sed -i.old "s|LIBS_PRIVATE += -lz|LIBS_PRIVATE += `pkg-config zlib --libs`|" src/3rdparty/zlib_dependency.pri && \
-  OPENSSL_LIBS='-L$(host_prefix)/lib -lssl -lcrypto $($(package)_ssl_extras)' ./configure `pkg-config icu-i18n icu-uc --cflags` `pkg-config icu-i18n icu-uc --libs` $($(package)_config_opts) && \
+  OPENSSL_LIBS='-L$(host_prefix)/lib -lssl -lcrypto $($(package)_ssl_extras)' ./configure $($(package)_config_opts) && \
   echo "host_build: QT_CONFIG ~= s/system-zlib/zlib" >> mkspecs/qconfig.pri && \
   echo "CONFIG += force_bootstrap" >> mkspecs/qconfig.pri && \
   $(MAKE) sub-src-clean && \
