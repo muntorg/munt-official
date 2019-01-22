@@ -709,6 +709,14 @@ public:
     virtual void SetTip(CBlockIndex *pindex) override;
     CBlockLocator GetLocatorPoW2(const CBlockIndex *pindex = NULL) const override;
 
+    template<typename T, typename Compare>
+    int LowerBound(int beginHeight, int endHeight, const T& val, const Compare& comp) const {
+        const auto beginRange = vChain.begin() + (beginHeight - HeightOffset());
+        const auto endRange =  vChain.begin() + (endHeight - HeightOffset());
+        const auto it = std::lower_bound(beginRange, endRange, val, comp);
+        return it == endRange ? -1 : (*it)->nHeight;
+    }
+
 private:
     int nHeightOffset;
 };

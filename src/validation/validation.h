@@ -202,9 +202,6 @@ static const int DEFAULT_STOPATHEIGHT = 0;
 /** if disabled full sync and validation will be skipped, ie. no chain is build. */
 static const bool DEFAULT_FULL_SYNC_MODE = true;
 
-/** Minimum part of partial chain to keep when pruning block index */
-static const int PARTIAL_SYNC_PRUNE_HEIGHT = 1152;
-
 struct BlockHasher
 {
     size_t operator()(const uint256& hash) const { return hash.GetCheapHash(); }

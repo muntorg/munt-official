@@ -306,7 +306,20 @@ void CSPVScanner::Persist()
 
         // now that we are sure both the index and lastProcessed time locator have been saved
         // compute the new pruning height for the next iteration
-        int maxPruneHeight = lastProcessed->nHeight - PARTIAL_SYNC_PRUNE_HEIGHT;
+
+        int64_t forkTimeLimit = lastProcessed->GetBlockTime() - 2 * MAX_FORK_DURATION;
+
+        int maxPruneHeight =
+                // determine oldest block that is at most forkTimeLimit in the past
+                partialChain.LowerBound(partialChain.HeightOffset(),
+                                        std::min(lastProcessed->nHeight, partialChain.Height()),
+                                        forkTimeLimit,
+                                        [](const CBlockIndex* index, int64_t limit){ return index->GetBlockTime() < limit; })
+                // the block before that is the youngest that is more than forkTimeLimit ago
+                - 1
+                // the window required to do context checks on the headers
+                - 576;
+
         if (maxPruneHeight > 0)
             SetMaxSPVPruneHeight(maxPruneHeight);
 
