@@ -4269,7 +4269,7 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
         LogPrintf("Partial chain height = %d offset = %d.\n", partialChain.Height(), partialChain.HeightOffset());
 
     if (    IsPartialSyncActive()
-         && youngestBefore && youngestBefore->nHeight - partialChain.HeightOffset() > 576)
+         && youngestBefore && (youngestBefore->nHeight <= 576 || youngestBefore->nHeight - partialChain.HeightOffset() > 576))
     {
         LogPrintf("Partial sync continues.\n");
     }
