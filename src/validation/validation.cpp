@@ -2011,7 +2011,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         }
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
 
-        if (IsPartialSyncActive() && chainActive.Height() >= partialChain.Height())
+        if (IsPartialSyncActive() && isFullSyncMode() && chainActive.Height() >= partialChain.Height())
             DeactivatePartialSync();
 
         // Notifications/callbacks that can run without cs_main
