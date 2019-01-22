@@ -2236,7 +2236,8 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
         if (pindexBestHeader == nullptr || pindexBestHeader->nChainWork < pindexNew->nChainWork)
             pindexBestHeader = pindexNew;
     }
-    else
+
+    if (IsPartialSyncActive() && pindexNew->nHeight > 0 && pindexNew->pprev->IsPartialValid(BLOCK_PARTIAL_TREE))
     {
         // block is not extending main tree, so it's extending the partial tree
         pindexNew->RaisePartialValidity(BLOCK_PARTIAL_TREE);
