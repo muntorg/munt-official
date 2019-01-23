@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="sv_SE">
+<TS version="2.1" language="sv">
     <extra-po-header-language>sv</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
