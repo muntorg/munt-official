@@ -583,7 +583,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 return "inconclusive-not-best-prevblk";
 
             CValidationState state;
-            if (pIndexMiningTip->nHeight < GetPow2ValidationCloneHeight())
+            if (pIndexMiningTip->nHeight < GetPhase2ActivationHeight())
             {
                 return "rejected";
             }
@@ -591,7 +591,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
             {
                 CCoinsViewCache viewNew(pcoinsTip);
                 CBlockIndex* pindexPrev_ = nullptr;
-                CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(), pIndexMiningTip, pindexPrev_);
+                CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(chainActive, pIndexMiningTip, 1), pIndexMiningTip, pindexPrev_);
                 //fixme: (2.0.1) error handling.
                 assert(pindexPrev_);
                 ForceActivateChain(pindexPrev_, nullptr, state, Params(), tempChain, viewNew);

@@ -34,10 +34,15 @@ const int PERSIST_BLOCK_COUNT = 500;
 // limit UI update notifications (except when catched up)
 const int UI_UPDATE_LIMIT = 50;
 
+std::atomic<int> CSPVScanner::lastProcessedHeight = 0;
+
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet),
     startTime(0),
     lastProcessed(nullptr),
+    numConnections(0),
+    lastProgressReported(-1.0f),
+    lastPersistedBlockTime(0),
     lastPersistTime(0)
 {
     LOCK(cs_main);
@@ -48,9 +53,8 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
     // forward scan starting time to last block processed if available
     CWalletDB walletdb(*wallet.dbw);
     CBlockLocator locator;
-    int64_t lastBlockTime;
-    if (walletdb.ReadLastSPVBlockProcessed(locator, lastBlockTime))
-        startTime = lastBlockTime;
+    if (walletdb.ReadLastSPVBlockProcessed(locator, lastPersistedBlockTime))
+        startTime = lastPersistedBlockTime;
 
     // rewind scan starting time by maximum handled fork duration
     startTime = std::max(Params().GenesisBlock().GetBlockTime(), startTime - MAX_FORK_DURATION);
@@ -58,13 +62,17 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
 
 CSPVScanner::~CSPVScanner()
 {
+    uiInterface.NotifyNumConnectionsChanged.disconnect(boost::bind(&CSPVScanner::OnNumConnectionsChanged, this, _1));
 }
 
 bool CSPVScanner::StartScan()
 {
+    LOCK(cs_main);
     if (StartPartialHeaders(startTime, std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1)))
     {
+        uiInterface.NotifyNumConnectionsChanged.connect(boost::bind(&CSPVScanner::OnNumConnectionsChanged, this, _1));
         HeaderTipChanged(partialChain.Tip());
+        NotifyUnifiedProgress();
         return true;
     }
     else
@@ -73,6 +81,7 @@ bool CSPVScanner::StartScan()
 
 const CBlockIndex* CSPVScanner::LastBlockProcessed() const
 {
+    LOCK(cs_main);
     return lastProcessed;
 }
 
@@ -110,7 +119,6 @@ void CSPVScanner::RequestBlocks()
         UpdateLastProcessed(skip);
         if (lastProcessed->nHeight > requestTip->nHeight) {
             requestTip = lastProcessed;
-            startHeight = lastProcessed->nHeight;
         }
     }
 
@@ -147,7 +155,6 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
     if (pindex->pprev == lastProcessed) {
         LogPrint(BCLog::WALLET, "SPV processing block %d\n", pindex->nHeight);
 
-        // TODO handle mempool effects
 
         std::vector<CTransactionRef> vtxConflicted; // dummy for now
         wallet.BlockConnected(block, pindex, vtxConflicted);
@@ -159,12 +166,17 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
         if (partialChain.Height() == pindex->nHeight || pindex->nHeight % UI_UPDATE_LIMIT == 0)
             uiInterface.NotifySPVProgress(startHeight, pindex->nHeight, partialChain.Height());
 
+        NotifyUnifiedProgress();
+
         blocksSincePersist++;
+
+        ExpireMempoolForPartialSync(lastProcessed);
     }
 }
 
 void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
 {
+    LOCK(cs_main);
     if (pTip)
     {
         // initialization on the first header tip notification
@@ -193,6 +205,8 @@ void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
         }
 
         RequestBlocks();
+
+        NotifyUnifiedProgress();
     }
     else // pTip == nullptr => partial sync stopped
     {
@@ -201,9 +215,76 @@ void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
     }
 }
 
+void CSPVScanner::OnNumConnectionsChanged(int newNumConnections)
+{
+    LOCK(cs_main);
+
+    numConnections = newNumConnections;
+    NotifyUnifiedProgress();
+}
+
+void CSPVScanner::ResetUnifiedProgressNotification()
+{
+    LOCK(cs_main);
+
+    lastProgressReported = -1.0f;
+    if (lastProcessed)
+        startHeight = lastProcessed->nHeight;
+    NotifyUnifiedProgress();
+}
+
+void CSPVScanner::NotifyUnifiedProgress()
+{
+    AssertLockHeld(cs_main);
+
+    const float CONNECTION_WEIGHT = 0.05f;
+    const float MIN_REPORTING_DELTA = 0.002f;
+    const float ALWAYS_REPORT_THRESHOLD = 0.9995f;
+
+    float newProgress = 0.0f;
+
+    // Only calculate progress if there are connections. Without connections progress is reported as zero
+    // which is the only case where progress can decrease during a session (ie. if all connections are lost)
+    if (numConnections > 0) {
+        newProgress += CONNECTION_WEIGHT;
+
+        int probableHeight = GetProbableHeight();
+
+        if (probableHeight > 0 && startHeight > 0 &&
+            probableHeight != startHeight &&
+            lastProcessed != nullptr && lastProcessed->nHeight > 0)
+        {
+            float pgs = (lastProcessed->nHeight - startHeight)/float(probableHeight - startHeight);
+            newProgress += (1.0f - CONNECTION_WEIGHT) * pgs;
+        }
+        else if (probableHeight == startHeight)
+            newProgress = 1.0f;
+
+        // silently ignore progress decrease, this can occur if the chain grew
+        // faster then the synchronisation (this would be a very short lived situation)
+        // and reporting will continue normally when catching up
+        if (newProgress <= lastProgressReported)
+            return;
+
+        // limit processing overhead and only report if a reasonable amount of progress was made since last report
+        if (newProgress - lastProgressReported <= MIN_REPORTING_DELTA && newProgress < ALWAYS_REPORT_THRESHOLD)
+            return;
+    }
+
+    if (newProgress != lastProgressReported) {
+        uiInterface.NotifyUnifiedProgress(newProgress);
+    }
+
+    lastProgressReported = newProgress;
+}
+
 void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
 {
+    AssertLockHeld(cs_main);
+
     lastProcessed = pindex;
+
+    lastProcessedHeight = lastProcessed ? lastProcessed->nHeight : 0;
 
     int64_t now = GetAdjustedTime();
     if (now - lastPersistTime > PERSIST_INTERVAL_SEC || blocksSincePersist >= PERSIST_BLOCK_COUNT)
@@ -212,12 +293,43 @@ void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
 
 void CSPVScanner::Persist()
 {
-    if (lastProcessed != nullptr)
+    LOCK(cs_main);
+
+    if (lastProcessed != nullptr && lastProcessed->GetBlockTime() > lastPersistedBlockTime)
     {
+        // persist & prune block index
+        PersistAndPruneForPartialSync();
+
+        // persist lastProcessed
         CWalletDB walletdb(*wallet.dbw);
         walletdb.WriteLastSPVBlockProcessed(partialChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
 
+        // now that we are sure both the index and lastProcessed time locator have been saved
+        // compute the new pruning height for the next iteration
+
+        int64_t forkTimeLimit = lastProcessed->GetBlockTime() - 2 * MAX_FORK_DURATION;
+
+        int maxPruneHeight =
+                // determine oldest block that is at most forkTimeLimit in the past
+                partialChain.LowerBound(partialChain.HeightOffset(),
+                                        std::min(lastProcessed->nHeight, partialChain.Height()),
+                                        forkTimeLimit,
+                                        [](const CBlockIndex* index, int64_t limit){ return index->GetBlockTime() < limit; })
+                // the block before that is the youngest that is more than forkTimeLimit ago
+                - 1
+                // the window required to do context checks on the headers
+                - 576;
+
+        if (maxPruneHeight > 0)
+            SetMaxSPVPruneHeight(maxPruneHeight);
+
         lastPersistTime = GetAdjustedTime();
+        lastPersistedBlockTime = lastProcessed->GetBlockTime();
         blocksSincePersist = 0;
     }
+}
+
+int CSPVScanner::getProcessedHeight()
+{
+    return lastProcessedHeight;
 }

@@ -5,10 +5,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
-import android.support.v7.widget.ShareActionProvider
+import androidx.core.view.MenuItemCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.ShareActionProvider
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
@@ -20,12 +20,15 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.unity_wallet.CoreObserverProxy
 
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
 
-class ShowRecoveryPhraseActivity : AppCompatActivity()
+class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
+    private val coreObserverProxy = CoreObserverProxy(this, this)
 
     internal var recoveryPhraseView: TextView? = null
     internal var recoveryPhraseAcknowledgeCheckBox: CheckBox? = null
@@ -74,6 +77,8 @@ class ShowRecoveryPhraseActivity : AppCompatActivity()
         }
 
         updateView()
+
+        UnityCore.instance.addObserver(coreObserverProxy)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
@@ -92,9 +97,19 @@ class ShowRecoveryPhraseActivity : AppCompatActivity()
 
     override fun onDestroy()
     {
+        UnityCore.instance.removeObserver(coreObserverProxy)
         //fixme: (GULDEN) Securely wipe.
         recoveryPhrase = ""
         super.onDestroy()
+    }
+
+    override fun onCoreReady(): Boolean {
+        // Proceed to main activity
+        val intent = Intent(this, WalletActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+        return true
     }
 
     fun onAcceptRecoveryPhrase(view: View)
@@ -104,12 +119,10 @@ class ShowRecoveryPhraseActivity : AppCompatActivity()
             // Create the new wallet
             GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
 
-            // Proceed to main activity
-            val intent = Intent(this, WalletActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
+            // a coreReady event will follow which will proceed to the main activity
         }
-        finish()
+        else
+            finish()
     }
 
     fun onAcknowledgeRecoveryPhrase(view: View)
@@ -148,7 +161,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity()
         }
 
 
-        override fun onCreateActionMode(mode: android.support.v7.view.ActionMode, menu: Menu): Boolean
+        override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode, menu: Menu): Boolean
         {
             mode.menuInflater.inflate(R.menu.share_menu, menu)
 

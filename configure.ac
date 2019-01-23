@@ -89,6 +89,7 @@ AC_PATH_PROG(HEXDUMP,hexdump)
 AC_PATH_TOOL(READELF, readelf)
 AC_PATH_TOOL(CPPFILT, c++filt)
 AC_PATH_TOOL(OBJCOPY, objcopy)
+AC_PATH_PROG(DJINNI_RUN, djinni-run,, $prefix/bin)
 
 AC_ARG_VAR(PYTHONPATH, Augments the default search path for python module files)
 
@@ -260,6 +261,12 @@ AC_ARG_WITH([jni-libs],
   [build_gulden_libs_jni=yes],
   [build_gulden_libs_jni=no])
 
+AC_ARG_WITH([objc-libs],
+  [AS_HELP_STRING([--with-objc-libs],
+  [build objc unity library (default=no)])],
+  [build_gulden_libs_objc=yes],
+  [build_gulden_libs_objc=no])
+
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
   [build GuldenD daemon (default=yes)])],
@@ -411,6 +418,9 @@ case $host in
      ;;
    *openbsd*)
      LEVELDB_TARGET_FLAGS="-DOS_OPENBSD"
+     ;;
+   *ios*)
+     LEVELDB_TARGET_FLAGS="-DOS_MACOSX"
      ;;
    *)
      OTHER_OS=`echo ${host_os} | awk '{print toupper($0)}'`
@@ -682,12 +692,20 @@ if test x$use_upnp != xno; then
   )
 fi
 
+dnl Check for Djinni
+if test x$build_gulden_libs_objc != xno; then
+  if test x$DJINNI_OBJCXXFLAGS = x; then
+    DJINNI_OBJCXXFLAGS=-I$prefix/include/objc
+  fi
+  AC_SUBST(DJINNI_OBJCXXFLAGS)
+fi
+
 GULDEN_QT_INIT
 
 dnl sets $gulden_enable_qt, $gulden_enable_qt_test, $gulden_enable_qt_dbus
 GULDEN_QT_CONFIGURE([$use_pkgconfig], [qt5])
 
-if test x$build_gulden_utils$build_gulden_libs_jni$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnonononono; then
+if test x$build_gulden_utils$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnononononono; then
     use_boost=no
 else
     use_boost=yes
@@ -1005,6 +1023,10 @@ AC_MSG_CHECKING([whether to build jni libraries])
 AM_CONDITIONAL([BUILD_GULDEN_LIBS_JNI], [test x$build_gulden_libs_jni = xyes])
 AC_MSG_RESULT($build_gulden_libs_jni)
 
+AC_MSG_CHECKING([whether to build objc libraries])
+AM_CONDITIONAL([BUILD_GULDEN_LIBS_OBJC], [test x$build_gulden_libs_objc = xyes])
+AC_MSG_RESULT($build_gulden_libs_objc)
+
 AC_LANG_POP
 
 if test "x$use_ccache" != "xno"; then
@@ -1133,8 +1155,8 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_gulden_utils$build_gulden_libs_jni$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnononononono; then
-  AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-libs --with-daemon --with-gui --enable-bench or --enable-tests])
+if test x$build_gulden_utils$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnonononononono; then
+  AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-jni-libs --with-objc-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
 AM_CONDITIONAL([TARGET_DARWIN], [test x$TARGET_OS = xdarwin])

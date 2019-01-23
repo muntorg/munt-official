@@ -37,6 +37,12 @@ public:
      */
     int nHeight;
 
+    /* Copy of the timestamp of the block the transaction is in, if any.
+     * Recorded together with nHeight, only valid if > 0
+     * Intended use when block not available, ie. it has been pruned from the index in SPV
+     */
+    unsigned int nBlockTime;
+
     /* An nIndex == -1 means that hashBlock (in nonzero) refers to the earliest
      * block in the chain we know this or any in-wallet dependency conflicts
      * with. Older clients interpret nIndex == -1 as unconfirmed for backward
@@ -65,6 +71,7 @@ public:
         hashBlock = uint256();
         nIndex = -1;
         nHeight = -1;
+        nBlockTime = 0;
     }
 
     void SetTx(CTransactionRef arg)
@@ -85,6 +92,7 @@ public:
             && (!ser_action.ForRead() || s.GetVersion() >= 2010000))
         {
             READWRITE(nHeight);
+            READWRITE(nBlockTime);
         }
 
         READWRITECOMPACTSIZEVECTOR(vMerkleBranch);

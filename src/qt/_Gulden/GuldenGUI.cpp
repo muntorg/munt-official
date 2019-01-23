@@ -71,6 +71,9 @@
 #include "units.h"
 #include "optionsmodel.h"
 #include "askpassphrasedialog.h"
+#include "transactiontablemodel.h"
+#include "transactionrecord.h"
+#include "viewaddressdialog.h"
 
 
 //Font sizes - NB! We specifically use 'px' and not 'pt' for all font sizes, as qt scales 'pt' dynamically in a way that makes our fonts unacceptably small on OSX etc. it doesn't do this with px so we use px instead.
@@ -87,8 +90,8 @@ const char* SMALL_BUTTON_FONT_SIZE = "14px";
 const char* MINOR_LABEL_FONT_SIZE = "12px";
 
 //Colors
-const char* ACCENT_COLOR_1 = "#007aff";
-const char* ACCENT_COLOR_2 = "#0067d9";
+const char* ACCENT_COLOR_1 = "#111444";
+const char* ACCENT_COLOR_2 = "#080a28";
 const char* TEXT_COLOR_1 = "#999";
 const char* COLOR_VALIDATION_FAILED = "#FF8080";
 
@@ -202,12 +205,16 @@ void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBal
     labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
     if (displayBalanceTotal > 0 && optionsModel)
     {
-        labelBalanceForex->setText(QString("(") + QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2) + QString(")"));
-        QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceLocked, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceImmatureOrUnconfirmed, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        labelBalanceForex->setToolTip(toolTip);
+        QString forexLabel = QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2);
+        labelBalanceForex->setText(QString("(") + forexLabel + QString(")"));
+        QString forexToolTip;
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"><b>%1</b>&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Conversion estimate")).arg("");
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"></td><td style=\"white-space: nowrap;\" align=\"right\"></td></tr>");
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceLocked, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Pending")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceImmatureOrUnconfirmed, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        labelBalanceForex->setToolTip(forexToolTip);
         if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);
     }
@@ -229,10 +236,13 @@ void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBal
         resizeToolBarsGulden();
     }
 
-    QString toolTip = QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
-    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceLocked, false, GuldenUnits::separatorStandard, 2));
-    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Funds awaiting confirmation: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
-    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable funds: ")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceAvailable, false, GuldenUnits::separatorStandard, 2));
+    QString toolTip;
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"><b>%1</b>&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Wallet balances")).arg("");
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"></td><td style=\"white-space: nowrap;\" align=\"right\"></td></tr>");
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceLocked, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Pending")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorStandard, 2));
+    toolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable")).arg(GuldenUnits::formatWithUnit(GuldenUnits::NLG, displayBalanceAvailable, false, GuldenUnits::separatorStandard, 2));
     labelBalance->setToolTip(toolTip);
 }
 
@@ -327,7 +337,7 @@ void GUI::requestEmptyWitness()
     LogPrint(BCLog::QT, "GUI::requestEmptyWitness\n");
 
     CAccount* fromWitnessAccount = pactiveWallet->getActiveAccount();
-    CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, true);
+    CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, false, true);
     if (availableAmount > 0)
     {
         //fixme: (2.1) - Remove this when ready
@@ -375,14 +385,14 @@ void GUI::requestEmptyWitness()
                             }
                             std::string sDestIn = CGuldenAddress(destIn).ToString();
 
-                            if (staticFundingAddressLookupTable.count(sDestIn) > 0)
+                            if (haveStaticFundingAddress(sDestIn, chainActive.Height()) > 0)
                             {
                                 SendCoinsRecipient rcp;
                                 rcp.paymentType = SendCoinsRecipient::PaymentType::NormalPayment;
                                 rcp.fSubtractFeeFromAmount = true;
                                 rcp.amount = availableAmount;
                                 rcp.forexFailCode = "";
-                                rcp.address = QString::fromStdString(staticFundingAddressLookupTable[sDestIn]);
+                                rcp.address = QString::fromStdString(getStaticFundingAddress(sDestIn, chainActive.Height()));
                                 walletFrame->currentWalletView()->sendCoinsPage->pendingRecipients.push_back(rcp);
                                 walletFrame->currentWalletView()->sendCoinsPage->on_sendButton_clicked();
                                 return;
@@ -437,6 +447,7 @@ void GUI::createToolBars()
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->addAction(witnessDialogAction);
     toolbar->addAction(overviewAction);
+    toolbar->addAction(viewAddressAction);
     toolbar->addAction(sendCoinsAction);
     toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(historyAction);
@@ -640,16 +651,18 @@ void GUI::createToolBars()
     tabsBar->setMovable( false );
     tabsBar->setToolButtonStyle( Qt::ToolButtonTextOnly );
     //Remove all the actions so we can add them again in a different order
-    tabsBar->removeAction( historyAction );
-    tabsBar->removeAction( overviewAction );
-    tabsBar->removeAction( sendCoinsAction );
-    tabsBar->removeAction( receiveCoinsAction );
-    tabsBar->removeAction( witnessDialogAction );
+    tabsBar->removeAction(historyAction);
+    tabsBar->removeAction(overviewAction);
+    tabsBar->removeAction(viewAddressAction);
+    tabsBar->removeAction(receiveCoinsAction);
+    tabsBar->removeAction(sendCoinsAction);
+    tabsBar->removeAction(witnessDialogAction);
     //Setup the tab toolbar
-    tabsBar->addAction( witnessDialogAction );
-    tabsBar->addAction( receiveCoinsAction );
-    tabsBar->addAction( sendCoinsAction );
-    tabsBar->addAction( historyAction );
+    tabsBar->addAction(witnessDialogAction);
+    tabsBar->addAction(viewAddressAction);
+    tabsBar->addAction(receiveCoinsAction);
+    tabsBar->addAction(sendCoinsAction);
+    tabsBar->addAction(historyAction);
 
     passwordAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf084), tr("&Password"), this);
     passwordAction->setObjectName("action_password");
@@ -681,6 +694,9 @@ void GUI::createToolBars()
     tabsBar->widgetForAction( backupAction )->setObjectName( "backup_button" );
     tabsBar->widgetForAction( backupAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( backupAction )->setCursor( Qt::PointingHandCursor );
+    tabsBar->widgetForAction( viewAddressAction )->setObjectName( "view_address_button" );
+    tabsBar->widgetForAction( viewAddressAction )->setContentsMargins( 0, 0, 0, 0 );
+    tabsBar->widgetForAction( viewAddressAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->widgetForAction( receiveCoinsAction )->setObjectName( "receive_coins_button" );
     tabsBar->widgetForAction( receiveCoinsAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( receiveCoinsAction )->setCursor( Qt::PointingHandCursor );
@@ -705,6 +721,7 @@ void GUI::createToolBars()
         tabsBar->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     }
     //Only show the actions we want
+    viewAddressAction->setVisible( true );
     receiveCoinsAction->setVisible( true );
     sendCoinsAction->setVisible( true );
     historyAction->setVisible( true );
@@ -755,6 +772,9 @@ void GUI::createToolBars()
     //Hide all toolbars and menus until UI fully loaded
     hideToolBars();
     appMenuBar->setVisible(false);
+    #ifndef MAC_OSX
+    menuBarSpaceFiller->setVisible(false);
+    #endif
 
 
     //Init the welcome dialog inside walletFrame
@@ -774,7 +794,10 @@ void GUI::hideToolBars()
     if (tabsBar) tabsBar->setVisible(false);
     if (spacerBarR) spacerBarR->setVisible(false);
     if (accountInfoBar) accountInfoBar->setVisible(false);
-    if (statusToolBar) statusToolBar->setVisible(false);
+    if (statusToolBar)
+    {
+        statusToolBar->setVisible(false);
+    }
 }
 
 void GUI::showToolBars()
@@ -909,6 +932,8 @@ void GUI::doPostInit()
             progressBarWrapper->setContentsMargins( 0, 0, 0, 0);
             QHBoxLayout* layoutProgressBarWrapper = new QHBoxLayout;
             progressBarWrapper->setLayout(layoutProgressBarWrapper);
+            layoutProgressBarWrapper->setSpacing(0);
+            layoutProgressBarWrapper->setContentsMargins( 0, 0, 0, 0 );
             layoutProgressBarWrapper->addWidget(progressBar);
             statusToolBar->addWidget(progressBarWrapper);
             progressBar->setVisible(false);
@@ -927,12 +952,13 @@ void GUI::doPostInit()
             frameBlocksSpacerL->setContentsMargins( 0, 0, 0, 0);
             ((QHBoxLayout*)frameBlocks->layout())->insertWidget(0, frameBlocksSpacerL, 1);
             statusToolBar->addWidget(frameBlocks);
+
             //Right margin to match rest of UI
-            QFrame* frameBlocksSpacerR = new QFrame(frameBlocks);
-            frameBlocksSpacerR->setObjectName("rightMargin");
+            QFrame* frameBlocksSpacerR = new QFrame(statusToolBar);
+            frameBlocksSpacerR->setObjectName("status_bar_right_margin");
             frameBlocksSpacerR->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
             frameBlocksSpacerR->setContentsMargins( 0, 0, 0, 0);
-            ((QHBoxLayout*)frameBlocks->layout())->addWidget(frameBlocksSpacerR);
+            statusToolBar->addWidget(frameBlocksSpacerR);
 
             //Use our own styling - clear the styling that is already applied
             progressBar->setStyleSheet("");
@@ -950,6 +976,7 @@ void GUI::doPostInit()
 
     //Change shortcut keys because we have hidden overview pane and changed tab orders
     overviewAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_0 ) );
+    viewAddressAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_0 ) );
     sendCoinsAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_2 ) );
     receiveCoinsAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_3 ) );
     historyAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_1 ) );
@@ -990,8 +1017,9 @@ void GUI::hideProgressBarLabel()
         progressBarLabel->setText("");
         progressBarLabel->setVisible(false);
     }
-    if(statusToolBar && optionsModel->getAutoHideStatusBar())
+    if(statusToolBar && optionsModel->getAutoHideStatusBar()) {
         statusToolBar->setVisible(false);
+    }
 }
 
 void GUI::showProgressBarLabel()
@@ -1001,7 +1029,9 @@ void GUI::showProgressBarLabel()
     if (progressBarLabel)
         progressBarLabel->setVisible(true);
     if(statusToolBar)
+    {
         statusToolBar->setVisible(true);
+    }
 }
 
 void GUI::hideBalances()
@@ -1180,18 +1210,12 @@ void GUI::refreshTabVisibilities()
 {
     LogPrint(BCLog::QT, "GUI::refreshTabVisibilities\n");
 
-    receiveCoinsAction->setVisible( true );
-    sendCoinsAction->setVisible( true );
-
-    //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
-    if (pactiveWallet->getActiveAccount()->IsReadOnly())
-        sendCoinsAction->setVisible( false );
-
     if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
     {
-        receiveCoinsAction->setVisible( false );
-        sendCoinsAction->setVisible( false );
-        witnessDialogAction->setVisible( true );
+        viewAddressAction->setVisible(true);
+        receiveCoinsAction->setVisible(false);
+        sendCoinsAction->setVisible(false);
+        witnessDialogAction->setVisible(true);
         if ( walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage )
         {
             showWitnessDialog();
@@ -1199,7 +1223,17 @@ void GUI::refreshTabVisibilities()
     }
     else
     {
-        witnessDialogAction->setVisible( false );
+        viewAddressAction->setVisible(false);
+        receiveCoinsAction->setVisible(true);
+        sendCoinsAction->setVisible(true);
+        witnessDialogAction->setVisible(false);
+
+        //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
+        if (pactiveWallet->getActiveAccount()->IsReadOnly())
+        {
+            sendCoinsAction->setVisible( false );
+        }
+
         if (walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage)
         {
             gotoReceiveCoinsPage();
@@ -1332,21 +1366,63 @@ void GUI::updateAccount(CAccount* account)
     LogPrint(BCLog::QT, "GUI::updateAccount\n");
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, account, KEYCHAIN_EXTERNAL);
-    CPubKey pubKey;
-    if (receiveAddress->GetReservedKey(pubKey))
+    if (!walletFrame)
+        return;
+    if (!walletFrame->currentWalletView())
+        return;
+
+    walletFrame->currentWalletView()->viewAddressPage->updateAddress("");
+    if (account->IsPoW2Witness())
     {
-        CKeyID keyID = pubKey.GetID();
-        walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CGuldenAddress(keyID).ToString()) );
+        if (!walletFrame->currentWalletView()->viewAddressPage)
+            return;
+        if (!walletFrame->currentWalletView()->walletModel)
+            return;
+
+        //fixme: (2.1) - Look into improving performance here, also better way to handle multiple addresses?
+        std::unique_ptr<TransactionFilterProxy> filter;
+        filter.reset(new TransactionFilterProxy);
+        filter->setSourceModel(walletFrame->currentWalletView()->walletModel->getTransactionTableModel());
+        filter->setDynamicSortFilter(true);
+        filter->setSortRole(Qt::EditRole);
+        filter->setShowInactive(false);
+        filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
+
+        filter->setAccountFilter(account);
+        int rows = filter->rowCount();
+        for (int row = 0; row < rows; ++row)
+        {
+            QModelIndex index = filter->index(row, 0);
+
+            int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
+            if ( (nType == TransactionRecord::WitnessFundRecv) || (nType == TransactionRecord::WitnessRenew) )
+            {
+                walletFrame->currentWalletView()->viewAddressPage->updateAddress(filter->data(index, TransactionTableModel::AddressRole).toString());
+                return;
+            }
+        }
     }
     else
     {
-        LogPrint(BCLog::ALL, "Keypool exhausted for account.\n");
-        walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
+        if (!walletFrame->currentWalletView()->receiveCoinsPage)
+            return;
+
+        CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, account, KEYCHAIN_EXTERNAL);
+        CPubKey pubKey;
+        if (receiveAddress->GetReservedKey(pubKey))
+        {
+            CKeyID keyID = pubKey.GetID();
+            walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CGuldenAddress(keyID).ToString()) );
+        }
+        else
+        {
+            LogPrint(BCLog::ALL, "Keypool exhausted for account.\n");
+            walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( "error" );
+        }
+        walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
+        receiveAddress->ReturnKey();
+        delete receiveAddress;
     }
-    walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
-    receiveAddress->ReturnKey();
-    delete receiveAddress;
 }
 
 void GUI::balanceChanged()
@@ -1671,6 +1747,8 @@ void GUI::restoreCachedWidgetIfNeeded()
         cacheCurrentWidget = NULL;
     }
 
+    if (viewAddressAction)
+        receiveCoinsAction->setVisible(!stateReceiveCoinsAction);
     if (receiveCoinsAction)
         receiveCoinsAction->setVisible( stateReceiveCoinsAction );
     if (sendCoinsAction)

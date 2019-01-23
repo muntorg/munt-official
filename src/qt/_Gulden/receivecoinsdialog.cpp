@@ -29,6 +29,7 @@
 #include <QTextDocument>
 #include <QDesktopWidget>
 #include <QDesktopServices>
+#include <QToolTip>
 
 #include "GuldenGUI.h"
 
@@ -119,6 +120,13 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *pa
     ui->accountBuyButton->setCursor(Qt::PointingHandCursor);
     ui->accountSaveQRButton->setCursor(Qt::PointingHandCursor);
     ui->accountCopyToClipboardButton->setCursor(Qt::PointingHandCursor);
+    ui->accountCopyToClipboardButton->setTextFormat( Qt::RichText );
+    ui->accountCopyToClipboardButton->setText( GUIUtil::fontAwesomeRegular("\uf0c5") );
+    ui->accountCopyToClipboardButton->setContentsMargins(0, 0, 0, 0);
+    ui->requestCopyToClipboardButton->setCursor(Qt::PointingHandCursor);
+    ui->requestCopyToClipboardButton->setTextFormat( Qt::RichText );
+    ui->requestCopyToClipboardButton->setText( GUIUtil::fontAwesomeRegular("\uf0c5") );
+    ui->requestCopyToClipboardButton->setContentsMargins(0, 0, 0, 0);
     ui->cancelButton->setCursor(Qt::PointingHandCursor);
     ui->closeButton->setCursor(Qt::PointingHandCursor);
     ui->generateRequestButton->setCursor(Qt::PointingHandCursor);
@@ -126,6 +134,7 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *pa
 
 
     connect(ui->accountCopyToClipboardButton, SIGNAL(clicked()), this, SLOT(copyAddressToClipboard()));
+    connect(ui->requestCopyToClipboardButton, SIGNAL(clicked()), this, SLOT(copyAddressToClipboard()));
     connect(ui->accountBuyGuldenButton, SIGNAL(clicked()), this, SLOT(showBuyGuldenDialog()));
     connect(ui->accountBuyButton, SIGNAL(clicked()), this, SLOT(buyGulden()));
     connect(ui->accountSaveQRButton, SIGNAL(clicked()), this, SLOT(saveQRAsImage()));
@@ -253,10 +262,12 @@ void ReceiveCoinsDialog::copyAddressToClipboard()
     if (ui->receiveCoinsStackedWidget->currentIndex() == 0)
     {
         GUIUtil::setClipboard(accountAddress);
+        QToolTip::showText(ui->accountCopyToClipboardButton->mapToGlobal(QPoint(0,0)), tr("Address copied to clipboard"),ui->accountCopyToClipboardButton);
     }
     else if (ui->receiveCoinsStackedWidget->currentIndex() == 3)
     {
         GUIUtil::setClipboard(ui->labelPaymentRequest->text());
+        QToolTip::showText(ui->requestCopyToClipboardButton->mapToGlobal(QPoint(0,0)), tr("Request copied to clipboard"),ui->requestCopyToClipboardButton);
     }
 }
 
@@ -278,6 +289,7 @@ void ReceiveCoinsDialog::gotoReceievePage()
     ui->receiveCoinsStackedWidget->setCurrentIndex(0);
     ui->requestLabel->setText("");
     ui->requestAmount->clear();
+    ui->requestAmount->setDisplayMaxButton(false);
 
     ui->accountRequestPaymentButtonComposite->setVisible(true);
     ui->accountBuyGuldenButton->setVisible(true);
@@ -291,8 +303,6 @@ void ReceiveCoinsDialog::gotoReceievePage()
     ui->accountBuyButton->setVisible(false);
 
     ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton);
-
-    ui->accountCopyToClipboardButton->setText(tr("Copy address to clipboard"));
 }
 
 
@@ -321,6 +331,8 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     ui->generateRequestButton->setVisible(false);
     ui->generateAnotherRequestButton->setVisible(false);
     ui->accountBuyButton->setVisible(true);
+
+    ui->accountSaveQRButton->setVisible(false);
 
 
 
@@ -371,6 +383,8 @@ void ReceiveCoinsDialog::gotoRequestPaymentPage()
     ui->generateRequestButton->setVisible(true);
     ui->generateAnotherRequestButton->setVisible(false);
     ui->accountBuyButton->setVisible(false);
+
+    ui->accountSaveQRButton->setVisible(false);
 }
 
 void ReceiveCoinsDialog::generateRequest()
@@ -398,7 +412,7 @@ void ReceiveCoinsDialog::generateRequest()
     ui->generateAnotherRequestButton->setVisible(true);
     ui->accountBuyButton->setVisible(false);
 
-    ui->accountCopyToClipboardButton->setText(tr("Copy request to clipboard"));
+    ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton);
 
     CAmount amount = ui->requestAmount->amount();
     if (amount > 0)

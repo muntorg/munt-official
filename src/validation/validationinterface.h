@@ -33,6 +33,7 @@ class CValidationInterface;
 class CValidationState;
 class uint256;
 class CAccount;
+enum class MemPoolRemovalReason;
 
 // These functions dispatch to one or all registered wallets
 
@@ -50,10 +51,10 @@ protected:
     virtual void StalledWitness([[maybe_unused]] const CBlockIndex* pBlock, [[maybe_unused]] uint64_t nSeconds) {}
     virtual void UpdatedBlockTip([[maybe_unused]] const CBlockIndex *pindexNew, [[maybe_unused]] const CBlockIndex *pindexFork, [[maybe_unused]] bool fInitialDownload) {}
     virtual void TransactionAddedToMempool([[maybe_unused]] const CTransactionRef &ptxn) {}
+    virtual void TransactionDeletedFromMempool([[maybe_unused]] const uint256 &hash, [[maybe_unused]] MemPoolRemovalReason reason) {}
     virtual void BlockConnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block, [[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::vector<CTransactionRef> &txnConflicted) {}
     virtual void BlockDisconnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block) {}
     virtual void SetBestChain([[maybe_unused]] const CBlockLocator &locator) {}
-    virtual void Inventory([[maybe_unused]] const uint256 &hash) {}
     virtual void ResendWalletTransactions([[maybe_unused]] int64_t nBestBlockTime, [[maybe_unused]] CConnman* connman) {}
     virtual void BlockChecked([[maybe_unused]] const CBlock&, [[maybe_unused]] const CValidationState&) {}
     virtual void GetScriptForMining([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
@@ -72,6 +73,8 @@ struct CMainSignals {
     boost::signals2::signal<void (const CBlockIndex *, const CBlockIndex *, bool fInitialDownload)> UpdatedBlockTip;
     /** Notifies listeners of a transaction having been added to mempool. */
     boost::signals2::signal<void (const CTransactionRef &)> TransactionAddedToMempool;
+    /** Notifies listeners of a transaction having been removed from mempool. Currently only triggered with MemPoolRemovalReason::EXPIRY. */
+    boost::signals2::signal<void (const uint256& hash, MemPoolRemovalReason reason)> TransactionDeletedFromMempool;
     /**
      * Notifies listeners of a block being connected.
      * Provides a vector of transactions evicted from the mempool as a result.
@@ -81,8 +84,6 @@ struct CMainSignals {
     boost::signals2::signal<void (const std::shared_ptr<const CBlock> &)> BlockDisconnected;
     /** Notifies listeners of a new active block chain. */
     boost::signals2::signal<void (const CBlockLocator &)> SetBestChain;
-    /** Notifies listeners about an inventory item being seen on the network. */
-    boost::signals2::signal<void (const uint256 &)> Inventory;
     /** Tells listeners to broadcast their data. */
     boost::signals2::signal<void (int64_t nBestBlockTime, CConnman* connman)> Broadcast;
     /**

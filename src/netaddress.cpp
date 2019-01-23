@@ -283,6 +283,24 @@ std::string CNetAddr::ToString() const
     return ToStringIP();
 }
 
+std::string CNetAddr::HostnameLookup() const
+{
+    if (IsTor())
+        return "";
+
+    try {
+        boost::asio::ip::tcp::resolver resolver(get_io_context());
+        boost::asio::ip::tcp::endpoint ep;
+        ep.address(GetAddress());
+        auto endpoints = resolver.resolve(ep);
+        return endpoints.begin()->host_name();
+    }
+    catch (const boost::system::error_code& ec) {
+    }
+
+    return "";
+}
+
 bool operator==(const CNetAddr& a, const CNetAddr& b)
 {
     return (memcmp(a.ip, b.ip, 16) == 0);

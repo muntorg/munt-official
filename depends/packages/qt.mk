@@ -12,6 +12,7 @@ $(package)_patches=mac-qmake.conf mingw-uuidof.patch pidlist_absolute.patch fix-
 $(package)_patches+=0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch
 $(package)_patches+=strip_log2f.patch
 $(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-coretext.patch
+$(package)_patches+=fix_mojave_fonts.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
@@ -176,6 +177,7 @@ define $(package)_preprocess_cmds
   patch -p1 < $($(package)_patch_dir)/fix-cocoahelpers-macos.patch && \
   patch -p1 < $($(package)_patch_dir)/qfixed-coretext.patch && \
   patch -p1 < $($(package)_patch_dir)/0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch && \
+  patch -p1 < $($(package)_patch_dir)/fix_mojave_fonts.patch && \
   $($(package)_patch_glibc_compat) \
   echo "!host_build: QMAKE_CFLAGS     += $($(package)_cflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_CXXFLAGS   += $($(package)_cxxflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \

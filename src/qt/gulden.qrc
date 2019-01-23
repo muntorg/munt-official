@@ -26,6 +26,7 @@
         <file alias="lock">_Gulden/res/Lock.png</file>
         <file alias="lock_x2">_Gulden/res/Lock@2x.png</file>
         <file alias="logo_blue">_Gulden/res/LogoBlue.png</file>
+        <file alias="logo_blue_x2">_Gulden/res/LogoBlue@2x.png</file>
         <file alias="main_background">_Gulden/res/MainBackground.png</file>
         <file alias="slider_handle">_Gulden/res/SliderHandle.png</file>
         <file alias="slider_handle_x2">_Gulden/res/SliderHandle@2x.png</file>

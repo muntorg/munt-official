@@ -204,14 +204,6 @@ void CoreShutdown(boost::thread_group& threadGroup)
     threadGroup.join_all();
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
 
-    #ifdef ENABLE_WALLET
-    LogPrintf("Core shutdown: final flush wallets.\n");
-    for (CWalletRef pwallet : vpwallets) {
-        pwallet->Flush(false);
-    }
-    MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
-    #endif
-
     LogPrintf("Core shutdown: delete network threads.\n");
     MapPort(false);
     UnregisterValidationInterface(peerLogic.get());
@@ -242,14 +234,9 @@ void CoreShutdown(boost::thread_group& threadGroup)
         LOCK(cs_main);
 
         if (!isFullSyncMode() && IsPartialSyncActive())
-            PruneForPartialSync();
+            PersistAndPruneForPartialSync();
         else
-        {
-            // avoid duplicate FlushStateToDisk as PruneForPartialSync will also call it
-            if (pcoinsTip != NULL) {
-                FlushStateToDisk();
-            }
-        }
+            FlushStateToDisk();
 
         blockStore.CloseBlockFiles();
         delete pcoinsTip;

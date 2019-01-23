@@ -5,50 +5,255 @@
 
 package com.gulden.unity_wallet
 
+import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
-
-import kotlinx.android.synthetic.main.activity_send_coins.*
-import android.content.Context
-import android.support.v7.app.AlertDialog
-import android.widget.EditText
-import android.view.ViewGroup
-import android.view.LayoutInflater
 import com.gulden.unity_wallet.R.layout.text_input_address_label
+import com.gulden.unity_wallet.currency.Currencies
+import com.gulden.unity_wallet.currency.fetchCurrencyRate
+import com.gulden.unity_wallet.currency.localCurrency
+import kotlinx.android.synthetic.main.activity_send_coins.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
+import kotlinx.coroutines.*
+import org.apache.commons.validator.routines.IBANValidator
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.appcompat.v7.Appcompat
+import org.jetbrains.anko.design.longSnackbar
+import kotlin.coroutines.CoroutineContext
 
 
-class SendCoinsActivity : AppCompatActivity() {
+class SendCoinsActivity : AppCompatActivity(), CoroutineScope
+{
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+    private var nocksJob: Job? = null
+    private var orderResult: NocksOrderResult? = null
+    private lateinit var activeAmount: EditText
+    private var localRate: Double = 0.0
+    private lateinit var recipient: UriRecipient
+    private var foreignCurrency = localCurrency
+    private var isIBAN = false
+    private val amount: Double
+        get() {
+            var a = send_coins_amount.text.toString().toDoubleOrNull()
+            if (a == null)
+                a = 0.0
+            return a
+        }
+    private val foreignAmount: Double
+        get() {
+            var a = send_coins_local_amount.text.toString().toDoubleOrNull()
+            if (a == null)
+                a = 0.0
+            return a
+        }
+    private val recipientDisplayAddress: String
+        get () {
+            return if (recipient.label.isEmpty()) recipient.address else "${recipient.label} (${recipient.address})"
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_coins)
         setSupportActionBar(toolbar)
 
-        var recipient : UriRecipient = intent.getParcelableExtra(EXTRA_RECIPIENT)
-        send_coins_amount.setText(recipient.amount)
+        recipient = intent.getParcelableExtra(EXTRA_RECIPIENT)
+        activeAmount = send_coins_amount
+        activeAmount.setText(recipient.amount)
         send_coins_receiving_static_address.text = recipient.address
 
         setAddressLabel(recipient.label)
 
-        fab.setOnClickListener {
-            view -> run {
-                if (send_coins_amount.text.length > 0) {
-                    var paymentRequest : UriRecipient = UriRecipient(true, recipient.address, recipient.label, send_coins_amount.text.toString())
-                    if (GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)) {
-                        finish()
-                    }
-                    else {
-                        Snackbar.make(view, "Payment failed", Snackbar.LENGTH_LONG).setAction("Action", null).show()
-                    }
+        send_coins_send_btn.setOnClickListener { view ->
+            run {
+                if (activeAmount.text.isEmpty()) {
+                    Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null)
+                            .show()
+                    return@run
                 }
-                else {
-                    Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+
+
+
+                if (isIBAN) {
+                    confirmAndCommitIBANPayment(view)
+                } else {
+                    confirmAndCommitGuldenPaymnet(view)
+                }
+            }
+        }
+
+        send_coins_amount.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) activeAmount = send_coins_amount
+        }
+
+        send_coins_local_amount.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) activeAmount = send_coins_local_amount
+        }
+
+        if (IBANValidator.getInstance().isValid(recipient.address)) {
+            foreignCurrency = Currencies.knownCurrencies["EUR"]!!
+            isIBAN = true
+        }
+        else {
+            foreignCurrency = localCurrency
+            isIBAN = false
+        }
+
+        setupRate()
+    }
+
+    private fun confirmAndCommitGuldenPaymnet(view: View) {
+        // create styled message from resource template and arguments bundle
+        val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amount)
+        val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
+
+        // alert dialog for confirmation
+        alert(Appcompat, message, "Send Gulden?") {
+
+            // on confirmation compose recipient and execute payment
+            positiveButton("Send") {
+                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, send_coins_amount.text.toString())
+                try {
+                    GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
+                    finish()
+                }
+                catch (exception: RuntimeException) {
+                    view.longSnackbar(exception.message!!)
+                }
+            }
+
+            negativeButton("Cancel") {}
+        }.show()
+    }
+
+    private fun confirmAndCommitIBANPayment(view: View) {
+        send_coins_send_btn.isEnabled = false
+        this.launch {
+            try {
+                // request order from Nocks
+                val orderResult = nocksOrder(
+                        amountEuro = String.format("%.${foreignCurrency.precision}f", foreignAmount),
+                        iban = recipient.address)
+
+                // create styled message from resource template and arguments bundle
+                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG.toDouble())
+                val message = getString(R.string.send_coins_iban_confirm_template,
+                        String.format("%.${foreignCurrency.precision}f", foreignAmount),
+                        nlgStr, recipientDisplayAddress)
+
+                // alert dialog for confirmation
+                alert(Appcompat, message, "Send Gulden to IBAN?") {
+
+                    // on confirmation compose recipient and execute payment
+                    positiveButton("Send") {
+                        send_coins_send_btn.isEnabled = true
+                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG)
+                        try {
+                            GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
+                            finish()
+                        }
+                        catch (exception: RuntimeException) {
+                            view.longSnackbar(exception.message!!)
+                        }
+
+                    }
+
+                    negativeButton("Cancel") {}
+                }
+                        .show()
+                send_coins_send_btn.isEnabled = true
+
+            } catch (e: Throwable) {
+                view.longSnackbar("IBAN order failed")
+                send_coins_send_btn.isEnabled = true
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        coroutineContext[Job]!!.cancel()
+    }
+
+    fun setupRate()
+    {
+        this.launch( Dispatchers.Main) {
+            try {
+                localRate = fetchCurrencyRate(foreignCurrency.code)
+                send_coins_local_label.text = foreignCurrency.short
+                send_coins_local_group.visibility = View.VISIBLE
+
+                updateConversion()
+
+                if (isIBAN)
+                    send_coins_local_amount.requestFocus()
+            }
+            catch (e: Throwable) {
+                send_coins_local_group.visibility = View.GONE
+            }
+        }
+    }
+
+    fun updateConversion()
+    {
+        if (localRate <= 0.0)
+            return
+
+        if (activeAmount == send_coins_amount) {
+            // update local from Gulden
+            send_coins_local_amount.setText(
+                    if (amount != 0.0)
+                        String.format("%.${foreignCurrency.precision}f", localRate * amount)
+                    else
+                        ""
+            )
+        }
+        else {
+            // update Gulden from local
+            send_coins_amount.setText(
+                    if (foreignAmount != 0.0)
+                        String.format("%.${Config.PRECISION_SHORT}f", foreignAmount / localRate)
+                    else
+                        ""
+            )
+        }
+    }
+
+    private fun updateNocksEstimate() {
+        nocksJob?.cancel()
+        send_coins_nocks_estimate.text = " "
+        if (isIBAN && foreignAmount != 0.0) {
+            val prevJob = nocksJob
+            nocksJob = this.launch(Dispatchers.Main) {
+                try {
+                    send_coins_nocks_estimate.text = "..."
+
+                    // delay a bit so quick typing will make a limited number of requests
+                    // (this job will be canceled by the next key typed
+                    delay(700)
+
+                    prevJob?.join()
+
+                    val quote = nocksQuote(send_coins_local_amount.text.toString())
+                    val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG.toDouble())
+                    send_coins_nocks_estimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
+                }
+                catch (_: CancellationException) {
+                    // silently pass job cancelation
+                }
+                catch (e: Throwable) {
+                    send_coins_nocks_estimate.text = "Could not fetch transaction quote"
                 }
             }
         }
@@ -78,10 +283,10 @@ class SendCoinsActivity : AppCompatActivity() {
 
     fun appendNumberToAmount(number : String)
     {
-        if (send_coins_amount.text.toString() == "0")
-            send_coins_amount.setText(number)
+        if (activeAmount.text.toString() == "0")
+            activeAmount.setText(number)
         else
-            send_coins_amount.setText(send_coins_amount.text.toString() + number)
+            activeAmount.setText(activeAmount.text.toString() + number)
     }
 
     fun handleKeypadButtonClick(view : View)
@@ -98,27 +303,29 @@ class SendCoinsActivity : AppCompatActivity() {
             R.id.button_8 -> appendNumberToAmount("8")
             R.id.button_9 -> appendNumberToAmount("9")
             R.id.button_0 -> {
-                if (send_coins_amount.text.isEmpty())
-                    send_coins_amount.setText(send_coins_amount.text.toString() + "0.")
-                else if (send_coins_amount.text.toString() != "0")
-                    send_coins_amount.setText(send_coins_amount.text.toString() + "0")
+                if (activeAmount.text.isEmpty())
+                    activeAmount.setText(activeAmount.text.toString() + "0.")
+                else if (activeAmount.text.toString() != "0")
+                    activeAmount.setText(activeAmount.text.toString() + "0")
             }
             R.id.button_backspace -> {
-                if (send_coins_amount.text.toString() == "0.")
-                    send_coins_amount.setText("")
+                if (activeAmount.text.toString() == "0.")
+                    activeAmount.setText("")
                 else
-                    send_coins_amount.setText(send_coins_amount.text.dropLast(1))
+                    activeAmount.setText(activeAmount.text.dropLast(1))
             }
             R.id.button_decimal -> {
-                if (!send_coins_amount.text.contains("."))
+                if (!activeAmount.text.contains("."))
                 {
-                    if (send_coins_amount.text.isEmpty())
-                        send_coins_amount.setText("0.")
+                    if (activeAmount.text.isEmpty())
+                        activeAmount.setText("0.")
                     else
-                        send_coins_amount.setText(send_coins_amount.text.toString() + ".")
+                        activeAmount.setText(activeAmount.text.toString() + ".")
                 }
             }
         }
+        updateConversion()
+        updateNocksEstimate()
     }
 
     fun handleAddToAddressBookClick(view : View)

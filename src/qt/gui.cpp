@@ -90,16 +90,6 @@
 #include <QUrlQuery>
 #endif
 
-const std::string GUI::DEFAULT_UIPLATFORM =
-#if defined(Q_OS_MAC)
-        "macosx"
-#elif defined(Q_OS_WIN)
-        "windows"
-#else
-        "other"
-#endif
-        ;
-
 static void NotifyRequestUnlockS(GUI* parent, CWallet* wallet, std::string reason)
 {
     QMetaObject::invokeMethod(parent, "NotifyRequestUnlock", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)));
@@ -403,6 +393,14 @@ void GUI::createActions()
     overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
     tabGroup->addAction(overviewAction);
 
+    viewAddressAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f6), tr("&Address"), this);
+    viewAddressAction->setObjectName("action_view_address");
+    viewAddressAction->setStatusTip(tr("Request payments (generates QR codes and gulden: URIs)"));
+    viewAddressAction->setToolTip(viewAddressAction->statusTip());
+    viewAddressAction->setCheckable(true);
+    viewAddressAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_2));
+    tabGroup->addAction(viewAddressAction);
+
     sendCoinsAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf2f5), tr("&Send"), this);
     sendCoinsAction->setObjectName("action_send_coins");
     sendCoinsAction->setStatusTip(tr("Send coins to a Gulden address"));
@@ -444,6 +442,8 @@ void GUI::createActions()
     connect(witnessDialogAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
+    connect(viewAddressAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(viewAddressAction, SIGNAL(triggered()), this, SLOT(gotoViewAddressPage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
     connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -749,6 +749,10 @@ bool GUI::setCurrentWallet(const QString& name)
     // Now that we have an active wallet it is safe to show the toolbars and menubars again.
     showToolBars();
     appMenuBar->setVisible(true);
+    #ifndef MAC_OSX
+    menuBarSpaceFiller->setFixedSize(20000, appMenuBar->height());
+    menuBarSpaceFiller->setVisible(true);
+    #endif
 
     refreshAccountControls();
 
@@ -790,6 +794,7 @@ void GUI::setWalletActionsEnabled(bool enabled)
 
     witnessDialogAction->setEnabled(enabled);
     overviewAction->setEnabled(enabled);
+    viewAddressAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
     sendCoinsMenuAction->setEnabled(enabled);
     receiveCoinsAction->setEnabled(enabled);
@@ -1001,6 +1006,15 @@ void GUI::gotoHistoryPage()
     historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
     //if (walletFrame) walletFrame->currentWalletView()->historyPage->update();
+}
+
+void GUI::gotoViewAddressPage()
+{
+    LogPrint(BCLog::QT, "GUI::gotoReceiveCoinsPage\n");
+
+    viewAddressAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoViewAddressPage();
+    //if (walletFrame) walletFrame->currentWalletView()->receiveCoinsPage->update();
 }
 
 void GUI::gotoReceiveCoinsPage()
@@ -1357,12 +1371,13 @@ void GUI::resizeEvent(QResizeEvent* event)
     // Other languages may in turn be different.
     // If we are working with limited horizontal spacing then hide some non-essential UI elements to help things fit more comfortably.
     bool restrictedHorizontalSpace = (event->size().width() < 980) ? true : false;
+    bool extraRestrictedHorizontalSpace = (event->size().width() < 780) ? true : false;
     if (accountSummaryWidget)
         accountSummaryWidget->showForexBalance(!restrictedHorizontalSpace);
     if (walletFrame && walletFrame->currentWalletView() && walletFrame->currentWalletView()->receiveCoinsPage)
-        walletFrame->currentWalletView()->receiveCoinsPage->setShowCopyQRAsImageButton(!restrictedHorizontalSpace);
+        walletFrame->currentWalletView()->receiveCoinsPage->setShowCopyQRAsImageButton(!extraRestrictedHorizontalSpace);
     else
-        ReceiveCoinsDialog::showCopyQRAsImagebutton = !restrictedHorizontalSpace;
+        ReceiveCoinsDialog::showCopyQRAsImagebutton = !extraRestrictedHorizontalSpace;
 }
 
 

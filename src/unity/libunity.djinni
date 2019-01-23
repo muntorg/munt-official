@@ -34,17 +34,19 @@ uri_recipient = record {
     amount : string;
 } deriving(parcelable)
 
-transaction_type = enum {
-    send;
-    receive;
-}
-
 transaction_record = record {
-    type : transaction_type;
+    txHash: string;
+    timestamp : i64;
+    amount : i64;
+    fee : i64;
+    receivedOutputs : list<output_record>;
+    sentOutputs : list<output_record>;
+} deriving(parcelable)
+
+output_record = record {
     amount : i64;
     address : string;
     label : string;
-    timestamp : i64;
 } deriving(parcelable)
 
 address_record = record {
@@ -52,6 +54,21 @@ address_record = record {
     purpose : string;
     name : string;
 } deriving(parcelable)
+
+peer_record = record {
+    ip : string;
+    hostname : string;
+    height : i32;
+    latency : i32;
+    userAgent : string;
+    protocol : i64;
+}
+
+blockinfo_record = record {
+    height : i32;
+    timestamp : i64;
+    blockhash : string;
+}
 
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
@@ -63,7 +80,8 @@ gulden_unified_backend = interface +c {
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletLinkedFromURI(linked_uri : string): bool;
 
-    # Check if a possible recovery phrase is valid or not
+    # Check recovery phrase for (syntactic) validity
+    # Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
     static IsValidRecoveryPhrase(phrase: string): bool;
 
     # Generate a new recovery mnemonic
@@ -87,8 +105,8 @@ gulden_unified_backend = interface +c {
     # Check if text/address is something we are capable of sending money too
     static IsValidRecipient(request : uri_record): uri_recipient;
 
-    # Attempt to pay a recipient
-    static performPaymentToRecipient(request : uri_recipient): bool;
+    # Attempt to pay a recipient, will throw on failure with descriptiopn
+    static performPaymentToRecipient(request : uri_recipient);
 
     # Get list of all transactions wallet has been involved in
     static getTransactionHistory() : list<transaction_record>;
@@ -102,17 +120,58 @@ gulden_unified_backend = interface +c {
     # Delete a record from the address book
     static deleteAddressBookRecord(address : address_record);
 
+    # Interim persist and prune of state. Use at key moments like app backgrounding.
+    static PersistAndPruneForSPV();
+
+    # Reset progress notification. In cases where there has been no progress for a long time, but the process
+    # is still running the progress can be reset and will represent work to be done from this reset onwards.
+    # For example when the process is in the background on iOS for a long long time (but has not been terminated
+    # by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
+    static ResetUnifiedProgress();
+
+    # Get connected peer info
+    static getPeers() : list<peer_record>;
+
+    # Get info of last blocks (at most 32) in SPV chain
+    static getLastSPVBlockinfos() : list<blockinfo_record>;
+
+    static getMonitoringStats(): monitor_record;
+
+    static RegisterMonitorListener(listener : gulden_monitor_listener);
+    static UnregisterMonitorListener(listener : gulden_monitor_listener);
+
     # Interface constants
     const version: i32 = 1;
 }
 
 # This interface will be implemented in Java and ObjC and can be called from C++.
 gulden_unified_frontend = interface +j +o {
-    notifySPVProgress(start_height : i32, progess_height : i32, expected_height : i32): bool;
+    # Fraction of work done since session start or last progress reset [0..1]
+    # Unified progress combines connection state, header and block sync
+    notifyUnifiedProgress(progress : f32);
     notifyBalanceChange(new_balance : balance_record): bool;
     notifyNewTransaction(new_transaction : transaction_record): bool;
+    notifyUpdatedTransaction(transaction : transaction_record): bool;
     notifyInitWithExistingWallet();
     notifyInitWithoutExistingWallet();
     notifyShutdown(): bool;
     notifyCoreReady(): bool;
+
+    logPrint(str : string);
+}
+
+# monitoring stats
+monitor_record = record {
+    partialHeight: i32;
+    partialOffset: i32;
+    prunedHeight: i32;
+    processedSPVHeight: i32;
+    probableHeight: i32;
+}
+
+# Monitoring events
+gulden_monitor_listener = interface +j +o {
+    onPartialChain(height : i32, probable_height : i32, offset : i32);
+    onPruned(height : i32);
+    onProcessedSPVBlocks(height : i32);
 }

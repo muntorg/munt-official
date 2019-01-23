@@ -6,14 +6,18 @@
 package com.gulden.unity_wallet.MainActivityFragments
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.preference.Preference
+import androidx.preference.Preference
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.SendCoinsActivity
+import com.gulden.unity_wallet.WalletActivity
+import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 
 
-class SettingsFragment : android.support.v7.preference.PreferenceFragmentCompat()
+class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 {
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {
@@ -51,6 +55,11 @@ class SettingsFragment : android.support.v7.preference.PreferenceFragmentCompat(
             "preference_notify_transaction_activity" ->
             {
                 //TODO: Implement
+            }
+            "preference_monitor" ->
+            {
+                val intent = Intent(context, NetworkMonitorActivity::class.java)
+                startActivity(intent)
             }
         }
         return super.onPreferenceTreeClick(preference)

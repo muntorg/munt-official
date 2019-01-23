@@ -49,6 +49,9 @@ endif
 if BUILD_GULDEN_LIBS_JNI
 LIBGULDEN_UNITY_JNI=libgulden_unity_jni.la
 endif
+if BUILD_GULDEN_LIBS_OBJC
+LIBGULDEN_UNITY_OBJC=libgulden_unity_objc.a
+endif
 if ENABLE_WALLET
 LIBGULDEN_WALLET=libgulden_wallet.a
 endif
@@ -74,6 +77,7 @@ lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
+noinst_LIBRARIES =
 TESTS =
 BENCHMARKS =
 
@@ -464,10 +468,18 @@ libgulden_unity_jni_la_SOURCES = \
   $(crypto_libgulden_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/djinni/jni/NativeBlockinfoRecord.hpp \
+  unity/djinni/jni/NativeBlockinfoRecord.cpp \
+  unity/djinni/jni/NativeGuldenMonitorListener.cpp \
+  unity/djinni/jni/NativeGuldenMonitorListener.hpp \
   unity/djinni/jni/NativeGuldenUnifiedBackend.hpp \
   unity/djinni/jni/NativeGuldenUnifiedBackend.cpp \
   unity/djinni/jni/NativeGuldenUnifiedFrontend.hpp \
   unity/djinni/jni/NativeGuldenUnifiedFrontend.cpp \
+  unity/djinni/jni/NativeMonitorRecord.cpp \
+  unity/djinni/jni/NativeMonitorRecord.hpp \
+  unity/djinni/jni/NativePeerRecord.hpp \
+  unity/djinni/jni/NativePeerRecord.cpp \
   unity/djinni/jni/NativeQrcodeRecord.hpp \
   unity/djinni/jni/NativeQrcodeRecord.cpp \
   unity/djinni/jni/NativeAddressRecord.hpp \
@@ -480,6 +492,8 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeUriRecipient.cpp \
   unity/djinni/jni/NativeTransactionRecord.hpp \
   unity/djinni/jni/NativeTransactionRecord.cpp \
+  unity/djinni/jni/NativeOutputRecord.hpp \
+  unity/djinni/jni/NativeOutputRecord.cpp \
   unity/djinni/cpp/gulden_unified_backend.hpp \
   unity/djinni/cpp/gulden_unified_backend.cpp \
   unity/djinni/cpp/gulden_unified_frontend.hpp \
@@ -495,6 +509,103 @@ libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 endif
 #
 
+# Gulden-unity library #
+if BUILD_GULDEN_LIBS_OBJC
+
+noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)
+
+libgulden_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(srcdir)/unity/djinni/cpp
+libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc  -I$(srcdir)/unity/djinni/cpp $(DJINNI_OBJCXXFLAGS)
+
+DJINNI_CPP_GEN = \
+  unity/djinni/cpp/address_record.hpp \
+  unity/djinni/cpp/balance_record.hpp \
+  unity/djinni/cpp/blockinfo_record.hpp \
+  unity/djinni/cpp/gulden_unified_backend.cpp \
+  unity/djinni/cpp/gulden_unified_backend.hpp \
+  unity/djinni/cpp/gulden_unified_frontend.hpp \
+  unity/djinni/cpp/gulden_monitor_listener.hpp \
+  unity/djinni/cpp/monitor_record.hpp \
+  unity/djinni/cpp/peer_record.hpp \
+  unity/djinni/cpp/qrcode_record.hpp \
+  unity/djinni/cpp/transaction_record.hpp \
+  unity/djinni/cpp/output_record.hpp \
+  unity/djinni/cpp/uri_recipient.hpp \
+  unity/djinni/cpp/uri_record.hpp
+
+DJINNI_OBJC_GEN = \
+  unity/djinni/objc/DBAddressRecord+Private.h \
+  unity/djinni/objc/DBAddressRecord+Private.mm \
+  unity/djinni/objc/DBAddressRecord.h \
+  unity/djinni/objc/DBAddressRecord.mm \
+  unity/djinni/objc/DBBalanceRecord+Private.h \
+  unity/djinni/objc/DBBalanceRecord+Private.mm \
+  unity/djinni/objc/DBBalanceRecord.h \
+  unity/djinni/objc/DBBalanceRecord.mm \
+  unity/djinni/objc/DBBlockinfoRecord+Private.h \
+  unity/djinni/objc/DBBlockinfoRecord+Private.mm \
+  unity/djinni/objc/DBBlockinfoRecord.h \
+  unity/djinni/objc/DBBlockinfoRecord.mm \
+  unity/djinni/objc/DBGuldenUnifiedBackend+Private.h \
+  unity/djinni/objc/DBGuldenUnifiedBackend+Private.mm \
+  unity/djinni/objc/DBGuldenUnifiedBackend.h \
+  unity/djinni/objc/DBGuldenUnifiedBackend.mm \
+  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.h \
+  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.mm \
+  unity/djinni/objc/DBGuldenUnifiedFrontend.h \
+  unity/djinni/objc/DBGuldenMonitorListener+Private.h \
+  unity/djinni/objc/DBGuldenMonitorListener+Private.mm \
+  unity/djinni/objc/DBGuldenMonitorListener.h \
+  unity/djinni/objc/DBMonitorRecord+Private.h \
+  unity/djinni/objc/DBMonitorRecord+Private.mm \
+  unity/djinni/objc/DBMonitorRecord.h \
+  unity/djinni/objc/DBMonitorRecord.mm \
+  unity/djinni/objc/DBOutputRecord+Private.h \
+  unity/djinni/objc/DBOutputRecord+Private.mm \
+  unity/djinni/objc/DBOutputRecord.h \
+  unity/djinni/objc/DBOutputRecord.mm \
+  unity/djinni/objc/DBPeerRecord+Private.h \
+  unity/djinni/objc/DBPeerRecord+Private.mm \
+  unity/djinni/objc/DBPeerRecord.h \
+  unity/djinni/objc/DBPeerRecord.mm \
+  unity/djinni/objc/DBQrcodeRecord+Private.h \
+  unity/djinni/objc/DBQrcodeRecord+Private.mm \
+  unity/djinni/objc/DBQrcodeRecord.h \
+  unity/djinni/objc/DBQrcodeRecord.mm \
+  unity/djinni/objc/DBTransactionRecord+Private.h \
+  unity/djinni/objc/DBTransactionRecord+Private.mm \
+  unity/djinni/objc/DBTransactionRecord.h \
+  unity/djinni/objc/DBTransactionRecord.mm \
+  unity/djinni/objc/DBUriRecipient+Private.h \
+  unity/djinni/objc/DBUriRecipient+Private.mm \
+  unity/djinni/objc/DBUriRecipient.h \
+  unity/djinni/objc/DBUriRecipient.mm \
+  unity/djinni/objc/DBUriRecord+Private.h \
+  unity/djinni/objc/DBUriRecord+Private.mm \
+  unity/djinni/objc/DBUriRecord.h \
+  unity/djinni/objc/DBUriRecord.mm
+
+libgulden_unity_objc_a_SOURCES = \
+  unity/libinit.cpp \
+  unity/libinit.h \
+  unity/ios/logging_ios.cpp \
+  unity/ios/init_ios.cpp \
+  $(libgulden_wallet_a_SOURCES) \
+  $(libgulden_common_a_SOURCES) \
+  $(libgulden_util_a_SOURCES) \
+  $(libgulden_node_a_SOURCES) \
+  $(libgulden_consensus_a_SOURCES) \
+  $(crypto_libgulden_crypto_a_SOURCES) \
+  unity/unity_impl.h \
+  unity/unity_impl.cpp \
+  $(DJINNI_CPP_GEN) \
+  $(DJINNI_OBJC_GEN) \
+  $(GULDEN_CORE_H)
+
+$(LIBGULDEN_UNITY_OBJC): $(LIBSECP256K1) $(LIBLEVELDB) $(LIBMEMENV)
+
+endif
 
 # GuldenD binary #
 GuldenD_SOURCES = GuldenD.cpp

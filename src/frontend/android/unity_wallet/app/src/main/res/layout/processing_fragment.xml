@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Willem de Jonge (willem@isnapp.nl)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <TableLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/list_entry_padding_horizontal"
+        android:paddingRight="@dimen/list_entry_padding_horizontal"
+        android:paddingTop="@dimen/list_entry_padding_vertical"
+        android:paddingBottom="@dimen/list_entry_padding_vertical"
+        android:stretchColumns="1">
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:padding="3dip"
+                android:text="Probable height" />
+            <TextView
+                android:id="@+id/processing_group_probable"
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="123" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:padding="3dip"
+                android:text="Partial chain height" />
+            <TextView
+                android:id="@+id/processing_group_height"
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="123" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:padding="3dip"
+                android:text="Processed height" />
+            <TextView
+                android:id="@+id/processing_group_processed"
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="123" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:padding="3dip"
+                android:text="Partial chain offset" />
+            <TextView
+                android:id="@+id/processing_group_offset"
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="123" />
+        </TableRow>
+
+    <TableRow>
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="Partial chain length" />
+        <TextView
+            android:id="@+id/processing_group_length"
+            android:gravity="right"
+            android:padding="3dip"
+            android:text="123" />
+    </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:padding="3dip"
+                android:text="Pruned below height" />
+            <TextView
+                android:id="@+id/processing_group_prune"
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="123" />
+        </TableRow>
+
+    </TableLayout>

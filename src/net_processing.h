@@ -102,4 +102,6 @@ void CancelAllPriorityDownloads();
 bool FlushPriorityDownloads();
 size_t CountPriorityDownloads();
 
+int GetProbableHeight();
+
 #endif // GULDEN_NET_PROCESSING_H

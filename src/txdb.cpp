@@ -254,22 +254,30 @@ void CCoinsViewDBCursor::Next()
     }
 }
 
-bool CBlockTreeDB::EraseBatchSync(const std::vector<const CBlockIndex*>& items) {
-    CDBBatch batch(*this);
-    for (const CBlockIndex* index: items) {
-        batch.Erase(std::pair(DB_BLOCK_INDEX, index->GetBlockHashPoW2()));
-    }
-    return WriteBatch(batch, true);
-}
-
-bool CBlockTreeDB::WriteBatchSync(const std::vector<std::pair<int, const CBlockFileInfo*> >& fileInfo, int nLastFile, const std::vector<const CBlockIndex*>& blockinfo) {
+bool CBlockTreeDB::UpdateBatchSync(const std::vector<std::pair<int, const CBlockFileInfo*> >& fileInfo, int nLastFile,
+                                   const std::vector<const CBlockIndex*>& vWriteIndices,
+                                   const std::vector<uint256>& vEraseHashes)
+{
     CDBBatch batch(*this);
     for (std::vector<std::pair<int, const CBlockFileInfo*> >::const_iterator it=fileInfo.begin(); it != fileInfo.end(); it++) {
         batch.Write(std::pair(DB_BLOCK_FILES, it->first), *it->second);
     }
     batch.Write(DB_LAST_BLOCK, nLastFile);
-    for (std::vector<const CBlockIndex*>::const_iterator it=blockinfo.begin(); it != blockinfo.end(); it++) {
+    for (std::vector<const CBlockIndex*>::const_iterator it=vWriteIndices.begin(); it != vWriteIndices.end(); it++) {
         batch.Write(std::pair(DB_BLOCK_INDEX, (*it)->GetBlockHashPoW2()), CDiskBlockIndex(*it));
+    }
+    for (const uint256& hash: vEraseHashes) {
+        batch.Erase(std::pair(DB_BLOCK_INDEX, hash));
+    }
+    return WriteBatch(batch, true);
+
+}
+
+bool CBlockTreeDB::EraseBatchSync(const std::vector<uint256>& vEraseHashes)
+{
+    CDBBatch batch(*this);
+    for (const uint256& hash: vEraseHashes) {
+        batch.Erase(std::pair(DB_BLOCK_INDEX, hash));
     }
     return WriteBatch(batch, true);
 }

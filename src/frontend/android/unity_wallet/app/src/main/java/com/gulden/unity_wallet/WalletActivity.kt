@@ -6,42 +6,55 @@
 package com.gulden.unity_wallet
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.barcodereader.BarcodeCaptureActivity
-import com.gulden.jniunifiedbackend.*
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.MainActivityFragments.ReceiveFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment
 import com.gulden.unity_wallet.MainActivityFragments.SendFragment.OnFragmentInteractionListener
 import com.gulden.unity_wallet.MainActivityFragments.SettingsFragment
 import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
+import com.gulden.unity_wallet.currency.fetchCurrencyRate
+import com.gulden.unity_wallet.currency.localCurrency
 import com.gulden.unity_wallet.ui.buy.BuyActivity
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-
-inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
+inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
     beginTransaction().func().commit()
 }
 
-fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int){
+fun AppCompatActivity.addFragment(fragment: androidx.fragment.app.Fragment, frameId: Int){
     supportFragmentManager.inTransaction { add(frameId, fragment) }
 }
 
 fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
-    supportFragmentManager.inTransaction{replace(frameId, fragment as Fragment)}
+    supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
 }
 
-class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener
+class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentInteractionListener,
+        ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener, CoroutineScope,
+        SharedPreferences.OnSharedPreferenceChangeListener
 {
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+
+    private val coreObserverProxy = CoreObserverProxy(this, this)
+
+    override fun syncProgressChanged(percent: Float): Boolean {
+        setSyncProgress(percent)
+        return true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -50,21 +63,51 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         syncProgress.max = 1000000
-        syncProgress.progress = 0
 
-        (application as ActivityManager).walletActivity = this
+        if (sendFragment == null)
+            sendFragment = SendFragment()
+        addFragment(sendFragment!!, R.id.mainLayout)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onStop()
-    {
+    override fun onDestroy() {
+        super.onDestroy()
+
+        coroutineContext[Job]!!.cancel()
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        preferences.unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        syncProgress.progress = 0
+        UnityCore.instance.addObserver(coreObserverProxy)
+
+        setWalletBalance(UnityCore.instance.balanceAmount)
+
+    }
+
+    override fun onStop() {
         super.onStop()
 
-        (application as ActivityManager).walletActivity = null
+        UnityCore.instance.removeObserver(coreObserverProxy)
     }
 
     override fun onFragmentInteraction(uri: Uri)
     {
 
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        when (key) {
+            "preference_local_currency" -> {
+                setWalletBalance(UnityCore.instance.balanceAmount)
+            }
+        }
     }
 
     private var sendFragment : SendFragment ?= null
@@ -105,22 +148,37 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
 
     fun setSyncProgress(percent: Float)
     {
-        syncProgress.progress = (1000000 * (percent/100)).toInt()
+        syncProgress.progress = (syncProgress.max * (percent/100)).toInt()
+        if (percent < 100.0)
+            syncProgress.visibility = View.VISIBLE
+        else
+            syncProgress.visibility = View.INVISIBLE
     }
 
     fun setWalletBalance(balance : Long)
     {
-        walletBalance.text = (balance.toFloat() / 100000000).toString()
+        val coins = balance.toDouble() / Config.COIN
+        walletBalance.text = String.format("%.2f", coins)
         walletBalanceLogo.visibility = View.VISIBLE
         walletBalance.visibility = View.VISIBLE
-        walletLogo.visibility = View.GONE
+
+        this.launch( Dispatchers.Main) {
+            try {
+                val rate = fetchCurrencyRate(localCurrency.code)
+                walletBalanceLocal.text = String.format(" (${localCurrency.short} %.${localCurrency.precision}f)",
+                        coins * rate)
+                walletBalanceLocal.visibility = View.VISIBLE
+            }
+            catch (e: Throwable) {
+                walletBalanceLocal.text = ""
+                walletBalanceLocal.visibility = View.GONE
+            }
+        }
     }
 
-    fun coreUIInit()
-    {
-        if (sendFragment == null)
-            sendFragment = SendFragment()
-        addFragment(sendFragment!!, R.id.mainLayout)
+    override fun walletBalanceChanged(balance: Long): Boolean {
+        setWalletBalance(balance)
+        return true
     }
 
     fun handleQRScanButtonClick(view : View) {
@@ -140,60 +198,13 @@ class WalletActivity : AppCompatActivity(), OnFragmentInteractionListener, Recei
         startActivityForResult(intent, BUY_RETURN_CODE)
     }
 
-    fun Uri.getParameters(): HashMap<String, String> {
-        val items : HashMap<String, String> = HashMap<String, String>()
-        if (isOpaque)
-            return items
-
-        val query = encodedQuery ?: return items
-
-        var start = 0
-        do {
-            val nextAmpersand = query.indexOf('&', start)
-            val end = if (nextAmpersand != -1) nextAmpersand else query.length
-
-            var separator = query.indexOf('=', start)
-            if (separator > end || separator == -1) {
-                separator = end
-            }
-
-            if (separator == end) {
-                items[Uri.decode(query.substring(start, separator))] = ""
-            } else {
-                items[Uri.decode(query.substring(start, separator))] = Uri.decode(query.substring(separator + 1, end))
-            }
-
-            // Move start to end of name.
-            if (nextAmpersand != -1) {
-                start = nextAmpersand + 1
-            } else {
-                break
-            }
-        } while (true)
-        return items
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BARCODE_READER_REQUEST_CODE) {
             if (resultCode == CommonStatusCodes.SUCCESS)
             {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-
-                    var barcodeText = barcode.displayValue
-                    var parsedQRCodeURI = Uri.parse(barcodeText)
-                    var address : String = ""
-
-                    // Handle all possible scheme variations (foo: foo:// etc.)
-                    if ((parsedQRCodeURI?.authority == null) && (parsedQRCodeURI?.path == null))
-                    {
-                        parsedQRCodeURI = Uri.parse(barcodeText.replaceFirst(":", "://"))
-                    }
-                    if (parsedQRCodeURI?.authority != null) address += parsedQRCodeURI.authority
-                    if (parsedQRCodeURI?.path != null) address += parsedQRCodeURI.path
-
-                    val parsedQRCodeURIRecord = UriRecord(parsedQRCodeURI.scheme, address , parsedQRCodeURI.getParameters())
-                    val recipient = GuldenUnifiedBackend.IsValidRecipient(parsedQRCodeURIRecord)
+                    val recipient = uriRecicpient(barcode.displayValue)
                     if (recipient.valid) {
                         val intent = Intent(applicationContext, SendCoinsActivity::class.java)
                         intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient)

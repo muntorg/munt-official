@@ -6,8 +6,8 @@
 package com.gulden.unity_wallet.ui.buy
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import com.gulden.unity_wallet.R
@@ -28,7 +28,7 @@ class BuyActivity : AppCompatActivity()
         val ft = supportFragmentManager.beginTransaction()
         // Replace the contents of the container with the new fragment
         fragment = BuyFragment.newInstance(intent.extras!!.getString(ARG_BUY_ADDRESS))
-        ft.replace(R.id.buy_fragment_placeholder, fragment!! as Fragment)
+        ft.replace(R.id.buy_fragment_placeholder, fragment!! as androidx.fragment.app.Fragment)
         // Complete the changes added above
         ft.commit()
     }

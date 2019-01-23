@@ -439,9 +439,6 @@ bool CWallet::HasWalletSpend(const uint256& txid) const
 
 void CWallet::Flush(bool shutdown)
 {
-    if (shutdown && pSPVScanner)
-        pSPVScanner->Persist();
-
     dbw->Flush(shutdown);
 }
 
@@ -574,6 +571,9 @@ bool CWallet::IsSpent(const uint256& hash, unsigned int n) const
                     auto prevtx = mapWallet.find(mit->second.tx->vin[0].prevout.getHash());
                     if (prevtx != mapWallet.end())
                     {
+                        if (prevtx->second.tx->vout.size() == 0)
+                            return true;
+
                         const auto& prevOut = prevtx->second.tx->vout[mit->second.tx->vin[0].prevout.n].output;
                         if ( prevOut.nType == ScriptLegacyOutput )
                         {
@@ -935,6 +935,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         {
             wtx.hashBlock = wtxIn.hashBlock;
             wtx.nHeight = wtxIn.nHeight;
+            wtx.nBlockTime = wtxIn.nBlockTime;
             fUpdated = true;
         }
         // If no longer abandoned, update
@@ -942,6 +943,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         {
             wtx.hashBlock = wtxIn.hashBlock;
             wtx.nHeight = wtxIn.nHeight;
+            wtx.nBlockTime = wtxIn.nBlockTime;
             fUpdated = true;
         }
         if (wtxIn.nIndex != -1 && (wtxIn.nIndex != wtx.nIndex))
@@ -1042,7 +1044,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     if (range.first->second != tx.GetHash())
                     {
                         std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
-                        if (mi != mapWallet.end() && GetPoW2Phase(chainActive.Tip(), Params(), chainActive) == 3 && (*mi).second.tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
+                        if (mi != mapWallet.end() && GetPoW2Phase(chainActive.Tip(), Params(), chainActive) == 3 && (*mi).second.tx->vout.size() > 0 && (*mi).second.tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
                         {
                             LogPrintf("Updated phase 3 witness transaction %s (in block %s) replace wallet transaction %s\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString());
                             if (mapWallet.find(range.first->second)->second.mapValue.count("replaced_by_txid") == 0)
@@ -1293,6 +1295,19 @@ void CWallet::TransactionAddedToMempool(const CTransactionRef& ptx) {
     SyncTransaction(ptx);
 }
 
+void CWallet::TransactionDeletedFromMempool(const uint256& hash, MemPoolRemovalReason reason)
+{
+    LOCK2(cs_main, cs_wallet);
+
+    if (!isFullSyncMode() && IsPartialSyncActive() && MemPoolRemovalReason::EXPIRY == reason) {
+        const auto& it = mapWallet.find(hash);
+        if (it != mapWallet.end()) {
+            if (TransactionCanBeAbandoned(hash))
+                AbandonTransaction(hash);
+        }
+    }
+}
+
 void CWallet::BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) {
     LOCK2(cs_main, cs_wallet);
     // TODO: Temporarily ensure that mempool removals are notified before
@@ -1436,7 +1451,7 @@ bool CWalletTx::IsTrusted() const
     {
         // Transactions not sent by us: not trusted
         const CWalletTx* parent = pwallet->GetWalletTx(txin.prevout.getHash());
-        if (parent == NULL)
+        if (parent == NULL || parent->tx->vout.size() == 0)
             return false;
         const CTxOut& parentOut = parent->tx->vout[txin.prevout.n];
         if (pwallet->IsMine(parentOut) != ISMINE_SPENDABLE)
@@ -2645,4 +2660,46 @@ int CWallet::ChainHeight()
 {
     LOCK(cs_main);
     return fSPV ? partialChain.Height() : chainActive.Height();
+}
+
+int64_t CWallet::birthTime() const
+{
+    int64_t birthTime = 0;
+
+    // determine block time of earliest transaction (if any)
+    // if this cannot be determined for every transaction a phrase without birth time acceleration will be used
+    int64_t firstTransactionTime = std::numeric_limits<int64_t>::max();
+    for (CWallet::TxItems::const_iterator it = pactiveWallet->wtxOrdered.begin(); it != pactiveWallet->wtxOrdered.end(); ++it)
+    {
+        CWalletTx* wtx = it->second.first;
+        if (!wtx->hashUnset())
+        {
+            CBlockIndex* index = mapBlockIndex.count(wtx->hashBlock) ? mapBlockIndex[wtx->hashBlock] : nullptr;
+            // try to get time from block timestamp
+            if (index && index->IsValid(BLOCK_VALID_HEADER))
+                firstTransactionTime = std::min(firstTransactionTime, std::max(int64_t(0), index->GetBlockTime()));
+            else if (wtx->nBlockTime > 0)
+            {
+                firstTransactionTime = std::min(firstTransactionTime, int64_t(wtx->nBlockTime));
+            }
+            else
+            {
+                // can't determine transaction time, only safe option left
+                firstTransactionTime = 0;
+                break;
+            }
+        }
+    }
+
+    int64_t tipTime;
+    const CBlockIndex* lastSPVBlock = pactiveWallet->LastSPVBlockProcessed();
+    if (lastSPVBlock)
+        tipTime = lastSPVBlock->GetBlockTime();
+    else
+        tipTime = chainActive.Tip()->GetBlockTime();
+
+    // never use a time beyond our processed tip either spv or full sync
+    birthTime = std::min(tipTime, firstTransactionTime);
+
+    return birthTime;
 }

@@ -5,7 +5,7 @@ Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,21 +13,21 @@ file COPYING
     tools:context=".SendCoinsActivity">
 
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -35,7 +35,7 @@ file COPYING
         android:layout_height="0dp"
         android:orientation="vertical"
         android:showDividers="middle"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintBottom_toTopOf="@+id/send_coins_send_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
@@ -90,18 +90,58 @@ file COPYING
             android:onClick="handleRemoveFromAddressBookClick"
             />
 
-        <EditText
-            android:id="@+id/send_coins_amount"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/send_coins_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:cursorVisible="false"
+                android:drawableLeft="@drawable/ic_g_logo"
+                android:hint="0"
+                android:editable="false"
+                android:inputType="none"
+                tools:clickable="false" />
+
+
+            <LinearLayout
+                android:id="@+id/send_coins_local_group"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/send_coins_local_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="€" />
+
+                <EditText
+                    android:id="@+id/send_coins_local_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cursorVisible="false"
+                    android:editable="false"
+                    android:hint="0"
+                    android:inputType="none"
+                    tools:clickable="false" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/send_coins_nocks_estimate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:cursorVisible="false"
-            android:drawableLeft="@drawable/ic_g_logo"
-            android:ems="10"
-            android:hint="0"
-            android:editable="false"
-            android:inputType="none"
-            tools:clickable="false" />
+            android:text=""
+            />
 
         <Space
             android:layout_width="match_parent"
@@ -119,8 +159,8 @@ file COPYING
     </LinearLayout>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/send_coins_send_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -130,4 +170,4 @@ file COPYING
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_glyphicons_219_circle_arrow_top" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

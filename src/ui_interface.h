@@ -125,6 +125,12 @@ public:
 
     /** SPV progress */
     boost::signals2::signal<void (int start_height, int processed_height, int probable_height)> NotifySPVProgress;
+
+    /** unified progress */
+    boost::signals2::signal<void (float progress)> NotifyUnifiedProgress;
+
+    /** SPV pruning */
+    boost::signals2::signal<void (int height)> NotifySPVPrune;
 };
 
 /** Show warning message **/

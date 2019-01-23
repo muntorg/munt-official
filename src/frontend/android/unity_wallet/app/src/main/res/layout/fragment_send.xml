@@ -5,7 +5,7 @@ Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
@@ -80,7 +80,7 @@ file COPYING
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/qrButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -97,13 +97,14 @@ file COPYING
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/clipboardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:background="@drawable/shape_rounded_button"
+            android:enabled="false"
             android:text="Clipboard"
             android:textColor="@android:color/white" />
 
@@ -111,4 +112,4 @@ file COPYING
 
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

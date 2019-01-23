@@ -46,14 +46,6 @@ static void handleFinalShutdown()
     shutDownFinalised = true;
 }
 
-static void WaitForShutdown()
-{
-    while (!shutDownFinalised)
-    {
-        MilliSleep(200);
-    }
-}
-
 extern void handlePostInitMain();
 static void handleAppInitResult(bool bResult)
 {
@@ -173,9 +165,7 @@ int InitUnity()
         PrintExceptionContinue(NULL, "AppInit()");
     }
 
-    //fixme: (UNITY) - It would be much better to wait on a condition variable here.
-    // Busy poll for shutdown and allow app to exit when we reach there.
-    WaitForShutdown();
+    GuldenAppManager::gApp->waitForShutDown();
 
     return EXIT_SUCCESS;
 }

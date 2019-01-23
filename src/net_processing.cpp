@@ -687,9 +687,6 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
 
 void NotifyHeaderProgress(CConnman& connman, bool partialProgressed)
 {
-    int probableHeight = nMaxStartingHeight;
-    probableHeight = std::max(probableHeight, Checkpoints::LastCheckPointHeight());
-    probableHeight = std::max(probableHeight, connman.GetBestHeight());
     int currentCount = 0;
     int headerTipHeight = 0;
     int64_t headerTipTime = 0;
@@ -714,10 +711,25 @@ void NotifyHeaderProgress(CConnman& connman, bool partialProgressed)
         }
     }
 
-    uiInterface.NotifyHeaderProgress(currentCount, probableHeight, headerTipHeight, headerTipTime);
+    uiInterface.NotifyHeaderProgress(currentCount, GetProbableHeight(), headerTipHeight, headerTipTime);
 }
 
 } // anon namespace
+
+int GetProbableHeight()
+{
+    LOCK(cs_main);
+
+    int probableHeight = nMaxStartingHeight;
+    probableHeight = std::max(probableHeight, Checkpoints::LastCheckPointHeight());
+    if (g_connman)
+        probableHeight = std::max(probableHeight, g_connman->GetBestHeight());
+    if (pindexBestHeader)
+        probableHeight = std::max(probableHeight, pindexBestHeader->nHeight);
+    if (pindexBestPartial)
+        probableHeight = std::max(probableHeight, pindexBestPartial->nHeight);
+    return probableHeight;
+}
 
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats) {
     LOCK(cs_main);
@@ -1384,9 +1396,6 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                 }
             }
 
-            // Track requests for our stuff.
-            GetMainSignals().Inventory(inv.hash);
-
             if (inv.type == MSG_BLOCK || inv.type == MSG_FILTERED_BLOCK || inv.type == MSG_CMPCT_BLOCK || inv.type == MSG_WITNESS_BLOCK)
                 break;
         }
@@ -1946,9 +1955,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     pfrom->AskFor(inv);
                 }
             }
-
-            // Track requests for our stuff
-            GetMainSignals().Inventory(inv.hash);
         }
     }
 
@@ -2778,7 +2784,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return false;
         }
 
-        NotifyHeaderProgress(connman, !chainActive.FindFork(mapBlockIndex.find(headers[0].hashPrevBlock)->second));
+        bool notifyAsPartialProgress = isFullSyncMode()
+                ? !chainActive.FindFork(mapBlockIndex.find(headers[0].hashPrevBlock)->second)
+                : true;
+        NotifyHeaderProgress(connman, notifyAsPartialProgress);
 
         {
         LOCK(cs_main);

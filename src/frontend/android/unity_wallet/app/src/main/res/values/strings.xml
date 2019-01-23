@@ -39,4 +39,98 @@ file COPYING
     <string name="address_book_empty_title">Empty address book</string>
     <string name="transaction_list_empty_title">No Gulden received so far.</string>
     <string name="transaction_list_empty_message">Touch here to buy your first Gulden.</string>
+    <string name="send_coins_confirm_template">%1$s NLG\n\nto %2$s</string>
+    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
+    <string name="send_coins_nocks_estimate_template">Approx. G %1$s including IBAN service fee</string>
+
+    <string name="network_monitor_activity_title">Network monitor</string>
+    <string name="network_monitor_peer_list_title">Peers</string>
+    <string name="network_monitor_block_list_title">Blocks</string>
+    <string name="network_monitor_processing_title">Processing</string>
+    <string name="peer_list_fragment_empty">No peers connected</string>
+    <string name="peer_list_row_ping_time">⇆ %d&#x2009;ms</string>
+    <string name="block_row_now">just now</string>
+    <string name="action_browse">Browse</string>
+
+    <string name="default_currency">EUR</string>
+
+    <string-array name="currency_description_entries">
+        <item>EUR - Euro</item>
+        <item>BTC - Bitcoin</item>
+        <item>AUD - Australian dollar</item>
+        <item>BRL - Brazilian real</item>
+        <!--<item>CNY - Chinese yuan</item>-->
+        <item>GBP - British Pound</item>
+        <!--<item>RUB - Russian roebel</item>-->
+        <item>USD - US dollar</item>
+        <item>ZAR - South African rand</item>
+        <item>KRW - South Korean Won</item>
+        <item>JPY - Yapanese yen</item>
+    </string-array>
+    <string-array name="currency_codes">
+        <item>EUR</item>
+        <item>BTC</item>
+        <item>AUD</item>
+        <item>BRL</item>
+        <!--<item>CNY</item>-->
+        <item>GBP</item>
+        <!--<item>RUB</item>-->
+        <item>USD</item>
+        <item>ZAR</item>
+        <item>KRW</item>
+        <item>JPY</item>
+    </string-array>
+    <string-array name="currency_names">
+        <item>Euro</item>
+        <item>Bitcoin</item>
+        <item>Australian dollar</item>
+        <item>Brazilian real</item>
+        <!--<item>Chinese yuan</item>-->
+        <item>British Pound</item>
+        <!--<item>Russian roebel</item>-->
+        <item>US dollar</item>
+        <item>South African rand</item>
+        <item>South Korean Won</item>
+        <item>Yapanese yen</item>
+    </string-array>
+    <string-array name="currency_shorts">
+        <item>€</item>
+        <item>BTC</item>
+        <item>AU$</item>
+        <item>R$</item>
+        <!--<item>CN¥</item>-->
+        <item>£</item>
+        <!--<item>₽</item>-->
+        <item>US$</item>
+        <item>ZAR</item>
+        <item>₩</item>
+        <item>JP¥</item>
+    </string-array>
+    <integer-array
+        name="currency_precisions">
+        <item>2</item>
+        <item>8</item>
+        <item>2</item>
+        <item>2</item>
+        <!--<item>CN¥</item>-->
+        <item>2</item>
+        <!--<item>₽</item>-->
+        <item>2</item>
+        <item>2</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
+
+    <string-array name="background_sync_entries">
+        <item>Off</item>
+        <item>Daily</item>
+        <item>Always</item>
+    </string-array>
+    <string-array name="background_sync_values">
+        <item>BACKGROUND_SYNC_OFF</item>
+        <item>BACKGROUND_SYNC_DAILY</item>
+        <item>BACKGROUND_SYNC_CONTINUOUS</item>
+    </string-array>
+    <string name="background_sync_default">BACKGROUND_SYNC_OFF</string>
+
 </resources>

@@ -1,5 +1,5 @@
 ---
-name: "Gulden-win-2.0.0"
+name: "Gulden-win-2.1.0"
 enable_cache: true
 sudo: true
 suites:

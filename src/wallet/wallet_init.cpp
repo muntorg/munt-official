@@ -674,6 +674,23 @@ void CWallet::StartSPV()
         pSPVScanner.swap(scanner);
 }
 
+void CWallet::ResetUnifiedSPVProgressNotification()
+{
+    // TODO refactor spv scanning out of wallet and into validation/net at some point
+    // this simplifies architecture a bit and avoids the weird responsibility split
+    // which for example leads to this funny bit in here where we need to iterate the wallets
+    // to get to the spvscannerS!
+
+    LOCK(cs_main);
+
+    for (CWallet* pwallet : vpwallets)
+    {
+        LOCK(pwallet->cs_wallet);
+        if (pwallet->pSPVScanner)
+            pwallet->pSPVScanner->ResetUnifiedProgressNotification();
+    }
+}
+
 std::atomic<bool> CWallet::fFlushScheduled(false);
 
 void CWallet::postInitProcess(CScheduler& scheduler)

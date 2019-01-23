@@ -69,6 +69,8 @@
 # error "Gulden cannot be compiled without assertions."
 #endif
 
+#define DEBUG_PARTIAL_SYNC
+
 /**
  * Global state
  */
@@ -95,6 +97,7 @@ bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
 size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
+int nPartialPruneHeightDone;
 bool fAlerts = DEFAULT_ALERTS;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
@@ -135,7 +138,7 @@ namespace {
      *  or if we allocate more file space when we're in prune mode
      */
     bool fCheckForPruning = false;
-
+    std::atomic<int> nMaxSPVPruneHeight = 0;
     /**
      * Every received block is assigned a unique and increasing identifier, so we
      * know which one to give priority in case of a fork.
@@ -1320,7 +1323,7 @@ void FindFilesToPruneExplicit(std::set<int>& setFilesToPrune, unsigned int nPrun
         setFilesToPrune.insert(fileNumber);
         count++;
     }
-    LogPrintf("Prune (Manual): prune_height=%d removed %d blk/rev pairs\n", nPruneHeight, count);
+    LogPrint(BCLog::PRUNE, "Prune (Manual): prune_height=%d removed %d blk/rev pairs\n", nPruneHeight, count);
 }
 
 /**
@@ -1403,27 +1406,36 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
             }
 
             // prune block index for partial sync
+            std::vector<uint256> removals;
             if (fFlushPartialSync) {
-                std::vector<const CBlockIndex*> removals;
+#ifdef DEBUG_PARTIAL_SYNC
+                int numNotOnPartialChain = 0;
+#endif
                 for(const auto& it: mapBlockIndex)
                 {
                     CBlockIndex* index = it.second;
-                    if (   (index->nHeight < nManualPruneHeight || !partialChain.Contains(index))
-                           && index != chainActive.Genesis())
+                    if ((index->nHeight < nManualPruneHeight && // prune anything below prune-height
+                         (index->nHeight !=0 || index->GetBlockHashPoW2() != Params().GenesisBlock().GetHashPoW2()) && // that is not the Genesis
+                         index->nHeight >= nPartialPruneHeightDone // skip pruning below height that was already pruned this session
+                        )
+                        || index->nStatus & BLOCK_FAILED_MASK) // always prune invalid blocks (if it changes they will be dirty again)
                     {
-                        removals.push_back(index);
+                        removals.push_back(index->GetBlockHashPoW2());
                         setDirtyBlockIndex.erase(index); // prevent pruned indexes to be rewritten
                     }
+#ifdef DEBUG_PARTIAL_SYNC
+                    if (!partialChain.Contains(index)) {
+                        LogPrintf("Index not on partial chain [%s] during prune.\n", index->GetBlockHashPoW2().ToString());
+                        numNotOnPartialChain++;
+                    }
+#endif
                 }
-
-                LogPrintf("%s: deleting %d block indexes, prune height = %d\n", __func__, removals.size(), nManualPruneHeight);
-
-                // Will usually have at least one index to prune, because when loading the index
-                // of the previous block of partial chain start is added. This is ok.
-                if (removals.size() > 0)
-                {
-                    pblocktree->EraseBatchSync(removals);
-                }
+                nPartialPruneHeightDone = std::max(nManualPruneHeight, nPartialPruneHeightDone);
+#ifdef DEBUG_PARTIAL_SYNC
+                int numOrphans = mapBlockIndex.size() - (partialChain.Height()-partialChain.HeightOffset()) - 1;
+                LogPrintf("Number of orphans in index %d vs not on chain %d should match.\n", numOrphans, numNotOnPartialChain);
+                assert(numOrphans == numNotOnPartialChain);
+#endif
             }
 
             std::vector<const CBlockIndex*> vBlocks;
@@ -1432,9 +1444,11 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                 vBlocks.push_back(*it);
                 setDirtyBlockIndex.erase(it++);
             }
-            if (!pblocktree->WriteBatchSync(vFiles, nLastBlockFile, vBlocks)) {
+            LogPrintf("%s: updating %d and deleting %d block indexes, prune height = %d\n", __func__, vBlocks.size(), removals.size(), nManualPruneHeight);
+            if (!pblocktree->UpdateBatchSync(vFiles, nLastBlockFile, vBlocks, removals)) {
                 return AbortNode(state, "Failed to write to block index database");
             }
+            uiInterface.NotifySPVPrune(nPartialPruneHeightDone);
         }
         // Finally remove any pruned files
         if (fFlushForPrune)
@@ -1997,7 +2011,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         }
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
 
-        if (IsPartialSyncActive() && chainActive.Height() >= partialChain.Height())
+        if (IsPartialSyncActive() && isFullSyncMode() && chainActive.Height() >= partialChain.Height())
             DeactivatePartialSync();
 
         // Notifications/callbacks that can run without cs_main
@@ -2209,7 +2223,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     pindexNew->RaiseValidity(BLOCK_VALID_HEADER);
 
     pindexNew->nChainWork = CalculateChainWork(pindexNew, chainParams);
-    if ((pindexNew->nHeight > 0 && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)) || pindexNew->nHeight == 0)
+    if (isFullSyncMode() && ((pindexNew->nHeight > 0 && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)) || pindexNew->nHeight == 0))
     {
         // block is extending the main tree
         if (pindexNew->nChainTx && (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
@@ -2222,7 +2236,8 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
         if (pindexBestHeader == nullptr || pindexBestHeader->nChainWork < pindexNew->nChainWork)
             pindexBestHeader = pindexNew;
     }
-    else
+
+    if (IsPartialSyncActive() && pindexNew->nHeight > 0 && pindexNew->pprev->IsPartialValid(BLOCK_PARTIAL_TREE))
     {
         // block is not extending main tree, so it's extending the partial tree
         pindexNew->RaisePartialValidity(BLOCK_PARTIAL_TREE);
@@ -2523,7 +2538,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 
     // Check transactions
     for (const auto& tx : block.vtx)
-        if (!CheckTransaction(*tx, state, false))
+        if (!CheckTransaction(*tx, state, true))
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
                                  strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
 
@@ -2911,6 +2926,9 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidatio
 
     CheckAndNotifyHeaderTip();
 
+    if (IsPartialSyncActive() && !isFullSyncMode())
+        PersistAndPruneForPartialSync(true);
+
     return true;
 }
 
@@ -3236,24 +3254,63 @@ CBlockIndex * InsertBlockIndex(uint256 hash)
     return pindexNew;
 }
 
-bool static LoadBlockIndexDB(const CChainParams& chainparams)
+#ifdef DEBUG_PARTIAL_SYNC
+bool static checkBlockIndexForPartialSync()
 {
-    LOCK(cs_main);
+    LogPrintf("Checking block index for partial sync integrity\n");
 
-    if (!pblocktree->LoadBlockIndexGuts(InsertBlockIndex))
-        return false;
+    bool integrityOK = true;
 
-    boost::this_thread::interruption_point();
-
-    // Calculate nChainWork
-    std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
-    vSortedByHeight.reserve(mapBlockIndex.size());
+    // test for blocks with nHeight == 0 and nStatus == 0
+    int num00 = 0;
+    CBlockIndex* theOne = nullptr;
     for(const PAIRTYPE(uint256, CBlockIndex*)& item : mapBlockIndex)
     {
         CBlockIndex* pindex = item.second;
-        vSortedByHeight.push_back(std::pair(pindex->nHeight, pindex));
+        if (pindex->nHeight == 0 && pindex->nStatus == 0)
+        {
+            theOne = pindex;
+            LogPrintf("  Index with height 0 and status 0: %s\n", pindex->GetBlockHashPoW2().ToString());
+            num00++;
+        }
     }
-    sort(vSortedByHeight.begin(), vSortedByHeight.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool 
+    LogPrintf("  Number of indexes with height 0 and status 0: %d\n", num00);
+
+    // there can be at most one index with height 0 and status 0 (this is the index that precedes
+    // the start of the partial chain and was automtically creted during loading of the block-index
+    if (num00 > 1)
+        integrityOK = false;
+
+    // check that the one block with height 0 & status 0 precedes the partial chain
+    if (integrityOK && num00 == 1) {
+        if (partialChain[partialChain.HeightOffset()]->pprev == theOne) {
+            LogPrintf("  Exactly one index with height 0 and status 0 and it precedes the partial chain.\n");
+        }
+        else {
+            LogPrintf("  Exactly one index with height 0 and status 0 but is does NOT precede the partial chain, this and is a BUG!\n");
+            integrityOK = false;
+        }
+    }
+
+    // note for case where num00 == 0 there is no partial chain (yet) and no further check is needed
+
+    LogPrintf(integrityOK ? "  integrity is OK.\n"
+                          : "  integrity check FAILED! Block index has invalid state.\n");
+
+    return integrityOK;
+}
+#endif
+
+void static heightSortedBlockIndex(std::vector<std::pair<int, CBlockIndex*> >& vSorted)
+{
+    vSorted.clear();
+    vSorted.reserve(mapBlockIndex.size());
+    for(const PAIRTYPE(uint256, CBlockIndex*)& item : mapBlockIndex)
+    {
+        CBlockIndex* pindex = item.second;
+        vSorted.push_back(std::pair(pindex->nHeight, pindex));
+    }
+    sort(vSorted.begin(), vSorted.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool
     {
         //Ensure PoW block always comes first in sort before witness block of same height.
         if (a.first == b.first)
@@ -3265,11 +3322,105 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             return a.second < b.second;
         }
         return a.first < b.first;
+    });
+}
+
+bool static LoadBlockIndexDB(const CChainParams& chainparams)
+{
+    LOCK(cs_main);
+
+    if (!pblocktree->LoadBlockIndexGuts(InsertBlockIndex))
+        return false;
+
+    boost::this_thread::interruption_point();
+
+    // find pindexBestPartial
+    for (const auto& it: mapBlockIndex) {
+        CBlockIndex* pindex = it.second;
+        if ((pindex->IsPartialValid(BLOCK_PARTIAL_TREE))
+                && (!pindexBestPartial || pindex->nHeight >= pindexBestPartial->nHeight))
+            pindexBestPartial = pindex;
     }
-    );
+
+    // initialize partial chain and cleanup block index
+    if (pindexBestPartial)
+    {
+        CBlockIndex* pindex = pindexBestPartial;
+        while (pindex->pprev && pindex->pprev->IsPartialValid(BLOCK_PARTIAL_TREE))
+            pindex = pindex->pprev;
+        partialChain.SetHeightOffset(pindex->nHeight);
+        partialChain.SetTip(pindexBestPartial);
+
+#ifdef DEBUG_PARTIAL_SYNC
+        checkBlockIndexForPartialSync();
+#endif
+
+        // Kill link before partial chain offset unless it is linked:
+        // a) beyond pindex->pprev in which case it connects to the main chain.
+        // b)  to the genesis
+        if (pindex->pprev && !pindex->pprev->pprev && pindex->pprev->GetBlockHashPoW2() != Params().GenesisBlock().GetHashPoW2()) {
+            pindex->pprev = 0;
+        }
+
+        // if we are not in full sync mode any index block not in the partial chain is useless and can and should be removed
+        // if our partial chain is on a fork and blocks (now known) to be on the main chain are removed by this they will be
+        // re-requested (so that is ok)
+        if (!isFullSyncMode())
+        {
+            // collect orphans
+            std::vector<uint256> removals;
+            for (auto it = mapBlockIndex.begin(); it != mapBlockIndex.end(); )
+            {
+                CBlockIndex* pindex = it->second;
+
+                // When not in full sync mode we should not have any full validation status so clear it.
+                // This should normally not happen. An edge case is when with full sync mode in a previous session and
+                // in a later sessio0n switching to pure partial sync.
+                if (pindex->nHeight != 0) {
+                    pindex->nStatus &= ~(BLOCK_VALID_TREE | BLOCK_VALID_TRANSACTIONS | BLOCK_VALID_CHAIN | BLOCK_VALID_SCRIPTS);
+                    pindex->nChainTx = 0;
+                }
+
+                if (!partialChain.Contains(pindex) && (pindex->nHeight != 0 || pindex->GetBlockHashPoW2() != Params().GenesisBlock().GetHashPoW2()))
+                {
+                    // important to get hash for removals here first before erasing from mapBlockIndex
+                    // as the erase will invalidate the internal hash block ptr
+                    removals.push_back(pindex->GetBlockHashPoW2());
+                    it = mapBlockIndex.erase(it);
+
+                    // Reclaim memory now that it's not used anymore.
+                    delete pindex;
+                }
+                else {
+                    it++;
+                }
+            }
+
+            if (!removals.empty())
+            {
+                LogPrintf("Collected %d orphans from block index which will be removed\n", removals.size());
+
+                // remove them from disk
+                if (!pblocktree->EraseBatchSync(removals)) {
+                    LogPrintf("Failed to erase orphans from block index database");
+                    return false;
+                }
+            }
+        }
+
+#ifdef DEBUG_PARTIAL_SYNC
+        assert(checkBlockIndexForPartialSync());
+#endif
+    }
+
+    std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
+
+    // Build skiplist, calculate nChainWork and block index candidates
+    heightSortedBlockIndex(vSortedByHeight);
     for(const PAIRTYPE(int, CBlockIndex*)& item : vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
+        pindex->BuildSkip();
         pindex->nChainWork = CalculateChainWork(pindex, chainparams);;
         pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
         // We can link the chain of blocks for which we've received transactions at some point.
@@ -3294,30 +3445,8 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
         }
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
-        if (pindex->pprev)
-            pindex->BuildSkip();
         if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex))) {
             pindexBestHeader = pindex;
-        }
-        if ((pindex->IsPartialValid(BLOCK_PARTIAL_TREE))
-                && (!pindexBestPartial || pindex->nHeight >= pindexBestPartial->nHeight))
-            pindexBestPartial = pindex;
-    }
-
-    if (pindexBestPartial)
-    {
-        CBlockIndex* pindex = pindexBestPartial;
-        while (pindex->pprev && pindex->pprev->IsPartialValid(BLOCK_PARTIAL_TREE))
-            pindex = pindex->pprev;
-        partialChain.SetHeightOffset(pindex->nHeight);
-        partialChain.SetTip(pindexBestPartial);
-
-        // if block index loading createed an empty index in front of the partial chain it needs to be removed
-        if (partialChain[partialChain.HeightOffset()]->pprev && partialChain[partialChain.HeightOffset()]->pprev->nStatus == 0)
-        {
-            uint256 prevHash = partialChain[partialChain.HeightOffset()]->pprev->GetBlockHashPoW2();
-            mapBlockIndex.erase(prevHash);
-            partialChain[partialChain.HeightOffset()]->pprev = nullptr;
         }
     }
 
@@ -3495,7 +3624,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
         delete pblock;
 
         FlushBlockFile();
-        if (!pblocktree->WriteBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks))
+        if (!pblocktree->UpdateBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks, std::vector<uint256>()))
         {
             return error("UpgradeBlockIndex: Failed to write to block index database");
         }
@@ -3794,21 +3923,26 @@ bool InitBlockIndex(const CChainParams& chainparams)
     return true;
 }
 
-void PruneForPartialSync()
+void PersistAndPruneForPartialSync(bool periodic)
 {
-    // prune for partial sync prunes block files AND block index!
     // should be run at shutdown so that the block index remains small and
     // next startup stays fast
+    // also run periodically (and on demand at key points, ie. app to background)
+    // to prevent loss of data and needing to re-dowload
 
     LOCK(cs_main);
 
     if (isFullSyncMode() || !IsPartialSyncActive())
         return;
 
-    int pruneHeight = std::max(partialChain.HeightOffset(), partialChain.Height() - PARTIAL_SYNC_PRUNE_HEIGHT);
+    // never use a pruning height above what has been spv processed, if it has been set at all
+    // there is no point in keeping blocks below the partial chain offset
+    int pruneHeight = std::max(nMaxSPVPruneHeight.load(), partialChain.HeightOffset());
 
     CValidationState state;
-    FlushStateToDisk(Params(), state, FlushStateMode::FLUSH_STATE_ALWAYS, pruneHeight, true);
+    FlushStateToDisk(Params(), state,
+                     periodic ? FlushStateMode::FLUSH_STATE_PERIODIC : FlushStateMode::FLUSH_STATE_ALWAYS,
+                     pruneHeight, true);
 }
 
 bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskBlockPos *dbp)
@@ -4138,15 +4272,19 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
         return index->GetBlockTime() < before;
     });
 
+    if (IsPartialSyncActive())
+        LogPrintf("Partial chain height = %d offset = %d.\n", partialChain.Height(), partialChain.HeightOffset());
+
     if (    IsPartialSyncActive()
-         && youngestBefore && youngestBefore->nHeight - partialChain.HeightOffset() > 576)
+         && youngestBefore && (youngestBefore->nHeight <= 576 || youngestBefore->nHeight - partialChain.HeightOffset() > 576))
     {
-        LogPrintf("Partial sync continues, height offset = %d.\n", partialChain.HeightOffset());
+        LogPrintf("Partial sync continues.\n");
     }
     else {
         if (IsPartialSyncActive()) // IsPartialSyncActive() => above checks for time and/or 576 window failed
         {
             LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync reset.\n");
+            assert(false);
             pindexBestPartial = nullptr;
             partialChain.SetTip(nullptr);
             partialChain.SetHeightOffset(0);
@@ -4194,6 +4332,11 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
 
     headerTipSignal.connect(notifyCallback);
     return true;
+}
+
+void SetMaxSPVPruneHeight(int height)
+{
+    nMaxSPVPruneHeight = height;
 }
 
 class CMainCleanup

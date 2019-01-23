@@ -31,7 +31,10 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.InitWalletLinkedFromURI(linkedUri);
     }
 
-    /** Check if a possible recovery phrase is valid or not */
+    /**
+     * Check recovery phrase for (syntactic) validity
+     * Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
+     */
     public static boolean IsValidRecoveryPhrase(String phrase)
     {
         return CppProxy.IsValidRecoveryPhrase(phrase);
@@ -80,10 +83,10 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.IsValidRecipient(request);
     }
 
-    /** Attempt to pay a recipient */
-    public static boolean performPaymentToRecipient(UriRecipient request)
+    /** Attempt to pay a recipient, will throw on failure with descriptiopn */
+    public static void performPaymentToRecipient(UriRecipient request)
     {
-        return CppProxy.performPaymentToRecipient(request);
+        CppProxy.performPaymentToRecipient(request);
     }
 
     /** Get list of all transactions wallet has been involved in */
@@ -108,6 +111,50 @@ public abstract class GuldenUnifiedBackend {
     public static void deleteAddressBookRecord(AddressRecord address)
     {
         CppProxy.deleteAddressBookRecord(address);
+    }
+
+    /** Interim persist and prune of state. Use at key moments like app backgrounding. */
+    public static void PersistAndPruneForSPV()
+    {
+        CppProxy.PersistAndPruneForSPV();
+    }
+
+    /**
+     * Reset progress notification. In cases where there has been no progress for a long time, but the process
+     * is still running the progress can be reset and will represent work to be done from this reset onwards.
+     * For example when the process is in the background on iOS for a long long time (but has not been terminated
+     * by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
+     */
+    public static void ResetUnifiedProgress()
+    {
+        CppProxy.ResetUnifiedProgress();
+    }
+
+    /** Get connected peer info */
+    public static ArrayList<PeerRecord> getPeers()
+    {
+        return CppProxy.getPeers();
+    }
+
+    /** Get info of last blocks (at most 32) in SPV chain */
+    public static ArrayList<BlockinfoRecord> getLastSPVBlockinfos()
+    {
+        return CppProxy.getLastSPVBlockinfos();
+    }
+
+    public static MonitorRecord getMonitoringStats()
+    {
+        return CppProxy.getMonitoringStats();
+    }
+
+    public static void RegisterMonitorListener(GuldenMonitorListener listener)
+    {
+        CppProxy.RegisterMonitorListener(listener);
+    }
+
+    public static void UnregisterMonitorListener(GuldenMonitorListener listener)
+    {
+        CppProxy.UnregisterMonitorListener(listener);
     }
 
     private static final class CppProxy extends GuldenUnifiedBackend
@@ -155,7 +202,7 @@ public abstract class GuldenUnifiedBackend {
 
         public static native UriRecipient IsValidRecipient(UriRecord request);
 
-        public static native boolean performPaymentToRecipient(UriRecipient request);
+        public static native void performPaymentToRecipient(UriRecipient request);
 
         public static native ArrayList<TransactionRecord> getTransactionHistory();
 
@@ -164,5 +211,19 @@ public abstract class GuldenUnifiedBackend {
         public static native void addAddressBookRecord(AddressRecord address);
 
         public static native void deleteAddressBookRecord(AddressRecord address);
+
+        public static native void PersistAndPruneForSPV();
+
+        public static native void ResetUnifiedProgress();
+
+        public static native ArrayList<PeerRecord> getPeers();
+
+        public static native ArrayList<BlockinfoRecord> getLastSPVBlockinfos();
+
+        public static native MonitorRecord getMonitoringStats();
+
+        public static native void RegisterMonitorListener(GuldenMonitorListener listener);
+
+        public static native void UnregisterMonitorListener(GuldenMonitorListener listener);
     }
 }

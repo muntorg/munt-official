@@ -696,3 +696,52 @@ void DumpMempool(void)
         LogPrintf("Failed to dump mempool: %s. Continuing anyway.\n", e.what());
     }
 }
+
+int ExpireMempoolForPartialSync(const CBlockIndex* tip)
+{
+    AssertLockHeld(cs_main);
+    assert(tip);
+
+    /* Using the provided tip remove transactions from the mempool using the following logic:
+     * Transactions older then PARTIALSYNC_MEMPOOL_EXPIRE should be expired, but only if at least
+     * PARTIALSYNC_MEMPOOL_BLOCKS blocks have been mined that could/should have included the transaction.
+     * These blocks should be at least PARTIALSYNC_MEMPOOL_PROPAGATION_DELAY newer then the expire time,
+     * this is to account for time fro transactions to propagate through the network and be picked up by
+     * the miners.
+     */
+
+    const int PARTIALSYNC_MEMPOOL_EXPIRE = 3600; // one hour
+    const int PARTIALSYNC_MEMPOOL_PROPAGATION_DELAY = 60; // one minute
+    const int PARTIALSYNC_MEMPOOL_BLOCKS = 3;
+
+    // When tip too old don't expire at all. Perhaps we're doing inital sync or catching up
+    // from way behind. So we bail out as early as possible reduce the workload while catching up.
+
+    int64_t expireTime = GetTime() - PARTIALSYNC_MEMPOOL_EXPIRE;
+    if (tip->GetBlockTime() < expireTime)
+        return 0;
+
+    // propagation time accounts for the required number of blocks having been mined very close to each
+    // other and before the transaction might have been propagated through the network properly
+    int64_t propagationTime = expireTime + PARTIALSYNC_MEMPOOL_PROPAGATION_DELAY;
+
+    // count # blocks since propagationTime
+    int numBlocks = 0;
+    const CBlockIndex* pindex = tip;
+    while (tip && numBlocks < PARTIALSYNC_MEMPOOL_BLOCKS && tip->GetBlockTime() >= propagationTime) {
+        numBlocks++;
+        pindex = pindex->pprev;
+    }
+
+    // if enough blocks passed expire from mempool
+    if (numBlocks >= PARTIALSYNC_MEMPOOL_BLOCKS) {
+        std::vector<uint256> removed;
+        int numExpired = mempool.Expire(expireTime, &removed);
+        for (const auto& txHash: removed) {
+            GetMainSignals().TransactionDeletedFromMempool(txHash, MemPoolRemovalReason::EXPIRY);
+        }
+        return numExpired;
+    }
+    else
+        return 0;
+}

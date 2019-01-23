@@ -3,60 +3,71 @@
 
 package com.gulden.jniunifiedbackend;
 
+import java.util.ArrayList;
+
 public final class TransactionRecord implements android.os.Parcelable {
 
 
-    /*package*/ final TransactionType mType;
-
-    /*package*/ final long mAmount;
-
-    /*package*/ final String mAddress;
-
-    /*package*/ final String mLabel;
+    /*package*/ final String mTxHash;
 
     /*package*/ final long mTimestamp;
 
+    /*package*/ final long mAmount;
+
+    /*package*/ final long mFee;
+
+    /*package*/ final ArrayList<OutputRecord> mReceivedOutputs;
+
+    /*package*/ final ArrayList<OutputRecord> mSentOutputs;
+
     public TransactionRecord(
-            TransactionType type,
+            String txHash,
+            long timestamp,
             long amount,
-            String address,
-            String label,
-            long timestamp) {
-        this.mType = type;
-        this.mAmount = amount;
-        this.mAddress = address;
-        this.mLabel = label;
+            long fee,
+            ArrayList<OutputRecord> receivedOutputs,
+            ArrayList<OutputRecord> sentOutputs) {
+        this.mTxHash = txHash;
         this.mTimestamp = timestamp;
+        this.mAmount = amount;
+        this.mFee = fee;
+        this.mReceivedOutputs = receivedOutputs;
+        this.mSentOutputs = sentOutputs;
     }
 
-    public TransactionType getType() {
-        return mType;
-    }
-
-    public long getAmount() {
-        return mAmount;
-    }
-
-    public String getAddress() {
-        return mAddress;
-    }
-
-    public String getLabel() {
-        return mLabel;
+    public String getTxHash() {
+        return mTxHash;
     }
 
     public long getTimestamp() {
         return mTimestamp;
     }
 
+    public long getAmount() {
+        return mAmount;
+    }
+
+    public long getFee() {
+        return mFee;
+    }
+
+    public ArrayList<OutputRecord> getReceivedOutputs() {
+        return mReceivedOutputs;
+    }
+
+    public ArrayList<OutputRecord> getSentOutputs() {
+        return mSentOutputs;
+    }
+
     @Override
     public String toString() {
         return "TransactionRecord{" +
-                "mType=" + mType +
-                "," + "mAmount=" + mAmount +
-                "," + "mAddress=" + mAddress +
-                "," + "mLabel=" + mLabel +
+                "mTxHash=" + mTxHash +
                 "," + "mTimestamp=" + mTimestamp +
+                "," + "mAmount=" + mAmount +
+                "," + "mFee=" + mFee +
+                "," + "mReceivedOutputs=" + mReceivedOutputs +
+                "," + "mSentOutputs=" + mSentOutputs +
         "}";
     }
 
@@ -75,11 +86,14 @@ public final class TransactionRecord implements android.os.Parcelable {
     };
 
     public TransactionRecord(android.os.Parcel in) {
-        this.mType = TransactionType.values()[in.readInt()];
-        this.mAmount = in.readLong();
-        this.mAddress = in.readString();
-        this.mLabel = in.readString();
+        this.mTxHash = in.readString();
         this.mTimestamp = in.readLong();
+        this.mAmount = in.readLong();
+        this.mFee = in.readLong();
+        this.mReceivedOutputs = new ArrayList<OutputRecord>();
+        in.readList(this.mReceivedOutputs, getClass().getClassLoader());
+        this.mSentOutputs = new ArrayList<OutputRecord>();
+        in.readList(this.mSentOutputs, getClass().getClassLoader());
     }
 
     @Override
@@ -89,11 +103,12 @@ public final class TransactionRecord implements android.os.Parcelable {
 
     @Override
     public void writeToParcel(android.os.Parcel out, int flags) {
-        out.writeInt(this.mType.ordinal());
-        out.writeLong(this.mAmount);
-        out.writeString(this.mAddress);
-        out.writeString(this.mLabel);
+        out.writeString(this.mTxHash);
         out.writeLong(this.mTimestamp);
+        out.writeLong(this.mAmount);
+        out.writeLong(this.mFee);
+        out.writeList(this.mReceivedOutputs);
+        out.writeList(this.mSentOutputs);
     }
 
 }

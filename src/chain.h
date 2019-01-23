@@ -185,7 +185,8 @@ enum BlockStatus: uint32_t {
 class CBlockIndex
 {
 public:
-    //! pointer to the hash of the block, if any. Memory is owned by this CBlockIndex
+    //! pointer to the hash of the block, if any. IMPORTANT: Memory is owned by the mapBlockIndex!
+    //! So the hash pointer can only be valid if this CBlockIndex is in mapBlockIndex!
     const uint256* phashBlock;
 
     //! pointer to the index of the predecessor of this block
@@ -707,6 +708,14 @@ public:
     virtual int Height() const override;
     virtual void SetTip(CBlockIndex *pindex) override;
     CBlockLocator GetLocatorPoW2(const CBlockIndex *pindex = NULL) const override;
+
+    template<typename T, typename Compare>
+    int LowerBound(int beginHeight, int endHeight, const T& val, const Compare& comp) const {
+        const auto beginRange = vChain.begin() + (beginHeight - HeightOffset());
+        const auto endRange =  vChain.begin() + (endHeight - HeightOffset());
+        const auto it = std::lower_bound(beginRange, endRange, val, comp);
+        return it == endRange ? -1 : (*it)->nHeight;
+    }
 
 private:
     int nHeightOffset;

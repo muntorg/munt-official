@@ -10,7 +10,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "wallet/wallet.h"
+#include "wallet.h"
 #include "wallet/wallettx.h"
 
 #include "consensus/validation.h"

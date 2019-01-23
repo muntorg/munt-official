@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>132</width>
-    <height>40</height>
+    <width>414</width>
+    <height>194</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -90,7 +90,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="balanceLayout" stretch="1,0">
+    <layout class="QHBoxLayout" name="balanceLayout" stretch="1,0,0">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -107,6 +107,16 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="ClickableLabel" name="accountBalanceForexIndicator">
+       <property name="text">
+        <string/>
        </property>
        <property name="indent">
         <number>0</number>

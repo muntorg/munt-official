@@ -171,6 +171,7 @@ void CurrencyTicker::pollTicker()
 
 void CurrencyTicker::netRequestFinished( QNetworkReply* reply )
 {
+    reply->deleteLater();
     bool signalUpdates = false;
 
     if ( reply->error() != QNetworkReply::NetworkError::NoError )

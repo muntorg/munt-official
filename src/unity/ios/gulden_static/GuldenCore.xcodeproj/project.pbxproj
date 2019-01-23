@@ -1,0 +1,495 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */; };
+		E61A12862171360F000069F0 /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E61A12852171360F000069F0 /* dummy.cpp */; };
+		E61A1288217136DE000069F0 /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A1287217136DE000069F0 /* dummy.m */; };
+		E64203F121638CD6004A77FF /* GuldenCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E64203EF21638CD6004A77FF /* GuldenCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E65180AE218A1080009283A8 /* libgulden_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65180AD218A1080009283A8 /* libgulden_unity_objc.a */; };
+		E65D1678218A22540080637D /* libsecp256k1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D1677218A22540080637D /* libsecp256k1.a */; };
+		E65D167A218A229F0080637D /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D1679218A229F0080637D /* libleveldb.a */; };
+		E65D167C218A22B70080637D /* libmemenv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D167B218A22B70080637D /* libmemenv.a */; };
+		E68FAE04216C964E0038C745 /* libdb-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF8216C964D0038C745 /* libdb-4.8.a */; };
+		E68FAE05216C964E0038C745 /* libboost_system-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */; };
+		E68FAE06216C964E0038C745 /* libboost_filesystem-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */; };
+		E68FAE07216C964E0038C745 /* libboost_program_options-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFB216C964D0038C745 /* libboost_program_options-mt-s.a */; };
+		E68FAE08216C964E0038C745 /* libboost_thread-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFC216C964E0038C745 /* libboost_thread-mt-s.a */; };
+		E68FAE09216C964E0038C745 /* libboost_timer-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFD216C964E0038C745 /* libboost_timer-mt-s.a */; };
+		E68FAE0A216C964E0038C745 /* libqrencode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFE216C964E0038C745 /* libqrencode.a */; };
+		E68FAE0B216C964E0038C745 /* libboost_chrono-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */; };
+		E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE00216C964E0038C745 /* libcrypto.a */; };
+		E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE01216C964E0038C745 /* libssl.a */; };
+		E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */; };
+		E6AE404921EF4A500019A54A /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AE404821EF4A500019A54A /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0421EF24A900320806 /* DBQrcodeRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF721EF24A800320806 /* DBQrcodeRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0521EF24A900320806 /* DBGuldenMonitorListener.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0621EF24A900320806 /* DBGuldenUnifiedBackend.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0721EF24A900320806 /* DBUriRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFA21EF24A800320806 /* DBUriRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0821EF24A900320806 /* DBGuldenUnifiedFrontend.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0921EF24A900320806 /* DBBlockinfoRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFC21EF24A800320806 /* DBBlockinfoRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0A21EF24A900320806 /* DBUriRecipient.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFD21EF24A800320806 /* DBUriRecipient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0B21EF24A900320806 /* DBBalanceRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0D21EF24A900320806 /* DBAddressRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7D0021EF24A800320806 /* DBAddressRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_support_lib_UNIVERSAL.a; path = "../../../../depends/aarch64-ios/lib/libdjinni_support_lib_UNIVERSAL.a"; sourceTree = "<group>"; };
+		E61A12852171360F000069F0 /* dummy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
+		E61A1287217136DE000069F0 /* dummy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dummy.m; sourceTree = "<group>"; };
+		E64203EC21638CD6004A77FF /* GuldenCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GuldenCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E64203EF21638CD6004A77FF /* GuldenCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCore.h; sourceTree = "<group>"; };
+		E64203F021638CD6004A77FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E65180AD218A1080009283A8 /* libgulden_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_objc.a; path = "../../../../build/aarch64-ios/src/libgulden_unity_objc.a"; sourceTree = "<group>"; };
+		E65D1677218A22540080637D /* libsecp256k1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsecp256k1.a; path = "../../../../build/aarch64-ios/src/secp256k1/.libs/libsecp256k1.a"; sourceTree = "<group>"; };
+		E65D1679218A229F0080637D /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = "../../../../build/aarch64-ios/src/leveldb/libleveldb.a"; sourceTree = "<group>"; };
+		E65D167B218A22B70080637D /* libmemenv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmemenv.a; path = "../../../../build/aarch64-ios/src/leveldb/libmemenv.a"; sourceTree = "<group>"; };
+		E68FADF8216C964D0038C745 /* libdb-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb-4.8.a"; sourceTree = "<group>"; };
+		E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_system-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_filesystem-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFB216C964D0038C745 /* libboost_program_options-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_program_options-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_program_options-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFC216C964E0038C745 /* libboost_thread-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_thread-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_thread-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFD216C964E0038C745 /* libboost_timer-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_timer-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_timer-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFE216C964E0038C745 /* libqrencode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqrencode.a; path = "../../../../depends/aarch64-ios/lib/libqrencode.a"; sourceTree = "<group>"; };
+		E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_chrono-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_chrono-mt-s.a"; sourceTree = "<group>"; };
+		E68FAE00216C964E0038C745 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../../depends/aarch64-ios/lib/libcrypto.a"; sourceTree = "<group>"; };
+		E68FAE01216C964E0038C745 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../depends/aarch64-ios/lib/libssl.a"; sourceTree = "<group>"; };
+		E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb_cxx-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb_cxx-4.8.a"; sourceTree = "<group>"; };
+		E6AE404821EF4A500019A54A /* DBOutputRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBOutputRecord.h; path = ../../djinni/objc/DBOutputRecord.h; sourceTree = "<group>"; };
+		E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMonitorRecord.h; path = ../../../djinni/objc/DBMonitorRecord.h; sourceTree = "<group>"; };
+		E6EC7CF721EF24A800320806 /* DBQrcodeRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBQrcodeRecord.h; path = ../../../djinni/objc/DBQrcodeRecord.h; sourceTree = "<group>"; };
+		E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenMonitorListener.h; path = ../../../djinni/objc/DBGuldenMonitorListener.h; sourceTree = "<group>"; };
+		E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenUnifiedBackend.h; path = ../../../djinni/objc/DBGuldenUnifiedBackend.h; sourceTree = "<group>"; };
+		E6EC7CFA21EF24A800320806 /* DBUriRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecord.h; path = ../../../djinni/objc/DBUriRecord.h; sourceTree = "<group>"; };
+		E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenUnifiedFrontend.h; path = ../../../djinni/objc/DBGuldenUnifiedFrontend.h; sourceTree = "<group>"; };
+		E6EC7CFC21EF24A800320806 /* DBBlockinfoRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBBlockinfoRecord.h; path = ../../../djinni/objc/DBBlockinfoRecord.h; sourceTree = "<group>"; };
+		E6EC7CFD21EF24A800320806 /* DBUriRecipient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecipient.h; path = ../../../djinni/objc/DBUriRecipient.h; sourceTree = "<group>"; };
+		E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBBalanceRecord.h; path = ../../../djinni/objc/DBBalanceRecord.h; sourceTree = "<group>"; };
+		E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBPeerRecord.h; path = ../../../djinni/objc/DBPeerRecord.h; sourceTree = "<group>"; };
+		E6EC7D0021EF24A800320806 /* DBAddressRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBAddressRecord.h; path = ../../../djinni/objc/DBAddressRecord.h; sourceTree = "<group>"; };
+		E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBTransactionRecord.h; path = ../../../djinni/objc/DBTransactionRecord.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E64203E921638CD6004A77FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E65D167C218A22B70080637D /* libmemenv.a in Frameworks */,
+				E65D167A218A229F0080637D /* libleveldb.a in Frameworks */,
+				E65D1678218A22540080637D /* libsecp256k1.a in Frameworks */,
+				E65180AE218A1080009283A8 /* libgulden_unity_objc.a in Frameworks */,
+				E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */,
+				E68FAE04216C964E0038C745 /* libdb-4.8.a in Frameworks */,
+				E68FAE05216C964E0038C745 /* libboost_system-mt-s.a in Frameworks */,
+				E68FAE06216C964E0038C745 /* libboost_filesystem-mt-s.a in Frameworks */,
+				E68FAE07216C964E0038C745 /* libboost_program_options-mt-s.a in Frameworks */,
+				E68FAE08216C964E0038C745 /* libboost_thread-mt-s.a in Frameworks */,
+				E68FAE09216C964E0038C745 /* libboost_timer-mt-s.a in Frameworks */,
+				E68FAE0A216C964E0038C745 /* libqrencode.a in Frameworks */,
+				E68FAE0B216C964E0038C745 /* libboost_chrono-mt-s.a in Frameworks */,
+				E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */,
+				E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */,
+				E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E64203E221638CD6004A77FF = {
+			isa = PBXGroup;
+			children = (
+				E6AE404821EF4A500019A54A /* DBOutputRecord.h */,
+				E65D47B021639AF100033ED1 /* source */,
+				E64203EE21638CD6004A77FF /* GuldenCore */,
+				E64203ED21638CD6004A77FF /* Products */,
+				E64203F721638D34004A77FF /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E64203ED21638CD6004A77FF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E64203EC21638CD6004A77FF /* GuldenCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E64203EE21638CD6004A77FF /* GuldenCore */ = {
+			isa = PBXGroup;
+			children = (
+				E6EC7D0021EF24A800320806 /* DBAddressRecord.h */,
+				E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */,
+				E6EC7CFC21EF24A800320806 /* DBBlockinfoRecord.h */,
+				E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */,
+				E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */,
+				E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */,
+				E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */,
+				E6EC7CF721EF24A800320806 /* DBQrcodeRecord.h */,
+				E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */,
+				E6EC7CFD21EF24A800320806 /* DBUriRecipient.h */,
+				E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */,
+				E6EC7CFA21EF24A800320806 /* DBUriRecord.h */,
+				E64203EF21638CD6004A77FF /* GuldenCore.h */,
+				E64203F021638CD6004A77FF /* Info.plist */,
+			);
+			path = GuldenCore;
+			sourceTree = "<group>";
+		};
+		E64203F721638D34004A77FF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E65D167B218A22B70080637D /* libmemenv.a */,
+				E65D1679218A229F0080637D /* libleveldb.a */,
+				E65D1677218A22540080637D /* libsecp256k1.a */,
+				E65180AD218A1080009283A8 /* libgulden_unity_objc.a */,
+				E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */,
+				E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */,
+				E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */,
+				E68FADFB216C964D0038C745 /* libboost_program_options-mt-s.a */,
+				E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */,
+				E68FADFC216C964E0038C745 /* libboost_thread-mt-s.a */,
+				E68FADFD216C964E0038C745 /* libboost_timer-mt-s.a */,
+				E68FAE00216C964E0038C745 /* libcrypto.a */,
+				E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */,
+				E68FADF8216C964D0038C745 /* libdb-4.8.a */,
+				E68FADFE216C964E0038C745 /* libqrencode.a */,
+				E68FAE01216C964E0038C745 /* libssl.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E65D47B021639AF100033ED1 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				E61A12852171360F000069F0 /* dummy.cpp */,
+				E61A1287217136DE000069F0 /* dummy.m */,
+			);
+			path = source;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E64203E721638CD6004A77FF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6EC7D0D21EF24A900320806 /* DBAddressRecord.h in Headers */,
+				E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */,
+				E6EC7D0B21EF24A900320806 /* DBBalanceRecord.h in Headers */,
+				E6EC7D0521EF24A900320806 /* DBGuldenMonitorListener.h in Headers */,
+				E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */,
+				E6EC7D0721EF24A900320806 /* DBUriRecord.h in Headers */,
+				E6AE404921EF4A500019A54A /* DBOutputRecord.h in Headers */,
+				E6EC7D0621EF24A900320806 /* DBGuldenUnifiedBackend.h in Headers */,
+				E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */,
+				E6EC7D0921EF24A900320806 /* DBBlockinfoRecord.h in Headers */,
+				E6EC7D0421EF24A900320806 /* DBQrcodeRecord.h in Headers */,
+				E6EC7D0821EF24A900320806 /* DBGuldenUnifiedFrontend.h in Headers */,
+				E6EC7D0A21EF24A900320806 /* DBUriRecipient.h in Headers */,
+				E64203F121638CD6004A77FF /* GuldenCore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E64203EB21638CD6004A77FF /* GuldenCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E64203F421638CD6004A77FF /* Build configuration list for PBXNativeTarget "GuldenCore" */;
+			buildPhases = (
+				E64203E721638CD6004A77FF /* Headers */,
+				E64203E821638CD6004A77FF /* Sources */,
+				E64203E921638CD6004A77FF /* Frameworks */,
+				E64203EA21638CD6004A77FF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GuldenCore;
+			productName = gulden_static;
+			productReference = E64203EC21638CD6004A77FF /* GuldenCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E64203E321638CD6004A77FF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1000;
+				ORGANIZATIONNAME = "Gulden.com BV";
+				TargetAttributes = {
+					E64203EB21638CD6004A77FF = {
+						CreatedOnToolsVersion = 10.0;
+					};
+				};
+			};
+			buildConfigurationList = E64203E621638CD6004A77FF /* Build configuration list for PBXProject "GuldenCore" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = E64203E221638CD6004A77FF;
+			productRefGroup = E64203ED21638CD6004A77FF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E64203EB21638CD6004A77FF /* GuldenCore */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E64203EA21638CD6004A77FF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E64203E821638CD6004A77FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E61A1288217136DE000069F0 /* dummy.m in Sources */,
+				E61A12862171360F000069F0 /* dummy.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E64203F221638CD6004A77FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMPILER_INDEX_STORE_ENABLE = NO;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GULDEN_BUILD = "../../../../build/aarch64-ios";
+				GULDEN_DEPENDS = "../../../../depends/aarch64-ios";
+				HEADER_SEARCH_PATHS = "$(GULDEN_BUILD)/src";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(GULDEN_DEPENDS)/lib",
+					"$(GULDEN_BUILD)/src/**",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E64203F321638CD6004A77FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMPILER_INDEX_STORE_ENABLE = NO;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GULDEN_BUILD = "../../../../build/aarch64-ios";
+				GULDEN_DEPENDS = "../../../../depends/aarch64-ios";
+				HEADER_SEARCH_PATHS = "$(GULDEN_BUILD)/src";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(GULDEN_DEPENDS)/lib",
+					"$(GULDEN_BUILD)/src/**",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E64203F521638CD6004A77FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 33W3ADGJQH;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"GULDEN_BUILD[sdk=iphoneos*]" = "../../../../build/aarch64-ios";
+				"GULDEN_BUILD[sdk=iphonesimulator*]" = "../../../../build/x86_64-ios";
+				"GULDEN_DEPENDS[sdk=iphoneos*]" = "../../../../depends/aarch64-ios";
+				"GULDEN_DEPENDS[sdk=iphonesimulator*]" = "../../../../depends/x86_64-ios";
+				INFOPLIST_FILE = "$(SRCROOT)/GuldenCore/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gulden.gulden-static";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E64203F621638CD6004A77FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 33W3ADGJQH;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"GULDEN_BUILD[sdk=iphoneos*]" = "../../../../build/aarch64-ios";
+				"GULDEN_BUILD[sdk=iphonesimulator*]" = "../../../../build/x86_64-ios";
+				"GULDEN_DEPENDS[sdk=iphoneos*]" = "../../../../depends/aarch64-ios";
+				"GULDEN_DEPENDS[sdk=iphonesimulator*]" = "../../../../depends/x86_64-ios";
+				INFOPLIST_FILE = "$(SRCROOT)/GuldenCore/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gulden.gulden-static";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E64203E621638CD6004A77FF /* Build configuration list for PBXProject "GuldenCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E64203F221638CD6004A77FF /* Debug */,
+				E64203F321638CD6004A77FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E64203F421638CD6004A77FF /* Build configuration list for PBXNativeTarget "GuldenCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E64203F521638CD6004A77FF /* Debug */,
+				E64203F621638CD6004A77FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E64203E321638CD6004A77FF /* Project object */;
+}

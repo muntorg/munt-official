@@ -704,6 +704,7 @@ public:
     bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
     bool LoadToWallet(const CWalletTx& wtxIn);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
+    void TransactionDeletedFromMempool( const uint256 &hash, MemPoolRemovalReason reason) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
     void ClearCacheForTransaction(const uint256& hash);
@@ -714,7 +715,7 @@ public:
     void ReacceptWalletTransactions();
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
     void GetBalances(WalletBalances& balances, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
-    CAmount GetBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
+    CAmount GetBalance(const CAccount* forAccount = nullptr, bool useCache=true, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetLockedBalance(const CAccount* forAccount = nullptr, bool includeChildren=false);
     CAmount GetUnconfirmedBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetImmatureBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
@@ -826,15 +827,6 @@ public:
     // CValidationInterface updates
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
     void SetBestChain(const CBlockLocator& loc) override;
-    void Inventory(const uint256 &hash) override
-    {
-        {
-            LOCK(cs_wallet);
-            std::map<uint256, int>::iterator mi = mapRequestCount.find(hash);
-            if (mi != mapRequestCount.end())
-                (*mi).second++;
-        }
-    }
 
     void GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
     void GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
@@ -930,6 +922,15 @@ public:
 
     //! Chain height for wallets (height used depends on SPV).
     static int ChainHeight();
+
+    static void ResetUnifiedSPVProgressNotification();
+
+    /**
+     * Birthtime computed from wallet transactions
+     * If there are no transactions the tip of the known chain is used
+     * If birthtime cannot be succesfully computed it will return 0
+     */
+    int64_t birthTime() const;
 
 private:
     int nTransactionScanProgressPercent;

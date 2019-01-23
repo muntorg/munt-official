@@ -80,7 +80,6 @@ class GUI : public QMainWindow
 
 public:
     static const QString DEFAULT_WALLET;
-    static const std::string DEFAULT_UIPLATFORM;
 
     explicit GUI(const QStyle *platformStyle, const NetworkStyle* networkStyle, QWidget *parent = 0);
     ~GUI();
@@ -163,6 +162,7 @@ private:
     QAction* usedSendingAddressesAction = nullptr;
     QAction* usedReceivingAddressesAction = nullptr;
     QAction* aboutAction = nullptr;
+    QAction* viewAddressAction = nullptr;
     QAction* receiveCoinsAction = nullptr;
     QAction* receiveCoinsMenuAction = nullptr;
     QAction* optionsAction = nullptr;
@@ -326,6 +326,8 @@ private Q_SLOTS:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to view address page */
+    void gotoViewAddressPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

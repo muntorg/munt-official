@@ -40,6 +40,12 @@
 
 #include "uint256.h"
 
+#if defined(__APPLE__) && defined(__MACH__)
+#include <TargetConditionals.h>
+#endif
+#if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0) || defined(__ANDROID__)
+#define VALIDATION_MOBILE
+#endif
 class CBlockIndex;
 class CBlockTreeDB;
 class CBloomFilter;
@@ -93,10 +99,17 @@ static const unsigned int DEFAULT_DESCENDANT_SIZE_LIMIT = 101;
 static const unsigned int DEFAULT_MEMPOOL_EXPIRY = 1;
 /** Maximum kilobytes for transactions to store for processing during reorg */
 static const unsigned int MAX_DISCONNECTED_TX_POOL_SIZE = 20000;
+#if defined(VALIDATION_MOBILE)
+/** The maximum size of a blk?????.dat file (since 0.8) */
+static const unsigned int MAX_BLOCKFILE_SIZE = 0x2000000; // 32 MiB
+/** The pre-allocation chunk size for blk?????.dat files (since 0.8) */
+static const unsigned int BLOCKFILE_CHUNK_SIZE = 0x0400000; // 4 MiB
+#else
 /** The maximum size of a blk?????.dat file (since 0.8) */
 static const unsigned int MAX_BLOCKFILE_SIZE = 0x8000000; // 128 MiB
 /** The pre-allocation chunk size for blk?????.dat files (since 0.8) */
 static const unsigned int BLOCKFILE_CHUNK_SIZE = 0x1000000; // 16 MiB
+#endif
 /** The pre-allocation chunk size for rev?????.dat files (since 0.8) */
 static const unsigned int UNDOFILE_CHUNK_SIZE = 0x100000; // 1 MiB
 /** Dust Soft Limit, allowed with additional fee per output */
@@ -125,8 +138,15 @@ static const int MAX_BLOCKTXN_DEPTH = 10;
  *  degree of disordering of blocks on disk (which make reindexing and in the future perhaps pruning
  *  harder). We'll probably want to make this a per-peer adaptive value at some point. */
 static const unsigned int BLOCK_DOWNLOAD_WINDOW = 1024;
-/** Time to wait (in seconds) between writing blocks/block index to disk. */
+/** Time to wait (in seconds) between writing blocks/block index to disk.
+ *  Use a very short write interval on mobile platforms as it is very likely (and normal procedure)
+ *  to be terminated without notice. Also the writing is quite fast as there is little work in pure SPV mode.
+*/
+#if defined(VALIDATION_MOBILE)
+static const unsigned int DATABASE_WRITE_INTERVAL = 10;
+#else
 static const unsigned int DATABASE_WRITE_INTERVAL = 60 * 60;
+#endif
 /** Time to wait (in seconds) between flushing chainstate to disk. */
 static const unsigned int DATABASE_FLUSH_INTERVAL = 24 * 60 * 60;
 /** Maximum length of reject messages. */
@@ -181,9 +201,6 @@ static const int DEFAULT_STOPATHEIGHT = 0;
 
 /** if disabled full sync and validation will be skipped, ie. no chain is build. */
 static const bool DEFAULT_FULL_SYNC_MODE = true;
-
-/** Minimum part of partial chain to keep when pruning block index */
-static const int PARTIAL_SYNC_PRUNE_HEIGHT = 1152;
 
 struct BlockHasher
 {
@@ -255,6 +272,9 @@ extern bool fHavePruned;
 extern bool fPruneMode;
 /** Number of MiB of block files that we're trying to stay below. */
 extern uint64_t nPruneTarget;
+/** Track pruning of partial chain to optimize & prevent duplicate erase */
+extern int nPartialPruneHeightDone;
+
 /** Block files containing a block-height within MIN_BLOCKS_TO_KEEP of chainActive.Tip() will not be pruned. */
 static const unsigned int MIN_BLOCKS_TO_KEEP = 288;
 
@@ -344,17 +364,25 @@ void PruneAndFlush();
 /** Prune block files up to a given height */
 void PruneBlockFilesManual(int nManualPruneHeight);
 /**
- * Prune block index and blk/rev files if using partial sync only
+ * Persist and prune block index and blk/rev files if using partial sync only
  * Deleting block indexes unnesesary for partial sync reduces database size, memory usage and
  * results in faster startup times.
- * Only call at program shutdown to avoid state inconsistencies.
+ * Call periodically to prevent re-download after forced kill (= normal iOS behavior) or crash
+ * also call at shutdown.
 */
-void PruneForPartialSync();
+void PersistAndPruneForPartialSync(bool periodic=false);
 /** (try to) add transaction to memory pool
  * plTxnReplaced will be appended to with all transactions replaced from mempool **/
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx, bool fLimitFree,
                         bool* pfMissingInputs, std::list<CTransactionRef>* plTxnReplaced = NULL,
                         bool fOverrideMempoolLimit=false, const CAmount nAbsurdFee=0);
+
+/**
+ * In pure partial sync expire transactions that stay in the memorypool too long.
+ * It's for example possible that created transaction pass local spv validation but are
+ * rejected by the full validation.
+ */
+int ExpireMempoolForPartialSync(const CBlockIndex* tip);
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);
@@ -607,5 +635,6 @@ void SetFullSyncMode(bool state);
 bool isFullSyncMode();
 
 bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback);
+void SetMaxSPVPruneHeight(int height);
 
 #endif // GULDEN_VALIDATION_H

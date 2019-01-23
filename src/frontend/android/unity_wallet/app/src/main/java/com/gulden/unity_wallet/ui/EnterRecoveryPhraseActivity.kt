@@ -3,7 +3,7 @@ package com.gulden.unity_wallet.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -15,13 +15,16 @@ import android.widget.CheckBox
 import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.unity_wallet.CoreObserverProxy
 import com.gulden.unity_wallet.WalletActivity
 
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
 
 
-class EnterRecoveryPhraseActivity : AppCompatActivity()
+class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
+    private val coreObserverProxy = CoreObserverProxy(this, this)
 
     private var proceedButton: Button? = null
     private var recoveryPhraseEditText: MultiAutoCompleteTextView? = null
@@ -144,6 +147,23 @@ class EnterRecoveryPhraseActivity : AppCompatActivity()
         }
 
         updateView()
+
+        UnityCore.instance.addObserver(coreObserverProxy)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        UnityCore.instance.removeObserver(coreObserverProxy)
+    }
+
+    override fun onCoreReady(): Boolean {
+        // Proceed to main activity
+        val intent = Intent(this, WalletActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
@@ -164,12 +184,9 @@ class EnterRecoveryPhraseActivity : AppCompatActivity()
     {
         if (GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
         {
-            // Proceed to main activity
-            val intent = Intent(this, WalletActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
+            // no need to do anything here, there will be a coreReady event soon
+            // possibly put a progress spinner or some other user feedback if
+            // the coreReady can take a long time
         }
         else
         {
@@ -186,12 +203,9 @@ class EnterRecoveryPhraseActivity : AppCompatActivity()
     {
         if (GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
         {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(recoveryPhraseEditText!!.windowToken, 0)
-
             proceedButton?.isEnabled = true
 
-            if (!overwriteWalletCheckbox!!.isChecked && (isNewWallet!!))
+            if (!isNewWallet!! && !overwriteWalletCheckbox!!.isChecked)
             {
                 proceedButton?.isEnabled = false
             }

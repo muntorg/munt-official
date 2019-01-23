@@ -6,7 +6,7 @@
 package com.gulden.unity_wallet.ui.widgets
 
 import android.content.Context
-import android.support.v7.widget.AppCompatMultiAutoCompleteTextView
+import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection

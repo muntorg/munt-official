@@ -1,114 +1,115 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za) & Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
 package com.gulden.unity_wallet
 
 import android.app.Application
-import android.content.ComponentName
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.PendingIntent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
+import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.os.Build
-import android.os.IBinder
-import android.support.v7.app.AppCompatActivity
+import android.content.SharedPreferences
+import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.preference.PreferenceManager
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.TransactionRecord
+import org.jetbrains.anko.runOnUiThread
 
-class ActivityManager : Application(), UnityService.UnityServiceSignalHandler
+private val TAG = "activity-manager"
+
+class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
 {
-    var walletActivity : WalletActivity ?= null
-        set(value)
-        {
-            field = value
-            if (field == null)
-            {
-                unbindServiceIfAllActivitiesStopped()
-            }
-        }
-    var introActivity : IntroActivity ?= null
-        set(value)
-        {
-            field = value
-        }
-
-    override fun syncProgressChanged(percent: Float): Boolean
-    {
-        walletActivity?.runOnUiThread{ walletActivity?.setSyncProgress(percent); }
-        return true
-    }
-    override fun walletBalanceChanged(balance: Long): Boolean
-    {
-        walletActivity?.runOnUiThread{ walletActivity?.setWalletBalance(balance); }
-        return true
-    }
-    override fun coreUIInit() : Boolean
-    {
-        walletActivity?.runOnUiThread{ walletActivity?.coreUIInit(); }
-        return true
-    }
-    override fun haveExistingWallet() : Boolean
-    {
-        introActivity?.runOnUiThread{ introActivity?.gotoWalletActivity(); }
-        return true
-    }
-    override fun createNewWallet() : Boolean
-    {
-        introActivity?.runOnUiThread{ introActivity?.gotoWelcomeActivity(); }
-        return true
-    }
-
-    private var bound = false
-    private lateinit var myService : UnityService
     override fun onCreate()
     {
         super.onCreate()
 
-        val service = Intent(this, UnityService::class.java)
-        if (!UnityService.IS_SERVICE_RUNNING)
-        {
-            service.action = UnityService.START_FOREGROUND_ACTION
-            UnityService.IS_SERVICE_RUNNING = true
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            {
-                startForegroundService(service)
+        AppContext.instance = baseContext
+
+        UnityCore.instance.configure(
+                UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, testnet = Constants.TEST)
+        )
+
+        UnityCore.instance.addObserver(this)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        preferences.registerOnSharedPreferenceChangeListener(this)
+
+        setupBackgroundSync(this)
+    }
+
+    override fun onCoreReady(): Boolean {
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        return true
+    }
+
+    override fun onCoreShutdown(): Boolean {
+        ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
+        return true
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        when (key) {
+            "preference_background_sync" -> {
+                setupBackgroundSync(this)
             }
-            else
-            {
-                startService(service)
+        }
+    }
+
+    override fun incomingTransaction(transaction: TransactionRecord): Boolean {
+        runOnUiThread {
+            val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+            if (preferences.getBoolean("preference_notify_transaction_activity", true)) {
+                val notificationIntent = Intent(this, WalletActivity::class.java)
+                val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+
+                val notification = NotificationCompat.Builder(this)
+                        .setContentTitle("Incoming transaction")
+                        .setTicker("Incoming transaction")
+                        .setContentText((" %.2f").format(transaction.amount.toDouble() / 100000000))
+                        .setSmallIcon(R.drawable.ic_g_logo)
+                        //.setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
+                        .setContentIntent(pendingIntent)
+                        .setOngoing(false)
+                        .setAutoCancel(true)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        //.setPublicVersion()
+                        //.setTimeoutAfter()
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .build()
+
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(1, notification)
             }
         }
 
-        // Bind to service
-        val intent = Intent(this, UnityService::class.java)
-        bindService(intent, serviceConnection, AppCompatActivity.BIND_AUTO_CREATE)
+        return true
     }
 
-    fun unbindServiceIfAllActivitiesStopped()
+    override fun updatedTransaction(transaction: TransactionRecord): Boolean {
+        runOnUiThread {
+            Log.i(TAG, "updatedTransaction: " + transaction.toString())
+        }
+        return true
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun allActivitiesStopped()
     {
-        if (walletActivity == null && introActivity == null)
-        {
-            // Unbind from service
-            if (bound)
-            {
-                myService.signalHandler = null
-                unbindService(serviceConnection)
-                bound = false
-            }
-        }
+        GuldenUnifiedBackend.PersistAndPruneForSPV();
     }
 
-private val serviceConnection = object : ServiceConnection
-{
-
-    override fun onServiceConnected(className: ComponentName, service: IBinder) {
-        // cast the IBinder and get MyService instance
-        val binder = service as UnityService.LocalBinder
-        myService = binder.service
-        bound = true
-        myService.signalHandler = (this@ActivityManager) // register
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun firstActivityStarted()
+    {
+        GuldenUnifiedBackend.ResetUnifiedProgress()
     }
 
-    override fun onServiceDisconnected(arg0: ComponentName) {
-        bound = false
-    }
-}
 }
