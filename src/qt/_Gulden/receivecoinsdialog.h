@@ -16,21 +16,12 @@
 #include <QItemSelection>
 #include <QKeyEvent>
 #include <QMenu>
-#include <QPoint>
-#include <QVariant>
-#include <QSslError>
+
 
 class OptionsModel;
 class QStyle;
 class WalletModel;
-#if defined(HAVE_WEBENGINE_VIEW)
-class QWebEngineView;
-#elif defined(HAVE_WEBKIT)
-class QWebView;
-#endif
 class CReserveKeyOrScript;
-class QWebEngineNewViewRequest;
-class QNetworkReply;
 
 class CAccount;
 
@@ -67,21 +58,13 @@ private:
     WalletModel* model;
     const QStyle* platformStyle;
     QString accountAddress;
-    #if defined(HAVE_WEBENGINE_VIEW)
-    QWebEngineView* buyView;
-    #elif defined(HAVE_WEBKIT)
-    QWebView* buyView;
-    #endif
     CReserveKeyOrScript* buyReceiveAddress;
     CAccount* currentAccount;
 
 private Q_SLOTS:
   void copyAddressToClipboard();
   void saveQRAsImage();
-  void loadBuyViewFinished(bool bOk);
   void generateRequest();
-  void buyGulden();
-  void sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist);
 };
 
 #endif // GULDEN_QT_GULDENRECEIVECOINSDIALOG_H

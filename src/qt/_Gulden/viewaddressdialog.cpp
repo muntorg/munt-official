@@ -83,7 +83,8 @@ void ViewAddressDialog::activeAccountChanged(CAccount* activeAccount)
 
 void ViewAddressDialog::updateQRCode(const QString& sAddress)
 {
-    QString uri = QString("Gulden:") + sAddress;
+    //fixme: (2.2) This QR is "witness" instead of "gulden" to interoperate with special "witness watch" iOS app - this isn't ideal, revisit Qr schemes going forward.
+    QString uri = QString("witness:") + sAddress;
     if(!uri.isEmpty())
     {
         // limit URI length

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.1" language="de">
     <extra-po-header-language>de</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
@@ -220,24 +220,8 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
         <translation>Verfügbar</translation>
     </message>
     <message>
-        <source>Total funds: </source>
-        <translation>Gesamtbetrag: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Gesperrter Betrag: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Betrag in Erwartung der Bestätigung:  </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Verfügbarer Betrag: </translation>
-    </message>
-    <message>
-        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
-        <translation>Dieses Feature ist in den ersten paar Wochen der Witnessing nicht verfügbar, bitte aktualisiere auf die neueste Version und versuch es noch einmal, oder bitte um Hilfe.</translation>
+        <source>&amp;Address</source>
+        <translation>&amp;Adresse</translation>
     </message>
     <message>
         <source>Check for Updates</source>
@@ -661,10 +645,6 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
         <translation>Meine Konten</translation>
     </message>
     <message>
-        <source>All</source>
-        <translation>Alle</translation>
-    </message>
-    <message>
         <source>Receiving address</source>
         <translation>Empfangsadresse</translation>
     </message>
@@ -1037,6 +1017,18 @@ Witness Gewicht: %5</translation>
     <message>
         <source>No</source>
         <translation>Nein</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>adresse</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Anforderung in die Zwischenablage kopiert</translation>
+    </message>
+    <message>
+        <source>Request copied to clipboard</source>
+        <translation>Anforderung in die Zwischenablage kopiert</translation>
     </message>
     <message>
         <source>My receiving address</source>
@@ -1555,22 +1547,6 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
         <source>Spendable</source>
         <translation>Verfügbar</translation>
     </message>
-    <message>
-        <source>Total funds: </source>
-        <translation>Gesamtbetrag: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Gesperrter Betrag: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Betrag in Erwartung der Bestätigung:  </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Verfügbarer Betrag: </translation>
-    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -1763,10 +1739,6 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     <message>
         <source>Internal transfer</source>
         <translation>Interne Transaktion</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Mining Belohnung</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -2225,10 +2197,6 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     <message>
         <source>Internal transfer</source>
         <translation>Interne Transaktion</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Mining Belohnung</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -3706,10 +3674,6 @@ In zukünftigen Versionen von Gulden wird es möglich sein, dieses Konto wieder 
         <translation>Betrag aus unbestätigten Transaktionen, der noch nicht im aktuell verfügbaren Kontostand enthalten ist</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Erarbeiteter Betrag in beobachteten Adressen der noch nicht gereift ist</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Gesamtbetrag:</translation>
     </message>
@@ -3720,10 +3684,6 @@ In zukünftigen Versionen von Gulden wird es möglich sein, dieses Konto wieder 
     <message>
         <source>Generated balance that has not yet matured</source>
         <translation>Generierter Betrag der noch nicht gereift ist</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Erarbeiteter Betrag der noch nicht gereift ist</translation>
     </message>
     <message>
         <source>Immature:</source>
@@ -3941,6 +3901,21 @@ In zukünftigen Versionen von Gulden wird es möglich sein, dieses Konto wieder 
     <message>
         <source>Yes</source>
         <translation>Ja</translation>
+    </message>
+</context>
+<context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>address</source>
+        <translation>adresse</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse in die Zwischenablage kopiert</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopiere Adresse in Zwischenablage</translation>
     </message>
 </context>
 <context>

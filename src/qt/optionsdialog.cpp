@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2019 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -37,6 +37,38 @@
 
 #include "_Gulden/GuldenGUI.h"
 #include <unity/appmanager.h>
+
+//Very primitive function to capatalise first letter of string (only for latin alphabet).
+//Only used to "beautify" language selection list so doesn't need to be fast or perfect.
+void CapitaliseStringLatinOnly(QString& str)
+{
+    if (str.isEmpty())
+        return;
+    if (str[0] == 'a') {str[0]='A';}
+    else if (str[0] == 'b') {str[0]='B';}
+    else if (str[0] == 'c') {str[0]='C';}
+    else if (str[0] == 'd') {str[0]='D';}
+    else if (str[0] == 'e') {str[0]='E';}
+    else if (str[0] == 'f') {str[0]='F';}
+    else if (str[0] == 'g') {str[0]='G';}
+    else if (str[0] == 'h') {str[0]='H';}
+    else if (str[0] == 'i') {str[0]='I';}
+    else if (str[0] == 'j') {str[0]='J';}
+    else if (str[0] == 'k') {str[0]='K';}
+    else if (str[0] == 'l') {str[0]='L';}
+    else if (str[0] == 'm') {str[0]='M';}
+    else if (str[0] == 'n') {str[0]='N';}
+    else if (str[0] == 'o') {str[0]='O';}
+    else if (str[0] == 'p') {str[0]='P';}
+    else if (str[0] == 'q') {str[0]='Q';}
+    else if (str[0] == 'r') {str[0]='R';}
+    else if (str[0] == 's') {str[0]='S';}
+    else if (str[0] == 't') {str[0]='T';}
+    else if (str[0] == 'u') {str[0]='U';}
+    else if (str[0] == 'x') {str[0]='X';}
+    else if (str[0] == 'y') {str[0]='Y';}
+    else if (str[0] == 'z') {str[0]='Z';}
+}
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
@@ -110,26 +142,33 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     {
         QLocale locale(langStr);
 
-        /** check if the locale name consists of 2 parts (language_country) */
+        QString nativeLanguageName = locale.nativeLanguageName();
+
+        // Neaten up list by ensuring all language names are at least capatalised (was a messy mix/match otherwise)
+        // Only works for latin languages but this is fine, no need to get fancier than that for now.
+        CapitaliseStringLatinOnly(nativeLanguageName);
+
+        // check if the locale name consists of 2 parts (language_country)
         if(langStr.contains("_"))
         {
-#if QT_VERSION >= 0x040800
-            /** display language strings as "native language - native country (locale name)", e.g. "Deutsch - Deutschland (de)" */
-            ui->lang->addItem(locale.nativeLanguageName() + QString(" - ") + locale.nativeCountryName() + QString(" (") + langStr + QString(")"), QVariant(langStr));
-#else
-            /** display language strings as "language - country (locale name)", e.g. "German - Germany (de)" */
-            ui->lang->addItem(QLocale::languageToString(locale.language()) + QString(" - ") + QLocale::countryToString(locale.country()) + QString(" (") + langStr + QString(")"), QVariant(langStr));
-#endif
+            // display language strings as "native language - native country (locale name)", e.g. "Deutsch - Deutschland (de)" 
+            ui->lang->addItem(nativeLanguageName + QString(" - ") + locale.nativeCountryName() + QString(" (") + langStr + QString(")"), QVariant(langStr));
         }
         else
         {
-#if QT_VERSION >= 0x040800
-            /** display language strings as "native language (locale name)", e.g. "Deutsch (de)" */
-            ui->lang->addItem(locale.nativeLanguageName() + QString(" (") + langStr + QString(")"), QVariant(langStr));
-#else
-            /** display language strings as "language (locale name)", e.g. "German (de)" */
-            ui->lang->addItem(QLocale::languageToString(locale.language()) + QString(" (") + langStr + QString(")"), QVariant(langStr));
-#endif
+            //fixme: (FUT)
+            // For some reason QLocale("en").nativeLanguageName() returns "American English".
+            // This is likely/potentially wrong for other languages as well but English was the most obvious/important to have right.
+            // No time to dig into it now so for now we just hardcode a fix here for now, we should look into this in future.
+            if (langStr == "en") { nativeLanguageName = "English"; }
+            else if (langStr == "eo") { nativeLanguageName = "Esperanto"; }
+            else if (langStr == "ku") { nativeLanguageName = "Kurdî"; }
+            else if (langStr == "kr") { nativeLanguageName = "Kanuri"; }
+            else if (langStr == "la-VA") { nativeLanguageName = "Latin"; }
+            else if (langStr == "cs") { nativeLanguageName = "Čeština"; }
+
+            // display language strings as "native language (locale name)", e.g. "Deutsch (de)"
+            ui->lang->addItem(nativeLanguageName + QString(" (") + langStr + QString(")"), QVariant(langStr));
         }
     }
 #if QT_VERSION >= 0x040700

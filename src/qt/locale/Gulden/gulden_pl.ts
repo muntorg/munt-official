@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pl_PL">
+<TS version="2.1" language="pl">
     <extra-po-header-language>pl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
@@ -224,28 +224,8 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Oszacowanie konwersji</translation>
     </message>
     <message>
-        <source>Total funds: </source>
-        <translation>Razem środki: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Zablokowane środki: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Środki w oczekiwaniu na potwierdzenie: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Dostępne środki: </translation>
-    </message>
-    <message>
         <source>Wallet balances</source>
         <translation>Saldo portfela</translation>
-    </message>
-    <message>
-        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
-        <translation>Ta funkcja nie jest dostępna w pierwszych kilku tygodniach witnessing, zaktualizuj ją do najnowszej wersji i spróbuj ponownie lub poproś o pomoc.</translation>
     </message>
     <message>
         <source>Check for Updates</source>
@@ -669,10 +649,6 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>My accounts</source>
         <translation>Moje konta</translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation>Wszystko</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -1583,22 +1559,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <source>Conversion estimate</source>
         <translation>Oszacowanie konwersji</translation>
     </message>
-    <message>
-        <source>Total funds: </source>
-        <translation>Razem środki: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Zablokowane środki: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Fundusze oczekiwaniu na potwierdzenie: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Dostępne środki: </translation>
-    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -1791,10 +1751,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Internal transfer</source>
         <translation>Transfer wewnętrzny</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Nagroda górnicza</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -2254,10 +2210,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Internal transfer</source>
         <translation>Transfer wewnętrzny</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Nagroda górnicza</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -3746,10 +3698,6 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
         <translation>Suma transakcji, które nie zostały jeszcze potwierdzone, a które nie zostały wliczone do twojego obecnego salda</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Wykopane monety na podglądanych adresach które jeszcze nie dojrzały</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Ogółem:</translation>
     </message>
@@ -3760,10 +3708,6 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Generated balance that has not yet matured</source>
         <translation>Wygenerowane saldo które jeszcze nie zostało dojrzałe</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Balans wydobytych monet, które jeszcze nie dojrzały</translation>
     </message>
     <message>
         <source>Immature:</source>

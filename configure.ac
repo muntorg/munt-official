@@ -3,9 +3,9 @@ AC_PREREQ([2.60])
 define(_CLIENT_VERSION_MAJOR,       2)
 define(_CLIENT_VERSION_MINOR,       1)
 define(_CLIENT_VERSION_REVISION, 0)
-define(_CLIENT_VERSION_BUILD,       0)
+define(_CLIENT_VERSION_BUILD,       3)
 define(_CLIENT_VERSION_IS_RELEASE, false)
-define(_COPYRIGHT_YEAR, 2018)
+define(_COPYRIGHT_YEAR, 2019)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
 define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Gulden]])
 AC_INIT([Gulden],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@gulden.com],[Gulden])
@@ -267,8 +267,6 @@ AC_ARG_WITH([daemon],
 
 use_pkgconfig=yes
 
-# fixme: (2.1) switch default to webengine when build and deploy works on all platforms
-default_webview=webkit
 
 case $host in
   *mingw*)
@@ -317,9 +315,7 @@ case $host in
        CXXFLAGS="$CXXFLAGS -w"
      fi
      case $host in
-       i?86-*) WINDOWS_BITS=32
-         default_webview=webkit
-         ;;
+       i?86-*) WINDOWS_BITS=32 ;;
        x86_64-*) WINDOWS_BITS=64 ;;
        *) AC_MSG_ERROR("Could not determine win32/win64 for installer") ;;
      esac

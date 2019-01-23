@@ -19,7 +19,7 @@ sed -i 's|^\"Language\(.*\)$|"Language\1\n"X-Qt-Contexts: true\\n"|' *.po
 
 #Now update ts files from onesky translations
 for filename in *.po; do
-    lconvert -locations relative $filename -o `dirname ${filename}`/`basename ${filename} .po`.ts
+    lconvert -locations relative $filename -o `dirname ${filename}`/`basename ${filename} .po`.ts -target-language `echo $filename | sed "s/gulden_//" | sed "s/.po//" | sed "s/-/_/"`
 done
 
 #Remerge updated ts files from source if source has changed (english only)
