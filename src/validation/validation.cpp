@@ -2223,7 +2223,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
     pindexNew->RaiseValidity(BLOCK_VALID_HEADER);
 
     pindexNew->nChainWork = CalculateChainWork(pindexNew, chainParams);
-    if ((pindexNew->nHeight > 0 && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)) || pindexNew->nHeight == 0)
+    if (isFullSyncMode() && ((pindexNew->nHeight > 0 && pindexNew->pprev->IsValid(BLOCK_VALID_TREE)) || pindexNew->nHeight == 0))
     {
         // block is extending the main tree
         if (pindexNew->nChainTx && (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
@@ -3334,40 +3334,9 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
 
     boost::this_thread::interruption_point();
 
-    std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
-
-    // Calculate nChainWork
-    heightSortedBlockIndex(vSortedByHeight);
-    for(const PAIRTYPE(int, CBlockIndex*)& item : vSortedByHeight)
-    {
-        CBlockIndex* pindex = item.second;
-        pindex->nChainWork = CalculateChainWork(pindex, chainparams);;
-        pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
-        // We can link the chain of blocks for which we've received transactions at some point.
-        // Pruned nodes may have deleted the block.
-        if (pindex->nTx > 0) {
-            if (pindex->pprev) {
-                if (pindex->pprev->nChainTx) {
-                    pindex->nChainTx = pindex->pprev->nChainTx + pindex->nTx;
-                } else {
-                    pindex->nChainTx = 0;
-                    mapBlocksUnlinked.insert(std::pair(pindex->pprev, pindex));
-                }
-            } else {
-                pindex->nChainTx = pindex->nTx;
-            }
-        }
-
-        if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->nChainTx || pindex->pprev == NULL))
-        {
-            setBlockIndexCandidates.insert(pindex);
-            //LogPrintf("LoadBlockIndexDB: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
-        }
-        if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
-            pindexBestInvalid = pindex;
-        if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex))) {
-            pindexBestHeader = pindex;
-        }
+    // find pindexBestPartial
+    for (const auto& it: mapBlockIndex) {
+        CBlockIndex* pindex = it.second;
         if ((pindex->IsPartialValid(BLOCK_PARTIAL_TREE))
                 && (!pindexBestPartial || pindex->nHeight >= pindexBestPartial->nHeight))
             pindexBestPartial = pindex;
@@ -3402,7 +3371,16 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             std::vector<uint256> removals;
             for (auto it = mapBlockIndex.begin(); it != mapBlockIndex.end(); )
             {
-                const CBlockIndex* pindex = it->second;
+                CBlockIndex* pindex = it->second;
+
+                // When not in full sync mode we should not have any full validation status so clear it.
+                // This should normally not happen. An edge case is when with full sync mode in a previous session and
+                // in a later sessio0n switching to pure partial sync.
+                if (pindex->nHeight != 0) {
+                    pindex->nStatus &= ~(BLOCK_VALID_TREE | BLOCK_VALID_TRANSACTIONS | BLOCK_VALID_CHAIN | BLOCK_VALID_SCRIPTS);
+                    pindex->nChainTx = 0;
+                }
+
                 if (!partialChain.Contains(pindex) && (pindex->nHeight != 0 || pindex->GetBlockHashPoW2() != Params().GenesisBlock().GetHashPoW2()))
                 {
                     // important to get hash for removals here first before erasing from mapBlockIndex
@@ -3435,12 +3413,41 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
 #endif
     }
 
-    // build skiplist now as no more block indexes will be erased from here on
+    std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
+
+    // Build skiplist, calculate nChainWork and block index candidates
     heightSortedBlockIndex(vSortedByHeight);
-    for(const auto& item: vSortedByHeight)
+    for(const PAIRTYPE(int, CBlockIndex*)& item : vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
         pindex->BuildSkip();
+        pindex->nChainWork = CalculateChainWork(pindex, chainparams);;
+        pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
+        // We can link the chain of blocks for which we've received transactions at some point.
+        // Pruned nodes may have deleted the block.
+        if (pindex->nTx > 0) {
+            if (pindex->pprev) {
+                if (pindex->pprev->nChainTx) {
+                    pindex->nChainTx = pindex->pprev->nChainTx + pindex->nTx;
+                } else {
+                    pindex->nChainTx = 0;
+                    mapBlocksUnlinked.insert(std::pair(pindex->pprev, pindex));
+                }
+            } else {
+                pindex->nChainTx = pindex->nTx;
+            }
+        }
+
+        if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->nChainTx || pindex->pprev == NULL))
+        {
+            setBlockIndexCandidates.insert(pindex);
+            //LogPrintf("LoadBlockIndexDB: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
+        }
+        if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
+            pindexBestInvalid = pindex;
+        if (pindex->IsValid(BLOCK_VALID_TREE) && (pindexBestHeader == NULL || CBlockIndexWorkComparator()(pindexBestHeader, pindex))) {
+            pindexBestHeader = pindex;
+        }
     }
 
     // Load block file info
