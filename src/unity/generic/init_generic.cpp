@@ -22,7 +22,9 @@
 #include "util.h"
 #include "utilmoneystr.h"
 #include "validation/validation.h"
+#ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#endif
 #include "warnings.h"
 
 #include <boost/thread.hpp>
