@@ -1,10 +1,7 @@
-package com.gulden.unity_wallet.currency
+package com.gulden.unity_wallet
 
 import android.preference.PreferenceManager
 import android.util.Log
-import com.gulden.unity_wallet.AppContext
-import com.gulden.unity_wallet.Config
-import com.gulden.unity_wallet.R
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URL
@@ -36,7 +33,7 @@ suspend fun fetchCurrencyRate(code: String): Double
         }
     }
     catch (e: Throwable) {
-        Log.i(TAG, "Failed to fetch currency rates from ${GULDEN_MARKET_URL}")
+        Log.i(TAG, "Failed to fetch currency rates from $GULDEN_MARKET_URL")
         throw e
     }
 

@@ -18,9 +18,6 @@ import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.R.layout.text_input_address_label
-import com.gulden.unity_wallet.currency.Currencies
-import com.gulden.unity_wallet.currency.fetchCurrencyRate
-import com.gulden.unity_wallet.currency.localCurrency
 import kotlinx.android.synthetic.main.activity_send_coins.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*

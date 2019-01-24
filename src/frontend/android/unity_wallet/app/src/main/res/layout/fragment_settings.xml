@@ -10,7 +10,7 @@ file COPYING
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:title="Preferences"
-    tools:context=".MainActivityFragments.SettingsFragment">
+    tools:context=".main_activity_fragments.SettingsFragment">
 
     <Preference
         android:key="recovery_preference"

@@ -3,7 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-package com.gulden.unity_wallet.MainActivityFragments
+package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.Context
 import android.content.Intent
@@ -12,8 +12,6 @@ import android.os.Bundle
 import androidx.preference.Preference
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.SendCoinsActivity
-import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 
 

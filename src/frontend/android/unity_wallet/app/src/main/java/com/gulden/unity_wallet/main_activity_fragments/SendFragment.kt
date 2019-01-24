@@ -3,7 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-package com.gulden.unity_wallet.MainActivityFragments
+package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.ClipboardManager
 import android.content.Context
@@ -20,7 +20,7 @@ import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.SendCoinsActivity
 import com.gulden.unity_wallet.ui.AddressBookAdapter
-import com.gulden.unity_wallet.uriRecicpient
+import com.gulden.uriRecicpient
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
 

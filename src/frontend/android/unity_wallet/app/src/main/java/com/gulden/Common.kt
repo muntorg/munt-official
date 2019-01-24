@@ -1,4 +1,4 @@
-package com.gulden.unity_wallet
+package com.gulden
 
 import android.net.Uri
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend

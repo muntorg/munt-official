@@ -3,12 +3,11 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-package com.gulden.unity_wallet.MainActivityFragments
+package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

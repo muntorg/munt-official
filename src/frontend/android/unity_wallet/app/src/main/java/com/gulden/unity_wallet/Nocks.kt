@@ -97,7 +97,7 @@ suspend fun nocksOrder(amountEuro: String, iban:String): NocksOrderResult
             throw RuntimeException("Withdrawal address modified, please contact a developer for assistance.")
 
         return NocksOrderResult(
-                depositAddress = result?.success?.deposit!!,
-                depositAmountNLG = String.format("%.${Config.PRECISION_FULL}f", result?.success?.depositAmount))
+                depositAddress = result.success?.deposit!!,
+                depositAmountNLG = String.format("%.${Config.PRECISION_FULL}f", result.success?.depositAmount))
     }
 }
