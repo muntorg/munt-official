@@ -34,7 +34,7 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
-            versionCode 335
+            versionCode 336
             versionName = "2.0.1.0"
         }
         gulden_mainnet {
@@ -42,7 +42,7 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
-            versionCode 335
+            versionCode 336
             versionName = "2.0.1.0"
         }
     }
@@ -63,15 +63,15 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'androidx.preference:preference:1.1.0-alpha01'
-    implementation 'com.google.android.material:material:1.1.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.preference:preference:1.1.0-alpha02'
+    implementation 'com.google.android.material:material:1.1.0-alpha02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0-alpha01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.gms:play-services-vision:16.2.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
-    implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha11"
+    implementation "android.arch.work:work-runtime-ktx:1.0.0-beta02"
     implementation "commons-validator:commons-validator:1.6"
     implementation "com.squareup.okhttp3:okhttp:3.12.0"
     implementation "com.squareup.moshi:moshi:1.8.0"
@@ -83,8 +83,8 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
     kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1-beta01'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1-beta01'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
 

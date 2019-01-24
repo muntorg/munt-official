@@ -1,16 +1,19 @@
 #### -- Support Library --
 
-# support-v4
--dontwarn android.support.v4.**
--keep class android.support.v4.app.** { *; }
--keep interface android.support.v4.app.** { *; }
--keep class android.support.v4.** { *; }
+#okhttp3
+-dontwarn javax.annotation.**
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
 
-# support-v7
--dontwarn android.support.v7.**
--keep class android.support.v7.internal.** { *; }
--keep interface android.support.v7.internal.** { *; }
--keep class android.support.v7.** { *; }
+-dontwarn org.apache.**
+-dontwarn org.apache.commons.logging.**
+
+# support
+-dontwarn androidx.support.**
+-keep class androidx.support.app.** { *; }
+-keep interface androidx.support.app.** { *; }
+-keep class androidx.support.** { *; }
 
 # unity backend
 -keep class com.gulden.jniunifiedbackend.** { *; }

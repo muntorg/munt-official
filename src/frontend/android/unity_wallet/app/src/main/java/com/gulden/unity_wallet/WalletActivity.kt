@@ -24,7 +24,6 @@ import com.gulden.unity_wallet.MainActivityFragments.SettingsFragment
 import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
 import com.gulden.unity_wallet.currency.fetchCurrencyRate
 import com.gulden.unity_wallet.currency.localCurrency
-import com.gulden.unity_wallet.ui.buy.BuyActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext

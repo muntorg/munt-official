@@ -157,7 +157,7 @@ class SyncWorker(context : Context, params : WorkerParameters)
         Log.i(TAG, "Periodic sync finished")
 
         // Indicate success or failure with your return value:
-        return ListenableWorker.Result.SUCCESS
+        return ListenableWorker.Result.success()
 
         // (Returning RETRY tells WorkManager to try this task again
         // later; FAILURE says not to try again.)

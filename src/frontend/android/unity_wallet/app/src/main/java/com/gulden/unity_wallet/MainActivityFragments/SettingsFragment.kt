@@ -29,7 +29,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
         when (preference?.key){
             "recovery_preference" ->
             {
-                val phraseView = findPreference("recovery_view_preference")
+                val phraseView : Preference = findPreference("recovery_view_preference")
                 phraseView.title = GuldenUnifiedBackend.GetRecoveryPhrase()
             }
             "preference_link_wallet" ->
