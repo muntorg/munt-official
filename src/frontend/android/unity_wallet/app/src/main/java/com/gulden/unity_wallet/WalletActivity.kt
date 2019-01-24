@@ -193,9 +193,15 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
 
     fun gotoBuyActivity()
     {
-        val intent = Intent(this, BuyActivity::class.java)
-        intent.putExtra(BuyActivity.ARG_BUY_ADDRESS, GuldenUnifiedBackend.GetReceiveAddress().toString())
-        startActivityForResult(intent, BUY_RETURN_CODE)
+        val urlBuilder = Uri.Builder()
+        urlBuilder.scheme("https")
+        urlBuilder.path("gulden.com/purchase")
+        urlBuilder.appendQueryParameter("receive_address", GuldenUnifiedBackend.GetReceiveAddress().toString())
+        val intent = Intent(Intent.ACTION_VIEW, urlBuilder.build())
+        if (intent.resolveActivity(packageManager) != null)
+        {
+            startActivity(intent)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
