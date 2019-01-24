@@ -15,6 +15,7 @@ static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_DISABLE_SAFEMODE = false;
 static const bool DEFAULT_STOPAFTERBLOCKIMPORT = false;
+static const bool DEFAULT_SPV = false;
 
 namespace boost
 {
