@@ -4,13 +4,11 @@ $(package)_download_path=http://download.qt.io/official_releases/qt/5.7/$($(pack
 $(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
-$(package)_dependencies=openssl zlib icu
+$(package)_dependencies=openssl zlib
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
-$(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
+$(package)_qt_libs=corelib network widgets gui plugins testlib concurrent
 $(package)_patches=mac-qmake.conf mingw-uuidof.patch pidlist_absolute.patch fix-xcb-include-order.patch
-$(package)_patches+=0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch
-$(package)_patches+=strip_log2f.patch
 $(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-coretext.patch
 $(package)_patches+=fix_mojave_fonts.patch
 
@@ -27,19 +25,11 @@ $(package)_qwt_file_name=qwt-$($(package)_qwt_version).tar.bz2
 $(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733
 
 
-$(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6.0
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
-$(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
-
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
-
-$(package)_patch_glibc_compat_linux = patch -p1 < $($(package)_patch_dir)/strip_log2f.patch &&
-$(package)_patch_glibc_compat = $($(package)_patch_glibc_compat_$(host_os))
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 $(package)_extra_sources += $($(package)_qwt_file_name)
-$(package)_extra_sources += $($(package)_qtwebkit_file_name)
 
 $(package)_ssl_extras_mingw32 =-lwsock32 -lgdi32
 $(package)_ssl_extras = $($(package)_ssl_extras_$(host_os))
@@ -65,8 +55,11 @@ $(package)_config_opts += -no-egl
 $(package)_config_opts += -no-eglfs
 $(package)_config_opts += -no-feature-style-windowsmobile
 $(package)_config_opts += -no-feature-style-windowsce
+$(package)_config_opts += -no-feature-printer
+$(package)_config_opts += -no-feature-printdialog
 $(package)_config_opts += -no-freetype
 $(package)_config_opts += -no-glib
+$(package)_config_opts += -no-icu
 $(package)_config_opts += -no-gstreamer
 $(package)_config_opts += -no-iconv
 $(package)_config_opts += -no-kms
@@ -132,8 +125,7 @@ define $(package)_fetch_cmds
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttranslations_file_name),$($(package)_qttranslations_file_name),$($(package)_qttranslations_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash)) && \
-$(call fetch_file,$(package),$($(package)_qwt_download_path),$($(package)_qwt_file_name),$($(package)_qwt_file_name),$($(package)_qwt_sha256_hash)) && \
-$(call fetch_file,$(package),$($(package)_download_path_webkit),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_sha256_hash))
+$(call fetch_file,$(package),$($(package)_qwt_download_path),$($(package)_qwt_file_name),$($(package)_qwt_file_name),$($(package)_qwt_sha256_hash)) 
 endef
 
 define $(package)_extract_cmds
@@ -142,7 +134,6 @@ define $(package)_extract_cmds
   echo "$($(package)_qttranslations_sha256_hash)  $($(package)_source_dir)/$($(package)_qttranslations_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qwt_sha256_hash)  $($(package)_source_dir)/$($(package)_qwt_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttools_sha256_hash)  $($(package)_source_dir)/$($(package)_qttools_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
-  echo "$($(package)_qtwebkit_sha256_hash)  $($(package)_source_dir)/$($(package)_qtwebkit_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   $(build_SHA256SUM) -c $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   mkdir qtbase && \
   tar --strip-components=1 -xf $($(package)_source) -C qtbase && \
@@ -151,8 +142,7 @@ define $(package)_extract_cmds
   mkdir qwt && \
   tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qwt_file_name) -C qwt && \
   mkdir qttools && \
-  tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
-  mkdir qtwebkit && tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qtwebkit_file_name) -C qtwebkit
+  tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools
 endef
 
 
@@ -163,7 +153,6 @@ define $(package)_preprocess_cmds
   sed -i.old "s|X11/extensions/XIproto.h|X11/X.h|" qtbase/src/plugins/platforms/xcb/qxcbxsettings.cpp && \
   sed -i.old 's/if \[ "$$$$XPLATFORM_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/if \[ "$$$$BUILD_ON_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/' qtbase/configure && \
   sed -i.old 's/CGEventCreateMouseEvent(0, kCGEventMouseMoved, pos, 0)/CGEventCreateMouseEvent(0, kCGEventMouseMoved, pos, kCGMouseButtonLeft)/' qtbase/src/plugins/platforms/cocoa/qcocoacursor.mm && \
-  sed -i.old "s|type nul|perl -e ''|" qtwebkit/Source/WebCore/DerivedSources.pri && \
   sed -i.old "s|CFG_FRAMEWORK=.*|CFG_FRAMEWORK=no|" qtbase/configure && \
   mkdir -p qtbase/mkspecs/macx-clang-linux &&\
   cp -f qtbase/mkspecs/macx-clang/Info.plist.lib qtbase/mkspecs/macx-clang-linux/ &&\
@@ -176,9 +165,7 @@ define $(package)_preprocess_cmds
   patch -p1 < $($(package)_patch_dir)/fix_qt_pkgconfig.patch && \
   patch -p1 < $($(package)_patch_dir)/fix-cocoahelpers-macos.patch && \
   patch -p1 < $($(package)_patch_dir)/qfixed-coretext.patch && \
-  patch -p1 < $($(package)_patch_dir)/0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch && \
   patch -p1 < $($(package)_patch_dir)/fix_mojave_fonts.patch && \
-  $($(package)_patch_glibc_compat) \
   echo "!host_build: QMAKE_CFLAGS     += $($(package)_cflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_CXXFLAGS   += $($(package)_cxxflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_LFLAGS     += $($(package)_ldflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
@@ -202,11 +189,10 @@ define $(package)_config_cmds
   export PKG_CONFIG_LIBDIR=$(host_prefix)/lib/pkgconfig && \
   export PKG_CONFIG_PATH=$(host_prefix)/share/pkgconfig  && \
   sed -i.old "s|LIBS_PRIVATE += -lz|LIBS_PRIVATE += `pkg-config zlib --libs`|" src/3rdparty/zlib_dependency.pri && \
-  OPENSSL_LIBS='-L$(host_prefix)/lib -lssl -lcrypto $($(package)_ssl_extras)' ./configure `pkg-config icu-i18n icu-uc --cflags` `pkg-config icu-i18n icu-uc --libs` $($(package)_config_opts) && \
+  OPENSSL_LIBS='-L$(host_prefix)/lib -lssl -lcrypto $($(package)_ssl_extras)' ./configure $($(package)_config_opts) && \
   echo "host_build: QT_CONFIG ~= s/system-zlib/zlib" >> mkspecs/qconfig.pri && \
   echo "CONFIG += force_bootstrap" >> mkspecs/qconfig.pri && \
   $(MAKE) sub-src-clean && \
-  cd ../qtwebkit && SQLITE3SRCDIR="../qtbase/src/3rdparty/sqlite" ../qtbase/bin/qmake WebKit.pro -o Makefile && \
   cd ../qttranslations && ../qtbase/bin/qmake qttranslations.pro -o Makefile && \
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd .. &&\
   cd ../qwt && ../qtbase/bin/qmake -o Makefile && \
@@ -218,8 +204,7 @@ define $(package)_build_cmds
   $(MAKE) -C ../qttools/src/linguist/lrelease && \
   $(MAKE) -C ../qttranslations && \
   $($(package)_patch_prl_files) \
-  $(MAKE) -C ../qwt && \
-  $(MAKE) -C ../qtwebkit
+  $(MAKE) -C ../qwt
 endef
 
 define $(package)_stage_cmds
@@ -228,7 +213,6 @@ define $(package)_stage_cmds
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qwt INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $($(package)_patch_qwt_pc_files) \
-  $(MAKE) -C qtwebkit INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
     cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
   fi

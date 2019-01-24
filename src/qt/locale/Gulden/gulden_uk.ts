@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk_UA">
+<TS version="2.1" language="uk">
     <extra-po-header-language>uk</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
@@ -1014,16 +1014,8 @@
         <translation>Сума монет у непідтверджених транзакціях</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Баланс видобутих та ще недозрілих монет на адресах для спостереження</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Всього:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Баланс видобутих та ще недозрілих монет</translation>
     </message>
     <message>
         <source>Immature:</source>

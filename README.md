@@ -2,7 +2,7 @@
   <tr border=0>
     <td border="0px" width="80%" rowspan="7">
       <a href="https://www.Gulden.com">
-        <img align="left" src="https://dev.gulden.com/images/branding/gblue256x256.png" alt="Gulden"/>
+        <img align="left" src="https://gulden.com/img/design/g-111444.svg" alt="Gulden"/>
       </a>
       <p>Gulden is a <i>revolutionary</i> next generation blockchain based currency and payment system.<br/>
       Gulden takes the blockchain concept to a whole new level; improving on multiple downsides and deficiencies in the earlier implementations of blockchain.</p>
@@ -37,7 +37,7 @@
   <tr border=0>
     <td>
       <a href="https://github.com/Gulden/gulden-official/commits/master">
-        <img height="20px" src="https://img.shields.io/github/commit-activity/4w/gulden/gulden-official.svg" alt="commits 4w"/>
+        <img height="20px" src="https://img.shields.io/github/commit-activity/y/gulden/gulden-official.svg" alt="commits 1y"/>
       </a>
     </td>
   </tr>

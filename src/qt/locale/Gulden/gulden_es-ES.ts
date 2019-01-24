@@ -108,22 +108,6 @@
         <translation>Cancelar</translation>
     </message>
     <message>
-        <source>Total funds: </source>
-        <translation>Fondos totales: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Fondos bloqueados: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Fondos en espera de la confirmación: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Fondos disponibles: </translation>
-    </message>
-    <message>
         <source>Send</source>
         <translation>Enviar</translation>
     </message>
@@ -184,25 +168,6 @@
 </source>
         <translation>Fecha: %1
 </translation>
-    </message>
-</context>
-<context>
-    <name>AccountSummaryWidget</name>
-    <message>
-        <source>Total funds: </source>
-        <translation>Fondos totales: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Fondos bloqueados: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Fondos en espera de la confirmación: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Fondos disponibles: </translation>
     </message>
 </context>
 <context>
@@ -1882,14 +1847,6 @@
     <message>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
         <translation>Total de transacciones pendientes de confirmar y que aún no contribuye al saldo disponible</translation>
-    </message>
-    <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Saldo minado en direcciones watch-only que aún no ha madurado</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Saldo recién minado que aún no ha madurado.</translation>
     </message>
     <message>
         <source>Immature:</source>

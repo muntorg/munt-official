@@ -118,10 +118,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].requiredProtoUpgradePercent = 75;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000dbbfebc2fd513e3e");
+        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000fad1c7f4818beec6");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x7cdbb7bef28741aa682570703ca03cd77a6524011aed588fd0aabe5f0038f124"); //700000
+        consensus.defaultAssumeValid = uint256S("0x9d2ecf60d1e0cca1510eb211ed3fd2e049a467ccfdf13d10b02c90ea8e92e6b9"); //850000
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0

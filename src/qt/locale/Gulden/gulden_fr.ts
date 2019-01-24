@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.1" language="fr">
     <extra-po-header-language>fr</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
@@ -225,28 +225,12 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Conversion estimation</translation>
     </message>
     <message>
-        <source>Total funds: </source>
-        <translation>Total des fonds : </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Fonds bloqués : </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Fonds en attente de confirmation : </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Fonds disponibles : </translation>
+        <source>&amp;Address</source>
+        <translation>&amp;Adresse</translation>
     </message>
     <message>
         <source>Wallet balances</source>
         <translation>Soldes de portefeuille</translation>
-    </message>
-    <message>
-        <source>This feature is not available in the first few weeks of witnessing, please update to the latest version and try again, or ask for assistance.</source>
-        <translation>Cette fonction n&apos;est pas disponible dans les premières semaines de &quot;witness&quot;, veuillez mettre à jour à la dernière version et réessayer, ou demander de l&apos;aide.</translation>
     </message>
     <message>
         <source>Check for Updates</source>
@@ -668,10 +652,6 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>My accounts</source>
         <translation>Mes comptes</translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation>Tous</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -1580,22 +1560,6 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <source>Conversion estimate</source>
         <translation>Conversion estimation</translation>
     </message>
-    <message>
-        <source>Total funds: </source>
-        <translation>Total des fonds: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Fonds bloqués: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Fonds en attente de confirmation: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Fonds disponibles : </translation>
-    </message>
 </context>
 <context>
     <name>AddressBookPage</name>
@@ -1788,10 +1752,6 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Internal transfer</source>
         <translation>Transfert interne</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Récompense minières</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -2250,10 +2210,6 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Internal transfer</source>
         <translation>Transfert interne</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Récompense minières</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -3731,10 +3687,6 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
         <translation>Total des transactions qui doivent encore être confirmées et qui ne sont pas prises en compte dans le solde disponible</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Le solde miné dans des adresses juste-regarder, qui n&apos;est pas encore mûr</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Total :</translation>
     </message>
@@ -3745,10 +3697,6 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>Generated balance that has not yet matured</source>
         <translation>Solde généré qui n&apos;a pas encore mûri</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Le solde miné n&apos;est pas encore mûr</translation>
     </message>
     <message>
         <source>Immature:</source>
@@ -3966,6 +3914,25 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>Yes</source>
         <translation>Oui</translation>
+    </message>
+</context>
+<context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>address</source>
+        <translation>adresse</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse copiée dans le presse-papiers</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Copier l&apos;adresse au presse-papier</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI résultant trop longue, essayez de réduire le texte pour l&apos;étiquette / message.</translation>
     </message>
 </context>
 <context>

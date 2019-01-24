@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="nb_NO">
+<TS version="2.1" language="nb">
     <extra-po-header-language>nb</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
@@ -1024,16 +1024,8 @@
         <translation>Totalt antall ubekreftede transaksjoner som ikke teller med i saldo</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Utvunnet balanse i kun observerbare adresser som ennå ikke har modnet</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Totalt:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Minet saldo har ikke modnet enda</translation>
     </message>
     <message>
         <source>Immature:</source>

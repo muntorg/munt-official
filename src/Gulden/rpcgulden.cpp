@@ -1568,7 +1568,7 @@ static UniValue getaccountbalances(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
-            "getaccountbalances ( minconf include_watchonly )\n"
+            "getaccountbalances ( min_conf include_watchonly )\n"
             "Returns a list of balances for all accounts in the wallet.\n"
             "\nArguments:\n"
             "1. minconf           (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
@@ -1588,7 +1588,7 @@ static UniValue getaccountbalances(const JSONRPCRequest& request)
 
     int nMinDepth = 1;
     if (request.params.size() > 0)
-        nMinDepth = request.params[1].get_int();
+        nMinDepth = request.params[0].get_int();
 
     bool includeWatchOnly = false;
     if (request.params.size() > 1)
