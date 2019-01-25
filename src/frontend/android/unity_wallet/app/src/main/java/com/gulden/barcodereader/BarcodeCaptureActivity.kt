@@ -183,10 +183,14 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
         // make sure that auto focus is an available option
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         {
-            builder = builder.setFocusMode(if (autoFocus) Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE else "")
+            if (autoFocus)
+                builder = builder.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
         }
 
-        mCameraSource = builder.setFlashMode(if (useFlash) Camera.Parameters.FLASH_MODE_TORCH else "").build()
+        if (useFlash)
+            builder.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH)
+
+        mCameraSource = builder.build()
     }
 
     /**
