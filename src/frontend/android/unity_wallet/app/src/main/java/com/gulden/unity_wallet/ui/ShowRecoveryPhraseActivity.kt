@@ -112,6 +112,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         return true
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onAcceptRecoveryPhrase(view: View)
     {
         if (isNewWallet!!)
@@ -125,6 +126,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
             finish()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onAcknowledgeRecoveryPhrase(view: View)
     {
         updateView()
@@ -182,6 +184,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
             intent.putExtra(Intent.EXTRA_TEXT, recoveryPhrase)
             shareActionProvider!!.setShareIntent(intent)
 
+            @Suppress("DEPRECATION")
             val color = resources.getColor(R.color.colorPrimary)
             val spannableString = SpannableString(recoveryPhraseView!!.text)
             spannableString.setSpan(BackgroundColorSpan(color), 0, recoveryPhraseView!!.text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

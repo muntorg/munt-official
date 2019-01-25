@@ -179,17 +179,14 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         return true
     }
 
-    fun handleQRScanButtonClick(view : View) {
+    @Suppress("UNUSED_PARAMETER")
+    fun handleQRScanButtonClick(view : View? = null) {
         val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
         startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
     }
 
-    fun gotoBuyActivity(_view : View)
-    {
-        gotoBuyActivity()
-    }
-
-    fun gotoBuyActivity()
+    @Suppress("UNUSED_PARAMETER")
+    fun gotoBuyActivity(view : View? = null)
     {
         val urlBuilder = Uri.Builder()
         urlBuilder.scheme("https")

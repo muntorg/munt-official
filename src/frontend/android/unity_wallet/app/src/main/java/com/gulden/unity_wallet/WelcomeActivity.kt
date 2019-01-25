@@ -38,6 +38,7 @@ class WelcomeActivity : AppCompatActivity()
         System.exit(0);
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onCreateNewWallet(view: View)
     {
         thread(true)
@@ -53,6 +54,7 @@ class WelcomeActivity : AppCompatActivity()
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onSyncWithDesktop(view: View)
     {
         val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
@@ -94,6 +96,7 @@ class WelcomeActivity : AppCompatActivity()
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onRecoverExistingWallet(view: View)
     {
         startActivity(Intent(this, EnterRecoveryPhraseActivity::class.java))

@@ -43,7 +43,7 @@ class NetworkMonitorActivity : AppCompatActivity() {
                     )
 
             pager.adapter = PagerAdapter(supportFragmentManager)
-            pager.setOnPageChangeListener(network_monitor_pager_tabs)
+            pager.addOnPageChangeListener(network_monitor_pager_tabs)
             pager.pageMargin = 2
             pager.setPageMarginDrawable(R.color.bg_less_bright)
         }

@@ -56,7 +56,11 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
     // execute on IO thread pool
     val result = withContext(IO) {
         val response = client.newCall(request).execute()
-        response.body()?.string()
+        val body = response.body()
+        if (body != null)
+            body.string()
+        else
+            throw RuntimeException("Null body in Nocks response.")
     }
 
     val adapter = Moshi.Builder().build().adapter<ResultType>(ResultType::class.java)

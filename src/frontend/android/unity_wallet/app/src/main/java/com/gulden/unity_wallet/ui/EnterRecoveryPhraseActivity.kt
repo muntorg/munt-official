@@ -116,7 +116,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         })
 
         recoveryPhraseEditText!!.imeOptions = EditorInfo.IME_ACTION_DONE
-        recoveryPhraseEditText!!.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+        recoveryPhraseEditText!!.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE)
             {
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -194,6 +194,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onAcknowledgeOverwrite(view: View)
     {
         updateView()

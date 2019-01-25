@@ -89,11 +89,11 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
             }
         }
 
-        send_coins_amount.setOnFocusChangeListener { v, hasFocus ->
+        send_coins_amount.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) activeAmount = send_coins_amount
         }
 
-        send_coins_local_amount.setOnFocusChangeListener { v, hasFocus ->
+        send_coins_local_amount.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) activeAmount = send_coins_local_amount
         }
 
@@ -345,6 +345,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
         builder.show()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun handleRemoveFromAddressBookClick(view : View)
     {
         val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", send_coins_receiving_static_label.text.toString())
