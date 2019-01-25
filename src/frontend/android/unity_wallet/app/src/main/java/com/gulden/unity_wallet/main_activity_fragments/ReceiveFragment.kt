@@ -31,7 +31,10 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        return inflater.inflate(R.layout.fragment_receive, container, false)
+        val inflated = inflater.inflate(R.layout.fragment_receive, container, false)
+        currentAddressQrView.setOnClickListener { setFocusOnAddress() }
+        currentAddressLabel.setOnClickListener { setFocusOnAddress() }
+        return inflated
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)
