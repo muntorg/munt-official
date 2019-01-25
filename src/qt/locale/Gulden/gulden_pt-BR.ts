@@ -1982,16 +1982,8 @@
         <translation>Total de transações que ainda têm de ser confirmados, e ainda não contam para o equilíbrio spendable</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Saldo minerado de endereço monitorado ainda não foi implementado</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Total:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Saldo minerado que ainda não maturou</translation>
     </message>
     <message>
         <source>Immature:</source>

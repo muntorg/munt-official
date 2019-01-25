@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.1" language="ja">
     <extra-po-header-language>ja</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
@@ -1957,16 +1957,8 @@
         <translation>未検証の取引で利用可能残高に反映されていない数</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>ウォッチオンリーアドレスの採掘された残高のうち、成熟していないもの</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>合計:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>完成していない採掘された残高</translation>
     </message>
     <message>
         <source>Immature:</source>

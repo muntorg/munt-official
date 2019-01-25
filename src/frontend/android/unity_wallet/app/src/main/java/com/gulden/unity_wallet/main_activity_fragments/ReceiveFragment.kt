@@ -3,7 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-package com.gulden.unity_wallet.MainActivityFragments
+package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -11,7 +11,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import android.graphics.Bitmap

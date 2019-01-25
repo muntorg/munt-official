@@ -575,10 +575,6 @@
         <translation>Total de transacciones que deben ser confirmadas, y que no cuentan con el balance gastable necesario</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Saldo recién minado que aún no está disponible.</translation>
-    </message>
-    <message>
         <source>Immature:</source>
         <translation>No disponible:</translation>
     </message>

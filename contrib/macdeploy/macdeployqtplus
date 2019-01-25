@@ -409,47 +409,6 @@ def deployFrameworksForAppBundle(applicationBundle, strip, verbose):
     else:
         return deployFrameworks(frameworks, applicationBundle.path, applicationBundle.binaryPath, strip, verbose)
 
-def deployWebkit(appBundleInfo, deploymentInfo, strip, verbose):
-    # Lookup available bins, exclude unneeded
-    bins = []
-    if deploymentInfo.libexecPath is None:
-        return
-    for dirpath, dirnames, filenames in os.walk(deploymentInfo.libexecPath):
-        binDirectory = os.path.relpath(dirpath, deploymentInfo.libexecPath)
-
-        for binName in filenames:
-            binPath = os.path.join(binDirectory, binName)
-            if binName != "QtWebProcess":
-                # Skip
-                continue
-
-            bins.append((binDirectory, binName))
-    
-    for binDirectory, binName in bins:
-        print("Processing binary dep", os.path.join(binDirectory, binName), "...")
-        
-        sourcePath = os.path.join(deploymentInfo.libexecPath, binDirectory, binName)
-        destinationDirectory = os.path.join(appBundleInfo.libexecPath, binDirectory)
-        if not os.path.exists(destinationDirectory):
-            os.makedirs(destinationDirectory)
-        
-        destinationPath = os.path.join(destinationDirectory, binName)
-        shutil.copy2(sourcePath, destinationPath)
-        print("Copied:", sourcePath)
-        print(" to:", destinationPath)
-        
-        if strip:
-            runStrip(destinationPath, 3)
-        
-        dependencies = getFrameworks(destinationPath, 3)
-        
-        for dependency in dependencies:
-            changeInstallName(dependency.installName, dependency.deployedInstallName, destinationPath, verbose)
-            # Deploy framework if necessary.
-            if dependency.frameworkName not in deploymentInfo.deployedFrameworks:
-                deployFrameworks([dependency], appBundleInfo.path, destinationPath, strip, verbose, deploymentInfo)
-
-
 
 def deployPlugins(appBundleInfo, deploymentInfo, strip, verbose):
     # Lookup available plugins, exclude unneeded
@@ -727,21 +686,6 @@ if config.plugins:
             sys.stderr.write("Error: %s\n" % str(e))
         sys.exit(1)
         
-# ------------------------------------------------
-
-if config.plugins:
-    if verbose >= 2:
-        print("+ Deploying webkit +")
-    
-    try:
-        deployWebkit(applicationBundle, deploymentInfo, config.strip, verbose)
-    except RuntimeError as e:
-        if verbose >= 1:
-            sys.stderr.write("Error: %s\n" % str(e))
-        sys.exit(1)
-        
-        
-
 # ------------------------------------------------
 
 if len(config.add_qt_tr) == 0:

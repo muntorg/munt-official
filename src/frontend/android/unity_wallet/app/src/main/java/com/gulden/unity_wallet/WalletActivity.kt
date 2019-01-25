@@ -17,14 +17,12 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.MainActivityFragments.ReceiveFragment
-import com.gulden.unity_wallet.MainActivityFragments.SendFragment
-import com.gulden.unity_wallet.MainActivityFragments.SendFragment.OnFragmentInteractionListener
-import com.gulden.unity_wallet.MainActivityFragments.SettingsFragment
-import com.gulden.unity_wallet.MainActivityFragments.TransactionFragment
-import com.gulden.unity_wallet.currency.fetchCurrencyRate
-import com.gulden.unity_wallet.currency.localCurrency
-import com.gulden.unity_wallet.ui.buy.BuyActivity
+import com.gulden.unity_wallet.main_activity_fragments.ReceiveFragment
+import com.gulden.unity_wallet.main_activity_fragments.SendFragment
+import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentInteractionListener
+import com.gulden.unity_wallet.main_activity_fragments.SettingsFragment
+import com.gulden.unity_wallet.main_activity_fragments.TransactionFragment
+import com.gulden.uriRecicpient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -193,9 +191,15 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
 
     fun gotoBuyActivity()
     {
-        val intent = Intent(this, BuyActivity::class.java)
-        intent.putExtra(BuyActivity.ARG_BUY_ADDRESS, GuldenUnifiedBackend.GetReceiveAddress().toString())
-        startActivityForResult(intent, BUY_RETURN_CODE)
+        val urlBuilder = Uri.Builder()
+        urlBuilder.scheme("https")
+        urlBuilder.path("gulden.com/purchase")
+        urlBuilder.appendQueryParameter("receive_address", GuldenUnifiedBackend.GetReceiveAddress().toString())
+        val intent = Intent(Intent.ACTION_VIEW, urlBuilder.build())
+        if (intent.resolveActivity(packageManager) != null)
+        {
+            startActivity(intent)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -5,7 +5,10 @@ Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:layout_width="match_parent"

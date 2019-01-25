@@ -352,25 +352,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     </message>
 </context>
 <context>
-    <name>AccountSummaryWidget</name>
-    <message>
-        <source>Total funds: </source>
-        <translation>Fundos totais: </translation>
-    </message>
-    <message>
-        <source>Locked funds: </source>
-        <translation>Fundos trancados: </translation>
-    </message>
-    <message>
-        <source>Funds awaiting confirmation: </source>
-        <translation>Fundos aguardando confirmação: </translation>
-    </message>
-    <message>
-        <source>Spendable funds: </source>
-        <translation>Fundos utilizáveis: </translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -557,10 +538,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>Internal transfer</source>
         <translation>Transferência interna</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Recompensa de mineração</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -1178,10 +1155,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>Internal transfer</source>
         <translation>Transferência interna</translation>
-    </message>
-    <message>
-        <source>Mining reward</source>
-        <translation>Recompensa de mineração</translation>
     </message>
     <message>
         <source>Witness reward</source>
@@ -2191,16 +2164,8 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>Total de transações por confirmar, que ainda não estão contabilizadas no seu saldo gastável</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Saldo minado ainda não disponivél de endereços modo-verificação</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Total:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>O saldo minado ainda não amadureceu</translation>
     </message>
     <message>
         <source>Immature:</source>

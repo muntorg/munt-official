@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="eo">
     <extra-po-header-language>eo</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
@@ -504,6 +504,7 @@
         <source>%n GB of free space available</source>
         <translation>
             <numerusform>%n gigabajto de libera loko disponeble</numerusform>
+            <numerusform>%n gigabajtoj de libera loko disponebla.</numerusform>
         </translation>
     </message>
 </context>
@@ -704,10 +705,6 @@
     <message>
         <source>Total:</source>
         <translation>Totalo:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Minita saldo, kiu ankoraŭ ne maturiĝis</translation>
     </message>
     <message>
         <source>Immature:</source>

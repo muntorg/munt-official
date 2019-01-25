@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fi_FI">
+<TS version="2.1" language="fi">
     <extra-po-header-language>fi</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
@@ -980,16 +980,8 @@
         <translation>Varmistamattomien rahansiirtojen summa, jota ei lasketa käytettävissä olevaan taseeseen.</translation>
     </message>
     <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Louhittu, ei vielä kypsynyt saldo vain katseltavissa osoitteissa</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Yhteensä:</translation>
-    </message>
-    <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Louhittu saldo, joka ei ole vielä kypsynyt</translation>
     </message>
     <message>
         <source>Immature:</source>

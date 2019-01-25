@@ -6,6 +6,12 @@ UI - Option to hide status bar when synchronized (default enabled). Disable to a
 
 
 
+2.1.0.3
+
+UI - Modify witness QR for better interoperability with external apps.
+UI - Remove embedded webkit for buy page in favour of simply launching buy page in an external browser.
+RPC - Minor RPC fixes.
+
 2.1.0.1
 
 UI - Implement an address tab for witness accounts, for easier access of the current active witness account address and for better integration with third party monitoring apps.
@@ -49,6 +55,8 @@ UI - Fix an issue where an "unlocked" witness account would show incorrect stati
 CORE - Reduce memory footprint and improve performance of witness validation.
 
 
+
+
 2.0.0.11
 UI - Display full converted balance in upper left for forex (Euro or other currency) display instead of only available balance; Add a tooltip to break down the different amounts when hovered over.
 UI - Fix an issue where the transaction list would sometimes show confusing more recent timestamps when importing a witness-only key or recovering from phrase.
@@ -84,6 +92,7 @@ CORE - Fix a block relay issue that combined with other factors was occasionally
 
 
 
+
 2.0.0.9
 CORE - Major witness validation performance improvement and memory usage reduction due to partial chain cloning
 CORE - Move some invalid block logic earlier in the block check process, this should help address some issues users have been experiencing as well as further stabalise the network.
@@ -96,8 +105,11 @@ CMDFLAG - Add a new flag `limitdeltadiffdrop=n` for mining pools, larger mining 
 CMDFLAG - Add new "minimallogging" flag for the benefit of users with limited disk space e.g. pi users
 
 
+
+
 2.0.0.7
 CORE - Fix a crash for users who run with -disablewallet
+
 
 
 
@@ -110,10 +122,13 @@ NET - No longer advertise or establish outgoing connections to outdated (1.6.x) 
 
 
 
+
+
 2.0.0.4
 UI - Fix a (phase 3 only) issue where the transaction list sometimes displaying unnecessary duplicate "rejected" earning messages for every valid earning message.
 RPC - Add two commands disablewitnessing/enablewitnessing - useful for various testing scenarios and some other fringe use cases.
 NET - Fix an annoying instability issue (crash) in the networking code that is triggered by the checkpoint system in some scenarios.
+
 
 
 

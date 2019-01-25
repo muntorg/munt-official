@@ -33,71 +33,8 @@
 
 #include "GuldenGUI.h"
 
-#ifdef HAVE_WEBENGINE_VIEW
-#include <QWebEngineView>
-#elif defined(HAVE_WEBKIT)
-#include <QtWebKit>
-#include <QWebView>
-#include <QWebFrame>
-#endif
-#include <QMovie>
-
 #ifdef USE_QRCODE
 #include <qrencode.h>
-#endif
-
-#ifdef HAVE_WEBENGINE_VIEW
-class WebEngineView: public QWebEngineView
-{
-public:
-    WebEngineView(QWidget* parent)
-    : QWebEngineView(parent)
-    {
-
-    }
-
-    QWebEngineView* createWindow(QWebEnginePage::WebWindowType type)
-    {
-        //https://bugreports.qt.io/browse/QTBUG-42216
-        return this;
-    }
-};
-#elif defined(HAVE_WEBKIT)
-class WebView: public QWebView
-{
-public:
-    WebView(QWidget *p = 0)
-    : QWebView(p)
-    , parent(p)
-    {
-        dismissOnPopup = false;
-    }
-
-    QWebView *createWindow(QWebPage::WebWindowType type)
-    {
-        QWebView *webView = new QWebView;
-        QWebPage *newWeb = new QWebPage(webView);
-        if (type == QWebPage::WebModalDialog)
-            webView->setWindowModality(Qt::ApplicationModal);
-        webView->setAttribute(Qt::WA_DeleteOnClose, true);
-        webView->setPage(newWeb);
-        webView->setMinimumSize(800, 600);
-        webView->show();
-
-        QRect r = webView->geometry();
-        r.moveCenter(QApplication::desktop()->availableGeometry().center());
-        webView->setGeometry(r);
-
-        if (dismissOnPopup)
-        {
-            QMetaObject::invokeMethod( parent, "cancelRequestPayment" );
-        }
-
-        return webView;
-    }
-    bool dismissOnPopup;
-    QWidget* parent;
-};
 #endif
 
 bool ReceiveCoinsDialog::showCopyQRAsImagebutton = true;
@@ -107,9 +44,6 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *pa
 , ui( new Ui::ReceiveCoinsDialog )
 , model( 0 )
 , platformStyle( _platformStyle )
-#if defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT)
-, buyView( NULL )
-#endif
 , buyReceiveAddress( NULL )
 , currentAccount( NULL )
 {
@@ -117,7 +51,6 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *pa
 
     ui->accountRequestPaymentButton->setCursor(Qt::PointingHandCursor);
     ui->accountBuyGuldenButton->setCursor(Qt::PointingHandCursor);
-    ui->accountBuyButton->setCursor(Qt::PointingHandCursor);
     ui->accountSaveQRButton->setCursor(Qt::PointingHandCursor);
     ui->accountCopyToClipboardButton->setCursor(Qt::PointingHandCursor);
     ui->accountCopyToClipboardButton->setTextFormat( Qt::RichText );
@@ -136,7 +69,6 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *pa
     connect(ui->accountCopyToClipboardButton, SIGNAL(clicked()), this, SLOT(copyAddressToClipboard()));
     connect(ui->requestCopyToClipboardButton, SIGNAL(clicked()), this, SLOT(copyAddressToClipboard()));
     connect(ui->accountBuyGuldenButton, SIGNAL(clicked()), this, SLOT(showBuyGuldenDialog()));
-    connect(ui->accountBuyButton, SIGNAL(clicked()), this, SLOT(buyGulden()));
     connect(ui->accountSaveQRButton, SIGNAL(clicked()), this, SLOT(saveQRAsImage()));
     connect(ui->accountRequestPaymentButton, SIGNAL(clicked()), this, SLOT(gotoRequestPaymentPage()));
     connect(ui->generateAnotherRequestButton, SIGNAL(clicked()), this, SLOT(gotoRequestPaymentPage()));
@@ -148,47 +80,6 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const QStyle *_platformStyle, QWidget *pa
     updateAddress("");
 
     gotoReceievePage();
-
-    #ifdef HAVE_WEBENGINE_VIEW
-    buyView = new WebEngineView( this );
-    buyView->setAttribute(Qt::WA_TranslucentBackground);
-    ui->buyGuldenPageLayout->addWidget( buyView );
-    buyView->show();
-
-    ui->loadingAnimationLabel->setObjectName("buy_page_error_text");
-    #elif defined(HAVE_WEBKIT)
-    buyView = new WebView( this );
-    buyView->settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
-    buyView->settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows, true);
-    buyView->settings()->setAttribute(QWebSettings::JavascriptCanCloseWindows, true);
-    buyView->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled, true);
-    buyView->settings()->setAttribute(QWebSettings::JavascriptCanAccessClipboard, false);
-    buyView->settings()->setAttribute(QWebSettings::SpatialNavigationEnabled, true);
-    buyView->settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, true);
-    buyView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-
-    //fixme: (2.1)- figure out why this is necessary on osx.
-    #ifdef MAC_OSX
-    QSslConfiguration sslCfg = QSslConfiguration::defaultConfiguration();
-    QList<QSslCertificate> ca_list = sslCfg.caCertificates();
-    QList<QSslCertificate> ca_new = QSslCertificate::fromData("CaCertificates");
-    ca_list += ca_new;
-
-    sslCfg.setCaCertificates(ca_list);
-    sslCfg.setProtocol(QSsl::AnyProtocol);
-    QSslConfiguration::setDefaultConfiguration(sslCfg);
-
-    connect(buyView->page()->networkAccessManager(), SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError> & )), this, SLOT(sslErrorHandler(QNetworkReply*, const QList<QSslError> & )));
-    #endif
-
-    //buyView->setAttribute(Qt::WA_TranslucentBackground);
-    ui->buyGuldenPageLayout->addWidget( buyView );
-    buyView->show();
-
-    ui->loadingAnimationLabel->setObjectName("buy_page_error_text");
-    #else
-    ui->accountBuyGuldenButton->setVisible(false);
-    #endif
 }
 
 void ReceiveCoinsDialog::updateAddress(const QString& address)
@@ -300,7 +191,6 @@ void ReceiveCoinsDialog::gotoReceievePage()
     ui->cancelButtonGroup->setVisible(false);
     ui->generateRequestButton->setVisible(false);
     ui->generateAnotherRequestButton->setVisible(false);
-    ui->accountBuyButton->setVisible(false);
 
     ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton);
 }
@@ -308,65 +198,33 @@ void ReceiveCoinsDialog::gotoReceievePage()
 
 void ReceiveCoinsDialog::showBuyGuldenDialog()
 {
-    bool externalBuyPage = false;
-    #if !(defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT))
-    externalBuyPage = true;
-    #endif
-    if (externalBuyPage)
+    QString guldenAddress;
+
+    if (buyReceiveAddress)
     {
-        QDesktopServices::openUrl(QUrl("https://gulden.com/purchase"));
-        return;
+        delete buyReceiveAddress;
+        buyReceiveAddress = NULL;
     }
 
-    #if defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT)
-    ui->receiveCoinsStackedWidget->setCurrentIndex(1);
-
-    ui->accountRequestPaymentButtonComposite->setVisible(false);
-    ui->accountBuyGuldenButton->setVisible(false);
-    ui->accountSaveQRButtonComposite->setVisible(false);
-    ui->accountCopyToClipboardButtonComposite->setVisible(false);
-    ui->cancelButton->setVisible(true);
-    ui->closeButton->setVisible(false);
-    ui->cancelButtonGroup->setVisible(true);
-    ui->generateRequestButton->setVisible(false);
-    ui->generateAnotherRequestButton->setVisible(false);
-    ui->accountBuyButton->setVisible(true);
-
-    ui->accountSaveQRButton->setVisible(false);
-
-
-
-    QMovie *movie = new QMovie(":/Gulden/loading_animation");
-    if ( movie && movie->isValid() )
+    buyReceiveAddress = new CReserveKeyOrScript(pactiveWallet, currentAccount, KEYCHAIN_EXTERNAL);
+    CPubKey pubKey;
+    if (!buyReceiveAddress || !buyReceiveAddress->GetReservedKey(pubKey))
     {
-        ui->loadingAnimationLabel->setVisible(true);
-        buyView->setVisible(false);
-        movie->setScaledSize(QSize(30, 30));
-        ui->loadingAnimationLabel->setMovie(movie);
-        movie->start();
+        //fixme: (2.1.x) better error handling
+        return;
     }
     else
     {
-        ui->loadingAnimationLabel->setVisible(false);
-        buyView->setVisible(true);
-        if (movie)
-            delete movie;
+        CKeyID keyID = pubKey.GetID();
+        guldenAddress = QString::fromStdString(CGuldenAddress(keyID).ToString());
     }
 
-    buyView->load(QUrl("https://gulden.com/purchase"));
-
-    #if defined(HAVE_WEBENGINE_VIEW)
-    buyView->page()->setBackgroundColor(Qt::transparent);
-    #else
-    QPalette palette = buyView->palette();
-    palette.setBrush(QPalette::Base, Qt::transparent);
-    buyView->page()->setPalette(palette);
-    buyView->setAttribute(Qt::WA_OpaquePaintEvent, false);
-    buyView->page()->setLinkDelegationPolicy(QWebPage::DontDelegateLinks);
-    #endif
-
-    connect(buyView, SIGNAL( loadFinished(bool) ), this, SLOT( loadBuyViewFinished(bool) ) );
-    #endif
+    QUrl purchasePage("https://gulden.com/purchase");
+    QUrlQuery purchasePageQueryItems;
+    purchasePageQueryItems.addQueryItem("receive_address", guldenAddress);
+    purchasePage.setQuery(purchasePageQueryItems);
+    QDesktopServices::openUrl(purchasePage);
+    return;
 }
 
 void ReceiveCoinsDialog::gotoRequestPaymentPage()
@@ -382,7 +240,6 @@ void ReceiveCoinsDialog::gotoRequestPaymentPage()
     ui->cancelButtonGroup->setVisible(true);
     ui->generateRequestButton->setVisible(true);
     ui->generateAnotherRequestButton->setVisible(false);
-    ui->accountBuyButton->setVisible(false);
 
     ui->accountSaveQRButton->setVisible(false);
 }
@@ -410,7 +267,6 @@ void ReceiveCoinsDialog::generateRequest()
     ui->cancelButtonGroup->setVisible(true);
     ui->generateRequestButton->setVisible(false);
     ui->generateAnotherRequestButton->setVisible(true);
-    ui->accountBuyButton->setVisible(false);
 
     ui->accountSaveQRButton->setVisible(showCopyQRAsImagebutton);
 
@@ -484,110 +340,5 @@ void ReceiveCoinsDialog::cancelRequestPayment()
 {
     ui->requestLabel->setText("");
     ui->requestAmount->clear();
-    #if defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT)
-    buyView->load(QUrl("about:blank"));
-    #endif
     gotoReceievePage();
-}
-
-
-void ReceiveCoinsDialog::buyGulden()
-{
-    #if defined(HAVE_WEBENGINE_VIEW)
-    buyView->page()->runJavaScript(QString("$('#submit').show().focus().click().hide()"));
-    #elif defined(HAVE_WEBKIT)
-    ((WebView*)buyView)->dismissOnPopup=true;
-    buyView->page()->mainFrame()->evaluateJavaScript(QString("$('#submit').show().focus().click().hide()"));
-    #endif
-}
-
-void ReceiveCoinsDialog::loadBuyViewFinished([[maybe_unused]] bool bOk)
-{
-    #if defined(HAVE_WEBENGINE_VIEW) || defined(HAVE_WEBKIT)
-    if (bOk)
-    {
-        if (buyReceiveAddress)
-        {
-            delete buyReceiveAddress;
-            buyReceiveAddress = NULL;
-        }
-
-        buyReceiveAddress = new CReserveKeyOrScript(pactiveWallet, currentAccount, KEYCHAIN_EXTERNAL);
-        CPubKey pubKey;
-        QString guldenAddress;
-
-
-        if (!buyReceiveAddress->GetReservedKey(pubKey))
-        {
-            //fixme: (2.1) better error handling
-            guldenAddress = "error";
-        }
-        else
-        {
-            CKeyID keyID = pubKey.GetID();
-            guldenAddress = QString::fromStdString(CGuldenAddress(keyID).ToString());
-        }
-
-        //fixme: (2.1) fill proper email address etc. here
-        QString emailAddress = QString("");
-        QString paymentMethod = QString("");
-        QString paymentDetails = QString("");
-        #if defined(HAVE_WEBENGINE_VIEW)
-        buyView->page()->runJavaScript(QString("NocksBuyFormFillDetails('%1', '%2')").arg(guldenAddress, emailAddress));
-        buyView->page()->runJavaScript(QString("$('.extra-row').hide()"));
-        #elif defined(HAVE_WEBKIT)
-        QVariant ret = buyView->page()->mainFrame()->evaluateJavaScript(QString("NocksBuyFormFillDetails('%1', '%2')").arg(guldenAddress, emailAddress));
-        QString temp = ret.toString();
-        buyView->page()->mainFrame()->evaluateJavaScript(QString("$('.extra-row').hide()"));
-        #endif
-
-        //https://bugreports.qt.io/browse/QTBUG-42216
-        #if defined(HAVE_WEBENGINE_VIEW)
-            #if QT_VERSION < QT_VERSION_CHECK(5, 6, 2) || QT_VERSION == QT_VERSION_CHECK(5, 7, 0)
-            buyView->page()->runJavaScript(QString("$('a[href]').attr('target', '_blank');"));
-            buyView->page()->runJavaScript(QString("$('form').attr('target', '_blank');"));
-            #endif
-        #elif defined(HAVE_WEBKIT)
-        buyView->page()->mainFrame()->evaluateJavaScript(QString("$('a[href]').attr('target', '_blank');"));
-        buyView->page()->mainFrame()->evaluateJavaScript(QString("$('form').attr('target', '_blank');"));
-        #endif
-
-        //Force the WebView to have the fonts we want - it doesn't pick up our registered fonts otherwise.
-        {
-            //fixme: 2.1 - all app fonts here not just solid typeface.
-            QFile fontFile(":/Gulden/fontawesome_pro_solid");
-            fontFile.open(QIODevice::ReadOnly);
-            QString rawCSS = "@font-face{ font-family: FontAwesome;src: url(data:font/ttf;base64," + fontFile.readAll().toBase64() + ") format('truetype');";
-            std::string encodedCSS = EncodeBase64(rawCSS.toStdString());
-            QString insertFontScript = QString("(function() {") +
-                    "var parent = document.getElementsByTagName('head').item(0);" +
-                    "var style = document.createElement('style');" +
-                    "style.type = 'text/css';" +
-                    "style.innerHTML = window.atob('" + encodedCSS.c_str() + "');" +
-                    "parent.appendChild(style)" +
-                    "})()";
-            #if defined(HAVE_WEBENGINE_VIEW)
-            buyView->page()->runJavaScript(insertFontScript);
-            #elif defined(HAVE_WEBKIT)
-            buyView->page()->mainFrame()->evaluateJavaScript(insertFontScript);
-            #endif
-        }
-
-        ui->loadingAnimationLabel->setVisible(false);
-        buyView->setVisible(true);
-    }
-    else
-    {
-        ui->loadingAnimationLabel->setText(tr("Error loading the buy page, please check your connection and try again later."));
-        ui->loadingAnimationLabel->setVisible(true);
-        buyView->setVisible(false);
-    }
-    #endif
-}
-
-void ReceiveCoinsDialog::sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist)
-{
-#ifdef HAVE_WEBKIT
-    qnr->ignoreSslErrors();
-#endif
 }

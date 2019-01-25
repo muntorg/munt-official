@@ -20,6 +20,7 @@ import androidx.work.*
 import java.util.concurrent.TimeUnit
 
 private val TAG = "backgroundsync"
+val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
 
 fun setupBackgroundSync(context: Context) {
 
@@ -30,8 +31,6 @@ fun setupBackgroundSync(context: Context) {
     Log.i(TAG, "Starting background sync: " + syncType)
 
     val serviceIntent = Intent(context, SyncService::class.java)
-
-    val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
 
     when (syncType) {
         "BACKGROUND_SYNC_OFF" -> {
@@ -157,7 +156,7 @@ class SyncWorker(context : Context, params : WorkerParameters)
         Log.i(TAG, "Periodic sync finished")
 
         // Indicate success or failure with your return value:
-        return ListenableWorker.Result.SUCCESS
+        return ListenableWorker.Result.success()
 
         // (Returning RETRY tells WorkManager to try this task again
         // later; FAILURE says not to try again.)

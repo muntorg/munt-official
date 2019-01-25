@@ -214,7 +214,7 @@ static UniValue generate(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
-            "generate nblocks ( maxtries )\n"
+            "generate num_blocks ( max_tries )\n"
             "\ngenerate up to n blocks immediately (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
@@ -250,13 +250,13 @@ static UniValue setgenerate(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
-            "setgenerate generate ( genproclimit )\n"
+            "setgenerate generate ( gen_proc_limit )\n"
             "\nSet 'generate' true or false to turn generation on or off.\n"
-            "Generation is limited to 'genproclimit' processors, -1 is unlimited.\n"
+            "Generation is limited to 'gen_proc_limit' processors, -1 is unlimited.\n"
             "See the getgenerate call for the current setting.\n"
             "\nArguments:\n"
             "1. generate         (boolean, required) Set to true to turn on generation, off to turn off.\n"
-            "2. genproclimit     (numeric, optional) Set the processor limit for when generation is on. Can be -1 for unlimited.\n"
+            "2. gen_proc_limit   (numeric, optional) Set the processor limit for when generation is on. Can be -1 for unlimited.\n"
             "\nExamples:\n"
             "\nSet the generation on with a limit of one processor\n"
             + HelpExampleCli("setgenerate", "true 1") +
@@ -316,7 +316,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw std::runtime_error(
-            "generatetoaddress nblocks address (maxtries)\n"
+            "generatetoaddress num_blocks address (max_tries)\n"
             "\nGenerate blocks immediately to a specified address (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
@@ -394,11 +394,11 @@ static UniValue prioritisetransaction(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 3)
         throw std::runtime_error(
-            "prioritisetransaction <txid> <dummy value> <fee delta>\n"
+            "prioritisetransaction <txid> <dummy_value> <fee_delta>\n"
             "Accepts the transaction into generated blocks at a higher (or lower) priority\n"
             "\nArguments:\n"
-            "1. \"txid\"       (string, required) The transaction id.\n"
-            "2. dummy          (numeric, optional) API-Compatibility for previous API. Must be zero or null.\n"
+            "1. \"txid\"         (string, required) The transaction id.\n"
+            "2. dummy_value    (numeric, optional) API-Compatibility for previous API. Must be zero or null.\n"
             "                  DEPRECATED. For forward compatibility use named arguments and omit this parameter.\n"
             "3. fee_delta      (numeric, required) The fee value (in satoshis) to add (or subtract, if negative).\n"
             "                  The fee is not actually paid, only the algorithm for selecting transactions into a block\n"
@@ -1001,19 +1001,19 @@ static UniValue estimatefee(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-            "estimatefee nblocks\n"
+            "estimatefee num_blocks\n"
             "\nDEPRECATED. Please use estimatesmartfee for more intelligent estimates."
             "\nEstimates the approximate fee per kilobyte needed for a transaction to begin\n"
-            "confirmation within nblocks blocks. Uses virtual transaction size of transaction\n"
+            "confirmation within num_blocks blocks. Uses virtual transaction size of transaction\n"
             "as defined in BIP 141 (witness data is discounted).\n"
             "\nArguments:\n"
-            "1. nblocks     (numeric, required)\n"
+            "1. num_blocks  (numeric, required)\n"
             "\nResult:\n"
             "n              (numeric) estimated fee-per-kilobyte\n"
             "\n"
             "A negative value is returned if not enough transactions and blocks\n"
             "have been observed to make an estimate.\n"
-            "-1 is always returned for nblocks == 1 as it is impossible to calculate\n"
+            "-1 is always returned for num_blocks == 1 as it is impossible to calculate\n"
             "a fee that is high enough to get reliably included in the next block.\n"
             "\nExample:\n"
             + HelpExampleCli("estimatefee", "6")
@@ -1036,13 +1036,13 @@ static UniValue estimatesmartfee(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
-            "estimatesmartfee nblocks (conservative)\n"
+            "estimatesmartfee num_blocks (conservative)\n"
             "\nEstimates the approximate fee per kilobyte needed for a transaction to begin\n"
-            "confirmation within nblocks blocks if possible and return the number of blocks\n"
+            "confirmation within num_blocks blocks if possible and return the number of blocks\n"
             "for which the estimate is valid. Uses virtual transaction size as defined\n"
             "in BIP 141 (witness data is discounted).\n"
             "\nArguments:\n"
-            "1. nblocks       (numeric)\n"
+            "1. num_blocks    (numeric)\n"
             "2. conservative  (bool, optional, default=true) Whether to return a more conservative estimate which\n"
             "                 also satisfies a longer history. A conservative estimate potentially returns a higher\n"
             "                 feerate and is more likely to be sufficient for the desired target, but is not as\n"
@@ -1081,18 +1081,18 @@ static UniValue estimaterawfee(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1|| request.params.size() > 3)
         throw std::runtime_error(
-            "estimaterawfee nblocks (threshold horizon)\n"
+            "estimaterawfee num_blocks (threshold horizon)\n"
             "\nWARNING: This interface is unstable and may disappear or change!\n"
             "\nWARNING: This is an advanced API call that is tightly coupled to the specific\n"
             "         implementation of fee estimation. The parameters it can be called with\n"
             "         and the results it returns will change if the internal implementation changes.\n"
             "\nEstimates the approximate fee per kilobyte needed for a transaction to begin\n"
-            "confirmation within nblocks blocks if possible. Uses virtual transaction size as defined\n"
+            "confirmation within num_blocks blocks if possible. Uses virtual transaction size as defined\n"
             "in BIP 141 (witness data is discounted).\n"
             "\nArguments:\n"
-            "1. nblocks     (numeric)\n"
+            "1. num_blocks  (numeric)\n"
             "2. threshold   (numeric, optional) The proportion of transactions in a given feerate range that must have been\n"
-            "               confirmed within nblocks in order to consider those feerates as high enough and proceed to check\n"
+            "               confirmed within num_blocks in order to consider those feerates as high enough and proceed to check\n"
             "               lower buckets.  Default: 0.95\n"
             "3. horizon     (numeric, optional) How long a history of estimates to consider. 0=short, 1=medium, 2=long.\n"
             "               Default: 1\n"
@@ -1162,21 +1162,21 @@ static UniValue estimaterawfee(const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
-    { "block_generation",   "getnetworkhashps",       &getnetworkhashps,       true,  {"nblocks","height"} },
+    { "block_generation",   "getnetworkhashps",       &getnetworkhashps,       true,  {"num_blocks","height"} },
     { "block_generation",   "getmininginfo",          &getmininginfo,          true,  {} },
-    { "block_generation",   "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","dummy","fee_delta"} },
+    { "block_generation",   "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","dummy_value","fee_delta"} },
     { "block_generation",   "getblocktemplate",       &getblocktemplate,       true,  {"template_request"} },
     { "block_generation",   "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
 
-    { "generating",         "generate",               &generate,               true,  {"nblocks","maxtries"} },
-    { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"nblocks","address","maxtries"} },
+    { "generating",         "generate",               &generate,               true,  {"num_blocks","max_tries"} },
+    { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"num_blocks","address","max_tries"} },
     { "generating",         "getgenerate",            &getgenerate,            true,  {}  },
-    { "generating",         "setgenerate",            &setgenerate,            true,  {"generate", "genproclimit"}  },
+    { "generating",         "setgenerate",            &setgenerate,            true,  {"generate", "gen_proc_limit"}  },
 
-    { "util",               "estimatefee",            &estimatefee,            true,  {"nblocks"} },
-    { "util",               "estimatesmartfee",       &estimatesmartfee,       true,  {"nblocks", "conservative"} },
+    { "util",               "estimatefee",            &estimatefee,            true,  {"num_blocks"} },
+    { "util",               "estimatesmartfee",       &estimatesmartfee,       true,  {"num_blocks", "conservative"} },
 
-    { "hidden",             "estimaterawfee",         &estimaterawfee,         true,  {"nblocks", "threshold", "horizon"} },
+    { "hidden",             "estimaterawfee",         &estimaterawfee,         true,  {"num_blocks", "threshold", "horizon"} },
 };
 
 void RegisterMiningRPCCommands(CRPCTable &t)

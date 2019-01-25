@@ -248,13 +248,13 @@ static UniValue disconnectnode(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() == 0 || request.params.size() >= 3)
         throw std::runtime_error(
-            "disconnectnode \"[address]\" [nodeid]\n"
+            "disconnectnode \"[address]\" [node_id]\n"
             "\nImmediately disconnects from the specified peer node.\n"
-            "\nStrictly one out of 'address' and 'nodeid' can be provided to identify the node.\n"
-            "\nTo disconnect by nodeid, either set 'address' to the empty string, or call using the named 'nodeid' argument only.\n"
+            "\nStrictly one out of 'address' and 'node_id' can be provided to identify the node.\n"
+            "\nTo disconnect by node_id, either set 'address' to the empty string, or call using the named 'node_id' argument only.\n"
             "\nArguments:\n"
             "1. \"address\"     (string, optional) The IP address/port of the node\n"
-            "2. \"nodeid\"      (number, optional) The node ID (see getpeerinfo for node IDs)\n"
+            "2. \"node_id\"      (number, optional) The node ID (see getpeerinfo for node IDs)\n"
             "\nExamples:\n"
             + HelpExampleCli("disconnectnode", "\"192.168.0.6:8333\"")
             + HelpExampleCli("disconnectnode", "\"\" 1")
@@ -505,13 +505,13 @@ static UniValue setban(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 2 ||
         (strCommand != "add" && strCommand != "remove"))
         throw std::runtime_error(
-                            "setban \"subnet\" \"add|remove\" (bantime) (absolute)\n"
+                            "setban \"subnet\" \"add|remove\" (ban_time) (absolute)\n"
                             "\nAttempts add or remove a IP/Subnet from the banned list.\n"
                             "\nArguments:\n"
                             "1. \"subnet\"       (string, required) The IP/Subnet (see getpeerinfo for nodes ip) with a optional netmask (default is /32 = single ip)\n"
                             "2. \"command\"      (string, required) 'add' to add a IP/Subnet to the list, 'remove' to remove a IP/Subnet from the list\n"
-                            "3. \"bantime\"      (numeric, optional) time in seconds how long (or until when if [absolute] is set) the ip is banned (0 or empty means using the default time of 24h which can also be overwritten by the -bantime startup argument)\n"
-                            "4. \"absolute\"     (boolean, optional) If set, the bantime must be a absolute timestamp in seconds since epoch (Jan 1 1970 GMT)\n"
+                            "3. \"ban_time\"     (numeric, optional) time in seconds how long (or until when if [absolute] is set) the ip is banned (0 or empty means using the default time of 24h which can also be overwritten by the -bantime startup argument)\n"
+                            "4. \"absolute\"     (boolean, optional) If set, the ban_time must be a absolute timestamp in seconds since epoch (Jan 1 1970 GMT)\n"
                             "\nExamples:\n"
                             + HelpExampleCli("setban", "\"192.168.0.6\" \"add\" 86400")
                             + HelpExampleCli("setban", "\"192.168.0.0/24\" \"add\"")
@@ -669,11 +669,11 @@ static const CRPCCommand commands[] =
     { "network",            "ping",                   &ping,                   true,  {} },
     { "network",            "getpeerinfo",            &getpeerinfo,            true,  {} },
     { "network",            "addnode",                &addnode,                true,  {"node","command"} },
-    { "network",            "disconnectnode",         &disconnectnode,         true,  {"address", "nodeid"} },
+    { "network",            "disconnectnode",         &disconnectnode,         true,  {"address", "node_id"} },
     { "network",            "getaddednodeinfo",       &getaddednodeinfo,       true,  {"node"} },
     { "network",            "getnettotals",           &getnettotals,           true,  {} },
     { "network",            "getnetworkinfo",         &getnetworkinfo,         true,  {} },
-    { "network",            "setban",                 &setban,                 true,  {"subnet", "command", "bantime", "absolute"} },
+    { "network",            "setban",                 &setban,                 true,  {"subnet", "command", "ban_time", "absolute"} },
     { "network",            "listbanned",             &listbanned,             true,  {} },
     { "network",            "clearbanned",            &clearbanned,            true,  {} },
     { "network",            "setnetworkactive",       &setnetworkactive,       true,  {"state"} },

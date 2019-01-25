@@ -9,7 +9,7 @@ class Config {
         val PRECISION_FULL = 8
         val DEFAULT_CURRENCY_CODE get() = getDefaultCurrencyCode()
         val USER_AGENT = "/${BuildConfig.APPLICATION_ID}:${BuildConfig.VERSION_NAME}/"
-        val BLOCK_EXPLORER = Uri.parse("https://blockchain.gulden.com")
+        val BLOCK_EXPLORER = Uri.parse("https://blockchain.gulden.com")!!
 
         fun getDefaultCurrencyCode(): String {
             return AppContext.instance.getString(R.string.default_currency)
