@@ -1,8 +1,15 @@
-# support
--dontwarn androidx.support.**
--keep class androidx.support.app.** { *; }
--keep interface androidx.support.app.** { *; }
--keep class androidx.support.** { *; }
+# Support
+# Below is probably overkill, but keep it like this for now; we can slowly tune it to be less aggressive later.
+# Otherwise there were issues with ActionMode and other things
+-dontwarn com.google.android.material.**
+-keep class com.google.android.material.** { *; }
+-dontwarn androidx.**
+-keep class androidx.** { *; }
+-keep interface androidx.** { *; }
+-dontwarn android.support.v4.**
+-keep class android.support.v4.** { *; }
+-dontwarn android.support.v7.**
+-keep class android.support.v7.** { *; }
 
 # unity backend
 -keep class com.gulden.jniunifiedbackend.** { *; }
