@@ -31,10 +31,7 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        val inflated = inflater.inflate(R.layout.fragment_receive, container, false)
-        currentAddressQrView.setOnClickListener { setFocusOnAddress() }
-        currentAddressLabel.setOnClickListener { setFocusOnAddress() }
-        return inflated
+        return inflater.inflate(R.layout.fragment_receive, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)
@@ -42,6 +39,8 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         super.onActivityCreated(savedInstanceState)
 
         updateAddress()
+        currentAddressQrView!!.setOnClickListener { setFocusOnAddress() }
+        currentAddressLabel!!.setOnClickListener { setFocusOnAddress() }
     }
 
     override fun onAttach(context: Context)
@@ -160,7 +159,7 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         if (actionBarCallback == null)
         {
             actionBarCallback = ActionBarCallBack()
-            storedMode = (activity as AppCompatActivity).startSupportActionMode(ActionBarCallBack())
+            storedMode = (activity as AppCompatActivity).startSupportActionMode(actionBarCallback!!)
         }
         else
         {
