@@ -967,7 +967,7 @@ private constructor()
         // should guarantee that there will be an array to work with.
         val byteArray = ByteArray(bufferSize)
         val buffer = ByteBuffer.wrap(byteArray)
-        if (!buffer.hasArray() || !buffer.array().contentEquals(byteArray))
+        if (!buffer.hasArray() || !buffer.array()!!.contentEquals(byteArray))
         {
             // I don't think that this will ever happen.  But if it does, then we wouldn't be
             // passing the preview content to the underlying detector later.
