@@ -221,14 +221,8 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         }
     }
 
-    fun setFocusOnAddress(view : View)
-    {
-        receiveFragment?.setFocusOnAddress()
-    }
-
     companion object {
         private val BARCODE_READER_REQUEST_CODE = 1
         val SEND_COINS_RETURN_CODE = 2
-        val BUY_RETURN_CODE = 3
     }
 }
