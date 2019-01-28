@@ -12,7 +12,7 @@ case "$OSTYPE" in
       ;;
 esac
 
-export NDK_VERSION=android-ndk-r18b
+export NDK_VERSION=android-ndk-r19
 export NDK_FILENAME=${NDK_VERSION}-${PLATFORM}-x86_64.zip
 
 #sha256_file=5dfbbdc2d3ba859fed90d0e978af87c71a91a5be1f6e1c40ba697503d48ccecd

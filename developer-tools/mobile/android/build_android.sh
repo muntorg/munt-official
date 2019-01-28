@@ -36,6 +36,6 @@ do
 
   mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib} | true
   cp build_android_${target_host}/src/.libs/libgulden_unity_jni.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
-  cp ${PWD}/developer-tools/android-ndk-gulden/${toolchain}/${target_host}/${lib_dir}/libc++_shared.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
+  cp ${PWD}/developer-tools/android-ndk-gulden/${toolchain}/${lib_dir}/${target_host}/libc++_shared.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
   ${PWD}/developer-tools/android-ndk-gulden/${toolchain}/${target_host}/bin/strip --strip-unneeded src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/*.so
 done

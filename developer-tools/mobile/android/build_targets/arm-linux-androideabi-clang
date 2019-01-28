@@ -2,5 +2,5 @@ toolchain=arm-linux-androideabi-clang
 target_host=arm-linux-androideabi
 target_bits=32
 jni_lib=armeabi-v7a
-lib_dir=lib/armv7-a
+lib_dir=sysroot/usr/lib
 march_flags="-mthumb"

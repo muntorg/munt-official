@@ -2,5 +2,5 @@ toolchain=aarch64-linux-android-clang
 target_host=aarch64-linux-android
 target_bits=64
 jni_lib=arm64-v8a
-lib_dir=lib
+lib_dir=sysroot/usr/lib
 march_flags=""
