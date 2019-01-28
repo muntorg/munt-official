@@ -4,6 +4,7 @@
 #include "NativeTransactionRecord.hpp"  // my header
 #include "Marshal.hpp"
 #include "NativeOutputRecord.hpp"
+#include "NativeTransactionStatus.hpp"
 
 namespace djinni_generated {
 
@@ -18,6 +19,9 @@ auto NativeTransactionRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::dji
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.timestamp)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.amount)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.fee)),
+                                                           ::djinni::get(::djinni_generated::NativeTransactionStatus::fromCpp(jniEnv, c.status)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.height)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.depth)),
                                                            ::djinni::get(::djinni::List<::djinni_generated::NativeOutputRecord>::fromCpp(jniEnv, c.receivedOutputs)),
                                                            ::djinni::get(::djinni::List<::djinni_generated::NativeOutputRecord>::fromCpp(jniEnv, c.sentOutputs)))};
     ::djinni::jniExceptionCheck(jniEnv);
@@ -25,13 +29,16 @@ auto NativeTransactionRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::dji
 }
 
 auto NativeTransactionRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 7);
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeTransactionRecord>::get();
     return {::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mTxHash)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mTimestamp)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAmount)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mFee)),
+            ::djinni_generated::NativeTransactionStatus::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mStatus)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mHeight)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mDepth)),
             ::djinni::List<::djinni_generated::NativeOutputRecord>::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mReceivedOutputs)),
             ::djinni::List<::djinni_generated::NativeOutputRecord>::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mSentOutputs))};
 }

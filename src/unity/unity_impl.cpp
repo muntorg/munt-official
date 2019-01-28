@@ -91,9 +91,30 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         }
     }
 
+    const int RECOMMENDED_CONFIRMATIONS = 3;
+
+    int depth = wtx.GetDepthInMainChain();
+
+    TransactionStatus status;
+    if (depth < 0)
+        status = TransactionStatus::CONFLICTED;
+    else if (depth == 0) {
+        if (wtx.isAbandoned())
+            status = TransactionStatus::ABANDONED;
+        else
+            status = TransactionStatus::UNCONFIRMED;
+    }
+    else if (depth < RECOMMENDED_CONFIRMATIONS) {
+        status = TransactionStatus::CONFIRMING;
+    }
+    else {
+        status = TransactionStatus::CONFIRMED;
+    }
+
     return TransactionRecord(wtx.GetHash().ToString(), wtx.nTimeSmart,
                              wtx.GetCredit(ISMINE_SPENDABLE) - wtx.GetDebit(ISMINE_SPENDABLE),
-                             nFee, receivedOutputs, sentOutputs);
+                             nFee, status, wtx.nHeight, wtx.GetDepthInMainChain(),
+                             receivedOutputs, sentOutputs);
 }
 
 static void notifyBalanceChanged(CWallet* pwallet)

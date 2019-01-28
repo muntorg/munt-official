@@ -492,6 +492,7 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeUriRecipient.cpp \
   unity/djinni/jni/NativeTransactionRecord.hpp \
   unity/djinni/jni/NativeTransactionRecord.cpp \
+  unity/djinni/jni/NativeTransactionStatus.hpp \
   unity/djinni/jni/NativeOutputRecord.hpp \
   unity/djinni/jni/NativeOutputRecord.cpp \
   unity/djinni/cpp/gulden_unified_backend.hpp \
@@ -530,6 +531,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/peer_record.hpp \
   unity/djinni/cpp/qrcode_record.hpp \
   unity/djinni/cpp/transaction_record.hpp \
+  unity/djinni/cpp/transaction_status.hpp \
   unity/djinni/cpp/output_record.hpp \
   unity/djinni/cpp/uri_recipient.hpp \
   unity/djinni/cpp/uri_record.hpp
@@ -577,6 +579,8 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBTransactionRecord+Private.mm \
   unity/djinni/objc/DBTransactionRecord.h \
   unity/djinni/objc/DBTransactionRecord.mm \
+  unity/djinni/objc/DBTransactionStatus+Private.h \
+  unity/djinni/objc/DBTransactionStatus.h \
   unity/djinni/objc/DBUriRecipient+Private.h \
   unity/djinni/objc/DBUriRecipient+Private.mm \
   unity/djinni/objc/DBUriRecipient.h \

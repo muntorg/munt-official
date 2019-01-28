@@ -39,9 +39,20 @@ transaction_record = record {
     timestamp : i64;
     amount : i64;
     fee : i64;
+    status : transaction_status;
+    height : i32;
+    depth : i32;
     receivedOutputs : list<output_record>;
     sentOutputs : list<output_record>;
 } deriving(parcelable)
+
+transaction_status = enum {
+    unconfirmed;
+    confirming;
+    confirmed;
+    abandoned;
+    conflicted;
+}
 
 output_record = record {
     amount : i64;
