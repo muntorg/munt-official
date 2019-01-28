@@ -14,6 +14,7 @@ import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.transaction_list_item.view.*
 import kotlinx.android.synthetic.main.transaction_list_item_with_header.view.*
+import java.text.DecimalFormat
 
 class TransactionAdapter(private val context: Context, private val dataSource: ArrayList<TransactionRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -53,7 +54,7 @@ class TransactionAdapter(private val context: Context, private val dataSource: A
         }
 
         rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(transactionRecord.timestamp * 1000L))
-        rowView.textViewAmount.text = (" %.2f").format(transactionRecord.amount.toDouble() / 100000000)
+        rowView.textViewAmount.text = "  " + (DecimalFormat("+#,##0.00;-#").format(transactionRecord.amount.toDouble() / 100000000))
         return rowView
     }
 }
