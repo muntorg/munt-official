@@ -5,6 +5,8 @@
 
 package com.gulden.unity_wallet
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.sdk27.coroutines.onClick
 import java.text.DecimalFormat
 import kotlin.coroutines.CoroutineContext
 
@@ -31,6 +34,12 @@ class TransactionInfoActivity : AppCompatActivity(), CoroutineScope {
 
         // transaction id
         transactionId.text = tx.txHash
+
+        // view transaction in browser
+        transactionId.onClick {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.withAppendedPath(Config.BLOCK_EXPLORER, "/tx/" + tx.txHash))
+            startActivity(intent)
+        }
 
         // status
         status.text = "Bevestigd in blok #802538 (mock, TBD)"
