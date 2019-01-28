@@ -25,4 +25,6 @@ file COPYING
     <dimen name="list_entry_padding_vertical">6dp</dimen>
     <!--<dimen name="list_entry_padding_vertical_lax">10dp</dimen>-->
 
+    <dimen name="transaction_details_item_spacing">30dp</dimen>
+
 </resources>
