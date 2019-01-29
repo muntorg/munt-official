@@ -16,6 +16,7 @@ import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.ui.TransactionAdapter
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import android.content.Intent
+import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.TransactionInfoActivity
 
@@ -33,15 +34,15 @@ class TransactionFragment : androidx.fragment.app.Fragment() {
 
         transactionList?.emptyView = emptyTransactionListView
 
-        val transactions = GuldenUnifiedBackend.getTransactionHistory()
+        val mutations = GuldenUnifiedBackend.getMutationHistory()
 
-        val adapter = TransactionAdapter(this.context!!, transactions)
+        val adapter = TransactionAdapter(this.context!!, mutations)
         transactionList.adapter = adapter
 
         transactionList.setOnItemClickListener { parent, _, position, _ ->
-            val transaction = parent.adapter.getItem(position) as TransactionRecord
+            val mutation = parent.adapter.getItem(position) as MutationRecord
             val intent = Intent(this.context, TransactionInfoActivity::class.java)
-            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, transaction)
+            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.tx)
             startActivity(intent)
         }
     }
