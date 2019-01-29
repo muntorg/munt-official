@@ -265,6 +265,9 @@ public:
     //! Create a read-only HD account using an encoded public key.
     CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
+    //! Create an HD account directly from a key and not assosciated with any seed.
+    CAccountHD* CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type);
+
     void setActiveAccount(CAccount* newActiveAccount);
 
     //! Find the first account that is not deleted/shadow etc. and set it as active
