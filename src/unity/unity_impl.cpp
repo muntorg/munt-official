@@ -239,7 +239,7 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
     SecureString phraseOnly;
     int phraseBirthNumber = 0;
     GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
-    if (phraseBirthNumber == 0 || !checkMnemonic(phraseOnly))
+    if (!checkMnemonic(phraseOnly))
     {
         return false;
     }
