@@ -30,7 +30,7 @@
 #endif
 
 #include <boost/algorithm/string/case_conv.hpp> // for to_lower()
-#include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
+#include <boost/algorithm/string/predicate.hpp> // for starts_with() and ends_with()
 #include <boost/asio.hpp>
 
 using namespace boost::asio::ip;

@@ -31,6 +31,10 @@
 #include <string>
 #include <vector>
 
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp> // for starts_with() and ends_with()
+
 /**
  * Encode a byte sequence as a base58-encoded string.
  * pbegin and pend cannot be NULL, unless both are.
@@ -166,7 +170,7 @@ template <typename KeyType> class CGuldenSecretExt
 {
 public:
     void SetKey(const KeyType& vchSecret) { key = vchSecret; }
-    KeyType GetKey()
+    KeyType GetKeyFromString()
     {
         //fixme: (Bitcoin) Strip creationTime and payAccount
         KeyType retExt;
@@ -183,6 +187,11 @@ public:
         {
             retExt.GetMutableKey().Set(vchSecretKey.begin(), vchSecretKey.end());
             retExt.chaincode = uint256(vchSecretCode);
+        }
+        else
+        {
+            //fixme: Better error handling here - though this should never happen.
+            assert(0);
         }
 
         return retExt;
@@ -201,26 +210,89 @@ public:
         return true;
     }
 
-    std::string ToString(std::string creationtime, std::string payAccount) const
+    CGuldenSecretExt<KeyType>& SetCreationTime(std::string newCreationTime)
     {
-        std::string ret = ToString();
+        creationTime = newCreationTime;
+        return *this;
+    }
 
-        const unsigned char* creationTimeRaw = (const unsigned char*)creationtime.c_str();
-        ret = ret + ":" + EncodeBase58( creationTimeRaw, creationTimeRaw + creationtime.length() );
+    int64_t getCreationTime() const
+    {
+        if (creationTime.empty())
+        {
+            return -1;
+        }
+        else
+        {
+            return atoi64(creationTime);
+        }
+    }
 
-        ret = ret + ";" + payAccount;
+    CGuldenSecretExt<KeyType>& SetPayAccount(std::string newPayAccount)
+    {
+        payAccount = newPayAccount;
+        return *this;
+    }
 
-        return ret;
+    bool fromURIString(std::string uri)
+    {
+        if (!boost::starts_with(uri, "guldensync:"))
+            return false;
+
+        uri = std::string(uri.begin()+11,uri.end());
+        std::vector<unsigned char> vchSecretKey;
+        std::vector<unsigned char> vchSecretCode;
+        std::vector<unsigned char> vchCreationTime;
+        std::string payAccount;
+
+        std::vector<std::string> vStrInputParts;
+        boost::split(vStrInputParts, uri, boost::is_any_of("-"));
+        if (vStrInputParts.size() != 2)
+            return false;
+        if (!DecodeBase58(vStrInputParts[0].c_str(), vchSecretKey))
+            return false;
+
+        boost::split(vStrInputParts, vStrInputParts[1], boost::is_any_of(":"));
+        if (vStrInputParts.size() != 2)
+            return false;
+        if (!DecodeBase58(vStrInputParts[0].c_str(), vchSecretCode))
+            return false;
+
+        boost::split(vStrInputParts, vStrInputParts[1], boost::is_any_of(";"));
+        if (vStrInputParts.size() != 2)
+            return false;
+        if (!DecodeBase58(vStrInputParts[0].c_str(), vchCreationTime))
+            return false;
+
+        creationTime = std::string(vchCreationTime.begin(), vchCreationTime.end());
+        payAccount = vStrInputParts[1];
+        if (vchSecretCode.size() != 32)
+            return false;
+
+        key.GetMutableKey().Set(vchSecretKey.begin(), vchSecretKey.end(), true);
+        key.chaincode = uint256(vchSecretCode);
+
+        return true;
+    }
+
+    std::string ToURIString() const
+    {
+        std::string encodedURI = ToString();
+        encodedURI = encodedURI + ":" + EncodeBase58( (const unsigned char*)&creationTime[0], (const unsigned char*)&creationTime[0]+creationTime.size() );
+        encodedURI = encodedURI + ";" + payAccount;
+
+        return encodedURI;
     }
 
     std::string ToString() const
     {
-        std::string ret =  EncodeBase58( (const unsigned char*)key.GetKey().begin(), (const unsigned char*)key.GetKey().end() );
-        ret = ret + "-" + EncodeBase58( key.chaincode.begin(), key.chaincode.end() );
+        std::string encodedString =  EncodeBase58( (const unsigned char*)key.GetKey().begin(), (const unsigned char*)key.GetKey().end() );
+        encodedString = encodedString + "-" + EncodeBase58( key.chaincode.begin(), key.chaincode.end() );
 
-        return ret;
+        return encodedString;
     }
 
+    KeyType getKeyRaw() { return key; }
     CGuldenSecretExt(const KeyType& vchSecret) { SetKey(vchSecret); }
     CGuldenSecretExt(const std::string& strSecret) { SetString(strSecret); }
     CGuldenSecretExt() {}
@@ -228,6 +300,9 @@ public:
 private:
     KeyType key;
     std::string secret;
+
+    std::string payAccount;
+    std::string creationTime;
 };
 
 template<typename K, int Size, CChainParams::Base58Type Type> class CGuldenExtKeyBase : public CBase58Data

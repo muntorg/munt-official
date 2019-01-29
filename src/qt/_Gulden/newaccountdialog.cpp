@@ -143,7 +143,7 @@ void NewAccountDialog::showSyncQr()
                 return;
             payoutAddress = CGuldenAddress(vchPubKey.GetID()).ToString();
 
-            QString qrString = QString::fromStdString("guldensync:" + CGuldenSecretExt<CExtKey>(*newAccount->GetAccountMasterPrivKey()).ToString( QString::number(currentTime).toStdString(), payoutAddress ) );
+            QString qrString = QString::fromStdString("guldensync:" + CGuldenSecretExt<CExtKey>(*newAccount->GetAccountMasterPrivKey()).SetCreationTime(QString::number(currentTime).toStdString()).SetPayAccount(payoutAddress).ToURIString() );
             ui->scanQRCode->setCode(qrString);
 
             disconnect(this, SLOT( showSyncQr() ));

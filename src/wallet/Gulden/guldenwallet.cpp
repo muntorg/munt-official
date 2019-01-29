@@ -9,7 +9,7 @@
 #include "account.h"
 #include "script/ismine.h"
 #include <boost/uuid/nil_generator.hpp>
-#include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
+#include <boost/algorithm/string/predicate.hpp> // for starts_with() and end_swith()
 #include <boost/algorithm/string.hpp> // for split()
 #include <Gulden/mnemonic.h>
 #include "util.h"
@@ -678,7 +678,7 @@ CHDSeed* CGuldenWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     {
         CGuldenSecretExt<CExtPubKey> secretExt;
         secretExt.SetString(pubKeyString.c_str());
-        pubkey = secretExt.GetKey();
+        pubkey = secretExt.GetKeyFromString();
     }
     catch(...)
     {
@@ -996,6 +996,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
     }
 
     newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()(), AccountType::Desktop);
+
 
     // Write new account
     addAccount(newAccount, strAccount);
