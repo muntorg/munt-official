@@ -19,8 +19,9 @@ import com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity
 import com.gulden.unity_wallet.ui.ShowRecoveryPhraseActivity
 import kotlin.concurrent.thread
 
-class WelcomeActivity : AppCompatActivity()
+class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
 {
+    private val coreObserverProxy = CoreObserverProxy(this, this)
     private var context: Context? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -28,6 +29,15 @@ class WelcomeActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
         context = this
+
+        UnityCore.instance.addObserver(coreObserverProxy)
+    }
+
+    override fun onDestroy()
+    {
+        super.onDestroy()
+
+        UnityCore.instance.removeObserver(coreObserverProxy)
     }
 
     override fun onBackPressed() {
@@ -84,9 +94,17 @@ class WelcomeActivity : AppCompatActivity()
                 if (data != null)
                 {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                    val parsedQRCodeURI = Uri.parse(barcode.displayValue)
 
-                    //TODO: Implement this
+                    if (!GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue))
+                    {
+                        // no need to do anything here, there will be a coreReady event soon
+                        // possibly put a progress spinner or some other user feedback if
+                        // the coreReady can take a long time
+                    }
+                    else
+                    {
+                        //TODO: Display error to user...
+                    }
                 }
             }
         }
@@ -100,6 +118,15 @@ class WelcomeActivity : AppCompatActivity()
     fun onRecoverExistingWallet(view: View)
     {
         startActivity(Intent(this, EnterRecoveryPhraseActivity::class.java))
+    }
+
+    override fun onCoreReady(): Boolean {
+        // Proceed to main activity
+        val intent = Intent(this, WalletActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+        return true
     }
 
     companion object
