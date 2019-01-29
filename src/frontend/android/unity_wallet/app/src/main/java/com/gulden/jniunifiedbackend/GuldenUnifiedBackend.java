@@ -95,6 +95,12 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.getTransactionHistory();
     }
 
+    /** Get list of wallet mutations */
+    public static ArrayList<MutationRecord> getMutationHistory()
+    {
+        return CppProxy.getMutationHistory();
+    }
+
     /** Get list of all address book entries */
     public static ArrayList<AddressRecord> getAddressBookRecords()
     {
@@ -205,6 +211,8 @@ public abstract class GuldenUnifiedBackend {
         public static native void performPaymentToRecipient(UriRecipient request);
 
         public static native ArrayList<TransactionRecord> getTransactionHistory();
+
+        public static native ArrayList<MutationRecord> getMutationHistory();
 
         public static native ArrayList<AddressRecord> getAddressBookRecords();
 
