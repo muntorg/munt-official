@@ -1,8 +1,8 @@
 2.2.0
 
-Extend recovery phrase with (optional) birth number.
+CORE - Extend recovery phrase with (optional) birth number.
 UI - Option to hide status bar when synchronized (default enabled). Disable to always show status indicators.
-
+RPC - Implement new 'importlinkedaccount' command.
 
 
 
