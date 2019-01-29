@@ -132,11 +132,11 @@ file COPYING
         <item>BACKGROUND_SYNC_CONTINUOUS</item>
     </string-array>
     <string name="background_sync_default">BACKGROUND_SYNC_OFF</string>
-    <string name="transaction_id">Transactie ID</string>
+    <string name="transaction_id">Transaction ID</string>
     <string name="status">Status</string>
-    <string name="amount_label">Bedrag</string>
-    <string name="from_label">Van</string>
-    <string name="to_label">Naar</string>
+    <string name="amount_label">Amount</string>
+    <string name="from_label">From</string>
+    <string name="to_label">To</string>
     <string name="tx_status_abandoned">Abandoned</string>
     <string name="tx_status_conflicted">Conflicted</string>
     <string name="tx_status_confirming">Confirming %s/%s</string>
