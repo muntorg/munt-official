@@ -1055,6 +1055,7 @@ CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuld
     return newAccount;
 }
 
+
 void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
 {
     {

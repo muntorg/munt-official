@@ -273,8 +273,15 @@ std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
 
 bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri)
 {
-    //fixme: (SPV) - Implement
+    CGuldenSecretExt<CExtKey> linkedKey;
+    if (!linkedKey.fromURIString(linked_uri))
+    {
+        return false;
+    }
+    GuldenAppManager::gApp->setLinkKey(linkedKey);
+    GuldenAppManager::gApp->isLink = true;
     GuldenAppManager::gApp->initialize();
+
     return true;
 }
 

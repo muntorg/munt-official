@@ -396,6 +396,21 @@ SecureString GuldenAppManager::composeRecoveryPhrase(const SecureString& phrase,
         return phrase;
 }
 
+void GuldenAppManager::setLinkKey(CGuldenSecretExt<CExtKey> _linkKey)
+{
+    linkKey = _linkKey;
+}
+
+int64_t GuldenAppManager::getLinkedBirthTime() const
+{
+    return linkKey.getCreationTime();
+}
+
+CGuldenSecretExt<CExtKey> GuldenAppManager::getLinkedKey() const
+{
+    return linkKey;
+}
+
 bool ShutdownRequested()
 {
     return GuldenAppManager::gApp ? (bool)GuldenAppManager::gApp->fShutDownHasBeenInitiated : false;
