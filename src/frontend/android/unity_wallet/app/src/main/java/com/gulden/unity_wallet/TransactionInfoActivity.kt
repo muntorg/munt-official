@@ -50,7 +50,7 @@ class TransactionInfoActivity : AppCompatActivity(), CoroutineScope {
                     .format(tx.depth, Constants.RECOMMENDED_CONFIRMATIONS)
             TransactionStatus.UNCONFIRMED -> getString(R.string.tx_status_unconfirmed)
             TransactionStatus.CONFIRMED -> getString(R.string.tx_status_confirmed)
-                    .format(tx.height, java.text.SimpleDateFormat("HH:mm").format(java.util.Date(tx.timestamp * 1000L)))
+                    .format(tx.height, java.text.SimpleDateFormat("HH:mm").format(java.util.Date(tx.blocktime * 1000L)))
             else -> getString(R.string.tx_status_unknown)
         }
 
