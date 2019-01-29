@@ -11,4 +11,5 @@ import com.gulden.unity_wallet.BuildConfig
 object Constants
 {
     val TEST = BuildConfig.TESTNET
+    val RECOMMENDED_CONFIRMATIONS = 3
 }

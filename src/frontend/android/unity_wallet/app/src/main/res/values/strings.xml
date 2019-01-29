@@ -137,5 +137,11 @@ file COPYING
     <string name="amount_label">Bedrag</string>
     <string name="from_label">Van</string>
     <string name="to_label">Naar</string>
+    <string name="tx_status_abandoned">Abandoned</string>
+    <string name="tx_status_conflicted">Conflicted</string>
+    <string name="tx_status_confirming">Confirming %s/%s</string>
+    <string name="tx_status_unconfirmed">Unconfirmed</string>
+    <string name="tx_status_confirmed">Confirmed in block #%d at %s</string>
+    <string name="tx_status_unknown">Unknown (you found a bug)</string>
 
 </resources>

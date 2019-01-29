@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.TransactionRecord
+import com.gulden.jniunifiedbackend.TransactionStatus
 import kotlinx.android.synthetic.main.activity_transaction_info.*
 import kotlinx.android.synthetic.main.content_transaction_info.*
 import kotlinx.coroutines.CoroutineScope
@@ -42,7 +43,16 @@ class TransactionInfoActivity : AppCompatActivity(), CoroutineScope {
         }
 
         // status
-        status.text = "Bevestigd in blok #802538 (mock, TBD)"
+        status.text = when (tx.status) {
+            TransactionStatus.ABANDONED -> getString(R.string.tx_status_abandoned)
+            TransactionStatus.CONFLICTED -> getString(R.string.tx_status_conflicted)
+            TransactionStatus.CONFIRMING -> getString(R.string.tx_status_confirming)
+                    .format(tx.depth, Constants.RECOMMENDED_CONFIRMATIONS)
+            TransactionStatus.UNCONFIRMED -> getString(R.string.tx_status_unconfirmed)
+            TransactionStatus.CONFIRMED -> getString(R.string.tx_status_confirmed)
+                    .format(tx.height, java.text.SimpleDateFormat("HH:mm").format(java.util.Date(tx.timestamp * 1000L)))
+            else -> getString(R.string.tx_status_unknown)
+        }
 
         // Amount instantly and update with rate conversion
         amount.text = formatAmount(tx.amount, 0.0)
