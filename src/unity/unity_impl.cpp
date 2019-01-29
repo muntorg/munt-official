@@ -113,7 +113,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 
     return TransactionRecord(wtx.GetHash().ToString(), wtx.nTimeSmart,
                              wtx.GetCredit(ISMINE_SPENDABLE) - wtx.GetDebit(ISMINE_SPENDABLE),
-                             nFee, status, wtx.nHeight, wtx.GetDepthInMainChain(),
+                             nFee, status, wtx.nHeight, wtx.nBlockTime, wtx.GetDepthInMainChain(),
                              receivedOutputs, sentOutputs);
 }
 

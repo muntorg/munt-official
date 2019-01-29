@@ -18,6 +18,7 @@ auto TransactionRecord::toCpp(ObjcType obj) -> CppType
             ::djinni::I64::toCpp(obj.fee),
             ::djinni::Enum<::TransactionStatus, DBTransactionStatus>::toCpp(obj.status),
             ::djinni::I32::toCpp(obj.height),
+            ::djinni::I64::toCpp(obj.blocktime),
             ::djinni::I32::toCpp(obj.depth),
             ::djinni::List<::djinni_generated::OutputRecord>::toCpp(obj.receivedOutputs),
             ::djinni::List<::djinni_generated::OutputRecord>::toCpp(obj.sentOutputs)};
@@ -31,6 +32,7 @@ auto TransactionRecord::fromCpp(const CppType& cpp) -> ObjcType
                                                    fee:(::djinni::I64::fromCpp(cpp.fee))
                                                 status:(::djinni::Enum<::TransactionStatus, DBTransactionStatus>::fromCpp(cpp.status))
                                                 height:(::djinni::I32::fromCpp(cpp.height))
+                                             blocktime:(::djinni::I64::fromCpp(cpp.blocktime))
                                                  depth:(::djinni::I32::fromCpp(cpp.depth))
                                        receivedOutputs:(::djinni::List<::djinni_generated::OutputRecord>::fromCpp(cpp.receivedOutputs))
                                            sentOutputs:(::djinni::List<::djinni_generated::OutputRecord>::fromCpp(cpp.sentOutputs))];

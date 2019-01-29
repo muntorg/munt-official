@@ -41,6 +41,7 @@ transaction_record = record {
     fee : i64;
     status : transaction_status;
     height : i32;
+    blocktime : i64;
     depth : i32;
     receivedOutputs : list<output_record>;
     sentOutputs : list<output_record>;

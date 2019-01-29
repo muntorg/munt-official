@@ -17,6 +17,7 @@ struct TransactionRecord final {
     int64_t fee;
     TransactionStatus status;
     int32_t height;
+    int64_t blocktime;
     int32_t depth;
     std::vector<OutputRecord> receivedOutputs;
     std::vector<OutputRecord> sentOutputs;
@@ -27,6 +28,7 @@ struct TransactionRecord final {
                       int64_t fee_,
                       TransactionStatus status_,
                       int32_t height_,
+                      int64_t blocktime_,
                       int32_t depth_,
                       std::vector<OutputRecord> receivedOutputs_,
                       std::vector<OutputRecord> sentOutputs_)
@@ -36,6 +38,7 @@ struct TransactionRecord final {
     , fee(std::move(fee_))
     , status(std::move(status_))
     , height(std::move(height_))
+    , blocktime(std::move(blocktime_))
     , depth(std::move(depth_))
     , receivedOutputs(std::move(receivedOutputs_))
     , sentOutputs(std::move(sentOutputs_))

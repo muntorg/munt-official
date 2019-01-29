@@ -12,6 +12,7 @@
                                    fee:(int64_t)fee
                                 status:(DBTransactionStatus)status
                                 height:(int32_t)height
+                             blocktime:(int64_t)blocktime
                                  depth:(int32_t)depth
                        receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
                            sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs;
@@ -21,6 +22,7 @@
                                                 fee:(int64_t)fee
                                              status:(DBTransactionStatus)status
                                              height:(int32_t)height
+                                          blocktime:(int64_t)blocktime
                                               depth:(int32_t)depth
                                     receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
                                         sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs;
@@ -36,6 +38,8 @@
 @property (nonatomic, readonly) DBTransactionStatus status;
 
 @property (nonatomic, readonly) int32_t height;
+
+@property (nonatomic, readonly) int64_t blocktime;
 
 @property (nonatomic, readonly) int32_t depth;
 

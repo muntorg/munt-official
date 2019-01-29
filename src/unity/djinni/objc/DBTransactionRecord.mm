@@ -12,6 +12,7 @@
                                    fee:(int64_t)fee
                                 status:(DBTransactionStatus)status
                                 height:(int32_t)height
+                             blocktime:(int64_t)blocktime
                                  depth:(int32_t)depth
                        receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
                            sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs
@@ -23,6 +24,7 @@
         _fee = fee;
         _status = status;
         _height = height;
+        _blocktime = blocktime;
         _depth = depth;
         _receivedOutputs = [receivedOutputs copy];
         _sentOutputs = [sentOutputs copy];
@@ -36,6 +38,7 @@
                                                 fee:(int64_t)fee
                                              status:(DBTransactionStatus)status
                                              height:(int32_t)height
+                                          blocktime:(int64_t)blocktime
                                               depth:(int32_t)depth
                                     receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
                                         sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs
@@ -46,6 +49,7 @@
                                     fee:fee
                                  status:status
                                  height:height
+                              blocktime:blocktime
                                   depth:depth
                         receivedOutputs:receivedOutputs
                             sentOutputs:sentOutputs];
@@ -53,7 +57,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p txHash:%@ timestamp:%@ amount:%@ fee:%@ status:%@ height:%@ depth:%@ receivedOutputs:%@ sentOutputs:%@>", self.class, (void *)self, self.txHash, @(self.timestamp), @(self.amount), @(self.fee), @(self.status), @(self.height), @(self.depth), self.receivedOutputs, self.sentOutputs];
+    return [NSString stringWithFormat:@"<%@ %p txHash:%@ timestamp:%@ amount:%@ fee:%@ status:%@ height:%@ blocktime:%@ depth:%@ receivedOutputs:%@ sentOutputs:%@>", self.class, (void *)self, self.txHash, @(self.timestamp), @(self.amount), @(self.fee), @(self.status), @(self.height), @(self.blocktime), @(self.depth), self.receivedOutputs, self.sentOutputs];
 }
 
 @end
