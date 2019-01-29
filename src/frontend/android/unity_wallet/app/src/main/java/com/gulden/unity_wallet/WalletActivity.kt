@@ -22,7 +22,7 @@ import com.gulden.unity_wallet.main_activity_fragments.SendFragment
 import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentInteractionListener
 import com.gulden.unity_wallet.main_activity_fragments.SettingsFragment
 import com.gulden.unity_wallet.main_activity_fragments.TransactionFragment
-import com.gulden.uriRecicpient
+import com.gulden.uriRecipient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -205,7 +205,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
             {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                    val recipient = uriRecicpient(barcode.displayValue)
+                    val recipient = uriRecipient(barcode.displayValue)
                     if (recipient.valid) {
                         val intent = Intent(applicationContext, SendCoinsActivity::class.java)
                         intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient)

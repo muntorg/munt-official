@@ -20,7 +20,7 @@ import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.SendCoinsActivity
 import com.gulden.unity_wallet.ui.AddressBookAdapter
-import com.gulden.uriRecicpient
+import com.gulden.uriRecipient
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
 
@@ -44,8 +44,8 @@ class SendFragment : Fragment()
                     UriRecipient(false, text, "", "")
                 GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid ->
                     GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>()))
-                uriRecicpient(text).valid ->
-                    uriRecicpient(text)
+                uriRecipient(text).valid ->
+                    uriRecipient(text)
                 else ->
                     null
             }
@@ -121,7 +121,7 @@ class SendFragment : Fragment()
         clipboardButton.isEnabled = when {
             IBANValidator.getInstance().isValid(text) -> true
             GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid -> true
-            uriRecicpient(text).valid -> true
+            uriRecipient(text).valid -> true
             else -> false
         }
     }

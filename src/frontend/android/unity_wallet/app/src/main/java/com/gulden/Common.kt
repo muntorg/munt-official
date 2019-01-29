@@ -39,7 +39,7 @@ fun Uri.getParameters(): HashMap<String, String> {
     return items
 }
 
-fun uriRecicpient(text: String): UriRecipient {
+fun uriRecipient(text: String): UriRecipient {
     var parsedQRCodeURI = Uri.parse(text)
     var address: String = ""
 
