@@ -171,7 +171,7 @@ bool CZMQPublishStalledWitnessNotifier::NotifyStalledWitness(const CBlockIndex* 
     unsigned char data[40];
     for (unsigned int i = 0; i < 32; i++)
         data[31 - i] = hash.begin()[i];
-    WriteLE64(&data[31], nSecondsDelayed);
+    WriteLE64(&data[32], nSecondsDelayed);
     return SendMessage(MSG_STALLEDWITNESS, data, 40);
 }
 
