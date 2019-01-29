@@ -1023,38 +1023,6 @@ CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuld
     return newAccount;
 }
 
-CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type)
-{
-    //fixme: HIGH add key validation checks here.
-
-    CAccountHD* newAccount = new CAccountHD(accountExtKey.getKeyRaw(), boost::uuids::nil_generator()(), type);
-    newAccount->m_State = state;
-
-    // Write new account
-    addAccount(newAccount, strAccount);
-
-    //We only assign the bare minimum addresses here - and let the background thread do the rest
-    static_cast<CWallet*>(this)->TopUpKeyPool(2, 0, newAccount);
-
-    return newAccount;
-}
-
-CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type)
-{
-    //fixme: HIGH add key validation checks here.
-
-    CAccountHD* newAccount = new CAccountHD(accountExtKey.getKeyRaw(), boost::uuids::nil_generator()(), type);
-    newAccount->m_State = state;
-
-    // Write new account
-    addAccount(newAccount, strAccount);
-
-    //We only assign the bare minimum addresses here - and let the background thread do the rest
-    static_cast<CWallet*>(this)->TopUpKeyPool(2, 0, newAccount);
-
-    return newAccount;
-}
-
 
 void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
 {
