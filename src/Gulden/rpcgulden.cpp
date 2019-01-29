@@ -1494,6 +1494,54 @@ static UniValue importreadonlyaccount(const JSONRPCRequest& request)
     return getUUIDAsString(account->getUUID());
 }
 
+
+
+static UniValue importlinkedaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "importlinkedaccount \"name\" \"encoded_key_uri\" \n"
+            "\nImport a linked account from an \"encoded_key_uri\"\n"
+            "1. \"name\"       (string) Name to assign to the new account.\n"
+            "2. \"encoded_key_uri\" (string) Encoded string containing the extended public key for the account.\n"
+            "\nResult:\n"
+            "\nReturn the UUID of the new account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("importlinkedaccount \"Linked account\" \"guldensync:2JQWMRUmrVym8Ak8TdeLhveAXkA1a5fb9fWzQUZkhd8G-3tS68yeav8TRJqhf5NEsa44tLRyjRouZQCcwcQ4Q5CSe:3mM4jYg7L4FhLC;TNhC2TDsD2L2PW7ri7ysn9YTfoQfpWT1K3\"", "")
+            + HelpExampleRpc("importlinkedaccount \"Linked account\" \"guldensync:2JQWMRUmrVym8Ak8TdeLhveAXkA1a5fb9fWzQUZkhd8G-3tS68yeav8TRJqhf5NEsa44tLRyjRouZQCcwcQ4Q5CSe:3mM4jYg7L4FhLC;TNhC2TDsD2L2PW7ri7ysn9YTfoQfpWT1K3\"", ""));
+
+
+
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    EnsureWalletIsUnlocked(pwallet);
+
+    CGuldenSecretExt<CExtKey> linkedKey;
+    if (!linkedKey.fromURIString(request.params[1].get_str().c_str()))
+    {
+        return false;
+    }
+    CAccount* account =  pwallet->CreateSeedlessHDAccount(request.params[0].get_str().c_str(), linkedKey.getKeyRaw(), AccountState::Normal, AccountType::Mobi);
+
+    if (!account)
+        throw std::runtime_error("Unable to create account.");
+
+    boost::thread t(rescanThread); // thread runs free
+
+    return getUUIDAsString(account->getUUID());
+}
+
 static UniValue getactiveseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -3165,6 +3213,7 @@ static const CRPCCommand commands[] =
     { "accounts",                "getactiveaccount",                &getactiveaccount,               true,    {} },
     { "accounts",                "getreadonlyaccount",              &getreadonlyaccount,             true,    {"account"} },
     { "accounts",                "importreadonlyaccount",           &importreadonlyaccount,          true,    {"name", "encoded_key"} },
+    { "accounts",                "importlinkedaccount",             &importlinkedaccount,            true,    {"name", "encoded_key_uri"} },
     { "accounts",                "listaccounts",                    &listallaccounts,                true,    {"seed", "state"} },
     { "accounts",                "setactiveaccount",                &setactiveaccount,               true,    {"account"} },
     { "accounts",                "getaccountbalances",              &getaccountbalances,             false,   {"min_conf", "include_watchonly"} },
