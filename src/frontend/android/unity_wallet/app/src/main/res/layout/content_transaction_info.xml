@@ -1,104 +1,110 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright (c) 2018 The Gulden developers
-Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), , Willem de Jonge (willem@isnapp.nl)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:orientation="vertical"
-    android:paddingHorizontal="10dp"
-    android:paddingVertical="10dp"
     tools:context=".TransactionInfoActivity"
     tools:showIn="@layout/activity_transaction_info">
 
-
-    <TextView
-        android:id="@+id/transactionId_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
-        android:textSize="18sp"
-        android:text="@string/transaction_id" />
-
-    <TextView
-        android:id="@+id/transactionId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/transaction_details_item_spacing" />
-
-    <TextView
-        android:id="@+id/status_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
-        android:textSize="18sp"
-        android:text="@string/status" />
-
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/transaction_details_item_spacing" />
-
-    <TextView
-        android:id="@+id/amount_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
-        android:textSize="18sp"
-        android:text="@string/amount_label" />
-
-    <TextView
-        android:id="@+id/amount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/transaction_details_item_spacing" />
-
-    <TextView
-        android:id="@+id/from_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
-        android:textSize="18sp"
-        android:text="@string/from_label" />
-
     <LinearLayout
-        android:id="@+id/from_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".TransactionInfoActivity"
+        tools:showIn="@layout/activity_transaction_info">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/transaction_details_item_spacing" />
 
-    <TextView
-        android:id="@+id/to_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
-        android:textSize="18sp"
-        android:text="@string/to_label" />
+        <TextView
+            android:id="@+id/transactionId_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/transaction_id"
+            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textSize="18sp" />
 
-    <LinearLayout
-        android:id="@+id/to_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        <TextView
+            android:id="@+id/transactionId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-</LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/transaction_details_item_spacing" />
+
+        <TextView
+            android:id="@+id/status_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/status"
+            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/transaction_details_item_spacing" />
+
+        <TextView
+            android:id="@+id/amount_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_label"
+            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/transaction_details_item_spacing" />
+
+        <TextView
+            android:id="@+id/from_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/from_label"
+            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/from_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/transaction_details_item_spacing" />
+
+        <TextView
+            android:id="@+id/to_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/to_label"
+            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/to_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+</ScrollView>
