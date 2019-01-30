@@ -12,11 +12,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.unity_wallet.R
-import kotlinx.android.synthetic.main.transaction_list_item.view.*
-import kotlinx.android.synthetic.main.transaction_list_item_with_header.view.*
+import kotlinx.android.synthetic.main.mutation_list_item.view.*
+import kotlinx.android.synthetic.main.mutation_list_item_with_header.view.*
 import java.text.DecimalFormat
 
-class TransactionAdapter(private val context: Context, private val dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
+class MutationAdapter(private val context: Context, private val dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
@@ -45,12 +45,12 @@ class TransactionAdapter(private val context: Context, private val dataSource: A
         var rowView : View
         if (date != prevDate)
         {
-            rowView = inflater.inflate(R.layout.transaction_list_item_with_header, parent, false)
+            rowView = inflater.inflate(R.layout.mutation_list_item_with_header, parent, false)
             rowView.transactionItemHeading.text = date
         }
         else
         {
-            rowView = inflater.inflate(R.layout.transaction_list_item, parent, false)
+            rowView = inflater.inflate(R.layout.mutation_list_item, parent, false)
         }
 
         rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(mutationRecord.timestamp * 1000L))

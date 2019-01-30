@@ -21,7 +21,7 @@ import com.gulden.unity_wallet.main_activity_fragments.ReceiveFragment
 import com.gulden.unity_wallet.main_activity_fragments.SendFragment
 import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentInteractionListener
 import com.gulden.unity_wallet.main_activity_fragments.SettingsFragment
-import com.gulden.unity_wallet.main_activity_fragments.TransactionFragment
+import com.gulden.unity_wallet.main_activity_fragments.MutationFragment
 import com.gulden.uriRecipient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
@@ -40,7 +40,7 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
 }
 
 class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentInteractionListener,
-        ReceiveFragment.OnFragmentInteractionListener, TransactionFragment.OnFragmentInteractionListener,
+        ReceiveFragment.OnFragmentInteractionListener, MutationFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener, CoroutineScope,
         SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -110,7 +110,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
 
     private var sendFragment : SendFragment ?= null
     private var receiveFragment : ReceiveFragment ?= null
-    private var transactionFragment : TransactionFragment ?= null
+    private var transactionFragment : MutationFragment ?= null
     private var settingsFragment : SettingsFragment ?= null
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -129,7 +129,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
             }
             R.id.navigation_transactions -> {
                 if (transactionFragment == null)
-                    transactionFragment = TransactionFragment()
+                    transactionFragment = MutationFragment()
                 replaceFragment(transactionFragment!!, R.id.mainLayout)
                 return@OnNavigationItemSelectedListener true
             }

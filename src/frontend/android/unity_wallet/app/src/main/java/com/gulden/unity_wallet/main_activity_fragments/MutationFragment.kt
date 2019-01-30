@@ -13,33 +13,32 @@ import android.view.View
 import android.view.ViewGroup
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.ui.TransactionAdapter
-import kotlinx.android.synthetic.main.fragment_transaction.*
+import com.gulden.unity_wallet.ui.MutationAdapter
+import kotlinx.android.synthetic.main.fragment_mutation.*
 import android.content.Intent
 import com.gulden.jniunifiedbackend.MutationRecord
-import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.TransactionInfoActivity
 
 
-class TransactionFragment : androidx.fragment.app.Fragment() {
+class MutationFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        return inflater.inflate(R.layout.fragment_transaction, container, false)
+        return inflater.inflate(R.layout.fragment_mutation, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)
     {
         super.onActivityCreated(savedInstanceState)
 
-        transactionList?.emptyView = emptyTransactionListView
+        mutationList?.emptyView = emptyMutationListView
 
         val mutations = GuldenUnifiedBackend.getMutationHistory()
 
-        val adapter = TransactionAdapter(this.context!!, mutations)
-        transactionList.adapter = adapter
+        val adapter = MutationAdapter(this.context!!, mutations)
+        mutationList.adapter = adapter
 
-        transactionList.setOnItemClickListener { parent, _, position, _ ->
+        mutationList.setOnItemClickListener { parent, _, position, _ ->
             val mutation = parent.adapter.getItem(position) as MutationRecord
             val intent = Intent(this.context, TransactionInfoActivity::class.java)
             intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.txHash)

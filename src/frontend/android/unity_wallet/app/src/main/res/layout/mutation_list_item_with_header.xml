@@ -24,7 +24,7 @@ file COPYING
         android:textColor="@android:color/black" />
 
     <include
-        layout="@layout/transaction_list_item"
+        layout="@layout/mutation_list_item"
         android:layout_width="match_parent"
         android:layout_height="60dp" />
 </LinearLayout>
