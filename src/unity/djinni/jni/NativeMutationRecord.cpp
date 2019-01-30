@@ -3,7 +3,6 @@
 
 #include "NativeMutationRecord.hpp"  // my header
 #include "Marshal.hpp"
-#include "NativeTransactionRecord.hpp"
 
 namespace djinni_generated {
 
@@ -15,17 +14,19 @@ auto NativeMutationRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni
     const auto& data = ::djinni::JniClass<NativeMutationRecord>::get();
     auto r = ::djinni::LocalRef<JniType>{jniEnv->NewObject(data.clazz.get(), data.jconstructor,
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.change)),
-                                                           ::djinni::get(::djinni_generated::NativeTransactionRecord::fromCpp(jniEnv, c.tx)))};
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.timestamp)),
+                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.txHash)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
 
 auto NativeMutationRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 3);
+    ::djinni::JniLocalScope jscope(jniEnv, 4);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeMutationRecord>::get();
     return {::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mChange)),
-            ::djinni_generated::NativeTransactionRecord::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mTx))};
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mTimestamp)),
+            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mTxHash))};
 }
 
 }  // namespace djinni_generated

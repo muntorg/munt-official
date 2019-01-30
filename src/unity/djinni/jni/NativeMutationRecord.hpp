@@ -25,9 +25,10 @@ private:
     friend ::djinni::JniClass<NativeMutationRecord>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/MutationRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JLcom/gulden/jniunifiedbackend/TransactionRecord;)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JJLjava/lang/String;)V") };
     const jfieldID field_mChange { ::djinni::jniGetFieldID(clazz.get(), "mChange", "J") };
-    const jfieldID field_mTx { ::djinni::jniGetFieldID(clazz.get(), "mTx", "Lcom/gulden/jniunifiedbackend/TransactionRecord;") };
+    const jfieldID field_mTimestamp { ::djinni::jniGetFieldID(clazz.get(), "mTimestamp", "J") };
+    const jfieldID field_mTxHash { ::djinni::jniGetFieldID(clazz.get(), "mTxHash", "Ljava/lang/String;") };
 };
 
 }  // namespace djinni_generated

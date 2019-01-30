@@ -508,6 +508,22 @@ std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
     return ret;
 }
 
+TransactionRecord GuldenUnifiedBackend::getTransaction(const std::string & txHash)
+{
+    if (!pactiveWallet)
+        throw std::runtime_error(strprintf("No active wallet to query tx hash [%s]", txHash));
+
+    uint256 hash = uint256S(txHash);
+
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    if (pactiveWallet->mapWallet.find(hash) == pactiveWallet->mapWallet.end())
+        throw std::runtime_error(strprintf("No transaction found for hash [%s]", txHash));
+
+    const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
+    return calculateTransactionRecordForWalletTransaction(wtx);
+}
+
 std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
 {
     std::vector<MutationRecord> ret;
@@ -529,6 +545,9 @@ std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
         int64_t substracted = wtx->GetDebit(ISMINE_SPENDABLE);
         int64_t added = wtx->GetCredit(ISMINE_SPENDABLE);
 
+        uint64_t time = wtx->nTimeSmart;
+        std::string hash = wtx->GetHash().ToString();
+
         // if any funds were substracted the transaction was sent by us
         if (substracted > 0) {
             int64_t fee = substracted - wtx->tx->GetValueOut();
@@ -538,16 +557,16 @@ std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
             if (substracted - fee == added)
             {
                 // amount received
-                ret.push_back(MutationRecord(added - change, calculateTransactionRecordForWalletTransaction(*wtx)));
+                ret.push_back(MutationRecord(added - change, time, hash));
 
                 // amount send including fee
-                ret.push_back(MutationRecord(change - substracted, calculateTransactionRecordForWalletTransaction(*wtx)));
+                ret.push_back(MutationRecord(change - substracted, time, hash));
             }
             else
-                ret.push_back(MutationRecord(added - substracted, calculateTransactionRecordForWalletTransaction(*wtx)));
+                ret.push_back(MutationRecord(added - substracted, time, hash));
         }
         else // nothing substracted so we received funds
-            ret.push_back(MutationRecord(added, calculateTransactionRecordForWalletTransaction(*wtx)));
+            ret.push_back(MutationRecord(added, time, hash));
     }
 
     return ret;

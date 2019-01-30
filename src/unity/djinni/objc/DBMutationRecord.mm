@@ -7,25 +7,29 @@
 @implementation DBMutationRecord
 
 - (nonnull instancetype)initWithChange:(int64_t)change
-                                    tx:(nonnull DBTransactionRecord *)tx
+                             timestamp:(int64_t)timestamp
+                                txHash:(nonnull NSString *)txHash
 {
     if (self = [super init]) {
         _change = change;
-        _tx = tx;
+        _timestamp = timestamp;
+        _txHash = [txHash copy];
     }
     return self;
 }
 
 + (nonnull instancetype)mutationRecordWithChange:(int64_t)change
-                                              tx:(nonnull DBTransactionRecord *)tx
+                                       timestamp:(int64_t)timestamp
+                                          txHash:(nonnull NSString *)txHash
 {
     return [[self alloc] initWithChange:change
-                                     tx:tx];
+                              timestamp:timestamp
+                                 txHash:txHash];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p change:%@ tx:%@>", self.class, (void *)self, @(self.change), self.tx];
+    return [NSString stringWithFormat:@"<%@ %p change:%@ timestamp:%@ txHash:%@>", self.class, (void *)self, @(self.change), @(self.timestamp), self.txHash];
 }
 
 @end

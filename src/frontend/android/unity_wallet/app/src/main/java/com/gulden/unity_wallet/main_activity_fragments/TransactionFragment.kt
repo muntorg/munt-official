@@ -42,7 +42,7 @@ class TransactionFragment : androidx.fragment.app.Fragment() {
         transactionList.setOnItemClickListener { parent, _, position, _ ->
             val mutation = parent.adapter.getItem(position) as MutationRecord
             val intent = Intent(this.context, TransactionInfoActivity::class.java)
-            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.tx)
+            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.txHash)
             startActivity(intent)
         }
     }

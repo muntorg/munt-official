@@ -143,5 +143,6 @@ file COPYING
     <string name="tx_status_unconfirmed">Unconfirmed</string>
     <string name="tx_status_confirmed">Confirmed in block #%d at %s</string>
     <string name="tx_status_unknown">Unknown (you found a bug)</string>
+    <string name="no_tx_details">No transaction details for [%s]</string>
 
 </resources>

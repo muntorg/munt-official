@@ -65,6 +65,12 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Get list of all transactions wallet has been involved in */
 + (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory;
 
+/**
+ * Get the wallet transaction for the hash
+ * Will throw if not found
+ */
++ (nonnull DBTransactionRecord *)getTransaction:(nonnull NSString *)txHash;
+
 /** Get list of wallet mutations */
 + (nonnull NSArray<DBMutationRecord *> *)getMutationHistory;
 

@@ -8,28 +8,37 @@ public final class MutationRecord {
 
     /*package*/ final long mChange;
 
-    /*package*/ final TransactionRecord mTx;
+    /*package*/ final long mTimestamp;
+
+    /*package*/ final String mTxHash;
 
     public MutationRecord(
             long change,
-            TransactionRecord tx) {
+            long timestamp,
+            String txHash) {
         this.mChange = change;
-        this.mTx = tx;
+        this.mTimestamp = timestamp;
+        this.mTxHash = txHash;
     }
 
     public long getChange() {
         return mChange;
     }
 
-    public TransactionRecord getTx() {
-        return mTx;
+    public long getTimestamp() {
+        return mTimestamp;
+    }
+
+    public String getTxHash() {
+        return mTxHash;
     }
 
     @Override
     public String toString() {
         return "MutationRecord{" +
                 "mChange=" + mChange +
-                "," + "mTx=" + mTx +
+                "," + "mTimestamp=" + mTimestamp +
+                "," + "mTxHash=" + mTxHash +
         "}";
     }
 

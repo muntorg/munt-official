@@ -34,11 +34,11 @@ class TransactionAdapter(private val context: Context, private val dataSource: A
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val mutationRecord = getItem(position) as MutationRecord
-        var date = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(mutationRecord.tx.timestamp * 1000L))
+        var date = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(mutationRecord.timestamp * 1000L))
         var prevDate = ""
         if (position != 0) {
             val prevMutationRecord = getItem(position-1) as MutationRecord
-            prevDate = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(prevMutationRecord.tx.timestamp * 1000L))
+            prevDate = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(prevMutationRecord.timestamp * 1000L))
         }
 
 
@@ -53,7 +53,7 @@ class TransactionAdapter(private val context: Context, private val dataSource: A
             rowView = inflater.inflate(R.layout.transaction_list_item, parent, false)
         }
 
-        rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(mutationRecord.tx.timestamp * 1000L))
+        rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(mutationRecord.timestamp * 1000L))
         rowView.textViewAmount.text = "  " + (DecimalFormat("+#,##0.00;-#").format(mutationRecord.change.toDouble() / 100000000))
         return rowView
     }

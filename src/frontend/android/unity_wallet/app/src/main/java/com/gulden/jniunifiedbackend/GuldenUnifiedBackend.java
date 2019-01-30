@@ -95,6 +95,15 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.getTransactionHistory();
     }
 
+    /**
+     * Get the wallet transaction for the hash
+     * Will throw if not found
+     */
+    public static TransactionRecord getTransaction(String txHash)
+    {
+        return CppProxy.getTransaction(txHash);
+    }
+
     /** Get list of wallet mutations */
     public static ArrayList<MutationRecord> getMutationHistory()
     {
@@ -211,6 +220,8 @@ public abstract class GuldenUnifiedBackend {
         public static native void performPaymentToRecipient(UriRecipient request);
 
         public static native ArrayList<TransactionRecord> getTransactionHistory();
+
+        public static native TransactionRecord getTransaction(String txHash);
 
         public static native ArrayList<MutationRecord> getMutationHistory();
 

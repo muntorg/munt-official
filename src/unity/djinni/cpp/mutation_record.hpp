@@ -3,17 +3,20 @@
 
 #pragma once
 
-#include "transaction_record.hpp"
 #include <cstdint>
+#include <string>
 #include <utility>
 
 struct MutationRecord final {
     int64_t change;
-    TransactionRecord tx;
+    int64_t timestamp;
+    std::string txHash;
 
     MutationRecord(int64_t change_,
-                   TransactionRecord tx_)
+                   int64_t timestamp_,
+                   std::string txHash_)
     : change(std::move(change_))
-    , tx(std::move(tx_))
+    , timestamp(std::move(timestamp_))
+    , txHash(std::move(txHash_))
     {}
 };
