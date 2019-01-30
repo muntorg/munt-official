@@ -1336,23 +1336,21 @@ void CWallet::BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) {
 
 bool CWallet::IsChange(const CTxOut& txout) const
 {
-    // TODO: fix handling of 'change' outputs. The assumption is that any
-    // payment to a script that is ours, but is not in the address book
-    // is change. That assumption is likely to break when we implement multisignature
-    // wallets that return change back into a multi-signature-protected address;
-    // a better way of identifying which outputs are 'the send' and which are
-    // 'the change' will need to be implemented (maybe extend CWalletTx to remember
-    // which output, if any, was change).
+    LOCK(cs_wallet);
+
     if (::IsMine(*this, txout))
     {
         CTxDestination address;
         if (!ExtractDestination(txout, address))
             return true;
 
-        LOCK(cs_wallet);
-        if (!mapAddressBook.count(CGuldenAddress(address).ToString()))
-            return true;
+        for (const auto& accountItem : mapAccounts)
+        {
+            if (::IsMine(accountItem.second->internalKeyStore, address) > ISMINE_NO)
+                return true;
+        }
     }
+
     return false;
 }
 

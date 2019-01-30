@@ -478,6 +478,8 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeGuldenUnifiedFrontend.cpp \
   unity/djinni/jni/NativeMonitorRecord.cpp \
   unity/djinni/jni/NativeMonitorRecord.hpp \
+  unity/djinni/jni/NativeMutationRecord.cpp \
+  unity/djinni/jni/NativeMutationRecord.hpp \
   unity/djinni/jni/NativePeerRecord.hpp \
   unity/djinni/jni/NativePeerRecord.cpp \
   unity/djinni/jni/NativeQrcodeRecord.hpp \
@@ -528,6 +530,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/gulden_unified_frontend.hpp \
   unity/djinni/cpp/gulden_monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
+  unity/djinni/cpp/mutation_record.hpp \
   unity/djinni/cpp/peer_record.hpp \
   unity/djinni/cpp/qrcode_record.hpp \
   unity/djinni/cpp/transaction_record.hpp \
@@ -561,6 +564,10 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBGuldenMonitorListener.h \
   unity/djinni/objc/DBMonitorRecord+Private.h \
   unity/djinni/objc/DBMonitorRecord+Private.mm \
+  unity/djinni/objc/DBMutationRecord+Private.h \
+  unity/djinni/objc/DBMutationRecord+Private.mm \
+  unity/djinni/objc/DBMutationRecord.h \
+  unity/djinni/objc/DBMutationRecord.mm \
   unity/djinni/objc/DBMonitorRecord.h \
   unity/djinni/objc/DBMonitorRecord.mm \
   unity/djinni/objc/DBOutputRecord+Private.h \

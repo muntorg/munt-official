@@ -8,6 +8,7 @@
 #include "NativeGuldenMonitorListener.hpp"
 #include "NativeGuldenUnifiedFrontend.hpp"
 #include "NativeMonitorRecord.hpp"
+#include "NativeMutationRecord.hpp"
 #include "NativePeerRecord.hpp"
 #include "NativeQrcodeRecord.hpp"
 #include "NativeTransactionRecord.hpp"
@@ -143,6 +144,15 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacken
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::GuldenUnifiedBackend::getTransactionHistory();
         return ::djinni::release(::djinni::List<::djinni_generated::NativeTransactionRecord>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_getMutationHistory(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::getMutationHistory();
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeMutationRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
