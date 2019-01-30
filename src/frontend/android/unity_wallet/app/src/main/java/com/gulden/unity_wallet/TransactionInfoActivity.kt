@@ -10,16 +10,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.gulden.jniunifiedbackend.GuldenMonitorListener
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionStatus
 import kotlinx.android.synthetic.main.activity_transaction_info.*
 import kotlinx.android.synthetic.main.content_transaction_info.*
+import kotlinx.android.synthetic.main.processing_fragment.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.jetbrains.anko.support.v4.runOnUiThread
 import java.text.DecimalFormat
 import kotlin.coroutines.CoroutineContext
 
@@ -46,16 +49,7 @@ class TransactionInfoActivity : AppCompatActivity(), CoroutineScope {
             }
 
             // status
-            status.text = when (tx.status) {
-                TransactionStatus.ABANDONED -> getString(R.string.tx_status_abandoned)
-                TransactionStatus.CONFLICTED -> getString(R.string.tx_status_conflicted)
-                TransactionStatus.CONFIRMING -> getString(R.string.tx_status_confirming)
-                        .format(tx.depth, Constants.RECOMMENDED_CONFIRMATIONS)
-                TransactionStatus.UNCONFIRMED -> getString(R.string.tx_status_unconfirmed)
-                TransactionStatus.CONFIRMED -> getString(R.string.tx_status_confirmed)
-                        .format(tx.height, java.text.SimpleDateFormat("HH:mm").format(java.util.Date(tx.blocktime * 1000L)))
-                else -> getString(R.string.tx_status_unknown)
-            }
+            status.text = statusText(tx)
 
             // Amount instantly and update with rate conversion
             amount.text = formatAmount(tx.amount, 0.0)
@@ -102,9 +96,54 @@ class TransactionInfoActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    private fun statusText(tx: TransactionRecord): String {
+        return when (tx.status) {
+            TransactionStatus.ABANDONED -> getString(R.string.tx_status_abandoned)
+            TransactionStatus.CONFLICTED -> getString(R.string.tx_status_conflicted)
+            TransactionStatus.CONFIRMING -> getString(R.string.tx_status_confirming)
+                    .format(tx.depth, Constants.RECOMMENDED_CONFIRMATIONS)
+            TransactionStatus.UNCONFIRMED -> getString(R.string.tx_status_unconfirmed)
+            TransactionStatus.CONFIRMED -> getString(R.string.tx_status_confirmed)
+                    .format(tx.height, java.text.SimpleDateFormat("HH:mm").format(java.util.Date(tx.blocktime * 1000L)))
+            else -> getString(R.string.tx_status_unknown)
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        GuldenUnifiedBackend.RegisterMonitorListener(monitoringListener)
+    }
+
+    override fun onPause() {
+        GuldenUnifiedBackend.UnregisterMonitorListener(monitoringListener)
+
+        super.onPause()
+    }
+
+    private val monitoringListener = object: GuldenMonitorListener() {
+        override fun onPruned(height: Int) {}
+
+        override fun onProcessedSPVBlocks(height: Int) {}
+
+        override fun onPartialChain(height: Int, probableHeight: Int, offset: Int) {
+            runOnUiThread {
+                val txHash = intent.getStringExtra(EXTRA_TRANSACTION)
+                try {
+                    val tx = GuldenUnifiedBackend.getTransaction(txHash)
+                    status.text = statusText(tx)
+                }
+                catch (e: Throwable)
+                {
+                    // silently ignore
+                }
+            }
+        }
     }
 
     companion object {
