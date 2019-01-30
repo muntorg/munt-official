@@ -6,10 +6,12 @@
 package com.gulden.unity_wallet
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
@@ -71,19 +73,15 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
         startActivityForResult(intent, REQUEST_CODE_SCAN)
     }
 
-    /*fun showMainWallet()
+    fun showMainWallet()
     {
-        // Save new wallet/settings etc.
-        //((WalletApplication) getApplication()).afterLoadWallet(this);
-
         // Proceed to main activity
         val intent = Intent(this, WalletActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
 
         finish()
-    }*/
-
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
@@ -103,7 +101,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
                     }
                     else
                     {
-                        //TODO: Display error to user...
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
                     }
                 }
             }
@@ -121,11 +119,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady(): Boolean {
-        // Proceed to main activity
-        val intent = Intent(this, WalletActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-        finish()
+        showMainWallet()
         return true
     }
 
