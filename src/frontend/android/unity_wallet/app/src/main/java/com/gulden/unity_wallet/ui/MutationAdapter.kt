@@ -16,8 +16,13 @@ import kotlinx.android.synthetic.main.mutation_list_item.view.*
 import kotlinx.android.synthetic.main.mutation_list_item_with_header.view.*
 import java.text.DecimalFormat
 
-class MutationAdapter(private val context: Context, private val dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
+class MutationAdapter(private val context: Context, private var dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+    fun updateDataSource(newDataSource: ArrayList<MutationRecord>) {
+        dataSource = newDataSource
+        notifyDataSetChanged()
+    }
 
     override fun getCount(): Int {
         return dataSource.size

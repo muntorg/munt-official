@@ -16,13 +16,11 @@ import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionStatus
 import kotlinx.android.synthetic.main.activity_transaction_info.*
 import kotlinx.android.synthetic.main.content_transaction_info.*
-import kotlinx.android.synthetic.main.processing_fragment.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onClick
-import org.jetbrains.anko.support.v4.runOnUiThread
 import java.text.DecimalFormat
 import kotlin.coroutines.CoroutineContext
 

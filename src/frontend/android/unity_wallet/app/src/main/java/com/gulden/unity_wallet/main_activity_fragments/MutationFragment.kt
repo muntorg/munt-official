@@ -17,10 +17,13 @@ import com.gulden.unity_wallet.ui.MutationAdapter
 import kotlinx.android.synthetic.main.fragment_mutation.*
 import android.content.Intent
 import com.gulden.jniunifiedbackend.MutationRecord
+import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.TransactionInfoActivity
+import com.gulden.unity_wallet.UnityCore
+import org.jetbrains.anko.support.v4.runOnUiThread
 
 
-class MutationFragment : androidx.fragment.app.Fragment() {
+class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -48,6 +51,8 @@ class MutationFragment : androidx.fragment.app.Fragment() {
 
     override fun onAttach(context: Context)
     {
+        UnityCore.instance.addObserver(this)
+
         super.onAttach(context)
         if (context is OnFragmentInteractionListener)
         {
@@ -60,8 +65,19 @@ class MutationFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onDetach() {
+        UnityCore.instance.removeObserver(this)
+
         super.onDetach()
         listener = null
+    }
+
+    override fun incomingTransaction(transaction: TransactionRecord): Boolean {
+        val mutations = GuldenUnifiedBackend.getMutationHistory()
+        runOnUiThread {
+            val adapter = mutationList.adapter as MutationAdapter
+            adapter.updateDataSource(mutations)
+        }
+        return true
     }
 
     private var listener: OnFragmentInteractionListener? = null
