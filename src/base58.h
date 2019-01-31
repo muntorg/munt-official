@@ -234,6 +234,11 @@ public:
         return *this;
     }
 
+    std::string getPayAccount()
+    {
+        return payAccount;
+    }
+
     bool fromURIString(std::string uri)
     {
         if (!boost::starts_with(uri, "guldensync:"))
@@ -243,7 +248,6 @@ public:
         std::vector<unsigned char> vchSecretKey;
         std::vector<unsigned char> vchSecretCode;
         std::vector<unsigned char> vchCreationTime;
-        std::string payAccount;
 
         std::vector<std::string> vStrInputParts;
         boost::split(vStrInputParts, uri, boost::is_any_of("-"));
