@@ -93,6 +93,8 @@ gulden_unified_backend = interface +c {
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletLinkedFromURI(linked_uri : string): bool;
 
+    # Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet.
+    static ReplaceWalletLinkedFromURI(linked_uri : string): bool;
     # Check link URI for validity
     static IsValidLinkURI(phrase: string): bool;
 
