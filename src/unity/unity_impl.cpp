@@ -371,6 +371,9 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         walletdb.WritePrimaryAccount(pactiveWallet->activeAccount);
     }
 
+    // Allow update of balance for deleted accounts/transactions
+    notifyBalanceChanged(pactiveWallet);
+
     // Rescan for transactions on the linked account
     DoRescan();
 
