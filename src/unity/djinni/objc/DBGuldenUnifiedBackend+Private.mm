@@ -8,6 +8,7 @@
 #import "DBGuldenMonitorListener+Private.h"
 #import "DBGuldenUnifiedFrontend+Private.h"
 #import "DBMonitorRecord+Private.h"
+#import "DBMutationRecord+Private.h"
 #import "DBPeerRecord+Private.h"
 #import "DBQrcodeRecord+Private.h"
 #import "DBTransactionRecord+Private.h"
@@ -145,6 +146,20 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::getTransactionHistory();
         return ::djinni::List<::djinni_generated::TransactionRecord>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull DBTransactionRecord *)getTransaction:(nonnull NSString *)txHash {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::getTransaction(::djinni::String::toCpp(txHash));
+        return ::djinni_generated::TransactionRecord::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSArray<DBMutationRecord *> *)getMutationHistory {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::getMutationHistory();
+        return ::djinni::List<::djinni_generated::MutationRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

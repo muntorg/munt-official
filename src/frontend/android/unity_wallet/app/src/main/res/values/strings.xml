@@ -143,6 +143,7 @@ file COPYING
     <string name="tx_status_unconfirmed">Unconfirmed</string>
     <string name="tx_status_confirmed">Confirmed in block #%d at %s</string>
     <string name="tx_status_unknown">Unknown (you found a bug)</string>
+    <string name="no_tx_details">No transaction details for [%s]</string>
     <string name="no_guldensync_warning_title">Invalid QR code</string>
     <string name="button_ok">ok</string>
     <string name="no_guldensync_warning">This QR code does not contain a valid Gulden sync code, please try again with a valid code.</string>

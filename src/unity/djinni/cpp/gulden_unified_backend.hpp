@@ -13,6 +13,7 @@ class GuldenUnifiedFrontend;
 struct AddressRecord;
 struct BlockinfoRecord;
 struct MonitorRecord;
+struct MutationRecord;
 struct PeerRecord;
 struct QrcodeRecord;
 struct TransactionRecord;
@@ -74,6 +75,15 @@ public:
 
     /** Get list of all transactions wallet has been involved in */
     static std::vector<TransactionRecord> getTransactionHistory();
+
+    /**
+     * Get the wallet transaction for the hash
+     * Will throw if not found
+     */
+    static TransactionRecord getTransaction(const std::string & txHash);
+
+    /** Get list of wallet mutations */
+    static std::vector<MutationRecord> getMutationHistory();
 
     /** Get list of all address book entries */
     static std::vector<AddressRecord> getAddressBookRecords();

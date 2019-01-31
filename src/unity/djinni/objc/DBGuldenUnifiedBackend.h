@@ -4,6 +4,7 @@
 #import "DBAddressRecord.h"
 #import "DBBlockinfoRecord.h"
 #import "DBMonitorRecord.h"
+#import "DBMutationRecord.h"
 #import "DBPeerRecord.h"
 #import "DBQrcodeRecord.h"
 #import "DBTransactionRecord.h"
@@ -69,6 +70,15 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 
 /** Get list of all transactions wallet has been involved in */
 + (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory;
+
+/**
+ * Get the wallet transaction for the hash
+ * Will throw if not found
+ */
++ (nonnull DBTransactionRecord *)getTransaction:(nonnull NSString *)txHash;
+
+/** Get list of wallet mutations */
++ (nonnull NSArray<DBMutationRecord *> *)getMutationHistory;
 
 /** Get list of all address book entries */
 + (nonnull NSArray<DBAddressRecord *> *)getAddressBookRecords;

@@ -9,10 +9,10 @@ file COPYING
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main_activity_fragments.TransactionFragment">
+    tools:context=".main_activity_fragments.MutationFragment">
 
     <ListView
-        android:id="@+id/transactionList"
+        android:id="@+id/mutationList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
@@ -20,7 +20,7 @@ file COPYING
         />
 
     <LinearLayout
-        android:id="@+id/emptyTransactionListView"
+        android:id="@+id/emptyMutationListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"

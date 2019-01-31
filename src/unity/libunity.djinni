@@ -34,6 +34,12 @@ uri_recipient = record {
     amount : string;
 } deriving(parcelable)
 
+mutation_record = record {
+    change : i64;
+    timestamp : i64;
+    txHash : string;
+}
+
 transaction_record = record {
     txHash: string;
     timestamp : i64;
@@ -128,6 +134,13 @@ gulden_unified_backend = interface +c {
 
     # Get list of all transactions wallet has been involved in
     static getTransactionHistory() : list<transaction_record>;
+
+    # Get the wallet transaction for the hash
+    # Will throw if not found
+    static getTransaction(txHash : string) :  transaction_record;
+
+    # Get list of wallet mutations
+    static getMutationHistory() : list<mutation_record>;
 
     # Get list of all address book entries
     static getAddressBookRecords() : list<address_record>;
