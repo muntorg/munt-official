@@ -1769,6 +1769,7 @@ static UniValue createseed(const JSONRPCRequest& request)
     return getUUIDAsString(newSeed->getUUID());
 }
 
+//fixme: (2.2) - Add a purge option to purge accounts when calling this.
 static UniValue deleteseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET

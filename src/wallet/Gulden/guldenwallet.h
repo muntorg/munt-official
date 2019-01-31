@@ -276,7 +276,7 @@ public:
     CAccount* getActiveAccount();
     void setActiveSeed(CHDSeed* newActiveSeed);
     CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
-    void DeleteSeed(CHDSeed* deleteSeed, bool purge);
+    void DeleteSeed(CHDSeed* deleteSeed, bool shouldPurgeAccounts);
     CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
     CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
     CHDSeed* getActiveSeed();
