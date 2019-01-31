@@ -1769,7 +1769,7 @@ static UniValue createseed(const JSONRPCRequest& request)
     return getUUIDAsString(newSeed->getUUID());
 }
 
-//fixme: (2.2) - Add a purge option to purge accounts when calling this.
+
 static UniValue deleteseed(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -1782,17 +1782,17 @@ static UniValue deleteseed(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 1)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
-            "deleteseed \"seed\" \n"
+            "deleteseed \"seed\" should_purge_accounts \n" 
             "\nDelete a HD seed.\n"
-            "1. \"seed\"        (string, required) The unique UUID for the seed that we want mnemonics of, or \"\" for the active seed.\n"
+            "1. \"seed\"                (string, required) The unique UUID for the seed that we want mnemonics of, or \"\" for the active seed.\n"
+            "2. should_purge_accounts     (boolean, optional, default=false) Permanently purge from the wallet, all accounts associated with the seed, as opposed to simply marking them as deleted which places them in a hidden but still accessible state."
             "\nResult:\n"
             "\ntrue on success.\n"
             "\nExamples:\n"
             + HelpExampleCli("deleteseed \"827f0000-0300-0000-0000-000000000000\"", "")
             + HelpExampleRpc("deleteseed \"827f0000-0300-0000-0000-000000000000\"", ""));
-
 
 
     if (!pwallet)
@@ -1802,7 +1802,11 @@ static UniValue deleteseed(const JSONRPCRequest& request)
 
     EnsureWalletIsUnlocked(pwallet);
 
-    pwallet->DeleteSeed(seed, false);
+    bool shouldPurgeAccounts = false;
+    if (request.params.size() > 1)
+        shouldPurgeAccounts = request.params[1].get_bool();
+
+    pwallet->DeleteSeed(seed, shouldPurgeAccounts);
 
     return true;
 }
@@ -3220,7 +3224,7 @@ static const CRPCCommand commands[] =
     { "accounts",                "getaccountbalances",              &getaccountbalances,             false,   {"min_conf", "include_watchonly"} },
 
     { "mnemonics",               "createseed",                      &createseed,                     true,    {"type"} },
-    { "mnemonics",               "deleteseed",                      &deleteseed,                     true,    {"seed"} },
+    { "mnemonics",               "deleteseed",                      &deleteseed,                     true,    {"seed", "should_purge_accounts"} },
     { "mnemonics",               "getactiveseed",                   &getactiveseed,                  true,    {} },
     { "mnemonics",               "getmnemonicfromseed",             &getmnemonicfromseed,            true,    {"seed"} },
     { "mnemonics",               "getreadonlyseed",                 &getreadonlyseed,                true,    {"seed"} },
