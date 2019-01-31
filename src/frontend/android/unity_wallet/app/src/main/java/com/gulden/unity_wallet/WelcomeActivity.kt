@@ -70,7 +70,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
     fun onSyncWithDesktop(view: View)
     {
         val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
-        startActivityForResult(intent, REQUEST_CODE_SCAN)
+        startActivityForResult(intent, REQUEST_CODE_SCAN_FOR_LINK)
     }
 
     fun showMainWallet()
@@ -85,7 +85,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
-        if (requestCode == REQUEST_CODE_SCAN)
+        if (requestCode == REQUEST_CODE_SCAN_FOR_LINK)
         {
             if (resultCode == CommonStatusCodes.SUCCESS)
             {
@@ -93,7 +93,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
                 {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
 
-                    if (!GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue))
+                    if (GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue))
                     {
                         // no need to do anything here, there will be a coreReady event soon
                         // possibly put a progress spinner or some other user feedback if
@@ -125,6 +125,6 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
 
     companion object
     {
-        private val REQUEST_CODE_SCAN = 0
+        private val REQUEST_CODE_SCAN_FOR_LINK = 0
     }
 }

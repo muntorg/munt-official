@@ -6,12 +6,18 @@
 package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.vision.barcode.Barcode
+import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.WelcomeActivity
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 
 
@@ -32,7 +38,8 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             }
             "preference_link_wallet" ->
             {
-                //TODO: Implement
+                val intent = Intent(context, BarcodeCaptureActivity::class.java)
+                startActivityForResult(intent, SettingsFragment.REQUEST_CODE_SCAN_FOR_LINK)
             }
             "preference_change_passcode" ->
             {
@@ -50,10 +57,6 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             {
                 //TODO: Implement
             }
-            "preference_notify_transaction_activity" ->
-            {
-                //TODO: Implement
-            }
             "preference_monitor" ->
             {
                 val intent = Intent(context, NetworkMonitorActivity::class.java)
@@ -61,6 +64,35 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             }
         }
         return super.onPreferenceTreeClick(preference)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        if (requestCode == SettingsFragment.REQUEST_CODE_SCAN_FOR_LINK)
+        {
+            if (resultCode == CommonStatusCodes.SUCCESS)
+            {
+                if (data != null)
+                {
+                    val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
+
+                    if (!GuldenUnifiedBackend.IsValidLinkURI(barcode.displayValue))
+                    {
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                    }
+
+                    if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(barcode.displayValue))
+                    {
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                    }
+                }
+            }
+        }
+        else
+        {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
 
@@ -87,5 +119,10 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     interface OnFragmentInteractionListener
     {
         fun onFragmentInteraction(uri: Uri)
+    }
+
+    companion object
+    {
+        private val REQUEST_CODE_SCAN_FOR_LINK = 0
     }
 }
