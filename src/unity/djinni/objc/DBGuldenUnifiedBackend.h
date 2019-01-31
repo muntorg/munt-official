@@ -30,6 +30,12 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri;
 
+/** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
++ (BOOL)ReplaceWalletLinkedFromURI:(nonnull NSString *)linkedUri;
+
+/** Check link URI for validity */
++ (BOOL)IsValidLinkURI:(nonnull NSString *)phrase;
+
 /**
  * Check recovery phrase for (syntactic) validity
  * Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum

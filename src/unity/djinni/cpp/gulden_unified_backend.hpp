@@ -36,6 +36,12 @@ public:
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletLinkedFromURI(const std::string & linked_uri);
 
+    /** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
+    static bool ReplaceWalletLinkedFromURI(const std::string & linked_uri);
+
+    /** Check link URI for validity */
+    static bool IsValidLinkURI(const std::string & phrase);
+
     /**
      * Check recovery phrase for (syntactic) validity
      * Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum

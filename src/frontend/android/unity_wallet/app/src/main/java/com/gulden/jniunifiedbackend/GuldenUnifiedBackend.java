@@ -31,6 +31,18 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.InitWalletLinkedFromURI(linkedUri);
     }
 
+    /** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
+    public static boolean ReplaceWalletLinkedFromURI(String linkedUri)
+    {
+        return CppProxy.ReplaceWalletLinkedFromURI(linkedUri);
+    }
+
+    /** Check link URI for validity */
+    public static boolean IsValidLinkURI(String phrase)
+    {
+        return CppProxy.IsValidLinkURI(phrase);
+    }
+
     /**
      * Check recovery phrase for (syntactic) validity
      * Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
@@ -185,6 +197,10 @@ public abstract class GuldenUnifiedBackend {
         public static native boolean InitWalletFromRecoveryPhrase(String phrase);
 
         public static native boolean InitWalletLinkedFromURI(String linkedUri);
+
+        public static native boolean ReplaceWalletLinkedFromURI(String linkedUri);
+
+        public static native boolean IsValidLinkURI(String phrase);
 
         public static native boolean IsValidRecoveryPhrase(String phrase);
 
