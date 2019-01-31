@@ -1368,6 +1368,11 @@ bool CWalletDB::WritePrimarySeed(const CHDSeed& seed)
     return WriteIC(std::string("primaryseed"), getUUIDAsString(seed.getUUID()));
 }
 
+bool CWalletDB::ErasePrimarySeed()
+{
+    return EraseIC(std::string("primaryseed"));
+}
+
 bool CWalletDB::WritePrimaryAccount(const CAccount* account)
 {
     return WriteIC(std::string("primaryaccount"), getUUIDAsString(account->getUUID()));

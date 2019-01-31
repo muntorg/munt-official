@@ -211,6 +211,7 @@ public:
     bool WriteHDSeed(const CHDSeed& seed);
     bool DeleteHDSeed(const CHDSeed& seed);
     bool WritePrimarySeed(const CHDSeed& seed);
+    bool ErasePrimarySeed();
     bool WritePrimaryAccount(const CAccount* account);
 
     /// Write destination data key,value tuple to database

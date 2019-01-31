@@ -610,7 +610,10 @@ void CGuldenWallet::setActiveSeed(CHDSeed* newActiveSeed)
     {
         activeSeed = newActiveSeed;
         CWalletDB walletdb(*dbw);
-        walletdb.WritePrimarySeed(*activeSeed);
+        if (activeSeed)
+            walletdb.WritePrimarySeed(*activeSeed);
+        else
+            walletdb.ErasePrimarySeed();
 
         //fixme: (Post-2.1)
         //NotifyActiveSeedChanged(this, newActiveAccount);
