@@ -285,6 +285,16 @@ bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri
     return true;
 }
 
+
+bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
+{
+    CGuldenSecretExt<CExtKey> linkedKey;
+    if (!linkedKey.fromURIString(linked_uri))
+        return false;
+    return true;
+}
+
+
 int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
 {
     // Force the datadir to specific place on e.g. android devices

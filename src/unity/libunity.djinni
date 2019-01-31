@@ -89,8 +89,12 @@ gulden_unified_backend = interface +c {
     static InitUnityLib(data_dir : string, testnet : bool, signals : gulden_unified_frontend): i32;
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletFromRecoveryPhrase(phrase : string): bool;
+
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletLinkedFromURI(linked_uri : string): bool;
+
+    # Check link URI for validity
+    static IsValidLinkURI(phrase: string): bool;
 
     # Check recovery phrase for (syntactic) validity
     # Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
