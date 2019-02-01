@@ -507,6 +507,21 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
             }
         }
 
+        // Wipe all the transactions associated with account
+        LogPrintf("CGuldenWallet::deleteAccount - wipe transactions");
+        {
+            std::vector<uint256> hashesToErase;
+            std::vector<uint256> hashesErased;
+            for (const auto& [txHash, tx] : pactiveWallet->mapWallet)
+            {
+                if (::IsMine(account, tx))
+                {
+                    hashesToErase.push_back(txHash);
+                }
+            }
+            pactiveWallet->ZapSelectTx(hashesToErase, hashesErased);
+        }
+
         LogPrintf("CGuldenWallet::deleteAccount - wipe account from memory");
         mapAccountLabels.erase(mapAccountLabels.find(account->getUUID()));
         mapAccounts.erase(mapAccounts.find(account->getUUID()));

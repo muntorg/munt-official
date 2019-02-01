@@ -346,16 +346,6 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     }
     LogPrintf("ReplaceWalletLinkedFromURI: End purge seeds");
 
-    // Purge all transactions from the wallet
-    std::vector<uint256> hashesToErase;
-    std::vector<uint256> hashesErased;
-    hashesToErase.reserve(pactiveWallet->mapWallet.size());
-    for (const auto& [txHash, tx] : pactiveWallet->mapWallet)
-    {
-        hashesToErase.push_back(txHash);
-    }
-    pactiveWallet->ZapSelectTx(hashesToErase, hashesErased);
-
     // Create a new linked account as the primary account
     pactiveWallet->nTimeFirstKey = linkedKey.getCreationTime();
     LogPrintf("Creating new linked primary account, birth time [%d]\n", pactiveWallet->nTimeFirstKey);
