@@ -370,13 +370,13 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
 {
     // Purge all current accounts/seeds from the system
-    LogPrintf("ReplaceWalletLinkedFromURI: Begin purge seeds");
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge seeds");
     while (!pactiveWallet->mapSeeds.empty())
     {
-        LogPrintf("ReplaceWalletLinkedFromURI: purge seeds");
+        LogPrintf("EraseWalletSeedsAndAccounts: purge seed");
         pactiveWallet->DeleteSeed(pactiveWallet->mapSeeds.begin()->second, true);
     }
-    LogPrintf("ReplaceWalletLinkedFromURI: End purge seeds");
+    LogPrintf("EraseWalletSeedsAndAccounts: End purge seeds");
 
     return true;
 }

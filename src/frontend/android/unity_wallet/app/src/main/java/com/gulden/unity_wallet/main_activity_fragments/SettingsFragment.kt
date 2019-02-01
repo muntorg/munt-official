@@ -18,6 +18,7 @@ import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
+import com.gulden.unity_wallet.WelcomeActivity
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 
 
@@ -51,7 +52,10 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             }
             "preference_remove_wallet" ->
             {
-                //TODO: Implement
+                GuldenUnifiedBackend.EraseWalletSeedsAndAccounts()
+                val intent = Intent(activity, WelcomeActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
             }
             "preference_select_local_currency" ->
             {
