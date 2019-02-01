@@ -31,16 +31,26 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.InitWalletLinkedFromURI(linkedUri);
     }
 
+    /** Check link URI for validity */
+    public static boolean IsValidLinkURI(String phrase)
+    {
+        return CppProxy.IsValidLinkURI(phrase);
+    }
+
     /** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
     public static boolean ReplaceWalletLinkedFromURI(String linkedUri)
     {
         return CppProxy.ReplaceWalletLinkedFromURI(linkedUri);
     }
 
-    /** Check link URI for validity */
-    public static boolean IsValidLinkURI(String phrase)
+    /**
+     * Erase the seeds and accounts of a wallet leaving an empty wallet (with things like the address book intact)
+     * After calling this it will be necessary to create a new linked account or recovery phrase account again.
+     * NB! This will empty a wallet regardless of whether it has funds in it or not and makes no provisions to check for this - it is the callers responsibility to ensure that erasing the wallet is safe to do in this regard.
+     */
+    public static boolean EraseWalletSeedsAndAccounts()
     {
-        return CppProxy.IsValidLinkURI(phrase);
+        return CppProxy.EraseWalletSeedsAndAccounts();
     }
 
     /**
@@ -225,9 +235,11 @@ public abstract class GuldenUnifiedBackend {
 
         public static native boolean InitWalletLinkedFromURI(String linkedUri);
 
+        public static native boolean IsValidLinkURI(String phrase);
+
         public static native boolean ReplaceWalletLinkedFromURI(String linkedUri);
 
-        public static native boolean IsValidLinkURI(String phrase);
+        public static native boolean EraseWalletSeedsAndAccounts();
 
         public static native boolean IsValidRecoveryPhrase(String phrase);
 

@@ -37,11 +37,18 @@ public:
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletLinkedFromURI(const std::string & linked_uri);
 
+    /** Check link URI for validity */
+    static bool IsValidLinkURI(const std::string & phrase);
+
     /** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
     static bool ReplaceWalletLinkedFromURI(const std::string & linked_uri);
 
-    /** Check link URI for validity */
-    static bool IsValidLinkURI(const std::string & phrase);
+    /**
+     * Erase the seeds and accounts of a wallet leaving an empty wallet (with things like the address book intact)
+     * After calling this it will be necessary to create a new linked account or recovery phrase account again.
+     * NB! This will empty a wallet regardless of whether it has funds in it or not and makes no provisions to check for this - it is the callers responsibility to ensure that erasing the wallet is safe to do in this regard.
+     */
+    static bool EraseWalletSeedsAndAccounts();
 
     /**
      * Check recovery phrase for (syntactic) validity

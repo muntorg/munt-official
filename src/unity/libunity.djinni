@@ -99,10 +99,16 @@ gulden_unified_backend = interface +c {
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletLinkedFromURI(linked_uri : string): bool;
 
-    # Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet.
-    static ReplaceWalletLinkedFromURI(linked_uri : string): bool;
     # Check link URI for validity
     static IsValidLinkURI(phrase: string): bool;
+
+    # Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet.
+    static ReplaceWalletLinkedFromURI(linked_uri : string): bool;
+
+    # Erase the seeds and accounts of a wallet leaving an empty wallet (with things like the address book intact)
+    # After calling this it will be necessary to create a new linked account or recovery phrase account again.
+    # NB! This will empty a wallet regardless of whether it has funds in it or not and makes no provisions to check for this - it is the callers responsibility to ensure that erasing the wallet is safe to do in this regard.
+    static EraseWalletSeedsAndAccounts(): bool;
 
     # Check recovery phrase for (syntactic) validity
     # Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum

@@ -337,14 +337,10 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         }
     }
 
-    // Purge all current accounts/seeds from the system
-    LogPrintf("ReplaceWalletLinkedFromURI: Begin purge seeds");
-    while (!pactiveWallet->mapSeeds.empty())
+    if (!EraseWalletSeedsAndAccounts())
     {
-        LogPrintf("ReplaceWalletLinkedFromURI: purge seeds");
-        pactiveWallet->DeleteSeed(pactiveWallet->mapSeeds.begin()->second, true);
+        return false;
     }
-    LogPrintf("ReplaceWalletLinkedFromURI: End purge seeds");
 
     // Create a new linked account as the primary account
     pactiveWallet->nTimeFirstKey = linkedKey.getCreationTime();
@@ -367,6 +363,20 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 
     // Rescan for transactions on the linked account
     DoRescan();
+
+    return true;
+}
+
+bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
+{
+    // Purge all current accounts/seeds from the system
+    LogPrintf("ReplaceWalletLinkedFromURI: Begin purge seeds");
+    while (!pactiveWallet->mapSeeds.empty())
+    {
+        LogPrintf("ReplaceWalletLinkedFromURI: purge seeds");
+        pactiveWallet->DeleteSeed(pactiveWallet->mapSeeds.begin()->second, true);
+    }
+    LogPrintf("ReplaceWalletLinkedFromURI: End purge seeds");
 
     return true;
 }

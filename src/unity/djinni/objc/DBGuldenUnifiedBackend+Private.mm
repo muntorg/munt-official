@@ -66,6 +66,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)IsValidLinkURI:(nonnull NSString *)phrase {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::IsValidLinkURI(::djinni::String::toCpp(phrase));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (BOOL)ReplaceWalletLinkedFromURI:(nonnull NSString *)linkedUri {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(::djinni::String::toCpp(linkedUri));
@@ -73,9 +80,9 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)IsValidLinkURI:(nonnull NSString *)phrase {
++ (BOOL)EraseWalletSeedsAndAccounts {
     try {
-        auto objcpp_result_ = ::GuldenUnifiedBackend::IsValidLinkURI(::djinni::String::toCpp(phrase));
+        auto objcpp_result_ = ::GuldenUnifiedBackend::EraseWalletSeedsAndAccounts();
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
