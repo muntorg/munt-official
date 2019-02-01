@@ -61,8 +61,14 @@ public:
     /** Get a receive address from the wallet */
     static std::string GetReceiveAddress();
 
-    /** Get a receive address from the wallet */
+    /** Get the recovery phrase for the wallet */
     static std::string GetRecoveryPhrase();
+
+    /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
+    static bool HaveUnconfirmedFunds();
+
+    /** Check current wallet balance (including unconfirmed funds) */
+    static int64_t GetBalance();
 
     /** Rescan blockchain for wallet transactions */
     static void DoRescan();

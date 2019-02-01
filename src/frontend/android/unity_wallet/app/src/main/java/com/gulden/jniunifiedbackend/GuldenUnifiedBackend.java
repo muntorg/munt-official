@@ -77,10 +77,22 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.GetReceiveAddress();
     }
 
-    /** Get a receive address from the wallet */
+    /** Get the recovery phrase for the wallet */
     public static String GetRecoveryPhrase()
     {
         return CppProxy.GetRecoveryPhrase();
+    }
+
+    /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
+    public static boolean HaveUnconfirmedFunds()
+    {
+        return CppProxy.HaveUnconfirmedFunds();
+    }
+
+    /** Check current wallet balance (including unconfirmed funds) */
+    public static long GetBalance()
+    {
+        return CppProxy.GetBalance();
     }
 
     /** Rescan blockchain for wallet transactions */
@@ -228,6 +240,10 @@ public abstract class GuldenUnifiedBackend {
         public static native String GetReceiveAddress();
 
         public static native String GetRecoveryPhrase();
+
+        public static native boolean HaveUnconfirmedFunds();
+
+        public static native long GetBalance();
 
         public static native void DoRescan();
 

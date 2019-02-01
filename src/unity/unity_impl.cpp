@@ -512,6 +512,31 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
     return "";
 }
 
+bool GuldenUnifiedBackend::HaveUnconfirmedFunds()
+{
+    if (!pactiveWallet)
+        return true;
+
+    WalletBalances balances;
+    pactiveWallet->GetBalances(balances, nullptr, false);
+
+    if (balances.unconfirmedIncludingLocked > 0 || balances.immatureIncludingLocked > 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+int64_t GuldenUnifiedBackend::GetBalance()
+{
+    if (!pactiveWallet)
+        return 0;
+
+    WalletBalances balances;
+    pactiveWallet->GetBalances(balances, nullptr, false);
+    return balances.availableIncludingLocked + balances.unconfirmedIncludingLocked + balances.immatureIncludingLocked;
+}
+
 void GuldenUnifiedBackend::DoRescan()
 {
     if (pactiveWallet)
@@ -570,7 +595,7 @@ void GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
 
     bool fSubtractFeeFromAmount = false;
 
-    CRecipient recipient = GetRecipientForDestination(address.Get(), nAmount, false, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), nAmount, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 

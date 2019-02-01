@@ -120,8 +120,14 @@ gulden_unified_backend = interface +c {
     # Get a receive address from the wallet
     static GetReceiveAddress(): string;
 
-    # Get a receive address from the wallet
+    # Get the recovery phrase for the wallet
     static GetRecoveryPhrase(): string;
+
+    # Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait.
+    static HaveUnconfirmedFunds(): bool;
+
+    # Check current wallet balance (including unconfirmed funds)
+    static GetBalance(): i64;
 
     # Rescan blockchain for wallet transactions
     static DoRescan();

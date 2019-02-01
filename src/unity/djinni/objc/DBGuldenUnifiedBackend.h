@@ -56,8 +56,14 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Get a receive address from the wallet */
 + (nonnull NSString *)GetReceiveAddress;
 
-/** Get a receive address from the wallet */
+/** Get the recovery phrase for the wallet */
 + (nonnull NSString *)GetRecoveryPhrase;
+
+/** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
++ (BOOL)HaveUnconfirmedFunds;
+
+/** Check current wallet balance (including unconfirmed funds) */
++ (int64_t)GetBalance;
 
 /** Rescan blockchain for wallet transactions */
 + (void)DoRescan;
