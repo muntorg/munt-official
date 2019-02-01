@@ -17,7 +17,7 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.WelcomeActivity
+import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 
 
@@ -67,6 +67,16 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     }
 
 
+    fun performLink(linkURI: String)
+    {
+        if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI))
+        {
+            AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+            return
+        }
+        (activity as WalletActivity).gotoReceivePage()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
         if (requestCode == SettingsFragment.REQUEST_CODE_SCAN_FOR_LINK)
@@ -82,9 +92,21 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
                         AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
                     }
 
-                    if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(barcode.displayValue))
+                    if (GuldenUnifiedBackend.HaveUnconfirmedFunds())
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.failed_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.failed_guldensync_unconfirmed_funds_message)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        return
+                    }
+
+                    //TODO: Refuse to link if we are in the process of a sync.
+
+                    if (GuldenUnifiedBackend.GetBalance() > 0)
+                    {
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_nonemptywallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok) , DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue) }).setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                    }
+                    else
+                    {
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_emptywallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok) , DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue)} ).setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
                     }
                 }
             }

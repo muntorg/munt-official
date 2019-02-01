@@ -146,6 +146,12 @@ file COPYING
     <string name="no_tx_details">No transaction details for [%s]</string>
     <string name="no_guldensync_warning_title">Invalid QR code</string>
     <string name="button_ok">ok</string>
+    <string name="button_cancel">cancel</string>
     <string name="no_guldensync_warning">This QR code does not contain a valid Gulden sync code, please try again with a valid code.</string>
+    <string name="failed_guldensync_warning_title">Could not perform link</string>
+    <string name="failed_guldensync_unconfirmed_funds_message">Some of your funds are awaiting confirmation, please allow for them to fully confirm before attempting the link process again.</string>
+    <string name="guldensync_info_title">Link with desktop wallet</string>
+    <string name="guldensync_info_message_nonemptywallet">You are about to establish a link with your desktop wallet. The current addresses in this wallet will be deleted and no longer available after the link is established. The current funds in this wallet will be transferred into the desktop wallet before the link is established, and will be temporarily unavailable from this wallet until the link finishes establishing. Please ensure you save a copy of your old recovery phrase somewhere in case you ever find the need to access these addresses again.</string>
+    <string name="guldensync_info_message_emptywallet">You are about to establish a link with your desktop wallet. The current addresses in this wallet will be deleted and no longer available after the link is established. Please ensure you save a copy of your old recovery phrase somewhere in case you ever find the need to access these addresses again.</string>
 
 </resources>
