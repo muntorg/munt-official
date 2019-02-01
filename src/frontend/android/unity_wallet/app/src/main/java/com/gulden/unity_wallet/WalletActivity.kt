@@ -108,6 +108,34 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         }
     }
 
+    fun gotoSendPage()
+    {
+        if (sendFragment == null)
+            sendFragment = SendFragment()
+        replaceFragment(sendFragment!!, R.id.mainLayout)
+    }
+
+    fun gotoReceivePage()
+    {
+        if (receiveFragment == null)
+            receiveFragment = ReceiveFragment()
+        replaceFragment(receiveFragment!!, R.id.mainLayout)
+    }
+
+    fun gotoTransactionPage()
+    {
+        if (transactionFragment == null)
+            transactionFragment = MutationFragment()
+        replaceFragment(transactionFragment!!, R.id.mainLayout)
+    }
+
+    fun gotoSettingsPage()
+    {
+        if (settingsFragment == null)
+            settingsFragment = SettingsFragment()
+        replaceFragment(settingsFragment!!, R.id.mainLayout)
+    }
+
     private var sendFragment : SendFragment ?= null
     private var receiveFragment : ReceiveFragment ?= null
     private var transactionFragment : MutationFragment ?= null
@@ -115,30 +143,10 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
          when (item.itemId) {
-            R.id.navigation_send -> {
-                if (sendFragment == null)
-                    sendFragment = SendFragment()
-                replaceFragment(sendFragment!!, R.id.mainLayout)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_receive -> {
-                if (receiveFragment == null)
-                    receiveFragment = ReceiveFragment()
-                replaceFragment(receiveFragment!!, R.id.mainLayout)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_transactions -> {
-                if (transactionFragment == null)
-                    transactionFragment = MutationFragment()
-                replaceFragment(transactionFragment!!, R.id.mainLayout)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_settings -> {
-                if (settingsFragment == null)
-                    settingsFragment = SettingsFragment()
-                replaceFragment(settingsFragment!!, R.id.mainLayout)
-                return@OnNavigationItemSelectedListener true
-            }
+            R.id.navigation_send -> { gotoSendPage(); return@OnNavigationItemSelectedListener true }
+            R.id.navigation_receive -> { gotoReceivePage(); return@OnNavigationItemSelectedListener true }
+            R.id.navigation_transactions -> { gotoTransactionPage(); return@OnNavigationItemSelectedListener true }
+            R.id.navigation_settings -> { gotoSettingsPage(); return@OnNavigationItemSelectedListener true }
         }
         false
     }
