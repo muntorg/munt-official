@@ -447,7 +447,10 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
     if (shouldPurge)
     {
         LogPrintf("CGuldenWallet::deleteAccount - purge account");
-        if (account->IsHD())
+
+        // We should never be purging an HD account unless we have also purged the seed that it belongs too (or it has no seed)
+        // It makes no sense to purge an account while retaining the seed as it can always be regenerated from the seed (so purging is still not permanent) and it can only lead to difficult to understand issues.
+        if (account->IsHD() && (mapSeeds.find(dynamic_cast<CAccountHD*>(account)->getSeedUUID()) != mapSeeds.end()))
             assert(0);
 
         LOCK2(cs_main, cs_wallet);
