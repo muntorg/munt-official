@@ -73,8 +73,8 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
     {
         if (currentAddressQrView != null)
         {
-            var address = GuldenUnifiedBackend.GetReceiveAddress()
-            var imageData = GuldenUnifiedBackend.QRImageFromString("gulden://"+address, 600)
+            val address = GuldenUnifiedBackend.GetReceiveAddress()
+            val imageData = GuldenUnifiedBackend.QRImageFromString("gulden://"+address, 600)
             val bitmap = Bitmap.createBitmap(imageData.width, imageData.width, Bitmap.Config.ALPHA_8)
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageData.pixelData))
             currentAddressQrView.setImageBitmap(bitmap)

@@ -31,8 +31,6 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.gulden.unity_wallet.R;
-
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 /**
@@ -52,7 +50,7 @@ public class ViewPagerTabs extends View implements OnPageChangeListener {
 
         setSaveEnabled(true);
 
-        paint.setTextSize(getResources().getDimension(R.dimen.font_size_tiny));
+        paint.setTextSize(getResources().getDimension(com.gulden.unity_wallet.R.dimen.font_size_tiny));
         paint.setColor(Color.BLACK);
         paint.setAntiAlias(true);
         paint.setShadowLayer(2, 0, 0, Color.WHITE);
@@ -130,23 +128,35 @@ public class ViewPagerTabs extends View implements OnPageChangeListener {
         final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
         final int width;
-        if (widthMode == MeasureSpec.EXACTLY)
-            width = widthSize;
-        else if (widthMode == MeasureSpec.AT_MOST)
-            width = Math.min(getMeasuredWidth(), widthSize);
-        else
-            width = 0;
+        switch (widthMode)
+        {
+            case MeasureSpec.EXACTLY:
+                width = widthSize;
+                break;
+            case MeasureSpec.AT_MOST:
+                width = Math.min(getMeasuredWidth(), widthSize);
+                break;
+            default:
+                width = 0;
+                break;
+        }
 
         final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
         final int height;
-        if (heightMode == MeasureSpec.EXACTLY)
-            height = heightSize;
-        else if (heightMode == MeasureSpec.AT_MOST)
-            height = Math.min(getSuggestedMinimumHeight(), heightSize);
-        else
-            height = getSuggestedMinimumHeight();
+        switch (heightMode)
+        {
+            case MeasureSpec.EXACTLY:
+                height = heightSize;
+                break;
+            case MeasureSpec.AT_MOST:
+                height = Math.min(getSuggestedMinimumHeight(), heightSize);
+                break;
+            default:
+                height = getSuggestedMinimumHeight();
+                break;
+        }
 
         setMeasuredDimension(width, height);
     }

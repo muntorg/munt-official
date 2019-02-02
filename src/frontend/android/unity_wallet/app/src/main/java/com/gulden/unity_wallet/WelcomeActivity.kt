@@ -58,7 +58,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
             val recoveryPhrase = GuldenUnifiedBackend.GenerateRecoveryMnemonic()
             this.runOnUiThread()
             {
-                var newIntent = Intent(this, ShowRecoveryPhraseActivity::class.java)
+                val newIntent = Intent(this, ShowRecoveryPhraseActivity::class.java)
                 //TODO: (GULDEN) Probably not the greatest way to do this - snooping?
                 newIntent.putExtra(this.packageName + "recovery_phrase", recoveryPhrase)
                 startActivity(newIntent)

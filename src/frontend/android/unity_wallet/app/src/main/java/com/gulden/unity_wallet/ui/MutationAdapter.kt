@@ -39,7 +39,7 @@ class MutationAdapter(private val context: Context, private var dataSource: Arra
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val mutationRecord = getItem(position) as MutationRecord
-        var date = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(mutationRecord.timestamp * 1000L))
+        val date = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(mutationRecord.timestamp * 1000L))
         var prevDate = ""
         if (position != 0) {
             val prevMutationRecord = getItem(position-1) as MutationRecord
@@ -47,7 +47,7 @@ class MutationAdapter(private val context: Context, private var dataSource: Arra
         }
 
 
-        var rowView : View
+        val rowView : View
         if (date != prevDate)
         {
             rowView = inflater.inflate(R.layout.mutation_list_item_with_header, parent, false)
