@@ -58,10 +58,10 @@ To build GuldenD from this repository please follow these steps which are valid 
 * make -j$(nproc)
 
 To build the full UI version of Gulden:
-* sudo apt-get install curl build-essential libtool autotools-dev autoconf pkg-config libssl-dev
+* sudo apt-get install curl build-essential libtool autotools-dev autoconf pkg-config libssl-dev libpcre++-dev
 * ./autogen.sh  
 * cd depends  
-* make NO_QT=1 NO_UPNP=1
+* make
 * cd ..
 * mkdir build && cd build
 * ../configure --prefix=$PWD/../depends/x86_64-pc-linux-gnu/
@@ -84,7 +84,7 @@ Required dependencies:
 > &gt;=bdb-4.8.30 &gt;=boost-1_66_0 expat-2 openssl miniupnpc protobuf zeromq
 
 Optional dependencies (depending on configure - e.g. qt only for GUI builds):
-> dbus fontconfig freetype icu libevent libX11 libXau libxcb libXext libXrender  qrencode &gt;=qt-5.6.1 renderproto xcb_proto xextproto xproto xtrans
+> dbus fontconfig freetype icu libevent libX11 libXau libxcb libXext libXrender libpcre qrencode &gt;=qt-5.6.1 renderproto xcb_proto xextproto xproto xtrans
 
 Troubleshooting
 -----
