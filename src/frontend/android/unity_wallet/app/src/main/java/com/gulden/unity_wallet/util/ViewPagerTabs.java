@@ -127,7 +127,7 @@ public class ViewPagerTabs extends View implements OnPageChangeListener {
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
-        final int width;
+        int width=0;
         switch (widthMode)
         {
             case MeasureSpec.EXACTLY:
@@ -136,7 +136,7 @@ public class ViewPagerTabs extends View implements OnPageChangeListener {
             case MeasureSpec.AT_MOST:
                 width = Math.min(getMeasuredWidth(), widthSize);
                 break;
-            default:
+            case MeasureSpec.UNSPECIFIED:
                 width = 0;
                 break;
         }
@@ -144,7 +144,7 @@ public class ViewPagerTabs extends View implements OnPageChangeListener {
         final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        final int height;
+        int height = 0;
         switch (heightMode)
         {
             case MeasureSpec.EXACTLY:
@@ -153,7 +153,7 @@ public class ViewPagerTabs extends View implements OnPageChangeListener {
             case MeasureSpec.AT_MOST:
                 height = Math.min(getSuggestedMinimumHeight(), heightSize);
                 break;
-            default:
+            case MeasureSpec.UNSPECIFIED:
                 height = getSuggestedMinimumHeight();
                 break;
         }
