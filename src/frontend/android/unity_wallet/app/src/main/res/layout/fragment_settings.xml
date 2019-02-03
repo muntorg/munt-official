@@ -9,7 +9,7 @@ file COPYING
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:title="Preferences"
+    android:title="@string/preference_fragment_title"
     tools:context=".main_activity_fragments.SettingsFragment">
 
     <Preference
@@ -17,7 +17,7 @@ file COPYING
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
-        android:title="Recovery phrase"
+        android:title="@string/preference_fragment_recovery_label"
         tools:ignore="UnusedAttribute" />
 
     <Preference
@@ -33,7 +33,7 @@ file COPYING
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="Link your mobile wallet with your desktop wallet"
-        android:title="Link wallet"
+        android:title="@string/preference_fragment_link_label"
         tools:ignore="UnusedAttribute" />
 
     <Preference
@@ -41,7 +41,7 @@ file COPYING
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
-        android:title="Change passcode"
+        android:title="@string/preference_fragment_passcode_label"
         tools:ignore="UnusedAttribute" />
 
     <Preference
@@ -49,24 +49,25 @@ file COPYING
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
-        android:title="Rescan wallet" />
+        android:title="@string/preference_fragment_rescan_label"
+        tools:ignore="UnusedAttribute" />
 
     <Preference
         android:key="preference_remove_wallet"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="Remove this wallet in order to start or recover another wallet"
-        android:title="Remove wallet"
+        android:title="@string/preference_fragment_remove_label"
         tools:ignore="UnusedAttribute" />
 
     <ListPreference
         android:key="preference_local_currency"
-        android:title="Local currency"
         android:summary="%s"
         android:iconSpaceReserved="false"
         android:entries="@array/currency_description_entries"
         android:entryValues="@array/currency_codes"
         android:defaultValue="@string/default_currency"
+        android:title="@string/preference_fragment_fiat_label"
         tools:ignore="UnusedAttribute" />
 
     <SwitchPreference
@@ -75,12 +76,12 @@ file COPYING
         android:persistent="true"
         android:defaultValue="true"
         android:summary=""
-        android:title="Notifications"
+        android:title="@string/preference_fragment_notification_label"
         tools:ignore="UnusedAttribute" />
 
     <ListPreference
         android:key="preference_background_sync"
-        android:title="Background synchronisation"
+        android:title="@string/preference_fragment_background_sync_label"
         android:summary="%s"
         android:entries="@array/background_sync_entries"
         android:entryValues="@array/background_sync_values"
@@ -91,7 +92,7 @@ file COPYING
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
-        android:title="Network monitor"
+        android:title="@string/preference_fragment_background_network_label"
         tools:ignore="UnusedAttribute" />
 
 </PreferenceScreen>

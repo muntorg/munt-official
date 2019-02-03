@@ -153,5 +153,15 @@ file COPYING
     <string name="guldensync_info_title">Link with desktop wallet</string>
     <string name="guldensync_info_message_nonemptywallet">You are about to establish a link with your desktop wallet. The current addresses in this wallet will be deleted and no longer available after the link is established. The current funds in this wallet will be transferred into the desktop wallet before the link is established, and will be temporarily unavailable from this wallet until the link finishes establishing. Please ensure you save a copy of your old recovery phrase somewhere in case you ever find the need to access these addresses again.</string>
     <string name="guldensync_info_message_emptywallet">You are about to establish a link with your desktop wallet. The current addresses in this wallet will be deleted and no longer available after the link is established. Please ensure you save a copy of your old recovery phrase somewhere in case you ever find the need to access these addresses again.</string>
+    <string name="preference_fragment_title">Preferences</string>
+    <string name="preference_fragment_recovery_label">Recovery phrase</string>
+    <string name="preference_fragment_link_label">Link wallet</string>
+    <string name="preference_fragment_passcode_label">Change passcode</string>
+    <string name="preference_fragment_rescan_label">Rescan wallet</string>
+    <string name="preference_fragment_remove_label">Remove wallet</string>
+    <string name="preference_fragment_fiat_label">Local currency</string>
+    <string name="preference_fragment_notification_label">Notifications</string>
+    <string name="preference_fragment_background_sync_label">Background synchronisation</string>
+    <string name="preference_fragment_background_network_label">Network monitor</string>
 
 </resources>
