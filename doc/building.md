@@ -61,7 +61,7 @@ To build the full UI version of Gulden:
 * sudo apt-get install curl build-essential libtool autotools-dev autoconf pkg-config libssl-dev
 * ./autogen.sh  
 * cd depends  
-* make NO_QT=1 NO_UPNP=1
+* make
 * cd ..
 * mkdir build && cd build
 * ../configure --prefix=$PWD/../depends/x86_64-pc-linux-gnu/
