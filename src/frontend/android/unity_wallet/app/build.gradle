@@ -34,7 +34,7 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
-            versionCode 340
+            versionCode 341
             versionName = "2.0.1.0"
         }
         gulden_mainnet {
@@ -42,7 +42,7 @@ android {
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
-            versionCode 340
+            versionCode 341
             versionName = "2.0.1.0"
         }
     }
@@ -62,7 +62,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.1.0-alpha02'
+    implementation 'com.google.android.material:material:1.1.0-alpha03'
     implementation 'androidx.preference:preference:1.1.0-alpha02'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0-alpha01'
@@ -70,7 +70,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'android.arch.work:work-runtime-ktx:1.0.0-beta02'
+    implementation 'android.arch.work:work-runtime-ktx:1.0.0-beta03'
     implementation "commons-validator:commons-validator:1.6" exclude module: "commons-logging"
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.squareup.moshi:moshi:1.8.0'
