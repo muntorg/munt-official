@@ -44,7 +44,7 @@
             android:name=".WelcomeActivity"
             android:label="@string/title_activity_welcome"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.BlueBackground.NoActionBar" />
         <activity
             android:name=".ui.EnterRecoveryPhraseActivity"
             android:label="@string/title_activity_enter_recovery_phrase"
