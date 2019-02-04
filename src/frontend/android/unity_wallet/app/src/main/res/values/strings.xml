@@ -6,9 +6,6 @@ Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
 <resources>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="title_send">Send</string>
     <string name="title_receive">Receive</string>
     <string name="title_transactions">Transactions</string>
@@ -21,7 +18,6 @@ file COPYING
     <string name="action_bar_copylong">Copy to clipboard</string>
     <string name="action_bar_share">Share</string>
     <string name="action_bar_buy">Buy</string>
-    <string name="title_activity_buy">Buy Gulden</string>
     <string name="welcome_activity_create_new_wallet">New wallet</string>
     <string name="welcome_activity_recover_existing_wallet">Recover wallet</string>
     <string name="welcome_activity_sync_with_desktop">Link wallet</string>
@@ -43,12 +39,10 @@ file COPYING
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
     <string name="send_coins_nocks_estimate_template">Approx. G %1$s including IBAN service fee</string>
 
-    <string name="network_monitor_activity_title">Network monitor</string>
     <string name="network_monitor_peer_list_title">Peers</string>
     <string name="network_monitor_block_list_title">Blocks</string>
     <string name="network_monitor_processing_title">Processing</string>
     <string name="peer_list_fragment_empty">No peers connected</string>
-    <string name="peer_list_row_ping_time">⇆ %d&#x2009;ms</string>
     <string name="block_row_now">just now</string>
     <string name="action_browse">Browse</string>
 
@@ -163,5 +157,28 @@ file COPYING
     <string name="preference_fragment_notification_label">Notifications</string>
     <string name="preference_fragment_background_sync_label">Background synchronisation</string>
     <string name="preference_fragment_background_network_label">Network monitor</string>
+    <string name="send_coins_label_pay_to">Pay to</string>
+    <string name="send_coins_label_add_to_address_book">Add to address book</string>
+    <string name="send_coins_label_remove_from_address_book">Remove from address book</string>
+    <string name="send_fragment_scan_label">Scan QR</string>
+    <string name="send_fragment_clipboard_label">Clipboard</string>
+    <string name="send_keypad_digit_1">1</string>
+    <string name="send_keypad_digit_2">2</string>
+    <string name="send_keypad_digit_3">3</string>
+    <string name="send_keypad_digit_4">4</string>
+    <string name="send_keypad_digit_5">5</string>
+    <string name="send_keypad_digit_6">6</string>
+    <string name="send_keypad_digit_7">7</string>
+    <string name="send_keypad_digit_8">8</string>
+    <string name="send_keypad_digit_9">9</string>
+    <string name="send_keypad_decimal_seperator">.</string>
+    <string name="send_keypad_digit_0">0</string>
+    <string name="send_keypad_button_delete">x</string>
+    <string name="chain_status_label_probable_height">Probable height</string>
+    <string name="chain_status_label_partial_height">Partial chain height</string>
+    <string name="chain_status_label_processed_height">Processed height</string>
+    <string name="chain_status_label_chain_offset">Partial chain offset</string>
+    <string name="chain_status_label_chain_length">Partial chain length</string>
+    <string name="chain_status_label_pruned_height">Pruned below height</string>
 
 </resources>

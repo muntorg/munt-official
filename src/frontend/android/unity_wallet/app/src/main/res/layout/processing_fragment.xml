@@ -19,7 +19,7 @@ file COPYING
             <TextView
                 android:layout_column="1"
                 android:padding="3dip"
-                android:text="Probable height" />
+                android:text="@string/chain_status_label_probable_height" />
             <TextView
                 android:id="@+id/processing_group_probable"
                 android:gravity="right"
@@ -31,7 +31,7 @@ file COPYING
             <TextView
                 android:layout_column="1"
                 android:padding="3dip"
-                android:text="Partial chain height" />
+                android:text="@string/chain_status_label_partial_height" />
             <TextView
                 android:id="@+id/processing_group_height"
                 android:gravity="right"
@@ -43,7 +43,7 @@ file COPYING
             <TextView
                 android:layout_column="1"
                 android:padding="3dip"
-                android:text="Processed height" />
+                android:text="@string/chain_status_label_processed_height" />
             <TextView
                 android:id="@+id/processing_group_processed"
                 android:gravity="right"
@@ -55,7 +55,7 @@ file COPYING
             <TextView
                 android:layout_column="1"
                 android:padding="3dip"
-                android:text="Partial chain offset" />
+                android:text="@string/chain_status_label_chain_offset" />
             <TextView
                 android:id="@+id/processing_group_offset"
                 android:gravity="right"
@@ -67,7 +67,7 @@ file COPYING
         <TextView
             android:layout_column="1"
             android:padding="3dip"
-            android:text="Partial chain length" />
+            android:text="@string/chain_status_label_chain_length" />
         <TextView
             android:id="@+id/processing_group_length"
             android:gravity="right"
@@ -79,7 +79,7 @@ file COPYING
             <TextView
                 android:layout_column="1"
                 android:padding="3dip"
-                android:text="Pruned below height" />
+                android:text="@string/chain_status_label_pruned_height" />
             <TextView
                 android:id="@+id/processing_group_prune"
                 android:gravity="right"

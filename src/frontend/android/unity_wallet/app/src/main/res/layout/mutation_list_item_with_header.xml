@@ -20,6 +20,7 @@ file COPYING
         android:layout_height="30dp"
         android:gravity="bottom"
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="Heading"
         android:textColor="@android:color/black" />
 

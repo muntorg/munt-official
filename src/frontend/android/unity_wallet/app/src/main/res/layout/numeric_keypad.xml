@@ -28,7 +28,7 @@ file COPYING
             android:layout_marginBottom="5dp"
             android:background="@drawable/shape_rounded_button"
             android:onClick="handleKeypadButtonClick"
-            android:text="1"
+            android:text="@string/send_keypad_digit_1"
             android:textColor="@android:color/white" />
 
         <Button
@@ -39,7 +39,7 @@ file COPYING
             android:layout_marginRight="5dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="2"
+            android:text="@string/send_keypad_digit_2"
             android:textColor="@android:color/white" />
 
         <Button
@@ -48,7 +48,7 @@ file COPYING
             android:layout_height="80dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="3"
+            android:text="@string/send_keypad_digit_3"
             android:textColor="@android:color/white" />
 
         <Space
@@ -71,7 +71,7 @@ file COPYING
             android:layout_marginBottom="5dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="4"
+            android:text="@string/send_keypad_digit_4"
             android:textColor="@android:color/white" />
 
         <Button
@@ -82,7 +82,7 @@ file COPYING
             android:layout_marginRight="5dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="5"
+            android:text="@string/send_keypad_digit_5"
             android:textColor="@android:color/white" />
 
         <Button
@@ -91,7 +91,7 @@ file COPYING
             android:layout_height="80dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="6"
+            android:text="@string/send_keypad_digit_6"
             android:textColor="@android:color/white" />
 
         <Space
@@ -114,7 +114,7 @@ file COPYING
             android:layout_marginBottom="5dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="7"
+            android:text="@string/send_keypad_digit_7"
             android:textColor="@android:color/white" />
 
         <Button
@@ -125,7 +125,7 @@ file COPYING
             android:layout_marginRight="5dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="8"
+            android:text="@string/send_keypad_digit_8"
             android:textColor="@android:color/white" />
 
         <Button
@@ -134,7 +134,7 @@ file COPYING
             android:layout_height="80dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="9"
+            android:text="@string/send_keypad_digit_9"
             android:textColor="@android:color/white" />
 
         <Space
@@ -156,7 +156,7 @@ file COPYING
             android:layout_height="80dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="."
+            android:text="@string/send_keypad_decimal_seperator"
             android:textColor="@android:color/white" />
 
         <Button
@@ -167,7 +167,7 @@ file COPYING
             android:layout_marginRight="5dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="0"
+            android:text="@string/send_keypad_digit_0"
             android:textColor="@android:color/white" />
 
         <Button
@@ -176,7 +176,7 @@ file COPYING
             android:layout_height="80dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="x"
+            android:text="@string/send_keypad_button_delete"
             android:textColor="@android:color/white"
             app:srcCompat="@android:drawable/ic_notification_clear_all" />
 

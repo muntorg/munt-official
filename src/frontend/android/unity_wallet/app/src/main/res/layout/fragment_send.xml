@@ -88,7 +88,7 @@ file COPYING
             android:layout_weight="1"
             android:background="@drawable/shape_rounded_button"
             android:onClick="handleQRScanButtonClick"
-            android:text="Scan QR"
+            android:text="@string/send_fragment_scan_label"
             android:textColor="@android:color/white" />
 
         <Space
@@ -105,7 +105,7 @@ file COPYING
             android:layout_weight="1"
             android:background="@drawable/shape_rounded_button"
             android:enabled="false"
-            android:text="Clipboard"
+            android:text="@string/send_fragment_clipboard_label"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
