@@ -97,7 +97,7 @@ bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
 size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
-int nPartialPruneHeightDone;
+int nPartialPruneHeightDone = 0;
 bool fAlerts = DEFAULT_ALERTS;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
@@ -4272,6 +4272,58 @@ bool isFullSyncMode() {
     return fFullSyncMode;
 }
 
+void ResetPartialSync()
+{
+    pindexBestPartial = nullptr;
+    partialChain.SetTip(nullptr);
+    partialChain.SetHeightOffset(0);
+
+    // TODO find all the block we don't want and remove them
+    // iterate the block index, if there is one we don't like remove and if it has no "other chain" validity
+    // completely remove it, else "only" unvlidate the partial stuff of it
+    // check that there are no partial valid blocks beyond the pindexBestPartial
+
+    std::vector<uint256> removals;
+    for (auto it = mapBlockIndex.begin(); it != mapBlockIndex.end(); )
+    {
+        CBlockIndex* pindex = it->second;
+
+        if (pindex->IsPartialValid() && (!pindexBestPartial || pindex->nHeight > pindexBestPartial->nHeight)) {
+            if (pindex->IsValid(BLOCK_VALID_TREE)) {
+                // has some main tree validity, only remove partial sync reference
+                pindex->nStatus &= ~BLOCK_PARTIAL_MASK;
+                setDirtyBlockIndex.insert(pindex);
+                it++;
+            }
+            else {
+                // only partial validity, completely remove it
+                removals.push_back(pindex->GetBlockHashPoW2());
+                setDirtyBlockIndex.erase(pindex);
+                it = mapBlockIndex.erase(it);
+                // Reclaim memory
+                delete pindex;
+            }
+        }
+        else
+            it++;
+    }
+
+    if (!removals.empty())
+    {
+        LogPrintf("Partial sync reset collected %d blocks for removal.\n", removals.size());
+        if (!pblocktree->EraseBatchSync(removals)) {
+            AbortNode("Failed to write to block index database");
+        }
+    }
+
+#ifdef DEBUG_PARTIAL_SYNC
+    checkBlockIndexForPartialSync();
+#endif
+
+    nMaxSPVPruneHeight = 0;
+    PersistAndPruneForPartialSync();
+}
+
 bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
 {
     // To ensure that context checks can be done on headers from *time* onwards, a window of
@@ -4293,10 +4345,7 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
         if (IsPartialSyncActive()) // IsPartialSyncActive() => above checks for time and/or 576 window failed
         {
             LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync reset.\n");
-            assert(false);
-            pindexBestPartial = nullptr;
-            partialChain.SetTip(nullptr);
-            partialChain.SetHeightOffset(0);
+            ResetPartialSync();
         }
 
         // Search checkpoint with at least a 576 block height difference to the checkpoint that is the youngest before
