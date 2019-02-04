@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.UnityCore
 import kotlinx.android.synthetic.main.peer_list_fragment.*
 import kotlinx.android.synthetic.main.peer_list_fragment.view.*
 import kotlinx.coroutines.*
@@ -58,7 +57,7 @@ class PeerListFragment : Fragment(), CoroutineScope {
         view.peer_list.let { recycler ->
             recycler.layoutManager = LinearLayoutManager(context)
             recycler.adapter = adapter
-            recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+            recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
         return view

@@ -466,13 +466,13 @@ private constructor()
 
             currentZoom = parameters.zoom + 1
             val newZoom: Float
-            if (scale > 1)
+            newZoom = if (scale > 1)
             {
-                newZoom = currentZoom + scale * (maxZoom / 10)
+                currentZoom + scale * (maxZoom / 10)
             }
             else
             {
-                newZoom = currentZoom * scale
+                currentZoom * scale
             }
             currentZoom = Math.round(newZoom) - 1
             if (currentZoom < 0)
@@ -831,12 +831,11 @@ private constructor()
      */
     private class SizePair(previewSize: android.hardware.Camera.Size, pictureSize: android.hardware.Camera.Size?)
     {
-        private val mPreview: Size
+        private val mPreview: Size = Size(previewSize.width, previewSize.height)
         private var mPicture: Size? = null
 
         init
         {
-            mPreview = Size(previewSize.width, previewSize.height)
             if (pictureSize != null)
             {
                 mPicture = Size(pictureSize.width, pictureSize.height)
@@ -1144,19 +1143,19 @@ private constructor()
         @SuppressLint("InlinedApi")
         val CAMERA_FACING_FRONT = CameraInfo.CAMERA_FACING_FRONT
 
-        private val TAG = "OpenCameraSource"
+        private const val TAG = "OpenCameraSource"
 
         /**
          * The dummy surface texture must be assigned a chosen name.  Since we never use an OpenGL
          * context, we can choose any ID we want here.
          */
-        private val DUMMY_TEXTURE_NAME = 100
+        private const val DUMMY_TEXTURE_NAME = 100
 
         /**
          * If the absolute difference between a preview size aspect ratio and a picture size aspect
          * ratio is less than this tolerance, they are considered to be the same aspect ratio.
          */
-        private val ASPECT_RATIO_TOLERANCE = 0.01f
+        private const val ASPECT_RATIO_TOLERANCE = 0.01f
 
         /**
          * Gets the id for the camera specified by the direction it is facing.  Returns -1 if no such

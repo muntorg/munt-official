@@ -92,7 +92,7 @@ class SendFragment : Fragment()
         }
         else
         {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
@@ -108,13 +108,13 @@ class SendFragment : Fragment()
         fun onFragmentInteraction(uri: Uri)
     }
 
-    fun clipboardText(): String
+    private fun clipboardText(): String
     {
         val clipboard = ContextCompat.getSystemService(context!!, ClipboardManager::class.java)
         return (clipboard?.primaryClip?.getItemAt(0)?.coerceToText(context)).toString()
     }
 
-    fun checkClipboardEnable()
+    private fun checkClipboardEnable()
     {
         // Enable clipboard button if it contains a valid IBAN, Gulden address or Uri
         val text = clipboardText()

@@ -60,7 +60,7 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
         }
         else
         {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 

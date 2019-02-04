@@ -52,7 +52,7 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         }
         else
         {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
@@ -74,7 +74,7 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         if (currentAddressQrView != null)
         {
             val address = GuldenUnifiedBackend.GetReceiveAddress()
-            val imageData = GuldenUnifiedBackend.QRImageFromString("gulden://"+address, 600)
+            val imageData = GuldenUnifiedBackend.QRImageFromString("gulden://$address", 600)
             val bitmap = Bitmap.createBitmap(imageData.width, imageData.width, Bitmap.Config.ALPHA_8)
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageData.pixelData))
             currentAddressQrView.setImageBitmap(bitmap)
@@ -154,7 +154,7 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         }
     }
 
-    fun setFocusOnAddress()
+    private fun setFocusOnAddress()
     {
         if (actionBarCallback == null)
         {

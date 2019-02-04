@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gulden.jniunifiedbackend.PeerRecord
 
-class PeerListViewModel() : ViewModel() {
+class PeerListViewModel : ViewModel() {
     private lateinit var peers: MutableLiveData<List<PeerRecord>>
 
     fun getPeers(): LiveData<List<PeerRecord>> {

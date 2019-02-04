@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gulden.jniunifiedbackend.BlockInfoRecord
 
-class BlockListViewModel() : ViewModel() {
+class BlockListViewModel : ViewModel() {
     private lateinit var blocks: MutableLiveData<List<BlockInfoRecord>>
 
     fun getBlocks(): LiveData<List<BlockInfoRecord>> {

@@ -6,7 +6,6 @@
 package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -71,11 +70,11 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     }
 
 
-    fun performLink(linkURI: String)
+    private fun performLink(linkURI: String)
     {
         if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI))
         {
-            AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+            AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
             return
         }
         (activity as WalletActivity).gotoReceivePage()
@@ -93,12 +92,12 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
                     if (!GuldenUnifiedBackend.IsValidLinkURI(barcode.displayValue))
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
                     }
 
                     if (GuldenUnifiedBackend.HaveUnconfirmedFunds())
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.failed_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.failed_guldensync_unconfirmed_funds_message)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.failed_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.failed_guldensync_unconfirmed_funds_message)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
                         return
                     }
 
@@ -106,11 +105,11 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
                     if (GuldenUnifiedBackend.GetBalance() > 0)
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_non_empty_wallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok) , DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue) }).setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_non_empty_wallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue) }.setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
                     }
                     else
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_empty_wallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok) , DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue)} ).setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_empty_wallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue)}.setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
                     }
                 }
             }
@@ -131,7 +130,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
         }
         else
         {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
@@ -149,6 +148,6 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
     companion object
     {
-        private val REQUEST_CODE_SCAN_FOR_LINK = 0
+        private const val REQUEST_CODE_SCAN_FOR_LINK = 0
     }
 }

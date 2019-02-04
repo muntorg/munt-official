@@ -23,7 +23,7 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
 import org.jetbrains.anko.runOnUiThread
 
-private val TAG = "activity-manager"
+private const val TAG = "activity-manager"
 
 class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -95,7 +95,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 
     override fun updatedTransaction(transaction: TransactionRecord): Boolean {
         runOnUiThread {
-            Log.i(TAG, "updatedTransaction: " + transaction.toString())
+            Log.i(TAG, "updatedTransaction: $transaction")
         }
         return true
     }
@@ -103,7 +103,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun allActivitiesStopped()
     {
-        GuldenUnifiedBackend.PersistAndPruneForSPV();
+        GuldenUnifiedBackend.PersistAndPruneForSPV()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)

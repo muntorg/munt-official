@@ -50,7 +50,7 @@ class IntroActivity : AppCompatActivity(), UnityCore.Observer
         UnityCore.instance.removeObserver(coreObserverProxy)
     }
 
-    fun gotoActivity(cls: Class<*> )
+    private fun gotoActivity(cls: Class<*> )
     {
             val intent = Intent(this, cls)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

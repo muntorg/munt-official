@@ -31,12 +31,12 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     private val coreObserverProxy = CoreObserverProxy(this, this)
 
     internal var recoveryPhraseView: TextView? = null
-    internal var recoveryPhraseAcknowledgeCheckBox: CheckBox? = null
-    internal var recoveryPhraseAcceptButton: Button? = null
+    private var recoveryPhraseAcknowledgeCheckBox: CheckBox? = null
+    private var recoveryPhraseAcceptButton: Button? = null
     //fixme: (GULDEN) Change to char[] to we can securely wipe.
     internal var recoveryPhrase: String? = null
 
-    val isNewWallet: Boolean?
+    private val isNewWallet: Boolean?
         get() = !intent.hasExtra(this.packageName + "do_not_start_wallet_activity_on_close")
 
     private var shareActionProvider: ShareActionProvider? = null
@@ -132,7 +132,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         updateView()
     }
 
-    fun updateView()
+    private fun updateView()
     {
         if (isNewWallet!!)
         {
@@ -206,7 +206,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         }
     }
 
-    fun setFocusOnRecoveryPhrase()
+    private fun setFocusOnRecoveryPhrase()
     {
         startSupportActionMode(ActionBarCallBack())
     }

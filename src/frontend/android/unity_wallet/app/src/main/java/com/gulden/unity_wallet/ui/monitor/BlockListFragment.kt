@@ -53,7 +53,7 @@ class BlockListFragment : Fragment(), CoroutineScope {
         view.block_list.let { recycler ->
             recycler.layoutManager = LinearLayoutManager(context)
             recycler.adapter = adapter
-            recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+            recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
         return view

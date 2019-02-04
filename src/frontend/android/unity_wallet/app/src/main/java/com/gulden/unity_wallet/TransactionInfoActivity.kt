@@ -145,6 +145,6 @@ class TransactionInfoActivity : AppCompatActivity(), CoroutineScope {
     }
 
     companion object {
-        val EXTRA_TRANSACTION = "transaction"
+        const val EXTRA_TRANSACTION = "transaction"
     }
 }

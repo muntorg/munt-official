@@ -315,17 +315,17 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
 
     companion object
     {
-        private val TAG = "Barcode-reader"
+        private const val TAG = "Barcode-reader"
 
         // intent request code to handle updating play services if needed.
-        private val RC_HANDLE_GMS = 9001
+        private const val RC_HANDLE_GMS = 9001
 
         // permission request codes need to be < 256
-        private val RC_HANDLE_CAMERA_PERM = 2
+        private  const val RC_HANDLE_CAMERA_PERM = 2
 
         // constants used to pass extra data in the intent
-        val AutoFocus = "AutoFocus"
-        val UseFlash = "UseFlash"
-        val BarcodeObject = "Barcode"
+        const val AutoFocus = "AutoFocus"
+        const val UseFlash = "UseFlash"
+        const val BarcodeObject = "Barcode"
     }
 }

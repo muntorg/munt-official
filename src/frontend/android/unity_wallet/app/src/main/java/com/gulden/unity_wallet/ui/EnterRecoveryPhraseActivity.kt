@@ -31,10 +31,10 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     private var recoverFromPhraseWipeText: TextView? = null
     private var overwriteWalletCheckbox: CheckBox? = null
 
-    val recoveryPhrase: String
+    private val recoveryPhrase: String
         get() = recoveryPhraseEditText!!.text.toString().trim { it <= ' ' }
 
-    val isNewWallet: Boolean?
+    private val isNewWallet: Boolean?
         get() = !intent.hasExtra(this.packageName + "do_not_start_wallet_activity_on_close")
 
 

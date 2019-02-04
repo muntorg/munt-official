@@ -69,17 +69,15 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
 
 suspend fun nocksQuote(amountEuro: String): NocksQuoteResult
 {
-    if (FAKE_NOCKS_SERVICE) {
+    return if (FAKE_NOCKS_SERVICE) {
         delay(500)
         val amount = Random.nextDouble(300.0, 400.0)
-        return NocksQuoteResult(amountNLG = String.format("%.${Config.PRECISION_FULL}f", amount))
+        NocksQuoteResult(amountNLG = String.format("%.${Config.PRECISION_FULL}f", amount))
     }
     else {
-        val result = nocksRequest<NocksQuoteApiResult>(
-                "price",
-                "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"fee\": \"yes\", \"amountType\": \"withdrawal\"}")
+        val result = nocksRequest<NocksQuoteApiResult>("price", "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"fee\": \"yes\", \"amountType\": \"withdrawal\"}")
         val amountNLG = result?.success?.amount
-        return NocksQuoteResult(String.format("%.${Config.PRECISION_FULL}f", amountNLG))
+        NocksQuoteResult(String.format("%.${Config.PRECISION_FULL}f", amountNLG))
     }
 }
 

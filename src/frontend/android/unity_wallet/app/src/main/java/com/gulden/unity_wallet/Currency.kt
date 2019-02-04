@@ -7,9 +7,9 @@ import org.json.JSONObject
 import java.net.URL
 import java.util.*
 
-private val TAG = "currency"
+private const val TAG = "currency"
 
-private val GULDEN_MARKET_URL = "https://api.gulden.com/api/v1/ticker"
+private const val GULDEN_MARKET_URL = "https://api.gulden.com/api/v1/ticker"
 
 /**
  * Fetch currency conversion rate from server (suspended, use from co-routine)
@@ -63,10 +63,10 @@ class Currencies {
         var knownCurrencies = TreeMap<String, Currency>()
 
         init {
-            val codes = AppContext.instance.getResources().getStringArray(R.array.currency_codes)
-            val names = AppContext.instance.getResources().getStringArray(R.array.currency_names)
-            val shorts = AppContext.instance.getResources().getStringArray(R.array.currency_shorts)
-            val precisions = AppContext.instance.getResources().getIntArray(R.array.currency_precisions)
+            val codes = AppContext.instance.resources.getStringArray(R.array.currency_codes)
+            val names = AppContext.instance.resources.getStringArray(R.array.currency_names)
+            val shorts = AppContext.instance.resources.getStringArray(R.array.currency_shorts)
+            val precisions = AppContext.instance.resources.getIntArray(R.array.currency_precisions)
 
             for (i in 0 until codes.size) {
                 val c = Currency(code = codes[i], name = names[i], short = shorts[i], precision = precisions[i])

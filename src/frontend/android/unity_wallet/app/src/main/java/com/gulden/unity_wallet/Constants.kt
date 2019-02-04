@@ -5,11 +5,8 @@
 
 package com.gulden.unity_wallet
 
-import com.gulden.unity_wallet.BuildConfig
-
-
 object Constants
 {
-    val TEST = BuildConfig.TESTNET
-    val RECOMMENDED_CONFIRMATIONS = 3
+    const val TEST = BuildConfig.TESTNET
+    const val RECOMMENDED_CONFIRMATIONS = 3
 }

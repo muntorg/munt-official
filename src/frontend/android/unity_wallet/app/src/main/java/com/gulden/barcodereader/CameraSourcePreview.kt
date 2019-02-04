@@ -226,6 +226,6 @@ class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : 
 
     companion object
     {
-        private val TAG = "CameraSourcePreview"
+        private const val TAG = "CameraSourcePreview"
     }
 }

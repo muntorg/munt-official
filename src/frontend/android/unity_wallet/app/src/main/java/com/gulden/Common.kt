@@ -7,7 +7,7 @@ import com.gulden.jniunifiedbackend.UriRecord
 import java.util.HashMap
 
 fun Uri.getParameters(): HashMap<String, String> {
-    val items : HashMap<String, String> = HashMap<String, String>()
+    val items : HashMap<String, String> = HashMap()
     if (isOpaque)
         return items
 
@@ -41,7 +41,7 @@ fun Uri.getParameters(): HashMap<String, String> {
 
 fun uriRecipient(text: String): UriRecipient {
     var parsedQRCodeURI = Uri.parse(text)
-    var address: String = ""
+    var address = ""
 
     // Handle all possible scheme variations (foo: foo:// etc.)
     if (parsedQRCodeURI?.authority == null && parsedQRCodeURI?.path == null) {

@@ -6,9 +6,7 @@
 package com.gulden.unity_wallet
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -46,8 +44,8 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
         super.onBackPressed()
 
         // finish and kill myself so a next session is properly started
-        finish();
-        System.exit(0);
+        finish()
+        System.exit(0)
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -73,7 +71,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
         startActivityForResult(intent, REQUEST_CODE_SCAN_FOR_LINK)
     }
 
-    fun showMainWallet()
+    private fun showMainWallet()
     {
         // Proceed to main activity
         val intent = Intent(this, WalletActivity::class.java)
@@ -101,7 +99,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
                     }
                     else
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
                     }
                 }
             }
@@ -125,6 +123,6 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
 
     companion object
     {
-        private val REQUEST_CODE_SCAN_FOR_LINK = 0
+        private const val REQUEST_CODE_SCAN_FOR_LINK = 0
     }
 }

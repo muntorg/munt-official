@@ -19,8 +19,8 @@ import androidx.core.content.ContextCompat
 import androidx.work.*
 import java.util.concurrent.TimeUnit
 
-private val TAG = "background_sync"
-val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
+private const val TAG = "background_sync"
+const val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
 
 fun setupBackgroundSync(context: Context) {
 
@@ -28,7 +28,7 @@ fun setupBackgroundSync(context: Context) {
     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     val syncType = sharedPreferences.getString("preference_background_sync", context.getString(R.string.background_sync_default))!!
 
-    Log.i(TAG, "Starting background sync: " + syncType)
+    Log.i(TAG, "Starting background sync: $syncType")
 
     val serviceIntent = Intent(context, SyncService::class.java)
 
@@ -64,10 +64,10 @@ class SyncService : Service(), UnityCore.Observer
     }
 
     override fun syncProgressChanged(percent: Float): Boolean {
-        Log.i(TAG, "sync progress = " + percent)
+        Log.i(TAG, "sync progress = $percent")
         if (builder != null) {
             val b: NotificationCompat.Builder = builder!!
-            builder!!.setContentText("progress " + percent)
+            builder!!.setContentText("progress $percent")
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(NOTIFICATION_ID_FOREGROUND_SERVICE, b.build())
         }
@@ -76,9 +76,9 @@ class SyncService : Service(), UnityCore.Observer
 
     private var builder: NotificationCompat.Builder? = null
 
-    val channelID = "com.gulden.unity_wallet.service.channel"
+    private val channelID = "com.gulden.unity_wallet.service.channel"
 
-    fun startInForeground()
+    private fun startInForeground()
     {
 
         val notificationIntent = Intent(this, WalletActivity::class.java)
@@ -138,7 +138,7 @@ class SyncWorker(context : Context, params : WorkerParameters)
     : UnityCore.Observer, Worker(context, params) {
 
     override fun syncProgressChanged(percent: Float): Boolean {
-        Log.i(TAG, "periodic sync progress = " + percent)
+        Log.i(TAG, "periodic sync progress = $percent")
         return true
     }
 

@@ -108,7 +108,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         }
     }
 
-    fun gotoSendPage()
+    private fun gotoSendPage()
     {
         if (sendFragment == null)
             sendFragment = SendFragment()
@@ -122,14 +122,14 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         replaceFragment(receiveFragment!!, R.id.mainLayout)
     }
 
-    fun gotoTransactionPage()
+    private fun gotoTransactionPage()
     {
         if (transactionFragment == null)
             transactionFragment = MutationFragment()
         replaceFragment(transactionFragment!!, R.id.mainLayout)
     }
 
-    fun gotoSettingsPage()
+    private fun gotoSettingsPage()
     {
         if (settingsFragment == null)
             settingsFragment = SettingsFragment()
@@ -152,7 +152,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
     }
 
 
-    fun setSyncProgress(percent: Float)
+    private fun setSyncProgress(percent: Float)
     {
         syncProgress.progress = (syncProgress.max * (percent/100)).toInt()
         if (percent < 100.0)
@@ -161,7 +161,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
             syncProgress.visibility = View.INVISIBLE
     }
 
-    fun setWalletBalance(balance : Long)
+    private fun setWalletBalance(balance : Long)
     {
         val coins = balance.toDouble() / Config.COIN
         walletBalance.text = String.format("%.2f", coins)
@@ -227,7 +227,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
     }
 
     companion object {
-        private val BARCODE_READER_REQUEST_CODE = 1
-        val SEND_COINS_RETURN_CODE = 2
+        private const val BARCODE_READER_REQUEST_CODE = 1
+        const val SEND_COINS_RETURN_CODE = 2
     }
 }

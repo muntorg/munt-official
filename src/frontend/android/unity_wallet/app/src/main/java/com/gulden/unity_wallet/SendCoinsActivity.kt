@@ -183,7 +183,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
         coroutineContext[Job]!!.cancel()
     }
 
-    fun setupRate()
+    private fun setupRate()
     {
         this.launch( Dispatchers.Main) {
             try {
@@ -202,7 +202,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
         }
     }
 
-    fun updateConversion()
+    private fun updateConversion()
     {
         if (localRate <= 0.0)
             return
@@ -256,13 +256,13 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
         }
     }
 
-    fun setAddressLabel(label : String)
+    private fun setAddressLabel(label : String)
     {
         send_coins_receiving_static_label.text = label
         setAddressHasLabel(label.isNotEmpty())
     }
 
-    fun setAddressHasLabel(hasLabel : Boolean)
+    private fun setAddressHasLabel(hasLabel : Boolean)
     {
         if (hasLabel)
         {
@@ -278,7 +278,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
         }
     }
 
-    fun appendNumberToAmount(number : String)
+    private fun appendNumberToAmount(number : String)
     {
         if (activeAmount.text.toString() == "0")
             activeAmount.setText(number)
@@ -355,6 +355,6 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
 
     companion object
     {
-        val EXTRA_RECIPIENT = "recipient"
+        const val EXTRA_RECIPIENT = "recipient"
     }
 }
