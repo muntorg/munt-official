@@ -124,7 +124,7 @@ file COPYING
             android:layout_alignParentRight="true"
             android:textColor="@android:color/white"
             android:background="@drawable/shape_rounded_button"
-            />
+            tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>
 </LinearLayout>

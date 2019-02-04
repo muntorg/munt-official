@@ -130,9 +130,9 @@ public final class TransactionRecord implements android.os.Parcelable {
         this.mHeight = in.readInt();
         this.mBlockTime = in.readLong();
         this.mDepth = in.readInt();
-        this.mReceivedOutputs = new ArrayList<OutputRecord>();
+        this.mReceivedOutputs = new ArrayList<>();
         in.readList(this.mReceivedOutputs, getClass().getClassLoader());
-        this.mSentOutputs = new ArrayList<OutputRecord>();
+        this.mSentOutputs = new ArrayList<>();
         in.readList(this.mSentOutputs, getClass().getClassLoader());
     }
 
