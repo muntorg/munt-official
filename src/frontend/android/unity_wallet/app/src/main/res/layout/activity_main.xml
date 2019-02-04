@@ -17,7 +17,7 @@ file COPYING
         android:id="@+id/navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:background="@android:color/transparent"
         app:itemIconSize="50dp"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"

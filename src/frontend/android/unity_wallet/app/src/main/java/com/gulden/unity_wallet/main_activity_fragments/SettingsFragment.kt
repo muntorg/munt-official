@@ -27,7 +27,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 {
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {
-        setPreferencesFromResource(R.layout.fragment_settings, rootKey)
+        setPreferencesFromResource(R.xml.fragment_settings, rootKey)
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
