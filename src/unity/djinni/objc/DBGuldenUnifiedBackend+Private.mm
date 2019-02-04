@@ -4,13 +4,13 @@
 #import "DBGuldenUnifiedBackend+Private.h"
 #import "DBGuldenUnifiedBackend.h"
 #import "DBAddressRecord+Private.h"
-#import "DBBlockinfoRecord+Private.h"
+#import "DBBlockInfoRecord+Private.h"
 #import "DBGuldenMonitorListener+Private.h"
 #import "DBGuldenUnifiedFrontend+Private.h"
 #import "DBMonitorRecord+Private.h"
 #import "DBMutationRecord+Private.h"
 #import "DBPeerRecord+Private.h"
-#import "DBQrcodeRecord+Private.h"
+#import "DBQrCodeRecord+Private.h"
 #import "DBTransactionRecord+Private.h"
 #import "DBUriRecipient+Private.h"
 #import "DBUriRecord+Private.h"
@@ -107,12 +107,12 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (nonnull DBQrcodeRecord *)QRImageFromString:(nonnull NSString *)qrString
++ (nonnull DBQrCodeRecord *)QRImageFromString:(nonnull NSString *)qrString
                                     widthHint:(int32_t)widthHint {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::QRImageFromString(::djinni::String::toCpp(qrString),
                                                                         ::djinni::I32::toCpp(widthHint));
-        return ::djinni_generated::QrcodeRecord::fromCpp(objcpp_result_);
+        return ::djinni_generated::QrCodeRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -222,10 +222,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (nonnull NSArray<DBBlockinfoRecord *> *)getLastSPVBlockinfos {
++ (nonnull NSArray<DBBlockInfoRecord *> *)getLastSPVBlockInfos {
     try {
-        auto objcpp_result_ = ::GuldenUnifiedBackend::getLastSPVBlockinfos();
-        return ::djinni::List<::djinni_generated::BlockinfoRecord>::fromCpp(objcpp_result_);
+        auto objcpp_result_ = ::GuldenUnifiedBackend::getLastSPVBlockInfos();
+        return ::djinni::List<::djinni_generated::BlockInfoRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

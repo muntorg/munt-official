@@ -4,27 +4,27 @@
 #pragma once
 
 #include "djinni_support.hpp"
-#include "qrcode_record.hpp"
+#include "qr_code_record.hpp"
 
 namespace djinni_generated {
 
-class NativeQrcodeRecord final {
+class NativeQrCodeRecord final {
 public:
-    using CppType = ::QrcodeRecord;
+    using CppType = ::QrCodeRecord;
     using JniType = jobject;
 
-    using Boxed = NativeQrcodeRecord;
+    using Boxed = NativeQrCodeRecord;
 
-    ~NativeQrcodeRecord();
+    ~NativeQrCodeRecord();
 
     static CppType toCpp(JNIEnv* jniEnv, JniType j);
     static ::djinni::LocalRef<JniType> fromCpp(JNIEnv* jniEnv, const CppType& c);
 
 private:
-    NativeQrcodeRecord();
-    friend ::djinni::JniClass<NativeQrcodeRecord>;
+    NativeQrCodeRecord();
+    friend ::djinni::JniClass<NativeQrCodeRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/QrcodeRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/QrCodeRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(I[B)V") };
     const jfieldID field_mWidth { ::djinni::jniGetFieldID(clazz.get(), "mWidth", "I") };
     const jfieldID field_mPixelData { ::djinni::jniGetFieldID(clazz.get(), "mPixelData", "[B") };

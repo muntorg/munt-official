@@ -23,17 +23,17 @@ private const val FAKE_NOCKS_SERVICE = false
 @JsonClass(generateAdapter = true)
 class NocksQuoteApiResult
 {
-    class SuccesValue {
+    class SuccessValue {
         var amount: Double = -1.0
     }
     var error: String? = null
-    var success: SuccesValue? = null
+    var success: SuccessValue? = null
 }
 
 @JsonClass(generateAdapter = true)
 class NocksOrderApiResult
 {
-    class SuccesValue {
+    class SuccessValue {
         var depositAmount: Double = -1.0
         var deposit: String? = null
         var expirationTimestamp: String? = null
@@ -41,7 +41,7 @@ class NocksOrderApiResult
         var withdrawalOriginal: String? = null
     }
     var error: String? = null
-    var success: SuccesValue? = null
+    var success: SuccessValue? = null
 }
 
 private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, jsonParams: String): ResultType?
@@ -83,7 +83,7 @@ suspend fun nocksQuote(amountEuro: String): NocksQuoteResult
     }
 }
 
-suspend fun nocksOrder(amountEuro: String, iban:String): NocksOrderResult
+suspend fun nocksOrder(amountEuro: String, destinationIBAN:String): NocksOrderResult
 {
     if (FAKE_NOCKS_SERVICE) {
         delay(500)
@@ -95,9 +95,9 @@ suspend fun nocksOrder(amountEuro: String, iban:String): NocksOrderResult
     else {
         val result = nocksRequest<NocksOrderApiResult>(
                 "transaction",
-                "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$iban\"}")
+                "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\"}")
 
-        if (result?.success?.withdrawalOriginal != iban)
+        if (result?.success?.withdrawalOriginal != destinationIBAN)
             throw RuntimeException("Withdrawal address modified, please contact a developer for assistance.")
 
         return NocksOrderResult(

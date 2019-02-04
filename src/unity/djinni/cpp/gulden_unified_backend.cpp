@@ -3,11 +3,11 @@
 
 #include "gulden_unified_backend.hpp"  // my header
 #include "address_record.hpp"
-#include "blockinfo_record.hpp"
+#include "block_info_record.hpp"
 #include "monitor_record.hpp"
 #include "mutation_record.hpp"
 #include "peer_record.hpp"
-#include "qrcode_record.hpp"
+#include "qr_code_record.hpp"
 #include "transaction_record.hpp"
 #include "uri_recipient.hpp"
 #include "uri_record.hpp"

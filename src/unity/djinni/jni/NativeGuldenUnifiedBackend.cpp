@@ -4,13 +4,13 @@
 #include "NativeGuldenUnifiedBackend.hpp"  // my header
 #include "Marshal.hpp"
 #include "NativeAddressRecord.hpp"
-#include "NativeBlockinfoRecord.hpp"
+#include "NativeBlockInfoRecord.hpp"
 #include "NativeGuldenMonitorListener.hpp"
 #include "NativeGuldenUnifiedFrontend.hpp"
 #include "NativeMonitorRecord.hpp"
 #include "NativeMutationRecord.hpp"
 #include "NativePeerRecord.hpp"
-#include "NativeQrcodeRecord.hpp"
+#include "NativeQrCodeRecord.hpp"
 #include "NativeTransactionRecord.hpp"
 #include "NativeUriRecipient.hpp"
 #include "NativeUriRecord.hpp"
@@ -118,7 +118,7 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacken
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::GuldenUnifiedBackend::QRImageFromString(::djinni::String::toCpp(jniEnv, j_qrString),
                                                            ::djinni::I32::toCpp(jniEnv, j_widthHint));
-        return ::djinni::release(::djinni_generated::NativeQrcodeRecord::fromCpp(jniEnv, r));
+        return ::djinni::release(::djinni_generated::NativeQrCodeRecord::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
@@ -260,12 +260,12 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacken
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_getLastSPVBlockinfos(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_getLastSPVBlockInfos(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::GuldenUnifiedBackend::getLastSPVBlockinfos();
-        return ::djinni::release(::djinni::List<::djinni_generated::NativeBlockinfoRecord>::fromCpp(jniEnv, r));
+        auto r = ::GuldenUnifiedBackend::getLastSPVBlockInfos();
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeBlockInfoRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

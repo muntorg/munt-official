@@ -7,29 +7,29 @@
 
 @interface DBTransactionRecord : NSObject
 - (nonnull instancetype)initWithTxHash:(nonnull NSString *)txHash
-                             timestamp:(int64_t)timestamp
+                             timeStamp:(int64_t)timeStamp
                                 amount:(int64_t)amount
                                    fee:(int64_t)fee
                                 status:(DBTransactionStatus)status
                                 height:(int32_t)height
-                             blocktime:(int64_t)blocktime
+                             blockTime:(int64_t)blockTime
                                  depth:(int32_t)depth
                        receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
                            sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs;
 + (nonnull instancetype)transactionRecordWithTxHash:(nonnull NSString *)txHash
-                                          timestamp:(int64_t)timestamp
+                                          timeStamp:(int64_t)timeStamp
                                              amount:(int64_t)amount
                                                 fee:(int64_t)fee
                                              status:(DBTransactionStatus)status
                                              height:(int32_t)height
-                                          blocktime:(int64_t)blocktime
+                                          blockTime:(int64_t)blockTime
                                               depth:(int32_t)depth
                                     receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
                                         sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs;
 
 @property (nonatomic, readonly, nonnull) NSString * txHash;
 
-@property (nonatomic, readonly) int64_t timestamp;
+@property (nonatomic, readonly) int64_t timeStamp;
 
 @property (nonatomic, readonly) int64_t amount;
 
@@ -39,7 +39,7 @@
 
 @property (nonatomic, readonly) int32_t height;
 
-@property (nonatomic, readonly) int64_t blocktime;
+@property (nonatomic, readonly) int64_t blockTime;
 
 @property (nonatomic, readonly) int32_t depth;
 

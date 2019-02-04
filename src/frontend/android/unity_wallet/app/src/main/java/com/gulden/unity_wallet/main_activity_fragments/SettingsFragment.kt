@@ -11,7 +11,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import androidx.preference.Preference
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
@@ -43,7 +42,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
                 val intent = Intent(context, BarcodeCaptureActivity::class.java)
                 startActivityForResult(intent, SettingsFragment.REQUEST_CODE_SCAN_FOR_LINK)
             }
-            "preference_change_passcode" ->
+            "preference_change_pass_code" ->
             {
                 //TODO: Implement
             }
@@ -107,11 +106,11 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
                     if (GuldenUnifiedBackend.GetBalance() > 0)
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_nonemptywallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok) , DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue) }).setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_non_empty_wallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok) , DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue) }).setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
                     }
                     else
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_emptywallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok) , DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue)} ).setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
+                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_empty_wallet)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok) , DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss(); performLink(barcode.displayValue)} ).setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel), DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() }).setCancelable(true).create().show()
                     }
                 }
             }

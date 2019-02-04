@@ -61,7 +61,7 @@ class BlockListFragment : Fragment(), CoroutineScope {
 
     private suspend fun updateBlocks() {
         val data = withContext(Dispatchers.IO) {
-            GuldenUnifiedBackend.getLastSPVBlockinfos()
+            GuldenUnifiedBackend.getLastSPVBlockInfos()
         }
         viewModel.setBlocks(data)
     }

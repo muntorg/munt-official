@@ -37,7 +37,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     internal var recoveryPhrase: String? = null
 
     val isNewWallet: Boolean?
-        get() = !intent.hasExtra(this.packageName + "dont_start_wallet_activity_on_close")
+        get() = !intent.hasExtra(this.packageName + "do_not_start_wallet_activity_on_close")
 
     private var shareActionProvider: ShareActionProvider? = null
 

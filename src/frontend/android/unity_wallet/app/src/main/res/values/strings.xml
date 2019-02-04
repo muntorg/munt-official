@@ -15,7 +15,7 @@ file COPYING
     <string name="title_activity_transaction_info">Transaction info</string>
 
     <string name="action_bar_copy">Copy</string>
-    <string name="action_bar_copylong">Copy to clipboard</string>
+    <string name="action_bar_copy_long">Copy to clipboard</string>
     <string name="action_bar_share">Share</string>
     <string name="action_bar_buy">Buy</string>
     <string name="welcome_activity_create_new_wallet">New wallet</string>
@@ -59,7 +59,7 @@ file COPYING
         <item>USD - US dollar</item>
         <item>ZAR - South African rand</item>
         <item>KRW - South Korean Won</item>
-        <item>JPY - Yapanese yen</item>
+        <item>JPY - Japanese yen</item>
     </string-array>
     <string-array name="currency_codes">
         <item>EUR</item>
@@ -85,7 +85,7 @@ file COPYING
         <item>US dollar</item>
         <item>South African rand</item>
         <item>South Korean Won</item>
-        <item>Yapanese yen</item>
+        <item>Japanese yen</item>
     </string-array>
     <string-array name="currency_shorts">
         <item>€</item>
@@ -145,12 +145,12 @@ file COPYING
     <string name="failed_guldensync_warning_title">Could not perform link</string>
     <string name="failed_guldensync_unconfirmed_funds_message">Some of your funds are awaiting confirmation, please allow for them to fully confirm before attempting the link process again.</string>
     <string name="guldensync_info_title">Link with desktop wallet</string>
-    <string name="guldensync_info_message_nonemptywallet">You are about to establish a link with your desktop wallet. The current addresses in this wallet will be deleted and no longer available after the link is established. The current funds in this wallet will be transferred into the desktop wallet before the link is established, and will be temporarily unavailable from this wallet until the link finishes establishing. Please ensure you save a copy of your old recovery phrase somewhere in case you ever find the need to access these addresses again.</string>
-    <string name="guldensync_info_message_emptywallet">You are about to establish a link with your desktop wallet. The current addresses in this wallet will be deleted and no longer available after the link is established. Please ensure you save a copy of your old recovery phrase somewhere in case you ever find the need to access these addresses again.</string>
+    <string name="guldensync_info_message_non_empty_wallet">You are about to establish a link with your desktop wallet. The current addresses in this wallet will be deleted and no longer available after the link is established. The current funds in this wallet will be transferred into the desktop wallet before the link is established, and will be temporarily unavailable from this wallet until the link finishes establishing. Please ensure you save a copy of your old recovery phrase somewhere in case you ever find the need to access these addresses again.</string>
+    <string name="guldensync_info_message_empty_wallet">You are about to establish a link with your desktop wallet. The current addresses in this wallet will be deleted and no longer available after the link is established. Please ensure you save a copy of your old recovery phrase somewhere in case you ever find the need to access these addresses again.</string>
     <string name="preference_fragment_title">Preferences</string>
     <string name="preference_fragment_recovery_label">Recovery phrase</string>
     <string name="preference_fragment_link_label">Link wallet</string>
-    <string name="preference_fragment_passcode_label">Change passcode</string>
+    <string name="preference_fragment_pass_code_label">Change passcode</string>
     <string name="preference_fragment_rescan_label">Rescan wallet</string>
     <string name="preference_fragment_remove_label">Remove wallet</string>
     <string name="preference_fragment_fiat_label">Local currency</string>
@@ -171,7 +171,7 @@ file COPYING
     <string name="send_keypad_digit_7">7</string>
     <string name="send_keypad_digit_8">8</string>
     <string name="send_keypad_digit_9">9</string>
-    <string name="send_keypad_decimal_seperator">.</string>
+    <string name="send_keypad_decimal_separator">.</string>
     <string name="send_keypad_digit_0">0</string>
     <string name="send_keypad_button_delete">x</string>
     <string name="chain_status_label_probable_height">Probable height</string>

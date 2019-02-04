@@ -55,7 +55,7 @@ public abstract class GuldenUnifiedBackend {
 
     /**
      * Check recovery phrase for (syntactic) validity
-     * Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
+     * Considered valid if the contained mnemonic is valid and the birth-number is either absent or passes Base-10 checksum
      */
     public static boolean IsValidRecoveryPhrase(String phrase)
     {
@@ -75,7 +75,7 @@ public abstract class GuldenUnifiedBackend {
     }
 
     /** Generate a QR code for a string, QR code will be as close to widthHint as possible when applying simple scaling. */
-    public static QrcodeRecord QRImageFromString(String qrString, int widthHint)
+    public static QrCodeRecord QRImageFromString(String qrString, int widthHint)
     {
         return CppProxy.QRImageFromString(qrString,
                                           widthHint);
@@ -117,7 +117,7 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.IsValidRecipient(request);
     }
 
-    /** Attempt to pay a recipient, will throw on failure with descriptiopn */
+    /** Attempt to pay a recipient, will throw on failure with description */
     public static void performPaymentToRecipient(UriRecipient request)
     {
         CppProxy.performPaymentToRecipient(request);
@@ -186,9 +186,9 @@ public abstract class GuldenUnifiedBackend {
     }
 
     /** Get info of last blocks (at most 32) in SPV chain */
-    public static ArrayList<BlockinfoRecord> getLastSPVBlockinfos()
+    public static ArrayList<BlockInfoRecord> getLastSPVBlockInfos()
     {
-        return CppProxy.getLastSPVBlockinfos();
+        return CppProxy.getLastSPVBlockInfos();
     }
 
     public static MonitorRecord getMonitoringStats()
@@ -247,7 +247,7 @@ public abstract class GuldenUnifiedBackend {
 
         public static native void TerminateUnityLib();
 
-        public static native QrcodeRecord QRImageFromString(String qrString, int widthHint);
+        public static native QrCodeRecord QRImageFromString(String qrString, int widthHint);
 
         public static native String GetReceiveAddress();
 
@@ -281,7 +281,7 @@ public abstract class GuldenUnifiedBackend {
 
         public static native ArrayList<PeerRecord> getPeers();
 
-        public static native ArrayList<BlockinfoRecord> getLastSPVBlockinfos();
+        public static native ArrayList<BlockInfoRecord> getLastSPVBlockInfos();
 
         public static native MonitorRecord getMonitoringStats();
 

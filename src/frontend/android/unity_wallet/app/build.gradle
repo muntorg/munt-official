@@ -46,7 +46,7 @@ android {
             versionName = "2.0.1.0"
         }
     }
-    // Build a seperate apk for each native architecture we support.
+    // Build a separate apk for each native architecture we support.
     splits
     {
         abi

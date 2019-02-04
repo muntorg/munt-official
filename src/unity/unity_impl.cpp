@@ -25,7 +25,7 @@
 // Djinni generated files
 #include "gulden_unified_backend.hpp"
 #include "gulden_unified_frontend.hpp"
-#include "qrcode_record.hpp"
+#include "qr_code_record.hpp"
 #include "balance_record.hpp"
 #include "uri_record.hpp"
 #include "uri_recipient.hpp"
@@ -34,7 +34,7 @@
 #include "output_record.hpp"
 #include "address_record.hpp"
 #include "peer_record.hpp"
-#include "blockinfo_record.hpp"
+#include "block_info_record.hpp"
 #include "monitor_record.hpp"
 #include "gulden_monitor_listener.hpp"
 #ifdef __ANDROID__
@@ -438,12 +438,12 @@ void GuldenUnifiedBackend::TerminateUnityLib()
     GuldenAppManager::gApp->waitForShutDown();
 }
 
-QrcodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)
+QrCodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)
 {
     QRcode* code = QRcode_encodeString(qr_string.c_str(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
     if (!code)
     {
-        return QrcodeRecord(0, std::vector<uint8_t>());
+        return QrCodeRecord(0, std::vector<uint8_t>());
     }
     else
     {
@@ -465,7 +465,7 @@ QrcodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_strin
             }
         }
         QRcode_free(code);
-        return QrcodeRecord(finalWidth, dataVector);
+        return QrCodeRecord(finalWidth, dataVector);
     }
 }
 
@@ -633,7 +633,7 @@ std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
         TransactionRecord tx = calculateTransactionRecordForWalletTransaction(wtx);
         ret.push_back(tx);
     }
-    std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timestamp > y.timestamp); });
+    std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timeStamp > y.timeStamp); });
     return ret;
 }
 
@@ -758,16 +758,16 @@ std::vector<PeerRecord> GuldenUnifiedBackend::getPeers()
     return ret;
 }
 
-std::vector<BlockinfoRecord> GuldenUnifiedBackend::getLastSPVBlockinfos()
+std::vector<BlockInfoRecord> GuldenUnifiedBackend::getLastSPVBlockInfos()
 {
-    std::vector<BlockinfoRecord> ret;
+    std::vector<BlockInfoRecord> ret;
 
     LOCK(cs_main);
 
     int height = partialChain.Height();
     while (ret.size() < 32 && height > partialChain.HeightOffset()) {
         const CBlockIndex* pindex = partialChain[height];
-        ret.push_back(BlockinfoRecord(pindex->nHeight, pindex->GetBlockTime(), pindex->GetBlockHashPoW2().ToString()));
+        ret.push_back(BlockInfoRecord(pindex->nHeight, pindex->GetBlockTime(), pindex->GetBlockHashPoW2().ToString()));
         height--;
     }
 

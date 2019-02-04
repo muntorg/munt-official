@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.work.*
 import java.util.concurrent.TimeUnit
 
-private val TAG = "backgroundsync"
+private val TAG = "background_sync"
 val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
 
 fun setupBackgroundSync(context: Context) {

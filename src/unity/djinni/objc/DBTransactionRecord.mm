@@ -7,24 +7,24 @@
 @implementation DBTransactionRecord
 
 - (nonnull instancetype)initWithTxHash:(nonnull NSString *)txHash
-                             timestamp:(int64_t)timestamp
+                             timeStamp:(int64_t)timeStamp
                                 amount:(int64_t)amount
                                    fee:(int64_t)fee
                                 status:(DBTransactionStatus)status
                                 height:(int32_t)height
-                             blocktime:(int64_t)blocktime
+                             blockTime:(int64_t)blockTime
                                  depth:(int32_t)depth
                        receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
                            sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs
 {
     if (self = [super init]) {
         _txHash = [txHash copy];
-        _timestamp = timestamp;
+        _timeStamp = timeStamp;
         _amount = amount;
         _fee = fee;
         _status = status;
         _height = height;
-        _blocktime = blocktime;
+        _blockTime = blockTime;
         _depth = depth;
         _receivedOutputs = [receivedOutputs copy];
         _sentOutputs = [sentOutputs copy];
@@ -33,23 +33,23 @@
 }
 
 + (nonnull instancetype)transactionRecordWithTxHash:(nonnull NSString *)txHash
-                                          timestamp:(int64_t)timestamp
+                                          timeStamp:(int64_t)timeStamp
                                              amount:(int64_t)amount
                                                 fee:(int64_t)fee
                                              status:(DBTransactionStatus)status
                                              height:(int32_t)height
-                                          blocktime:(int64_t)blocktime
+                                          blockTime:(int64_t)blockTime
                                               depth:(int32_t)depth
                                     receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
                                         sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs
 {
     return [[self alloc] initWithTxHash:txHash
-                              timestamp:timestamp
+                              timeStamp:timeStamp
                                  amount:amount
                                     fee:fee
                                  status:status
                                  height:height
-                              blocktime:blocktime
+                              blockTime:blockTime
                                   depth:depth
                         receivedOutputs:receivedOutputs
                             sentOutputs:sentOutputs];
@@ -57,7 +57,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p txHash:%@ timestamp:%@ amount:%@ fee:%@ status:%@ height:%@ blocktime:%@ depth:%@ receivedOutputs:%@ sentOutputs:%@>", self.class, (void *)self, self.txHash, @(self.timestamp), @(self.amount), @(self.fee), @(self.status), @(self.height), @(self.blocktime), @(self.depth), self.receivedOutputs, self.sentOutputs];
+    return [NSString stringWithFormat:@"<%@ %p txHash:%@ timeStamp:%@ amount:%@ fee:%@ status:%@ height:%@ blockTime:%@ depth:%@ receivedOutputs:%@ sentOutputs:%@>", self.class, (void *)self, self.txHash, @(self.timeStamp), @(self.amount), @(self.fee), @(self.status), @(self.height), @(self.blockTime), @(self.depth), self.receivedOutputs, self.sentOutputs];
 }
 
 @end

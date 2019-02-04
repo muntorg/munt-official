@@ -8,19 +8,19 @@ package com.gulden.unity_wallet.ui.monitor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.gulden.jniunifiedbackend.BlockinfoRecord
+import com.gulden.jniunifiedbackend.BlockInfoRecord
 
 class BlockListViewModel() : ViewModel() {
-    private lateinit var blocks: MutableLiveData<List<BlockinfoRecord>>
+    private lateinit var blocks: MutableLiveData<List<BlockInfoRecord>>
 
-    fun getBlocks(): LiveData<List<BlockinfoRecord>> {
+    fun getBlocks(): LiveData<List<BlockInfoRecord>> {
         if (!::blocks.isInitialized) {
             blocks = MutableLiveData()
         }
         return blocks
     }
 
-    fun setBlocks(blocks_: List<BlockinfoRecord>) {
+    fun setBlocks(blocks_: List<BlockInfoRecord>) {
         if (!::blocks.isInitialized) {
             blocks = MutableLiveData()
         }

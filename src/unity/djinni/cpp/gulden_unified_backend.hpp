@@ -11,11 +11,11 @@
 class GuldenMonitorListener;
 class GuldenUnifiedFrontend;
 struct AddressRecord;
-struct BlockinfoRecord;
+struct BlockInfoRecord;
 struct MonitorRecord;
 struct MutationRecord;
 struct PeerRecord;
-struct QrcodeRecord;
+struct QrCodeRecord;
 struct TransactionRecord;
 struct UriRecipient;
 struct UriRecord;
@@ -52,7 +52,7 @@ public:
 
     /**
      * Check recovery phrase for (syntactic) validity
-     * Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
+     * Considered valid if the contained mnemonic is valid and the birth-number is either absent or passes Base-10 checksum
      */
     static bool IsValidRecoveryPhrase(const std::string & phrase);
 
@@ -63,7 +63,7 @@ public:
     static void TerminateUnityLib();
 
     /** Generate a QR code for a string, QR code will be as close to width_hint as possible when applying simple scaling. */
-    static QrcodeRecord QRImageFromString(const std::string & qr_string, int32_t width_hint);
+    static QrCodeRecord QRImageFromString(const std::string & qr_string, int32_t width_hint);
 
     /** Get a receive address from the wallet */
     static std::string GetReceiveAddress();
@@ -83,7 +83,7 @@ public:
     /** Check if text/address is something we are capable of sending money too */
     static UriRecipient IsValidRecipient(const UriRecord & request);
 
-    /** Attempt to pay a recipient, will throw on failure with descriptiopn */
+    /** Attempt to pay a recipient, will throw on failure with description */
     static void performPaymentToRecipient(const UriRecipient & request);
 
     /** Get list of all transactions wallet has been involved in */
@@ -122,7 +122,7 @@ public:
     static std::vector<PeerRecord> getPeers();
 
     /** Get info of last blocks (at most 32) in SPV chain */
-    static std::vector<BlockinfoRecord> getLastSPVBlockinfos();
+    static std::vector<BlockInfoRecord> getLastSPVBlockInfos();
 
     static MonitorRecord getMonitoringStats();
 

@@ -37,11 +37,11 @@ file COPYING
         tools:ignore="UnusedAttribute" />
 
     <Preference
-        android:key="preference_change_passcode"
+        android:key="preference_change_pass_code"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
-        android:title="@string/preference_fragment_passcode_label"
+        android:title="@string/preference_fragment_pass_code_label"
         tools:ignore="UnusedAttribute" />
 
     <Preference

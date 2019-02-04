@@ -12,7 +12,7 @@ private val TAG = "currency"
 private val GULDEN_MARKET_URL = "https://api.gulden.com/api/v1/ticker"
 
 /**
- * Fetch currency conversion rate from server (suspended, use from coroutine)
+ * Fetch currency conversion rate from server (suspended, use from co-routine)
  *
  * @param code currency code
  * @throws Throwable on any error

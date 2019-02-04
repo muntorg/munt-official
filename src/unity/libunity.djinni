@@ -3,7 +3,7 @@
 # Distributed under the GULDEN software license, see the accompanying
 # file COPYING
 
-qrcode_record = record {
+qr_code_record = record {
     width: i32;
     pixel_data: binary;
 }
@@ -42,12 +42,12 @@ mutation_record = record {
 
 transaction_record = record {
     txHash: string;
-    timestamp : i64;
+    timeStamp : i64;
     amount : i64;
     fee : i64;
     status : transaction_status;
     height : i32;
-    blocktime : i64;
+    blockTime : i64;
     depth : i32;
     receivedOutputs : list<output_record>;
     sentOutputs : list<output_record>;
@@ -82,10 +82,10 @@ peer_record = record {
     protocol : i64;
 }
 
-blockinfo_record = record {
+block_info_record = record {
     height : i32;
-    timestamp : i64;
-    blockhash : string;
+    timeStamp : i64;
+    blockHash : string;
 }
 
 # This interface will be implemented in C++ and can be called from any language.
@@ -111,7 +111,7 @@ gulden_unified_backend = interface +c {
     static EraseWalletSeedsAndAccounts(): bool;
 
     # Check recovery phrase for (syntactic) validity
-    # Considered valid if the contained mnemonic is valid and the birthnumber is either absent or passes Base-10 checksum
+    # Considered valid if the contained mnemonic is valid and the birth-number is either absent or passes Base-10 checksum
     static IsValidRecoveryPhrase(phrase: string): bool;
 
     # Generate a new recovery mnemonic
@@ -121,7 +121,7 @@ gulden_unified_backend = interface +c {
     static TerminateUnityLib();
 
     # Generate a QR code for a string, QR code will be as close to width_hint as possible when applying simple scaling.
-    static QRImageFromString(qr_string : string, width_hint : i32): qrcode_record;
+    static QRImageFromString(qr_string : string, width_hint : i32): qr_code_record;
 
     # Get a receive address from the wallet
     static GetReceiveAddress(): string;
@@ -141,7 +141,7 @@ gulden_unified_backend = interface +c {
     # Check if text/address is something we are capable of sending money too
     static IsValidRecipient(request : uri_record): uri_recipient;
 
-    # Attempt to pay a recipient, will throw on failure with descriptiopn
+    # Attempt to pay a recipient, will throw on failure with description
     static performPaymentToRecipient(request : uri_recipient);
 
     # Get list of all transactions wallet has been involved in
@@ -176,7 +176,7 @@ gulden_unified_backend = interface +c {
     static getPeers() : list<peer_record>;
 
     # Get info of last blocks (at most 32) in SPV chain
-    static getLastSPVBlockinfos() : list<blockinfo_record>;
+    static getLastSPVBlockInfos() : list<block_info_record>;
 
     static getMonitoringStats(): monitor_record;
 

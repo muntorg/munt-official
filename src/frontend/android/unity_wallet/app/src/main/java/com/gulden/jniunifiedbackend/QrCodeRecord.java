@@ -9,14 +9,14 @@ package com.gulden.jniunifiedbackend;
  * Distributed under the GULDEN software license, see the accompanying
  * file COPYING
  */
-public final class QrcodeRecord {
+public final class QrCodeRecord {
 
 
     /*package*/ final int mWidth;
 
     /*package*/ final byte[] mPixelData;
 
-    public QrcodeRecord(
+    public QrCodeRecord(
             int width,
             byte[] pixelData) {
         this.mWidth = width;
@@ -33,7 +33,7 @@ public final class QrcodeRecord {
 
     @Override
     public String toString() {
-        return "QrcodeRecord{" +
+        return "QrCodeRecord{" +
                 "mWidth=" + mWidth +
                 "," + "mPixelData=" + mPixelData +
         "}";

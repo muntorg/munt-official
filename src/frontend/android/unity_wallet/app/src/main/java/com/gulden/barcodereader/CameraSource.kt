@@ -517,19 +517,6 @@ private constructor()
      *
      * @return current focus mode. This value is null if the camera is not yet created. Applications should call [ ][.autoFocus] to start the focus if focus
      * mode is FOCUS_MODE_AUTO or FOCUS_MODE_MACRO.
-     * @see Camera.Parameters.FOCUS_MODE_AUTO
-     *
-     * @see Camera.Parameters.FOCUS_MODE_INFINITY
-     *
-     * @see Camera.Parameters.FOCUS_MODE_MACRO
-     *
-     * @see Camera.Parameters.FOCUS_MODE_FIXED
-     *
-     * @see Camera.Parameters.FOCUS_MODE_EDOF
-     *
-     * @see Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO
-     *
-     * @see Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE
      */
     @FocusMode
     fun getFocusMode(): String?
@@ -1211,7 +1198,7 @@ private constructor()
 
             // The method for selecting the best size is to minimize the sum of the differences between
             // the desired values and the actual values for width and height.  This is certainly not the
-            // only way to select the best size, but it provides a decent tradeoff between using the
+            // only way to select the best size, but it provides a decent trade off between using the
             // closest aspect ratio vs. using the closest pixel area.
             var selectedPair: SizePair? = null
             var minDiff = Integer.MAX_VALUE

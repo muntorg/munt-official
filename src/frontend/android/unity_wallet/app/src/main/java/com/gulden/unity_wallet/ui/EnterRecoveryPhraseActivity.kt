@@ -35,7 +35,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         get() = recoveryPhraseEditText!!.text.toString().trim { it <= ' ' }
 
     val isNewWallet: Boolean?
-        get() = !intent.hasExtra(this.packageName + "dont_start_wallet_activity_on_close")
+        get() = !intent.hasExtra(this.packageName + "do_not_start_wallet_activity_on_close")
 
 
     inner class SpaceTokenizer : MultiAutoCompleteTextView.Tokenizer

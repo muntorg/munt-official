@@ -468,8 +468,8 @@ libgulden_unity_jni_la_SOURCES = \
   $(crypto_libgulden_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
-  unity/djinni/jni/NativeBlockinfoRecord.hpp \
-  unity/djinni/jni/NativeBlockinfoRecord.cpp \
+  unity/djinni/jni/NativeBlockInfoRecord.hpp \
+  unity/djinni/jni/NativeBlockInfoRecord.cpp \
   unity/djinni/jni/NativeGuldenMonitorListener.cpp \
   unity/djinni/jni/NativeGuldenMonitorListener.hpp \
   unity/djinni/jni/NativeGuldenUnifiedBackend.hpp \
@@ -482,8 +482,8 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeMutationRecord.hpp \
   unity/djinni/jni/NativePeerRecord.hpp \
   unity/djinni/jni/NativePeerRecord.cpp \
-  unity/djinni/jni/NativeQrcodeRecord.hpp \
-  unity/djinni/jni/NativeQrcodeRecord.cpp \
+  unity/djinni/jni/NativeQrCodeRecord.hpp \
+  unity/djinni/jni/NativeQrCodeRecord.cpp \
   unity/djinni/jni/NativeAddressRecord.hpp \
   unity/djinni/jni/NativeAddressRecord.cpp \
   unity/djinni/jni/NativeBalanceRecord.hpp \

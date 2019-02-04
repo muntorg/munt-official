@@ -156,7 +156,7 @@ file COPYING
             android:layout_height="80dp"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
-            android:text="@string/send_keypad_decimal_seperator"
+            android:text="@string/send_keypad_decimal_separator"
             android:textColor="@android:color/white" />
 
         <Button

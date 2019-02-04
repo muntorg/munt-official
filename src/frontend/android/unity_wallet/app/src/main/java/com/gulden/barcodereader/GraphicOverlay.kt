@@ -27,7 +27,7 @@ import java.util.HashSet
 import java.util.Vector
 
 /**
- * A view which renders a series of custom graphics to be overlayed on top of an associated preview
+ * A view which renders a series of custom graphics to be overlaid on top of an associated preview
  * (i.e., the camera preview).  The creator can add graphics objects, update the objects, and remove
  * them, triggering the appropriate drawing and invalidation within the view.
  *

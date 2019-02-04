@@ -21,7 +21,7 @@
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/peer_list_row_useragent"
+            android:id="@+id/peer_list_row_user_agent"
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_weight="1" />

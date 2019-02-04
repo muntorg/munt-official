@@ -20,12 +20,12 @@ class IntroActivity : AppCompatActivity(), UnityCore.Observer
 
     override fun haveExistingWallet(): Boolean {
         // after init there will be a coreReady event, after which the WalletActivity can start
-        receivedExisitingWalletEvent = true
+        receivedExistingWalletEvent = true
         return true
     }
 
     override fun onCoreReady(): Boolean {
-        if (receivedExisitingWalletEvent)
+        if (receivedExistingWalletEvent)
             gotoActivity(WalletActivity::class.java)
         return true
     }
@@ -39,7 +39,7 @@ class IntroActivity : AppCompatActivity(), UnityCore.Observer
         core.startCore()
 
         // if core is already ready we are resuming a session and can go directly to the wallet
-        // (there will be no further coreReady or haveExisitingWallet event)
+        // (there will be no further coreReady or haveExistingWallet event)
         if (core.isCoreReady())
             gotoActivity(WalletActivity::class.java)
     }
@@ -59,5 +59,5 @@ class IntroActivity : AppCompatActivity(), UnityCore.Observer
             finish()
     }
 
-    private var receivedExisitingWalletEvent: Boolean = false
+    private var receivedExistingWalletEvent: Boolean = false
 }

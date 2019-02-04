@@ -84,7 +84,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
                 if (isIBAN) {
                     confirmAndCommitIBANPayment(view)
                 } else {
-                    confirmAndCommitGuldenPaymnet(view)
+                    confirmAndCommitGuldenPayment(view)
                 }
             }
         }
@@ -109,7 +109,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
         setupRate()
     }
 
-    private fun confirmAndCommitGuldenPaymnet(view: View) {
+    private fun confirmAndCommitGuldenPayment(view: View) {
         // create styled message from resource template and arguments bundle
         val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amount)
         val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
@@ -140,7 +140,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
                 // request order from Nocks
                 val orderResult = nocksOrder(
                         amountEuro = String.format("%.${foreignCurrency.precision}f", foreignAmount),
-                        iban = recipient.address)
+                        destinationIBAN = recipient.address)
 
                 // create styled message from resource template and arguments bundle
                 val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG.toDouble())
@@ -247,7 +247,7 @@ class SendCoinsActivity : AppCompatActivity(), CoroutineScope
                     send_coins_nocks_estimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
                 }
                 catch (_: CancellationException) {
-                    // silently pass job cancelation
+                    // silently pass job cancellation
                 }
                 catch (e: Throwable) {
                     send_coins_nocks_estimate.text = "Could not fetch transaction quote"

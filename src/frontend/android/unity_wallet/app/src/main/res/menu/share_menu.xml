@@ -11,7 +11,7 @@
         android:id="@+id/item_copy_to_clipboard"
         android:icon="@drawable/ic_glyphicons_512_copy"
         app:showAsAction="ifRoom|withText"
-        android:title="@string/action_bar_copylong"
+        android:title="@string/action_bar_copy_long"
         android:titleCondensed="@string/action_bar_copy"
         />
     <item

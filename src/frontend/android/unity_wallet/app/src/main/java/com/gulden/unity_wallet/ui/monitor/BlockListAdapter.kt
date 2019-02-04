@@ -15,13 +15,13 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.gulden.jniunifiedbackend.BlockinfoRecord
+import com.gulden.jniunifiedbackend.BlockInfoRecord
 import com.gulden.unity_wallet.Config
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.block_row.view.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class BlockListAdapter : ListAdapter<BlockinfoRecord, BlockListAdapter.ItemViewHolder>(BlockDiffCallback()) {
+class BlockListAdapter : ListAdapter<BlockInfoRecord, BlockListAdapter.ItemViewHolder>(BlockDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder(
@@ -35,22 +35,22 @@ class BlockListAdapter : ListAdapter<BlockinfoRecord, BlockListAdapter.ItemViewH
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: BlockinfoRecord) = with(itemView) {
+        fun bind(item: BlockInfoRecord) = with(itemView) {
             itemView.block_list_row_height.text = item.height.toString()
-            val ms = item.timestamp * DateUtils.SECOND_IN_MILLIS
+            val ms = item.timeStamp * DateUtils.SECOND_IN_MILLIS
             itemView.block_list_row_time.text =
                     if (ms < System.currentTimeMillis() - DateUtils.MINUTE_IN_MILLIS) {
                         DateUtils.getRelativeDateTimeString(context, ms, DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString()
                     } else
                         context.getString(R.string.block_row_now)
-            itemView.block_list_row_hash.text = item.blockhash
+            itemView.block_list_row_hash.text = item.blockHash
             itemView.block_list_row_menu.onClick {
                 val popupMenu = PopupMenu(context, itemView.block_list_row_menu)
                 popupMenu.inflate(R.menu.blocks_context)
                 popupMenu.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.blocks_context_browse -> {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.withAppendedPath(Config.BLOCK_EXPLORER, "/block/" + item.blockhash))
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.withAppendedPath(Config.BLOCK_EXPLORER, "/block/" + item.blockHash))
                             context.startActivity(intent)
                         }
                     }
@@ -62,12 +62,12 @@ class BlockListAdapter : ListAdapter<BlockinfoRecord, BlockListAdapter.ItemViewH
     }
 }
 
-private class BlockDiffCallback : DiffUtil.ItemCallback<BlockinfoRecord>() {
-    override fun areItemsTheSame(oldItem: BlockinfoRecord, newItem: BlockinfoRecord): Boolean {
-        return oldItem.blockhash == newItem.blockhash
+private class BlockDiffCallback : DiffUtil.ItemCallback<BlockInfoRecord>() {
+    override fun areItemsTheSame(oldItem: BlockInfoRecord, newItem: BlockInfoRecord): Boolean {
+        return oldItem.blockHash == newItem.blockHash
     }
 
-    override fun areContentsTheSame(oldItem: BlockinfoRecord, newItem: BlockinfoRecord): Boolean {
+    override fun areContentsTheSame(oldItem: BlockInfoRecord, newItem: BlockInfoRecord): Boolean {
         return oldItem == newItem
     }
 }

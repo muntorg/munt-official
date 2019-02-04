@@ -3,32 +3,32 @@
 
 #pragma once
 
-#include "blockinfo_record.hpp"
+#include "block_info_record.hpp"
 #include "djinni_support.hpp"
 
 namespace djinni_generated {
 
-class NativeBlockinfoRecord final {
+class NativeBlockInfoRecord final {
 public:
-    using CppType = ::BlockinfoRecord;
+    using CppType = ::BlockInfoRecord;
     using JniType = jobject;
 
-    using Boxed = NativeBlockinfoRecord;
+    using Boxed = NativeBlockInfoRecord;
 
-    ~NativeBlockinfoRecord();
+    ~NativeBlockInfoRecord();
 
     static CppType toCpp(JNIEnv* jniEnv, JniType j);
     static ::djinni::LocalRef<JniType> fromCpp(JNIEnv* jniEnv, const CppType& c);
 
 private:
-    NativeBlockinfoRecord();
-    friend ::djinni::JniClass<NativeBlockinfoRecord>;
+    NativeBlockInfoRecord();
+    friend ::djinni::JniClass<NativeBlockInfoRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/BlockinfoRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/BlockInfoRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(IJLjava/lang/String;)V") };
     const jfieldID field_mHeight { ::djinni::jniGetFieldID(clazz.get(), "mHeight", "I") };
-    const jfieldID field_mTimestamp { ::djinni::jniGetFieldID(clazz.get(), "mTimestamp", "J") };
-    const jfieldID field_mBlockhash { ::djinni::jniGetFieldID(clazz.get(), "mBlockhash", "Ljava/lang/String;") };
+    const jfieldID field_mTimeStamp { ::djinni::jniGetFieldID(clazz.get(), "mTimeStamp", "J") };
+    const jfieldID field_mBlockHash { ::djinni::jniGetFieldID(clazz.get(), "mBlockHash", "Ljava/lang/String;") };
 };
 
 }  // namespace djinni_generated

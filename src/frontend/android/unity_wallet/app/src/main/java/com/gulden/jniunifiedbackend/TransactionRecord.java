@@ -10,7 +10,7 @@ public final class TransactionRecord implements android.os.Parcelable {
 
     /*package*/ final String mTxHash;
 
-    /*package*/ final long mTimestamp;
+    /*package*/ final long mTimeStamp;
 
     /*package*/ final long mAmount;
 
@@ -20,7 +20,7 @@ public final class TransactionRecord implements android.os.Parcelable {
 
     /*package*/ final int mHeight;
 
-    /*package*/ final long mBlocktime;
+    /*package*/ final long mBlockTime;
 
     /*package*/ final int mDepth;
 
@@ -30,22 +30,22 @@ public final class TransactionRecord implements android.os.Parcelable {
 
     public TransactionRecord(
             String txHash,
-            long timestamp,
+            long timeStamp,
             long amount,
             long fee,
             TransactionStatus status,
             int height,
-            long blocktime,
+            long blockTime,
             int depth,
             ArrayList<OutputRecord> receivedOutputs,
             ArrayList<OutputRecord> sentOutputs) {
         this.mTxHash = txHash;
-        this.mTimestamp = timestamp;
+        this.mTimeStamp = timeStamp;
         this.mAmount = amount;
         this.mFee = fee;
         this.mStatus = status;
         this.mHeight = height;
-        this.mBlocktime = blocktime;
+        this.mBlockTime = blockTime;
         this.mDepth = depth;
         this.mReceivedOutputs = receivedOutputs;
         this.mSentOutputs = sentOutputs;
@@ -55,8 +55,8 @@ public final class TransactionRecord implements android.os.Parcelable {
         return mTxHash;
     }
 
-    public long getTimestamp() {
-        return mTimestamp;
+    public long getTimeStamp() {
+        return mTimeStamp;
     }
 
     public long getAmount() {
@@ -75,8 +75,8 @@ public final class TransactionRecord implements android.os.Parcelable {
         return mHeight;
     }
 
-    public long getBlocktime() {
-        return mBlocktime;
+    public long getBlockTime() {
+        return mBlockTime;
     }
 
     public int getDepth() {
@@ -95,12 +95,12 @@ public final class TransactionRecord implements android.os.Parcelable {
     public String toString() {
         return "TransactionRecord{" +
                 "mTxHash=" + mTxHash +
-                "," + "mTimestamp=" + mTimestamp +
+                "," + "mTimeStamp=" + mTimeStamp +
                 "," + "mAmount=" + mAmount +
                 "," + "mFee=" + mFee +
                 "," + "mStatus=" + mStatus +
                 "," + "mHeight=" + mHeight +
-                "," + "mBlocktime=" + mBlocktime +
+                "," + "mBlockTime=" + mBlockTime +
                 "," + "mDepth=" + mDepth +
                 "," + "mReceivedOutputs=" + mReceivedOutputs +
                 "," + "mSentOutputs=" + mSentOutputs +
@@ -123,12 +123,12 @@ public final class TransactionRecord implements android.os.Parcelable {
 
     public TransactionRecord(android.os.Parcel in) {
         this.mTxHash = in.readString();
-        this.mTimestamp = in.readLong();
+        this.mTimeStamp = in.readLong();
         this.mAmount = in.readLong();
         this.mFee = in.readLong();
         this.mStatus = TransactionStatus.values()[in.readInt()];
         this.mHeight = in.readInt();
-        this.mBlocktime = in.readLong();
+        this.mBlockTime = in.readLong();
         this.mDepth = in.readInt();
         this.mReceivedOutputs = new ArrayList<OutputRecord>();
         in.readList(this.mReceivedOutputs, getClass().getClassLoader());
@@ -144,12 +144,12 @@ public final class TransactionRecord implements android.os.Parcelable {
     @Override
     public void writeToParcel(android.os.Parcel out, int flags) {
         out.writeString(this.mTxHash);
-        out.writeLong(this.mTimestamp);
+        out.writeLong(this.mTimeStamp);
         out.writeLong(this.mAmount);
         out.writeLong(this.mFee);
         out.writeInt(this.mStatus.ordinal());
         out.writeInt(this.mHeight);
-        out.writeLong(this.mBlocktime);
+        out.writeLong(this.mBlockTime);
         out.writeInt(this.mDepth);
         out.writeList(this.mReceivedOutputs);
         out.writeList(this.mSentOutputs);
