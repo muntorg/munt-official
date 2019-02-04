@@ -177,6 +177,11 @@ bool CWalletDB::ReadBestBlock(CBlockLocator& locator)
     return batch.Read(std::string("bestblock_nomerkle"), locator);
 }
 
+bool CWalletDB::EraseLastSPVBlockProcessed()
+{
+    return EraseIC(std::string("lastspvblock"));
+}
+
 bool CWalletDB::WriteLastSPVBlockProcessed(const CBlockLocator& locator, const int64_t time)
 {
     return WriteIC(std::string("lastspvblock"), std::pair(locator, time));

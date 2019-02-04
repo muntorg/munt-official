@@ -171,6 +171,7 @@ public:
     bool WriteBestBlock(const CBlockLocator& locator);
     bool ReadBestBlock(CBlockLocator& locator);
 
+    bool EraseLastSPVBlockProcessed();
     bool WriteLastSPVBlockProcessed(const CBlockLocator& locator, const int64_t time);
     bool ReadLastSPVBlockProcessed(CBlockLocator& locator, int64_t& time);
 

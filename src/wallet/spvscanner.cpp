@@ -38,14 +38,25 @@ std::atomic<int> CSPVScanner::lastProcessedHeight = 0;
 
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet),
-    startTime(0),
-    lastProcessed(nullptr),
-    numConnections(0),
-    lastProgressReported(-1.0f),
-    lastPersistedBlockTime(0),
-    lastPersistTime(0)
+    numConnections(0)
 {
     LOCK(cs_main);
+    Init();
+}
+
+CSPVScanner::~CSPVScanner()
+{
+    uiInterface.NotifyNumConnectionsChanged.disconnect(boost::bind(&CSPVScanner::OnNumConnectionsChanged, this, _1));
+}
+
+void CSPVScanner::Init()
+{
+    AssertLockHeld(cs_main);
+
+    lastProcessed = nullptr;
+    lastProgressReported = -1.0f;
+    lastPersistedBlockTime = 0;
+    lastPersistTime = 0;
 
     // init scan starting time to birth of first key
     startTime =  wallet.nTimeFirstKey;
@@ -60,9 +71,15 @@ CSPVScanner::CSPVScanner(CWallet& _wallet) :
     startTime = std::max(Params().GenesisBlock().GetBlockTime(), startTime - MAX_FORK_DURATION);
 }
 
-CSPVScanner::~CSPVScanner()
+void CSPVScanner::ResetScan()
 {
-    uiInterface.NotifyNumConnectionsChanged.disconnect(boost::bind(&CSPVScanner::OnNumConnectionsChanged, this, _1));
+    LOCK(cs_main);
+
+    // erase persisted spv progress
+    CWalletDB walletdb(*wallet.dbw);
+    walletdb.EraseLastSPVBlockProcessed();
+
+    Init();
 }
 
 bool CSPVScanner::StartScan()

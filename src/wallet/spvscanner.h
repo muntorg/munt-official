@@ -18,6 +18,7 @@ public:
     ~CSPVScanner();
 
     bool StartScan();
+    void ResetScan();
 
     const CBlockIndex* LastBlockProcessed() const;
 
@@ -46,6 +47,9 @@ private:
 
     // Session start height for progress reporting
     int startHeight;
+
+    // Common initialisation
+    void Init();
 
     void HeaderTipChanged(const CBlockIndex* pTip);
 
