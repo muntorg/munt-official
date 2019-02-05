@@ -541,7 +541,7 @@ void GuldenUnifiedBackend::DoRescan()
 {
     if (pactiveWallet)
     {
-        boost::thread t(rescanThread); // thread runs free
+        ResetSPVStartRescanThread();
     }
 }
 
