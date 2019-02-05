@@ -13,11 +13,11 @@
  * Distributed under the GULDEN software license, see the accompanying
  * file COPYING
  */
-struct QrcodeRecord final {
+struct QrCodeRecord final {
     int32_t width;
     std::vector<uint8_t> pixel_data;
 
-    QrcodeRecord(int32_t width_,
+    QrCodeRecord(int32_t width_,
                  std::vector<uint8_t> pixel_data_)
     : width(std::move(width_))
     , pixel_data(std::move(pixel_data_))

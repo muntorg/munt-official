@@ -9,10 +9,10 @@
  * Distributed under the GULDEN software license, see the accompanying
  * file COPYING
  */
-@interface DBQrcodeRecord : NSObject
+@interface DBQrCodeRecord : NSObject
 - (nonnull instancetype)initWithWidth:(int32_t)width
                             pixelData:(nonnull NSData *)pixelData;
-+ (nonnull instancetype)qrcodeRecordWithWidth:(int32_t)width
++ (nonnull instancetype)qrCodeRecordWithWidth:(int32_t)width
                                     pixelData:(nonnull NSData *)pixelData;
 
 @property (nonatomic, readonly) int32_t width;
