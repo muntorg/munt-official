@@ -3296,7 +3296,7 @@ bool static checkBlockIndexForPartialSync()
     // note for case where num00 == 0 there is no partial chain (yet)
 
     // check that there are no partial valid blocks beyond the pindexBestPartial
-    for(const auto &[hash, pindex] : mapBlockIndex)
+    for([[maybe_unused]]const auto &[hash, pindex] : mapBlockIndex)
     {
         if (pindex->IsPartialValid() && (!pindexBestPartial || pindex->nHeight > pindexBestPartial->nHeight)) {
             LogPrintf("  Index partial valid beyond pindexBestPartial: %s height = %d status  %d\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight, pindex->nStatus);
