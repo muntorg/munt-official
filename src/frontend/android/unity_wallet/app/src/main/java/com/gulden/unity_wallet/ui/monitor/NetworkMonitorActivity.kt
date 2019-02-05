@@ -92,6 +92,11 @@ class NetworkMonitorActivity : UnityCore.Observer, AppCompatActivity(), Coroutin
     }
 
 
+    override fun syncProgressChanged(percent: Float): Boolean {
+        setSyncProgress(percent)
+        return true
+    }
+
     private fun setSyncProgress(percent: Float)
     {
         syncProgress.progress = (syncProgress.max * (percent/100)).toInt()
