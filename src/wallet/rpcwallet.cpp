@@ -2484,7 +2484,7 @@ UniValue rescan(const JSONRPCRequest& request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    std::thread(rescanThread).detach();
+    ResetSPVStartRescanThread();
 
     return NullUniValue;
 }

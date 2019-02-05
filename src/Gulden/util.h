@@ -17,7 +17,7 @@
 #include "coins.h"
 
 #ifdef ENABLE_WALLET
-void rescanThread();
+void ResetSPVStartRescanThread();
 std::string StringFromSeedType(CHDSeed* seed);
 CHDSeed::SeedType SeedTypeFromString(std::string type);
 #endif

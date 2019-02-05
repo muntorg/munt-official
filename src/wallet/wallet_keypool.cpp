@@ -412,7 +412,7 @@ bool CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& priv
 
     // Whenever a key is imported, we need to scan the whole chain from birth date - do so now
     pactiveWallet->nTimeFirstKey = std::min(pactiveWallet->nTimeFirstKey, keyBirthDate);
-    boost::thread t(rescanThread); // thread runs free
+    ResetSPVStartRescanThread();
 
     return true;
 }

@@ -1489,7 +1489,7 @@ static UniValue importreadonlyaccount(const JSONRPCRequest& request)
     //fixme: (2.1) Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwallet->nTimeFirstKey = 1;
-    boost::thread t(rescanThread); // thread runs free
+    ResetSPVStartRescanThread();
 
     return getUUIDAsString(account->getUUID());
 }
@@ -1537,7 +1537,7 @@ static UniValue importlinkedaccount(const JSONRPCRequest& request)
     if (!account)
         throw std::runtime_error("Unable to create account.");
 
-    boost::thread t(rescanThread); // thread runs free
+    ResetSPVStartRescanThread();
 
     return getUUIDAsString(account->getUUID());
 }
@@ -1873,7 +1873,7 @@ static UniValue importseed(const JSONRPCRequest& request)
     //fixme: (2.1) Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwallet->nTimeFirstKey = 1;
-    boost::thread t(rescanThread); // thread runs free
+    ResetSPVStartRescanThread();
 
     return getUUIDAsString(newSeed->getUUID());
 }

@@ -164,7 +164,7 @@ UniValue importprivkey(const JSONRPCRequest& request)
         pwallet->UpdateTimeFirstKey(1);
         if (fRescan)
         {
-            std::thread(rescanThread).detach();
+            ResetSPVStartRescanThread();
         }
     }
 

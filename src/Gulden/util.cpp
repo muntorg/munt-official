@@ -14,7 +14,7 @@
 #include "validation/versionbitsvalidation.h"
 #include "validation/witnessvalidation.h"
 #include "versionbits.h"
-
+#include "net_processing.h"
 #include "txdb.h"
 
 #include "primitives/transaction.h"
@@ -30,6 +30,36 @@ void rescanThread()
     alreadyInRescan = true;
     pactiveWallet->ScanForWalletTransactions(chainActive.Genesis(), true);
     alreadyInRescan = false;
+}
+
+void ResetSPVStartRescanThread()
+{
+    // reset SPV first
+    {
+        LOCK(cs_main);
+
+        // disconnect all nodes to avoid problems with inconsistent block index state
+        g_connman->ForEachNode([](CNode* node) { g_connman->DisconnectNode(node->GetId()); });
+
+        // clear old spv requests (and also avoid invalid block index access)
+        CancelAllPriorityDownloads();
+
+        // reset wallet spv, note that this will also
+        // 1) restart spv and partial sync
+        // 2) clear the partial sync state underneath (in most cases, as likely
+        // too much of the index will have been pruned)
+        if (fSPV) {
+            for (CWallet* pwallet : vpwallets) {
+                LOCK(pwallet->cs_wallet);
+                pwallet->ResetSPV();
+            }
+        }
+    }
+
+    // second do the standard rescan thread in fullsync
+    if (isFullSyncMode()) {
+        std::thread(rescanThread).detach();
+    }
 }
 
 std::string StringFromSeedType(CHDSeed* seed)

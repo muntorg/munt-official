@@ -1662,7 +1662,7 @@ void GUI::promptRescan()
 
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pactiveWallet->nTimeFirstKey = 1;
-    boost::thread t(rescanThread); // thread runs free
+    ResetSPVStartRescanThread();
 }
 
 void GUI::gotoWebsite()
