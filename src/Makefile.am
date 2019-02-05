@@ -524,7 +524,7 @@ libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc  -I$(srcdir)/unity/djinni/cpp $(
 DJINNI_CPP_GEN = \
   unity/djinni/cpp/address_record.hpp \
   unity/djinni/cpp/balance_record.hpp \
-  unity/djinni/cpp/blockinfo_record.hpp \
+  unity/djinni/cpp/block_info_record.hpp \
   unity/djinni/cpp/gulden_unified_backend.cpp \
   unity/djinni/cpp/gulden_unified_backend.hpp \
   unity/djinni/cpp/gulden_unified_frontend.hpp \
@@ -532,7 +532,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/monitor_record.hpp \
   unity/djinni/cpp/mutation_record.hpp \
   unity/djinni/cpp/peer_record.hpp \
-  unity/djinni/cpp/qrcode_record.hpp \
+  unity/djinni/cpp/qr_code_record.hpp \
   unity/djinni/cpp/transaction_record.hpp \
   unity/djinni/cpp/transaction_status.hpp \
   unity/djinni/cpp/output_record.hpp \
@@ -548,10 +548,10 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBBalanceRecord+Private.mm \
   unity/djinni/objc/DBBalanceRecord.h \
   unity/djinni/objc/DBBalanceRecord.mm \
-  unity/djinni/objc/DBBlockinfoRecord+Private.h \
-  unity/djinni/objc/DBBlockinfoRecord+Private.mm \
-  unity/djinni/objc/DBBlockinfoRecord.h \
-  unity/djinni/objc/DBBlockinfoRecord.mm \
+  unity/djinni/objc/DBBlockInfoRecord+Private.h \
+  unity/djinni/objc/DBBlockInfoRecord+Private.mm \
+  unity/djinni/objc/DBBlockInfoRecord.h \
+  unity/djinni/objc/DBBlockInfoRecord.mm \
   unity/djinni/objc/DBGuldenUnifiedBackend+Private.h \
   unity/djinni/objc/DBGuldenUnifiedBackend+Private.mm \
   unity/djinni/objc/DBGuldenUnifiedBackend.h \
@@ -578,10 +578,10 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBPeerRecord+Private.mm \
   unity/djinni/objc/DBPeerRecord.h \
   unity/djinni/objc/DBPeerRecord.mm \
-  unity/djinni/objc/DBQrcodeRecord+Private.h \
-  unity/djinni/objc/DBQrcodeRecord+Private.mm \
-  unity/djinni/objc/DBQrcodeRecord.h \
-  unity/djinni/objc/DBQrcodeRecord.mm \
+  unity/djinni/objc/DBQrCodeRecord+Private.h \
+  unity/djinni/objc/DBQrCodeRecord+Private.mm \
+  unity/djinni/objc/DBQrCodeRecord.h \
+  unity/djinni/objc/DBQrCodeRecord.mm \
   unity/djinni/objc/DBTransactionRecord+Private.h \
   unity/djinni/objc/DBTransactionRecord+Private.mm \
   unity/djinni/objc/DBTransactionRecord.h \

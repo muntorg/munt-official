@@ -28,12 +28,12 @@
 		E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */; };
 		E6AE404921EF4A500019A54A /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AE404821EF4A500019A54A /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E6EC7D0421EF24A900320806 /* DBQrcodeRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF721EF24A800320806 /* DBQrcodeRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0421EF24A900320806 /* DBQrCodeRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF721EF24A800320806 /* DBQrCodeRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0521EF24A900320806 /* DBGuldenMonitorListener.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0621EF24A900320806 /* DBGuldenUnifiedBackend.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0721EF24A900320806 /* DBUriRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFA21EF24A800320806 /* DBUriRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0821EF24A900320806 /* DBGuldenUnifiedFrontend.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E6EC7D0921EF24A900320806 /* DBBlockinfoRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFC21EF24A800320806 /* DBBlockinfoRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EC7D0921EF24A900320806 /* DBBlockInfoRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFC21EF24A800320806 /* DBBlockInfoRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0A21EF24A900320806 /* DBUriRecipient.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFD21EF24A800320806 /* DBUriRecipient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0B21EF24A900320806 /* DBBalanceRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -65,12 +65,12 @@
 		E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb_cxx-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb_cxx-4.8.a"; sourceTree = "<group>"; };
 		E6AE404821EF4A500019A54A /* DBOutputRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBOutputRecord.h; path = ../../djinni/objc/DBOutputRecord.h; sourceTree = "<group>"; };
 		E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMonitorRecord.h; path = ../../../djinni/objc/DBMonitorRecord.h; sourceTree = "<group>"; };
-		E6EC7CF721EF24A800320806 /* DBQrcodeRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBQrcodeRecord.h; path = ../../../djinni/objc/DBQrcodeRecord.h; sourceTree = "<group>"; };
+		E6EC7CF721EF24A800320806 /* DBQrCodeRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBQrCodeRecord.h; path = ../../../djinni/objc/DBQrCodeRecord.h; sourceTree = "<group>"; };
 		E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenMonitorListener.h; path = ../../../djinni/objc/DBGuldenMonitorListener.h; sourceTree = "<group>"; };
 		E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenUnifiedBackend.h; path = ../../../djinni/objc/DBGuldenUnifiedBackend.h; sourceTree = "<group>"; };
 		E6EC7CFA21EF24A800320806 /* DBUriRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecord.h; path = ../../../djinni/objc/DBUriRecord.h; sourceTree = "<group>"; };
 		E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenUnifiedFrontend.h; path = ../../../djinni/objc/DBGuldenUnifiedFrontend.h; sourceTree = "<group>"; };
-		E6EC7CFC21EF24A800320806 /* DBBlockinfoRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBBlockinfoRecord.h; path = ../../../djinni/objc/DBBlockinfoRecord.h; sourceTree = "<group>"; };
+		E6EC7CFC21EF24A800320806 /* DBBlockInfoRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBBlockInfoRecord.h; path = ../../../djinni/objc/DBBlockInfoRecord.h; sourceTree = "<group>"; };
 		E6EC7CFD21EF24A800320806 /* DBUriRecipient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecipient.h; path = ../../../djinni/objc/DBUriRecipient.h; sourceTree = "<group>"; };
 		E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBBalanceRecord.h; path = ../../../djinni/objc/DBBalanceRecord.h; sourceTree = "<group>"; };
 		E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBPeerRecord.h; path = ../../../djinni/objc/DBPeerRecord.h; sourceTree = "<group>"; };
@@ -193,8 +193,8 @@
 				E6AE404921EF4A500019A54A /* DBOutputRecord.h in Headers */,
 				E6EC7D0621EF24A900320806 /* DBGuldenUnifiedBackend.h in Headers */,
 				E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */,
-				E6EC7D0921EF24A900320806 /* DBBlockinfoRecord.h in Headers */,
-				E6EC7D0421EF24A900320806 /* DBQrcodeRecord.h in Headers */,
+				E6EC7D0921EF24A900320806 /* DBBlockInfoRecord.h in Headers */,
+				E6EC7D0421EF24A900320806 /* DBQrCodeRecord.h in Headers */,
 				E6EC7D0821EF24A900320806 /* DBGuldenUnifiedFrontend.h in Headers */,
 				E6EC7D0A21EF24A900320806 /* DBUriRecipient.h in Headers */,
 				E64203F121638CD6004A77FF /* GuldenCore.h in Headers */,
