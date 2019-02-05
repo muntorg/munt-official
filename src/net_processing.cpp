@@ -2732,7 +2732,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         // If this looks like it could be a block announcement (nCount <
         // MAX_BLOCKS_TO_ANNOUNCE), use special logic for handling headers that
         // don't connect:
-        // - Send a getheaders message in response to try to connect the chain.
+        // - Send a getheaders message in response to try to connect the chain, but only if header sync is near present.
         // - The peer can send up to MAX_UNCONNECTING_HEADERS in a row that
         //   don't connect before giving DoS points
         // - Once a headers message is received that is valid and does connect,
@@ -2743,12 +2743,20 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     ? pindexBestPartial
                     : pindexBestHeader;
             CChain& chain = pindex == pindexBestHeader ? chainActive : partialChain;
-            connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chain.GetLocatorPoW2(pindex), uint256()));
-            LogPrint(BCLog::NET, "received header %s: missing prev block %s, sending getheaders (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
-                    headers[0].GetHashPoW2().ToString(),
-                    headers[0].hashPrevBlock.ToString(),
-                    pindex->nHeight,
-                    pfrom->GetId(), nodestate->nUnconnectingHeaders);
+
+            bool headerSyncNearPresent = pindex && GetAdjustedTime() - pindex->GetBlockTime() < 24 * 3600;
+            if (headerSyncNearPresent) {
+                connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, chain.GetLocatorPoW2(pindex), uint256()));
+                LogPrint(BCLog::NET, "received header %s: missing prev block %s, sending getheaders (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
+                        headers[0].GetHashPoW2().ToString(),
+                        headers[0].hashPrevBlock.ToString(),
+                        pindex->nHeight,
+                        pfrom->GetId(), nodestate->nUnconnectingHeaders);
+            }
+            else {
+                LogPrintf("Skipping connecting header request (BECAUSE OF ANNOUNCE!!!!!!!!!!!!!!!!!!!!!!!!!!!)\n");
+            }
+
             // Set hashLastUnknownBlock for this peer, so that if we
             // eventually get the headers - even from a different peer -
             // we can use this peer to download.
