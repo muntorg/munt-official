@@ -19,6 +19,9 @@ import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.WelcomeActivity
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
+import org.jetbrains.anko.contentView
+import org.jetbrains.anko.design.snackbar
+import org.jetbrains.anko.support.v4.alert
 
 
 class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
@@ -47,7 +50,15 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             }
             "preference_rescan_wallet" ->
             {
-                GuldenUnifiedBackend.DoRescan()
+                alert(getString(R.string.rescan_confirm_msg), getString(R.string.rescan_confirm_title)) {
+
+                    // on confirmation compose recipient and execute payment
+                    positiveButton(getString(R.string.rescan_confirm_btn)) {
+                        GuldenUnifiedBackend.DoRescan()
+                        activity?.contentView?.snackbar(getString(R.string.rescan_started))
+                    }
+                    negativeButton(getString(R.string.cancel_btn)) {}
+                }.show()
             }
             "preference_remove_wallet" ->
             {

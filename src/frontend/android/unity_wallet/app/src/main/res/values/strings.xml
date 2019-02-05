@@ -184,5 +184,10 @@ file COPYING
     <string name="title_blocks">Blocks</string>
     <string name="title_processing">Processing</string>
     <string name="image_content_description_gulden_logo">Gulden logo</string>
+    <string name="rescan_confirm_msg">Rescanning the blockchain can take a long time. Are you sure?</string>
+    <string name="rescan_confirm_title">Rescan?</string>
+    <string name="rescan_confirm_btn">Rescan</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="rescan_started">Rescan started</string>
 
 </resources>
