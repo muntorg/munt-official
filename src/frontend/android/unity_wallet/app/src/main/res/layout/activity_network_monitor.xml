@@ -12,17 +12,15 @@ file COPYING
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".ui.monitor.NetworkMonitorActivity">
+    tools:context=".ui.monitor.NetworkMonitorActivity"
+    android:paddingBottom="8dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="8dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,29 +36,32 @@ file COPYING
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp">
 
-            <Button
-                android:id="@+id/networkMonitorBackButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:text=""
-                android:background="?attr/homeAsUpIndicator"
-                android:backgroundTint="@color/colorPrimary"
-                android:onClick="onBackButtonPushed"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
             <ImageView
                 android:id="@+id/walletLogo"
                 android:layout_width="0dp"
                 android:layout_height="21dp"
                 android:layout_marginStart="8dp"
+                android:contentDescription="@string/image_content_description_gulden_logo"
                 android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_gulden_logo_text" />
+
+            <ImageButton
+                android:id="@+id/networkMonitorBackButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:tint="@color/colorPrimary"
+                android:padding="24dp"
+                android:src="?attr/homeAsUpIndicator"
+                android:onClick="onBackButtonPushed"
+                android:text=""
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:srcCompat="@drawable/ic_gulden_logo_text"
-                android:contentDescription="@string/image_content_description_gulden_logo" />
+                app:layout_constraintStart_toStartOf="parent"
+                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -74,7 +75,6 @@ file COPYING
             android:id="@+id/networkMonitorMainLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </FrameLayout>
 
     </LinearLayout>
