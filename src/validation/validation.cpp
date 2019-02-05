@@ -1425,7 +1425,7 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                     }
 #ifdef DEBUG_PARTIAL_SYNC
                     if (!partialChain.Contains(index)) {
-                        LogPrintf("Index not on partial chain [%s] during prune.\n", index->GetBlockHashPoW2().ToString());
+                        LogPrintf("Index not on partial chain during prune: [%s] height = %d\n", index->GetBlockHashPoW2().ToString(), index->nHeight);
                         numNotOnPartialChain++;
                     }
 #endif
