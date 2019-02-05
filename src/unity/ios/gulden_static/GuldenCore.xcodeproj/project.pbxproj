@@ -15,6 +15,8 @@
 		E65D1678218A22540080637D /* libsecp256k1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D1677218A22540080637D /* libsecp256k1.a */; };
 		E65D167A218A229F0080637D /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D1679218A229F0080637D /* libleveldb.a */; };
 		E65D167C218A22B70080637D /* libmemenv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D167B218A22B70080637D /* libmemenv.a */; };
+		E67BA0882209C84600223B01 /* DBTransactionStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = E67BA0862209C84600223B01 /* DBTransactionStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E67BA0892209C84600223B01 /* DBMutationRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E67BA0872209C84600223B01 /* DBMutationRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E68FAE04216C964E0038C745 /* libdb-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF8216C964D0038C745 /* libdb-4.8.a */; };
 		E68FAE05216C964E0038C745 /* libboost_system-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */; };
 		E68FAE06216C964E0038C745 /* libboost_filesystem-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */; };
@@ -52,6 +54,8 @@
 		E65D1677218A22540080637D /* libsecp256k1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsecp256k1.a; path = "../../../../build/aarch64-ios/src/secp256k1/.libs/libsecp256k1.a"; sourceTree = "<group>"; };
 		E65D1679218A229F0080637D /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = "../../../../build/aarch64-ios/src/leveldb/libleveldb.a"; sourceTree = "<group>"; };
 		E65D167B218A22B70080637D /* libmemenv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmemenv.a; path = "../../../../build/aarch64-ios/src/leveldb/libmemenv.a"; sourceTree = "<group>"; };
+		E67BA0862209C84600223B01 /* DBTransactionStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBTransactionStatus.h; path = ../../../djinni/objc/DBTransactionStatus.h; sourceTree = "<group>"; };
+		E67BA0872209C84600223B01 /* DBMutationRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMutationRecord.h; path = ../../../djinni/objc/DBMutationRecord.h; sourceTree = "<group>"; };
 		E68FADF8216C964D0038C745 /* libdb-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb-4.8.a"; sourceTree = "<group>"; };
 		E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_system-mt-s.a"; sourceTree = "<group>"; };
 		E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_filesystem-mt-s.a"; sourceTree = "<group>"; };
@@ -127,6 +131,8 @@
 		E64203EE21638CD6004A77FF /* GuldenCore */ = {
 			isa = PBXGroup;
 			children = (
+				E67BA0872209C84600223B01 /* DBMutationRecord.h */,
+				E67BA0862209C84600223B01 /* DBTransactionStatus.h */,
 				E6EC7D0021EF24A800320806 /* DBAddressRecord.h */,
 				E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */,
 				E6EC7CFC21EF24A800320806 /* DBBlockInfoRecord.h */,
@@ -196,6 +202,8 @@
 				E6EC7D0921EF24A900320806 /* DBBlockInfoRecord.h in Headers */,
 				E6EC7D0421EF24A900320806 /* DBQrCodeRecord.h in Headers */,
 				E6EC7D0821EF24A900320806 /* DBGuldenUnifiedFrontend.h in Headers */,
+				E67BA0882209C84600223B01 /* DBTransactionStatus.h in Headers */,
+				E67BA0892209C84600223B01 /* DBMutationRecord.h in Headers */,
 				E6EC7D0A21EF24A900320806 /* DBUriRecipient.h in Headers */,
 				E64203F121638CD6004A77FF /* GuldenCore.h in Headers */,
 			);
