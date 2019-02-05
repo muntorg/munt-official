@@ -180,5 +180,9 @@ file COPYING
     <string name="chain_status_label_chain_offset">Partial chain offset</string>
     <string name="chain_status_label_chain_length">Partial chain length</string>
     <string name="chain_status_label_pruned_height">Pruned below height</string>
+    <string name="title_peers">Peers</string>
+    <string name="title_blocks">Blocks</string>
+    <string name="title_processing">Processing</string>
+    <string name="image_content_description_gulden_logo">Gulden logo</string>
 
 </resources>

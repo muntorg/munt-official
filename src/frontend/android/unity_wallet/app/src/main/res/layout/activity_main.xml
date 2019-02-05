@@ -57,7 +57,8 @@ file COPYING
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_gulden_logo_text" />
+                app:srcCompat="@drawable/ic_gulden_logo_text"
+                android:contentDescription="@string/image_content_description_gulden_logo" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -71,7 +72,8 @@ file COPYING
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:visibility="invisible"
-                app:srcCompat="@drawable/ic_g_logo" />
+                app:srcCompat="@drawable/ic_g_logo"
+                android:contentDescription="@string/image_content_description_gulden_logo" />
 
             <TextView
                 android:id="@+id/walletBalance"

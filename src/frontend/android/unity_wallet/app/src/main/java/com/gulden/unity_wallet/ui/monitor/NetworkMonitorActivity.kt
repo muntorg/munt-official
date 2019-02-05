@@ -1,69 +1,103 @@
-/*
- * Copyright 2013-2015 the original author or authors.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (c) 2018 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 package com.gulden.unity_wallet.ui.monitor
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import com.gulden.unity_wallet.R
-import kotlinx.android.synthetic.main.network_monitor_onepane.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.gulden.unity_wallet.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-/**
- * @author Andreas Schildbach
- */
-class NetworkMonitorActivity : AppCompatActivity() {
+class NetworkMonitorActivity : UnityCore.Observer, AppCompatActivity(), CoroutineScope
+{
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private val coreObserverProxy = CoreObserverProxy(this, this)
+
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_network_monitor)
 
-        setContentView(R.layout.network_monitor_onepane)
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        network_monitor_pager.let { pager ->
-            network_monitor_pager_tabs.addTabLabels(
-                    R.string.network_monitor_peer_list_title,
-                    R.string.network_monitor_block_list_title,
-                    R.string.network_monitor_processing_title
-                    )
+        syncProgress.max = 1000000
 
-            pager.adapter = PagerAdapter(supportFragmentManager)
-            pager.addOnPageChangeListener(network_monitor_pager_tabs)
-            pager.pageMargin = 2
-            pager.setPageMarginDrawable(R.color.bg_less_bright)
-        }
+        if (peersFragment == null)
+            peersFragment = PeerListFragment()
+        addFragment(peersFragment!!, R.id.networkMonitorMainLayout)
     }
 
-    private class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    override fun onDestroy() {
+        super.onDestroy()
 
-        override fun getCount(): Int {
-            return 3
-        }
+        coroutineContext[Job]!!.cancel()
+    }
 
-        override fun getItem(position: Int): Fragment {
-            return when (position) {
-                0 -> PeerListFragment()
-                1 -> BlockListFragment()
-                2 -> ProcessingFragment()
-                else -> {
-                    throw Exception("No such fragment page!")
-                }
-            }
+    override fun onStart() {
+        super.onStart()
+
+        syncProgress.progress = 0
+        UnityCore.instance.addObserver(coreObserverProxy)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        UnityCore.instance.removeObserver(coreObserverProxy)
+    }
+
+    fun onBackButtonPushed(view : View) {
+        finish()
+    }
+
+    private fun gotoPeersPage()
+    {
+        if (peersFragment == null)
+            peersFragment = PeerListFragment()
+        replaceFragment(peersFragment!!, R.id.networkMonitorMainLayout)
+    }
+
+    fun gotoBlocksPage()
+    {
+        if (blocksFragment == null)
+            blocksFragment = BlockListFragment()
+        replaceFragment(blocksFragment!!, R.id.networkMonitorMainLayout)
+    }
+
+    private fun gotoProcessingPage()
+    {
+        if (processingFragment == null)
+            processingFragment = ProcessingFragment()
+        replaceFragment(processingFragment!!, R.id.networkMonitorMainLayout)
+    }
+
+    private var blocksFragment : BlockListFragment ?= null
+    private var peersFragment : PeerListFragment?= null
+    private var processingFragment : ProcessingFragment?= null
+
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_peers -> { gotoPeersPage(); return@OnNavigationItemSelectedListener true }
+            R.id.navigation_blocks -> { gotoBlocksPage(); return@OnNavigationItemSelectedListener true }
+            R.id.navigation_processing -> { gotoProcessingPage(); return@OnNavigationItemSelectedListener true }
         }
+        false
+    }
+
+
+    private fun setSyncProgress(percent: Float)
+    {
+        syncProgress.progress = (syncProgress.max * (percent/100)).toInt()
+        if (percent < 100.0)
+            syncProgress.visibility = View.VISIBLE
+        else
+            syncProgress.visibility = View.INVISIBLE
     }
 }

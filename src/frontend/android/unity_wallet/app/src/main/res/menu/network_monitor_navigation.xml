@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_peers"
+        android:icon="@drawable/ic_glyphicons_508_cluster"
+        android:title="@string/title_peers" />
+
+    <item
+        android:id="@+id/navigation_blocks"
+        android:icon="@drawable/ic_glyphicons_115_list"
+        android:title="@string/title_blocks" />
+
+    <item
+        android:id="@+id/navigation_processing"
+        android:icon="@drawable/ic_glyphicons_basic_51_pulse"
+        android:title="@string/title_processing" />
+
+</menu>
