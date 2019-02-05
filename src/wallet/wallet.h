@@ -478,8 +478,6 @@ private:
      * Should be called with pindexBlock and posInBlock if this is for a transaction that is included in a block. */
     void SyncTransaction(const CTransactionRef& tx, const CBlockIndex *pindex = NULL, int posInBlock = 0);
 
-    void StartSPV();
-
     std::set<int64_t> setKeyPool;
 
     //int64_t nTimeFirstKey;
@@ -930,6 +928,9 @@ public:
      * If birthtime cannot be succesfully computed it will return 0
      */
     int64_t birthTime() const;
+
+    void StartSPV();
+    void ResetSPV();
 
 private:
     int nTransactionScanProgressPercent;

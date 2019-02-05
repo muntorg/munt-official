@@ -691,9 +691,19 @@ bool CWallet::InitLoadWallet()
 
 void CWallet::StartSPV()
 {
+    LOCK(cs_wallet);
     auto scanner = std::make_unique<CSPVScanner>(*this);
     if (scanner->StartScan())
         pSPVScanner.swap(scanner);
+}
+
+void CWallet::ResetSPV()
+{
+    LOCK(cs_wallet);
+    if (pSPVScanner) {
+        pSPVScanner->ResetScan();
+        pSPVScanner->StartScan();
+    }
 }
 
 void CWallet::ResetUnifiedSPVProgressNotification()
