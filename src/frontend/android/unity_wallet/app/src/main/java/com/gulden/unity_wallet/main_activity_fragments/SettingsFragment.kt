@@ -56,9 +56,9 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             }
-            "preference_select_local_currency" ->
+            "preference_local_currency" ->
             {
-                //TODO: Implement
+                (activity as WalletActivity).showLocalCurrenciesPage()
             }
             "preference_monitor" ->
             {

@@ -17,11 +17,8 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.main_activity_fragments.ReceiveFragment
-import com.gulden.unity_wallet.main_activity_fragments.SendFragment
+import com.gulden.unity_wallet.main_activity_fragments.*
 import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentInteractionListener
-import com.gulden.unity_wallet.main_activity_fragments.SettingsFragment
-import com.gulden.unity_wallet.main_activity_fragments.MutationFragment
 import com.gulden.uriRecipient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
@@ -41,7 +38,7 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
 
 class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentInteractionListener,
         ReceiveFragment.OnFragmentInteractionListener, MutationFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener, CoroutineScope,
+        SettingsFragment.OnFragmentInteractionListener, LocalCurrencyFragment.OnFragmentInteractionListener, CoroutineScope,
         SharedPreferences.OnSharedPreferenceChangeListener
 {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
@@ -136,10 +133,18 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
         replaceFragment(settingsFragment!!, R.id.mainLayout)
     }
 
+    fun showLocalCurrenciesPage()
+    {
+        if (localCurrencies == null)
+            localCurrencies = LocalCurrencyFragment()
+        replaceFragment(localCurrencies!!, R.id.mainLayout)
+    }
+
     private var sendFragment : SendFragment ?= null
     private var receiveFragment : ReceiveFragment ?= null
     private var transactionFragment : MutationFragment ?= null
     private var settingsFragment : SettingsFragment ?= null
+    private var localCurrencies : LocalCurrencyFragment ?= null
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
          when (item.itemId) {
