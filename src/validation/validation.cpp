@@ -1425,15 +1425,16 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                     }
 #ifdef DEBUG_PARTIAL_SYNC
                     if (!partialChain.Contains(index)) {
-                        LogPrintf("Index not on partial chain during prune: [%s] height = %d\n", index->GetBlockHashPoW2().ToString(), index->nHeight);
                         numNotOnPartialChain++;
+                        // it is normal to have forks (and blocks getting witnessed) at/near the tip, only log deeper ones
+                        if (index->nHeight < partialChain.Height() - 20)
+                            LogPrintf("Index not on partial chain during prune: [%s] height = %d\n", index->GetBlockHashPoW2().ToString(), index->nHeight);
                     }
 #endif
                 }
                 nPartialPruneHeightDone = std::max(nManualPruneHeight, nPartialPruneHeightDone);
 #ifdef DEBUG_PARTIAL_SYNC
                 int numOrphans = mapBlockIndex.size() - (partialChain.Height()-partialChain.HeightOffset()) - 1;
-                LogPrintf("Number of orphans in index %d vs not on chain %d should match.\n", numOrphans, numNotOnPartialChain);
                 assert(numOrphans == numNotOnPartialChain);
 #endif
             }
