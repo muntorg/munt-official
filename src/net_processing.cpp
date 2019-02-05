@@ -2753,9 +2753,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                         pindex->nHeight,
                         pfrom->GetId(), nodestate->nUnconnectingHeaders);
             }
-            else {
-                LogPrintf("Skipping connecting header request (BECAUSE OF ANNOUNCE!!!!!!!!!!!!!!!!!!!!!!!!!!!)\n");
-            }
 
             // Set hashLastUnknownBlock for this peer, so that if we
             // eventually get the headers - even from a different peer -
