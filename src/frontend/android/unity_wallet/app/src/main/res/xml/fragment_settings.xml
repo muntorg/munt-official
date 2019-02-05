@@ -60,12 +60,10 @@ file COPYING
         android:title="@string/preference_fragment_remove_label"
         tools:ignore="UnusedAttribute" />
 
-    <ListPreference
+    <Preference
         android:key="preference_local_currency"
         android:summary="%s"
         android:iconSpaceReserved="false"
-        android:entries="@array/currency_description_entries"
-        android:entryValues="@array/currency_codes"
         android:defaultValue="@string/default_currency"
         android:title="@string/preference_fragment_fiat_label"
         tools:ignore="UnusedAttribute" />
