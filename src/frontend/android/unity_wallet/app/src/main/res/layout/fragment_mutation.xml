@@ -16,7 +16,7 @@ file COPYING
     <ListView
         android:id="@+id/mutationList"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:divider="@null"
         android:dividerHeight="0dp"
