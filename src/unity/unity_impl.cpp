@@ -378,6 +378,7 @@ bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
     }
     LogPrintf("EraseWalletSeedsAndAccounts: End purge seeds");
 
+
     return true;
 }
 
@@ -653,6 +654,7 @@ TransactionRecord GuldenUnifiedBackend::getTransaction(const std::string & txHas
     return calculateTransactionRecordForWalletTransaction(wtx);
 }
 
+extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
 std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
 {
     std::vector<MutationRecord> ret;
@@ -665,37 +667,46 @@ std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
     // wallet transactions in reverse chronological ordering
     std::vector<const CWalletTx*> vWtx;
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
-        vWtx.push_back(&wtx);
+    {
+        if (IsMine(pactiveWallet->activeAccount, wtx))
+        {
+            vWtx.push_back(&wtx);
+        }
+    }
     std::sort(vWtx.begin(), vWtx.end(), [&](const CWalletTx* x, const CWalletTx* y){ return (x->nTimeSmart > y->nTimeSmart); });
 
     // build mutation list based on transactions
     for (const CWalletTx* wtx : vWtx)
     {
-        int64_t substracted = wtx->GetDebit(ISMINE_SPENDABLE);
+        int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE);
         int64_t added = wtx->GetCredit(ISMINE_SPENDABLE);
 
         uint64_t time = wtx->nTimeSmart;
         std::string hash = wtx->GetHash().ToString();
 
-        // if any funds were substracted the transaction was sent by us
-        if (substracted > 0) {
-            int64_t fee = substracted - wtx->tx->GetValueOut();
+        // if any funds were subtracted the transaction was sent by us
+        if (subtracted > 0) {
+            int64_t fee = subtracted - wtx->tx->GetValueOut();
             int64_t change = wtx->GetChange();
 
             // detect internal transfer and split it
-            if (substracted - fee == added)
+            if (subtracted - fee == added)
             {
                 // amount received
                 ret.push_back(MutationRecord(added - change, time, hash));
 
                 // amount send including fee
-                ret.push_back(MutationRecord(change - substracted, time, hash));
+                ret.push_back(MutationRecord(change - subtracted, time, hash));
             }
             else
-                ret.push_back(MutationRecord(added - substracted, time, hash));
+            {
+                ret.push_back(MutationRecord(added - subtracted, time, hash));
+            }
         }
-        else // nothing substracted so we received funds
+        else if (added > 0) // nothing subtracted so we received funds
+        {
             ret.push_back(MutationRecord(added, time, hash));
+        }
     }
 
     return ret;
