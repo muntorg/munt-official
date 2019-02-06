@@ -502,7 +502,14 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
                 }
                 else
                 {
-                    db.EraseKey(pubKey);
+                    if (IsCrypted())
+                    {
+                        db.EraseEncryptedKey(pubKey);
+                    }
+                    else
+                    {
+                        db.EraseKey(pubKey);
+                    }
                 }
             }
         }
