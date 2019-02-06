@@ -22,6 +22,7 @@ import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.support.v4.alert
+import kotlin.concurrent.thread
 
 
 class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
@@ -83,12 +84,23 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
     private fun performLink(linkURI: String)
     {
-        if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI))
+        // ReplaceWalletLinkedFromURI can be long running, so run it in a thread that isn't the UI thread.
+        thread(start = true)
         {
-            AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
-            return
+            if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI))
+            {
+                activity?.runOnUiThread(java.lang.Runnable {
+                    AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
+                })
+            }
+            else
+            {
+                activity?.runOnUiThread(java.lang.Runnable {
+                    activity?.contentView?.snackbar(getString(R.string.rescan_started))
+                    (activity as WalletActivity).gotoReceivePage()
+                })
+            }
         }
-        (activity as WalletActivity).gotoReceivePage()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
