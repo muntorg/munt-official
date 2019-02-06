@@ -32,6 +32,25 @@ void rescanThread()
     alreadyInRescan = false;
 }
 
+//fixme: (2.2) (UNITY) (HIGH) - While this works as a temporary way of achieving things it is far from ideal
+//Rearchitecture this into something more appropriate.
+//When we perform a link we need to ensure that the wallet that empties our transaction broadcasts
+//As we reset all the networking as part of the rescan this doesn't always happen "naturally" like it should
+//And the 'trickle' transaction code further works against us etc.
+//So for now we use this heavy handed approach of forcefully rebroadcasting the transactions every five seconds for 30 seconds which is enough to ensure the transactions propagate
+void broadcastTransactionsThread()
+{
+    for (int i=0; i < 6; ++i)
+    {
+        MilliSleep(5000);
+        // Resend any inventory that might have been pending send before we cleared all the connections.
+        for (CWallet* pwallet : vpwallets) {
+            LOCK2(cs_main, pwallet->cs_wallet);
+            pwallet->ResendWalletTransactionsBefore(GetTime(), g_connman.get());
+        }
+    }
+}
+
 void ResetSPVStartRescanThread()
 {
     // reset SPV first
@@ -39,7 +58,10 @@ void ResetSPVStartRescanThread()
         LOCK(cs_main);
 
         // disconnect all nodes to avoid problems with inconsistent block index state
-        g_connman->ForEachNode([](CNode* node) { g_connman->DisconnectNode(node->GetId()); });
+        g_connman->ForEachNode([](CNode* node)
+        {
+            g_connman->DisconnectNode(node->GetId());
+        });
 
         // clear old spv requests (and also avoid invalid block index access)
         CancelAllPriorityDownloads();
@@ -54,6 +76,8 @@ void ResetSPVStartRescanThread()
                 pwallet->ResetSPV();
             }
         }
+
+        std::thread(broadcastTransactionsThread).detach();
     }
 
     // second do the standard rescan thread in fullsync

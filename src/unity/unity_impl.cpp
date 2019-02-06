@@ -293,7 +293,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 
     if (!pactiveWallet || !pactiveWallet->activeAccount)
     {
-        LogPrintf("ReplaceWalletLinkedFromURI: no active wallet");
+        LogPrintf("ReplaceWalletLinkedFromURI: No active wallet");
         return false;
     }
 
@@ -301,7 +301,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     CGuldenSecretExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
     {
-        LogPrintf("ReplaceWalletLinkedFromURI: failed to parse link URI");
+        LogPrintf("ReplaceWalletLinkedFromURI: Failed to parse link URI");
         return false;
     }
 
@@ -314,37 +314,46 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     }
 
     // Empty wallet to target address
+    LogPrintf("ReplaceWalletLinkedFromURI: Empty accounts into linked address");
     bool fSubtractFeeFromAmount = true;
+    std::vector<std::tuple<CWalletTx*, CReserveKeyOrScript*>> transactionsToCommit;
     for (const auto& [accountUUID, pAccount] : pactiveWallet->mapAccounts)
     {
         CAmount nBalance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
         if (nBalance > 0)
         {
+            LogPrintf("ReplaceWalletLinkedFromURI: Empty account into linked address [%s]", getUUIDAsString(accountUUID).c_str());
             std::vector<CRecipient> vecSend;
             CRecipient recipient = GetRecipientForDestination(address.Get(), nBalance, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
             vecSend.push_back(recipient);
 
-            CWalletTx wtx;
+            CWalletTx* pWallettx = new CWalletTx();
             CAmount nFeeRequired;
             int nChangePosRet = -1;
             std::string strError;
-            CReserveKeyOrScript reservekey(pactiveWallet, pAccount, KEYCHAIN_CHANGE);
-            if (!pactiveWallet->CreateTransaction(pAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+            CReserveKeyOrScript* pReserveKey = new CReserveKeyOrScript(pactiveWallet, pAccount, KEYCHAIN_CHANGE);
+            if (!pactiveWallet->CreateTransaction(pAccount, vecSend, *pWallettx, *pReserveKey, nFeeRequired, nChangePosRet, strError))
             {
-                LogPrintf("ReplaceWalletLinkedFromURI: failed to create transaction %s",strError.c_str());
+                LogPrintf("ReplaceWalletLinkedFromURI: Failed to create transaction %s",strError.c_str());
                 return false;
             }
+            transactionsToCommit.push_back(std::tuple(pWallettx, pReserveKey));
+        }
+        else
+        {
+            LogPrintf("ReplaceWalletLinkedFromURI: Account already empty [%s]", getUUIDAsString(accountUUID).c_str());
         }
     }
 
     if (!EraseWalletSeedsAndAccounts())
     {
+        LogPrintf("ReplaceWalletLinkedFromURI: Failed to erase seed and accounts");
         return false;
     }
 
     // Create a new linked account as the primary account
     pactiveWallet->nTimeFirstKey = linkedKey.getCreationTime();
-    LogPrintf("Creating new linked primary account, birth time [%d]\n", pactiveWallet->nTimeFirstKey);
+    LogPrintf("ReplaceWalletLinkedFromURI: Creating new linked primary account, birth time [%d]\n", pactiveWallet->nTimeFirstKey);
     pactiveWallet->activeAccount = pactiveWallet->CreateSeedlessHDAccount("My account", linkedKey, AccountState::Normal, AccountType::Mobi);
 
     // Write the primary account into wallet file
@@ -352,14 +361,28 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         CWalletDB walletdb(*pactiveWallet->dbw);
         if (!walletdb.WriteAccount(getUUIDAsString(pactiveWallet->activeAccount->getUUID()), pactiveWallet->activeAccount))
         {
-            LogPrintf("ReplaceWalletLinkedFromURI: failed to write new linked account");
+            LogPrintf("ReplaceWalletLinkedFromURI: Failed to write new linked account");
             return false;
         }
         walletdb.WritePrimaryAccount(pactiveWallet->activeAccount);
     }
 
+    for (auto& [pWalletTx, pReserveKey] : transactionsToCommit)
+    {
+        CValidationState state;
+        //NB! We delibritely pass nullptr for connman here to prevent transaction from relaying
+        //We allow the relaying to occur inside DoRescan instead
+        if (!pactiveWallet->CommitTransaction(*pWalletTx, *pReserveKey, nullptr, state))
+        {
+            LogPrintf("ReplaceWalletLinkedFromURI: Failed to commit transaction");
+            return false;
+        }
+        delete pWalletTx;
+        delete pReserveKey;
+    }
 
     // Allow update of balance for deleted accounts/transactions
+    LogPrintf("ReplaceWalletLinkedFromURI: Update balance and rescan");
     notifyBalanceChanged(pactiveWallet);
 
     // Rescan for transactions on the linked account
