@@ -318,6 +318,41 @@ public:
             { 0, { genesis.GetHashPoW2(), genesis.nTime } }
         };
 
+        if (sTestnetParams == "C1534687770:60")
+        {
+            checkpointData = {
+                {      0, { uint256S("0x52b6c4e959a5e18c9fbc949561ed59481f50b012f9b5fe25cd58de65e07e2a87"), 1534687770 } },
+                {   5000, { uint256S("0x5645cb5dbbbeed00c799e303d6c4e2c901f6ba7f9ba8bdba93aea2a91ee569d6"), 1535010157 } },
+                {  10000, { uint256S("0x1f1a9f22fa9da34844a18cfbc72868e72efa072ba56160c93dbacdf4ed1163dd"), 1536108393 } },
+                {  15000, { uint256S("0x2cb89a55489f4e0ebc02f04e166bb39a35bf07ee5b0f49864dc3b38d2ca92c3c"), 1537808886 } },
+                {  20000, { uint256S("0xa0051ef2c5283c6770d149f49e8cad71dc302ba74a3b583f8f0c751827436b22"), 1538128272 } },
+                {  25000, { uint256S("0x1c65ccca24be2222d12c566aaaf4f7324046f0ed988d80ddce33186a0d0b33bc"), 1538445993 } },
+                {  30000, { uint256S("0xc9b656cbcac084fca88ce4edd0ec9847e6cebf17ec3f8e674993465c31055cf7"), 1538763420 } },
+                {  35000, { uint256S("0x99b4150d987ccd14be80e8dcd8262b45a2dc1d3370b929c1efc5ce993dbf2f91"), 1539079981 } },
+                {  40000, { uint256S("0x2c1942d7fa8e713b9e3d46c42dd3c6b88640b367bd36fc3a230c9901c69ba83a"), 1539397292 } },
+                {  45000, { uint256S("0xc3356fbba262b2560018c8e41a0ad2b56f291cca22eeebbce3534f13ffebcce4"), 1539710360 } },
+                {  50000, { uint256S("0x8ebe5d2aa1a3d5bec694c7f68a127d86fbe9c3acdc8d43b41c30b64951f8e8ed"), 1540030199 } },
+                {  55000, { uint256S("0xa92c9216e521886b7bb21122216d4e764b0d0e8f7e178aa0179ac65f2508fbce"), 1540349467 } },
+                {  60000, { uint256S("0xc5f3f9283a88ddcd8c76e8f7ad913eb7ed026bc46fe1ecddb6be2703d3de6fcd"), 1540670080 } },
+                {  65000, { uint256S("0x61c2b543790968d99c0abc271eda404ea07b9e2b661e8e33f0839e87afd1a23d"), 1540989319 } },
+                {  70000, { uint256S("0xdc6fcba1e93c425ed79d636b2a70c697115153d23311c4876fdc9ac41be031db"), 1541307040 } },
+                {  75000, { uint256S("0xef1be658833a6ed267840598dcd3754a727b0369e38c4ebc5f4f7683fa9c5a8e"), 1541625273 } },
+                {  80000, { uint256S("0xf6d65ed2a52367bf0dbff586f23062a67d73a5fd97727edf618f58e68638e45f"), 1541942706 } },
+                {  85000, { uint256S("0x1350e7ab72f649f505a93dc728ba0927750af3ed3fb0947045b9944d052c115f"), 1542261051 } },
+                {  90000, { uint256S("0xb95cbebc3493c289a304a57b39f3842e98173d42b2c52e250dba22e4acb36e40"), 1542581413 } },
+                {  95000, { uint256S("0x7d328a542759c2c8dedcde2dad19138979ca155c07625b6b7001d48cbf539ad5"), 1543698585 } },
+                { 100000, { uint256S("0x659c77ab1e3434617ca186c61d575ddb3748817cdf6b1a40d59181aeab6ba026"), 1545381741 } },
+                { 105000, { uint256S("0x2f4d53ced87100a5d050a1a08964a313fd2cbd307b59332b2c5ac59de41da488"), 1547153405 } },
+                { 110000, { uint256S("0x0df2b54c0938cb9107ee5b808f05f53c0be9eb6390a63c09b2bcf04c5d1cfb6b"), 1547888099 } },
+                { 115000, { uint256S("0xa6eb6aab6f670aa60dfbf681a93e8da586d31ab25341555315eea79f93c7cbdf"), 1548229204 } },
+                { 120000, { uint256S("0x86896682580a544aac0987c8a30037bed1bfb81d1b9370e9a0fb32fce0645293"), 1548550481 } },
+                { 125000, { uint256S("0xc65b792dd1c918fd05596eccc93795ecd429fb30bcabe80a0e081ded13356059"), 1548870842 } },
+                { 130000, { uint256S("0xe6526b88456142631c17ad01346363345cd7fe150273a5de7cb57d3a53f952c9"), 1549190172 } },
+                { 131527, { uint256S("0xfd25ff32810f02cc803601fe29b0b3a9f39f417bfdb68fa5e4d452b3b2b4cb2a"), 1549288854 } },
+                { 132679, { uint256S("0x5c9de9c540a722ceeed12b86705fb760d2b50d1c26d1ecb60261ecfbfc42bf2e"), 1549361917 } }
+            };
+        }
+
         chainTxData = ChainTxData{
             0,
             0,
