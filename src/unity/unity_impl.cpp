@@ -358,6 +358,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         walletdb.WritePrimaryAccount(pactiveWallet->activeAccount);
     }
 
+
     // Allow update of balance for deleted accounts/transactions
     notifyBalanceChanged(pactiveWallet);
 
@@ -378,6 +379,13 @@ bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
     }
     LogPrintf("EraseWalletSeedsAndAccounts: End purge seeds");
 
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge standalone accounts");
+    while (!pactiveWallet->mapAccounts.empty())
+    {
+        LogPrintf("EraseWalletSeedsAndAccounts: purge account");
+        pactiveWallet->deleteAccount(pactiveWallet->mapAccounts.begin()->second, true);
+    }
+    LogPrintf("EraseWalletSeedsAndAccounts: End purge standalone accounts");
 
     return true;
 }
