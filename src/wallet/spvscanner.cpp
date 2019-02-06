@@ -57,6 +57,7 @@ void CSPVScanner::Init()
     lastProgressReported = -1.0f;
     lastPersistedBlockTime = 0;
     lastPersistTime = 0;
+    startHeight = -1;
 
     // init scan starting time to birth of first key
     startTime =  wallet.nTimeFirstKey;
@@ -80,6 +81,8 @@ void CSPVScanner::ResetScan()
     walletdb.EraseLastSPVBlockProcessed();
 
     Init();
+
+    ResetUnifiedProgressNotification();
 }
 
 bool CSPVScanner::StartScan()
@@ -245,6 +248,7 @@ void CSPVScanner::ResetUnifiedProgressNotification()
     LOCK(cs_main);
 
     lastProgressReported = -1.0f;
+    startHeight = -1;
     if (lastProcessed)
         startHeight = lastProcessed->nHeight;
     NotifyUnifiedProgress();
@@ -267,7 +271,7 @@ void CSPVScanner::NotifyUnifiedProgress()
 
         int probableHeight = GetProbableHeight();
 
-        if (probableHeight > 0 && startHeight > 0 &&
+        if (probableHeight > 0 && startHeight >= 0 &&
             probableHeight != startHeight &&
             lastProcessed != nullptr && lastProcessed->nHeight > 0)
         {
@@ -280,19 +284,22 @@ void CSPVScanner::NotifyUnifiedProgress()
         // silently ignore progress decrease, this can occur if the chain grew
         // faster then the synchronisation (this would be a very short lived situation)
         // and reporting will continue normally when catching up
-        if (newProgress <= lastProgressReported)
+        // Note that newProgress is always >= 0 here. So when progress reporting is reset (lastProgressReported = -1)
+        // it is not handled as a decrease.
+        if (newProgress <= lastProgressReported && lastProgressReported != 1.0f)
             return;
 
-        // limit processing overhead and only report if a reasonable amount of progress was made since last report
-        if (newProgress - lastProgressReported <= MIN_REPORTING_DELTA && newProgress < ALWAYS_REPORT_THRESHOLD)
+        // Limit processing overhead and only report if a reasonable amount of progress was made since last report.
+        // But don't limit if progress reporting was reset (lastProgressReported = -1)
+        // and also don't limit if we are near the end (ALWAYS_REPORT_THRESHOLD).
+        if (lastProgressReported >= 0.0f  && lastProgressReported != 1.0f && newProgress - lastProgressReported <= MIN_REPORTING_DELTA && newProgress < ALWAYS_REPORT_THRESHOLD)
             return;
     }
 
     if (newProgress != lastProgressReported) {
         uiInterface.NotifyUnifiedProgress(newProgress);
+        lastProgressReported = newProgress;
     }
-
-    lastProgressReported = newProgress;
 }
 
 void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)

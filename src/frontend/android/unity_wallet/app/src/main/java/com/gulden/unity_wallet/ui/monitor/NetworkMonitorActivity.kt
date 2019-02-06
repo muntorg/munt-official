@@ -43,7 +43,7 @@ class NetworkMonitorActivity : UnityCore.Observer, AppCompatActivity(), Coroutin
     override fun onStart() {
         super.onStart()
 
-        syncProgress.progress = 0
+        setSyncProgress(UnityCore.instance.progressPercent)
         UnityCore.instance.addObserver(coreObserverProxy)
     }
 
