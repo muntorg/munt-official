@@ -4278,11 +4278,7 @@ void ResetPartialSync()
     pindexBestPartial = nullptr;
     partialChain.SetTip(nullptr);
     partialChain.SetHeightOffset(0);
-
-    // TODO find all the block we don't want and remove them
-    // iterate the block index, if there is one we don't like remove and if it has no "other chain" validity
-    // completely remove it, else "only" unvlidate the partial stuff of it
-    // check that there are no partial valid blocks beyond the pindexBestPartial
+    nPartialPruneHeightDone = 0;
 
     std::vector<uint256> removals;
     for (auto it = mapBlockIndex.begin(); it != mapBlockIndex.end(); )

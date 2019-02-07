@@ -79,7 +79,7 @@ class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentIntera
     override fun onStart() {
         super.onStart()
 
-        syncProgress.progress = 0
+        setSyncProgress(UnityCore.instance.progressPercent)
         UnityCore.instance.addObserver(coreObserverProxy)
 
         setWalletBalance(UnityCore.instance.balanceAmount)
