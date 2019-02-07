@@ -69,7 +69,7 @@ bool CWalletDB::EraseTx(uint256 hash)
 
 bool CWalletDB::EraseKey(const CPubKey& vchPubKey)
 {
-    return EraseIC(std::pair(std::string("keymeta"), vchPubKey)) && EraseIC(std::pair(std::string("key"), vchPubKey));
+    return EraseIC(std::pair(std::string("keymeta"), vchPubKey)) && (EraseIC(std::pair(std::string("keyHD"), vchPubKey)) || EraseIC(std::pair(std::string("key"), vchPubKey)));
 }
 
 bool CWalletDB::EraseEncryptedKey(const CPubKey& vchPubKey)
@@ -706,7 +706,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             {
                 if ( pwallet->mapAccounts.count(getUUIDFromString(accountUUID)) == 0 )
                 {
-                    strErr = "Wallet contains key for non existent account";
+                    strErr = "Wallet pool contains key for non existent account";
                     return false;
                 }
                 forAccount = pwallet->mapAccounts[getUUIDFromString(accountUUID)];
