@@ -319,7 +319,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     std::vector<std::tuple<CWalletTx*, CReserveKeyOrScript*>> transactionsToCommit;
     for (const auto& [accountUUID, pAccount] : pactiveWallet->mapAccounts)
     {
-        CAmount nBalance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+        CAmount nBalance = pactiveWallet->GetBalance(pAccount, false, true, true);
         if (nBalance > 0)
         {
             LogPrintf("ReplaceWalletLinkedFromURI: Empty account into linked address [%s]", getUUIDAsString(accountUUID).c_str());
@@ -334,7 +334,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
             CReserveKeyOrScript* pReserveKey = new CReserveKeyOrScript(pactiveWallet, pAccount, KEYCHAIN_CHANGE);
             if (!pactiveWallet->CreateTransaction(pAccount, vecSend, *pWallettx, *pReserveKey, nFeeRequired, nChangePosRet, strError))
             {
-                LogPrintf("ReplaceWalletLinkedFromURI: Failed to create transaction %s",strError.c_str());
+                LogPrintf("ReplaceWalletLinkedFromURI: Failed to create transaction %s [%d]",strError.c_str(), nBalance);
                 return false;
             }
             transactionsToCommit.push_back(std::tuple(pWallettx, pReserveKey));
@@ -699,24 +699,22 @@ std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
     std::vector<const CWalletTx*> vWtx;
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
     {
-        if (IsMine(pactiveWallet->activeAccount, wtx))
-        {
-            vWtx.push_back(&wtx);
-        }
+        vWtx.push_back(&wtx);
     }
     std::sort(vWtx.begin(), vWtx.end(), [&](const CWalletTx* x, const CWalletTx* y){ return (x->nTimeSmart > y->nTimeSmart); });
 
     // build mutation list based on transactions
     for (const CWalletTx* wtx : vWtx)
     {
-        int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE);
-        int64_t added = wtx->GetCredit(ISMINE_SPENDABLE);
+        int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
+        int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
 
         uint64_t time = wtx->nTimeSmart;
         std::string hash = wtx->GetHash().ToString();
 
         // if any funds were subtracted the transaction was sent by us
-        if (subtracted > 0) {
+        if (subtracted > 0)
+        {
             int64_t fee = subtracted - wtx->tx->GetValueOut();
             int64_t change = wtx->GetChange();
 
@@ -734,7 +732,7 @@ std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
                 ret.push_back(MutationRecord(added - subtracted, time, hash));
             }
         }
-        else if (added > 0) // nothing subtracted so we received funds
+        else if (added != 0) // nothing subtracted so we received funds
         {
             ret.push_back(MutationRecord(added, time, hash));
         }
