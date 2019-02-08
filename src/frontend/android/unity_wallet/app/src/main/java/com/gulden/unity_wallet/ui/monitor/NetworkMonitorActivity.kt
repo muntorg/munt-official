@@ -7,17 +7,14 @@ package com.gulden.unity_wallet.ui.monitor
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Job
 
-class NetworkMonitorActivity : UnityCore.Observer, AppCompatActivity(), CoroutineScope
+class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
 {
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
-
     private val coreObserverProxy = CoreObserverProxy(this, this)
 
     override fun onCreate(savedInstanceState: Bundle?)

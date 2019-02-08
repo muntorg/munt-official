@@ -9,24 +9,19 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenMonitorListener
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionStatus
+import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_transaction_info.*
 import kotlinx.android.synthetic.main.content_transaction_info.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import java.text.DecimalFormat
-import kotlin.coroutines.CoroutineContext
 
-class TransactionInfoActivity : AppCompatActivity(), CoroutineScope {
-
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+class TransactionInfoActivity : AppBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

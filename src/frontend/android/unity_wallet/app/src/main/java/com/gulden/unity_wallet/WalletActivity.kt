@@ -19,10 +19,10 @@ import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.main_activity_fragments.*
 import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentInteractionListener
+import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.uriRecipient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 
 inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
     beginTransaction().func().commit()
@@ -36,13 +36,11 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
     supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
 }
 
-class WalletActivity : UnityCore.Observer, AppCompatActivity(), OnFragmentInteractionListener,
+class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteractionListener,
         ReceiveFragment.OnFragmentInteractionListener, MutationFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener, LocalCurrencyFragment.OnFragmentInteractionListener, CoroutineScope,
+        SettingsFragment.OnFragmentInteractionListener, LocalCurrencyFragment.OnFragmentInteractionListener,
         SharedPreferences.OnSharedPreferenceChangeListener
 {
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
-
     private val coreObserverProxy = CoreObserverProxy(this, this)
 
     override fun syncProgressChanged(percent: Float): Boolean {

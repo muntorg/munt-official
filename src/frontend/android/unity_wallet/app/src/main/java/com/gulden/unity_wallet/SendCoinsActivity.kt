@@ -12,12 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.R.layout.text_input_address_label
+import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_send_coins.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
@@ -25,12 +25,10 @@ import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.design.longSnackbar
-import kotlin.coroutines.CoroutineContext
 
 
-class SendCoinsActivity : AppCompatActivity(), CoroutineScope
+class SendCoinsActivity : AppBaseActivity()
 {
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
     private var nocksJob: Job? = null
     private var orderResult: NocksOrderResult? = null
     private lateinit var activeAmount: EditText
