@@ -10,14 +10,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import androidx.core.content.ContextCompat
 import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.formatNativeAndLocal
 import kotlinx.android.synthetic.main.mutation_list_item.view.*
 import kotlinx.android.synthetic.main.mutation_list_item_with_header.view.*
-import java.text.DecimalFormat
+import org.jetbrains.anko.textColor
 
 class MutationAdapter(private val context: Context, private var dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private var rate = 0.0
+
+    fun updateRate(rate_: Double) {
+        rate = rate_
+        notifyDataSetChanged()
+    }
 
     fun updateDataSource(newDataSource: ArrayList<MutationRecord>) {
         dataSource = newDataSource
@@ -59,7 +67,9 @@ class MutationAdapter(private val context: Context, private var dataSource: Arra
         }
 
         rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(mutationRecord.timestamp * 1000L))
-        rowView.textViewAmount.text = "  " + (DecimalFormat("+#,##0.00;-#").format(mutationRecord.change.toDouble() / 100000000))
+        rowView.textViewAmount.text = formatNativeAndLocal(mutationRecord.change,rate,false)
+        rowView.textViewAmount.textColor = ContextCompat.getColor(rowView.context,
+                if (mutationRecord.change >= 0) R.color.change_postivive else R.color.change_negative)
         return rowView
     }
 }

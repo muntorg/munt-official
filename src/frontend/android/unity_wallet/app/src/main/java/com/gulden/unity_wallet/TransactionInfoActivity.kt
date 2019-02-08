@@ -45,10 +45,10 @@ class TransactionInfoActivity : AppBaseActivity() {
             status.text = statusText(tx)
 
             // Amount instantly and update with rate conversion
-            amount.text = formatAmount(tx.amount, 0.0)
+            amount.text = formatNativeAndLocal(tx.amount, 0.0)
             this.launch(Dispatchers.Main) {
                 try {
-                    amount.text = formatAmount(tx.amount, fetchCurrencyRate(localCurrency.code))
+                    amount.text = formatNativeAndLocal(tx.amount, fetchCurrencyRate(localCurrency.code))
                 } catch (e: Throwable) {
                     // silently ignore failure of getting rate here
                 }
@@ -71,21 +71,6 @@ class TransactionInfoActivity : AppBaseActivity() {
         catch (e: Throwable)
         {
             transactionId.text = getString(R.string.no_tx_details).format(txHash)
-        }
-    }
-
-    private fun formatAmount(amount: Long, rate: Double = 0.0): String {
-        val native = "G " + (DecimalFormat("+#,##0.00;-#").format(amount.toDouble() / 100000000))
-
-        val pattern = "+#,##0.%s;-#".format("0".repeat(localCurrency.precision))
-
-        localCurrency.precision
-
-        return when (rate) {
-            0.0 -> native
-            else -> {
-                "%s (%s %s)".format(native, localCurrency.short, DecimalFormat(pattern).format(rate * amount.toDouble() / 100000000) )
-            }
         }
     }
 

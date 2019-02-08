@@ -15,4 +15,7 @@ file COPYING
     <color name="bg_less_bright">#ffe8e8f0</color>
     <color name="bg_list">#40ffffff</color>
 
+    <!-- mutation depending on balance effect -->
+    <color name="change_postivive">#4CAF50</color>
+    <color name="change_negative">#ff000000</color>
 </resources>

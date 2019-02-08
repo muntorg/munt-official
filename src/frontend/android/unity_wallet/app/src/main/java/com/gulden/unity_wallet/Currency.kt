@@ -5,6 +5,7 @@ import android.util.Log
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URL
+import java.text.DecimalFormat
 import java.util.*
 
 private const val TAG = "currency"
@@ -82,3 +83,17 @@ val localCurrency: Currency
         val code = sharedPreferences.getString("preference_local_currency", Config.DEFAULT_CURRENCY_CODE)!!
         return Currencies.knownCurrencies[code]!!
     }
+
+fun formatNativeAndLocal(nativeAmount: Long, conversionRate: Double, useNativePrefix: Boolean = true): String
+{
+    val native = "%s %s".format(if (useNativePrefix) "G" else "",
+            (DecimalFormat("+#,##0.00;-#").format(nativeAmount.toDouble() / 100000000)))
+
+    return if (conversionRate > 0.0) {
+        val pattern = "+#,##0.%s;-#".format("0".repeat(localCurrency.precision))
+        "%s (%s %s)".format(native, localCurrency.short,
+                DecimalFormat(pattern).format(conversionRate * nativeAmount.toDouble() / 100000000) )
+    }
+    else
+        native
+}
