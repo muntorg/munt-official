@@ -23,6 +23,9 @@ import com.gulden.unity_wallet.ui.AddressBookAdapter
 import com.gulden.uriRecipient
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
+import android.text.Html
+import android.text.SpannableString
+import com.gulden.ellipsizeString
 
 
 class SendFragment : Fragment()
@@ -114,15 +117,33 @@ class SendFragment : Fragment()
         return (clipboard?.primaryClip?.getItemAt(0)?.coerceToText(context)).toString()
     }
 
+    private fun setClipButtonText(text : String)
+    {
+        val styledText = SpannableString(Html.fromHtml(getString(R.string.send_fragment_clipboard_label) + "<br/>" + "<small> <font color='"+resources.getColor(R.color.lightText)+"'>" + ellipsizeString(text, 18) + "</font> </small>"))
+        clipboardButton.text = styledText
+    }
+
     private fun checkClipboardEnable()
     {
         // Enable clipboard button if it contains a valid IBAN, Gulden address or Uri
         val text = clipboardText()
-        clipboardButton.isEnabled = when {
-            IBANValidator.getInstance().isValid(text) -> true
-            GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid -> true
-            uriRecipient(text).valid -> true
-            else -> false
+        when
+        {
+            IBANValidator.getInstance().isValid(text) || GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid ->
+            {
+                clipboardButton.isEnabled = true
+                setClipButtonText(text)
+            }
+            uriRecipient(text).valid ->
+            {
+                clipboardButton.isEnabled = true
+                setClipButtonText(uriRecipient(text).address)
+            }
+            else ->
+            {
+                clipboardButton.text = getString(R.string.send_fragment_clipboard_label)
+                clipboardButton.isEnabled = false
+            }
         }
     }
 }
