@@ -9,6 +9,8 @@ file COPYING
     <color name="colorPrimary">#111444</color>
     <color name="colorPrimaryDark">#909090</color>
     <color name="colorAccent">#575ba0</color>
+    <color name="darkText">#111444</color>
+    <color name="lightText">#909090</color>
 
     <!-- background -->
     <color name="bg_bright">#ffffffff</color>
