@@ -134,7 +134,7 @@ std::vector<unsigned char> entropyFromMnemonic(const SecureString& mnemonic)
     std::istream_iterator<SecureString> end;
     std::vector<SecureString> mnemonicWords(begin, end);
 
-    // Word list must be m inimum of 12 words, always a multiple of 3.
+    // Word list must be minimum of 12 words, always a multiple of 3.
     if (mnemonicWords.size() < 12 || mnemonicWords.size() % 3 > 0)
         return std::vector<unsigned char>();
 

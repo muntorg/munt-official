@@ -474,21 +474,8 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
             throw std::runtime_error("erasing account failed");
         }
 
-        LogPrintf("CGuldenWallet::deleteAccount - wipe keypool from disk");
-        // Wipe our keypool
-        {
-            bool forceErase = true;
-            for(int64_t nIndex : account->setKeyPoolInternal)
-                db.ErasePool(pactiveWallet, nIndex, forceErase);
-            for(int64_t nIndex : account->setKeyPoolExternal)
-                db.ErasePool(pactiveWallet, nIndex, forceErase);
-
-            account->setKeyPoolInternal.clear();
-            account->setKeyPoolExternal.clear();
-        }
-
-        // Wipe all the keys as well
-        LogPrintf("CGuldenWallet::deleteAccount - wipe keys");
+        // Wipe all the keys
+        LogPrintf("CGuldenWallet::deleteAccount - wipe keys from disk");
         {
             std::set<CKeyID> setAddress;
             account->GetKeys(setAddress);
@@ -502,9 +489,29 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
                 }
                 else
                 {
-                    db.EraseKey(pubKey);
+                    if (IsCrypted())
+                    {
+                        db.EraseEncryptedKey(pubKey);
+                    }
+                    else
+                    {
+                        db.EraseKey(pubKey);
+                    }
                 }
             }
+        }
+
+        LogPrintf("CGuldenWallet::deleteAccount - wipe keypool from disk");
+        // Wipe our keypool
+        {
+            bool forceErase = true;
+            for(int64_t nIndex : account->setKeyPoolInternal)
+                db.ErasePool(pactiveWallet, nIndex, forceErase);
+            for(int64_t nIndex : account->setKeyPoolExternal)
+                db.ErasePool(pactiveWallet, nIndex, forceErase);
+
+            account->setKeyPoolInternal.clear();
+            account->setKeyPoolExternal.clear();
         }
 
         // Wipe all the transactions associated with account
@@ -1152,7 +1159,10 @@ bool CGuldenWallet::AddHDKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CA
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
     if (!forAccount.AddKeyPubKey(HDKeyIndex, pubkey, keyChain))
+    {
+        LogPrintf("CGuldenWallet::AddHDKeyPubKey: AddKeyPubKey failed for account");
         return false;
+    }
 
     // check if we need to remove from watch-only
     CScript script;
@@ -1163,13 +1173,17 @@ bool CGuldenWallet::AddHDKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CA
     if (HaveWatchOnly(script))
         static_cast<CWallet*>(this)->RemoveWatchOnly(script);
 
-    bool ret = CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID()));
-    if (ret && forAccount.IsPoW2Witness() && keyChain == KEYCHAIN_WITNESS)
+    if (!CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID())))
+    {
+        LogPrintf("CGuldenWallet::AddHDKeyPubKey: WriteKeyHD failed for key");
+        return false;
+    }
+    else if (forAccount.IsPoW2Witness() && keyChain == KEYCHAIN_WITNESS)
     {
         CPrivKey nullKey;
-        ret = CWalletDB(*dbw).WriteKeyOverride(pubkey, nullKey, getUUIDAsString(forAccount.getUUID()), KEYCHAIN_WITNESS);
+        return CWalletDB(*dbw).WriteKeyOverride(pubkey, nullKey, getUUIDAsString(forAccount.getUUID()), KEYCHAIN_WITNESS);
     }
-    return ret;
+    return true;
 }
 
 

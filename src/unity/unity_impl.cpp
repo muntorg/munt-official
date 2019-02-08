@@ -293,7 +293,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 
     if (!pactiveWallet || !pactiveWallet->activeAccount)
     {
-        LogPrintf("ReplaceWalletLinkedFromURI: no active wallet");
+        LogPrintf("ReplaceWalletLinkedFromURI: No active wallet");
         return false;
     }
 
@@ -301,7 +301,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     CGuldenSecretExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
     {
-        LogPrintf("ReplaceWalletLinkedFromURI: failed to parse link URI");
+        LogPrintf("ReplaceWalletLinkedFromURI: Failed to parse link URI");
         return false;
     }
 
@@ -314,37 +314,46 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     }
 
     // Empty wallet to target address
+    LogPrintf("ReplaceWalletLinkedFromURI: Empty accounts into linked address");
     bool fSubtractFeeFromAmount = true;
+    std::vector<std::tuple<CWalletTx*, CReserveKeyOrScript*>> transactionsToCommit;
     for (const auto& [accountUUID, pAccount] : pactiveWallet->mapAccounts)
     {
-        CAmount nBalance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+        CAmount nBalance = pactiveWallet->GetBalance(pAccount, false, true, true);
         if (nBalance > 0)
         {
+            LogPrintf("ReplaceWalletLinkedFromURI: Empty account into linked address [%s]", getUUIDAsString(accountUUID).c_str());
             std::vector<CRecipient> vecSend;
             CRecipient recipient = GetRecipientForDestination(address.Get(), nBalance, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
             vecSend.push_back(recipient);
 
-            CWalletTx wtx;
+            CWalletTx* pWallettx = new CWalletTx();
             CAmount nFeeRequired;
             int nChangePosRet = -1;
             std::string strError;
-            CReserveKeyOrScript reservekey(pactiveWallet, pAccount, KEYCHAIN_CHANGE);
-            if (!pactiveWallet->CreateTransaction(pAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+            CReserveKeyOrScript* pReserveKey = new CReserveKeyOrScript(pactiveWallet, pAccount, KEYCHAIN_CHANGE);
+            if (!pactiveWallet->CreateTransaction(pAccount, vecSend, *pWallettx, *pReserveKey, nFeeRequired, nChangePosRet, strError))
             {
-                LogPrintf("ReplaceWalletLinkedFromURI: failed to create transaction %s",strError.c_str());
+                LogPrintf("ReplaceWalletLinkedFromURI: Failed to create transaction %s [%d]",strError.c_str(), nBalance);
                 return false;
             }
+            transactionsToCommit.push_back(std::tuple(pWallettx, pReserveKey));
+        }
+        else
+        {
+            LogPrintf("ReplaceWalletLinkedFromURI: Account already empty [%s]", getUUIDAsString(accountUUID).c_str());
         }
     }
 
     if (!EraseWalletSeedsAndAccounts())
     {
+        LogPrintf("ReplaceWalletLinkedFromURI: Failed to erase seed and accounts");
         return false;
     }
 
     // Create a new linked account as the primary account
     pactiveWallet->nTimeFirstKey = linkedKey.getCreationTime();
-    LogPrintf("Creating new linked primary account, birth time [%d]\n", pactiveWallet->nTimeFirstKey);
+    LogPrintf("ReplaceWalletLinkedFromURI: Creating new linked primary account, birth time [%d]\n", pactiveWallet->nTimeFirstKey);
     pactiveWallet->activeAccount = pactiveWallet->CreateSeedlessHDAccount("My account", linkedKey, AccountState::Normal, AccountType::Mobi);
 
     // Write the primary account into wallet file
@@ -352,13 +361,28 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         CWalletDB walletdb(*pactiveWallet->dbw);
         if (!walletdb.WriteAccount(getUUIDAsString(pactiveWallet->activeAccount->getUUID()), pactiveWallet->activeAccount))
         {
-            LogPrintf("ReplaceWalletLinkedFromURI: failed to write new linked account");
+            LogPrintf("ReplaceWalletLinkedFromURI: Failed to write new linked account");
             return false;
         }
         walletdb.WritePrimaryAccount(pactiveWallet->activeAccount);
     }
 
+    for (auto& [pWalletTx, pReserveKey] : transactionsToCommit)
+    {
+        CValidationState state;
+        //NB! We delibritely pass nullptr for connman here to prevent transaction from relaying
+        //We allow the relaying to occur inside DoRescan instead
+        if (!pactiveWallet->CommitTransaction(*pWalletTx, *pReserveKey, nullptr, state))
+        {
+            LogPrintf("ReplaceWalletLinkedFromURI: Failed to commit transaction");
+            return false;
+        }
+        delete pWalletTx;
+        delete pReserveKey;
+    }
+
     // Allow update of balance for deleted accounts/transactions
+    LogPrintf("ReplaceWalletLinkedFromURI: Update balance and rescan");
     notifyBalanceChanged(pactiveWallet);
 
     // Rescan for transactions on the linked account
@@ -377,6 +401,14 @@ bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
         pactiveWallet->DeleteSeed(pactiveWallet->mapSeeds.begin()->second, true);
     }
     LogPrintf("EraseWalletSeedsAndAccounts: End purge seeds");
+
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge standalone accounts");
+    while (!pactiveWallet->mapAccounts.empty())
+    {
+        LogPrintf("EraseWalletSeedsAndAccounts: purge account");
+        pactiveWallet->deleteAccount(pactiveWallet->mapAccounts.begin()->second, true);
+    }
+    LogPrintf("EraseWalletSeedsAndAccounts: End purge standalone accounts");
 
     return true;
 }
@@ -653,6 +685,7 @@ TransactionRecord GuldenUnifiedBackend::getTransaction(const std::string & txHas
     return calculateTransactionRecordForWalletTransaction(wtx);
 }
 
+extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
 std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
 {
     std::vector<MutationRecord> ret;
@@ -665,37 +698,44 @@ std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
     // wallet transactions in reverse chronological ordering
     std::vector<const CWalletTx*> vWtx;
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
+    {
         vWtx.push_back(&wtx);
+    }
     std::sort(vWtx.begin(), vWtx.end(), [&](const CWalletTx* x, const CWalletTx* y){ return (x->nTimeSmart > y->nTimeSmart); });
 
     // build mutation list based on transactions
     for (const CWalletTx* wtx : vWtx)
     {
-        int64_t substracted = wtx->GetDebit(ISMINE_SPENDABLE);
-        int64_t added = wtx->GetCredit(ISMINE_SPENDABLE);
+        int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
+        int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
 
         uint64_t time = wtx->nTimeSmart;
         std::string hash = wtx->GetHash().ToString();
 
-        // if any funds were substracted the transaction was sent by us
-        if (substracted > 0) {
-            int64_t fee = substracted - wtx->tx->GetValueOut();
+        // if any funds were subtracted the transaction was sent by us
+        if (subtracted > 0)
+        {
+            int64_t fee = subtracted - wtx->tx->GetValueOut();
             int64_t change = wtx->GetChange();
 
             // detect internal transfer and split it
-            if (substracted - fee == added)
+            if (subtracted - fee == added)
             {
                 // amount received
                 ret.push_back(MutationRecord(added - change, time, hash));
 
                 // amount send including fee
-                ret.push_back(MutationRecord(change - substracted, time, hash));
+                ret.push_back(MutationRecord(change - subtracted, time, hash));
             }
             else
-                ret.push_back(MutationRecord(added - substracted, time, hash));
+            {
+                ret.push_back(MutationRecord(added - subtracted, time, hash));
+            }
         }
-        else // nothing substracted so we received funds
+        else if (added != 0) // nothing subtracted so we received funds
+        {
             ret.push_back(MutationRecord(added, time, hash));
+        }
     }
 
     return ret;

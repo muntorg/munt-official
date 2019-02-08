@@ -28,13 +28,15 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/transaction_id"
-            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textColor="@color/darkText"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/transactionId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightText"
+            />
 
         <Space
             android:layout_width="match_parent"
@@ -45,13 +47,15 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/status"
-            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textColor="@color/darkText"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/status"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightText"
+            />
 
         <Space
             android:layout_width="match_parent"
@@ -62,13 +66,15 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/amount_label"
-            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textColor="@color/darkText"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/amount"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightText"
+            />
 
         <Space
             android:layout_width="match_parent"
@@ -79,14 +85,16 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/from_label"
-            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textColor="@color/darkText"
             android:textSize="18sp" />
 
         <LinearLayout
             android:id="@+id/from_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:textColor="@color/lightText"
+            />
 
         <Space
             android:layout_width="match_parent"
@@ -97,14 +105,16 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/to_label"
-            android:textColor="@color/mtrl_dark_on_surface_emphasis_medium"
+            android:textColor="@color/darkText"
             android:textSize="18sp" />
 
         <LinearLayout
             android:id="@+id/to_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:textColor="@color/lightText"
+            />
 
     </LinearLayout>
 </ScrollView>
