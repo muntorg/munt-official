@@ -15,7 +15,7 @@ file COPYING
 
     <ListView
         android:id="@+id/mutationList"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:divider="@null"
@@ -27,7 +27,7 @@ file COPYING
 
     <LinearLayout
         android:id="@+id/emptyMutationListView"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:gravity="center"
