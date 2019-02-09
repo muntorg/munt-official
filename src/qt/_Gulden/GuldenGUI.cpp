@@ -1214,13 +1214,14 @@ void GUI::refreshTabVisibilities()
 {
     LogPrint(BCLog::QT, "GUI::refreshTabVisibilities\n");
 
+    auto* currentWidget = walletFrame->currentWalletView()->currentWidget();
     if (pactiveWallet->getActiveAccount()->IsPoW2Witness())
     {
         viewAddressAction->setVisible(true);
         receiveCoinsAction->setVisible(false);
         sendCoinsAction->setVisible(false);
         witnessDialogAction->setVisible(true);
-        if ( walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage )
+        if ( currentWidget == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage )
         {
             showWitnessDialog();
         }
@@ -1238,7 +1239,7 @@ void GUI::refreshTabVisibilities()
             sendCoinsAction->setVisible( false );
         }
 
-        if (walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage || walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->viewAddressPage)
+        if (currentWidget == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->viewAddressPage)
         {
             gotoReceiveCoinsPage();
         }
