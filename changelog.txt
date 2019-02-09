@@ -1,3 +1,10 @@
+2.1.0.4
+
+UI - Fix a small dispaly updatge issue when switching between witness and normal accounts in some instances.
+
+
+
+
 2.1.0.3
 
 UI - Modify witness QR for better interoperability with external apps.
