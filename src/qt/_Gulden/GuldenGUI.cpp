@@ -1238,7 +1238,7 @@ void GUI::refreshTabVisibilities()
             sendCoinsAction->setVisible( false );
         }
 
-        if (walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage)
+        if (walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage || walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->viewAddressPage)
         {
             gotoReceiveCoinsPage();
         }
