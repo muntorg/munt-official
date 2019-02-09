@@ -158,7 +158,6 @@ file COPYING
 
     </LinearLayout>
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/send_coins_send_btn"
         android:layout_width="0dp"

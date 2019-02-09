@@ -42,14 +42,11 @@ file COPYING
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <View
+    <include layout="@layout/vertical_divider"
         android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-         />
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
