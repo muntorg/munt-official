@@ -19,6 +19,7 @@ import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.R.layout.text_input_address_label
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_send_coins.*
+import kotlinx.android.synthetic.main.numeric_keypad.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
@@ -59,7 +60,6 @@ class SendCoinsActivity : AppBaseActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_coins)
-        setSupportActionBar(toolbar)
 
         recipient = intent.getParcelableExtra(EXTRA_RECIPIENT)
         activeAmount = send_coins_amount
@@ -67,25 +67,6 @@ class SendCoinsActivity : AppBaseActivity()
         send_coins_receiving_static_address.text = recipient.address
 
         setAddressLabel(recipient.label)
-
-        send_coins_send_btn.setOnClickListener { view ->
-            run {
-                if (activeAmount.text.isEmpty()) {
-                    Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null)
-                            .show()
-                    return@run
-                }
-
-
-
-                if (isIBAN) {
-                    confirmAndCommitIBANPayment(view)
-                } else {
-                    confirmAndCommitGuldenPayment(view)
-                }
-            }
-        }
 
         send_coins_amount.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) activeAmount = send_coins_amount
@@ -132,7 +113,7 @@ class SendCoinsActivity : AppBaseActivity()
     }
 
     private fun confirmAndCommitIBANPayment(view: View) {
-        send_coins_send_btn.isEnabled = false
+        button_send.isEnabled = false
         this.launch {
             try {
                 // request order from Nocks
@@ -151,7 +132,7 @@ class SendCoinsActivity : AppBaseActivity()
 
                     // on confirmation compose recipient and execute payment
                     positiveButton("Send") {
-                        send_coins_send_btn.isEnabled = true
+                        button_send.isEnabled = true
                         val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG)
                         try {
                             GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
@@ -166,11 +147,11 @@ class SendCoinsActivity : AppBaseActivity()
                     negativeButton("Cancel") {}
                 }
                         .show()
-                send_coins_send_btn.isEnabled = true
+                button_send.isEnabled = true
 
             } catch (e: Throwable) {
                 view.longSnackbar("IBAN order failed")
-                send_coins_send_btn.isEnabled = true
+                button_send.isEnabled = true
             }
         }
     }
@@ -318,6 +299,26 @@ class SendCoinsActivity : AppBaseActivity()
                         activeAmount.setText(activeAmount.text.toString() + ".")
                 }
             }
+            R.id.button_currency -> {
+                //TODO:
+            }
+            R.id.button_send -> {
+                run {
+                    if (activeAmount.text.isEmpty()) {
+                        Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null)
+                                .show()
+                        return@run
+                    }
+
+                    when
+                    {
+                        isIBAN -> confirmAndCommitIBANPayment(view)
+                        else -> confirmAndCommitGuldenPayment(view)
+                    }
+                }
+            }
+
         }
         updateConversion()
         updateNocksEstimate()

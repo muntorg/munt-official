@@ -9,23 +9,22 @@ file COPYING
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/numeric_keypad"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:columnCount="5"
+    android:layout_height="match_parent"
+    android:columnCount="3"
     android:orientation="horizontal"
-    android:stretchColumns="0, 4">
+    android:stretchColumns="*"
+    >
 
-    <TableRow>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+    <TableRow
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/keypad_key_gap_size"
+        >
 
         <Button
             android:id="@+id/button_1"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:background="@drawable/shape_rounded_button"
             android:onClick="handleKeypadButtonClick"
             android:text="@string/send_keypad_digit_1"
@@ -33,10 +32,10 @@ file COPYING
 
         <Button
             android:id="@+id/button_2"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/keypad_key_gap_size"
+            android:layout_marginRight="@dimen/keypad_key_gap_size"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_2"
@@ -44,31 +43,25 @@ file COPYING
 
         <Button
             android:id="@+id/button_3"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_3"
             android:textColor="@android:color/white" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
     </TableRow>
 
-    <TableRow>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+    <TableRow
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/keypad_key_gap_size"
+        >
 
         <Button
             android:id="@+id/button_4"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_4"
@@ -76,10 +69,10 @@ file COPYING
 
         <Button
             android:id="@+id/button_5"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/keypad_key_gap_size"
+            android:layout_marginRight="@dimen/keypad_key_gap_size"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_5"
@@ -87,31 +80,24 @@ file COPYING
 
         <Button
             android:id="@+id/button_6"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_6"
             android:textColor="@android:color/white" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
     </TableRow>
 
-    <TableRow>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
+    <TableRow
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/keypad_key_gap_size"
+        >
         <Button
             android:id="@+id/button_7"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_7"
@@ -119,10 +105,10 @@ file COPYING
 
         <Button
             android:id="@+id/button_8"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/keypad_key_gap_size"
+            android:layout_marginRight="@dimen/keypad_key_gap_size"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_8"
@@ -130,30 +116,24 @@ file COPYING
 
         <Button
             android:id="@+id/button_9"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_9"
             android:textColor="@android:color/white" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
     </TableRow>
 
-    <TableRow>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+    <TableRow
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/keypad_key_gap_size"
+        >
 
         <Button
             android:id="@+id/button_decimal"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_decimal_separator"
@@ -161,10 +141,10 @@ file COPYING
 
         <Button
             android:id="@+id/button_0"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/keypad_key_gap_size"
+            android:layout_marginRight="@dimen/keypad_key_gap_size"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_digit_0"
@@ -172,18 +152,42 @@ file COPYING
 
         <Button
             android:id="@+id/button_backspace"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:onClick="handleKeypadButtonClick"
             android:background="@drawable/shape_rounded_button"
             android:text="@string/send_keypad_button_delete"
             android:textColor="@android:color/white"
             app:srcCompat="@android:drawable/ic_notification_clear_all" />
+    </TableRow>
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+    <TableRow
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/keypad_key_gap_size"
+        >
+
+        <Button
+            android:id="@+id/button_currency"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:onClick="handleKeypadButtonClick"
+            android:background="@drawable/shape_rounded_button"
+            android:text=""
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/keypad_key_gap_size"
+            android:layout_span="2"
+            android:onClick="handleKeypadButtonClick"
+            android:background="@drawable/shape_rounded_button"
+            android:text="Send"
+            android:textColor="@android:color/white"
+            app:srcCompat="@android:drawable/ic_notification_clear_all" />
+
     </TableRow>
 
 </TableLayout>
