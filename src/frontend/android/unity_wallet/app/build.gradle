@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'com.google.protobuf'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -74,6 +76,7 @@ dependencies {
     implementation "commons-validator:commons-validator:1.6" exclude module: "commons-logging"
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.squareup.moshi:moshi:1.8.0'
+    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-design:$anko_version"
@@ -101,6 +104,27 @@ android.applicationVariants.all { variant ->
         if (baseAbiVersionCode != null)
         {
             output.versionCodeOverride = baseAbiVersionCode * 100000 + variant.versionCode
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.0.0'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.plugins {
+                javalite { }
+            }
         }
     }
 }
