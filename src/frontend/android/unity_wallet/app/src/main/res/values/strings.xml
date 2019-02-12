@@ -157,7 +157,6 @@ file COPYING
     <string name="preference_fragment_notification_label">Notifications</string>
     <string name="preference_fragment_background_sync_label">Background synchronisation</string>
     <string name="preference_fragment_background_network_label">Network monitor</string>
-    <string name="send_coins_label_pay_to">Pay to</string>
     <string name="send_coins_label_add_to_address_book">Add to address book</string>
     <string name="send_coins_label_remove_from_address_book">Remove from address book</string>
     <string name="send_fragment_scan_label">Scan QR</string>

@@ -30,37 +30,21 @@ file COPYING
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:cursorVisible="false"
-            android:drawableLeft="@drawable/ic_g_logo"
             android:editable="false"
             android:hint="0"
             android:inputType="none"
             tools:clickable="false" />
 
-
-        <LinearLayout
-            android:id="@+id/send_coins_local_group"
+        <EditText
+            android:id="@+id/send_coins_local_amount"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/send_coins_local_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="€" />
-
-            <EditText
-                android:id="@+id/send_coins_local_amount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:cursorVisible="false"
-                android:editable="false"
-                android:hint="0"
-                android:inputType="none"
-                tools:clickable="false" />
-        </LinearLayout>
+            android:cursorVisible="false"
+            android:editable="false"
+            android:hint="0"
+            android:inputType="none"
+            tools:clickable="false" />
 
     </LinearLayout>
 
@@ -94,14 +78,6 @@ file COPYING
         app:layout_constraintBottom_toBottomOf="parent"
         >
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/send_coins_label_pay_to"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -114,11 +90,13 @@ file COPYING
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="3"
+                android:textColor="@color/lightText"
                 android:singleLine="false"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/send_coins_receiving_static_address"
+                android:textColor="@color/lightText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -129,7 +107,7 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="handleAddToAddressBookClick"
+            android:textColor="@color/darkText"
             android:text="@string/send_coins_label_add_to_address_book" />
 
         <TextView
@@ -137,7 +115,6 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="handleRemoveFromAddressBookClick"
             android:text="@string/send_coins_label_remove_from_address_book" />
 
 

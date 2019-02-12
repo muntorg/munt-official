@@ -8,6 +8,7 @@ package com.gulden.unity_wallet
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,16 +32,8 @@ import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.design.longSnackbar
 import kotlin.coroutines.CoroutineContext
 import com.google.android.material.bottomsheet.BottomSheetDialog
-
-
-
-
-
-
-
-
-
-
+import com.amulyakhare.textdrawable.TextDrawable
+import kotlin.math.roundToInt
 
 
 class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
@@ -89,12 +82,10 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
     private lateinit var mActivitySendCoins : EditText
     private lateinit var mActivitySendCoinsLocal : EditText
     private lateinit var msend_coins_receiving_static_address : TextView
-    private lateinit var msend_coins_local_label : TextView
     private lateinit var msend_coins_nocks_estimate : TextView
     private lateinit var msend_coins_receiving_static_label : TextView
     private lateinit var mlabelRemoveFromAddressBook : TextView
     private lateinit var mlabelAddToAddressBook : TextView
-    private lateinit var msend_coins_local_group : View
     private lateinit var m_mainlayout : View
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog
@@ -105,13 +96,33 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
         mActivitySendCoins = m_mainlayout.findViewById<EditText>(R.id.send_coins_amount)
         mActivitySendCoinsLocal = m_mainlayout.findViewById<EditText>(R.id.send_coins_local_amount)
         msend_coins_receiving_static_address = m_mainlayout.findViewById<TextView>(R.id.send_coins_receiving_static_address)
-        msend_coins_local_label = m_mainlayout.findViewById<TextView>(R.id.send_coins_local_label)
         msend_coins_nocks_estimate = m_mainlayout.findViewById<TextView>(R.id.send_coins_nocks_estimate)
         msend_coins_receiving_static_label = m_mainlayout.findViewById<TextView>(R.id.send_coins_receiving_static_label)
         mlabelRemoveFromAddressBook = m_mainlayout.findViewById<TextView>(R.id.labelRemoveFromAddressBook)
         mlabelAddToAddressBook = m_mainlayout.findViewById<TextView>(R.id.labelAddToAddressBook)
         msend_coins_receiving_static_address = m_mainlayout.findViewById<TextView>(R.id.send_coins_receiving_static_address)
-        msend_coins_local_group = m_mainlayout.findViewById<View>(R.id.send_coins_local_group)
+
+        var drawable = TextDrawable.builder().beginConfig().fontSize(mActivitySendCoins.textSize.roundToInt()).textColor(Color.BLACK).endConfig().buildRect("G", Color.TRANSPARENT)
+        drawable.setBounds(0, 0, 40, 40)
+        mActivitySendCoins.setCompoundDrawables(drawable, null, null, null)
+
+        m_mainlayout.findViewById<View>(R.id.button_0).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_1).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_2).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_3).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_4).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_5).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_6).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_7).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_8).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_9).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_send).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_currency).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_decimal).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.button_backspace).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        m_mainlayout.findViewById<View>(R.id.labelAddToAddressBook).setOnClickListener { view -> handleAddToAddressBookClick(view) }
+        m_mainlayout.findViewById<View>(R.id.labelRemoveFromAddressBook).setOnClickListener { view -> handleRemoveFromAddressBookClick(view) }
+
 
         dialog.setContentView(m_mainlayout)
 
@@ -125,7 +136,7 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
         super.onStart()
 
         // Always fully expand never peek
-        m_mainlayout.layoutParams.height = fragmentActivity.window.decorView.height - 200
+        m_mainlayout.layoutParams.height = fragmentActivity.window.decorView.height - 300
         mBehavior!!.skipCollapsed = true
         mBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
     }
@@ -248,8 +259,10 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
         this.launch( Dispatchers.Main) {
             try {
                 localRate = fetchCurrencyRate(foreignCurrency.code)
-                msend_coins_local_label.text = foreignCurrency.short
-                msend_coins_local_group.visibility = View.VISIBLE
+                var drawable = TextDrawable.builder().beginConfig().fontSize(mActivitySendCoinsLocal.textSize.roundToInt()).textColor(Color.BLACK).endConfig().buildRect(foreignCurrency.short, Color.TRANSPARENT)
+                drawable.setBounds(0, 0, 40, 40)
+                mActivitySendCoinsLocal.setCompoundDrawables(drawable, null, null, null)
+                mActivitySendCoinsLocal.visibility = View.VISIBLE
 
                 updateConversion()
 
@@ -257,7 +270,7 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
                     mActivitySendCoinsLocal.requestFocus()
             }
             catch (e: Throwable) {
-                msend_coins_local_group.visibility = View.GONE
+                mActivitySendCoinsLocal.visibility = View.GONE
             }
         }
     }
@@ -359,36 +372,34 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
             R.id.button_7 -> appendNumberToAmount("7")
             R.id.button_8 -> appendNumberToAmount("8")
             R.id.button_9 -> appendNumberToAmount("9")
-            R.id.button_0 -> {
-                if (activeAmount.text.isEmpty())
-                    activeAmount.setText(activeAmount.text.toString() + "0.")
-                else if (activeAmount.text.toString() != "0")
-                    activeAmount.setText(activeAmount.text.toString() + "0")
+            R.id.button_0 ->
+            {
+                if (activeAmount.text.isEmpty()) activeAmount.setText(activeAmount.text.toString() + "0.")
+                else if (activeAmount.text.toString() != "0") activeAmount.setText(activeAmount.text.toString() + "0")
             }
-            R.id.button_backspace -> {
-                if (activeAmount.text.toString() == "0.")
-                    activeAmount.setText("")
-                else
-                    activeAmount.setText(activeAmount.text.dropLast(1))
+            R.id.button_backspace ->
+            {
+                if (activeAmount.text.toString() == "0.") activeAmount.setText("")
+                else activeAmount.setText(activeAmount.text.dropLast(1))
             }
-            R.id.button_decimal -> {
+            R.id.button_decimal ->
+            {
                 if (!activeAmount.text.contains("."))
                 {
-                    if (activeAmount.text.isEmpty())
-                        activeAmount.setText("0.")
-                    else
-                        activeAmount.setText(activeAmount.text.toString() + ".")
+                    if (activeAmount.text.isEmpty()) activeAmount.setText("0.")
+                    else activeAmount.setText(activeAmount.text.toString() + ".")
                 }
             }
-            R.id.button_currency -> {
-                //TODO:
+            R.id.button_currency ->
+            {
+                //TODO
             }
-            R.id.button_send -> {
+            R.id.button_send ->
+            {
                 run {
-                    if (activeAmount.text.isEmpty()) {
-                        Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null)
-                                .show()
+                    if (activeAmount.text.isEmpty())
+                    {
+                        Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG).setAction("Action", null).show()
                         return@run
                     }
 
