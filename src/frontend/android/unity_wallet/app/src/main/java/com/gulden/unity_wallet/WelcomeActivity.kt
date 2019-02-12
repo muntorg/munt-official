@@ -22,13 +22,11 @@ import kotlin.concurrent.thread
 class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
 {
     private val coreObserverProxy = CoreObserverProxy(this, this)
-    private var context: Context? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
-        context = this
 
         UnityCore.instance.addObserver(coreObserverProxy)
     }
@@ -99,7 +97,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
                     }
                     else
                     {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
+                        AlertDialog.Builder(this).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
                     }
                 }
             }
