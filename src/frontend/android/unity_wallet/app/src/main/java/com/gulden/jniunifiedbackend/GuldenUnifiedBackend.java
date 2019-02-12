@@ -68,6 +68,13 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.GenerateRecoveryMnemonic();
     }
 
+    /** Compute recovery phrase with birth number */
+    public static String ComposeRecoveryPhrase(String mnemonic, long birthTime)
+    {
+        return CppProxy.ComposeRecoveryPhrase(mnemonic,
+                                              birthTime);
+    }
+
     /** Stop the library */
     public static void TerminateUnityLib()
     {
@@ -244,6 +251,8 @@ public abstract class GuldenUnifiedBackend {
         public static native boolean IsValidRecoveryPhrase(String phrase);
 
         public static native String GenerateRecoveryMnemonic();
+
+        public static native String ComposeRecoveryPhrase(String mnemonic, long birthTime);
 
         public static native void TerminateUnityLib();
 

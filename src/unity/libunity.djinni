@@ -117,6 +117,9 @@ gulden_unified_backend = interface +c {
     # Generate a new recovery mnemonic
     static GenerateRecoveryMnemonic(): string;
 
+    # Compute recovery phrase with birth number
+    static ComposeRecoveryPhrase(mnemonic: string, birthTime: i64): string;
+
     # Stop the library
     static TerminateUnityLib();
 

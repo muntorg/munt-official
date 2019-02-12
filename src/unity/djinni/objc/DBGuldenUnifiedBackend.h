@@ -53,6 +53,10 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Generate a new recovery mnemonic */
 + (nonnull NSString *)GenerateRecoveryMnemonic;
 
+/** Compute recovery phrase with birth number */
++ (nonnull NSString *)ComposeRecoveryPhrase:(nonnull NSString *)mnemonic
+                                  birthTime:(int64_t)birthTime;
+
 /** Stop the library */
 + (void)TerminateUnityLib;
 

@@ -101,6 +101,15 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (nonnull NSString *)ComposeRecoveryPhrase:(nonnull NSString *)mnemonic
+                                  birthTime:(int64_t)birthTime {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::ComposeRecoveryPhrase(::djinni::String::toCpp(mnemonic),
+                                                                            ::djinni::I64::toCpp(birthTime));
+        return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (void)TerminateUnityLib {
     try {
         ::GuldenUnifiedBackend::TerminateUnityLib();

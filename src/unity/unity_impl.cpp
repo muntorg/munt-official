@@ -272,6 +272,11 @@ std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
     return GuldenAppManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), GetAdjustedTime()).c_str();
 }
 
+std::string GuldenUnifiedBackend::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
+{
+    return std::string(GuldenAppManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
+}
+
 bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri)
 {
     CGuldenSecretExt<CExtKey> linkedKey;
