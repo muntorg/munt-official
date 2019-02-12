@@ -61,11 +61,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SendCoinsActivity"
-            android:label="@string/title_activity_send_coins"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".TransactionInfoActivity"
             android:label="@string/title_activity_transaction_info"
             android:screenOrientation="portrait"

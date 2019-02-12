@@ -5,20 +5,23 @@
 
 package com.gulden.unity_wallet
 
+import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.R.layout.text_input_address_label
-import com.gulden.unity_wallet.util.AppBaseActivity
-import kotlinx.android.synthetic.main.activity_send_coins.*
 import kotlinx.android.synthetic.main.numeric_keypad.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
@@ -26,10 +29,24 @@ import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.design.longSnackbar
+import kotlin.coroutines.CoroutineContext
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
-class SendCoinsActivity : AppBaseActivity()
+
+
+
+
+
+
+
+
+
+
+class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
 {
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+
     private var nocksJob: Job? = null
     private var orderResult: NocksOrderResult? = null
     private lateinit var activeAmount: EditText
@@ -39,14 +56,14 @@ class SendCoinsActivity : AppBaseActivity()
     private var isIBAN = false
     private val amount: Double
         get() {
-            var a = send_coins_amount.text.toString().toDoubleOrNull()
+            var a = mActivitySendCoins.text.toString().toDoubleOrNull()
             if (a == null)
                 a = 0.0
             return a
         }
     private val foreignAmount: Double
         get() {
-            var a = send_coins_local_amount.text.toString().toDoubleOrNull()
+            var a = mActivitySendCoinsLocal.text.toString().toDoubleOrNull()
             if (a == null)
                 a = 0.0
             return a
@@ -57,23 +74,85 @@ class SendCoinsActivity : AppBaseActivity()
         }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_send_coins)
+    companion object {
+        const val EXTRA_RECIPIENT = "recipient"
+        fun newInstance(recipient: UriRecipient) = SendCoinsFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(EXTRA_RECIPIENT, recipient)
+            }
+        }
+    }
 
-        recipient = intent.getParcelableExtra(EXTRA_RECIPIENT)
-        activeAmount = send_coins_amount
+    private lateinit var fragmentActivity : Activity
+
+    private var mBehavior: BottomSheetBehavior<*>? = null
+    private lateinit var mActivitySendCoins : EditText
+    private lateinit var mActivitySendCoinsLocal : EditText
+    private lateinit var msend_coins_receiving_static_address : TextView
+    private lateinit var msend_coins_local_label : TextView
+    private lateinit var msend_coins_nocks_estimate : TextView
+    private lateinit var msend_coins_receiving_static_label : TextView
+    private lateinit var mlabelRemoveFromAddressBook : TextView
+    private lateinit var mlabelAddToAddressBook : TextView
+    private lateinit var msend_coins_local_group : View
+    private lateinit var m_mainlayout : View
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog
+    {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        m_mainlayout = View.inflate(context, R.layout.fragment_send_coins, null)
+
+        mActivitySendCoins = m_mainlayout.findViewById<EditText>(R.id.send_coins_amount)
+        mActivitySendCoinsLocal = m_mainlayout.findViewById<EditText>(R.id.send_coins_local_amount)
+        msend_coins_receiving_static_address = m_mainlayout.findViewById<TextView>(R.id.send_coins_receiving_static_address)
+        msend_coins_local_label = m_mainlayout.findViewById<TextView>(R.id.send_coins_local_label)
+        msend_coins_nocks_estimate = m_mainlayout.findViewById<TextView>(R.id.send_coins_nocks_estimate)
+        msend_coins_receiving_static_label = m_mainlayout.findViewById<TextView>(R.id.send_coins_receiving_static_label)
+        mlabelRemoveFromAddressBook = m_mainlayout.findViewById<TextView>(R.id.labelRemoveFromAddressBook)
+        mlabelAddToAddressBook = m_mainlayout.findViewById<TextView>(R.id.labelAddToAddressBook)
+        msend_coins_receiving_static_address = m_mainlayout.findViewById<TextView>(R.id.send_coins_receiving_static_address)
+        msend_coins_local_group = m_mainlayout.findViewById<View>(R.id.send_coins_local_group)
+
+        dialog.setContentView(m_mainlayout)
+
+        mBehavior = BottomSheetBehavior.from(m_mainlayout!!.parent as View)
+
+        return dialog
+    }
+
+    override fun onStart()
+    {
+        super.onStart()
+
+        // Always fully expand never peek
+        m_mainlayout.layoutParams.height = fragmentActivity.window.decorView.height - 200
+        mBehavior!!.skipCollapsed = true
+        mBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+
+
+        fragmentActivity = super.getActivity()!!
+
+        arguments?.getParcelable<UriRecipient>(EXTRA_RECIPIENT)?.let {
+            recipient = it
+        }
+
+        activeAmount = mActivitySendCoins
         activeAmount.setText(recipient.amount)
-        send_coins_receiving_static_address.text = recipient.address
+        msend_coins_receiving_static_address.text = recipient.address
 
         setAddressLabel(recipient.label)
 
-        send_coins_amount.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) activeAmount = send_coins_amount
+        mActivitySendCoins.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) activeAmount = mActivitySendCoins
         }
 
-        send_coins_local_amount.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) activeAmount = send_coins_local_amount
+        mActivitySendCoinsLocal.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) activeAmount = mActivitySendCoinsLocal
         }
 
         if (IBANValidator.getInstance().isValid(recipient.address)) {
@@ -86,6 +165,8 @@ class SendCoinsActivity : AppBaseActivity()
         }
 
         setupRate()
+
+        return view
     }
 
     private fun confirmAndCommitGuldenPayment(view: View) {
@@ -94,14 +175,14 @@ class SendCoinsActivity : AppBaseActivity()
         val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
 
         // alert dialog for confirmation
-        alert(Appcompat, message, "Send Gulden?") {
+        fragmentActivity.alert(Appcompat, message, "Send Gulden?") {
 
             // on confirmation compose recipient and execute payment
             positiveButton("Send") {
-                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, send_coins_amount.text.toString())
+                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, mActivitySendCoins.text.toString())
                 try {
                     GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
-                    finish()
+                    dismiss()
                 }
                 catch (exception: RuntimeException) {
                     view.longSnackbar(exception.message!!)
@@ -128,7 +209,7 @@ class SendCoinsActivity : AppBaseActivity()
                         nlgStr, recipientDisplayAddress)
 
                 // alert dialog for confirmation
-                alert(Appcompat, message, "Send Gulden to IBAN?") {
+                fragmentActivity.alert(Appcompat, message, "Send Gulden to IBAN?") {
 
                     // on confirmation compose recipient and execute payment
                     positiveButton("Send") {
@@ -136,7 +217,7 @@ class SendCoinsActivity : AppBaseActivity()
                         val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG)
                         try {
                             GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
-                            finish()
+                            dismiss()
                         }
                         catch (exception: RuntimeException) {
                             view.longSnackbar(exception.message!!)
@@ -167,16 +248,16 @@ class SendCoinsActivity : AppBaseActivity()
         this.launch( Dispatchers.Main) {
             try {
                 localRate = fetchCurrencyRate(foreignCurrency.code)
-                send_coins_local_label.text = foreignCurrency.short
-                send_coins_local_group.visibility = View.VISIBLE
+                msend_coins_local_label.text = foreignCurrency.short
+                msend_coins_local_group.visibility = View.VISIBLE
 
                 updateConversion()
 
                 if (isIBAN)
-                    send_coins_local_amount.requestFocus()
+                    mActivitySendCoinsLocal.requestFocus()
             }
             catch (e: Throwable) {
-                send_coins_local_group.visibility = View.GONE
+                msend_coins_local_group.visibility = View.GONE
             }
         }
     }
@@ -186,9 +267,9 @@ class SendCoinsActivity : AppBaseActivity()
         if (localRate <= 0.0)
             return
 
-        if (activeAmount == send_coins_amount) {
+        if (activeAmount == mActivitySendCoins) {
             // update local from Gulden
-            send_coins_local_amount.setText(
+            mActivitySendCoinsLocal.setText(
                     if (amount != 0.0)
                         String.format("%.${foreignCurrency.precision}f", localRate * amount)
                     else
@@ -197,7 +278,7 @@ class SendCoinsActivity : AppBaseActivity()
         }
         else {
             // update Gulden from local
-            send_coins_amount.setText(
+            mActivitySendCoins.setText(
                     if (foreignAmount != 0.0)
                         String.format("%.${Config.PRECISION_SHORT}f", foreignAmount / localRate)
                     else
@@ -208,12 +289,12 @@ class SendCoinsActivity : AppBaseActivity()
 
     private fun updateNocksEstimate() {
         nocksJob?.cancel()
-        send_coins_nocks_estimate.text = " "
+        msend_coins_nocks_estimate.text = " "
         if (isIBAN && foreignAmount != 0.0) {
             val prevJob = nocksJob
             nocksJob = this.launch(Dispatchers.Main) {
                 try {
-                    send_coins_nocks_estimate.text = "..."
+                    msend_coins_nocks_estimate.text = "..."
 
                     // delay a bit so quick typing will make a limited number of requests
                     // (this job will be canceled by the next key typed
@@ -221,15 +302,15 @@ class SendCoinsActivity : AppBaseActivity()
 
                     prevJob?.join()
 
-                    val quote = nocksQuote(send_coins_local_amount.text.toString())
+                    val quote = nocksQuote(mActivitySendCoinsLocal.text.toString())
                     val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG.toDouble())
-                    send_coins_nocks_estimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
+                    msend_coins_nocks_estimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
                 }
                 catch (_: CancellationException) {
                     // silently pass job cancellation
                 }
                 catch (e: Throwable) {
-                    send_coins_nocks_estimate.text = "Could not fetch transaction quote"
+                    msend_coins_nocks_estimate.text = "Could not fetch transaction quote"
                 }
             }
         }
@@ -237,7 +318,7 @@ class SendCoinsActivity : AppBaseActivity()
 
     private fun setAddressLabel(label : String)
     {
-        send_coins_receiving_static_label.text = label
+        msend_coins_receiving_static_label.text = label
         setAddressHasLabel(label.isNotEmpty())
     }
 
@@ -245,15 +326,15 @@ class SendCoinsActivity : AppBaseActivity()
     {
         if (hasLabel)
         {
-            send_coins_receiving_static_label.visibility = View.VISIBLE
-            labelRemoveFromAddressBook.visibility = View.VISIBLE
-            labelAddToAddressBook.visibility = View.GONE
+            msend_coins_receiving_static_label.visibility = View.VISIBLE
+            mlabelRemoveFromAddressBook.visibility = View.VISIBLE
+            mlabelAddToAddressBook.visibility = View.GONE
         }
         else
         {
-            send_coins_receiving_static_label.visibility = View.GONE
-            labelRemoveFromAddressBook.visibility = View.GONE
-            labelAddToAddressBook.visibility = View.VISIBLE
+            msend_coins_receiving_static_label.visibility = View.GONE
+            mlabelRemoveFromAddressBook.visibility = View.GONE
+            mlabelAddToAddressBook.visibility = View.VISIBLE
         }
     }
 
@@ -326,17 +407,17 @@ class SendCoinsActivity : AppBaseActivity()
 
     fun handleAddToAddressBookClick(view : View)
     {
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(fragmentActivity)
         builder.setTitle("Add address")
-        val layoutInflater : LayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layoutInflater : LayoutInflater = fragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val viewInflated : View = layoutInflater.inflate(text_input_address_label, view.rootView as ViewGroup, false)
-        viewInflated.labelAddAddressAddress.text = send_coins_receiving_static_address.text
+        viewInflated.labelAddAddressAddress.text = msend_coins_receiving_static_address.text
         val input = viewInflated.findViewById(R.id.input) as EditText
         builder.setView(viewInflated)
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             dialog.dismiss()
             val label = input.text.toString()
-            val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", label)
+            val record = AddressRecord(msend_coins_receiving_static_address.text.toString(), "Send", label)
             GuldenUnifiedBackend.addAddressBookRecord(record)
             setAddressLabel(label)
         }
@@ -347,13 +428,8 @@ class SendCoinsActivity : AppBaseActivity()
     @Suppress("UNUSED_PARAMETER")
     fun handleRemoveFromAddressBookClick(view : View)
     {
-        val record = AddressRecord(send_coins_receiving_static_address.text.toString(), "Send", send_coins_receiving_static_label.text.toString())
+        val record = AddressRecord(msend_coins_receiving_static_address.text.toString(), "Send", msend_coins_receiving_static_label.text.toString())
         GuldenUnifiedBackend.deleteAddressBookRecord(record)
         setAddressLabel("")
-    }
-
-    companion object
-    {
-        const val EXTRA_RECIPIENT = "recipient"
     }
 }
