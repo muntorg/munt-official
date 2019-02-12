@@ -36,6 +36,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".UpgradeActivity"
+            android:label="Upgrading"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".WalletActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"

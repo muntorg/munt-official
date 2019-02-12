@@ -9,4 +9,5 @@ object Constants
 {
     const val TEST = BuildConfig.TESTNET
     const val RECOMMENDED_CONFIRMATIONS = 3
+    const val OLD_WALLET_PROTOBUF_FILENAME = "wallet-protobuf"
 }
