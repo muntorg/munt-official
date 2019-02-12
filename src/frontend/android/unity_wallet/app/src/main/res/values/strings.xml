@@ -172,7 +172,7 @@ file COPYING
     <string name="send_keypad_digit_9">9</string>
     <string name="send_keypad_decimal_separator">.</string>
     <string name="send_keypad_digit_0">0</string>
-    <string name="send_keypad_button_delete">x</string>
+    <string name="send_keypad_button_delete">⌫</string>
     <string name="chain_status_label_probable_height">Probable height</string>
     <string name="chain_status_label_partial_height">Partial chain height</string>
     <string name="chain_status_label_processed_height">Processed height</string>

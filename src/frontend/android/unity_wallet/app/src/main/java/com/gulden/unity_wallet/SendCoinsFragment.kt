@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -124,6 +125,8 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
         m_mainlayout.findViewById<View>(R.id.labelRemoveFromAddressBook).setOnClickListener { view -> handleRemoveFromAddressBookClick(view) }
 
 
+        m_mainlayout.findViewById<Button>(R.id.button_currency).text = foreignCurrency.short
+
         dialog.setContentView(m_mainlayout)
 
         mBehavior = BottomSheetBehavior.from(m_mainlayout!!.parent as View)
@@ -159,11 +162,19 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
         setAddressLabel(recipient.label)
 
         mActivitySendCoins.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) activeAmount = mActivitySendCoins
+            if (hasFocus)
+            {
+                activeAmount = mActivitySendCoins
+                m_mainlayout.findViewById<Button>(R.id.button_currency).text = foreignCurrency.short
+            }
         }
 
         mActivitySendCoinsLocal.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) activeAmount = mActivitySendCoinsLocal
+            if (hasFocus)
+            {
+                activeAmount = mActivitySendCoinsLocal
+                m_mainlayout.findViewById<Button>(R.id.button_currency).text = "G"
+            }
         }
 
         if (IBANValidator.getInstance().isValid(recipient.address)) {
@@ -392,7 +403,14 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
             }
             R.id.button_currency ->
             {
-                //TODO
+                if (mActivitySendCoins.isFocused)
+                {
+                    mActivitySendCoinsLocal.requestFocus()
+                }
+                else
+                {
+                    mActivitySendCoins.requestFocus()
+                }
             }
             R.id.button_send ->
             {
