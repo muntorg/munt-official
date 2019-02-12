@@ -8,7 +8,6 @@ package com.gulden.unity_wallet
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -23,6 +22,8 @@ import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.design.longSnackbar
 import java.io.File
 import java.io.FileInputStream
+import kotlin.math.max
+import kotlin.math.min
 
 private const val TAG = "upgrade-activity"
 
@@ -85,9 +86,16 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
 
     private fun extractAndInitRecovery(wallet: Wallet) {
         assert(!wallet.isEncrypted)
-        val recoveryPhrase = wallet.keyChainSeed.mnemonicCode?.joinToString(" ")
+        val recoveryMnemonic = wallet.keyChainSeed.mnemonicCode?.joinToString(" ")
+        var recoveryTime = wallet.lastBlockSeenTimeSecs
+        for (tx in wallet.transactionsByTime) {
+            recoveryTime = min(recoveryTime, tx.updateTime.time / 1000)
+        }
+        recoveryTime = max(0, recoveryTime  - 24 * 60 * 60)
+        val recoveryPhrase = GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryMnemonic, recoveryTime)
         assert(GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
         Log.i(TAG, "old wallet mnemonic extracted")
+
         GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
     }
 
