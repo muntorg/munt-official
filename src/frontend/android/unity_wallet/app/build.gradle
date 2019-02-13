@@ -35,7 +35,7 @@ android {
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 341
+            versionCode 342
             versionName = "2.0.1.0"
         }
         gulden_mainnet {
@@ -44,7 +44,7 @@ android {
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
-            versionCode 341
+            versionCode 342
             versionName = "2.0.1.0"
         }
     }
@@ -91,6 +91,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     // begin wallet-protobuf dependencies for handling old wallet upgrade (essentially integrating GuldenJ)
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())

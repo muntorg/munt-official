@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    >
+
+    <LinearLayout
+        android:id="@+id/send_coins_amount_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+
+        <EditText
+            android:id="@+id/send_coins_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:cursorVisible="false"
+            android:editable="false"
+            android:hint="0"
+            android:inputType="none"
+            tools:clickable="false" />
+
+        <EditText
+            android:id="@+id/send_coins_local_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:cursorVisible="false"
+            android:editable="false"
+            android:hint="0"
+            android:inputType="none"
+            tools:clickable="false" />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/numeric_keypad"
+        layout="@layout/numeric_keypad"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/send_coins_amount_group"
+        app:layout_constraintBottom_toTopOf="@id/divider" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/send_coins_info_group"
+        />
+
+    <LinearLayout
+        android:id="@+id/send_coins_info_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/send_coins_receiving_static_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="@color/lightText"
+                android:singleLine="false"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/send_coins_receiving_static_address"
+                android:textColor="@color/lightText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/labelAddToAddressBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/darkText"
+            android:text="@string/send_coins_label_add_to_address_book" />
+
+        <TextView
+            android:id="@+id/labelRemoveFromAddressBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/send_coins_label_remove_from_address_book" />
+
+
+        <TextView
+            android:id="@+id/send_coins_nocks_estimate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="" />
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

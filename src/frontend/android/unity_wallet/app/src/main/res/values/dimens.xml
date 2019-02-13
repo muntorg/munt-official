@@ -13,7 +13,9 @@ file COPYING
     <!-- Bottom navigation bar. -->
     <dimen tools:override="true" name="design_bottom_navigation_height">75dp</dimen>
     <dimen tools:override="true" name="design_bottom_navigation_margin">5dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="keypad_key_gap_size">10dp</dimen>
 
 
     <dimen name="font_size_tiny">12sp</dimen>

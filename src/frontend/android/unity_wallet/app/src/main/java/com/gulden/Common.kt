@@ -58,3 +58,15 @@ fun uriRecipient(text: String): UriRecipient {
             )
     )
 }
+
+fun ellipsizeString(sourceString: String, maxLength: Int): String
+{
+    //Remove 3 chars for "ellipses" length and then split into two equal halves
+    val halfStringLength = (maxLength - 3) / 2
+    return when
+    {
+        sourceString.length > maxLength -> sourceString.replaceFirst(Regex("(.{"+halfStringLength+"}).+(.{"+halfStringLength+"})"), "$1…$2")
+        else -> sourceString
+    }
+}
+

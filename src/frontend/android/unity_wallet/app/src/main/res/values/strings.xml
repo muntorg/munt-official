@@ -157,7 +157,6 @@ file COPYING
     <string name="preference_fragment_notification_label">Notifications</string>
     <string name="preference_fragment_background_sync_label">Background synchronisation</string>
     <string name="preference_fragment_background_network_label">Network monitor</string>
-    <string name="send_coins_label_pay_to">Pay to</string>
     <string name="send_coins_label_add_to_address_book">Add to address book</string>
     <string name="send_coins_label_remove_from_address_book">Remove from address book</string>
     <string name="send_fragment_scan_label">Scan QR</string>
@@ -173,7 +172,7 @@ file COPYING
     <string name="send_keypad_digit_9">9</string>
     <string name="send_keypad_decimal_separator">.</string>
     <string name="send_keypad_digit_0">0</string>
-    <string name="send_keypad_button_delete">x</string>
+    <string name="send_keypad_button_delete">⌫</string>
     <string name="chain_status_label_probable_height">Probable height</string>
     <string name="chain_status_label_partial_height">Partial chain height</string>
     <string name="chain_status_label_processed_height">Processed height</string>

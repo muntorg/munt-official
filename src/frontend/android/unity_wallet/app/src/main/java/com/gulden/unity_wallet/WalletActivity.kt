@@ -15,6 +15,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.main_activity_fragments.*
@@ -218,9 +219,12 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
                     val recipient = uriRecipient(barcode.displayValue)
                     if (recipient.valid) {
-                        val intent = Intent(applicationContext, SendCoinsActivity::class.java)
-                        intent.putExtra(SendCoinsActivity.EXTRA_RECIPIENT, recipient)
-                        startActivityForResult(intent, SEND_COINS_RETURN_CODE)
+                        var fragment = SendCoinsFragment.newInstance(recipient)
+                        var bsBehaviour = BottomSheetBehavior.from(fragment as View)
+                        bsBehaviour.setPeekHeight(500)
+                        bsBehaviour.setFitToContents(true)
+                        bsBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
+                        fragment.show(supportFragmentManager, SendCoinsFragment::class.java.simpleName)
                     }
                 }
             }
@@ -231,6 +235,5 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
 
     companion object {
         private const val BARCODE_READER_REQUEST_CODE = 1
-        const val SEND_COINS_RETURN_CODE = 2
     }
 }

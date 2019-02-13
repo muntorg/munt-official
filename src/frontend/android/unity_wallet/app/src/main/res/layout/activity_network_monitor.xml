@@ -87,7 +87,9 @@ file COPYING
         android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
