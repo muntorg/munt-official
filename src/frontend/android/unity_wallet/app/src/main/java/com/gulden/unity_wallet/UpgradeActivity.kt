@@ -126,6 +126,18 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
         return wallet
     }
 
+    @Suppress("UNUSED_PARAMETER")
+    fun onStartFresh(view: View)
+    {
+        alert(Appcompat, getString(R.string.upgrade_start_fresh_desription), getString(R.string.upgrade_start_fresh_title)) {
+            positiveButton("Start fresh") {
+                gotoActivity(WelcomeActivity::class.java)
+            }
+            negativeButton("Cancel") {
+            }
+        }.show()
+    }
+
     private fun gotoActivity(cls: Class<*> )
     {
             val intent = Intent(this, cls)

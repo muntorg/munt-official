@@ -194,5 +194,8 @@ file COPYING
     <string name="upgrade_btn">Upgrade</string>
     <string name="upgrade_enter_password">Enter your password</string>
     <string name="upgrade_enter_password_hint">PIN</string>
+    <string name="upgrade_start_fresh">Don\'t upgrade, start fresh</string>
+    <string name="upgrade_start_fresh_desription">If you don\'t have the recovery phrase of your old wallet you will lose it forever if you start fresh. Are you sure?</string>
+    <string name="upgrade_start_fresh_title">Start fresh?</string>
 
 </resources>
