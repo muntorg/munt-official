@@ -50,22 +50,10 @@
 -dontwarn org.guldenj.net.**
 -dontwarn org.guldenj.core.PeerGroup
 
-# java-wns-resolver
--dontwarn com.netki.WalletNameResolver
--dontwarn com.netki.dns.DNSBootstrapService
--dontnote org.xbill.DNS.ResolverConfig
--dontwarn org.xbill.DNS.spi.DNSJavaNameServiceDescriptor
--dontnote org.xbill.DNS.spi.DNSJavaNameServiceDescriptor
--dontwarn org.apache.log4j.**
-
 # Guava
--dontwarn sun.misc.Unsafe
--dontwarn com.google.common.collect.MinMaxPriorityQueue
 -dontwarn com.google.common.util.concurrent.FuturesGetChecked**
 -dontwarn javax.lang.model.element.Modifier
 -dontwarn afu.org.checkerframework.**
--dontwarn org.checkerframework.**
--dontwarn java.lang.invoke**
 
 # slf4j
 -dontwarn org.slf4j.MDC
@@ -73,7 +61,3 @@
 
 # logback-android
 -dontwarn javax.mail.**
--dontnote ch.qos.logback.core.rolling.helper.FileStoreUtil
-
-# Bitcoin Wallet
--dontnote com.gulden.wallet.util.Io
