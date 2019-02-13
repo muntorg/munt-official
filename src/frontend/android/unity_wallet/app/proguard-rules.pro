@@ -32,3 +32,48 @@
 
 -dontwarn org.apache.**
 -dontwarn org.apache.commons.logging.**
+
+# guldenj
+-keep,includedescriptorclasses class org.guldenj.wallet.Protos$** { *; }
+-keepclassmembers class org.guldenj.wallet.Protos { com.google.protobuf.Descriptors$FileDescriptor descriptor; }
+-keep,includedescriptorclasses class org.bitcoin.protocols.payments.Protos$** { *; }
+-keepclassmembers class org.bitcoin.protocols.payments.Protos { com.google.protobuf.Descriptors$FileDescriptor descriptor; }
+-dontwarn org.guldenj.store.WindowsMMapHack
+-dontwarn org.guldenj.store.LevelDBBlockStore
+-dontnote org.guldenj.crypto.DRMWorkaround
+-dontnote org.guldenj.crypto.TrustStoreLoader$DefaultTrustStoreLoader
+-dontnote com.subgraph.orchid.crypto.PRNGFixes
+-dontwarn okio.DeflaterSink
+-dontwarn okio.Okio
+-dontnote com.squareup.okhttp.internal.Platform
+-dontwarn org.guldenj.store.LevelDBFullPrunedBlockStore**
+-dontwarn org.guldenj.net.**
+-dontwarn org.guldenj.core.PeerGroup
+
+# java-wns-resolver
+-dontwarn com.netki.WalletNameResolver
+-dontwarn com.netki.dns.DNSBootstrapService
+-dontnote org.xbill.DNS.ResolverConfig
+-dontwarn org.xbill.DNS.spi.DNSJavaNameServiceDescriptor
+-dontnote org.xbill.DNS.spi.DNSJavaNameServiceDescriptor
+-dontwarn org.apache.log4j.**
+
+# Guava
+-dontwarn sun.misc.Unsafe
+-dontwarn com.google.common.collect.MinMaxPriorityQueue
+-dontwarn com.google.common.util.concurrent.FuturesGetChecked**
+-dontwarn javax.lang.model.element.Modifier
+-dontwarn afu.org.checkerframework.**
+-dontwarn org.checkerframework.**
+-dontwarn java.lang.invoke**
+
+# slf4j
+-dontwarn org.slf4j.MDC
+-dontwarn org.slf4j.MarkerFactory
+
+# logback-android
+-dontwarn javax.mail.**
+-dontnote ch.qos.logback.core.rolling.helper.FileStoreUtil
+
+# Bitcoin Wallet
+-dontnote com.gulden.wallet.util.Io
