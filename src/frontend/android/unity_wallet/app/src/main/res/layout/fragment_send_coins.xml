@@ -58,14 +58,16 @@ file COPYING
         app:layout_constraintTop_toBottomOf="@id/send_coins_amount_group"
         app:layout_constraintBottom_toTopOf="@id/divider" />
 
-    <include
+    <View
         android:id="@+id/divider"
-        layout="@layout/vertical_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimaryDark"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/send_coins_info_group" />
+        app:layout_constraintBottom_toTopOf="@id/send_coins_info_group"
+        />
 
     <LinearLayout
         android:id="@+id/send_coins_info_group"
