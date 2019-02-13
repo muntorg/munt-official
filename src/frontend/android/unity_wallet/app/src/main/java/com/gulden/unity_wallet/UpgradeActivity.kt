@@ -15,6 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.Constants.OLD_WALLET_PROTOBUF_FILENAME
 import kotlinx.android.synthetic.main.upgrade_password.view.*
+import org.guldenj.core.Base58
+import org.guldenj.crypto.ChildNumber
+import org.guldenj.wallet.DeterministicKeyChain
+import org.guldenj.wallet.DeterministicKeyChain.*
 import org.guldenj.wallet.Wallet
 import org.guldenj.wallet.WalletProtobufSerializer
 import org.jetbrains.anko.alert
@@ -87,16 +91,30 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
     private fun extractAndInitRecovery(wallet: Wallet) {
         assert(!wallet.isEncrypted)
         val recoveryMnemonic = wallet.keyChainSeed.mnemonicCode?.joinToString(" ")
-        var recoveryTime = wallet.lastBlockSeenTimeSecs
-        for (tx in wallet.transactionsByTime) {
-            recoveryTime = min(recoveryTime, tx.updateTime.time / 1000)
-        }
-        recoveryTime = max(0, recoveryTime  - 24 * 60 * 60)
-        val recoveryPhrase = GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryMnemonic, recoveryTime)
-        assert(GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
-        Log.i(TAG, "old wallet mnemonic extracted")
+        // first attempt to extract mnemonic seed
+        if (recoveryMnemonic != null) {
+            // use transaction time and last processed block to determine birth time
+            var recoveryTime = wallet.lastBlockSeenTimeSecs
+            for (tx in wallet.transactionsByTime) {
+                recoveryTime = min(recoveryTime, tx.updateTime.time / 1000)
+            }
+            recoveryTime = max(0, recoveryTime  - 24 * 60 * 60)
 
-        GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
+            val recoveryPhrase = GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryMnemonic, recoveryTime)
+            assert(GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
+
+            Log.i(TAG, "old wallet mnemonic extracted")
+
+            GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
+        }
+        else { // mnemonic extraction failed, we should have a linked wallet
+            val key = wallet.getKeyByPath(DeterministicKeyChain.DESKTOP_SYNC_ZERO_PATH)
+            val timeString = Base58.encode(key.creationTimeSeconds.toString().toByteArray())
+            val pvk = Base58.encode(key.privKeyBytes33).substring(1)
+            val chaincode= Base58.encode(key.chainCode)
+            val linkedUri = "guldensync:%s-%s:%s;unused_payout".format(pvk,chaincode,timeString)
+            GuldenUnifiedBackend.InitWalletLinkedFromURI(linkedUri)
+        }
     }
 
     private fun walletFromProtobufFile(walletFile: File): Wallet {
