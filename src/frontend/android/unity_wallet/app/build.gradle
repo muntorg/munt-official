@@ -39,7 +39,7 @@ android {
             versionName = "2.0.1.0"
         }
         gulden_mainnet {
-            applicationId 'com.gulden.unity_wallet'
+            applicationId 'com.gulden.wallet'
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
