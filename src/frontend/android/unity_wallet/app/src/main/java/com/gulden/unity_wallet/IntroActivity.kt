@@ -14,8 +14,9 @@ class IntroActivity : AppCompatActivity(), UnityCore.Observer
     private val coreObserverProxy = CoreObserverProxy(this, this)
 
     override fun createNewWallet(): Boolean {
-        // upgrade old wallet when a protobuf wallet file is present
-        if (getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME).exists())
+        // upgrade old wallet when a protobuf wallet file is present and is not marked as upgraded
+        val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
+        if (!upgradedMarkerFile.exists() && getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME).exists())
             gotoActivity(UpgradeActivity::class.java)
         else
             gotoActivity(WelcomeActivity::class.java)

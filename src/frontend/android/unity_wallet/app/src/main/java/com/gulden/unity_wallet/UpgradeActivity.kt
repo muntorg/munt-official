@@ -7,6 +7,7 @@ package com.gulden.unity_wallet
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -53,6 +54,21 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady(): Boolean {
+        // create marker file to indicate upgrade
+        // this prevents prompting for an upgrade again later should the user remove his wallet
+        // still the data of the old wallet is retained so if (god forbid) should something go wrong with upgrades
+        // in the field a fix can be published which could ignore the upgrade marker
+        val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
+        if (!upgradedMarkerFile.exists()) {
+            val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageManager.getPackageInfo(packageName, 0).longVersionCode
+            } else {
+                @Suppress("DEPRECATION")
+                packageManager.getPackageInfo(packageName, 0).versionCode.toLong()
+            }
+            upgradedMarkerFile.writeText("%d\n".format(versionCode))
+        }
+
         gotoActivity(WalletActivity::class.java)
         return true
     }
