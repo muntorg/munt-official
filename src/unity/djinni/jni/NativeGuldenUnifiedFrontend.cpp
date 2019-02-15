@@ -4,6 +4,7 @@
 #include "NativeGuldenUnifiedFrontend.hpp"  // my header
 #include "Marshal.hpp"
 #include "NativeBalanceRecord.hpp"
+#include "NativeMutationRecord.hpp"
 #include "NativeTransactionRecord.hpp"
 
 namespace djinni_generated {
@@ -33,14 +34,13 @@ bool NativeGuldenUnifiedFrontend::JavaProxy::notifyBalanceChange(const ::Balance
     ::djinni::jniExceptionCheck(jniEnv);
     return ::djinni::Bool::toCpp(jniEnv, jret);
 }
-bool NativeGuldenUnifiedFrontend::JavaProxy::notifyNewTransaction(const ::TransactionRecord & c_new_transaction) {
+void NativeGuldenUnifiedFrontend::JavaProxy::notifyNewMutation(const ::MutationRecord & c_mutation) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    auto jret = jniEnv->CallBooleanMethod(Handle::get().get(), data.method_notifyNewTransaction,
-                                          ::djinni::get(::djinni_generated::NativeTransactionRecord::fromCpp(jniEnv, c_new_transaction)));
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyNewMutation,
+                           ::djinni::get(::djinni_generated::NativeMutationRecord::fromCpp(jniEnv, c_mutation)));
     ::djinni::jniExceptionCheck(jniEnv);
-    return ::djinni::Bool::toCpp(jniEnv, jret);
 }
 bool NativeGuldenUnifiedFrontend::JavaProxy::notifyUpdatedTransaction(const ::TransactionRecord & c_transaction) {
     auto jniEnv = ::djinni::jniGetThreadEnv();

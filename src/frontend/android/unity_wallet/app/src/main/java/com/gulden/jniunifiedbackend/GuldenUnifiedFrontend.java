@@ -13,7 +13,7 @@ public abstract class GuldenUnifiedFrontend {
 
     public abstract boolean notifyBalanceChange(BalanceRecord newBalance);
 
-    public abstract boolean notifyNewTransaction(TransactionRecord newTransaction);
+    public abstract void notifyNewMutation(MutationRecord mutation);
 
     public abstract boolean notifyUpdatedTransaction(TransactionRecord transaction);
 

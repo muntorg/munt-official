@@ -227,11 +227,17 @@ void handlePostInitMain()
                         LogPrintf("unity: notify transaction changed [2] %s",hash.ToString().c_str());
                         if (signalHandler)
                         {
-                            TransactionRecord walletTransactions = calculateTransactionRecordForWalletTransaction(wtx);
-                            if (status == CT_NEW)
-                                signalHandler->notifyNewTransaction(walletTransactions);
-                            else // status == CT_UPDATED
-                                signalHandler->notifyUpdatedTransaction(walletTransactions);
+                            if (status == CT_NEW) {
+                                std::vector<MutationRecord> mutations;
+                                addMutationsForTransaction(&wtx, mutations);
+                                for (auto& m: mutations) {
+                                    signalHandler->notifyNewMutation(m);
+                                }
+                            }
+                            else { // status == CT_UPDATED
+                                TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
+                                signalHandler->notifyUpdatedTransaction(walletTransaction);
+                            }
                         }
                     }
                     else if (status == CT_DELETED)

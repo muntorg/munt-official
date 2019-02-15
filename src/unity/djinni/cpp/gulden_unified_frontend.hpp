@@ -6,6 +6,7 @@
 #include <string>
 
 struct BalanceRecord;
+struct MutationRecord;
 struct TransactionRecord;
 
 /** This interface will be implemented in Java and ObjC and can be called from C++. */
@@ -21,7 +22,7 @@ public:
 
     virtual bool notifyBalanceChange(const BalanceRecord & new_balance) = 0;
 
-    virtual bool notifyNewTransaction(const TransactionRecord & new_transaction) = 0;
+    virtual void notifyNewMutation(const MutationRecord & mutation) = 0;
 
     virtual bool notifyUpdatedTransaction(const TransactionRecord & transaction) = 0;
 
