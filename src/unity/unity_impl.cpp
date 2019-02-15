@@ -51,6 +51,40 @@ std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 CCriticalSection cs_monitoringListeners;
 std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
 
+void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations)
+{
+    int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
+    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
+
+    uint64_t time = wtx->nTimeSmart;
+    std::string hash = wtx->GetHash().ToString();
+
+    // if any funds were subtracted the transaction was sent by us
+    if (subtracted > 0)
+    {
+        int64_t fee = subtracted - wtx->tx->GetValueOut();
+        int64_t change = wtx->GetChange();
+
+        // detect internal transfer and split it
+        if (subtracted - fee == added)
+        {
+            // amount received
+            mutations.push_back(MutationRecord(added - change, time, hash));
+
+            // amount send including fee
+            mutations.push_back(MutationRecord(change - subtracted, time, hash));
+        }
+        else
+        {
+            mutations.push_back(MutationRecord(added - subtracted, time, hash));
+        }
+    }
+    else if (added != 0) // nothing subtracted so we received funds
+    {
+        mutations.push_back(MutationRecord(added, time, hash));
+    }
+}
+
 TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx& wtx)
 {
     std::vector<OutputRecord> sentOutputs;
@@ -711,36 +745,7 @@ std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
     // build mutation list based on transactions
     for (const CWalletTx* wtx : vWtx)
     {
-        int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
-        int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
-
-        uint64_t time = wtx->nTimeSmart;
-        std::string hash = wtx->GetHash().ToString();
-
-        // if any funds were subtracted the transaction was sent by us
-        if (subtracted > 0)
-        {
-            int64_t fee = subtracted - wtx->tx->GetValueOut();
-            int64_t change = wtx->GetChange();
-
-            // detect internal transfer and split it
-            if (subtracted - fee == added)
-            {
-                // amount received
-                ret.push_back(MutationRecord(added - change, time, hash));
-
-                // amount send including fee
-                ret.push_back(MutationRecord(change - subtracted, time, hash));
-            }
-            else
-            {
-                ret.push_back(MutationRecord(added - subtracted, time, hash));
-            }
-        }
-        else if (added != 0) // nothing subtracted so we received funds
-        {
-            ret.push_back(MutationRecord(added, time, hash));
-        }
+        addMutationsForTransaction(wtx, ret);
     }
 
     return ret;
