@@ -1,6 +1,7 @@
 package com.gulden.unity_wallet
 
 import android.app.Activity
+import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.jniunifiedbackend.TransactionRecord
 
 /** Helper for running core events on the UI thread of an activity */
@@ -49,10 +50,9 @@ class CoreObserverProxy(private var activity: Activity,
         return false
     }
 
-    override fun incomingTransaction(transaction: TransactionRecord): Boolean {
+    override fun onNewMutation(mutation: MutationRecord) {
         activity.runOnUiThread {
-            observer.incomingTransaction(transaction)
+            observer.onNewMutation(mutation)
         }
-        return false
     }
 }

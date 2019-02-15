@@ -196,5 +196,7 @@ file COPYING
     <string name="upgrade_start_fresh">Don\'t upgrade, start fresh</string>
     <string name="upgrade_start_fresh_desription">If you don\'t have the recovery phrase of your old wallet you will lose it forever if you start fresh. Are you sure?</string>
     <string name="upgrade_start_fresh_title">Start fresh?</string>
+    <string name="notify_received">Funds received</string>
+    <string name="notify_sent">Funds sent</string>
 
 </resources>

@@ -80,13 +80,12 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
         listener = null
     }
 
-    override fun incomingTransaction(transaction: TransactionRecord): Boolean {
+    override fun onNewMutation(mutation: MutationRecord) {
         val mutations = GuldenUnifiedBackend.getMutationHistory()
         runOnUiThread {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }
-        return true
     }
 
     private var listener: OnFragmentInteractionListener? = null

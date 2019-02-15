@@ -5,10 +5,7 @@
 
 package com.gulden.unity_wallet
 
-import com.gulden.jniunifiedbackend.BalanceRecord
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.jniunifiedbackend.GuldenUnifiedFrontend
-import com.gulden.jniunifiedbackend.TransactionRecord
+import com.gulden.jniunifiedbackend.*
 import java.lang.RuntimeException
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -25,7 +22,7 @@ class UnityCore {
         fun onCoreShutdown(): Boolean { return false }
         fun createNewWallet(): Boolean { return false }
         fun haveExistingWallet(): Boolean { return false }
-        fun incomingTransaction(transaction: TransactionRecord): Boolean { return false }
+        fun onNewMutation(mutation: MutationRecord) {}
         fun updatedTransaction(transaction: TransactionRecord): Boolean { return false }
     }
 
@@ -134,13 +131,12 @@ class UnityCore {
             return true
         }
 
-        override fun notifyNewTransaction(newTransaction: TransactionRecord): Boolean {
+        override fun notifyNewMutation(mutation: MutationRecord) {
             observersLock.withLock {
                 observers.forEach {
-                    it.incomingTransaction(newTransaction)
+                    it.onNewMutation(mutation)
                 }
             }
-            return true
         }
 
         override fun notifyUpdatedTransaction(transaction: TransactionRecord): Boolean {
