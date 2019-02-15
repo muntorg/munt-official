@@ -34,12 +34,13 @@ bool NativeGuldenUnifiedFrontend::JavaProxy::notifyBalanceChange(const ::Balance
     ::djinni::jniExceptionCheck(jniEnv);
     return ::djinni::Bool::toCpp(jniEnv, jret);
 }
-void NativeGuldenUnifiedFrontend::JavaProxy::notifyNewMutation(const ::MutationRecord & c_mutation) {
+void NativeGuldenUnifiedFrontend::JavaProxy::notifyNewMutation(const ::MutationRecord & c_mutation, bool c_self_committed) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
     jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyNewMutation,
-                           ::djinni::get(::djinni_generated::NativeMutationRecord::fromCpp(jniEnv, c_mutation)));
+                           ::djinni::get(::djinni_generated::NativeMutationRecord::fromCpp(jniEnv, c_mutation)),
+                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c_self_committed)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
 bool NativeGuldenUnifiedFrontend::JavaProxy::notifyUpdatedTransaction(const ::TransactionRecord & c_transaction) {

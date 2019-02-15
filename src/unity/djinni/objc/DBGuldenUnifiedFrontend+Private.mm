@@ -34,10 +34,11 @@ public:
             return ::djinni::Bool::toCpp(objcpp_result_);
         }
     }
-    void notifyNewMutation(const ::MutationRecord & c_mutation) override
+    void notifyNewMutation(const ::MutationRecord & c_mutation, bool c_self_committed) override
     {
         @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() notifyNewMutation:(::djinni_generated::MutationRecord::fromCpp(c_mutation))];
+            [djinni_private_get_proxied_objc_object() notifyNewMutation:(::djinni_generated::MutationRecord::fromCpp(c_mutation))
+                                                          selfCommitted:(::djinni::Bool::fromCpp(c_self_committed))];
         }
     }
     bool notifyUpdatedTransaction(const ::TransactionRecord & c_transaction) override

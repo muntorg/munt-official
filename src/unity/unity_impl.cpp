@@ -215,7 +215,7 @@ void handlePostInitMain()
     // Update transaction/balance changes
     if (pactiveWallet)
     {
-        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status)
+        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted)
         {
             {
                 DS_LOCK2(cs_main, pwallet->cs_wallet);
@@ -231,7 +231,7 @@ void handlePostInitMain()
                                 std::vector<MutationRecord> mutations;
                                 addMutationsForTransaction(&wtx, mutations);
                                 for (auto& m: mutations) {
-                                    signalHandler->notifyNewMutation(m);
+                                    signalHandler->notifyNewMutation(m, fSelfComitted);
                                 }
                             }
                             else { // status == CT_UPDATED

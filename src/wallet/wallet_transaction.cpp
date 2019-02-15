@@ -956,14 +956,14 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservek
 
             // Add tx to wallet, because if it has change it's also ours,
             // otherwise just for transaction history.
-            AddToWallet(wtxNew);
+            AddToWallet(wtxNew, true, true);
 
             // Notify that old coins are spent
             for(const CTxIn& txin : wtxNew.tx->vin)
             {
                 CWalletTx &coin = mapWallet[txin.prevout.getHash()];
                 coin.BindWallet(this);
-                NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED);
+                NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED, false);
             }
         }
 

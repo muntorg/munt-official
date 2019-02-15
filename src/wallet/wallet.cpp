@@ -889,12 +889,12 @@ bool CWallet::MarkReplaced(const uint256& originalHash, const uint256& newHash)
         success = false;
     }
 
-    NotifyTransactionChanged(this, originalHash, CT_UPDATED);
+    NotifyTransactionChanged(this, originalHash, CT_UPDATED, false);
 
     return success;
 }
 
-bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
+bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose, bool fSelfComitted)
 {
     LOCK(cs_wallet);
 
@@ -970,7 +970,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
     wtx.MarkDirty();
 
     // Notify UI of new or updated transaction
-    NotifyTransactionChanged(this, hash, fInsertedNew ? CT_NEW : CT_UPDATED);
+    NotifyTransactionChanged(this, hash, fInsertedNew ? CT_NEW : CT_UPDATED, fSelfComitted);
 
     // notify an external script when a wallet transaction comes in or is updated
     std::string strCmd = GetArg("-walletnotify", "");
@@ -1189,7 +1189,7 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
             wtx.setAbandoned();
             wtx.MarkDirty();
             walletdb.WriteTx(wtx);
-            NotifyTransactionChanged(this, wtx.GetHash(), CT_UPDATED);
+            NotifyTransactionChanged(this, wtx.GetHash(), CT_UPDATED, false);
             // Iterate over all its outputs, and mark transactions in the wallet that spend them abandoned too
             TxSpends::const_iterator iter = mapTxSpends.lower_bound(COutPoint(hashTx, 0));
             while (iter != mapTxSpends.end() && iter->first.getHash() == now) {

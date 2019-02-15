@@ -22,7 +22,14 @@ public:
 
     virtual bool notifyBalanceChange(const BalanceRecord & new_balance) = 0;
 
-    virtual void notifyNewMutation(const MutationRecord & mutation) = 0;
+    /**
+     * Notification of new mutations.
+     * If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
+     * reached us in another way. In general this will be because we received funds from someone, hower there are
+     * also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
+     * or another wallet instance using the same keys as ours).
+     */
+    virtual void notifyNewMutation(const MutationRecord & mutation, bool self_committed) = 0;
 
     virtual bool notifyUpdatedTransaction(const TransactionRecord & transaction) = 0;
 

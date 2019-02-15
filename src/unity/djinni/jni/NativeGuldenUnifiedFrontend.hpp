@@ -35,7 +35,7 @@ private:
 
         void notifyUnifiedProgress(float progress) override;
         bool notifyBalanceChange(const ::BalanceRecord & new_balance) override;
-        void notifyNewMutation(const ::MutationRecord & mutation) override;
+        void notifyNewMutation(const ::MutationRecord & mutation, bool self_committed) override;
         bool notifyUpdatedTransaction(const ::TransactionRecord & transaction) override;
         void notifyInitWithExistingWallet() override;
         void notifyInitWithoutExistingWallet() override;
@@ -50,7 +50,7 @@ private:
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/GuldenUnifiedFrontend") };
     const jmethodID method_notifyUnifiedProgress { ::djinni::jniGetMethodID(clazz.get(), "notifyUnifiedProgress", "(F)V") };
     const jmethodID method_notifyBalanceChange { ::djinni::jniGetMethodID(clazz.get(), "notifyBalanceChange", "(Lcom/gulden/jniunifiedbackend/BalanceRecord;)Z") };
-    const jmethodID method_notifyNewMutation { ::djinni::jniGetMethodID(clazz.get(), "notifyNewMutation", "(Lcom/gulden/jniunifiedbackend/MutationRecord;)V") };
+    const jmethodID method_notifyNewMutation { ::djinni::jniGetMethodID(clazz.get(), "notifyNewMutation", "(Lcom/gulden/jniunifiedbackend/MutationRecord;Z)V") };
     const jmethodID method_notifyUpdatedTransaction { ::djinni::jniGetMethodID(clazz.get(), "notifyUpdatedTransaction", "(Lcom/gulden/jniunifiedbackend/TransactionRecord;)Z") };
     const jmethodID method_notifyInitWithExistingWallet { ::djinni::jniGetMethodID(clazz.get(), "notifyInitWithExistingWallet", "()V") };
     const jmethodID method_notifyInitWithoutExistingWallet { ::djinni::jniGetMethodID(clazz.get(), "notifyInitWithoutExistingWallet", "()V") };

@@ -18,7 +18,15 @@
 
 - (BOOL)notifyBalanceChange:(nonnull DBBalanceRecord *)newBalance;
 
-- (void)notifyNewMutation:(nonnull DBMutationRecord *)mutation;
+/**
+ * Notification of new mutations.
+ * If selfCommitted it is due to a call to performPaymentToRecipient, else it is because of a transaction
+ * reached us in another way. In general this will be because we received funds from someone, hower there are
+ * also cases where funds is send from our wallet while !selfCommitted (for example by a linked desktop wallet
+ * or another wallet instance using the same keys as ours).
+ */
+- (void)notifyNewMutation:(nonnull DBMutationRecord *)mutation
+            selfCommitted:(BOOL)selfCommitted;
 
 - (BOOL)notifyUpdatedTransaction:(nonnull DBTransactionRecord *)transaction;
 
