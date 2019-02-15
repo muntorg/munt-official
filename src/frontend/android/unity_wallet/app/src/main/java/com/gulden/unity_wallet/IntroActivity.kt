@@ -11,8 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 class IntroActivity : AppCompatActivity(), UnityCore.Observer
 {
-    private val coreObserverProxy = CoreObserverProxy(this, this)
-
     override fun createNewWallet(): Boolean {
         // upgrade old wallet when a protobuf wallet file is present and is not marked as upgraded
         val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
@@ -40,7 +38,7 @@ class IntroActivity : AppCompatActivity(), UnityCore.Observer
 
         val core = UnityCore.instance
 
-        core.addObserver(coreObserverProxy)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
         core.startCore()
 
         // if core is already ready we are resuming a session and can go directly to the wallet
@@ -52,7 +50,7 @@ class IntroActivity : AppCompatActivity(), UnityCore.Observer
     override fun onDestroy() {
         super.onDestroy()
 
-        UnityCore.instance.removeObserver(coreObserverProxy)
+        UnityCore.instance.removeObserver(this)
     }
 
     private fun gotoActivity(cls: Class<*> )

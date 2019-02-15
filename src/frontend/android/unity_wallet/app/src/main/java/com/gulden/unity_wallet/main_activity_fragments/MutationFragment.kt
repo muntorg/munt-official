@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.MutationRecord
-import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.MutationAdapter
 import com.gulden.unity_wallet.util.AppBaseActivity

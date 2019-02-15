@@ -5,7 +5,6 @@
 
 package com.gulden.unity_wallet
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -21,21 +20,19 @@ import kotlin.concurrent.thread
 
 class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
 {
-    private val coreObserverProxy = CoreObserverProxy(this, this)
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
-        UnityCore.instance.addObserver(coreObserverProxy)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
 
-        UnityCore.instance.removeObserver(coreObserverProxy)
+        UnityCore.instance.removeObserver(this)
     }
 
     override fun onBackPressed() {

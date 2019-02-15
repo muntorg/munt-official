@@ -17,6 +17,7 @@ import android.os.SystemClock.sleep
 import androidx.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import androidx.work.*
+import org.jetbrains.anko.runOnUiThread
 import java.util.concurrent.TimeUnit
 
 private const val TAG = "background_sync"
@@ -114,7 +115,7 @@ class SyncService : Service(), UnityCore.Observer
     override fun onCreate() {
         super.onCreate()
 
-        UnityCore.instance.addObserver(this)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
         UnityCore.instance.startCore()
     }
     override fun onDestroy() {

@@ -38,7 +38,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                 UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, testnet = Constants.TEST)
         )
 
-        UnityCore.instance.addObserver(this)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
@@ -65,7 +65,6 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     }
 
     override fun onNewMutation(mutation: MutationRecord) {
-        runOnUiThread {
             val preferences = PreferenceManager.getDefaultSharedPreferences(this)
             if (preferences.getBoolean("preference_notify_transaction_activity", true) && mutation.change != 0L) {
                 val notificationIntent = Intent(this, WalletActivity::class.java)
@@ -89,13 +88,10 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                 val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.notify(1, notification)
             }
-        }
     }
 
     override fun updatedTransaction(transaction: TransactionRecord): Boolean {
-        runOnUiThread {
-            Log.i(TAG, "updatedTransaction: $transaction")
-        }
+        Log.i(TAG, "updatedTransaction: $transaction")
         return true
     }
 

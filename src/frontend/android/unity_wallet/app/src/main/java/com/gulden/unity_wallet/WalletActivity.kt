@@ -23,7 +23,9 @@ import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentIn
 import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.uriRecipient
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
     beginTransaction().func().commit()
@@ -42,8 +44,6 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
         SettingsFragment.OnFragmentInteractionListener, LocalCurrencyFragment.OnFragmentInteractionListener,
         SharedPreferences.OnSharedPreferenceChangeListener
 {
-    private val coreObserverProxy = CoreObserverProxy(this, this)
-
     override fun syncProgressChanged(percent: Float): Boolean {
         setSyncProgress(percent)
         return true
@@ -79,8 +79,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
         super.onStart()
 
         setSyncProgress(UnityCore.instance.progressPercent)
-        UnityCore.instance.addObserver(coreObserverProxy)
-
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
         setWalletBalance(UnityCore.instance.balanceAmount)
 
     }
@@ -88,7 +87,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
     override fun onStop() {
         super.onStop()
 
-        UnityCore.instance.removeObserver(coreObserverProxy)
+        UnityCore.instance.removeObserver(this)
     }
 
     override fun onFragmentInteraction(uri: Uri)

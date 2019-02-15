@@ -34,7 +34,6 @@ private const val TAG = "upgrade-activity"
 
 class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
 {
-    private val coreObserverProxy = CoreObserverProxy(this, this)
     private var wallet: Wallet? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +41,7 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
 
         setContentView(R.layout.activity_upgrade)
 
-        UnityCore.instance.addObserver(coreObserverProxy)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
 
         wallet = walletFromProtobufFile(getFileStreamPath(OLD_WALLET_PROTOBUF_FILENAME))
     }
@@ -50,7 +49,7 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
     override fun onDestroy() {
         super.onDestroy()
 
-        UnityCore.instance.removeObserver(coreObserverProxy)
+        UnityCore.instance.removeObserver(this)
     }
 
     override fun onCoreReady(): Boolean {

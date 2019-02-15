@@ -3,7 +3,6 @@ package com.gulden.unity_wallet.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -14,18 +13,15 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.CoreObserverProxy
-import com.gulden.unity_wallet.WalletActivity
-
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
+import com.gulden.unity_wallet.WalletActivity
 
 
 class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
-    private val coreObserverProxy = CoreObserverProxy(this, this)
-
     private var proceedButton: Button? = null
     private var recoveryPhraseEditText: MultiAutoCompleteTextView? = null
     private var recoverFromPhraseWipeText: TextView? = null
@@ -148,13 +144,13 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
         updateView()
 
-        UnityCore.instance.addObserver(coreObserverProxy)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        UnityCore.instance.removeObserver(coreObserverProxy)
+        UnityCore.instance.removeObserver(this)
     }
 
     override fun onCoreReady(): Boolean {
