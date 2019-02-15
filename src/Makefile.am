@@ -100,7 +100,6 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   Gulden/Common/hash/hash.h \
   Gulden/Common/hash/city.h \
   Gulden/Common/hash/cityconfig.h \
-  Gulden/Common/scrypt.h \
   Gulden/mnemonic.h \
   Gulden/util.h \
   Gulden/auto_checkpoints.h \
@@ -221,6 +220,7 @@ obj/build.h: FORCE
 
 clientversion.cpp: obj/build.h
 
+
 # server: shared between GuldenD and Gulden
 libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -330,6 +330,17 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/aes.h \
   crypto/chacha20.h \
   crypto/chacha20.cpp \
+  Gulden/Common/scrypt.h \
+  Gulden/Common/scrypt.cpp \
+  crypto/scrypt/sha256_scrypt.h \
+  crypto/scrypt/sha256_scrypt.cpp \
+  crypto/scrypt/crypto_scrypt.h \
+  crypto/scrypt/crypto_scrypt.cpp \
+  crypto/scrypt/crypto_scrypt_ref.cpp \
+  crypto/scrypt/crypto_scrypt_smix.h \
+  crypto/scrypt/crypto_scrypt_smix.cpp \
+  crypto/scrypt/crypto_scrypt_smix_sse2.h \
+  crypto/scrypt/crypto_scrypt_smix_sse2.cpp \
   crypto/common.h \
   crypto/hmac_sha256.cpp \
   crypto/hmac_sha256.h \
@@ -348,7 +359,6 @@ crypto_libgulden_crypto_a_SOURCES = \
 libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_consensus_a_SOURCES = \
-  Gulden/Common/scrypt.cpp \
   Gulden/Common/diff_delta.cpp \
   Gulden/Common/diff_old.cpp \
   Gulden/Common/diff_common.cpp \
