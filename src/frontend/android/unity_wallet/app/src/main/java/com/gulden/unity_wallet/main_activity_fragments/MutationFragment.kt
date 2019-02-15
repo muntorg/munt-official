@@ -79,7 +79,7 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
         listener = null
     }
 
-    override fun onNewMutation(mutation: MutationRecord) {
+    override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
         val mutations = GuldenUnifiedBackend.getMutationHistory()
         runOnUiThread {
             val adapter = mutationList.adapter as MutationAdapter

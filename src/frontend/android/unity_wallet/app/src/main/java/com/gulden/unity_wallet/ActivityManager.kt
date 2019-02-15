@@ -64,9 +64,13 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         }
     }
 
-    override fun onNewMutation(mutation: MutationRecord) {
+    override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
             val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-            if (preferences.getBoolean("preference_notify_transaction_activity", true) && mutation.change != 0L) {
+            // only notify of mutations that are not initiated by our own payments, have a net change effect != 0
+            // and when notifications are enabled in preferences
+            if (preferences.getBoolean("preference_notify_transaction_activity", true)
+                    && !selfCommitted
+                    && mutation.change != 0L) {
                 val notificationIntent = Intent(this, WalletActivity::class.java)
                 val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 

@@ -22,7 +22,7 @@ class UnityCore {
         fun onCoreShutdown(): Boolean { return false }
         fun createNewWallet(): Boolean { return false }
         fun haveExistingWallet(): Boolean { return false }
-        fun onNewMutation(mutation: MutationRecord) {}
+        fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {}
         fun updatedTransaction(transaction: TransactionRecord): Boolean { return false }
     }
 
@@ -136,10 +136,10 @@ class UnityCore {
             return true
         }
 
-        override fun notifyNewMutation(mutation: MutationRecord) {
+        override fun notifyNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
             observersLock.withLock {
                 observers.forEach {
-                    it.wrapper { it.observer.onNewMutation(mutation) }
+                    it.wrapper { it.observer.onNewMutation(mutation, selfCommitted) }
                 }
             }
         }
