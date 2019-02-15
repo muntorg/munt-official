@@ -197,7 +197,7 @@ testsmix(void (*smix)(uint8_t *, size_t, uint64_t, void *, void *))
 		return (-1);
 
 	/* Does it match? */
-	return (memcmp(testcase.result, hbuf, TESTLEN));
+	return (memcmp(testcase.result, hbuf, TESTLEN) == 0);
 }
 
 static void
