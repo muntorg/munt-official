@@ -698,7 +698,7 @@ public:
     bool GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew = false);
 
     void MarkDirty();
-    bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
+    bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true, bool fSelfComitted=false);
     bool LoadToWallet(const CWalletTx& wtxIn);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void TransactionDeletedFromMempool( const uint256 &hash, MemPoolRemovalReason reason) override;
@@ -875,7 +875,7 @@ public:
      * @note called with lock cs_wallet held.
      */
     boost::signals2::signal<void (CWallet *wallet, const uint256 &hashTx,
-            ChangeType status)> NotifyTransactionChanged;
+            ChangeType status, bool fSelfComitted)> NotifyTransactionChanged;
 
     /** Show progress e.g. for rescan */
     boost::signals2::signal<void (const std::string &title, int nProgress)> ShowProgress;

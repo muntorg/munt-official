@@ -4,6 +4,7 @@
 #import "DBGuldenUnifiedFrontend+Private.h"
 #import "DBGuldenUnifiedFrontend.h"
 #import "DBBalanceRecord+Private.h"
+#import "DBMutationRecord+Private.h"
 #import "DBTransactionRecord+Private.h"
 #import "DJIMarshal+Private.h"
 #import "DJIObjcWrapperCache+Private.h"
@@ -33,11 +34,11 @@ public:
             return ::djinni::Bool::toCpp(objcpp_result_);
         }
     }
-    bool notifyNewTransaction(const ::TransactionRecord & c_new_transaction) override
+    void notifyNewMutation(const ::MutationRecord & c_mutation, bool c_self_committed) override
     {
         @autoreleasepool {
-            auto objcpp_result_ = [djinni_private_get_proxied_objc_object() notifyNewTransaction:(::djinni_generated::TransactionRecord::fromCpp(c_new_transaction))];
-            return ::djinni::Bool::toCpp(objcpp_result_);
+            [djinni_private_get_proxied_objc_object() notifyNewMutation:(::djinni_generated::MutationRecord::fromCpp(c_mutation))
+                                                          selfCommitted:(::djinni::Bool::fromCpp(c_self_committed))];
         }
     }
     bool notifyUpdatedTransaction(const ::TransactionRecord & c_transaction) override

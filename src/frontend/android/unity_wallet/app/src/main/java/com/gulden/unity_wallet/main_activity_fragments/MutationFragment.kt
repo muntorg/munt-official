@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.MutationRecord
-import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.MutationAdapter
 import com.gulden.unity_wallet.util.AppBaseActivity
@@ -80,13 +79,12 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
         listener = null
     }
 
-    override fun incomingTransaction(transaction: TransactionRecord): Boolean {
+    override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
         val mutations = GuldenUnifiedBackend.getMutationHistory()
         runOnUiThread {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }
-        return true
     }
 
     private var listener: OnFragmentInteractionListener? = null

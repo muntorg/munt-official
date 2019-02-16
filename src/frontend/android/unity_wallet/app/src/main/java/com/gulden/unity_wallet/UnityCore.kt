@@ -5,10 +5,7 @@
 
 package com.gulden.unity_wallet
 
-import com.gulden.jniunifiedbackend.BalanceRecord
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.jniunifiedbackend.GuldenUnifiedFrontend
-import com.gulden.jniunifiedbackend.TransactionRecord
+import com.gulden.jniunifiedbackend.*
 import java.lang.RuntimeException
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -25,7 +22,7 @@ class UnityCore {
         fun onCoreShutdown(): Boolean { return false }
         fun createNewWallet(): Boolean { return false }
         fun haveExistingWallet(): Boolean { return false }
-        fun incomingTransaction(transaction: TransactionRecord): Boolean { return false }
+        fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {}
         fun updatedTransaction(transaction: TransactionRecord): Boolean { return false }
     }
 
@@ -40,15 +37,17 @@ class UnityCore {
         config = _config
     }
 
-    fun addObserver(observer: Observer) {
+    fun addObserver(observer: Observer, wrapper: (() -> Unit)-> Unit = fun (body: () -> Unit) { body() }) {
         observersLock.withLock {
-            observers.add(observer)
+            observers.add(ObserverEntry(observer, wrapper))
         }
     }
 
     fun removeObserver(observer: Observer) {
         observersLock.withLock {
-            observers.remove(observer)
+            observers.removeAll(
+                    observers.filter { it.observer == observer }
+            )
         }
     }
 
@@ -78,8 +77,9 @@ class UnityCore {
     private var started: Boolean = false
     private var coreReady: Boolean = false
 
+    class ObserverEntry(val observer: Observer, val wrapper: (() ->Unit) -> Unit)
     private var observersLock: Lock = ReentrantLock()
-    private var observers: MutableSet<Observer> = mutableSetOf()
+    private var observers: MutableSet<ObserverEntry> = mutableSetOf()
 
     private var stateTrackLock:  Lock = ReentrantLock()
 
@@ -119,7 +119,7 @@ class UnityCore {
 
             observersLock.withLock {
                 observers.forEach {
-                    it.syncProgressChanged(percent)
+                    it.wrapper { it.observer.syncProgressChanged(percent) }
                 }
             }
         }
@@ -128,25 +128,26 @@ class UnityCore {
             balanceAmount = newBalance.availableIncludingLocked + newBalance.immatureIncludingLocked + newBalance.unconfirmedIncludingLocked
             observersLock.withLock {
                 observers.forEach {
-                    it.walletBalanceChanged(balanceAmount)
+                    it.wrapper {
+                        it.observer.walletBalanceChanged(balanceAmount)
+                    }
                 }
             }
             return true
         }
 
-        override fun notifyNewTransaction(newTransaction: TransactionRecord): Boolean {
+        override fun notifyNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
             observersLock.withLock {
                 observers.forEach {
-                    it.incomingTransaction(newTransaction)
+                    it.wrapper { it.observer.onNewMutation(mutation, selfCommitted) }
                 }
             }
-            return true
         }
 
         override fun notifyUpdatedTransaction(transaction: TransactionRecord): Boolean {
             observersLock.withLock {
                 observers.forEach {
-                    it.updatedTransaction(transaction)
+                    it.wrapper { it.observer.updatedTransaction(transaction) }
                 }
             }
             return true
@@ -155,7 +156,7 @@ class UnityCore {
         override fun notifyShutdown(): Boolean {
             observersLock.withLock {
                 observers.forEach {
-                    it.onCoreShutdown()
+                    it.wrapper { it.observer.onCoreShutdown() }
                 }
             }
             return true
@@ -164,7 +165,7 @@ class UnityCore {
         override fun notifyCoreReady(): Boolean {
             coreReady = true
             observers.forEach {
-                it.onCoreReady()
+                it.wrapper { it.observer.onCoreReady() }
             }
             return true
         }
@@ -172,7 +173,7 @@ class UnityCore {
         override fun notifyInitWithExistingWallet() {
             observersLock.withLock {
                 observers.forEach {
-                    it.haveExistingWallet()
+                    it.wrapper { it.observer.haveExistingWallet() }
                 }
             }
         }
@@ -180,7 +181,7 @@ class UnityCore {
         override fun notifyInitWithoutExistingWallet() {
             observersLock.withLock {
                 observers.forEach {
-                    it.createNewWallet()
+                    it.wrapper { it.observer.createNewWallet() }
                 }
             }
         }

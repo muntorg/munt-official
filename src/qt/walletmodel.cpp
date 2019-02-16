@@ -617,7 +617,7 @@ static void NotifyAddressBookChanged(WalletModel *walletmodel, [[maybe_unused]] 
                               Q_ARG(int, status));
 }
 
-static void NotifyTransactionChanged(WalletModel *walletmodel, CWallet *wallet, const uint256 &hash, ChangeType status)
+static void NotifyTransactionChanged(WalletModel *walletmodel, CWallet *wallet, const uint256 &hash, ChangeType status, bool)
 {
     (unused)wallet;
     (unused)hash;
@@ -710,7 +710,7 @@ void WalletModel::subscribeToCoreSignals()
         wallet->activeAccount->internalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
     }
     wallet->NotifyAddressBookChanged.connect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
-    wallet->NotifyTransactionChanged.connect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
+    wallet->NotifyTransactionChanged.connect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3, _4));
     wallet->NotifyAccountNameChanged.connect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
     wallet->NotifyAccountWarningChanged.connect(boost::bind(NotifyAccountWarningChanged, this, _1, _2));
     wallet->NotifyActiveAccountChanged.connect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
@@ -741,7 +741,7 @@ void WalletModel::unsubscribeFromCoreSignals()
 
         LogPrintf("WalletModel::~unsubscribeFromCoreSignals - disconnect wallet signals\n");
         wallet->NotifyAddressBookChanged.disconnect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
-        wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
+        wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3, _4));
         wallet->NotifyAccountNameChanged.disconnect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
         wallet->NotifyAccountWarningChanged.disconnect(boost::bind(NotifyAccountWarningChanged, this, _1, _2));
         wallet->NotifyActiveAccountChanged.disconnect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));

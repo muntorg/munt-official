@@ -15,8 +15,6 @@ import kotlinx.coroutines.Job
 
 class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
 {
-    private val coreObserverProxy = CoreObserverProxy(this, this)
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -41,12 +39,12 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
         super.onStart()
 
         setSyncProgress(UnityCore.instance.progressPercent)
-        UnityCore.instance.addObserver(coreObserverProxy)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
     }
 
     override fun onStop() {
         super.onStop()
-        UnityCore.instance.removeObserver(coreObserverProxy)
+        UnityCore.instance.removeObserver(this)
     }
 
     fun onBackButtonPushed(view : View) {

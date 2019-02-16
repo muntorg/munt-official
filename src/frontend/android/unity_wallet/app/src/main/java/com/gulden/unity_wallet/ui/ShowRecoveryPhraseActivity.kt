@@ -20,7 +20,6 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.CoreObserverProxy
 
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
@@ -28,8 +27,6 @@ import com.gulden.unity_wallet.UnityCore
 
 class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
-    private val coreObserverProxy = CoreObserverProxy(this, this)
-
     internal var recoveryPhraseView: TextView? = null
     private var recoveryPhraseAcknowledgeCheckBox: CheckBox? = null
     private var recoveryPhraseAcceptButton: Button? = null
@@ -78,7 +75,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
         updateView()
 
-        UnityCore.instance.addObserver(coreObserverProxy)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
@@ -97,7 +94,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     override fun onDestroy()
     {
-        UnityCore.instance.removeObserver(coreObserverProxy)
+        UnityCore.instance.removeObserver(this)
         //fixme: (GULDEN) Securely wipe.
         recoveryPhrase = ""
         super.onDestroy()

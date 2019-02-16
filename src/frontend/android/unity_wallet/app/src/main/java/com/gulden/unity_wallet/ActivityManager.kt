@@ -20,6 +20,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.jniunifiedbackend.TransactionRecord
 import org.jetbrains.anko.runOnUiThread
 
@@ -37,7 +38,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                 UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, testnet = Constants.TEST)
         )
 
-        UnityCore.instance.addObserver(this)
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
@@ -63,17 +64,21 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         }
     }
 
-    override fun incomingTransaction(transaction: TransactionRecord): Boolean {
-        runOnUiThread {
+    override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
             val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-            if (preferences.getBoolean("preference_notify_transaction_activity", true)) {
+            // only notify of mutations that are not initiated by our own payments, have a net change effect != 0
+            // and when notifications are enabled in preferences
+            if (preferences.getBoolean("preference_notify_transaction_activity", true)
+                    && !selfCommitted
+                    && mutation.change != 0L) {
                 val notificationIntent = Intent(this, WalletActivity::class.java)
                 val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
+                val title = getString(if (mutation.change > 0) R.string.notify_received else R.string.notify_sent)
                 val notification = NotificationCompat.Builder(this)
-                        .setContentTitle("Incoming transaction")
-                        .setTicker("Incoming transaction")
-                        .setContentText((" %.2f").format(transaction.amount.toDouble() / 100000000))
+                        .setContentTitle(title)
+                        .setTicker(title)
+                        .setContentText(formatNative(mutation.change))
                         .setSmallIcon(R.drawable.ic_g_logo)
                         //.setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
                         .setContentIntent(pendingIntent)
@@ -84,19 +89,13 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                         //.setTimeoutAfter()
                         .setDefaults(Notification.DEFAULT_ALL)
                         .build()
-
                 val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.notify(1, notification)
             }
-        }
-
-        return true
     }
 
     override fun updatedTransaction(transaction: TransactionRecord): Boolean {
-        runOnUiThread {
-            Log.i(TAG, "updatedTransaction: $transaction")
-        }
+        Log.i(TAG, "updatedTransaction: $transaction")
         return true
     }
 
