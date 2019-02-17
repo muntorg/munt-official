@@ -49,11 +49,7 @@ static void (*smix_func)(uint8_t *, size_t, uint64_t, void *, void *) = NULL;
  * _crypto_scrypt(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen, smix):
  * Perform the requested scrypt computation, using ${smix} as the smix routine.
  */
-static int
-_crypto_scrypt(const uint8_t * passwd, size_t passwdlen,
-    const uint8_t * salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p,
-    uint8_t * buf, size_t buflen,
-    void (*smix)(uint8_t *, size_t, uint64_t, void *, void *))
+static int _crypto_scrypt(const uint8_t * passwd, size_t passwdlen, const uint8_t * salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p, uint8_t * buf, size_t buflen, void (*smix)(uint8_t *, size_t, uint64_t, void *, void *))
 {
 	void * B0, * V0, * XY0;
 	uint8_t * B;
@@ -184,8 +180,7 @@ static struct scrypt_test {
 	}
 };
 
-static int
-testsmix(void (*smix)(uint8_t *, size_t, uint64_t, void *, void *))
+static bool testsmix(void (*smix)(uint8_t *, size_t, uint64_t, void *, void *))
 {
 	uint8_t hbuf[TESTLEN];
 
@@ -194,21 +189,20 @@ testsmix(void (*smix)(uint8_t *, size_t, uint64_t, void *, void *))
 	    (const uint8_t *)testcase.passwd, strlen(testcase.passwd),
 	    (const uint8_t *)testcase.salt, strlen(testcase.salt),
 	    testcase.N, testcase.r, testcase.p, hbuf, TESTLEN, smix))
-		return (-1);
+		return true;
 
 	/* Does it match? */
 	return (memcmp(testcase.result, hbuf, TESTLEN) == 0);
 }
 
-static void
-selectsmix(void)
+static void selectsmix(void)
 {
 
 #ifdef CPUSUPPORT_X86_SSE2
 	/* If we're running on an SSE2-capable CPU, try that code. */
 	if (cpusupport_x86_sse2()) {
 		/* If SSE2ized smix works, use it. */
-		if (!testsmix(crypto_scrypt_smix_sse2)) {
+		if (testsmix(crypto_scrypt_smix_sse2)) {
 			smix_func = crypto_scrypt_smix_sse2;
 			return;
 		}
@@ -217,7 +211,7 @@ selectsmix(void)
 #endif
 
 	/* If generic smix works, use it. */
-	if (!testsmix(crypto_scrypt_smix)) {
+	if (testsmix(crypto_scrypt_smix)) {
 		smix_func = crypto_scrypt_smix;
 		return;
 	}
@@ -236,10 +230,7 @@ selectsmix(void)
  *
  * Return 0 on success; or -1 on error.
  */
-int
-crypto_scrypt(const uint8_t * passwd, size_t passwdlen,
-    const uint8_t * salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p,
-    uint8_t * buf, size_t buflen)
+int crypto_scrypt(const uint8_t * passwd, size_t passwdlen, const uint8_t * salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p, uint8_t * buf, size_t buflen)
 {
 
 	if (smix_func == NULL)
