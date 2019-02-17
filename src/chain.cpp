@@ -205,22 +205,9 @@ void CCloneChain::SetTip(CBlockIndex *pindex)
 
 CBlockIndex* CChain::FindEarliestAtLeast(int64_t nTime) const
 {
-    int first = 0;
-    int it = 0;
-    int count = Height() + 1;
-
-    while (count > 0) {
-        int step = count / 2;
-        it += step;
-        if (operator[](it)->GetBlockTimeMax() < nTime) {
-            first = ++it;
-            count -= step + 1;
-        }
-        else
-            count = step;
-    }
-
-    return first <= Height() ? operator [](first) : nullptr;
+    std::vector<CBlockIndex*>::const_iterator lower = std::lower_bound(vChain.begin(), vChain.end(), nTime,
+        [](CBlockIndex* pBlock, const int64_t& time) -> bool { return pBlock->GetBlockTimeMax() < time; });
+    return (lower == vChain.end() ? nullptr : *lower);
 }
 
 /** Turn the lowest '1' bit in the binary representation of a number into a '0'. */
