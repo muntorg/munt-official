@@ -584,10 +584,9 @@ BOOST_AUTO_TEST_CASE(util_Base10Checksum)
     for (int i = 0; i < 30000; i++)
     {
         int encoded = Base10ChecksumEncode(i);
-        int decoded;
-        bool success = Base10ChecksumDecode(encoded, &decoded);
-        BOOST_CHECK(success);
-        BOOST_CHECK(encoded == decoded);
+        int decoded=-1;
+        BOOST_CHECK(Base10ChecksumDecode(encoded, &decoded));
+        BOOST_CHECK(decoded == i);
     }
 
     // test a range of number, which should mostly fail
