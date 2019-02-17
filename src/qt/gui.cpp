@@ -1010,7 +1010,7 @@ void GUI::gotoHistoryPage()
 
 void GUI::gotoViewAddressPage()
 {
-    LogPrint(BCLog::QT, "GUI::gotoReceiveCoinsPage\n");
+    LogPrint(BCLog::QT, "GUI::gotoViewAddressPage\n");
 
     viewAddressAction->setChecked(true);
     if (walletFrame) walletFrame->gotoViewAddressPage();
