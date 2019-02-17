@@ -5,6 +5,7 @@
 #include "crypto/sha512.h"
 
 #include "crypto/common.h"
+#include <support/cleanse.h>
 
 #include <string.h>
 
@@ -197,6 +198,9 @@ void CSHA512::Finalize(unsigned char hash[OUTPUT_SIZE])
     WriteBE64(hash + 40, s[5]);
     WriteBE64(hash + 48, s[6]);
     WriteBE64(hash + 56, s[7]);
+
+    memory_cleanse(&buf[0], 128);
+    memory_cleanse(&s[0], 32);
 }
 
 CSHA512& CSHA512::Reset()

@@ -14,6 +14,6 @@
  *
  * Use SSE2 instructions.
  */
-void crypto_scrypt_smix_sse2(uint8_t *, size_t, uint64_t, void *, void *);
+void crypto_scrypt_smix_sse2(uint8_t*, size_t, uint64_t, void*, void*);
 
 #endif /* !_CRYPTO_SCRYPT_SMIX_SSE2_H_ */

@@ -35,17 +35,16 @@
 
 #include "crypto_scrypt_smix_sse2.h"
 
-static void blkcpy(void *, const void *, size_t);
-static void blkxor(void *, const void *, size_t);
-static void salsa20_8(__m128i *);
-static void blockmix_salsa8(const __m128i *, __m128i *, __m128i *, size_t);
-static uint64_t integerify(const void *, size_t);
+static void blkcpy(void*, const void*, size_t);
+static void blkxor(void*, const void*, size_t);
+static void salsa20_8(__m128i*);
+static void blockmix_salsa8(const __m128i*, __m128i*, __m128i*, size_t);
+static uint64_t integerify(const void*, size_t);
 
-static void
-blkcpy(void * dest, const void * src, size_t len)
+static void blkcpy(void* dest, const void* src, size_t len)
 {
-	__m128i * D = dest;
-	const __m128i * S = src;
+	__m128i* D = dest;
+	const __m128i* S = src;
 	size_t L = len / 16;
 	size_t i;
 
@@ -53,11 +52,10 @@ blkcpy(void * dest, const void * src, size_t len)
 		D[i] = S[i];
 }
 
-static void
-blkxor(void * dest, const void * src, size_t len)
+static void blkxor(void* dest, const void* src, size_t len)
 {
-	__m128i * D = dest;
-	const __m128i * S = src;
+	__m128i* D = dest;
+	const __m128i* S = src;
 	size_t L = len / 16;
 	size_t i;
 
@@ -69,8 +67,7 @@ blkxor(void * dest, const void * src, size_t len)
  * salsa20_8(B):
  * Apply the salsa20/8 core to the provided block.
  */
-static void
-salsa20_8(__m128i B[4])
+static void salsa20_8(__m128i B[4])
 {
 	__m128i X0, X1, X2, X3;
 	__m128i T;
@@ -133,8 +130,7 @@ salsa20_8(__m128i B[4])
  * bytes in length; the output Bout must also be the same size.  The
  * temporary space X must be 64 bytes.
  */
-static void
-blockmix_salsa8(const __m128i * Bin, __m128i * Bout, __m128i * X, size_t r)
+static void blockmix_salsa8(const __m128i * Bin, __m128i * Bout, __m128i * X, size_t r)
 {
 	size_t i;
 
@@ -166,8 +162,7 @@ blockmix_salsa8(const __m128i * Bin, __m128i * Bout, __m128i * X, size_t r)
  * Return the result of parsing B_{2r-1} as a little-endian integer.
  * Note that B's layout is permuted compared to the generic implementation.
  */
-static uint64_t
-integerify(const void * B, size_t r)
+static uint64_t integerify(const void * B, size_t r)
 {
 	const uint32_t * X = (const void *)((uintptr_t)(B) + (2 * r - 1) * 64);
 
@@ -184,8 +179,7 @@ integerify(const void * B, size_t r)
  *
  * Use SSE2 instructions.
  */
-void
-crypto_scrypt_smix_sse2(uint8_t * B, size_t r, uint64_t N, void * V, void * XY)
+void crypto_scrypt_smix_sse2(uint8_t * B, size_t r, uint64_t N, void * V, void * XY)
 {
 	__m128i * X = XY;
 	__m128i * Y = (void *)((uintptr_t)(XY) + 128 * r);

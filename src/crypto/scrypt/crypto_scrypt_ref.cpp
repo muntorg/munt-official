@@ -36,15 +36,14 @@
 #include "crypto_scrypt.h"
 #include "sha256_scrypt.h"
 
-static void blkcpy(uint8_t *, uint8_t *, size_t);
-static void blkxor(uint8_t *, uint8_t *, size_t);
+static void blkcpy(uint8_t*, uint8_t*, size_t);
+static void blkxor(uint8_t*, uint8_t*, size_t);
 static void salsa20_8(uint8_t[64]);
-static void blockmix_salsa8(uint8_t *, uint8_t *, size_t);
-static uint64_t integerify(uint8_t *, size_t);
-static void smix(uint8_t *, size_t, uint64_t, uint8_t *, uint8_t *);
+static void blockmix_salsa8(uint8_t*, uint8_t*, size_t);
+static uint64_t integerify(uint8_t*, size_t);
+static void smix(uint8_t*, size_t, uint64_t, uint8_t*, uint8_t*);
 
-static void
-blkcpy(uint8_t * dest, uint8_t * src, size_t len)
+static void blkcpy(uint8_t* dest, uint8_t* src, size_t len)
 {
 	size_t i;
 
@@ -52,8 +51,7 @@ blkcpy(uint8_t * dest, uint8_t * src, size_t len)
 		dest[i] = src[i];
 }
 
-static void
-blkxor(uint8_t * dest, uint8_t * src, size_t len)
+static void blkxor(uint8_t* dest, uint8_t* src, size_t len)
 {
 	size_t i;
 
@@ -65,8 +63,7 @@ blkxor(uint8_t * dest, uint8_t * src, size_t len)
  * salsa20_8(B):
  * Apply the salsa20/8 core to the provided block.
  */
-static void
-salsa20_8(uint8_t B[64])
+static void salsa20_8(uint8_t B[64])
 {
 	uint32_t B32[16];
 	uint32_t x[16];
@@ -123,8 +120,7 @@ salsa20_8(uint8_t B[64])
  * Compute B = BlockMix_{salsa20/8, r}(B).  The input B must be 128r bytes in
  * length; the temporary space Y must also be the same size.
  */
-static void
-blockmix_salsa8(uint8_t * B, uint8_t * Y, size_t r)
+static void blockmix_salsa8(uint8_t* B, uint8_t* Y, size_t r)
 {
 	uint8_t X[64];
 	size_t i;
@@ -153,8 +149,7 @@ blockmix_salsa8(uint8_t * B, uint8_t * Y, size_t r)
  * integerify(B, r):
  * Return the result of parsing B_{2r-1} as a little-endian integer.
  */
-static uint64_t
-integerify(uint8_t * B, size_t r)
+static uint64_t integerify(uint8_t* B, size_t r)
 {
 	uint8_t * X = &B[(2 * r - 1) * 64];
 
@@ -167,11 +162,10 @@ integerify(uint8_t * B, size_t r)
  * temporary storage V must be 128rN bytes in length; the temporary storage
  * XY must be 256r bytes in length.  The value N must be a power of 2.
  */
-static void
-smix(uint8_t * B, size_t r, uint64_t N, uint8_t * V, uint8_t * XY)
+static void smix(uint8_t* B, size_t r, uint64_t N, uint8_t* V, uint8_t* XY)
 {
-	uint8_t * X = XY;
-	uint8_t * Y = &XY[128 * r];
+	uint8_t* X = XY;
+	uint8_t* Y = &XY[128 * r];
 	uint64_t i;
 	uint64_t j;
 
@@ -210,14 +204,11 @@ smix(uint8_t * B, size_t r, uint64_t N, uint8_t * V, uint8_t * XY)
  *
  * Return 0 on success; or -1 on error.
  */
-int
-crypto_scrypt(const uint8_t * passwd, size_t passwdlen,
-    const uint8_t * salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p,
-    uint8_t * buf, size_t buflen)
+int crypto_scrypt(const uint8_t* passwd, size_t passwdlen, const uint8_t* salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p, uint8_t* buf, size_t buflen)
 {
-	uint8_t * B;
-	uint8_t * V;
-	uint8_t * XY;
+	uint8_t* B;
+	uint8_t* V;
+	uint8_t* XY;
 	size_t r = _r, p = _p;
 	uint32_t i;
 

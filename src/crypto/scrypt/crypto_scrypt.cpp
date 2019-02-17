@@ -49,12 +49,12 @@ static void (*smix_func)(uint8_t *, size_t, uint64_t, void *, void *) = NULL;
  * _crypto_scrypt(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen, smix):
  * Perform the requested scrypt computation, using ${smix} as the smix routine.
  */
-static int _crypto_scrypt(const uint8_t * passwd, size_t passwdlen, const uint8_t * salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p, uint8_t * buf, size_t buflen, void (*smix)(uint8_t *, size_t, uint64_t, void *, void *))
+static int _crypto_scrypt(const uint8_t* passwd, size_t passwdlen, const uint8_t* salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p, uint8_t* buf, size_t buflen, void (*smix)(uint8_t*, size_t, uint64_t, void*, void*))
 {
-	void * B0, * V0, * XY0;
-	uint8_t * B;
-	uint32_t * V;
-	uint32_t * XY;
+	void* B0; void* V0; void* XY0;
+	uint8_t* B;
+	uint32_t* V;
+	uint32_t* XY;
 	size_t r = _r, p = _p;
 	uint32_t i;
 
@@ -156,8 +156,8 @@ err0:
 
 #define TESTLEN 64
 static struct scrypt_test {
-	const char * passwd;
-	const char * salt;
+	const char* passwd;
+	const char* salt;
 	uint64_t N;
 	uint32_t r;
 	uint32_t p;
@@ -180,7 +180,7 @@ static struct scrypt_test {
 	}
 };
 
-static bool testsmix(void (*smix)(uint8_t *, size_t, uint64_t, void *, void *))
+static bool testsmix(void (*smix)(uint8_t*, size_t, uint64_t, void*, void*))
 {
 	uint8_t hbuf[TESTLEN];
 
@@ -230,7 +230,7 @@ static void selectsmix(void)
  *
  * Return 0 on success; or -1 on error.
  */
-int crypto_scrypt(const uint8_t * passwd, size_t passwdlen, const uint8_t * salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p, uint8_t * buf, size_t buflen)
+int crypto_scrypt(const uint8_t* passwd, size_t passwdlen, const uint8_t* salt, size_t saltlen, uint64_t N, uint32_t _r, uint32_t _p, uint8_t* buf, size_t buflen)
 {
 
 	if (smix_func == NULL)
