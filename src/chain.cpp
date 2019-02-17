@@ -96,6 +96,8 @@ const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
 
 void CCloneChain::FreeMemory()
 {
+    //fixme: (2.1) - We should use shared_ptr for the chain instead of raw pointers
+    //This will remove the need for this messy vFree situation; and also allow us to re-enable the miner test that relied on nHeight++ that we have had to disable due to a crash in this FreeMemory call.
     for (auto index : vFree)
     {
         if (vChain[index->nHeight - cloneFrom] == index)
