@@ -1385,3 +1385,7 @@ bool CWalletDB::WritePrimaryAccount(const CAccount* account)
     return WriteIC(std::string("primaryaccount"), getUUIDAsString(account->getUUID()));
 }
 
+bool CWalletDB::ErasePrimaryAccount()
+{
+    return EraseIC(std::string("primaryaccount"));
+}

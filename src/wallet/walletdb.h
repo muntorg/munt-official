@@ -214,6 +214,7 @@ public:
     bool WritePrimarySeed(const CHDSeed& seed);
     bool ErasePrimarySeed();
     bool WritePrimaryAccount(const CAccount* account);
+    bool ErasePrimaryAccount();
 
     /// Write destination data key,value tuple to database
     bool WriteDestData(const std::string &address, const std::string &key, const std::string &value);

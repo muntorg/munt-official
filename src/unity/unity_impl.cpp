@@ -508,6 +508,10 @@ bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
     }
     LogPrintf("EraseWalletSeedsAndAccounts: End purge standalone accounts");
 
+    CWalletDB walletdb(*pactiveWallet->dbw);
+    walletdb.ErasePrimaryAccount();
+    pactiveWallet->GetDBHandle().Flush(false);
+
     return true;
 }
 
