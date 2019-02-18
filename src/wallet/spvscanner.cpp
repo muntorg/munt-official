@@ -259,8 +259,7 @@ void CSPVScanner::NotifyUnifiedProgress()
     AssertLockHeld(cs_main);
 
     const float CONNECTION_WEIGHT = 0.05f;
-    const float MIN_REPORTING_DELTA = 0.002f;
-    const float ALWAYS_REPORT_THRESHOLD = 0.9995f;
+    const float MIN_REPORTING_DELTA = 0.005f;
 
     float newProgress = 0.0f;
 
@@ -281,19 +280,10 @@ void CSPVScanner::NotifyUnifiedProgress()
         else if (probableHeight == startHeight)
             newProgress = 1.0f;
 
-        // silently ignore progress decrease, this can occur if the chain grew
-        // faster then the synchronisation (this would be a very short lived situation)
-        // and reporting will continue normally when catching up
-        // Note that newProgress is always >= 0 here. So when progress reporting is reset (lastProgressReported = -1)
-        // it is not handled as a decrease.
-        if (newProgress <= lastProgressReported && lastProgressReported != 1.0f)
-            return;
-
-        // Limit processing overhead and only report if a reasonable amount of progress was made since last report.
-        // But don't limit if progress reporting was reset (lastProgressReported = -1)
-        // and also don't limit if we are near the end (ALWAYS_REPORT_THRESHOLD).
-        if (lastProgressReported >= 0.0f  && lastProgressReported != 1.0f && newProgress - lastProgressReported <= MIN_REPORTING_DELTA && newProgress < ALWAYS_REPORT_THRESHOLD)
-            return;
+        // Limit progress notification to reduce overhead, only notify if delta since previous ntf is > MIN_REPORTING_DELTA
+        if (lastProgressReported >= 0.0f && newProgress < 1.0f && fabs(newProgress - lastProgressReported) < MIN_REPORTING_DELTA)
+                return;
+        // else lastProgressReported < 0 => progress was reset/initialized so always notify
     }
 
     if (newProgress != lastProgressReported) {
