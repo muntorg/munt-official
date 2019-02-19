@@ -5,11 +5,11 @@
 
 package com.gulden.unity_wallet
 
-import android.app.Activity
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_ATTEMPTS_ALLOWED
@@ -39,8 +39,8 @@ class Authentication {
         return locked
     }
 
-    fun unlock(activity: Activity, title: String?, msg: String?) {
-        unlock(activity, title, msg) { }
+    fun unlock(context: Context, title: String?, msg: String?) {
+        unlock(context, title, msg) { }
     }
 
     /**
@@ -48,9 +48,9 @@ class Authentication {
      * notified and then action is executed.
      *
      */
-    fun unlock(activity: Activity, title: String?, msg: String?, action: () -> Unit) {
+    fun unlock(context: Context, title: String?, msg: String?, action: () -> Unit) {
         if (isLocked()) {
-            authenticate(activity, title, msg) {
+            authenticate(context, title, msg) {
                 locked = false
                 lockingObservers.forEach {
                     it.onUnlock()
@@ -72,13 +72,13 @@ class Authentication {
      * Present user with authentication method.
      * On successful authentication action is executed.
      */
-    fun authenticate(activity: Activity, title: String?, msg: String?, action: () -> Unit) {
-        val contentView = activity.layoutInflater.inflate(R.layout.access_code_entry, null)
+    fun authenticate(context: Context, title: String?, msg: String?, action: () -> Unit) {
+        val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
 
         msg?.let { contentView.message.text = msg }
 
-        val builder = activity.alert(Appcompat) {
-            this.title = title ?: activity.getString(R.string.access_code_entry_title)
+        val builder = context.alert(Appcompat) {
+            this.title = title ?: context.getString(R.string.access_code_entry_title)
             customView = contentView
             negativeButton("Cancel") {
             }
@@ -102,8 +102,8 @@ class Authentication {
                                     numAttemptsRemaining -= 1
                                     if (numAttemptsRemaining > 0) {
                                         s?.clear()
-                                        contentView.accessCode.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake))
-                                        contentView.attemptsRemaining.text = activity.getString(R.string.access_code_entry_remaining).format(numAttemptsRemaining)
+                                        contentView.accessCode.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake))
+                                        contentView.attemptsRemaining.text = context.getString(R.string.access_code_entry_remaining).format(numAttemptsRemaining)
                                     } else {
                                         Log.i(TAG, "failed authentication")
                                         it.dismiss()
@@ -117,7 +117,7 @@ class Authentication {
                     })
 
             contentView.accessCode.requestFocus()
-            val imm = activity.application.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = context.applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(contentView.accessCode, InputMethodManager.SHOW_IMPLICIT)
         }
         dialog.show()

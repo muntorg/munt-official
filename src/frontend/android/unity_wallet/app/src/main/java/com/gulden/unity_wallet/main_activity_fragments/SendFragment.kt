@@ -29,7 +29,7 @@ import com.gulden.unity_wallet.Authentication
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 
-class SendFragment : Fragment(), Authentication.LockingObserver
+class SendFragment : Fragment()
 {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -59,30 +59,6 @@ class SendFragment : Fragment(), Authentication.LockingObserver
         }
 
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
-
-        Authentication.instance.addObserver(this)
-        displayLockingState()
-
-        lockSwitcher.onClick {
-            Authentication.instance.unlock(this@SendFragment.activity!!, null, null)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Authentication.instance.removeObserver(this)
-    }
-
-    fun displayLockingState() {
-        lockSwitcher.displayedChild = if (Authentication.instance.isLocked()) 0 else 1
-    }
-
-    override fun onLock() {
-        displayLockingState()
-    }
-
-    override fun onUnlock() {
-        displayLockingState()
     }
 
     override fun onResume() {
