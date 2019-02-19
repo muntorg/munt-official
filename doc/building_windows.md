@@ -110,7 +110,9 @@ After installing vcXsrv. Start XLaunch (with default settings) and then on WSL e
 
 `export DISPLAY=:0`
 
-`LD_LIBRARY_PATH=/home/vincent/gulden-official/depends/x86_64-pc-linux-gnu/lib/ ./src/qt/Gulden`
+`LD_LIBRARY_PATH=depends/x86_64-pc-linux-gnu/lib/ ./src/qt/Gulden`
+
+Modify the `LD_LIBRARY_PATH` as appropriate for your system.
 
 
 Troubleshooting
