@@ -5,6 +5,7 @@
 #include "sha256.h"
 
 #include "common.h"
+#include <support/cleanse.h>
 
 #include <string.h>
 
@@ -30,19 +31,7 @@ void inline Round(uint32_t a, uint32_t b, uint32_t c, uint32_t& d, uint32_t e, u
     h = t1 + t2;
 }
 
-/** Initialize SHA-256 state. */
-void inline Initialize(uint32_t* s)
-{
-    s[0] = 0x6a09e667ul;
-    s[1] = 0xbb67ae85ul;
-    s[2] = 0x3c6ef372ul;
-    s[3] = 0xa54ff53aul;
-    s[4] = 0x510e527ful;
-    s[5] = 0x9b05688cul;
-    s[6] = 0x1f83d9abul;
-    s[7] = 0x5be0cd19ul;
-}
-
+//fixme: (2.2) - Look into using ssh3/shani and/or other optimisations for this (see tarsnap implementation for example)
 /** Perform one SHA-256 transformation, processing a 64-byte chunk. */
 void Transform(uint32_t* s, const unsigned char* chunk)
 {
@@ -135,7 +124,7 @@ void Transform(uint32_t* s, const unsigned char* chunk)
 
 CSHA256::CSHA256() : bytes(0)
 {
-    sha256::Initialize(s);
+    sha256_Initialize(s);
 }
 
 CSHA256& CSHA256::Write(const unsigned char* data, size_t len)
@@ -179,11 +168,14 @@ void CSHA256::Finalize(unsigned char hash[OUTPUT_SIZE])
     WriteBE32(hash + 20, s[5]);
     WriteBE32(hash + 24, s[6]);
     WriteBE32(hash + 28, s[7]);
+
+    memory_cleanse(&buf[0], 64);
+    memory_cleanse(&s[0], 32);
 }
 
 CSHA256& CSHA256::Reset()
 {
     bytes = 0;
-    sha256::Initialize(s);
+    sha256_Initialize(s);
     return *this;
 }
