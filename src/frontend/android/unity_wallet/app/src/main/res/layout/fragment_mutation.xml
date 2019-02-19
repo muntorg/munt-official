@@ -23,12 +23,12 @@ file COPYING
 
         <ImageView
             android:id="@+id/unlockImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_gravity="center"
             android:layout_margin="0dp"
             android:contentDescription="@string/unlock"
-            android:src="@drawable/ic_glyphicons_508_cluster" />
+            android:src="@drawable/ic_lock_solid" />
 
         <FrameLayout
             android:layout_width="match_parent"
