@@ -336,7 +336,6 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/scrypt/sha256_scrypt.cpp \
   crypto/scrypt/crypto_scrypt.h \
   crypto/scrypt/crypto_scrypt.cpp \
-  crypto/scrypt/crypto_scrypt_ref.cpp \
   crypto/scrypt/crypto_scrypt_smix.h \
   crypto/scrypt/crypto_scrypt_smix.cpp \
   crypto/scrypt/crypto_scrypt_smix_sse2.h \
