@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2019 The Gulden developers
+Authored by: Willem de Jonge (willem@isnapp.nl)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+<translate android:duration="50"
+    android:fromXDelta="-2%"
+    android:toXDelta="2%"
+    android:repeatCount="5"
+    android:repeatMode="reverse"
+/>
+</set>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright (c) 2019 The Gulden developers
+Authored by: Willem de Jonge (willem@isnapp.nl)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp">
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/attemptsRemaining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/accessCode"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="@string/upgrade_enter_password_hint"
+        android:imeOptions="flagNoExtractUi"
+        android:inputType="numberPassword"
+        android:singleLine="true">
+
+        <requestFocus />
+    </EditText>
+
+</LinearLayout>

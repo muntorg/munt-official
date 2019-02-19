@@ -13,43 +13,70 @@ file COPYING
     android:layout_height="match_parent"
     tools:context=".main_activity_fragments.SendFragment">
 
-    <ListView
-        android:id="@+id/addressBookList"
+    <ViewSwitcher
+        android:id="@+id/lockSwitcher"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:divider="@null"
-        android:dividerHeight="0dp"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </ListView>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/emptyAddressBookView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:gravity="top"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-            <TextView
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/unlockImage"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/address_book_empty_title" />
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:clickable="false"
+                android:contentDescription="@string/unlock"
+                android:src="@drawable/ic_glyphicons_508_cluster" />
+        </FrameLayout>
 
-            <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/addressBookList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/address_book_empty_message" />
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:divider="@null"
+                android:dividerHeight="0dp">
 
-    </LinearLayout>
+            </ListView>
+
+            <LinearLayout
+                android:id="@+id/emptyAddressBookView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="8dp"
+                android:gravity="top"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address_book_empty_title" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/address_book_empty_message" />
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ViewSwitcher>
 
     <View
         android:id="@+id/divider"

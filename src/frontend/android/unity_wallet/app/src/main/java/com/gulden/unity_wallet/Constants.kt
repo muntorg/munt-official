@@ -9,5 +9,8 @@ object Constants
 {
     const val TEST = BuildConfig.TESTNET
     const val RECOMMENDED_CONFIRMATIONS = 3
+    const val ACCESS_CODE_ATTEMPTS_ALLOWED = 3
+    const val ACCESS_CODE_LENGTH = 4
+    const val FAKE_ACCESS_CODE = "1234"
     const val OLD_WALLET_PROTOBUF_FILENAME = BuildConfig.OLD_WALLET_PROTOBUF_FILENAME
 }
