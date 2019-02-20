@@ -7,6 +7,7 @@
 #import "DBBlockInfoRecord+Private.h"
 #import "DBGuldenMonitorListener+Private.h"
 #import "DBGuldenUnifiedFrontend+Private.h"
+#import "DBLegacyWalletResult+Private.h"
 #import "DBMonitorRecord+Private.h"
 #import "DBMutationRecord+Private.h"
 #import "DBPeerRecord+Private.h"
@@ -63,6 +64,24 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::InitWalletLinkedFromURI(::djinni::String::toCpp(linkedUri));
         return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)InitWalletFromAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
+                                      password:(nonnull NSString *)password {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(::djinni::String::toCpp(walletFile),
+                                                                                             ::djinni::String::toCpp(password));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (DBLegacyWalletResult)isValidAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
+                                               password:(nonnull NSString *)password {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(::djinni::String::toCpp(walletFile),
+                                                                                      ::djinni::String::toCpp(password));
+        return ::djinni::Enum<::LegacyWalletResult, DBLegacyWalletResult>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

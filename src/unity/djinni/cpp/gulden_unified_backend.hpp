@@ -10,6 +10,7 @@
 
 class GuldenMonitorListener;
 class GuldenUnifiedFrontend;
+enum class LegacyWalletResult;
 struct AddressRecord;
 struct BlockInfoRecord;
 struct MonitorRecord;
@@ -36,6 +37,12 @@ public:
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletLinkedFromURI(const std::string & linked_uri);
+
+    /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
+    static bool InitWalletFromAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password);
+
+    /** Check if a file is a valid legacy proto wallet */
+    static LegacyWalletResult isValidAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password);
 
     /** Check link URI for validity */
     static bool IsValidLinkURI(const std::string & phrase);

@@ -88,16 +88,31 @@ block_info_record = record {
     blockHash : string;
 }
 
+legacy_wallet_result = enum {
+    unsupported_on_this_platform;
+    invalid_or_corrupt;
+    encrypted_password_required;
+    password_invalid;
+    valid;
+}
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
     # Start the library
     static InitUnityLib(data_dir : string, testnet : bool, signals : gulden_unified_frontend): i32;
+
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletFromRecoveryPhrase(phrase : string): bool;
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletLinkedFromURI(linked_uri : string): bool;
+
+    # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
+    static InitWalletFromAndroidLegacyProtoWallet(wallet_file : string, password : string): bool;
+
+    # Check if a file is a valid legacy proto wallet
+    static isValidAndroidLegacyProtoWallet(wallet_file : string, password : string): legacy_wallet_result;
 
     # Check link URI for validity
     static IsValidLinkURI(phrase: string): bool;

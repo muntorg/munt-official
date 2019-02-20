@@ -7,6 +7,7 @@
 #include "NativeBlockInfoRecord.hpp"
 #include "NativeGuldenMonitorListener.hpp"
 #include "NativeGuldenUnifiedFrontend.hpp"
+#include "NativeLegacyWalletResult.hpp"
 #include "NativeMonitorRecord.hpp"
 #include "NativeMutationRecord.hpp"
 #include "NativePeerRecord.hpp"
@@ -56,6 +57,26 @@ CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacke
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::GuldenUnifiedBackend::InitWalletLinkedFromURI(::djinni::String::toCpp(jniEnv, j_linkedUri));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_InitWalletFromAndroidLegacyProtoWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_walletFile, jstring j_password)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(::djinni::String::toCpp(jniEnv, j_walletFile),
+                                                                                ::djinni::String::toCpp(jniEnv, j_password));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_isValidAndroidLegacyProtoWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_walletFile, jstring j_password)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(::djinni::String::toCpp(jniEnv, j_walletFile),
+                                                                         ::djinni::String::toCpp(jniEnv, j_password));
+        return ::djinni::release(::djinni_generated::NativeLegacyWalletResult::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

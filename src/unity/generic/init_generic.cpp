@@ -27,6 +27,8 @@
 #endif
 #include "warnings.h"
 
+#include "unity/djinni/cpp/legacy_wallet_result.hpp"
+
 #include <boost/thread.hpp>
 
 //If we want to translate help messages in future we can replace helptr with _ and everything will just work.
@@ -324,4 +326,14 @@ bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (GetBoolArg("-listenonion", DEFAULT_LISTEN_ONION))
         StartTorControl(threadGroup, scheduler);
     return true;
+}
+
+bool GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password)
+{
+    return false;
+}
+
+LegacyWalletResult GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password)
+{
+    return LegacyWalletResult::UNSUPPORTED_ON_THIS_PLATFORM;
 }

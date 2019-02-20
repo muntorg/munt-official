@@ -3,6 +3,7 @@
 
 #import "DBAddressRecord.h"
 #import "DBBlockInfoRecord.h"
+#import "DBLegacyWalletResult.h"
 #import "DBMonitorRecord.h"
 #import "DBMutationRecord.h"
 #import "DBPeerRecord.h"
@@ -30,6 +31,14 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri;
+
+/** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
++ (BOOL)InitWalletFromAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
+                                      password:(nonnull NSString *)password;
+
+/** Check if a file is a valid legacy proto wallet */
++ (DBLegacyWalletResult)isValidAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
+                                               password:(nonnull NSString *)password;
 
 /** Check link URI for validity */
 + (BOOL)IsValidLinkURI:(nonnull NSString *)phrase;
