@@ -39,7 +39,7 @@
             android:name=".UpgradeActivity"
             android:label="Upgrading"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.BlueBackground.NoActionBar" />
         <activity
             android:name=".WalletActivity"
             android:label="@string/app_name"

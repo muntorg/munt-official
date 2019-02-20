@@ -4,53 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout7"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     android:gravity="center_vertical|center_horizontal"
-    tools:context="com.gulden.unity_wallet.UpgradeActivity">
+    tools:context=".UpgradeActivity">
 
-        <TextView
-            android:id="@+id/textView"
+        <ImageView
+            android:id="@+id/AppLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:enabled="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="@string/upgrade_explanation"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#000000"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/image_content_description_gulden_logo"
+            android:src="@drawable/ic_gulden_logo_text"
+            android:tint="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.4" />
+            app:srcCompat="@drawable/ic_gulden_logo_text" />
 
-        <Button
-            android:id="@+id/button"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/shape_rounded_button_with_border"
-            android:onClick="onUpgrade"
-            android:padding="10dp"
-            android:text="@string/upgrade_btn"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:clickable="false"
+        android:enabled="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:justificationMode="inter_word"
+        android:text="@string/upgrade_explanation"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AppLogo" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:onClick="onStartFresh"
-            android:text="@string/upgrade_start_fresh"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+    <Button
+        android:id="@+id/button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/shape_rounded_button_with_border"
+        android:onClick="onUpgrade"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/upgrade_btn"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/restartFresh"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="onStartFresh"
+        android:text="@string/upgrade_start_fresh"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
