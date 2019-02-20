@@ -61,11 +61,6 @@ android {
     }
 }
 
-configurations {
-    // workaround bug in guava, see below in dependencies
-    all*.exclude group: 'com.google.guava', module: 'listenablefuture'
-}
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -92,21 +87,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1' exclude group: 'com.google.code.findbugs', module: 'jsr305'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    // begin wallet-protobuf dependencies for handling old wallet upgrade (essentially integrating GuldenJ)
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    implementation files(properties.getProperty('guldenj.dir') + '/core/target/guldenj-core-0.15-SNAPSHOT.jar')
-    implementation 'com.google.protobuf:protobuf-java:3.0.0'
-    implementation 'com.google.guava:guava:23.6-android' // don't upgrade to latest version of guava (it will fix the above 'listenablefuture' workaround, but it will require at least Android N)
-    implementation 'org.slf4j:slf4j-api:1.7.25'
-    implementation('com.github.tony19:logback-android-classic:1.1.1-3') {
-        exclude(group: 'com.google.android', module: 'android')
-    }
-    implementation 'com.madgag.spongycastle:core:1.51.0.0'
-    implementation 'org.bitcoinj:orchid:1.1.1'
-    implementation 'com.lambdaworks:scrypt:1.4.0'
-    implementation 'net.jcip:jcip-annotations:1.0'
-    // end wallet-protobuf dependencies
 }
 
 // Map for the version code that gives each ABI a value.
