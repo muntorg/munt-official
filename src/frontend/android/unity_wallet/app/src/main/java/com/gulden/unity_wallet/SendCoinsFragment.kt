@@ -202,12 +202,15 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
             // on confirmation compose recipient and execute payment
             positiveButton("Send") {
                 val paymentRequest = UriRecipient(true, recipient.address, recipient.label, mActivitySendCoins.text.toString())
-                try {
-                    GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
-                    dismiss()
-                }
-                catch (exception: RuntimeException) {
-                    view.longSnackbar(exception.message!!)
+                Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
+                        null, msg = "%s\n\nG %s".format(paymentRequest.address, nlgStr)) {
+                    try {
+                        GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
+                        dismiss()
+                    }
+                    catch (exception: RuntimeException) {
+                        view.longSnackbar(exception.message!!)
+                    }
                 }
             }
 
