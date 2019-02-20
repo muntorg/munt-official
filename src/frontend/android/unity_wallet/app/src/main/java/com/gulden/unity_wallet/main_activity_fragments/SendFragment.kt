@@ -25,6 +25,8 @@ import org.apache.commons.validator.routines.IBANValidator
 import android.text.Html
 import android.text.SpannableString
 import com.gulden.ellipsizeString
+import com.gulden.unity_wallet.Authentication
+import org.jetbrains.anko.sdk27.coroutines.onClick
 
 
 class SendFragment : Fragment()

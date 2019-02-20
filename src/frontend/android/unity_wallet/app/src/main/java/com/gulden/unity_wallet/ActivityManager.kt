@@ -103,6 +103,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     fun allActivitiesStopped()
     {
         GuldenUnifiedBackend.PersistAndPruneForSPV()
+        Authentication.instance.lock()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)

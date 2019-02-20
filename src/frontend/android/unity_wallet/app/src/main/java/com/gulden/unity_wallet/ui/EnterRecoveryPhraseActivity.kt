@@ -15,6 +15,7 @@ import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.WalletActivity
@@ -178,15 +179,17 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     fun onAcceptRecoverFromPhrase(view: View)
     {
-        if (GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
-        {
-            // no need to do anything here, there will be a coreReady event soon
-            // possibly put a progress spinner or some other user feedback if
-            // the coreReady can take a long time
-        }
-        else
-        {
-            //TODO: Display error to user...
+        Authentication.instance.chooseAccessCode(this) {
+            if (GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
+            {
+                // no need to do anything here, there will be a coreReady event soon
+                // possibly put a progress spinner or some other user feedback if
+                // the coreReady can take a long time
+            }
+            else
+            {
+                //TODO: Display error to user...
+            }
         }
     }
 
