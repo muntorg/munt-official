@@ -13,19 +13,12 @@ file COPYING
     tools:context=".main_activity_fragments.SettingsFragment">
 
     <Preference
-        android:key="recovery_preference"
-        android:iconSpaceReserved="false"
-        android:persistent="false"
-        android:summary=""
-        android:title="@string/preference_fragment_recovery_label"
-        tools:ignore="UnusedAttribute" />
-
-    <Preference
         android:key="recovery_view_preference"
         android:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
-        android:title=""
+        android:title="@string/preference_fragment_recovery_label"
+        android:layout="@layout/pref_view_recovery"
         tools:ignore="UnusedAttribute" />
 
     <Preference
