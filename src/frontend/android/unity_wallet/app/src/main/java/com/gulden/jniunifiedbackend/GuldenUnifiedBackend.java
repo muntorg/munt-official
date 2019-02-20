@@ -31,6 +31,20 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.InitWalletLinkedFromURI(linkedUri);
     }
 
+    /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
+    public static boolean InitWalletFromAndroidLegacyProtoWallet(String walletFile, String password)
+    {
+        return CppProxy.InitWalletFromAndroidLegacyProtoWallet(walletFile,
+                                                               password);
+    }
+
+    /** Check if a file is a valid legacy proto wallet */
+    public static LegacyWalletResult isValidAndroidLegacyProtoWallet(String walletFile, String password)
+    {
+        return CppProxy.isValidAndroidLegacyProtoWallet(walletFile,
+                                                        password);
+    }
+
     /** Check link URI for validity */
     public static boolean IsValidLinkURI(String phrase)
     {
@@ -241,6 +255,10 @@ public abstract class GuldenUnifiedBackend {
         public static native boolean InitWalletFromRecoveryPhrase(String phrase);
 
         public static native boolean InitWalletLinkedFromURI(String linkedUri);
+
+        public static native boolean InitWalletFromAndroidLegacyProtoWallet(String walletFile, String password);
+
+        public static native LegacyWalletResult isValidAndroidLegacyProtoWallet(String walletFile, String password);
 
         public static native boolean IsValidLinkURI(String phrase);
 
