@@ -201,6 +201,8 @@ file COPYING
     <string name="unlock">Unlock</string>
     <string name="access_code_entry_title">Access code for \"Gulden\"</string>
     <string name="access_code_entry_remaining">%d attempts remaining</string>
+    <string name="access_code_choose_title">Choose your \"Gulden\" access code</string>
+    <string name="access_code_choose_verify">Verify your access code</string>
     <string name="show_recovery_msg">Don\'t show your recovery phrase to anyone, or they will be able to spend your Gulden.</string>
 
 </resources>

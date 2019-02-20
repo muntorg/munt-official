@@ -123,6 +123,58 @@ class Authentication {
         dialog.show()
     }
 
+    fun chooseAccessCode(context: Context, action: () -> Unit) {
+        val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
+
+        val builder = context.alert(Appcompat) {
+            this.title = context.getString(R.string.access_code_choose_title)
+            customView = contentView
+            negativeButton("Cancel") {
+            }
+        }
+
+        val dialog = builder.build()
+        dialog.setOnShowListener {
+            contentView.accessCode.addTextChangedListener(
+                    object : TextWatcher {
+                        var verifying = false
+                        lateinit var choosenCode: String
+                        override fun afterTextChanged(s: Editable?) {
+                            val code = s.toString()
+                            if (code.length == ACCESS_CODE_LENGTH) {
+                                if (verifying) {
+                                    if (code == choosenCode) {
+                                        Log.i(TAG, "access code successfully chosen TODO SECURELY STORE")
+                                        it.dismiss()
+                                        action()
+                                    }
+                                    else {
+                                        verifying = false
+                                        s?.clear()
+                                        contentView.accessCode.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake))
+                                        contentView.message.text = ""
+                                    }
+                                }
+                                else {
+                                    choosenCode = code
+                                    verifying = true
+                                    s?.clear()
+                                    contentView.message.text = context.getString(R.string.access_code_choose_verify)
+                                }
+                            }
+                        }
+
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    })
+
+            contentView.accessCode.requestFocus()
+            val imm = context.applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(contentView.accessCode, InputMethodManager.SHOW_IMPLICIT)
+        }
+        dialog.show()
+    }
+
     private var lockingObservers: MutableSet<LockingObserver> = mutableSetOf()
     private var locked = true
 

@@ -20,6 +20,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.unity_wallet.Authentication
 
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.R
@@ -114,10 +115,12 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     {
         if (isNewWallet!!)
         {
-            // Create the new wallet
-            GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
+            Authentication.instance.chooseAccessCode(this) {
+                // Create the new wallet
+                GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
 
-            // a coreReady event will follow which will proceed to the main activity
+                // a coreReady event will follow which will proceed to the main activity
+            }
         }
         else
             finish()

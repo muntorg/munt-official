@@ -85,16 +85,17 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
                 if (data != null)
                 {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-
-                    if (GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue))
-                    {
-                        // no need to do anything here, there will be a coreReady event soon
-                        // possibly put a progress spinner or some other user feedback if
-                        // the coreReady can take a long time
-                    }
-                    else
-                    {
-                        AlertDialog.Builder(this).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
+                    Authentication.instance.chooseAccessCode(this) {
+                        if (GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue))
+                        {
+                            // no need to do anything here, there will be a coreReady event soon
+                            // possibly put a progress spinner or some other user feedback if
+                            // the coreReady can take a long time
+                        }
+                        else
+                        {
+                            AlertDialog.Builder(this).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
+                        }
                     }
                 }
             }
