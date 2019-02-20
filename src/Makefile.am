@@ -40,6 +40,7 @@ LIBGULDEN_CLI=libgulden_cli.a
 LIBGULDEN_UTIL=libgulden_util.a
 LIBGULDEN_GENERIC=libgulden_generic.a
 LIBGULDEN_CRYPTO=crypto/libgulden_crypto.a
+LIBGULDEN_ANDROID_COMPAT=libgulden_android_compat.a
 LIBGULDENQT=qt/libguldenqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
@@ -63,6 +64,7 @@ $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
   $(LIBGULDEN_CRYPTO) \
+  $(LIBGULDEN_ANDROID_COMPAT) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \
   $(LIBGULDEN_COMMON) \
@@ -353,6 +355,13 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/sha256.h \
   crypto/sha512.cpp \
   crypto/sha512.h
+
+# android compat library; shared between unity and testing framework.
+libgulden_android_compat_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PROTOBUF_CFLAGS)
+libgulden_android_compat_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libgulden_android_compat_a_SOURCES = \
+  unity/compat/android_wallet.cpp \
+  unity/compat/android_wallet.h
 
 # consensus: All executables except gulden-cli; all unity libraries
 libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
