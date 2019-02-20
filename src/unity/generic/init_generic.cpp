@@ -27,7 +27,6 @@
 #endif
 #include "warnings.h"
 
-#include "unity/djinni/cpp/legacy_wallet_result.hpp"
 
 #include <boost/thread.hpp>
 
@@ -328,12 +327,4 @@ bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler)
     return true;
 }
 
-bool GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password)
-{
-    return false;
-}
 
-LegacyWalletResult GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password)
-{
-    return LegacyWalletResult::UNSUPPORTED_ON_THIS_PLATFORM;
-}
