@@ -188,7 +188,7 @@ file COPYING
     <string name="rescan_confirm_btn">Rescan</string>
     <string name="cancel_btn">Cancel</string>
     <string name="rescan_started">Rescan started</string>
-    <string name="upgrade_wrong_password">%s\nWrong password?</string>
+    <string name="upgrade_wrong_password">Wrong password?</string>
     <string name="upgrade_explanation">Gulden wallet is now build on the new Unity framework.\n\nBecause of this your existing wallet data needs to be upgraded.\n\nAfter the upgrade the blockchain will have to be rescanned, this can take a while.</string>
     <string name="upgrade_btn">Upgrade</string>
     <string name="upgrade_enter_password">Enter your password</string>
