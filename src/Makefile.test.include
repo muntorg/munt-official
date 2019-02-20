@@ -16,6 +16,13 @@ noinst_PROGRAMS += test/test_gulden_fuzzy
 TEST_SRCDIR = test
 TEST_BINARY=test/test_gulden$(EXEEXT)
 
+TEST_EXTRA_DIST = \
+  test/data/wallet-seed-no-password-protobuf \
+  test/data/wallet-seed-password-1234-protobuf \
+  test/data/wallet-linked-no-password-protobuf \
+  test/data/wallet-linked-password-5281-protobuf
+
+
 JSON_TEST_FILES = \
   test/data/script_tests.json \
   test/data/base58_keys_valid.json \
@@ -91,7 +98,8 @@ GULDEN_TESTS =\
   test/versionbits_tests.cpp \
   test/uint256_tests.cpp \
   test/univalue_tests.cpp \
-  test/util_tests.cpp
+  test/util_tests.cpp \
+  test/unity_tests.cpp
 
 if ENABLE_WALLET
 GULDEN_TESTS += \
@@ -103,7 +111,7 @@ GULDEN_TESTS += \
 endif
 
 test_test_gulden_SOURCES = $(GULDEN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
-test_test_gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
+test_test_gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -DTESTDATADIR=\"$(abs_top_srcdir)/src/test/data/\" -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
 test_test_gulden_LDADD = $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
 if ENABLE_WALLET
 test_test_gulden_LDADD += $(LIBGULDEN_WALLET)
@@ -111,8 +119,8 @@ endif
 if ENABLE_ZMQ
 test_test_gulden_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
 endif
-test_test_gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_GENERIC) $(LIBGULDEN_UTIL) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
-  $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS)
+test_test_gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_GENERIC) $(LIBGULDEN_UTIL) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO) $(LIBGULDEN_ANDROID_COMPAT) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+  $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS) $(PROTOBUF_LIBS)
 test_test_gulden_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 test_test_gulden_LDADD += $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
