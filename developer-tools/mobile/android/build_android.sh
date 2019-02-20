@@ -17,13 +17,14 @@ do
   export LD=$target_host-ld
   export STRIP=$target_host-strip
   export RANLIB=$target_host-ranlib
+  export LIBTOOL=libtool
   export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH"
   #visibility=hidden
   export CFLAGS=${CXXFLAGS}
   export LDFLAGS="-fPIC -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections"
 
   cd depends
-  make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES=qrencode -j ${NUM_PROCS}
+  make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode protobufunity' -j ${NUM_PROCS}
   cd ..
 
   mkdir build_android_${target_host} | true
