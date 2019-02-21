@@ -43,17 +43,15 @@ file COPYING
             android:id="@+id/topLayoutBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="5dp">
 
             <ImageView
                 android:id="@+id/walletLogo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
                 android:contentDescription="@string/image_content_description_gulden_logo"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_gulden_logo_text" />
@@ -61,7 +59,6 @@ file COPYING
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
