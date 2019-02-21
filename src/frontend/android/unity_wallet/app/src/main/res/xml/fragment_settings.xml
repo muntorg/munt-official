@@ -55,7 +55,7 @@ file COPYING
 
     <Preference
         android:key="preference_local_currency"
-        android:summary="%s"
+        android:summary=""
         android:iconSpaceReserved="false"
         android:defaultValue="@string/default_currency"
         android:title="@string/preference_fragment_fiat_label"

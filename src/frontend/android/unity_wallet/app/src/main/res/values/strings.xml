@@ -189,7 +189,7 @@ file COPYING
     <string name="cancel_btn">Cancel</string>
     <string name="rescan_started">Rescan started</string>
     <string name="upgrade_wrong_password">Wrong password?</string>
-    <string name="upgrade_explanation">Gulden wallet is now upgraded to the new Unity framework.\nBecause of this existing wallet data needs to be upgraded. After the upgrade, the blockchain will be rescanned, this can take a while.</string>
+    <string name="upgrade_explanation">Gulden wallet is now upgraded to the new Unity framework. Because of this existing wallet data needs to be upgraded. After the upgrade, the blockchain will be rescanned, this can take a while.</string>
     <string name="upgrade_btn">Upgrade</string>
     <string name="upgrade_enter_password">Enter your password</string>
     <string name="upgrade_enter_password_hint">PIN</string>

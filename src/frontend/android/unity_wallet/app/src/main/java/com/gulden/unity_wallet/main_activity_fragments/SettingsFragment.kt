@@ -18,6 +18,7 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.WelcomeActivity
+import com.gulden.unity_wallet.localCurrency
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.design.snackbar
@@ -30,6 +31,14 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
+    }
+
+    override fun onResume()
+    {
+        super.onResume()
+
+        val localCurrencyPreference : Preference = findPreference("preference_local_currency")
+        localCurrencyPreference.summary = localCurrency.code;
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
