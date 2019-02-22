@@ -7,7 +7,7 @@ Active:
 |Suspected pool name|Website|Coinbase tag|Addresses|Confirmation URL|Contact details|
 |----|----|----|----|----|-----|
 |Strataspool|www.strataspool.com|Strataspool|GM4U6yt8qN2J9oW73hAPYAWqtV3WCj79Hz, Gd6nHhdJJYQ26Bvj7FgcEqi5z2af6m3oKd, GfoH4AyUdQMWx7VUS2oFPvTdvq1nNarzZx|||
-|coinpool|www.coinpool.nl|coinpool.nl||||
+|coinpool|www.coinpool.nl|coinpool.nl|GaB1GaCuffaJ98UFncxXfGNAzonAfRtibW|||
 |newpool.eu|www.nlgpool.nl|-|GawCYmSbj1p5VWaP7LqKPcdxUtBcKFp96G|www.nlgpool.nl/blocks/428||
 |Zpool.ca|www.zpool.ca|-|GLoGJBsw2DXtLApZo7sG4w44WTocpZGTKQ, GQqCEDHiHbBaYmNPy49XuqWa66VgtrJ3eV|||
 |guldenpool.nl|www.guldenpool.nl|-|GcpzphoLCjw9oYk8S2YNBYTQUrvBmXLBRSGcpzphoLCjw9oYk8S2YNBYTQUrvBmXLBRS, GLvKzdvd8KvHZsspM3R8zkCDvtg63QrV65, GM7yj7R8nB3HLPAzX7X4Fn9C3hCvCByVEG, GMVfyHTRhjajBuq5kCyanEtsC8NoTHTxoZ, GQScMGXzSm7tLvhiNQcYNiDSCcoRCBofdy, GZJ6jBNCdSWrtF9V2oDFt2UgcRnszXdkNF, GTRBWPqocPNNudbxgUuocN2yLuvXtSmNS6, GTumSsfv6dKUurP3va3adzWszRiUzJ6zkn, GdSra3MYCHdggWuXMvWnk3g63Lj3LRB3G7, GffxbedBp7WvyyeoytrweHhCPydryjgtXe, GX1epLF5rGmAX6asK2zerXc9jBzLrMTadp, GWaXs9uhp5zzNUbmdX35WHMimt4VJQTSMi, GaEnvhs37rGBan6zNg5Wot77J9TX6H2m1k, GJhuM5gfAqsM6qJrxHCs3RUNHpTLmrJ2QJ|||
