@@ -8,10 +8,12 @@ package com.gulden.unity_wallet
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import androidx.preference.PreferenceManager
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_ATTEMPTS_ALLOWED
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_LENGTH
 import com.gulden.unity_wallet.Constants.FAKE_ACCESS_CODE
@@ -20,6 +22,9 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 
 private const val TAG = "authentication"
+
+private const val BLOCK_DURATION = 241 * DateUtils.MINUTE_IN_MILLIS
+private const val BLOCKED_UNTIL_KEY = "authentication-blocked-until"
 
 class Authentication {
     interface LockingObserver {
@@ -68,13 +73,55 @@ class Authentication {
         }
     }
 
+    fun isBlocked(context: Context): Boolean {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val blockedUntil = preferences.getLong(BLOCKED_UNTIL_KEY, 0)
+        val now = System.currentTimeMillis()
+        return now < blockedUntil
+    }
+
+    fun block(context: Context) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = preferences.edit()
+        val blockUntil = System.currentTimeMillis() + BLOCK_DURATION
+        editor.putLong(BLOCKED_UNTIL_KEY, blockUntil)
+        editor.apply()
+    }
+
+    fun unblock(context: Context) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = preferences.edit()
+        editor.remove(BLOCKED_UNTIL_KEY)
+        editor.apply()
+    }
+
+    fun showBlocking(context: Context) {
+        context.alert(Appcompat) {
+            this.title = context.getString(R.string.authentication_blocked_title)
+            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val blockedUntil = preferences.getLong(BLOCKED_UNTIL_KEY, 0)
+            this.message = context.getString(R.string.authentication_blocked_msg).format(
+                    DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().toLowerCase())
+            positiveButton(context.getString(R.string.authentication_blocked_later_btn)) {}
+            neutralPressed(context.getString(R.string.authentication_blocked_choose_new_btn)) {
+                TODO("not implemented yet")
+            }
+        }.build().show()
+    }
+
     /**
      * Present user with authentication method.
      * On successful authentication action is executed.
      */
     fun authenticate(context: Context, title: String?, msg: String?, action: () -> Unit) {
-        val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
 
+
+        if (isBlocked(context)) {
+            showBlocking(context)
+            return
+        }
+
+        val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
         msg?.let { contentView.message.text = msg }
 
         val builder = context.alert(Appcompat) {
@@ -106,6 +153,8 @@ class Authentication {
                                         contentView.attemptsRemaining.text = context.getString(R.string.access_code_entry_remaining).format(numAttemptsRemaining)
                                     } else {
                                         Log.i(TAG, "failed authentication")
+                                        block(context)
+                                        showBlocking(context)
                                         it.dismiss()
                                     }
                                 }
