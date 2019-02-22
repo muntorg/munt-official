@@ -24,8 +24,13 @@ import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
 import android.text.Html
 import android.text.SpannableString
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.vision.barcode.Barcode
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.ellipsizeString
 import com.gulden.unity_wallet.Authentication
+import com.gulden.unity_wallet.WalletActivity
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 
@@ -56,6 +61,11 @@ class SendFragment : Fragment()
             if (recipient != null) {
                 SendCoinsFragment.newInstance(recipient).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
             }
+        }
+
+        qrButton.setOnClickListener {
+            val intent = Intent(context, BarcodeCaptureActivity::class.java)
+            startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
         }
 
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
@@ -143,5 +153,26 @@ class SendFragment : Fragment()
                 clipboardButton.isEnabled = false
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == BARCODE_READER_REQUEST_CODE) {
+            if (resultCode == CommonStatusCodes.SUCCESS)
+            {
+                if (data != null) {
+                    val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
+                    val recipient = uriRecipient(barcode.displayValue)
+                    if (recipient.valid) {
+                        SendCoinsFragment.newInstance(recipient).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                    }
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    companion object {
+        private const val BARCODE_READER_REQUEST_CODE = 1
     }
 }
