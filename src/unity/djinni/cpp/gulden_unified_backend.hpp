@@ -81,6 +81,12 @@ public:
     /** Get the recovery phrase for the wallet */
     static std::string GetRecoveryPhrase();
 
+    /** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
+    static bool IsMnemonicWallet();
+
+    /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
+    static bool IsMnemonicCorrect(const std::string & phrase);
+
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
     static bool HaveUnconfirmedFunds();
 

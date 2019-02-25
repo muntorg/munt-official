@@ -114,6 +114,18 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.GetRecoveryPhrase();
     }
 
+    /** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
+    public static boolean IsMnemonicWallet()
+    {
+        return CppProxy.IsMnemonicWallet();
+    }
+
+    /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
+    public static boolean IsMnemonicCorrect(String phrase)
+    {
+        return CppProxy.IsMnemonicCorrect(phrase);
+    }
+
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
     public static boolean HaveUnconfirmedFunds()
     {
@@ -279,6 +291,10 @@ public abstract class GuldenUnifiedBackend {
         public static native String GetReceiveAddress();
 
         public static native String GetRecoveryPhrase();
+
+        public static native boolean IsMnemonicWallet();
+
+        public static native boolean IsMnemonicCorrect(String phrase);
 
         public static native boolean HaveUnconfirmedFunds();
 

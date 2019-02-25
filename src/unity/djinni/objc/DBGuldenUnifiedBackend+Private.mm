@@ -158,6 +158,20 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)IsMnemonicWallet {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::IsMnemonicWallet();
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)IsMnemonicCorrect:(nonnull NSString *)phrase {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::IsMnemonicCorrect(::djinni::String::toCpp(phrase));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (BOOL)HaveUnconfirmedFunds {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::HaveUnconfirmedFunds();

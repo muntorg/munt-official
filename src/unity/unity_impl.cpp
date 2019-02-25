@@ -589,6 +589,41 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
     return "";
 }
 
+bool GuldenUnifiedBackend::IsMnemonicWallet()
+{
+    if (!pactiveWallet || !pactiveWallet->activeAccount)
+        throw std::runtime_error(_("No active internal wallet."));
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    for (const auto& seedIter : pactiveWallet->mapSeeds)
+    {
+        if (!seedIter.second->getMnemonic().empty())
+            return true;
+    }
+    return false;
+}
+
+bool GuldenUnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
+{
+    if (!pactiveWallet || !pactiveWallet->activeAccount)
+        throw std::runtime_error(_("No active internal wallet."));
+
+    SecureString mnemonicPhrase;
+    int birthNumber;
+
+    GuldenAppManager::splitRecoveryPhraseAndBirth(SecureString(phrase), mnemonicPhrase, birthNumber);
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    for (const auto& seedIter : pactiveWallet->mapSeeds)
+    {
+        if (mnemonicPhrase == seedIter.second->getMnemonic())
+            return true;
+    }
+    return false;
+}
+
 bool GuldenUnifiedBackend::HaveUnconfirmedFunds()
 {
     if (!pactiveWallet)
