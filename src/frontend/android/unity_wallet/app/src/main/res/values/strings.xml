@@ -211,5 +211,6 @@ file COPYING
     <string name="authentication_blocked_later_btn">Try later</string>
     <string name="authentication_blocked_choose_new_btn">Choose new code</string>
     <string name="access_code_recovery_incorrect">Incorrect recovery phrase.</string>
+    <string name="preference_linked_recovery_descr">View your recovery phrase on your desktop app.</string>
 
 </resources>

@@ -30,6 +30,10 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
+        if (GuldenUnifiedBackend.IsMnemonicWallet())
+            preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
+        else
+            preferenceScreen.removePreferenceRecursively("recovery_view_preference")
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean

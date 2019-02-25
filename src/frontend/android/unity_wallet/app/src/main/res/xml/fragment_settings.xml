@@ -22,6 +22,14 @@ file COPYING
         tools:ignore="UnusedAttribute" />
 
     <Preference
+        android:key="recovery_linked_preference"
+        android:iconSpaceReserved="false"
+        android:persistent="false"
+        android:summary="@string/preference_linked_recovery_descr"
+        android:title="@string/preference_fragment_recovery_label"
+        tools:ignore="UnusedAttribute" />
+
+    <Preference
         android:key="preference_link_wallet"
         android:iconSpaceReserved="false"
         android:persistent="false"
