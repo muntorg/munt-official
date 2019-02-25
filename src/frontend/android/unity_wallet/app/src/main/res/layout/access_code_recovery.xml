@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright (c) 2019 The Gulden developers
+Authored by: Willem de Jonge (willem@isnapp.nl)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter recovery phrase to reset access code."/>
+
+    <EditText
+        android:id="@+id/recoveryPhrase"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:autofillHints=""
+        android:hint="Recovery phrase"
+        android:imeOptions="flagNoExtractUi"
+        android:inputType="textMultiLine"
+        android:scrollHorizontally="false"
+        tools:ignore="UnusedAttribute">
+
+        <requestFocus />
+    </EditText>
+
+</LinearLayout>

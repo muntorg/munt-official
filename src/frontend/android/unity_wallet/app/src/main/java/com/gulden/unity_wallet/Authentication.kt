@@ -14,10 +14,12 @@ import android.view.LayoutInflater
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.preference.PreferenceManager
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_ATTEMPTS_ALLOWED
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_LENGTH
 import com.gulden.unity_wallet.Constants.FAKE_ACCESS_CODE
 import kotlinx.android.synthetic.main.access_code_entry.view.*
+import kotlinx.android.synthetic.main.access_code_recovery.view.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 
@@ -100,11 +102,38 @@ class Authentication {
             this.title = context.getString(R.string.authentication_blocked_title)
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             val blockedUntil = preferences.getLong(BLOCKED_UNTIL_KEY, 0)
-            this.message = context.getString(R.string.authentication_blocked_msg).format(
-                    DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().toLowerCase())
             positiveButton(context.getString(R.string.authentication_blocked_later_btn)) {}
-            neutralPressed(context.getString(R.string.authentication_blocked_choose_new_btn)) {
-                TODO("not implemented yet")
+            if (GuldenUnifiedBackend.IsMnemonicWallet()) {
+                this.message = context.getString(R.string.authentication_blocked_msg_recovery).format(
+                        DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().toLowerCase())
+                neutralPressed(context.getString(R.string.authentication_blocked_choose_new_btn)) {
+                    chooseNewWithRecovery(context)
+                }
+            }
+            else {
+                this.message = context.getString(R.string.authentication_blocked_msg).format(
+                        DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().toLowerCase())
+            }
+        }.build().show()
+    }
+
+    fun chooseNewWithRecovery(context: Context) {
+        val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_recovery, null)
+        context.alert(Appcompat) {
+            customView = contentView
+            this.title = context.getString(R.string.authentication_blocked_title)
+            negativeButton(android.R.string.cancel) { }
+            positiveButton(android.R.string.ok) {
+                if (GuldenUnifiedBackend.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
+                    chooseAccessCode(context) {
+                        unblock(context)
+                    }
+                } else {
+                    context.alert(Appcompat, context.getString(R.string.access_code_recovery_incorrect),
+                            context.getString(R.string.authentication_blocked_title)) {
+                        positiveButton(android.R.string.ok) {}
+                    }.build().show()
+                }
             }
         }.build().show()
     }
@@ -135,7 +164,6 @@ class Authentication {
         dialog.setOnShowListener {
             contentView.accessCode.addTextChangedListener(
                     object : TextWatcher {
-                        // TODO block locking/authentication for time period after too many attempts
                         var numAttemptsRemaining = ACCESS_CODE_ATTEMPTS_ALLOWED
                         override fun afterTextChanged(s: Editable?) {
                             val code = s.toString()

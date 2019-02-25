@@ -206,8 +206,10 @@ file COPYING
     <string name="show_recovery_msg">Don\'t show your recovery phrase to anyone, or they will be able to spend your Gulden.</string>
     <string name="send_coins_error_acknowledge">OK</string>
     <string name="authentication_blocked_title">Wallet disabled</string>
-    <string name="authentication_blocked_msg">Try again %s or choose a new access code using your recovery phrase.</string>
+    <string name="authentication_blocked_msg_recovery">Try again %s or choose a new access code using your recovery phrase.</string>
+    <string name="authentication_blocked_msg">Try again %s.</string>
     <string name="authentication_blocked_later_btn">Try later</string>
     <string name="authentication_blocked_choose_new_btn">Choose new code</string>
+    <string name="access_code_recovery_incorrect">Incorrect recovery phrase.</string>
 
 </resources>
