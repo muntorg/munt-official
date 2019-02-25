@@ -35,11 +35,6 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
     {
         when (preference?.key){
-            "recovery_preference" ->
-            {
-                val phraseView : Preference = findPreference("recovery_view_preference")
-                phraseView.title = GuldenUnifiedBackend.GetRecoveryPhrase()
-            }
             "preference_link_wallet" ->
             {
                 val intent = Intent(context, BarcodeCaptureActivity::class.java)
