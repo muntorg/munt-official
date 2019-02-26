@@ -10,28 +10,27 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.core.content.ContextCompat
+import android.text.Html
+import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.gulden.jniunifiedbackend.*
-import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.SendCoinsFragment
-import com.gulden.unity_wallet.ui.AddressBookAdapter
-import com.gulden.uriRecipient
-import kotlinx.android.synthetic.main.fragment_send.*
-import org.apache.commons.validator.routines.IBANValidator
-import android.text.Html
-import android.text.SpannableString
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.gulden.barcodereader.BarcodeCaptureActivity
-import com.gulden.ellipsizeString
-import com.gulden.unity_wallet.Authentication
-import com.gulden.unity_wallet.WalletActivity
-import org.jetbrains.anko.sdk27.coroutines.onClick
+import com.gulden.jniunifiedbackend.AddressRecord
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.UriRecipient
+import com.gulden.jniunifiedbackend.UriRecord
+import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.SendCoinsFragment
+import com.gulden.unity_wallet.ellipsizeString
+import com.gulden.unity_wallet.ui.AddressBookAdapter
+import com.gulden.unity_wallet.uriRecipient
+import kotlinx.android.synthetic.main.fragment_send.*
+import org.apache.commons.validator.routines.IBANValidator
 
 
 class SendFragment : Fragment()

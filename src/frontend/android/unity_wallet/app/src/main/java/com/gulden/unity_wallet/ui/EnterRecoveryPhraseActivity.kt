@@ -15,11 +15,9 @@ import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.Authentication
-import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.UnityCore
-import com.gulden.unity_wallet.WalletActivity
+import com.gulden.unity_wallet.*
 
+private const val TAG = "enter-recovery-activity"
 
 class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
@@ -155,12 +153,17 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady(): Boolean {
+        gotoWalletActivity()
+        return true
+    }
+
+    private fun gotoWalletActivity()
+    {
         // Proceed to main activity
         val intent = Intent(this, WalletActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
@@ -177,18 +180,18 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         return super.onOptionsItemSelected(item)
     }
 
-    fun onAcceptRecoverFromPhrase(view: View)
-    {
+    fun onAcceptRecoverFromPhrase(view: View) {
         Authentication.instance.chooseAccessCode(this) {
-            if (GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
-            {
-                // no need to do anything here, there will be a coreReady event soon
-                // possibly put a progress spinner or some other user feedback if
-                // the coreReady can take a long time
-            }
-            else
-            {
-                //TODO: Display error to user...
+            if (UnityCore.instance.isCoreReady()) {
+                if (GuldenUnifiedBackend.ContineWalletFromRecoveryPhrase(recoveryPhrase)) {
+                    gotoWalletActivity()
+                } else {
+                    internalErrorAlert(this, "$TAG continuation failed")
+                }
+            } else {
+                // Create the new wallet, a coreReady event will follow which will proceed to the main activity
+                if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
+                    internalErrorAlert(this, "$TAG init failed")
             }
         }
     }

@@ -20,11 +20,9 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.Authentication
+import com.gulden.unity_wallet.*
 
-import com.gulden.unity_wallet.WalletActivity
-import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.UnityCore
+private const val TAG = "show-recovery-activity"
 
 class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
@@ -102,13 +100,19 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady(): Boolean {
+        gotoWalletActivity()
+        return true
+    }
+
+    private fun gotoWalletActivity()
+    {
         // Proceed to main activity
         val intent = Intent(this, WalletActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
-        return true
     }
+
 
     @Suppress("UNUSED_PARAMETER")
     fun onAcceptRecoveryPhrase(view: View)
@@ -116,10 +120,17 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         if (isNewWallet!!)
         {
             Authentication.instance.chooseAccessCode(this) {
-                // Create the new wallet
-                GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase)
-
-                // a coreReady event will follow which will proceed to the main activity
+                if (UnityCore.instance.isCoreReady()) {
+                    if (GuldenUnifiedBackend.ContineWalletFromRecoveryPhrase(recoveryPhrase)) {
+                        gotoWalletActivity()
+                    } else {
+                        internalErrorAlert(this, "$TAG continuation failed")
+                    }
+                } else {
+                    // Create the new wallet, a coreReady event will follow which will proceed to the main activity
+                    if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
+                        internalErrorAlert(this, "$TAG init failed")
+                }
             }
         }
         else
