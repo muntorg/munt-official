@@ -35,6 +35,9 @@ public:
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletFromRecoveryPhrase(const std::string & phrase);
 
+    /** TODO describe what this is doing */
+    static bool ContineWalletFromRecoveryPhrase(const std::string & phrase);
+
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletLinkedFromURI(const std::string & linked_uri);
 

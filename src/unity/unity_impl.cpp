@@ -294,15 +294,51 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
     return true;
 }
 
-bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
+bool ValidateAndSplitRecoveryPhrase(const std::string & phrase, SecureString& mnemonic, int& birthNumber)
 {
     if (phrase.length() < 16)
         return false;
 
+    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), mnemonic, birthNumber);
+    return checkMnemonic(mnemonic) && (birthNumber == 0 || Base10ChecksumDecode(birthNumber, nullptr));
+}
+
+bool GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(const std::string& phrase)
+{
     SecureString phraseOnly;
-    int phraseBirthNumber = 0;
-    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
-    return checkMnemonic(phraseOnly) && (phraseBirthNumber == 0 || Base10ChecksumDecode(phraseBirthNumber, nullptr));
+    int phraseBirthNumber;
+
+    if (!ValidateAndSplitRecoveryPhrase(phrase, phraseOnly, phraseBirthNumber))
+        return false;
+
+    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
+    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    GuldenAppManager::gApp->isRecovery = true;
+
+    if (!pactiveWallet)
+    {
+        LogPrintf("ContineWalletFromRecoveryPhrase: No active wallet");
+        return false;
+    }
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+    CWallet::CreateSeedAndAccountFromPhrase(pactiveWallet);
+
+    // Allow update of balance for deleted accounts/transactions
+    LogPrintf("%s: Update balance and rescan", __func__);
+    notifyBalanceChanged(pactiveWallet);
+
+    // Rescan for transactions on the linked account
+    DoRescan();
+
+    return true;
+}
+
+bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
+{
+    SecureString dummyMnemonic;
+    int dummyNumber;
+    return ValidateAndSplitRecoveryPhrase(phrase, dummyMnemonic, dummyNumber);
 }
 
 std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()

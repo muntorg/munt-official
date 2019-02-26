@@ -29,6 +29,9 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletFromRecoveryPhrase:(nonnull NSString *)phrase;
 
+/** TODO describe what this is doing */
++ (BOOL)ContineWalletFromRecoveryPhrase:(nonnull NSString *)phrase;
+
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri;
 

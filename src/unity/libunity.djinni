@@ -105,6 +105,9 @@ gulden_unified_backend = interface +c {
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletFromRecoveryPhrase(phrase : string): bool;
 
+    # TODO describe what this is doing
+    static ContineWalletFromRecoveryPhrase(phrase : string): bool;
+
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletLinkedFromURI(linked_uri : string): bool;
 
