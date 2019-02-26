@@ -250,53 +250,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             }
             else
             {
-                // Generate a new primary seed and account (BIP44)
-                walletInstance->activeSeed = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
-                walletInstance->nTimeFirstKey = GuldenAppManager::gApp->getRecoveryBirthTime();
-                if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*walletInstance->activeSeed))
-                {
-                    throw std::runtime_error("Writing seed failed");
-                }
-                walletInstance->mapSeeds[walletInstance->activeSeed->getUUID()] = walletInstance->activeSeed;
-                walletInstance->activeAccount = walletInstance->GenerateNewAccount("My account", AccountState::Normal, AccountType::Desktop);
-
-                // Now generate children shadow accounts to handle legacy transactions
-                // Only for recovery wallets though, new ones don't need them
-                if (GuldenAppManager::gApp->isRecovery)
-                {
-                    // fixme: (SPV) extract firstkeytime from recovery
-                    //Temporary seeds for shadow children
-                    CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
-                    CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
-
-                    // Write new accounts
-                    CAccountHD* newAccountBip32 = seedBip32->GenerateAccount(AccountType::Desktop, NULL);
-                    newAccountBip32->m_State = AccountState::ShadowChild;
-                    walletInstance->activeAccount->AddChild(newAccountBip32);
-                    walletInstance->addAccount(newAccountBip32, "BIP32 child account");
-
-                    // Write new accounts
-                    CAccountHD* newAccountBip32Legacy = seedBip32Legacy->GenerateAccount(AccountType::Desktop, NULL);
-                    newAccountBip32Legacy->m_State = AccountState::ShadowChild;
-                    walletInstance->activeAccount->AddChild(newAccountBip32Legacy);
-                    walletInstance->addAccount(newAccountBip32Legacy, "BIP32 legacy child account");
-
-                    //NB! We intentionally delete these seeds we only want the one account from them (for backwards compatibility with old phones).
-                    delete seedBip32Legacy;
-                    delete seedBip32;
-                }
-
-                // Write the seed last so that account index changes are reflected
-                {
-                    CWalletDB walletdb(*walletInstance->dbw);
-                    walletdb.WritePrimarySeed(*walletInstance->activeSeed);
-                    walletdb.WritePrimaryAccount(walletInstance->activeAccount);
-                }
-
-                GuldenAppManager::gApp->BurnRecoveryPhrase();
-
-                //Assign the bare minimum keys here, let the rest take place in the background thread
-                walletInstance->TopUpKeyPool(1);
+                CreateSeedAndAccountFromPhrase(walletInstance);
             }
         }
         else
@@ -661,6 +615,57 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     }
 
     return walletInstance;
+}
+
+void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
+{
+    // Generate a new primary seed and account (BIP44)
+    walletInstance->activeSeed = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
+    walletInstance->nTimeFirstKey = GuldenAppManager::gApp->getRecoveryBirthTime();
+    if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*walletInstance->activeSeed))
+    {
+        throw std::runtime_error("Writing seed failed");
+    }
+    walletInstance->mapSeeds[walletInstance->activeSeed->getUUID()] = walletInstance->activeSeed;
+    walletInstance->activeAccount = walletInstance->GenerateNewAccount("My account", AccountState::Normal, AccountType::Desktop);
+
+    // Now generate children shadow accounts to handle legacy transactions
+    // Only for recovery wallets though, new ones don't need them
+    if (GuldenAppManager::gApp->isRecovery)
+    {
+        // fixme: (SPV) extract firstkeytime from recovery
+        //Temporary seeds for shadow children
+        CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
+        CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
+
+        // Write new accounts
+        CAccountHD* newAccountBip32 = seedBip32->GenerateAccount(AccountType::Desktop, NULL);
+        newAccountBip32->m_State = AccountState::ShadowChild;
+        walletInstance->activeAccount->AddChild(newAccountBip32);
+        walletInstance->addAccount(newAccountBip32, "BIP32 child account");
+
+        // Write new accounts
+        CAccountHD* newAccountBip32Legacy = seedBip32Legacy->GenerateAccount(AccountType::Desktop, NULL);
+        newAccountBip32Legacy->m_State = AccountState::ShadowChild;
+        walletInstance->activeAccount->AddChild(newAccountBip32Legacy);
+        walletInstance->addAccount(newAccountBip32Legacy, "BIP32 legacy child account");
+
+        //NB! We intentionally delete these seeds we only want the one account from them (for backwards compatibility with old phones).
+        delete seedBip32Legacy;
+        delete seedBip32;
+    }
+
+    // Write the seed last so that account index changes are reflected
+    {
+        CWalletDB walletdb(*walletInstance->dbw);
+        walletdb.WritePrimarySeed(*walletInstance->activeSeed);
+        walletdb.WritePrimaryAccount(walletInstance->activeAccount);
+    }
+
+    GuldenAppManager::gApp->BurnRecoveryPhrase();
+
+    //Assign the bare minimum keys here, let the rest take place in the background thread
+    walletInstance->TopUpKeyPool(1);
 }
 
 bool CWallet::InitLoadWallet()

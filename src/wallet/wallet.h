@@ -903,6 +903,7 @@ public:
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
     static CWallet* CreateWalletFromFile(const std::string walletFile);
     static bool InitLoadWallet();
+    static void CreateSeedAndAccountFromPhrase(CWallet* walletInstance);
 
     /**
      * Wallet post-init setup
