@@ -15,6 +15,7 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.WelcomeActivity
@@ -66,10 +67,17 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             }
             "preference_remove_wallet", "preference_unlink_wallet" ->
             {
-                GuldenUnifiedBackend.EraseWalletSeedsAndAccounts()
-                val intent = Intent(activity, WelcomeActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                startActivity(intent)
+                val msg = "%s%s".format(
+                        if (GuldenUnifiedBackend.IsMnemonicWallet())
+                            getString(R.string.remove_wallet_auth_desc_recovery_warn)
+                        else "",
+                        getString(R.string.remove_wallet_auth_desc))
+                Authentication.instance.authenticate(activity!!, getString(R.string.remove_wallet_auth_title), msg) {
+                    GuldenUnifiedBackend.EraseWalletSeedsAndAccounts()
+                    val intent = Intent(activity, WelcomeActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    startActivity(intent)
+                }
             }
             "preference_local_currency" ->
             {

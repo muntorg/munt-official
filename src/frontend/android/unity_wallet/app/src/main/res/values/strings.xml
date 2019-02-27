@@ -212,5 +212,8 @@ file COPYING
     <string name="authentication_blocked_choose_new_btn">Choose new code</string>
     <string name="access_code_recovery_incorrect">Incorrect recovery phrase.</string>
     <string name="preference_linked_recovery_descr">View your recovery phrase on your desktop app.</string>
+    <string name="remove_wallet_auth_title">Remove wallet</string>
+    <string name="remove_wallet_auth_desc_recovery_warn">If you don\'t have the recovery phrase of your wallet you will lose it forever if you remove it now, also for funds received in the future on its old addresses.\n\n</string>
+    <string name="remove_wallet_auth_desc">Enter access code to proceed and remove your wallet.</string>
 
 </resources>
