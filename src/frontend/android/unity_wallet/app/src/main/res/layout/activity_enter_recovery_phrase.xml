@@ -72,21 +72,6 @@ file COPYING
             android:paddingRight="20dp"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:text="@string/enter_recovery_phrase_overwrite_warning"
-            android:id="@+id/recoverFromPhraseWipeText"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:enabled="false"
-            android:textColor="@android:color/darker_gray"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_marginTop="20dp"
-            />
     </LinearLayout>
 
 
@@ -95,23 +80,6 @@ file COPYING
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/confirm_overwrite_wallet"
-            android:id="@+id/recovery_phrase_acknowledge_wallet_overwrite"
-            android:textColor="#000000"
-            android:singleLine="true"
-            android:gravity="left|center_vertical"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:onClick="onAcknowledgeOverwrite"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:checked="false"
-            />
 
         <Button
             android:id="@+id/recover_from_phrase_proceed_button"

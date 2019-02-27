@@ -5,35 +5,28 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.view.MenuItemCompat
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ActionMode
-import androidx.appcompat.widget.ShareActionProvider
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.ShareActionProvider
+import androidx.core.view.MenuItemCompat
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
+import kotlinx.android.synthetic.main.activity_show_recovery_phrase.*
+import org.jetbrains.anko.sdk27.coroutines.onClick
 
 private const val TAG = "show-recovery-activity"
 
 class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
-    internal var recoveryPhraseView: TextView? = null
-    private var recoveryPhraseAcknowledgeCheckBox: CheckBox? = null
-    private var recoveryPhraseAcceptButton: Button? = null
     //fixme: (GULDEN) Change to char[] to we can securely wipe.
     internal var recoveryPhrase: String? = null
-
-    private val isNewWallet: Boolean?
-        get() = !intent.hasExtra(this.packageName + "do_not_start_wallet_activity_on_close")
 
     private var shareActionProvider: ShareActionProvider? = null
 
@@ -43,34 +36,13 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
         setContentView(R.layout.activity_show_recovery_phrase)
 
-        recoveryPhraseAcknowledgeCheckBox = findViewById(R.id.acknowledge_recovery_phrase)
-
-        recoveryPhraseAcceptButton = findViewById(R.id.button_accept_recovery_phrase)
-
-        recoveryPhraseView = findViewById(R.id.recovery_phrase_text_view)
-
         recoveryPhrase = intent.getStringExtra(this.packageName + "recovery_phrase")
-        recoveryPhraseView!!.text = recoveryPhrase
-        recoveryPhraseView!!.setOnClickListener { setFocusOnRecoveryPhrase() }
-
-
-        // If we are not coming here from the 'welcome page' then we want a back button in title bar.
-        if (!(isNewWallet!!))
-        {
-            //Sort action bar out
-            run {
-                supportActionBar?.setDisplayShowTitleEnabled(false)
-                supportActionBar?.setDisplayShowCustomEnabled(true)
-                supportActionBar?.setDisplayShowHomeEnabled(true)
-                supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            }
-
-            recoveryPhraseAcceptButton?.visibility = View.GONE
+        recovery_phrase_text_view.run {
+            text = recoveryPhrase
+            onClick { setFocusOnRecoveryPhrase() }
         }
-        else
-        {
-            supportActionBar?.hide()
-        }
+
+        supportActionBar?.hide()
 
         updateView()
 
@@ -117,24 +89,19 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     @Suppress("UNUSED_PARAMETER")
     fun onAcceptRecoveryPhrase(view: View)
     {
-        if (isNewWallet!!)
-        {
-            Authentication.instance.chooseAccessCode(this) {
-                if (UnityCore.instance.isCoreReady()) {
-                    if (GuldenUnifiedBackend.ContineWalletFromRecoveryPhrase(recoveryPhrase)) {
-                        gotoWalletActivity()
-                    } else {
-                        internalErrorAlert(this, "$TAG continuation failed")
-                    }
+        Authentication.instance.chooseAccessCode(this) {
+            if (UnityCore.instance.isCoreReady()) {
+                if (GuldenUnifiedBackend.ContineWalletFromRecoveryPhrase(recoveryPhrase)) {
+                    gotoWalletActivity()
                 } else {
-                    // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                    if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
-                        internalErrorAlert(this, "$TAG init failed")
+                    internalErrorAlert(this, "$TAG continuation failed")
                 }
+            } else {
+                // Create the new wallet, a coreReady event will follow which will proceed to the main activity
+                if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
+                    internalErrorAlert(this, "$TAG init failed")
             }
         }
-        else
-            finish()
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -145,15 +112,8 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     private fun updateView()
     {
-        if (isNewWallet!!)
-        {
-            // Only allow user to move on once they have acknowledged writing the recovery phrase down.
-            recoveryPhraseAcceptButton!!.isEnabled = recoveryPhraseAcknowledgeCheckBox!!.isChecked
-        }
-        else
-        {
-            recoveryPhraseAcknowledgeCheckBox?.visibility = View.INVISIBLE
-        }
+        // Only allow user to move on once they have acknowledged writing the recovery phrase down.
+        button_accept_recovery_phrase.isEnabled = acknowledge_recovery_phrase.isChecked
     }
 
     internal inner class ActionBarCallBack : ActionMode.Callback
@@ -197,9 +157,9 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
             @Suppress("DEPRECATION")
             val color = resources.getColor(R.color.colorPrimary)
-            val spannableString = SpannableString(recoveryPhraseView!!.text)
-            spannableString.setSpan(BackgroundColorSpan(color), 0, recoveryPhraseView!!.text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            recoveryPhraseView!!.text = spannableString
+            val spannableString = SpannableString(recovery_phrase_text_view.text)
+            spannableString.setSpan(BackgroundColorSpan(color), 0, recovery_phrase_text_view.text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            recovery_phrase_text_view.setText(spannableString)
 
             return true
         }
@@ -208,7 +168,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         {
             shareActionProvider = null
 
-            recoveryPhraseView!!.text = recoveryPhrase
+            recovery_phrase_text_view.setText(recoveryPhrase ?: "")
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean
