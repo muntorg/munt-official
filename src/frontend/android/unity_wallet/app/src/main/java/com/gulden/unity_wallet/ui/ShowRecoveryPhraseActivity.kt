@@ -18,6 +18,7 @@ import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.MenuItemCompat
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.util.gotoWalletActivity
 import kotlinx.android.synthetic.main.activity_show_recovery_phrase.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
@@ -72,19 +73,9 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady(): Boolean {
-        gotoWalletActivity()
+        gotoWalletActivity(this)
         return true
     }
-
-    private fun gotoWalletActivity()
-    {
-        // Proceed to main activity
-        val intent = Intent(this, WalletActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-        finish()
-    }
-
 
     @Suppress("UNUSED_PARAMETER")
     fun onAcceptRecoveryPhrase(view: View)
@@ -92,7 +83,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         Authentication.instance.chooseAccessCode(this) {
             if (UnityCore.instance.isCoreReady()) {
                 if (GuldenUnifiedBackend.ContineWalletFromRecoveryPhrase(recoveryPhrase)) {
-                    gotoWalletActivity()
+                    gotoWalletActivity(this)
                 } else {
                     internalErrorAlert(this, "$TAG continuation failed")
                 }

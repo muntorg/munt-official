@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -8,7 +8,6 @@ package com.gulden.unity_wallet
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
@@ -16,6 +15,9 @@ import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity
 import com.gulden.unity_wallet.ui.ShowRecoveryPhraseActivity
+import com.gulden.unity_wallet.util.gotoWalletActivity
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.appcompat.v7.Appcompat
 import kotlin.concurrent.thread
 
 class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
@@ -66,37 +68,35 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
         startActivityForResult(intent, REQUEST_CODE_SCAN_FOR_LINK)
     }
 
-    private fun showMainWallet()
-    {
-        // Proceed to main activity
-        val intent = Intent(this, WalletActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-
-        finish()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
         if (requestCode == REQUEST_CODE_SCAN_FOR_LINK)
         {
-            if (resultCode == CommonStatusCodes.SUCCESS)
+            if (resultCode == CommonStatusCodes.SUCCESS && data != null)
             {
-                if (data != null)
-                {
-                    val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                    Authentication.instance.chooseAccessCode(this) {
-                        if (GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue))
-                        {
-                            // no need to do anything here, there will be a coreReady event soon
-                            // possibly put a progress spinner or some other user feedback if
-                            // the coreReady can take a long time
-                        }
-                        else
-                        {
-                            AlertDialog.Builder(this).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
+                val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
+                Authentication.instance.chooseAccessCode(this) {
+                    if (UnityCore.instance.isCoreReady()) {
+                        if (GuldenUnifiedBackend.ContinueWalletLinkedFromURI(barcode.displayValue)) {
+                            gotoWalletActivity(this)
+                            return@chooseAccessCode
                         }
                     }
+                    else {
+                        // Create the new wallet, a coreReady event will follow which will proceed to the main activity
+                        if (GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue))
+                            return@chooseAccessCode
+                    }
+
+                    // Got here so there was an error in init or continue linked wallet
+                    alert(Appcompat,
+                            getString(com.gulden.unity_wallet.R.string.no_guldensync_warning),
+                            getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)) {
+                        positiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) {
+                            it.dismiss()
+                        }
+                        isCancelable = true
+                    }.build().show()
                 }
             }
         }
@@ -113,7 +113,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady(): Boolean {
-        showMainWallet()
+        gotoWalletActivity(this)
         return true
     }
 
