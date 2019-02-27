@@ -432,21 +432,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         return false;
     }
 
-    // Create a new linked account as the primary account
-    pactiveWallet->nTimeFirstKey = linkedKey.getCreationTime();
-    LogPrintf("ReplaceWalletLinkedFromURI: Creating new linked primary account, birth time [%d]\n", pactiveWallet->nTimeFirstKey);
-    pactiveWallet->activeAccount = pactiveWallet->CreateSeedlessHDAccount("My account", linkedKey, AccountState::Normal, AccountType::Mobi);
-
-    // Write the primary account into wallet file
-    {
-        CWalletDB walletdb(*pactiveWallet->dbw);
-        if (!walletdb.WriteAccount(getUUIDAsString(pactiveWallet->activeAccount->getUUID()), pactiveWallet->activeAccount))
-        {
-            LogPrintf("ReplaceWalletLinkedFromURI: Failed to write new linked account");
-            return false;
-        }
-        walletdb.WritePrimaryAccount(pactiveWallet->activeAccount);
-    }
+    CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
 
     for (auto& [pWalletTx, pReserveKey] : transactionsToCommit)
     {

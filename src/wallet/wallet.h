@@ -904,6 +904,7 @@ public:
     static CWallet* CreateWalletFromFile(const std::string walletFile);
     static bool InitLoadWallet();
     static void CreateSeedAndAccountFromPhrase(CWallet* walletInstance);
+    static void CreateSeedAndAccountFromLink(CWallet *walletInstance);
 
     /**
      * Wallet post-init setup

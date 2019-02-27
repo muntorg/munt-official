@@ -127,6 +127,25 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
     return strUsage;
 }
 
+void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)
+{
+    walletInstance->nTimeFirstKey = GuldenAppManager::gApp->getLinkedBirthTime();
+
+    LogPrintf("%s: Creating new linked primary account, birth time [%d]\n", __func__, walletInstance->nTimeFirstKey);
+
+    walletInstance->activeAccount = walletInstance->CreateSeedlessHDAccount("My account", GuldenAppManager::gApp->getLinkedKey(), AccountState::Normal, AccountType::Mobi);
+
+    // Write the primary account into wallet file
+    {
+        CWalletDB walletdb(*walletInstance->dbw);
+        if (!walletdb.WriteAccount(getUUIDAsString(walletInstance->activeAccount->getUUID()), walletInstance->activeAccount))
+        {
+            throw std::runtime_error("Writing legacy account failed");
+        }
+        walletdb.WritePrimaryAccount(walletInstance->activeAccount);
+    }
+}
+
 CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 {
     // needed to restore wallet transaction meta data after -zapwallettxes
@@ -231,20 +250,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
             if (GuldenAppManager::gApp->isLink)
             {
-                LogPrintf("Creating new linked wallet\n");
-                walletInstance->nTimeFirstKey = GuldenAppManager::gApp->getLinkedBirthTime();
-
-                walletInstance->activeAccount = walletInstance->CreateSeedlessHDAccount("My account", GuldenAppManager::gApp->getLinkedKey(), AccountState::Normal, AccountType::Mobi);
-
-                // Write the primary account into wallet file
-                {
-                    CWalletDB walletdb(*walletInstance->dbw);
-                    if (!walletdb.WriteAccount(getUUIDAsString(walletInstance->activeAccount->getUUID()), walletInstance->activeAccount))
-                    {
-                        throw std::runtime_error("Writing legacy account failed");
-                    }
-                    walletdb.WritePrimaryAccount(walletInstance->activeAccount);
-                }
+                CreateSeedAndAccountFromLink(walletInstance);
                 //fixme: (2.1) HIGH - Implement an equivalent burn function for linked key
                 //GuldenAppManager::gApp->BurnRecoveryPhrase();
             }
