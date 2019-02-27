@@ -25,7 +25,7 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.InitWalletFromRecoveryPhrase(phrase);
     }
 
-    /** TODO describe what this is doing */
+    /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
     public static boolean ContineWalletFromRecoveryPhrase(String phrase)
     {
         return CppProxy.ContineWalletFromRecoveryPhrase(phrase);
@@ -35,6 +35,12 @@ public abstract class GuldenUnifiedBackend {
     public static boolean InitWalletLinkedFromURI(String linkedUri)
     {
         return CppProxy.InitWalletLinkedFromURI(linkedUri);
+    }
+
+    /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
+    public static boolean ContinueWalletLinkedFromURI(String linkedUri)
+    {
+        return CppProxy.ContinueWalletLinkedFromURI(linkedUri);
     }
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
@@ -275,6 +281,8 @@ public abstract class GuldenUnifiedBackend {
         public static native boolean ContineWalletFromRecoveryPhrase(String phrase);
 
         public static native boolean InitWalletLinkedFromURI(String linkedUri);
+
+        public static native boolean ContinueWalletLinkedFromURI(String linkedUri);
 
         public static native boolean InitWalletFromAndroidLegacyProtoWallet(String walletFile, String password);
 

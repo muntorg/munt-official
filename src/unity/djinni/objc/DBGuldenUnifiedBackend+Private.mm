@@ -74,6 +74,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)ContinueWalletLinkedFromURI:(nonnull NSString *)linkedUri {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::ContinueWalletLinkedFromURI(::djinni::String::toCpp(linkedUri));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (BOOL)InitWalletFromAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
                                       password:(nonnull NSString *)password {
     try {

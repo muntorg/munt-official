@@ -29,11 +29,14 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletFromRecoveryPhrase:(nonnull NSString *)phrase;
 
-/** TODO describe what this is doing */
+/** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
 + (BOOL)ContineWalletFromRecoveryPhrase:(nonnull NSString *)phrase;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri;
+
+/** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
++ (BOOL)ContinueWalletLinkedFromURI:(nonnull NSString *)linkedUri;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletFromAndroidLegacyProtoWallet:(nonnull NSString *)walletFile

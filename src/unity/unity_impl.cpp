@@ -311,10 +311,6 @@ bool GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(const std::string& ph
     if (!ValidateAndSplitRecoveryPhrase(phrase, phraseOnly, phraseBirthNumber))
         return false;
 
-    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
-    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
-    GuldenAppManager::gApp->isRecovery = true;
-
     if (!pactiveWallet)
     {
         LogPrintf("ContineWalletFromRecoveryPhrase: No active wallet");
@@ -322,6 +318,10 @@ bool GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(const std::string& ph
     }
 
     LOCK2(cs_main, pactiveWallet->cs_wallet);
+    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
+    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    GuldenAppManager::gApp->isRecovery = true;
+
     CWallet::CreateSeedAndAccountFromPhrase(pactiveWallet);
 
     // Allow update of balance for deleted accounts/transactions
@@ -367,6 +367,37 @@ bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri
     return true;
 }
 
+bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri)
+{
+    if (!pactiveWallet)
+    {
+        LogPrintf("%s: No active wallet", __func__);
+        return false;
+    }
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    CGuldenSecretExt<CExtKey> linkedKey;
+    if (!linkedKey.fromURIString(linked_uri))
+    {
+        LogPrintf("%s: Failed to parse link URI", __func__);
+        return false;
+    }
+
+    GuldenAppManager::gApp->setLinkKey(linkedKey);
+    GuldenAppManager::gApp->isLink = true;
+
+    CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
+
+    // Allow update of balance for deleted accounts/transactions
+    LogPrintf("%s: Update balance and rescan", __func__);
+    notifyBalanceChanged(pactiveWallet);
+
+    // Rescan for transactions on the linked account
+    DoRescan();
+
+    return true;
+}
 
 bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri)
 {
