@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -30,10 +30,14 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
-        if (GuldenUnifiedBackend.IsMnemonicWallet())
+        if (GuldenUnifiedBackend.IsMnemonicWallet()) {
             preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
-        else
+            preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
+        }
+        else {
             preferenceScreen.removePreferenceRecursively("recovery_view_preference")
+            preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
+        }
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
@@ -60,7 +64,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
                     negativeButton(getString(R.string.cancel_btn)) {}
                 }.show()
             }
-            "preference_remove_wallet" ->
+            "preference_remove_wallet", "preference_unlink_wallet" ->
             {
                 GuldenUnifiedBackend.EraseWalletSeedsAndAccounts()
                 val intent = Intent(activity, WelcomeActivity::class.java)
