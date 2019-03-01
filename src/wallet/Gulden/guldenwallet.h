@@ -62,6 +62,9 @@ public:
     //const std::string strWalletFile;
     std::unique_ptr<CWalletDBWrapper> dbw;
 
+    typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
+    typedef std::multimap<int64_t, TxPair > TxItems;
+    TxItems wtxOrdered;
 
     virtual bool Lock() const
     {

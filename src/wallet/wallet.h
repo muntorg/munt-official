@@ -570,10 +570,6 @@ public:
     std::map<uint256, CWalletTx> mapWallet;
     std::list<CAccountingEntry> laccentries;
 
-    typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
-    typedef std::multimap<int64_t, TxPair > TxItems;
-    TxItems wtxOrdered;
-
     int64_t nOrderPosNext;
     uint64_t nAccountingEntryNumber;
     std::map<uint256, int> mapRequestCount;
