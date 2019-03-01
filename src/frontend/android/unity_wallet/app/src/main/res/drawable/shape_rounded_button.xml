@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" android:padding="10dp">
-    <solid android:color="@color/colorPrimary"/>
-    <corners android:radius="10dp"/>
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true" android:drawable="@drawable/shape_rounded_button_enabled" />
+    <item android:state_enabled="false" android:drawable="@drawable/shape_rounded_button_disabled" />
+</selector>
