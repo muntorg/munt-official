@@ -35,8 +35,14 @@ public:
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletFromRecoveryPhrase(const std::string & phrase);
 
+    /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
+    static bool ContineWalletFromRecoveryPhrase(const std::string & phrase);
+
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletLinkedFromURI(const std::string & linked_uri);
+
+    /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
+    static bool ContinueWalletLinkedFromURI(const std::string & linked_uri);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletFromAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password);
@@ -80,6 +86,12 @@ public:
 
     /** Get the recovery phrase for the wallet */
     static std::string GetRecoveryPhrase();
+
+    /** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
+    static bool IsMnemonicWallet();
+
+    /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
+    static bool IsMnemonicCorrect(const std::string & phrase);
 
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
     static bool HaveUnconfirmedFunds();

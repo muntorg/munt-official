@@ -204,5 +204,16 @@ file COPYING
     <string name="access_code_choose_title">Choose your \"Gulden\" access code</string>
     <string name="access_code_choose_verify">Verify your access code</string>
     <string name="show_recovery_msg">Don\'t show your recovery phrase to anyone, or they will be able to spend your Gulden.</string>
+    <string name="send_coins_error_acknowledge">OK</string>
+    <string name="authentication_blocked_title">Wallet disabled</string>
+    <string name="authentication_blocked_msg_recovery">Try again %s or choose a new access code using your recovery phrase.</string>
+    <string name="authentication_blocked_msg">Try again %s.</string>
+    <string name="authentication_blocked_later_btn">Try later</string>
+    <string name="authentication_blocked_choose_new_btn">Choose new code</string>
+    <string name="access_code_recovery_incorrect">Incorrect recovery phrase.</string>
+    <string name="preference_linked_recovery_descr">View your recovery phrase on your desktop app.</string>
+    <string name="remove_wallet_auth_title">Remove wallet</string>
+    <string name="remove_wallet_auth_desc_recovery_warn">If you don\'t have the recovery phrase of your wallet you will lose it forever if you remove it now, also for funds received in the future on its old addresses.\n\n</string>
+    <string name="remove_wallet_auth_desc">Enter access code to proceed and remove your wallet.</string>
 
 </resources>

@@ -524,6 +524,14 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
                 if (::IsMine(account, tx))
                 {
                     hashesToErase.push_back(txHash);
+                    auto range = wtxOrdered.equal_range(tx.nOrderPos);
+                    for (auto i = range.first; i != range.second;)
+                    {
+                        if (tx.GetHash() == i->second.first->GetHash())
+                            i = wtxOrdered.erase(i);
+                        else
+                            i++;
+                    }
                 }
             }
             pactiveWallet->ZapSelectTx(hashesToErase, hashesErased);

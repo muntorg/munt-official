@@ -12,16 +12,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.main_activity_fragments.*
 import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentInteractionListener
 import com.gulden.unity_wallet.util.AppBaseActivity
-import com.gulden.uriRecipient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -191,12 +186,6 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun handleQRScanButtonClick(view : View? = null) {
-        val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
-        startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
     fun gotoBuyActivity(view : View? = null)
     {
         val urlBuilder = Uri.Builder()
@@ -208,31 +197,5 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
         {
             startActivity(intent)
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == BARCODE_READER_REQUEST_CODE) {
-            if (resultCode == CommonStatusCodes.SUCCESS)
-            {
-                if (data != null) {
-                    val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                    val recipient = uriRecipient(barcode.displayValue)
-                    if (recipient.valid) {
-                        var fragment = SendCoinsFragment.newInstance(recipient)
-                        var bsBehaviour = BottomSheetBehavior.from(fragment as View)
-                        bsBehaviour.setPeekHeight(500)
-                        bsBehaviour.setFitToContents(true)
-                        bsBehaviour.state = BottomSheetBehavior.STATE_EXPANDED
-                        fragment.show(supportFragmentManager, SendCoinsFragment::class.java.simpleName)
-                    }
-                }
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    companion object {
-        private const val BARCODE_READER_REQUEST_CODE = 1
     }
 }

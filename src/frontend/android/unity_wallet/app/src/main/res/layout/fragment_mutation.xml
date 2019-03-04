@@ -21,14 +21,20 @@ file COPYING
         app:layout_constraintStart_toStartOf="@+id/divider"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/unlockImage"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:layout_margin="0dp"
-            android:contentDescription="@string/unlock"
-            android:src="@drawable/ic_lock_solid" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/unlockImage"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:clickable="false"
+                android:contentDescription="@string/unlock"
+                android:src="@drawable/ic_lock_solid" />
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

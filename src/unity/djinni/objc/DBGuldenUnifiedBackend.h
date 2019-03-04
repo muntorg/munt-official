@@ -29,8 +29,14 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletFromRecoveryPhrase:(nonnull NSString *)phrase;
 
+/** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
++ (BOOL)ContineWalletFromRecoveryPhrase:(nonnull NSString *)phrase;
+
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri;
+
+/** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
++ (BOOL)ContinueWalletLinkedFromURI:(nonnull NSString *)linkedUri;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletFromAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
@@ -78,6 +84,12 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 
 /** Get the recovery phrase for the wallet */
 + (nonnull NSString *)GetRecoveryPhrase;
+
+/** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
++ (BOOL)IsMnemonicWallet;
+
+/** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
++ (BOOL)IsMnemonicCorrect:(nonnull NSString *)phrase;
 
 /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
 + (BOOL)HaveUnconfirmedFunds;

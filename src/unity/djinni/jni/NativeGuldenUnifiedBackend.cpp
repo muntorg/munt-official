@@ -51,11 +51,29 @@ CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacke
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_ContineWalletFromRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(::djinni::String::toCpp(jniEnv, j_phrase));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_InitWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::GuldenUnifiedBackend::InitWalletLinkedFromURI(::djinni::String::toCpp(jniEnv, j_linkedUri));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_ContinueWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::ContinueWalletLinkedFromURI(::djinni::String::toCpp(jniEnv, j_linkedUri));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
@@ -168,6 +186,24 @@ CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacken
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::GuldenUnifiedBackend::GetRecoveryPhrase();
         return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_IsMnemonicWallet(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::IsMnemonicWallet();
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_IsMnemonicCorrect(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::IsMnemonicCorrect(::djinni::String::toCpp(jniEnv, j_phrase));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

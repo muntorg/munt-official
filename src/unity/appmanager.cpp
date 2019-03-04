@@ -339,7 +339,9 @@ void GuldenAppManager::splitRecoveryPhraseAndBirth(const SecureString& input, Se
         try {
             birthNumber = std::stoi(birthString);
         }
-        catch (const std::exception) {}
+        catch (const std::exception) {
+            birthNumber = 0;
+        }
         if (birthNumber != 0) {
             // succesfull numeric conversion, strip birth number from phrase
             phrase.erase(lastSpace);

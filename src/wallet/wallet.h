@@ -478,8 +478,6 @@ private:
      * Should be called with pindexBlock and posInBlock if this is for a transaction that is included in a block. */
     void SyncTransaction(const CTransactionRef& tx, const CBlockIndex *pindex = NULL, int posInBlock = 0);
 
-    std::set<int64_t> setKeyPool;
-
     //int64_t nTimeFirstKey;
 
     /**
@@ -525,8 +523,6 @@ public:
 
     void LoadKeyPool(int nIndex, const CKeyPool &keypool)
     {
-        setKeyPool.insert(nIndex);
-
         // If no metadata exists yet, create a default with the pool key's
         // creation time. Note that this may be overwritten by actually
         // stored metadata for that key later, which is fine.
@@ -573,10 +569,6 @@ public:
 
     std::map<uint256, CWalletTx> mapWallet;
     std::list<CAccountingEntry> laccentries;
-
-    typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
-    typedef std::multimap<int64_t, TxPair > TxItems;
-    TxItems wtxOrdered;
 
     int64_t nOrderPosNext;
     uint64_t nAccountingEntryNumber;
@@ -903,6 +895,8 @@ public:
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
     static CWallet* CreateWalletFromFile(const std::string walletFile);
     static bool InitLoadWallet();
+    static void CreateSeedAndAccountFromPhrase(CWallet* walletInstance);
+    static void CreateSeedAndAccountFromLink(CWallet *walletInstance);
 
     /**
      * Wallet post-init setup

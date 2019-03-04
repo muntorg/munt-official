@@ -17,9 +17,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.amulyakhare.textdrawable.TextDrawable
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
@@ -30,10 +31,7 @@ import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
-import org.jetbrains.anko.design.longSnackbar
 import kotlin.coroutines.CoroutineContext
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.amulyakhare.textdrawable.TextDrawable
 import kotlin.math.roundToInt
 
 
@@ -209,7 +207,7 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
                         dismiss()
                     }
                     catch (exception: RuntimeException) {
-                        view.longSnackbar(exception.message!!)
+                        errorMessage(exception.message!!)
                     }
                 }
             }
@@ -245,7 +243,7 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
                             dismiss()
                         }
                         catch (exception: RuntimeException) {
-                            view.longSnackbar(exception.message!!)
+                            errorMessage(exception.message!!)
                         }
 
                     }
@@ -256,10 +254,16 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
                 button_send.isEnabled = true
 
             } catch (e: Throwable) {
-                view.longSnackbar("IBAN order failed")
+                errorMessage("IBAN order failed")
                 button_send.isEnabled = true
             }
         }
+    }
+
+    private fun errorMessage(msg: String) {
+        fragmentActivity.alert(Appcompat, msg, "") {
+            positiveButton(getString(R.string.send_coins_error_acknowledge)) {}
+        }.show()
     }
 
     override fun onDestroy() {
@@ -420,7 +424,7 @@ class SendCoinsFragment() : BottomSheetDialogFragment(), CoroutineScope
                 run {
                     if (activeAmount.text.isEmpty())
                     {
-                        Snackbar.make(view, "Enter an amount to pay", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+                        errorMessage("Enter an amount to pay")
                         return@run
                     }
 

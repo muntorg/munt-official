@@ -60,9 +60,23 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)ContineWalletFromRecoveryPhrase:(nonnull NSString *)phrase {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(::djinni::String::toCpp(phrase));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::InitWalletLinkedFromURI(::djinni::String::toCpp(linkedUri));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)ContinueWalletLinkedFromURI:(nonnull NSString *)linkedUri {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::ContinueWalletLinkedFromURI(::djinni::String::toCpp(linkedUri));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
@@ -155,6 +169,20 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::GetRecoveryPhrase();
         return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)IsMnemonicWallet {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::IsMnemonicWallet();
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)IsMnemonicCorrect:(nonnull NSString *)phrase {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::IsMnemonicCorrect(::djinni::String::toCpp(phrase));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

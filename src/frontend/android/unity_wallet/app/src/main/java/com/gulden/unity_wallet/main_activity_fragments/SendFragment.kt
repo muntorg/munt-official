@@ -10,23 +10,27 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.core.content.ContextCompat
+import android.text.Html
+import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.gulden.jniunifiedbackend.*
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.vision.barcode.Barcode
+import com.gulden.barcodereader.BarcodeCaptureActivity
+import com.gulden.jniunifiedbackend.AddressRecord
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.UriRecipient
+import com.gulden.jniunifiedbackend.UriRecord
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.SendCoinsFragment
+import com.gulden.unity_wallet.ellipsizeString
 import com.gulden.unity_wallet.ui.AddressBookAdapter
-import com.gulden.uriRecipient
+import com.gulden.unity_wallet.uriRecipient
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
-import android.text.Html
-import android.text.SpannableString
-import com.gulden.ellipsizeString
-import com.gulden.unity_wallet.Authentication
-import org.jetbrains.anko.sdk27.coroutines.onClick
 
 
 class SendFragment : Fragment()
@@ -56,6 +60,11 @@ class SendFragment : Fragment()
             if (recipient != null) {
                 SendCoinsFragment.newInstance(recipient).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
             }
+        }
+
+        qrButton.setOnClickListener {
+            val intent = Intent(context, BarcodeCaptureActivity::class.java)
+            startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
         }
 
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
@@ -143,5 +152,26 @@ class SendFragment : Fragment()
                 clipboardButton.isEnabled = false
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == BARCODE_READER_REQUEST_CODE) {
+            if (resultCode == CommonStatusCodes.SUCCESS)
+            {
+                if (data != null) {
+                    val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
+                    val recipient = uriRecipient(barcode.displayValue)
+                    if (recipient.valid) {
+                        SendCoinsFragment.newInstance(recipient).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                    }
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    companion object {
+        private const val BARCODE_READER_REQUEST_CODE = 1
     }
 }

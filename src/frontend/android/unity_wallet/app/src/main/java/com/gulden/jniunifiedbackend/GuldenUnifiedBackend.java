@@ -25,10 +25,22 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.InitWalletFromRecoveryPhrase(phrase);
     }
 
+    /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
+    public static boolean ContineWalletFromRecoveryPhrase(String phrase)
+    {
+        return CppProxy.ContineWalletFromRecoveryPhrase(phrase);
+    }
+
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     public static boolean InitWalletLinkedFromURI(String linkedUri)
     {
         return CppProxy.InitWalletLinkedFromURI(linkedUri);
+    }
+
+    /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
+    public static boolean ContinueWalletLinkedFromURI(String linkedUri)
+    {
+        return CppProxy.ContinueWalletLinkedFromURI(linkedUri);
     }
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
@@ -112,6 +124,18 @@ public abstract class GuldenUnifiedBackend {
     public static String GetRecoveryPhrase()
     {
         return CppProxy.GetRecoveryPhrase();
+    }
+
+    /** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
+    public static boolean IsMnemonicWallet()
+    {
+        return CppProxy.IsMnemonicWallet();
+    }
+
+    /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
+    public static boolean IsMnemonicCorrect(String phrase)
+    {
+        return CppProxy.IsMnemonicCorrect(phrase);
     }
 
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
@@ -254,7 +278,11 @@ public abstract class GuldenUnifiedBackend {
 
         public static native boolean InitWalletFromRecoveryPhrase(String phrase);
 
+        public static native boolean ContineWalletFromRecoveryPhrase(String phrase);
+
         public static native boolean InitWalletLinkedFromURI(String linkedUri);
+
+        public static native boolean ContinueWalletLinkedFromURI(String linkedUri);
 
         public static native boolean InitWalletFromAndroidLegacyProtoWallet(String walletFile, String password);
 
@@ -279,6 +307,10 @@ public abstract class GuldenUnifiedBackend {
         public static native String GetReceiveAddress();
 
         public static native String GetRecoveryPhrase();
+
+        public static native boolean IsMnemonicWallet();
+
+        public static native boolean IsMnemonicCorrect(String phrase);
 
         public static native boolean HaveUnconfirmedFunds();
 

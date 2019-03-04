@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -15,6 +15,7 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.WelcomeActivity
@@ -31,6 +32,14 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
+        if (GuldenUnifiedBackend.IsMnemonicWallet()) {
+            preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
+            preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
+        }
+        else {
+            preferenceScreen.removePreferenceRecursively("recovery_view_preference")
+            preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
+        }
     }
 
     override fun onResume()
@@ -44,11 +53,6 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
     {
         when (preference?.key){
-            "recovery_preference" ->
-            {
-                val phraseView : Preference = findPreference("recovery_view_preference")
-                phraseView.title = GuldenUnifiedBackend.GetRecoveryPhrase()
-            }
             "preference_link_wallet" ->
             {
                 val intent = Intent(context, BarcodeCaptureActivity::class.java)
@@ -70,12 +74,19 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
                     negativeButton(getString(R.string.cancel_btn)) {}
                 }.show()
             }
-            "preference_remove_wallet" ->
+            "preference_remove_wallet", "preference_unlink_wallet" ->
             {
-                GuldenUnifiedBackend.EraseWalletSeedsAndAccounts()
-                val intent = Intent(activity, WelcomeActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                startActivity(intent)
+                val msg = "%s%s".format(
+                        if (GuldenUnifiedBackend.IsMnemonicWallet())
+                            getString(R.string.remove_wallet_auth_desc_recovery_warn)
+                        else "",
+                        getString(R.string.remove_wallet_auth_desc))
+                Authentication.instance.authenticate(activity!!, getString(R.string.remove_wallet_auth_title), msg) {
+                    GuldenUnifiedBackend.EraseWalletSeedsAndAccounts()
+                    val intent = Intent(activity, WelcomeActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    startActivity(intent)
+                }
             }
             "preference_local_currency" ->
             {

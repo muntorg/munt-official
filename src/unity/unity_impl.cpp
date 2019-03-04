@@ -294,15 +294,51 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
     return true;
 }
 
-bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
+bool ValidateAndSplitRecoveryPhrase(const std::string & phrase, SecureString& mnemonic, int& birthNumber)
 {
     if (phrase.length() < 16)
         return false;
 
+    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), mnemonic, birthNumber);
+    return checkMnemonic(mnemonic) && (birthNumber == 0 || Base10ChecksumDecode(birthNumber, nullptr));
+}
+
+bool GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(const std::string& phrase)
+{
     SecureString phraseOnly;
-    int phraseBirthNumber = 0;
-    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
-    return checkMnemonic(phraseOnly) && (phraseBirthNumber == 0 || Base10ChecksumDecode(phraseBirthNumber, nullptr));
+    int phraseBirthNumber;
+
+    if (!ValidateAndSplitRecoveryPhrase(phrase, phraseOnly, phraseBirthNumber))
+        return false;
+
+    if (!pactiveWallet)
+    {
+        LogPrintf("ContineWalletFromRecoveryPhrase: No active wallet");
+        return false;
+    }
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
+    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    GuldenAppManager::gApp->isRecovery = true;
+
+    CWallet::CreateSeedAndAccountFromPhrase(pactiveWallet);
+
+    // Allow update of balance for deleted accounts/transactions
+    LogPrintf("%s: Update balance and rescan", __func__);
+    notifyBalanceChanged(pactiveWallet);
+
+    // Rescan for transactions on the linked account
+    DoRescan();
+
+    return true;
+}
+
+bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
+{
+    SecureString dummyMnemonic;
+    int dummyNumber;
+    return ValidateAndSplitRecoveryPhrase(phrase, dummyMnemonic, dummyNumber);
 }
 
 std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
@@ -331,6 +367,37 @@ bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri
     return true;
 }
 
+bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri)
+{
+    if (!pactiveWallet)
+    {
+        LogPrintf("%s: No active wallet", __func__);
+        return false;
+    }
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    CGuldenSecretExt<CExtKey> linkedKey;
+    if (!linkedKey.fromURIString(linked_uri))
+    {
+        LogPrintf("%s: Failed to parse link URI", __func__);
+        return false;
+    }
+
+    GuldenAppManager::gApp->setLinkKey(linkedKey);
+    GuldenAppManager::gApp->isLink = true;
+
+    CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
+
+    // Allow update of balance for deleted accounts/transactions
+    LogPrintf("%s: Update balance and rescan", __func__);
+    notifyBalanceChanged(pactiveWallet);
+
+    // Rescan for transactions on the linked account
+    DoRescan();
+
+    return true;
+}
 
 bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri)
 {
@@ -396,21 +463,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         return false;
     }
 
-    // Create a new linked account as the primary account
-    pactiveWallet->nTimeFirstKey = linkedKey.getCreationTime();
-    LogPrintf("ReplaceWalletLinkedFromURI: Creating new linked primary account, birth time [%d]\n", pactiveWallet->nTimeFirstKey);
-    pactiveWallet->activeAccount = pactiveWallet->CreateSeedlessHDAccount("My account", linkedKey, AccountState::Normal, AccountType::Mobi);
-
-    // Write the primary account into wallet file
-    {
-        CWalletDB walletdb(*pactiveWallet->dbw);
-        if (!walletdb.WriteAccount(getUUIDAsString(pactiveWallet->activeAccount->getUUID()), pactiveWallet->activeAccount))
-        {
-            LogPrintf("ReplaceWalletLinkedFromURI: Failed to write new linked account");
-            return false;
-        }
-        walletdb.WritePrimaryAccount(pactiveWallet->activeAccount);
-    }
+    CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
 
     for (auto& [pWalletTx, pReserveKey] : transactionsToCommit)
     {
@@ -587,6 +640,41 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
         }
     }
     return "";
+}
+
+bool GuldenUnifiedBackend::IsMnemonicWallet()
+{
+    if (!pactiveWallet || !pactiveWallet->activeAccount)
+        throw std::runtime_error(_("No active internal wallet."));
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    for (const auto& seedIter : pactiveWallet->mapSeeds)
+    {
+        if (!seedIter.second->getMnemonic().empty())
+            return true;
+    }
+    return false;
+}
+
+bool GuldenUnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
+{
+    if (!pactiveWallet || !pactiveWallet->activeAccount)
+        throw std::runtime_error(_("No active internal wallet."));
+
+    SecureString mnemonicPhrase;
+    int birthNumber;
+
+    GuldenAppManager::splitRecoveryPhraseAndBirth(SecureString(phrase), mnemonicPhrase, birthNumber);
+
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    for (const auto& seedIter : pactiveWallet->mapSeeds)
+    {
+        if (mnemonicPhrase == seedIter.second->getMnemonic())
+            return true;
+    }
+    return false;
 }
 
 bool GuldenUnifiedBackend::HaveUnconfirmedFunds()
