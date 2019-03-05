@@ -242,7 +242,8 @@ void AccountSettingsDialog::deleteAccount()
             int result = d->exec();
             if(result == QDialog::Accepted)
             {
-                pactiveWallet->deleteAccount(activeAccount, shouldPurge);
+                CWalletDB walletdb(*pactiveWallet->dbw);
+                pactiveWallet->deleteAccount(walletdb, activeAccount, shouldPurge);
             }
         }
     }

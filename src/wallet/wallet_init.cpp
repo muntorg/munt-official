@@ -717,6 +717,33 @@ void CWallet::ResetSPV()
     }
 }
 
+void CWallet::EraseWalletSeedsAndAccounts()
+{
+    LOCK2(cs_main, cs_wallet);
+
+    CWalletDB walletdb(*pactiveWallet->dbw);
+
+    // Purge all current accounts/seeds from the system
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge seeds");
+    while (!pactiveWallet->mapSeeds.empty())
+    {
+        LogPrintf("EraseWalletSeedsAndAccounts: purge seed");
+        pactiveWallet->DeleteSeed(walletdb, pactiveWallet->mapSeeds.begin()->second, true);
+    }
+    LogPrintf("EraseWalletSeedsAndAccounts: End purge seeds");
+
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge standalone accounts");
+    while (!pactiveWallet->mapAccounts.empty())
+    {
+        LogPrintf("EraseWalletSeedsAndAccounts: purge account");
+        pactiveWallet->deleteAccount(walletdb, pactiveWallet->mapAccounts.begin()->second, true);
+    }
+    LogPrintf("EraseWalletSeedsAndAccounts: End purge standalone accounts");
+
+    walletdb.ErasePrimaryAccount();
+    walletdb.EraseLastSPVBlockProcessed();
+}
+
 void CWallet::ResetUnifiedSPVProgressNotification()
 {
     // TODO refactor spv scanning out of wallet and into validation/net at some point

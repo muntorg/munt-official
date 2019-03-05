@@ -491,27 +491,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 
 bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
 {
-    // Purge all current accounts/seeds from the system
-    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge seeds");
-    while (!pactiveWallet->mapSeeds.empty())
-    {
-        LogPrintf("EraseWalletSeedsAndAccounts: purge seed");
-        pactiveWallet->DeleteSeed(pactiveWallet->mapSeeds.begin()->second, true);
-    }
-    LogPrintf("EraseWalletSeedsAndAccounts: End purge seeds");
-
-    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge standalone accounts");
-    while (!pactiveWallet->mapAccounts.empty())
-    {
-        LogPrintf("EraseWalletSeedsAndAccounts: purge account");
-        pactiveWallet->deleteAccount(pactiveWallet->mapAccounts.begin()->second, true);
-    }
-    LogPrintf("EraseWalletSeedsAndAccounts: End purge standalone accounts");
-
-    CWalletDB walletdb(*pactiveWallet->dbw);
-    walletdb.ErasePrimaryAccount();
-    pactiveWallet->GetDBHandle().Flush(false);
-
+    pactiveWallet->EraseWalletSeedsAndAccounts();
     return true;
 }
 

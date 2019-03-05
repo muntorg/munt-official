@@ -249,7 +249,7 @@ public:
 
     void changeAccountName(CAccount* account, const std::string& newName, bool notify=true);
     void addAccount(CAccount* account, const std::string& newName, bool bMakeActive=true);
-    void deleteAccount(CAccount* account, bool shouldPurge=false);
+    void deleteAccount(CWalletDB& walletDB, CAccount* account, bool shouldPurge=false);
 
     CAccountHD* GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive=true);
 
@@ -277,9 +277,9 @@ public:
     void setAnyActiveAccount();
 
     CAccount* getActiveAccount();
-    void setActiveSeed(CHDSeed* newActiveSeed);
+    void setActiveSeed(CWalletDB& walletdb, CHDSeed* newActiveSeed);
     CHDSeed* GenerateHDSeed(CHDSeed::SeedType);
-    void DeleteSeed(CHDSeed* deleteSeed, bool shouldPurgeAccounts);
+    void DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool shouldPurgeAccounts);
     CHDSeed* ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type);
     CHDSeed* ImportHDSeedFromPubkey(SecureString pubKeyString);
     CHDSeed* getActiveSeed();

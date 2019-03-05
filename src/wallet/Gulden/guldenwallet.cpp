@@ -438,7 +438,7 @@ void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newN
         NotifyAccountNameChanged(static_cast<CWallet*>(this), account);
 }
 
-void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
+void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldPurge)
 {
     LogPrintf("CGuldenWallet::deleteAccount");
     //fixme: (2.1) - If we are trying to delete the last remaining account we should return false
@@ -456,7 +456,6 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
         LOCK2(cs_main, cs_wallet);
 
         LogPrintf("CGuldenWallet::deleteAccount - wipe account from disk");
-        CWalletDB db(*dbw);
         if (!db.EraseAccount(getUUIDAsString(account->getUUID()), account))
         {
             throw std::runtime_error("erasing account failed");
@@ -570,7 +569,6 @@ void CGuldenWallet::deleteAccount(CAccount* account, bool shouldPurge)
         {
             LOCK(cs_wallet);
 
-            CWalletDB db(*dbw);
             account->setLabel(newLabel, &db);
             account->m_State = AccountState::Deleted;
             mapAccountLabels[account->getUUID()] = newLabel;
@@ -637,12 +635,11 @@ CAccount* CGuldenWallet::getActiveAccount()
     return activeAccount;
 }
 
-void CGuldenWallet::setActiveSeed(CHDSeed* newActiveSeed)
+void CGuldenWallet::setActiveSeed(CWalletDB& walletdb, CHDSeed* newActiveSeed)
 {
     if (activeSeed != newActiveSeed)
     {
         activeSeed = newActiveSeed;
-        CWalletDB walletdb(*dbw);
         if (activeSeed)
             walletdb.WritePrimarySeed(*activeSeed);
         else
@@ -679,11 +676,11 @@ CHDSeed* CGuldenWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
     return newSeed;
 }
 
-void CGuldenWallet::DeleteSeed(CHDSeed* deleteSeed, bool shouldPurgeAccounts)
+void CGuldenWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool shouldPurgeAccounts)
 {
     LogPrintf("CGuldenWallet::DeleteSeed");
     mapSeeds.erase(mapSeeds.find(deleteSeed->getUUID()));
-    if (!CWalletDB(*dbw).DeleteHDSeed(*deleteSeed))
+    if (!walletDB.DeleteHDSeed(*deleteSeed))
     {
         throw std::runtime_error("Deleting seed failed");
     }
@@ -695,7 +692,7 @@ void CGuldenWallet::DeleteSeed(CHDSeed* deleteSeed, bool shouldPurgeAccounts)
         if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
         {
             //fixme: (Post-2.1) check balance
-            deleteAccount(accountPair.second, shouldPurgeAccounts);
+            deleteAccount(walletDB, accountPair.second, shouldPurgeAccounts);
         }
     }
     LogPrintf("CGuldenWallet::DeleteSeed - done deleting accounts");
@@ -706,12 +703,12 @@ void CGuldenWallet::DeleteSeed(CHDSeed* deleteSeed, bool shouldPurgeAccounts)
         if (mapSeeds.empty())
         {
             LogPrintf("CGuldenWallet::DeleteSeed - set NULL active seed");
-            setActiveSeed(NULL);
+            setActiveSeed(walletDB, NULL);
         }
         else
         {
             LogPrintf("CGuldenWallet::DeleteSeed - setting first mapped seed as active");
-            setActiveSeed(mapSeeds.begin()->second);
+            setActiveSeed(walletDB, mapSeeds.begin()->second);
         }
     }
 

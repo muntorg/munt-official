@@ -926,6 +926,8 @@ public:
     void StartSPV();
     void ResetSPV();
 
+    void EraseWalletSeedsAndAccounts();
+
 private:
     int nTransactionScanProgressPercent;
 

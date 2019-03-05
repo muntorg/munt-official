@@ -778,7 +778,8 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
         }
     }
 
-    pwallet->deleteAccount(account, forcePurge);
+    CWalletDB walletdb(*pwallet->dbw);
+    pwallet->deleteAccount(walletdb, account, forcePurge);
     return true;
 }
 
@@ -1714,7 +1715,8 @@ static UniValue setactiveseed(const JSONRPCRequest& request)
 
     CHDSeed* seed = SeedFromValue(pwallet, request.params[0], false);
 
-    pwallet->setActiveSeed(seed);
+    CWalletDB walletdb(*pwallet->dbw);
+    pwallet->setActiveSeed(walletdb, seed);
     return getUUIDAsString(seed->getUUID());
 }
 
@@ -1806,7 +1808,8 @@ static UniValue deleteseed(const JSONRPCRequest& request)
     if (request.params.size() > 1)
         shouldPurgeAccounts = request.params[1].get_bool();
 
-    pwallet->DeleteSeed(seed, shouldPurgeAccounts);
+    CWalletDB walletdb(*pwallet->dbw);
+    pwallet->DeleteSeed(walletdb, seed, shouldPurgeAccounts);
 
     return true;
 }
