@@ -837,7 +837,8 @@ QString WalletModel::getAccountLabel(const boost::uuids::uuid& uuid)
 
 void WalletModel::setActiveAccount( CAccount* account )
 {
-    wallet->setActiveAccount(account);
+    CWalletDB walletdb(*wallet->dbw);
+    wallet->setActiveAccount(walletdb, account);
 }
 
 CAccount* WalletModel::getActiveAccount()

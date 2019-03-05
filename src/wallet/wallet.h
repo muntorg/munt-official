@@ -805,7 +805,7 @@ public:
 
     DBErrors LoadWallet(WalletLoadState& nExtraLoadState);
     DBErrors ZapWalletTx(std::vector<CWalletTx>& vWtx);
-    DBErrors ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut);
+    DBErrors ZapSelectTx(CWalletDB& walletdb, std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut);
 
     bool SetAddressBook(const std::string& address, const std::string& strName, const std::string& purpose);
 

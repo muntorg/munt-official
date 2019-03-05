@@ -243,8 +243,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             if (GuldenAppManager::gApp->getRecoveryPhrase().size() == 0)
             {
                 //Work around an issue with "non HD" wallets from older versions where active account may not be set in the wallet.
-                if (!walletInstance->mapAccounts.empty())
-                    walletInstance->setActiveAccount(walletInstance->mapAccounts.begin()->second);
+                if (!walletInstance->mapAccounts.empty()) {
+                    CWalletDB walletdb(*walletInstance->dbw);
+                    walletInstance->setActiveAccount(walletdb, walletInstance->mapAccounts.begin()->second);
+                }
                 throw std::runtime_error("Invalid seed mnemonic");
             }
 
@@ -422,8 +424,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         //Clean up a slight issue in 1.6.0 -> 1.6.3 wallets where a "usehd=0" account was created but no active account set.
         if (!walletInstance->activeAccount)
         {
-            if (!walletInstance->mapAccounts.empty())
-                walletInstance->setActiveAccount(walletInstance->mapAccounts.begin()->second);
+            if (!walletInstance->mapAccounts.empty()) {
+                CWalletDB walletdb(*walletInstance->dbw);
+                walletInstance->setActiveAccount(walletdb, walletInstance->mapAccounts.begin()->second);
+            }
             else
                 throw std::runtime_error("Wallet contains no accounts, but is marked as upgraded.");
         }

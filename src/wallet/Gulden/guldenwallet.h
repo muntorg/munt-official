@@ -271,10 +271,10 @@ public:
     //! Create an HD account directly from a key and not assosciated with any seed.
     CAccountHD* CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type);
 
-    void setActiveAccount(CAccount* newActiveAccount);
+    void setActiveAccount(CWalletDB& walletdb, CAccount* newActiveAccount);
 
     //! Find the first account that is not deleted/shadow etc. and set it as active
-    void setAnyActiveAccount();
+    void setAnyActiveAccount(CWalletDB& walletdb);
 
     CAccount* getActiveAccount();
     void setActiveSeed(CWalletDB& walletdb, CHDSeed* newActiveSeed);

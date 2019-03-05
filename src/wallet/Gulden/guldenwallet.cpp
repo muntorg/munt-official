@@ -533,7 +533,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
                     }
                 }
             }
-            pactiveWallet->ZapSelectTx(hashesToErase, hashesErased);
+            pactiveWallet->ZapSelectTx(db, hashesToErase, hashesErased);
         }
 
         LogPrintf("CGuldenWallet::deleteAccount - wipe account from memory");
@@ -545,7 +545,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
         {
             if (mapAccounts.size() > 0)
             {
-                setAnyActiveAccount();
+                setAnyActiveAccount(db);
             }
         }
 
@@ -600,31 +600,31 @@ void CGuldenWallet::addAccount(CAccount* account, const std::string& newName, bo
     {
         if (bMakeActive)
         {
-            setActiveAccount(account);
+            CWalletDB walletdb(*dbw);
+            setActiveAccount(walletdb, account);
         }
     }
 }
 
-void CGuldenWallet::setActiveAccount(CAccount* newActiveAccount)
+void CGuldenWallet::setActiveAccount(CWalletDB& walletdb, CAccount* newActiveAccount)
 {
     if (activeAccount != newActiveAccount)
     {
         activeAccount = newActiveAccount;
-        CWalletDB walletdb(*dbw);
         walletdb.WritePrimaryAccount(activeAccount);
 
         NotifyActiveAccountChanged(static_cast<CWallet*>(this), newActiveAccount);
     }
 }
 
-void CGuldenWallet::setAnyActiveAccount()
+void CGuldenWallet::setAnyActiveAccount(CWalletDB& walletdb)
 {
     for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
     {
         (unused)accountUUID;
         if (account->m_State == AccountState::Normal)
         {
-            setActiveAccount(account);
+            setActiveAccount(walletdb, account);
             return;
         }
     }

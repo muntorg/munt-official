@@ -1603,7 +1603,8 @@ static UniValue setactiveaccount(const JSONRPCRequest& request)
 
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
 
-    pwallet->setActiveAccount(account);
+    CWalletDB walletdb(*pwallet->dbw);
+    pwallet->setActiveAccount(walletdb, account);
     return getUUIDAsString(account->getUUID());
 }
 

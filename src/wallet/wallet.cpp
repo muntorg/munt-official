@@ -1110,8 +1110,10 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                                 potentialWitnessAccount->SetWarningState(pIndex ? AccountStatus::Default : AccountStatus::WitnessPending);
                                 static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, potentialWitnessAccount);
                                 // Set active so that witness account gains the focus immediately after funding.
-                                if (!pIndex)
-                                    pactiveWallet->setActiveAccount(potentialWitnessAccount);
+                                if (!pIndex) {
+                                    CWalletDB walletdb(*pactiveWallet->dbw);
+                                    pactiveWallet->setActiveAccount(walletdb, potentialWitnessAccount);
+                                }
                             }
                         }
                     }
@@ -1981,11 +1983,11 @@ CAmount CWallet::GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarge
     return nFeeNeeded;
 }
 
-DBErrors CWallet::ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut)
+DBErrors CWallet::ZapSelectTx(CWalletDB& walletdb, std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut)
 {
     AssertLockHeld(cs_wallet); // mapWallet
     //vchDefaultKey = CPubKey();//GULDEN - no default key.
-    DBErrors nZapSelectTxRet = CWalletDB(*dbw,"cr+").ZapSelectTx(vHashIn, vHashOut);
+    DBErrors nZapSelectTxRet = walletdb.ZapSelectTx(vHashIn, vHashOut);
     for (uint256 hash : vHashOut)
         mapWallet.erase(hash);
 

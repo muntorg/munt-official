@@ -327,7 +327,8 @@ void GUI::requestFundWitness(CAccount* funderAccount)
     LogPrint(BCLog::QT, "GUI::requestFundWitness\n");
 
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
-    pactiveWallet->setActiveAccount(funderAccount);
+    CWalletDB walletdb(*pactiveWallet->dbw);
+    pactiveWallet->setActiveAccount(walletdb, funderAccount);
     gotoSendCoinsPage();
     walletFrame->currentWalletView()->sendCoinsPage->gotoWitnessTab(targetWitnessAccount);
 }

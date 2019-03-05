@@ -397,7 +397,8 @@ UniValue removeprunedfunds(const JSONRPCRequest& request)
     vHash.push_back(hash);
     std::vector<uint256> vHashOut;
 
-    if (pwallet->ZapSelectTx(vHash, vHashOut) != DB_LOAD_OK) {
+    CWalletDB walletdb(*pwallet->dbw);
+    if (pwallet->ZapSelectTx(walletdb, vHash, vHashOut) != DB_LOAD_OK) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Could not properly delete the transaction.");
     }
 
