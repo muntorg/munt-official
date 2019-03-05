@@ -147,13 +147,26 @@ int InitUnity()
         }
 
         std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
-        if (!fs::exists(GetDataDir() / walletFile))
+        bool havePrimary = false;
+        if (fs::exists(GetDataDir() / walletFile))
         {
-            handleInitWithoutExistingWallet();
+            CWalletDBWrapper dbw(&bitdb, walletFile);
+            CDB db(dbw);
+            std::string primaryUUID;
+            havePrimary = db.Read(std::string("primaryaccount"), primaryUUID);
+            if (havePrimary)
+                fprintf(stderr, "Existing wallet file has primary account %s", primaryUUID.c_str());
+            else
+                fprintf(stderr, "Wallet file exists but hase no primary account (erased)");
+        }
+
+        if (havePrimary)
+        {
+            handleInitWithExistingWallet();
         }
         else
         {
-            handleInitWithExistingWallet();
+            handleInitWithoutExistingWallet();
         }
     }
     catch (const std::exception& e)
