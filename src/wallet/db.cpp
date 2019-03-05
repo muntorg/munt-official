@@ -145,7 +145,7 @@ void CDBEnv::MakeMock()
 CDBEnv::VerifyResult CDBEnv::Verify(const std::string& strFile, recoverFunc_type recoverFunc, std::string& out_backup_filename)
 {
     LOCK(cs_db);
-    assert(mapFileUseCount.count(strFile) == 0);
+    assert(mapFileUseCount.count(strFile) == 0 || mapFileUseCount[strFile]== 0);
 
     Db db(dbenv, 0);
     int result = db.verify(strFile.c_str(), NULL, NULL, 0);
