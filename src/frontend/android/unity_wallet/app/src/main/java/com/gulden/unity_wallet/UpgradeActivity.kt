@@ -62,11 +62,11 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
         return true
     }
 
-    fun onUpgradeWithPassword(view : View, password : String)
+    fun onUpgradeWithPassword(view : View, oldPassword : String)
     {
         thread(true)
         {
-            val result = GuldenUnifiedBackend.isValidAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, password)
+            val result = GuldenUnifiedBackend.isValidAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword)
             if (result == LegacyWalletResult.PASSWORD_INVALID)
             {
                 this.runOnUiThread { view.longSnackbar(getString(R.string.upgrade_wrong_password)) }
@@ -77,7 +77,9 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
             }
             else
             {
-                GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, password);
+                //TODO: Prompt here for password
+                var newPassword = "123456"
+                GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword);
                 this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
             }
         }
@@ -116,7 +118,9 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
                 }
                 LegacyWalletResult.VALID ->
                 {
-                    GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, "");
+                    //TODO: Prompt here for password
+                    var newPassword = "123456"
+                    GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, "", newPassword);
                 }
                 else ->
                 {
