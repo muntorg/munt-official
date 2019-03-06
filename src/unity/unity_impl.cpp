@@ -637,12 +637,7 @@ bool GuldenUnifiedBackend::IsMnemonicWallet()
 
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    for (const auto& seedIter : pactiveWallet->mapSeeds)
-    {
-        if (!seedIter.second->getMnemonic().empty())
-            return true;
-    }
-    return false;
+    return pactiveWallet->activeSeed != nullptr;
 }
 
 bool GuldenUnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
