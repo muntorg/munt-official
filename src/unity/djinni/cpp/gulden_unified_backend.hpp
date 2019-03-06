@@ -33,22 +33,22 @@ public:
     static int32_t InitUnityLib(const std::string & data_dir, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend> & signals);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
-    static bool InitWalletFromRecoveryPhrase(const std::string & phrase);
+    static bool InitWalletFromRecoveryPhrase(const std::string & phrase, const std::string & password);
 
     /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
-    static bool ContineWalletFromRecoveryPhrase(const std::string & phrase);
+    static bool ContinueWalletFromRecoveryPhrase(const std::string & phrase, const std::string & password);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
-    static bool InitWalletLinkedFromURI(const std::string & linked_uri);
+    static bool InitWalletLinkedFromURI(const std::string & linked_uri, const std::string & password);
 
     /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
-    static bool ContinueWalletLinkedFromURI(const std::string & linked_uri);
+    static bool ContinueWalletLinkedFromURI(const std::string & linked_uri, const std::string & password);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
-    static bool InitWalletFromAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password);
+    static bool InitWalletFromAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & old_password, const std::string & new_password);
 
     /** Check if a file is a valid legacy proto wallet */
-    static LegacyWalletResult isValidAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password);
+    static LegacyWalletResult isValidAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & old_password);
 
     /** Check link URI for validity */
     static bool IsValidLinkURI(const std::string & phrase);
@@ -92,6 +92,12 @@ public:
 
     /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
     static bool IsMnemonicCorrect(const std::string & phrase);
+
+    /** Unlock wallet */
+    static bool UnlockWallet(const std::string & password);
+
+    /** Forcefull lock wallet again */
+    static bool LockWallet();
 
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
     static bool HaveUnconfirmedFunds();

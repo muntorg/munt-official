@@ -27,24 +27,29 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
                 signals:(nullable id<DBGuldenUnifiedFrontend>)signals;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
-+ (BOOL)InitWalletFromRecoveryPhrase:(nonnull NSString *)phrase;
++ (BOOL)InitWalletFromRecoveryPhrase:(nonnull NSString *)phrase
+                            password:(nonnull NSString *)password;
 
 /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
-+ (BOOL)ContineWalletFromRecoveryPhrase:(nonnull NSString *)phrase;
++ (BOOL)ContinueWalletFromRecoveryPhrase:(nonnull NSString *)phrase
+                                password:(nonnull NSString *)password;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
-+ (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri;
++ (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri
+                       password:(nonnull NSString *)password;
 
 /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
-+ (BOOL)ContinueWalletLinkedFromURI:(nonnull NSString *)linkedUri;
++ (BOOL)ContinueWalletLinkedFromURI:(nonnull NSString *)linkedUri
+                           password:(nonnull NSString *)password;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletFromAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
-                                      password:(nonnull NSString *)password;
+                                   oldPassword:(nonnull NSString *)oldPassword
+                                   newPassword:(nonnull NSString *)newPassword;
 
 /** Check if a file is a valid legacy proto wallet */
 + (DBLegacyWalletResult)isValidAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
-                                               password:(nonnull NSString *)password;
+                                            oldPassword:(nonnull NSString *)oldPassword;
 
 /** Check link URI for validity */
 + (BOOL)IsValidLinkURI:(nonnull NSString *)phrase;
@@ -90,6 +95,12 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 
 /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
 + (BOOL)IsMnemonicCorrect:(nonnull NSString *)phrase;
+
+/** Unlock wallet */
++ (BOOL)UnlockWallet:(nonnull NSString *)password;
+
+/** Forcefull lock wallet again */
++ (BOOL)LockWallet;
 
 /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
 + (BOOL)HaveUnconfirmedFunds;

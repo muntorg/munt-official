@@ -268,7 +268,7 @@ void handleInitWithoutExistingWallet()
     signalHandler->notifyInitWithoutExistingWallet();
 }
 
-bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase)
+bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
 {
     // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement
     if (phrase.length() < 16)
@@ -288,6 +288,7 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
     //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
     GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
     GuldenAppManager::gApp->isRecovery = true;
     GuldenAppManager::gApp->initialize();
 
@@ -303,7 +304,7 @@ bool ValidateAndSplitRecoveryPhrase(const std::string & phrase, SecureString& mn
     return checkMnemonic(mnemonic) && (birthNumber == 0 || Base10ChecksumDecode(birthNumber, nullptr));
 }
 
-bool GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(const std::string& phrase)
+bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
 {
     SecureString phraseOnly;
     int phraseBirthNumber;
@@ -320,6 +321,7 @@ bool GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(const std::string& ph
     LOCK2(cs_main, pactiveWallet->cs_wallet);
     GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
     GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
     GuldenAppManager::gApp->isRecovery = true;
 
     CWallet::CreateSeedAndAccountFromPhrase(pactiveWallet);
@@ -353,7 +355,7 @@ std::string GuldenUnifiedBackend::ComposeRecoveryPhrase(const std::string & mnem
     return std::string(GuldenAppManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
 }
 
-bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri)
+bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
 {
     CGuldenSecretExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
@@ -362,12 +364,13 @@ bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri
     }
     GuldenAppManager::gApp->setLinkKey(linkedKey);
     GuldenAppManager::gApp->isLink = true;
+    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
     GuldenAppManager::gApp->initialize();
 
     return true;
 }
 
-bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri)
+bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri, const std::string& password)
 {
     if (!pactiveWallet)
     {
@@ -385,6 +388,7 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
     }
 
     GuldenAppManager::gApp->setLinkKey(linkedKey);
+    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
     GuldenAppManager::gApp->isLink = true;
 
     CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
@@ -659,6 +663,42 @@ bool GuldenUnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
             return true;
     }
     return false;
+}
+
+
+//fixme: (2.1) HIGH - take a timeout value and always lock again after timeout
+bool GuldenUnifiedBackend::UnlockWallet(const std::string& password)
+{
+    if (!pactiveWallet)
+    {
+        LogPrintf("UnlockWallet: No active wallet");
+        return false;
+    }
+
+    if (!dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsCrypted())
+    {
+        LogPrintf("UnlockWallet: Wallet not encrypted");
+        return false;
+    }
+
+    if (!dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsLocked())
+    {
+        LogPrintf("UnlockWallet: Wallet not locked");
+        return true;
+    }
+
+    return pactiveWallet->Unlock(password.c_str());
+}
+
+bool GuldenUnifiedBackend::LockWallet()
+{
+    if (!pactiveWallet)
+        return false;
+
+    if (dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsLocked())
+        return true;
+
+    return dynamic_cast<CGuldenWallet*>(pactiveWallet)->Lock();
 }
 
 bool GuldenUnifiedBackend::HaveUnconfirmedFunds()

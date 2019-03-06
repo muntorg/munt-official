@@ -103,22 +103,22 @@ gulden_unified_backend = interface +c {
     static InitUnityLib(data_dir : string, testnet : bool, signals : gulden_unified_frontend): i32;
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
-    static InitWalletFromRecoveryPhrase(phrase : string): bool;
+    static InitWalletFromRecoveryPhrase(phrase : string, password : string): bool;
 
     # Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts
-    static ContineWalletFromRecoveryPhrase(phrase : string): bool;
+    static ContinueWalletFromRecoveryPhrase(phrase : string, password : string): bool;
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
-    static InitWalletLinkedFromURI(linked_uri : string): bool;
+    static InitWalletLinkedFromURI(linked_uri : string, password : string): bool;
 
     # Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts
-    static ContinueWalletLinkedFromURI(linked_uri : string): bool;
+    static ContinueWalletLinkedFromURI(linked_uri : string, password : string): bool;
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
-    static InitWalletFromAndroidLegacyProtoWallet(wallet_file : string, password : string): bool;
+    static InitWalletFromAndroidLegacyProtoWallet(wallet_file : string, old_password : string, new_password : string): bool;
 
     # Check if a file is a valid legacy proto wallet
-    static isValidAndroidLegacyProtoWallet(wallet_file : string, password : string): legacy_wallet_result;
+    static isValidAndroidLegacyProtoWallet(wallet_file : string, old_password : string): legacy_wallet_result;
 
     # Check link URI for validity
     static IsValidLinkURI(phrase: string): bool;
@@ -158,6 +158,12 @@ gulden_unified_backend = interface +c {
 
     # Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time)
     static IsMnemonicCorrect(phrase: string): bool;
+
+    # Unlock wallet
+    static UnlockWallet(password: string): bool;
+
+    # Forcefull lock wallet again
+    static LockWallet(): bool;
 
     # Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait.
     static HaveUnconfirmedFunds(): bool;

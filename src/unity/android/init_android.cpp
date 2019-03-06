@@ -51,26 +51,26 @@ bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler)
 }
 
 
-bool GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string & wallet_file, const std::string & password)
+bool GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword, const std::string& newPassword)
 {
-    android_wallet wallet = ParseAndroidProtoWallet(wallet_file, password);
+    android_wallet wallet = ParseAndroidProtoWallet(walletFile, oldPassword);
     if (wallet.validWalletProto && wallet.validWallet)
     {
         if (wallet.walletSeedMnemonic.length() > 0)
         {
             if (wallet.walletSeedMnemonic.find("-") != std::string::npos && wallet.walletSeedMnemonic.find(":") != std::string::npos)
             {
-                return InitWalletLinkedFromURI("guldensync:"+wallet.walletSeedMnemonic+";unused_payout_address");
+                return InitWalletLinkedFromURI("guldensync:"+wallet.walletSeedMnemonic+";unused_payout_address", newPassword.c_str());
             }
             else
             {
                 if (wallet.walletBirth > 0)
                 {
-                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth));
+                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth), newPassword.c_str());
                 }
                 else
                 {
-                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth));
+                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth), newPassword.c_str());
                 }
             }
         }
@@ -78,11 +78,11 @@ bool GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::str
     return false;
 }
 
-LegacyWalletResult GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(const std::string& wallet_file, const std::string& password)
+LegacyWalletResult GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword)
 {
-    LogPrintf("Checking for valid legacy wallet proto [%s]\n", wallet_file.c_str());
+    LogPrintf("Checking for valid legacy wallet proto [%s]\n", walletFile.c_str());
 
-    android_wallet wallet = ParseAndroidProtoWallet(wallet_file, password);
+    android_wallet wallet = ParseAndroidProtoWallet(walletFile, oldPassword);
 
     if (wallet.validWalletProto)
     {
@@ -92,7 +92,7 @@ LegacyWalletResult GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(const s
         {
             LogPrintf("Proto is encrypted\n");
 
-            if ( password.length() == 0 )
+            if ( oldPassword.length() == 0 )
             {
                 LogPrintf("Password required\n");
                 return LegacyWalletResult::ENCRYPTED_PASSWORD_REQUIRED;

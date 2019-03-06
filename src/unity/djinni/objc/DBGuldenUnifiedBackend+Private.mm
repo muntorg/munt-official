@@ -53,48 +53,58 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)InitWalletFromRecoveryPhrase:(nonnull NSString *)phrase {
++ (BOOL)InitWalletFromRecoveryPhrase:(nonnull NSString *)phrase
+                            password:(nonnull NSString *)password {
     try {
-        auto objcpp_result_ = ::GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(::djinni::String::toCpp(phrase));
+        auto objcpp_result_ = ::GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(::djinni::String::toCpp(phrase),
+                                                                                   ::djinni::String::toCpp(password));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)ContineWalletFromRecoveryPhrase:(nonnull NSString *)phrase {
++ (BOOL)ContinueWalletFromRecoveryPhrase:(nonnull NSString *)phrase
+                                password:(nonnull NSString *)password {
     try {
-        auto objcpp_result_ = ::GuldenUnifiedBackend::ContineWalletFromRecoveryPhrase(::djinni::String::toCpp(phrase));
+        auto objcpp_result_ = ::GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(::djinni::String::toCpp(phrase),
+                                                                                       ::djinni::String::toCpp(password));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri {
++ (BOOL)InitWalletLinkedFromURI:(nonnull NSString *)linkedUri
+                       password:(nonnull NSString *)password {
     try {
-        auto objcpp_result_ = ::GuldenUnifiedBackend::InitWalletLinkedFromURI(::djinni::String::toCpp(linkedUri));
+        auto objcpp_result_ = ::GuldenUnifiedBackend::InitWalletLinkedFromURI(::djinni::String::toCpp(linkedUri),
+                                                                              ::djinni::String::toCpp(password));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)ContinueWalletLinkedFromURI:(nonnull NSString *)linkedUri {
++ (BOOL)ContinueWalletLinkedFromURI:(nonnull NSString *)linkedUri
+                           password:(nonnull NSString *)password {
     try {
-        auto objcpp_result_ = ::GuldenUnifiedBackend::ContinueWalletLinkedFromURI(::djinni::String::toCpp(linkedUri));
+        auto objcpp_result_ = ::GuldenUnifiedBackend::ContinueWalletLinkedFromURI(::djinni::String::toCpp(linkedUri),
+                                                                                  ::djinni::String::toCpp(password));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
 + (BOOL)InitWalletFromAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
-                                      password:(nonnull NSString *)password {
+                                   oldPassword:(nonnull NSString *)oldPassword
+                                   newPassword:(nonnull NSString *)newPassword {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(::djinni::String::toCpp(walletFile),
-                                                                                             ::djinni::String::toCpp(password));
+                                                                                             ::djinni::String::toCpp(oldPassword),
+                                                                                             ::djinni::String::toCpp(newPassword));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
 + (DBLegacyWalletResult)isValidAndroidLegacyProtoWallet:(nonnull NSString *)walletFile
-                                               password:(nonnull NSString *)password {
+                                            oldPassword:(nonnull NSString *)oldPassword {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(::djinni::String::toCpp(walletFile),
-                                                                                      ::djinni::String::toCpp(password));
+                                                                                      ::djinni::String::toCpp(oldPassword));
         return ::djinni::Enum<::LegacyWalletResult, DBLegacyWalletResult>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
@@ -182,6 +192,20 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 + (BOOL)IsMnemonicCorrect:(nonnull NSString *)phrase {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::IsMnemonicCorrect(::djinni::String::toCpp(phrase));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)UnlockWallet:(nonnull NSString *)password {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::UnlockWallet(::djinni::String::toCpp(password));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)LockWallet {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::LockWallet();
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
