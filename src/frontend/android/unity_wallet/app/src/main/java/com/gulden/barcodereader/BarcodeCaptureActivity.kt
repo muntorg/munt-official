@@ -25,6 +25,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.hardware.Camera
 import android.os.Build
 import android.os.Bundle
@@ -36,27 +37,53 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.vision.MultiProcessor
+import com.google.android.gms.vision.Detector
+import com.google.android.gms.vision.FocusingProcessor
+import com.google.android.gms.vision.Tracker
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.gulden.unity_wallet.R
+import org.jetbrains.anko.contentView
 
 import java.io.IOException
+
+
+// Only detect barcodes that fall within our target area
+class TargetBarcodeFocusingProcessor(detectionBox: Rect, detector: Detector<Barcode>, tracker: Tracker<Barcode>) : FocusingProcessor<Barcode>(detector, tracker)
+{
+    var detectionBoundingBox = detectionBox;
+    override fun selectFocus(detections: Detector.Detections<Barcode>?): Int
+    {
+        val barcodes = detections?.getDetectedItems();
+        for (i in 0 .. barcodes!!.size())
+        {
+            val barcodeID = barcodes.keyAt(i)
+            val barcode = barcodes.get(barcodeID)
+            val barcodeBoundingBox = barcode.getBoundingBox()
+            if (detectionBoundingBox.contains(barcodeBoundingBox))
+            {
+                return barcodeID;
+            }
+        }
+        return -1;
+    }
+}
 
 /**
  * Activity for barcode scanning.This app detects barcodes with the
  * rear facing camera.
  */
-class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.BarcodeUpdateListener
+class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdateListener
 {
     private var mCameraSource: CameraSource? = null
     private var mPreview: CameraSourcePreview? = null
-    private var mGraphicOverlay: GraphicOverlay<BarcodeGraphic>? = null
+    private var mTargetOverlay: ImageView? = null
 
     // helper objects for detecting taps and pinches.
     private var scaleGestureDetector: ScaleGestureDetector? = null
@@ -71,27 +98,32 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
         setContentView(R.layout.barcode_capture)
 
         mPreview = findViewById<View>(R.id.preview) as CameraSourcePreview
-        mGraphicOverlay = findViewById<View>(R.id.graphicOverlay) as GraphicOverlay<BarcodeGraphic>
+        mTargetOverlay = findViewById<View>(R.id.imageView3) as ImageView
 
         // read parameters from the intent used to launch the activity.
         val autoFocus = intent.getBooleanExtra(AutoFocus, false)
         val useFlash = intent.getBooleanExtra(UseFlash, false)
 
-        // Check for the camera permission before accessing the camera.  If the
-        // permission is not granted yet, request permission.
-        val rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-        if (rc == PackageManager.PERMISSION_GRANTED)
-        {
-            createCameraSource(autoFocus, useFlash)
-        }
-        else
-        {
-            requestCameraPermission()
+        // Below relies on sizing of view items so can only run after the view is visible
+        contentView?.post {
+            runOnUiThread {
+                // Check for the camera permission before accessing the camera.  If the  permission is not granted yet, request permission.
+                val rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                if (rc == PackageManager.PERMISSION_GRANTED)
+                {
+                    createCameraSource(autoFocus, useFlash)
+                    startCameraSource()
+                }
+                else
+                {
+                    requestCameraPermission()
+                }
+            }
         }
 
         scaleGestureDetector = ScaleGestureDetector(this, ScaleListener())
 
-        Snackbar.make(mGraphicOverlay!!, "Pinch/Stretch to zoom", Snackbar.LENGTH_LONG).show()
+        Snackbar.make(mPreview!!, "Pinch/Stretch to zoom", Snackbar.LENGTH_LONG).show()
     }
 
     /**
@@ -118,7 +150,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
         }
 
         findViewById<View>(R.id.topLayout).setOnClickListener(listener)
-        Snackbar.make(mGraphicOverlay!!, "Camera permission required to scan QR code", Snackbar.LENGTH_INDEFINITE).setAction("ok", listener).show()
+        Snackbar.make(mPreview!!, "Camera permission required to scan QR code", Snackbar.LENGTH_INDEFINITE).setAction("ok", listener).show()
     }
 
     override fun onTouchEvent(e: MotionEvent): Boolean
@@ -142,13 +174,16 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
     {
         val context = applicationContext
 
-        // A barcode detector is created to track barcodes.  An associated multi-processor instance
-        // is set to receive the barcode detection results, track the barcodes, and maintain
+        // A barcode detector is created to track barcodes.
+        //  An associated focusing-processor instance  is set to receive the barcode detection results, track the barcodes, and maintain
         // graphics for each barcode on screen.  The factory is used by the multi-processor to
         // create a separate tracker instance for each barcode.
         val barcodeDetector = BarcodeDetector.Builder(context).build()
-        val barcodeFactory = BarcodeTrackerFactory(mGraphicOverlay!!, this)
-        barcodeDetector.setProcessor(MultiProcessor.Builder(barcodeFactory).build())
+        val tracker = BarcodeTracker(this)
+
+        var targetOverlayRect = Rect()
+        mTargetOverlay!!.getHitRect(targetOverlayRect);
+        barcodeDetector.setProcessor(TargetBarcodeFocusingProcessor(targetOverlayRect, barcodeDetector, tracker))
 
         if (!barcodeDetector.isOperational)
         {
@@ -244,12 +279,13 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
             val autoFocus = intent.getBooleanExtra(AutoFocus, false)
             val useFlash = intent.getBooleanExtra(UseFlash, false)
             createCameraSource(autoFocus, useFlash)
+            startCameraSource()
             return
         }
 
         Log.e(TAG, "Permission not granted: results len = " + grantResults.size + " Result code = " + if (grantResults.size > 0) grantResults[0] else "(empty)")
 
-        val listener = DialogInterface.OnClickListener { dialog, id -> finish() }
+        val listener = DialogInterface.OnClickListener { _, id -> finish() }
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Gulden").setMessage("Unable to get camera permission").setPositiveButton("ok", listener).show()
@@ -275,7 +311,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeGraphicTracker.Barcod
         {
             try
             {
-                mGraphicOverlay?.let { mPreview?.start(mCameraSource as CameraSource, it) }
+                mPreview?.start(mCameraSource as CameraSource)
             }
             catch (e: IOException)
             {

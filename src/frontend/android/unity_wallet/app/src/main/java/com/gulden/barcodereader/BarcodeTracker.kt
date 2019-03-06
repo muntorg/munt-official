@@ -19,22 +19,38 @@
 package com.gulden.barcodereader
 
 import android.content.Context
+import androidx.annotation.UiThread
 
-import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.Tracker
 import com.google.android.gms.vision.barcode.Barcode
 
-/**
- * Factory for creating a tracker and associated graphic to be associated with a new barcode.  The
- * multi-processor uses this factory to create barcode trackers as needed -- one for each barcode.
- */
-internal class BarcodeTrackerFactory(private val mGraphicOverlay: GraphicOverlay<BarcodeGraphic>, private val mContext: Context) : MultiProcessor.Factory<Barcode>
+
+// Monitor for new barcode detections and alert via BarcodeUpdateListener interface.
+class BarcodeTracker internal constructor(context: Context) : Tracker<Barcode>()
 {
 
-    override fun create(barcode: Barcode): Tracker<Barcode>
+    private var mBarcodeUpdateListener: BarcodeUpdateListener? = null
+
+    interface BarcodeUpdateListener
     {
-        val graphic = BarcodeGraphic(mGraphicOverlay)
-        return BarcodeGraphicTracker(mGraphicOverlay, graphic, mContext)
+        @UiThread
+        fun onBarcodeDetected(barcode: Barcode?)
     }
 
+    init
+    {
+        if (context is BarcodeUpdateListener)
+        {
+            this.mBarcodeUpdateListener = context
+        }
+        else
+        {
+            throw RuntimeException("Hosting activity must implement BarcodeUpdateListener")
+        }
+    }
+
+    override fun onNewItem(id: Int, item: Barcode?)
+    {
+        mBarcodeUpdateListener?.onBarcodeDetected(item)
+    }
 }

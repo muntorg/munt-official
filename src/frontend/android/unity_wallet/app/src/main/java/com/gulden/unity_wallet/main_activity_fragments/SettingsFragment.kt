@@ -56,6 +56,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             "preference_link_wallet" ->
             {
                 val intent = Intent(context, BarcodeCaptureActivity::class.java)
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
                 startActivityForResult(intent, SettingsFragment.REQUEST_CODE_SCAN_FOR_LINK)
             }
             "preference_change_pass_code" ->

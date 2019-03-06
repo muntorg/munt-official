@@ -65,6 +65,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
     fun onSyncWithDesktop(view: View)
     {
         val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
+        intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
         startActivityForResult(intent, REQUEST_CODE_SCAN_FOR_LINK)
     }
 

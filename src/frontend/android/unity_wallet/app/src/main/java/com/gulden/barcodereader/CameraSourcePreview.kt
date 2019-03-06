@@ -37,8 +37,6 @@ class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : 
     private var mSurfaceAvailable: Boolean = false
     private var mCameraSource: CameraSource? = null
 
-    private var mOverlay: GraphicOverlay<*>? = null
-
     private val isPortraitMode: Boolean
         get()
         {
@@ -84,14 +82,6 @@ class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : 
         }
     }
 
-    @RequiresPermission(Manifest.permission.CAMERA)
-    @Throws(IOException::class, SecurityException::class)
-    fun start(cameraSource: CameraSource, overlay: GraphicOverlay<*>)
-    {
-        mOverlay = overlay
-        start(cameraSource)
-    }
-
     fun stop()
     {
         if (mCameraSource != null)
@@ -116,23 +106,6 @@ class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : 
         if (mStartRequested && mSurfaceAvailable)
         {
             mCameraSource?.start(mSurfaceView.holder)
-            if (mOverlay != null)
-            {
-                val size = mCameraSource?.previewSize
-                val min = Math.min(size!!.width, size.height)
-                val max = Math.max(size.width, size.height)
-                if (isPortraitMode)
-                {
-                    // Swap width and height sizes when in portrait, since it will be rotated by
-                    // 90 degrees
-                    mOverlay?.setCameraInfo(min, max, mCameraSource!!.cameraFacing)
-                }
-                else
-                {
-                    mOverlay?.setCameraInfo(max, min, mCameraSource!!.cameraFacing)
-                }
-                mOverlay?.clear()
-            }
             mStartRequested = false
         }
     }

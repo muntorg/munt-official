@@ -64,6 +64,7 @@ class SendFragment : Fragment()
 
         qrButton.setOnClickListener {
             val intent = Intent(context, BarcodeCaptureActivity::class.java)
+            intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
         }
 
