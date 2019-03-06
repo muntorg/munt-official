@@ -97,7 +97,10 @@ public:
         {
             bool needsWriteToDisk = false;
             if (!accountPair.second->Unlock(vMasterKeyIn, needsWriteToDisk))
+            {
+                LogPrintf("CWallet::UnlockWithMasterKey - Failed to unlock account");
                 ret = false;
+            }
             if (needsWriteToDisk)
             {
                 CWalletDB db(*dbw);
@@ -110,7 +113,10 @@ public:
         for (auto seedPair : mapSeeds)
         {
             if (!seedPair.second->Unlock(vMasterKeyIn))
+            {
+                LogPrintf("CWallet::UnlockWithMasterKey - Failed to unlock seed");
                 ret = false;
+            }
         }
         return ret;
     }
@@ -269,7 +275,7 @@ public:
     CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
     //! Create an HD account directly from a key and not assosciated with any seed.
-    CAccountHD* CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type);
+    CAccountHD* CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys=true);
 
     void setActiveAccount(CWalletDB& walletdb, CAccount* newActiveAccount);
 

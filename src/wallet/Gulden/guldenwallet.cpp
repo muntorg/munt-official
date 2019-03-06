@@ -1057,7 +1057,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
     return newAccount;
 }
 
-CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type)
+CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys)
 {
     //fixme: HIGH add key validation checks here.
 
@@ -1068,7 +1068,10 @@ CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuld
     addAccount(newAccount, strAccount);
 
     //We only assign the bare minimum addresses here - and let the background thread do the rest
-    static_cast<CWallet*>(this)->TopUpKeyPool(2, 0, newAccount);
+    if (generateKeys)
+    {
+        static_cast<CWallet*>(this)->TopUpKeyPool(2, 0, newAccount);
+    }
 
     return newAccount;
 }
