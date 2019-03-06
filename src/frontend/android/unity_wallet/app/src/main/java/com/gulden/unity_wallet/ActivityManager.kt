@@ -99,10 +99,13 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         return true
     }
 
+
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun allActivitiesStopped()
     {
         GuldenUnifiedBackend.PersistAndPruneForSPV()
+        GuldenUnifiedBackend.LockWallet()
+        //TODO: This lock call should be powered via core events and not directly
         Authentication.instance.lock()
     }
 
