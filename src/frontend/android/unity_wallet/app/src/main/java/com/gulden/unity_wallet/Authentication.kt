@@ -17,11 +17,13 @@ import androidx.preference.PreferenceManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_ATTEMPTS_ALLOWED
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_LENGTH
-import com.gulden.unity_wallet.Constants.FAKE_ACCESS_CODE
 import kotlinx.android.synthetic.main.access_code_entry.view.*
 import kotlinx.android.synthetic.main.access_code_recovery.view.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
+import android.R.attr.editable
+
+
 
 private const val TAG = "authentication"
 
@@ -55,6 +57,7 @@ class Authentication {
      * notified and then action is executed.
      *
      */
+    //TODO: lock()/unlock() should rather be driven by signals coming from the unity core.
     fun unlock(context: Context, title: String?, msg: String?, action: () -> Unit) {
         if (isLocked()) {
             authenticate(context, title, msg) {
@@ -68,6 +71,7 @@ class Authentication {
             action()
     }
 
+    //TODO: lock()/unlock() should rather be driven by signals coming from the unity core.
     fun lock() {
         if (!isLocked()) {
             locked = true
@@ -164,19 +168,22 @@ class Authentication {
         dialog.setOnShowListener {
             contentView.accessCode.addTextChangedListener(
                     object : TextWatcher {
+                        //TODO: Store/Initialise this - don't reinitialise to max for every dialog creation.
                         var numAttemptsRemaining = ACCESS_CODE_ATTEMPTS_ALLOWED
                         override fun afterTextChanged(s: Editable?) {
-                            val code = s.toString()
-                            if (code.length == ACCESS_CODE_LENGTH) {
-                                // TODO actual access code checking
-                                if (code == FAKE_ACCESS_CODE) {
-                                    Log.i(TAG, "successful authentication USING FAKE ACCESS CHECKING")
+                            if (s?.length == ACCESS_CODE_LENGTH)
+                            {
+                                var chosenCode: CharArray = CharArray(ACCESS_CODE_LENGTH)
+                                s.getChars(0, s.length, chosenCode, 0)
+
+                                if (GuldenUnifiedBackend.UnlockWallet(chosenCode.joinToString(""))) {
+                                    Log.i(TAG, "successful authentication")
                                     it.dismiss()
                                     action()
                                 } else {
                                     numAttemptsRemaining -= 1
                                     if (numAttemptsRemaining > 0) {
-                                        s?.clear()
+                                        s.clear()
                                         contentView.accessCode.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake))
                                         contentView.attemptsRemaining.text = context.getString(R.string.access_code_entry_remaining).format(numAttemptsRemaining)
                                     } else {
@@ -186,6 +193,9 @@ class Authentication {
                                         it.dismiss()
                                     }
                                 }
+                                s.clear()
+                                @Suppress("UNUSED_VALUE")
+                                chosenCode = CharArray(ACCESS_CODE_LENGTH)
                             }
                         }
 
@@ -200,7 +210,7 @@ class Authentication {
         dialog.show()
     }
 
-    fun chooseAccessCode(context: Context, action: () -> Unit) {
+    fun chooseAccessCode(context: Context, action: (CharArray) -> Unit) {
         val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
 
         val builder = context.alert(Appcompat) {
@@ -215,27 +225,38 @@ class Authentication {
             contentView.accessCode.addTextChangedListener(
                     object : TextWatcher {
                         var verifying = false
-                        lateinit var choosenCode: String
+                        var chosenCode: CharArray = CharArray(ACCESS_CODE_LENGTH)
                         override fun afterTextChanged(s: Editable?) {
-                            val code = s.toString()
-                            if (code.length == ACCESS_CODE_LENGTH) {
+                            if (s?.length == ACCESS_CODE_LENGTH)
+                            {
+                                var code = CharArray(ACCESS_CODE_LENGTH)
+                                s.getChars(0, s.length, code, 0)
                                 if (verifying) {
-                                    if (code == choosenCode) {
-                                        Log.i(TAG, "access code successfully chosen TODO SECURELY STORE")
+                                    if (code.contentEquals(chosenCode)) {
+                                        Log.i(TAG, "access code successfully chosen")
                                         it.dismiss()
-                                        action()
+                                        action(chosenCode)
+                                        s.clear()
+                                        chosenCode = CharArray(ACCESS_CODE_LENGTH)
+                                        @Suppress("UNUSED_VALUE")
+                                        code = CharArray(ACCESS_CODE_LENGTH)
                                     }
                                     else {
                                         verifying = false
-                                        s?.clear()
+                                        s.clear()
+                                        chosenCode = CharArray(ACCESS_CODE_LENGTH)
+                                        @Suppress("UNUSED_VALUE")
+                                        code = CharArray(ACCESS_CODE_LENGTH)
                                         contentView.accessCode.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake))
                                         contentView.message.text = ""
                                     }
                                 }
                                 else {
-                                    choosenCode = code
+                                    chosenCode = code
                                     verifying = true
-                                    s?.clear()
+                                    s.clear()
+                                    @Suppress("UNUSED_VALUE")
+                                    code = CharArray(ACCESS_CODE_LENGTH)
                                     contentView.message.text = context.getString(R.string.access_code_choose_verify)
                                 }
                             }
