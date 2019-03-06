@@ -754,24 +754,34 @@ void CWallet::EraseWalletSeedsAndAccounts()
 {
     LOCK2(cs_main, cs_wallet);
 
-    CWalletDB walletdb(*pactiveWallet->dbw);
+    CWalletDB walletdb(*dbw);
 
     // Purge all current accounts/seeds from the system
     LogPrintf("EraseWalletSeedsAndAccounts: Begin purge seeds");
-    while (!pactiveWallet->mapSeeds.empty())
+    while (!mapSeeds.empty())
     {
         LogPrintf("EraseWalletSeedsAndAccounts: purge seed");
-        pactiveWallet->DeleteSeed(walletdb, pactiveWallet->mapSeeds.begin()->second, true);
+        DeleteSeed(walletdb, pactiveWallet->mapSeeds.begin()->second, true);
     }
     LogPrintf("EraseWalletSeedsAndAccounts: End purge seeds");
 
     LogPrintf("EraseWalletSeedsAndAccounts: Begin purge standalone accounts");
-    while (!pactiveWallet->mapAccounts.empty())
+    while (!mapAccounts.empty())
     {
         LogPrintf("EraseWalletSeedsAndAccounts: purge account");
-        pactiveWallet->deleteAccount(walletdb, pactiveWallet->mapAccounts.begin()->second, true);
+        deleteAccount(walletdb, pactiveWallet->mapAccounts.begin()->second, true);
     }
     LogPrintf("EraseWalletSeedsAndAccounts: End purge standalone accounts");
+
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge masterkeys");
+    while (!mapMasterKeys.empty())
+    {
+        LogPrintf("EraseWalletSeedsAndAccounts: purge masterkey");
+        walletdb.EraseMasterKey(mapMasterKeys.begin()->first);
+        mapMasterKeys.erase(mapMasterKeys.begin());
+    }
+    nMasterKeyMaxID = 0;
+    LogPrintf("EraseWalletSeedsAndAccounts: End purge masterkeys");
 
     walletdb.ErasePrimaryAccount();
     walletdb.EraseLastSPVBlockProcessed();

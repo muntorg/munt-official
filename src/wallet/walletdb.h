@@ -158,6 +158,7 @@ public:
     //! Special writer only for witness accounts (where we store the witness key in both HD and non-HD mode)
     bool WriteKeyOverride(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const std::string forAccount, int64_t nKeyChain);
     bool WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey);
+    bool EraseMasterKey(unsigned int nID);
 
     bool EraseKey(const CPubKey& vchPubKey);
     bool EraseEncryptedKey(const CPubKey& vchPubKey);
