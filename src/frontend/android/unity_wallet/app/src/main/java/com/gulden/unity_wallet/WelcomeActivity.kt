@@ -76,23 +76,29 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
             {
                 val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
                 Authentication.instance.chooseAccessCode(this) {
-                    if (UnityCore.instance.isCoreReady()) {
-                        if (GuldenUnifiedBackend.ContinueWalletLinkedFromURI(barcode.displayValue)) {
+                    password->
+                    if (UnityCore.instance.isCoreReady())
+                    {
+                        if (GuldenUnifiedBackend.ContinueWalletLinkedFromURI(barcode.displayValue, password.joinToString("")))
+                        {
                             gotoWalletActivity(this)
                             return@chooseAccessCode
                         }
                     }
-                    else {
+                    else
+                    {
                         // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                        if (GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue))
+                        if (GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue, password.joinToString("")))
+                        {
                             return@chooseAccessCode
+                        }
                     }
 
                     // Got here so there was an error in init or continue linked wallet
-                    alert(Appcompat,
-                            getString(com.gulden.unity_wallet.R.string.no_guldensync_warning),
-                            getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)) {
-                        positiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) {
+                    alert(Appcompat,  getString(com.gulden.unity_wallet.R.string.no_guldensync_warning),  getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title))
+                    {
+                        positiveButton(getString(com.gulden.unity_wallet.R.string.button_ok))
+                        {
                             it.dismiss()
                         }
                         isCancelable = true

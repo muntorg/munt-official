@@ -142,15 +142,16 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     fun onAcceptRecoverFromPhrase(view: View) {
         Authentication.instance.chooseAccessCode(this) {
+            password->
             if (UnityCore.instance.isCoreReady()) {
-                if (GuldenUnifiedBackend.ContineWalletFromRecoveryPhrase(recoveryPhrase)) {
+                if (GuldenUnifiedBackend.ContinueWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString(""))) {
                     gotoWalletActivity(this)
                 } else {
                     internalErrorAlert(this, "$TAG continuation failed")
                 }
             } else {
                 // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase))
+                if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString("")))
                     internalErrorAlert(this, "$TAG init failed")
             }
         }
