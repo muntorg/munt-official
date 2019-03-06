@@ -403,7 +403,7 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
     return true;
 }
 
-bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri)
+bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
 {
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -466,6 +466,10 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         LogPrintf("ReplaceWalletLinkedFromURI: Failed to erase seed and accounts");
         return false;
     }
+
+    GuldenAppManager::gApp->setLinkKey(linkedKey);
+    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
+    GuldenAppManager::gApp->isLink = true;
 
     CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
 

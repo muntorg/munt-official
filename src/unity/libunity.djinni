@@ -124,7 +124,7 @@ gulden_unified_backend = interface +c {
     static IsValidLinkURI(phrase: string): bool;
 
     # Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet.
-    static ReplaceWalletLinkedFromURI(linked_uri : string): bool;
+    static ReplaceWalletLinkedFromURI(linked_uri : string, password : string): bool;
 
     # Erase the seeds and accounts of a wallet leaving an empty wallet (with things like the address book intact)
     # After calling this it will be necessary to create a new linked account or recovery phrase account again.

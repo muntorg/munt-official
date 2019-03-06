@@ -112,11 +112,12 @@ CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacke
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_ReplaceWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri)
+CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_ReplaceWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri, jstring j_password)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(::djinni::String::toCpp(jniEnv, j_linkedUri));
+        auto r = ::GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(::djinni::String::toCpp(jniEnv, j_linkedUri),
+                                                                    ::djinni::String::toCpp(jniEnv, j_password));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }

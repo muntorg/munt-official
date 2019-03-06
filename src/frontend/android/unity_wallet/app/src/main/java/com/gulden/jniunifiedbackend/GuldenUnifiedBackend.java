@@ -69,9 +69,10 @@ public abstract class GuldenUnifiedBackend {
     }
 
     /** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
-    public static boolean ReplaceWalletLinkedFromURI(String linkedUri)
+    public static boolean ReplaceWalletLinkedFromURI(String linkedUri, String password)
     {
-        return CppProxy.ReplaceWalletLinkedFromURI(linkedUri);
+        return CppProxy.ReplaceWalletLinkedFromURI(linkedUri,
+                                                   password);
     }
 
     /**
@@ -307,7 +308,7 @@ public abstract class GuldenUnifiedBackend {
 
         public static native boolean IsValidLinkURI(String phrase);
 
-        public static native boolean ReplaceWalletLinkedFromURI(String linkedUri);
+        public static native boolean ReplaceWalletLinkedFromURI(String linkedUri, String password);
 
         public static native boolean EraseWalletSeedsAndAccounts();
 

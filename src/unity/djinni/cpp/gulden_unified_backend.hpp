@@ -54,7 +54,7 @@ public:
     static bool IsValidLinkURI(const std::string & phrase);
 
     /** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
-    static bool ReplaceWalletLinkedFromURI(const std::string & linked_uri);
+    static bool ReplaceWalletLinkedFromURI(const std::string & linked_uri, const std::string & password);
 
     /**
      * Erase the seeds and accounts of a wallet leaving an empty wallet (with things like the address book intact)

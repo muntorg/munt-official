@@ -55,7 +55,8 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 + (BOOL)IsValidLinkURI:(nonnull NSString *)phrase;
 
 /** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
-+ (BOOL)ReplaceWalletLinkedFromURI:(nonnull NSString *)linkedUri;
++ (BOOL)ReplaceWalletLinkedFromURI:(nonnull NSString *)linkedUri
+                          password:(nonnull NSString *)password;
 
 /**
  * Erase the seeds and accounts of a wallet leaving an empty wallet (with things like the address book intact)
