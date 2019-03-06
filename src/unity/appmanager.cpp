@@ -413,6 +413,21 @@ CGuldenSecretExt<CExtKey> GuldenAppManager::getLinkedKey() const
     return linkKey;
 }
 
+void GuldenAppManager::setRecoveryPassword(const SecureString& password_)
+{
+    recoveryPassword = password_;
+}
+
+SecureString GuldenAppManager::getRecoveryPassword()
+{
+    return recoveryPassword;
+}
+
+void GuldenAppManager::SecureWipeRecoveryDetails()
+{
+    //fixme: (2.1) Burn all seeds/passwords etc. here.
+}
+
 bool ShutdownRequested()
 {
     return GuldenAppManager::gApp ? (bool)GuldenAppManager::gApp->fShutDownHasBeenInitiated : false;

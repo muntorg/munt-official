@@ -71,7 +71,6 @@ private:
 public:
     void setRecoveryPhrase(const SecureString& recoveryPhrase);
     SecureString getRecoveryPhrase();
-    void BurnRecoveryPhrase();
     // Set to true if we are busy starting a new wallet via "recovery phrase"
     bool isRecovery = false;
     // Set to true if we are busy starting a new wallet via "link"
@@ -88,10 +87,16 @@ public:
     static void splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber);
     void setLinkKey(CGuldenSecretExt<CExtKey> _linkKey);
     int64_t getLinkedBirthTime() const;
+    void setRecoveryPassword(const SecureString& password_);
+    SecureString getRecoveryPassword();
     CGuldenSecretExt<CExtKey> getLinkedKey() const;
+
+    void SecureWipeRecoveryDetails();
 private:
+    void BurnRecoveryPhrase();
     CGuldenSecretExt<CExtKey> linkKey;
     SecureString recoveryPhrase;
+    SecureString recoveryPassword;
     int recoveryBirthNumber;
 
     // Passed on to the rest of the app but not used internally by GuldenAppManager.
