@@ -70,8 +70,16 @@ bool CCrypter::SetKeyFromPassphrase(const SecureString& strKeyData, const std::v
 
 bool CCrypter::SetKey(const CKeyingMaterial& chNewKey, const std::vector<unsigned char>& chNewIV)
 {
-    if (chNewKey.size() != WALLET_CRYPTO_KEY_SIZE || chNewIV.size() != WALLET_CRYPTO_IV_SIZE)
+    if (chNewKey.size() != WALLET_CRYPTO_KEY_SIZE)
+    {
+        LogPrintf("CCrypter::SetKey Invalid key size [%d] expected [%d]", chNewKey.size(), WALLET_CRYPTO_KEY_SIZE);
         return false;
+    }
+    if (chNewIV.size() != WALLET_CRYPTO_IV_SIZE)
+    {
+        LogPrintf("CCrypter::SetKey Invalid IV size [%d] expected [%d]", chNewIV.size(), WALLET_CRYPTO_IV_SIZE);
+        return false;
+    }
 
     memcpy(vchKey.data(), chNewKey.data(), chNewKey.size());
     memcpy(vchIV.data(), chNewIV.data(), chNewIV.size());

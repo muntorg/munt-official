@@ -308,12 +308,16 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase)
         for(const MasterKeyMap::value_type& pMasterKey : mapMasterKeys)
         {
             if(!crypter.SetKeyFromPassphrase(strWalletPassphrase, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod))
+            {
+                LogPrintf("CWallet::Unlock - Failed to set key from phrase");
                 return false;
+            }
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 continue; // try another master key
             return UnlockWithMasterKey(_vMasterKey);
         }
     }
+    LogPrintf("CWallet::Unlock - Failed to unlock any keys");
     return false;
 }
 

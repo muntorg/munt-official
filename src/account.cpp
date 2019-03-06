@@ -335,25 +335,37 @@ bool CHDSeed::Encrypt(const CKeyingMaterial& vMasterKeyIn)
     assert(sizeof(m_UUID) == WALLET_CRYPTO_IV_SIZE);
     encryptedMnemonic.clear();
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(unencryptedMnemonic.begin(), unencryptedMnemonic.end()), std::vector<unsigned char>(m_UUID.begin(), m_UUID.end()), encryptedMnemonic))
+    {
+        LogPrintf("CHDSeed::Encrypt failed to encrypt mnemonic");
         return false;
+    }
 
     // Encrypt master key
     SecureUnsignedCharVector masterKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     masterKeyPriv.Encode(masterKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(masterKeyPrivEncoded.begin(), masterKeyPrivEncoded.end()), masterKeyPub.pubkey.GetHash(), masterKeyPrivEncrypted))
+    {
+        LogPrintf("CHDSeed::Encrypt failed to encrypt master key");
         return false;
+    }
 
     // Encrypt purpose key
     SecureUnsignedCharVector purposeKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     purposeKeyPriv.Encode(purposeKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(purposeKeyPrivEncoded.begin(), purposeKeyPrivEncoded.end()), purposeKeyPub.pubkey.GetHash(), purposeKeyPrivEncrypted))
+    {
+        LogPrintf("CHDSeed::Encrypt failed to encrypt purpose key");
         return false;
+    }
 
     // Encrypt coin type key
     SecureUnsignedCharVector cointypeKeyPrivEncoded(BIP32_EXTKEY_SIZE);
     cointypeKeyPriv.Encode(cointypeKeyPrivEncoded.data());
     if (!EncryptSecret(vMasterKeyIn, CKeyingMaterial(cointypeKeyPrivEncoded.begin(), cointypeKeyPrivEncoded.end()), cointypeKeyPub.pubkey.GetHash(), cointypeKeyPrivEncrypted))
+    {
+        LogPrintf("CHDSeed::Encrypt failed to encrypt coin type key");
         return false;
+    }
 
     encrypted = true;
     vMasterKey = vMasterKeyIn;
@@ -534,19 +546,28 @@ bool CAccountHD::Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToD
     // Decrypt account key
     CKeyingMaterial vchAccountKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, accountKeyPrivEncrypted, std::vector<unsigned char>(accountUUID.begin(), accountUUID.end()), vchAccountKeyPrivEncoded))
+    {
+        LogPrintf("CAccountHD::Unlock Failed to decrypt secret account key");
         return false;
+    }
     accountKeyPriv.Decode(vchAccountKeyPrivEncoded.data());
 
     // Decrypt primary chain key
     CKeyingMaterial vchPrimaryChainKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, primaryChainKeyEncrypted, primaryChainKeyPub.pubkey.GetHash(), vchPrimaryChainKeyPrivEncoded))
+    {
+        LogPrintf("CAccountHD::Unlock Failed to decrypt secret primary chain key");
         return false;
+    }
     primaryChainKeyPriv.Decode(vchPrimaryChainKeyPrivEncoded.data());
 
     // Decrypt change chain key
     CKeyingMaterial vchChangeChainKeyPrivEncoded;
     if (!DecryptSecret(vMasterKeyIn, changeChainKeyEncrypted, changeChainKeyPub.pubkey.GetHash(), vchChangeChainKeyPrivEncoded))
+    {
+        LogPrintf("CAccountHD::Unlock Failed to decrypt secret change chanin key");
         return false;
+    }
     changeChainKeyPriv.Decode(vchChangeChainKeyPrivEncoded.data());
 
     vMasterKey = vMasterKeyIn;
@@ -584,6 +605,7 @@ bool CAccountHD::Encrypt(const CKeyingMaterial& vMasterKeyIn)
         return false;
 
     encrypted = true;
+    vMasterKey = vMasterKeyIn;
 
     return true;
 }
