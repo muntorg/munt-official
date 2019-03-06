@@ -133,8 +133,17 @@ void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)
 
     LogPrintf("%s: Creating new linked primary account, birth time [%d]\n", __func__, walletInstance->nTimeFirstKey);
 
-    walletInstance->activeAccount = walletInstance->CreateSeedlessHDAccount("My account", GuldenAppManager::gApp->getLinkedKey(), AccountState::Normal, AccountType::Mobi);
+    walletInstance->activeAccount = walletInstance->CreateSeedlessHDAccount("My account", GuldenAppManager::gApp->getLinkedKey(), AccountState::Normal, AccountType::Mobi, false);
 
+    SecureString encryptUsingPassword = GuldenAppManager::gApp->getRecoveryPassword();
+    if (encryptUsingPassword.length() > 0)
+    {
+        LogPrintf("Encrypting wallet using passphrase\n");
+        if (!walletInstance->EncryptWallet(encryptUsingPassword))
+            throw std::runtime_error("Failed to encrypt wallet");
+        if (!walletInstance->Unlock(encryptUsingPassword))
+            throw std::runtime_error("Failed to unlock freshly encrypted wallet");
+    }
     // Write the primary account into wallet file
     {
         CWalletDB walletdb(*walletInstance->dbw);
@@ -144,6 +153,11 @@ void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)
         }
         walletdb.WritePrimaryAccount(walletInstance->activeAccount);
     }
+
+    //Assign the bare minimum keys here, let the rest take place in the background thread
+    walletInstance->TopUpKeyPool(1);
+
+    GuldenAppManager::gApp->SecureWipeRecoveryDetails();
 }
 
 CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
@@ -253,8 +267,6 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             if (GuldenAppManager::gApp->isLink)
             {
                 CreateSeedAndAccountFromLink(walletInstance);
-                //fixme: (2.1) HIGH - Implement an equivalent burn function for linked key
-                //GuldenAppManager::gApp->BurnRecoveryPhrase();
             }
             else
             {
@@ -278,7 +290,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 walletdb.WritePrimaryAccount(walletInstance->activeAccount);
             }
 
-            //Assign the bare minimum keys here, let the rest take place in the bakcground thread
+            //Assign the bare minimum keys here, let the rest take place in the background thread
             walletInstance->TopUpKeyPool(1);
         }
 
@@ -624,6 +636,9 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         LogPrintf("mapAddressBook.size() = %u\n",  walletInstance->mapAddressBook.size());
     }
 
+    // Ensure we leave the wallet in a locked state
+    walletInstance->Lock();
+
     return walletInstance;
 }
 
@@ -632,11 +647,17 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
     // Generate a new primary seed and account (BIP44)
     walletInstance->activeSeed = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
     walletInstance->nTimeFirstKey = GuldenAppManager::gApp->getRecoveryBirthTime();
-    if (!CWalletDB(*walletInstance->dbw).WriteHDSeed(*walletInstance->activeSeed))
-    {
-        throw std::runtime_error("Writing seed failed");
-    }
+
+    SecureString encryptUsingPassword = GuldenAppManager::gApp->getRecoveryPassword();
     walletInstance->mapSeeds[walletInstance->activeSeed->getUUID()] = walletInstance->activeSeed;
+    if (encryptUsingPassword.length() > 0)
+    {
+        LogPrintf("Encrypting wallet using passphrase\n");
+        if (!walletInstance->EncryptWallet(encryptUsingPassword))
+            throw std::runtime_error("Failed to encrypt wallet");
+        if (!walletInstance->Unlock(encryptUsingPassword))
+            throw std::runtime_error("Failed to unlock freshly encrypted wallet");
+    }
     walletInstance->activeAccount = walletInstance->GenerateNewAccount("My account", AccountState::Normal, AccountType::Desktop);
 
     // Now generate children shadow accounts to handle legacy transactions
@@ -647,6 +668,13 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
         //Temporary seeds for shadow children
         CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
         CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
+
+        // If wallet is encrypted we need to encrypt the seeds (even though they are temporary) to ensure that they produce properly encrypted accounts.
+        if (walletInstance->IsCrypted())
+        {
+            if (!seedBip32->Encrypt(walletInstance->activeAccount->vMasterKey)) { throw std::runtime_error("Encrypting bip32 seed failed"); }
+            if (!seedBip32Legacy->Encrypt(walletInstance->activeAccount->vMasterKey)) { throw std::runtime_error("Encrypting bip32-legacy seed failed"); }
+        }
 
         // Write new accounts
         CAccountHD* newAccountBip32 = seedBip32->GenerateAccount(AccountType::Desktop, NULL);
@@ -668,11 +696,12 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
     // Write the seed last so that account index changes are reflected
     {
         CWalletDB walletdb(*walletInstance->dbw);
-        walletdb.WritePrimarySeed(*walletInstance->activeSeed);
-        walletdb.WritePrimaryAccount(walletInstance->activeAccount);
+        if (!walletdb.WriteHDSeed(*walletInstance->activeSeed)) { throw std::runtime_error("Writing seed failed"); }
+        if (!walletdb.WritePrimarySeed(*walletInstance->activeSeed)) { throw std::runtime_error("Writing primary seed failed"); }
+        if (!walletdb.WritePrimaryAccount(walletInstance->activeAccount)) { throw std::runtime_error("Writing active account failed"); }
     }
 
-    GuldenAppManager::gApp->BurnRecoveryPhrase();
+    GuldenAppManager::gApp->SecureWipeRecoveryDetails();
 
     //Assign the bare minimum keys here, let the rest take place in the background thread
     walletInstance->TopUpKeyPool(1);
