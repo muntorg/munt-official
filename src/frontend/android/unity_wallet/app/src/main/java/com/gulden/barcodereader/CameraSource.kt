@@ -31,10 +31,7 @@ import android.os.SystemClock
 import androidx.annotation.RequiresPermission
 import androidx.annotation.StringDef
 import android.util.Log
-import android.view.Surface
-import android.view.SurfaceHolder
-import android.view.SurfaceView
-import android.view.WindowManager
+import android.view.*
 
 import com.google.android.gms.common.images.Size
 import com.google.android.gms.vision.Detector
@@ -119,13 +116,7 @@ private constructor()
     private var mFocusMode: String? = null
     private var mFlashMode: String? = null
 
-    // These instances need to be held onto to avoid GC of their underlying resources.  Even though
-    // these aren't used outside of the method that creates them, they still must have hard
-    // references maintained to them.
-    private var mDummySurfaceView: SurfaceView? = null
-    private var mDummySurfaceTexture: SurfaceTexture? = null
-
-    /**
+        /**
      * Dedicated thread and associated runnable for calling into the detector with frames, as the
      * frames become available from the camera.
      */
@@ -330,46 +321,17 @@ private constructor()
         }
     }
 
-    /**
-     * Opens the camera and starts sending preview frames to the underlying detector.  The preview
-     * frames are not displayed.
-     *
-     * @throws IOException if the camera's preview texture or display could not be initialized
-     */
-    @RequiresPermission(Manifest.permission.CAMERA)
-    @Throws(IOException::class)
-    fun start(): CameraSource
-    {
-        synchronized(mCameraLock) {
-            if (mCamera != null)
-            {
-                return this
-            }
-
-            mCamera = createCamera()
-
-            mDummySurfaceTexture = SurfaceTexture(DUMMY_TEXTURE_NAME)
-            mCamera!!.setPreviewTexture(mDummySurfaceTexture)
-
-            mCamera?.startPreview()
-
-            mProcessingThread = Thread(mFrameProcessor)
-            mFrameProcessor?.setActive(true)
-            mProcessingThread?.start()
-        }
-        return this
-    }
 
     /**
      * Opens the camera and starts sending preview frames to the underlying detector.  The supplied
-     * surface holder is used for the preview so frames can be displayed to the user.
+     * texture view is used for the preview so frames can be displayed to the user.
      *
-     * @param surfaceHolder the surface holder to use for the preview frames
+     * @param textureView the texture view to use for the preview frames
      * @throws IOException if the supplied surface holder could not be used as the preview display
      */
     @RequiresPermission(Manifest.permission.CAMERA)
     @Throws(IOException::class)
-    fun start(surfaceHolder: SurfaceHolder): CameraSource
+    fun start(textureView : TextureView): CameraSource
     {
         synchronized(mCameraLock) {
             if (mCamera != null)
@@ -378,7 +340,7 @@ private constructor()
             }
 
             mCamera = createCamera()
-            mCamera?.setPreviewDisplay(surfaceHolder)
+            mCamera?.setPreviewTexture(textureView.surfaceTexture)
             mCamera?.startPreview()
 
             mProcessingThread = Thread(mFrameProcessor)
@@ -387,6 +349,8 @@ private constructor()
         }
         return this
     }
+
+
 
     /**
      * Closes the camera and stops sending frames to the underlying frame detector.
@@ -429,11 +393,6 @@ private constructor()
                 mCamera?.setPreviewCallbackWithBuffer(null)
                 try
                 {
-                    // We want to be compatible back to Gingerbread, but SurfaceTexture
-                    // wasn't introduced until Honeycomb.  Since the interface cannot use a SurfaceTexture, if the
-                    // developer wants to display a preview we must use a SurfaceHolder.  If the developer doesn't
-                    // want to display a preview we use a SurfaceTexture if we are running at least Honeycomb.
-
                     mCamera?.setPreviewTexture(null)
                 }
                 catch (e: Exception)
@@ -1144,12 +1103,6 @@ private constructor()
         val CAMERA_FACING_FRONT = CameraInfo.CAMERA_FACING_FRONT
 
         private const val TAG = "OpenCameraSource"
-
-        /**
-         * The dummy surface texture must be assigned a chosen name.  Since we never use an OpenGL
-         * context, we can choose any ID we want here.
-         */
-        private const val DUMMY_TEXTURE_NAME = 100
 
         /**
          * If the absolute difference between a preview size aspect ratio and a picture size aspect

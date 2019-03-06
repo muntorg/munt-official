@@ -49,24 +49,58 @@ import com.google.android.gms.vision.Tracker
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.gulden.unity_wallet.R
+import kotlinx.android.synthetic.main.barcode_capture.*
 import org.jetbrains.anko.contentView
 
 import java.io.IOException
 
 
 // Only detect barcodes that fall within our target area
-class TargetBarcodeFocusingProcessor(detectionBox: Rect, detector: Detector<Barcode>, tracker: Tracker<Barcode>) : FocusingProcessor<Barcode>(detector, tracker)
+class TargetBarcodeFocusingProcessor(preview : CameraSourcePreview, detectionBox: Rect, detector: Detector<Barcode>, tracker: Tracker<Barcode>) : FocusingProcessor<Barcode>(detector, tracker)
 {
-    var detectionBoundingBox = detectionBox;
+    var detectionBoundingBox = detectionBox
+    var mPreview = preview
+
+    var widthScaleFactor = 1.0f;
+    var heightScaleFactor = 1.0f;
+
+    fun scaleX(horizontal: Int): Int
+    {
+        return (horizontal * widthScaleFactor).toInt()
+    }
+
+
+    fun scaleY(vertical: Int): Int
+    {
+        return (vertical * heightScaleFactor).toInt()
+    }
+
+    fun translateX(x: Int): Int
+    {
+        return scaleX(x)
+    }
+
+    fun translateY(y: Int): Int
+    {
+        return scaleY(y)
+    }
+
     override fun selectFocus(detections: Detector.Detections<Barcode>?): Int
     {
         val barcodes = detections?.getDetectedItems();
+        heightScaleFactor = mPreview.previewHeight / (detections?.frameMetadata?.height)?.toFloat()!!
+        widthScaleFactor = mPreview.previewWidth / (detections?.frameMetadata?.width)?.toFloat()!!
+
         for (i in 0 .. barcodes!!.size())
         {
             val barcodeID = barcodes.keyAt(i)
             val barcode = barcodes.get(barcodeID)
             val barcodeBoundingBox = barcode.getBoundingBox()
-            if (detectionBoundingBox.contains(barcodeBoundingBox))
+            barcodeBoundingBox.top = translateY(barcodeBoundingBox.top)
+            barcodeBoundingBox.bottom = translateY(barcodeBoundingBox.bottom) as Int
+            barcodeBoundingBox.left = translateX(barcodeBoundingBox.left) as Int
+            barcodeBoundingBox.right = translateX(barcodeBoundingBox.right) as Int
+            if (detectionBoundingBox.intersect(barcodeBoundingBox))
             {
                 return barcodeID;
             }
@@ -84,10 +118,10 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
     private var mCameraSource: CameraSource? = null
     private var mPreview: CameraSourcePreview? = null
     private var mTargetOverlay: ImageView? = null
+    private var mProcessor: TargetBarcodeFocusingProcessor? = null
 
     // helper objects for detecting taps and pinches.
     private var scaleGestureDetector: ScaleGestureDetector? = null
-    private val gestureDetector: GestureDetector? = null
 
     /**
      * Initializes the UI and creates the detector pipeline.
@@ -98,7 +132,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         setContentView(R.layout.barcode_capture)
 
         mPreview = findViewById<View>(R.id.preview) as CameraSourcePreview
-        mTargetOverlay = findViewById<View>(R.id.imageView3) as ImageView
+        mTargetOverlay = findViewById<View>(R.id.scanTargetOverlayImage) as ImageView
 
         // read parameters from the intent used to launch the activity.
         val autoFocus = intent.getBooleanExtra(AutoFocus, false)
@@ -182,8 +216,10 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         val tracker = BarcodeTracker(this)
 
         var targetOverlayRect = Rect()
-        mTargetOverlay!!.getHitRect(targetOverlayRect);
-        barcodeDetector.setProcessor(TargetBarcodeFocusingProcessor(targetOverlayRect, barcodeDetector, tracker))
+        mTargetOverlay!!.getGlobalVisibleRect(targetOverlayRect);
+
+        mProcessor = TargetBarcodeFocusingProcessor(mPreview!!, targetOverlayRect, barcodeDetector, tracker)
+        barcodeDetector.setProcessor(mProcessor)
 
         if (!barcodeDetector.isOperational)
         {

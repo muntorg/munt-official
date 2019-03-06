@@ -215,5 +215,6 @@ file COPYING
     <string name="remove_wallet_auth_title">Remove wallet</string>
     <string name="remove_wallet_auth_desc_recovery_warn">If you don\'t have the recovery phrase of your wallet you will lose it forever if you remove it now, also for funds received in the future on its old addresses.\n\n</string>
     <string name="remove_wallet_auth_desc">Enter access code to proceed and remove your wallet.</string>
+    <string name="image_content_description_qr_scan_target_rectangle">QR scan target rectangle</string>
 
 </resources>

@@ -29,10 +29,19 @@ import android.view.SurfaceView
 import android.view.ViewGroup
 
 import java.io.IOException
+import android.view.View.MeasureSpec
+import android.view.TextureView
+import android.graphics.SurfaceTexture
 
-class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : ViewGroup(mContext, attrs)
+
+
+
+class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : TextureView(mContext, attrs), TextureView.SurfaceTextureListener
 {
-    private val mSurfaceView: SurfaceView
+    public var textureHeight : Int = 0
+    public var textureWidth : Int = 0
+    public var previewHeight : Int = 0
+    public var previewWidth : Int = 0
     private var mStartRequested: Boolean = false
     private var mSurfaceAvailable: Boolean = false
     private var mCameraSource: CameraSource? = null
@@ -59,10 +68,43 @@ class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : 
         mStartRequested = false
         mSurfaceAvailable = false
 
-        mSurfaceView = SurfaceView(mContext)
-        mSurfaceView.holder.addCallback(SurfaceCallback())
-        addView(mSurfaceView)
+        setSurfaceTextureListener(this);
     }
+
+    /*Texture view listener overrides begin*/
+    override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int)
+    {
+        mSurfaceAvailable = true
+        textureHeight = height
+        textureWidth = width
+        try
+        {
+            startIfReady()
+        }
+        catch (e: IOException)
+        {
+            Log.e(TAG, "Could not start camera source.", e)
+        }
+
+    }
+
+    override fun onSurfaceTextureSizeChanged(texture: SurfaceTexture, width: Int, height: Int)
+    {
+        textureHeight = height
+        textureWidth = width
+    }
+
+    override fun onSurfaceTextureDestroyed(texture: SurfaceTexture): Boolean
+    {
+        mSurfaceAvailable = false
+        return true
+    }
+
+    override fun onSurfaceTextureUpdated(texture: SurfaceTexture)
+    {
+    }
+    /*Texture view listener overrides end*/
+
 
     @RequiresPermission(Manifest.permission.CAMERA)
     @Throws(IOException::class, SecurityException::class)
@@ -105,82 +147,15 @@ class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : 
     {
         if (mStartRequested && mSurfaceAvailable)
         {
-            mCameraSource?.start(mSurfaceView.holder)
+            mCameraSource?.start(this)
             mStartRequested = false
-        }
-    }
-
-    private inner class SurfaceCallback : SurfaceHolder.Callback
-    {
-        override fun surfaceCreated(surface: SurfaceHolder)
-        {
-            mSurfaceAvailable = true
-            try
-            {
-                startIfReady()
-            }
-            catch (se: SecurityException)
-            {
-                Log.e(TAG, "Do not have permission to start the camera", se)
-            }
-            catch (e: IOException)
-            {
-                Log.e(TAG, "Could not start camera source.", e)
-            }
-
-        }
-
-        override fun surfaceDestroyed(surface: SurfaceHolder)
-        {
-            mSurfaceAvailable = false
-        }
-
-        override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int)
-        {
         }
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int)
     {
-        var width = 320
-        var height = 240
-        if (mCameraSource != null)
-        {
-            val size = mCameraSource!!.previewSize
-            if (size != null)
-            {
-                width = size.width
-                height = size.height
-            }
-        }
-
-        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
-        if (isPortraitMode)
-        {
-            val tmp = width
-
-            width = height
-            height = tmp
-        }
-
-        val layoutWidth = right - left
-        val layoutHeight = bottom - top
-
-        // Computes height and width for potentially doing fit width.
-        var childWidth = layoutWidth
-        var childHeight = (layoutWidth.toFloat() / width.toFloat() * height).toInt()
-
-        // If height is too tall using fit width, does fit height instead.
-        if (childHeight > layoutHeight)
-        {
-            childHeight = layoutHeight
-            childWidth = (layoutHeight.toFloat() / height.toFloat() * width).toInt()
-        }
-
-        for (i in 0 until childCount)
-        {
-            getChildAt(i).layout(0, 0, childWidth, childHeight)
-        }
+        previewHeight = bottom - top
+        previewWidth = right - left
 
         try
         {
