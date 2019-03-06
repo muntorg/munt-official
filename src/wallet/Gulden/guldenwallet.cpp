@@ -491,9 +491,6 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
                     if (IsCrypted())
                     {
                         db.EraseEncryptedKey(pubKey);
-                    }
-                    else
-                    {
                         db.EraseKey(pubKey);
                     }
                 }
