@@ -22,9 +22,14 @@ file COPYING
         <item name="actionModeCloseDrawable">@color/colorPrimary</item>
         <item name="android:actionModeStyle">@style/MyActionBar</item>
         <item name="actionModeShareDrawable">@drawable/ic_glyphicons_309_share_alt</item>
+
+        <item name="preferenceTheme">@style/AppTheme.PreferenceThemeOverlay</item>
     </style>
 
-
+    <!-- Ensure custom preference layout so that we can put custom borders/controls on it other than just the list view it has by default -->
+    <style name="AppTheme.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
+        <item name="android:layout">@layout/preference_fragment_layout</item>
+    </style>
 
     <style name="Theme.Transparent" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>

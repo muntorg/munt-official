@@ -9,8 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -22,8 +20,6 @@ import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.WelcomeActivity
 import com.gulden.unity_wallet.localCurrency
-import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
-import kotlinx.android.synthetic.main.pref_about_app.*
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.support.v4.alert
@@ -44,6 +40,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
         }
     }
+
 
     override fun onResume()
     {

@@ -5,9 +5,15 @@
     android:clipToPadding="false"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="18dp"
-    android:paddingStart="?attr/listPreferredItemPaddingStart"
-    android:paddingEnd="?attr/listPreferredItemPaddingEnd" >
+    >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:paddingBottom="18dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimaryDark"
+        />
 
     <TextView
         android:id="@+id/textView2"
@@ -28,6 +34,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="18dp"
         android:orientation="horizontal">
 
         <Space
