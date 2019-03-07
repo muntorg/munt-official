@@ -43,13 +43,13 @@ file COPYING
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#40C3C3C3"
+        android:background="#80141414"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/scanCancelButton"
-            android:background="#00000000"
+            android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -63,7 +63,7 @@ file COPYING
 
         <ImageButton
             android:id="@+id/scanToggleFlashButton"
-            android:background="#00000000"
+            android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
