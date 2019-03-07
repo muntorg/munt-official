@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import android.widget.Toast
+
+
 
 inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
     beginTransaction().func().commit()
@@ -107,7 +110,21 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
 
     fun onRequestSupport(view: View? = null)
     {
-        //TODO: Implement
+        val i = Intent(Intent.ACTION_SENDTO)
+        i.type = "message/rfc822"
+        i.setData(Uri.parse("mailto:"));
+        i.putExtra(Intent.EXTRA_EMAIL, arrayOf("support@gulden.com"))
+        i.putExtra(Intent.EXTRA_SUBJECT, "Support request - Gulden android app")
+        i.putExtra(Intent.EXTRA_TEXT, "")
+        try
+        {
+            startActivity(Intent.createChooser(i, "Send mail..."))
+        }
+        catch (ex: android.content.ActivityNotFoundException)
+        {
+            Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun gotoSendPage()
