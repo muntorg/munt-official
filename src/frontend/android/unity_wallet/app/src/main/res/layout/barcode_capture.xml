@@ -39,4 +39,36 @@ file COPYING
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></com.gulden.barcodereader.CameraSourcePreview>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FAC3C3C3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/scanCancelButton"
+            android:background="#00000000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_cancel" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1000" />
+
+        <ImageButton
+            android:id="@+id/scanToggleFlashButton"
+            android:background="#00000000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_flash" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,13 +27,14 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.hardware.Camera
+import android.hardware.Camera.Parameters.FLASH_MODE_OFF
+import android.hardware.Camera.Parameters.FLASH_MODE_TORCH
 import android.os.Build
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.app.ActivityCompat
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
@@ -119,6 +120,8 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
     private var mPreview: CameraSourcePreview? = null
     private var mTargetOverlay: ImageView? = null
     private var mProcessor: TargetBarcodeFocusingProcessor? = null
+    private var mUseFlash : Boolean = false
+    private var mAutoFocus : Boolean = false
 
     // helper objects for detecting taps and pinches.
     private var scaleGestureDetector: ScaleGestureDetector? = null
@@ -135,8 +138,12 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         mTargetOverlay = findViewById<View>(R.id.scanTargetOverlayImage) as ImageView
 
         // read parameters from the intent used to launch the activity.
-        val autoFocus = intent.getBooleanExtra(AutoFocus, false)
-        val useFlash = intent.getBooleanExtra(UseFlash, false)
+        mAutoFocus = intent.getBooleanExtra(AutoFocus, false)
+        mUseFlash = intent.getBooleanExtra(UseFlash, false)
+
+        scanCancelButton.setOnClickListener { finish() }
+        scanToggleFlashButton.setOnClickListener() { mUseFlash = !mUseFlash; mCameraSource?.setFlashMode(if (mUseFlash) {FLASH_MODE_TORCH} else { FLASH_MODE_OFF}) }
+
 
         // Below relies on sizing of view items so can only run after the view is visible
         contentView?.post {
@@ -145,7 +152,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
                 val rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 if (rc == PackageManager.PERMISSION_GRANTED)
                 {
-                    createCameraSource(autoFocus, useFlash)
+                    createCameraSource(mAutoFocus, mUseFlash)
                     startCameraSource()
                 }
                 else
@@ -312,9 +319,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         {
             Log.d(TAG, "Camera permission granted - initialize the camera source")
             // we have permission, so create the camerasource
-            val autoFocus = intent.getBooleanExtra(AutoFocus, false)
-            val useFlash = intent.getBooleanExtra(UseFlash, false)
-            createCameraSource(autoFocus, useFlash)
+            createCameraSource(mAutoFocus, mUseFlash)
             startCameraSource()
             return
         }
