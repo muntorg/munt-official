@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018-2019 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Copyright (c) 2018 The Gulden developers
+Copyright (c) 2018-2019 The Gulden developers
 Authored by: Willem de Jonge (willem@isnapp.nl)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
-    <TableLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/list_entry_padding_horizontal"
-        android:paddingRight="@dimen/list_entry_padding_horizontal"
-        android:paddingTop="@dimen/list_entry_padding_vertical"
-        android:paddingBottom="@dimen/list_entry_padding_vertical"
-        android:stretchColumns="1">
-
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="@string/chain_status_label_probable_height" />
-            <TextView
-                android:id="@+id/processing_group_probable"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="123" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="@string/chain_status_label_partial_height" />
-            <TextView
-                android:id="@+id/processing_group_height"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="123" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="@string/chain_status_label_processed_height" />
-            <TextView
-                android:id="@+id/processing_group_processed"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="123" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="@string/chain_status_label_chain_offset" />
-            <TextView
-                android:id="@+id/processing_group_offset"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="123" />
-        </TableRow>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/list_entry_padding_horizontal"
+    android:paddingRight="@dimen/list_entry_padding_horizontal"
+    android:paddingTop="@dimen/list_entry_padding_vertical"
+    android:paddingBottom="@dimen/list_entry_padding_vertical"
+    android:stretchColumns="1">
 
     <TableRow>
         <TextView
             android:layout_column="1"
             android:padding="3dip"
-            android:text="@string/chain_status_label_chain_length" />
+            android:text="@string/chain_status_label_probable_height" />
         <TextView
-            android:id="@+id/processing_group_length"
+            android:id="@+id/processing_group_probable"
             android:gravity="right"
             android:padding="3dip"
             android:text="123" />
     </TableRow>
 
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="@string/chain_status_label_pruned_height" />
-            <TextView
-                android:id="@+id/processing_group_prune"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="123" />
-        </TableRow>
+    <TableRow>
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="@string/chain_status_label_partial_height" />
+        <TextView
+            android:id="@+id/processing_group_height"
+            android:gravity="right"
+            android:padding="3dip"
+            android:text="123" />
+    </TableRow>
 
-    </TableLayout>
+    <TableRow>
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="@string/chain_status_label_processed_height" />
+        <TextView
+            android:id="@+id/processing_group_processed"
+            android:gravity="right"
+            android:padding="3dip"
+            android:text="123" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="@string/chain_status_label_chain_offset" />
+        <TextView
+            android:id="@+id/processing_group_offset"
+            android:gravity="right"
+            android:padding="3dip"
+            android:text="123" />
+    </TableRow>
+
+<TableRow>
+    <TextView
+        android:layout_column="1"
+        android:padding="3dip"
+        android:text="@string/chain_status_label_chain_length" />
+    <TextView
+        android:id="@+id/processing_group_length"
+        android:gravity="right"
+        android:padding="3dip"
+        android:text="123" />
+</TableRow>
+
+    <TableRow>
+        <TextView
+            android:layout_column="1"
+            android:padding="3dip"
+            android:text="@string/chain_status_label_pruned_height" />
+        <TextView
+            android:id="@+id/processing_group_prune"
+            android:gravity="right"
+            android:padding="3dip"
+            android:text="123" />
+    </TableRow>
+
+</TableLayout>
