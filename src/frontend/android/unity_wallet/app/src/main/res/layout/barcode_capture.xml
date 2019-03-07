@@ -43,7 +43,7 @@ file COPYING
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#FAC3C3C3"
+        android:background="#40C3C3C3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
