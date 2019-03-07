@@ -7,6 +7,7 @@ file COPYING
 !-->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:title="@string/preference_fragment_title"
@@ -23,7 +24,7 @@ file COPYING
 
     <Preference
         android:key="recovery_linked_preference"
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="@string/preference_linked_recovery_descr"
         android:title="@string/preference_fragment_recovery_label"
@@ -31,7 +32,7 @@ file COPYING
 
     <Preference
         android:key="preference_link_wallet"
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="Link your mobile wallet with your desktop wallet"
         android:title="@string/preference_fragment_link_label"
@@ -39,7 +40,7 @@ file COPYING
 
     <Preference
         android:key="preference_change_pass_code"
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
         android:title="@string/preference_fragment_pass_code_label"
@@ -47,7 +48,7 @@ file COPYING
 
     <Preference
         android:key="preference_rescan_wallet"
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
         android:title="@string/preference_fragment_rescan_label"
@@ -55,7 +56,7 @@ file COPYING
 
     <Preference
         android:key="preference_remove_wallet"
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="Remove this wallet in order to start or recover another wallet"
         android:title="@string/preference_fragment_remove_label"
@@ -63,7 +64,7 @@ file COPYING
 
     <Preference
         android:key="preference_unlink_wallet"
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:persistent="false"
         android:summary="Unlink this wallet in order to start or recover another wallet"
         android:title="Unlink wallet"
@@ -72,31 +73,32 @@ file COPYING
     <Preference
         android:key="preference_local_currency"
         android:summary=""
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:defaultValue="@string/default_currency"
         android:title="@string/preference_fragment_fiat_label"
         tools:ignore="UnusedAttribute" />
 
+
+    <ListPreference
+        android:key="preference_background_sync"
+        app:iconSpaceReserved="false"
+        android:title="@string/preference_fragment_background_sync_label"
+        android:summary="%s"
+        android:entries="@array/background_sync_entries"
+        android:entryValues="@array/background_sync_values"
+        android:defaultValue="@string/background_sync_default" />
     <SwitchPreference
         android:key="preference_notify_transaction_activity"
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:persistent="true"
         android:defaultValue="true"
         android:summary=""
         android:title="@string/preference_fragment_notification_label"
         tools:ignore="UnusedAttribute" />
 
-    <ListPreference
-        android:key="preference_background_sync"
-        android:title="@string/preference_fragment_background_sync_label"
-        android:summary="%s"
-        android:entries="@array/background_sync_entries"
-        android:entryValues="@array/background_sync_values"
-        android:defaultValue="@string/background_sync_default" />
-
     <Preference
         android:key="preference_monitor"
-        android:iconSpaceReserved="false"
+        app:iconSpaceReserved="false"
         android:persistent="false"
         android:summary=""
         android:title="@string/preference_fragment_background_network_label"
