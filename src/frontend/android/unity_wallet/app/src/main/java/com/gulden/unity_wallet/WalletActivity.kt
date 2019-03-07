@@ -133,8 +133,8 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
 
     private fun gotoSettingsPage()
     {
-        if (settingsFragment == null)
-            settingsFragment = SettingsFragment()
+        //Always create a new settings fragment (In case we are in a nested menu and want to go back to top level)
+        settingsFragment = SettingsFragment()
         replaceFragment(settingsFragment!!, R.id.mainLayout)
     }
 

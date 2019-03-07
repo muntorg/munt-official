@@ -31,14 +31,6 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
-        if (GuldenUnifiedBackend.IsMnemonicWallet()) {
-            preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
-            preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
-        }
-        else {
-            preferenceScreen.removePreferenceRecursively("recovery_view_preference")
-            preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
-        }
     }
 
 
@@ -92,6 +84,18 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
             "preference_local_currency" ->
             {
                 (activity as WalletActivity).showLocalCurrenciesPage()
+            }
+            "preference_show_wallet_settings" ->
+            {
+                setPreferencesFromResource(R.xml.fragment_wallet_settings, null)
+                if (GuldenUnifiedBackend.IsMnemonicWallet()) {
+                    preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
+                    preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
+                }
+                else {
+                    preferenceScreen.removePreferenceRecursively("recovery_view_preference")
+                    preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
+                }
             }
         }
         return super.onPreferenceTreeClick(preference)
