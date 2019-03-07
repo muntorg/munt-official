@@ -1,19 +1,4 @@
-<vector android:height="24dp" android:viewportHeight="76.02982"
-    android:viewportWidth="76.01793" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillAlpha="1" android:fillColor="#40ffffff"
-        android:pathData="m28.6566,75.9402 l-0.0719,-6.3346h18.6972l0.064,6.3472 -9.7995,-0.003z" android:strokeWidth="20"/>
-    <path android:fillAlpha="1" android:fillColor="#40ffffff"
-        android:pathData="m76.0381,17.732 l-6.4497,-0.0181 0.0442,-11.3742 -11.5226,0.0112 -0.0151,-6.35 17.9162,0.0245v0z" android:strokeWidth="20"/>
-    <path android:fillAlpha="1" android:fillColor="#40ffffff"
-        android:pathData="m28.6566,6.3546 l-0.0719,-6.3346h18.6972l0.064,6.3472 -9.7995,-0.003z" android:strokeWidth="20"/>
-    <path android:fillAlpha="1" android:fillColor="#40ffffff"
-        android:pathData="m6.3458,47.3026 l-6.3347,0.0568 0.0446,-18.6971 6.3473,-0.0488 -0.0264,9.7994z" android:strokeWidth="20"/>
-    <path android:fillAlpha="1" android:fillColor="#40ffffff"
-        android:pathData="m75.8623,47.3026 l-6.3347,0.0568 0.0446,-18.6971 6.3473,-0.0488 -0.0264,9.7994z" android:strokeWidth="20"/>
-    <path android:fillAlpha="1" android:fillColor="#40ffffff"
-        android:pathData="m17.7365,0.006 l-0.0181,6.4497 -11.3742,-0.0442 0.0112,11.5226 -6.35,0.0151 0.0245,-17.9162v0z" android:strokeWidth="20"/>
-    <path android:fillAlpha="1" android:fillColor="#40ffffff"
-        android:pathData="m58.2519,76.0242 l0.0181,-6.4497 11.3742,0.0442 -0.0112,-11.5226 6.35,-0.0151 -0.0245,17.9162v0z" android:strokeWidth="20"/>
-    <path android:fillAlpha="1" android:fillColor="#40ffffff"
-        android:pathData="m17.7609,76.0021 l-0.0181,-6.4497 -11.3742,0.0442 0.0112,-11.5226 -6.35,-0.0151 0.0245,17.9162v0z" android:strokeWidth="20"/>
+<vector android:height="24dp" android:viewportHeight="725"
+    android:viewportWidth="725" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#ffffff" android:pathData="M161.7,724.87c-25.93,-1 -51.55,-0.28 -76.76,-3.16 -42.73,-4.87 -74.8,-36.55 -80.62,-76.8 -2.85,-19.66 -2.46,-39.8 -3.34,-59.73 -0.32,-7.13 -0.05,-14.3 -0.05,-21.88L49.1,563.3v5.73l1,59.43c0.95,26 19,44.76 45.13,46.24 20.26,1.14 40.6,0.9 60.9,1.26h5.55zM675.72,563.12h48l0.32,3.94c-0.32,21.3 0,42.65 -1.15,63.92 -2.58,49.4 -38,86.87 -85.66,90.95 -24.45,2.1 -49.1,2 -74,2.88v-48.88h17.58c18.28,-0.6 36.65,-0.3 54.78,-2.27 17.45,-1.9 30.45,-11.9 35.63,-29.14 2.83,-9.4 3.94,-19.55 4.33,-29.42 0.66,-17.1 0.17,-34.3 0.17,-51.98zM161.84,0.2v48.85h-5.9L96.5,50.23c-15.13,0.63 -28.1,6.34 -37.33,19.07a47.11,47.11 0,0 0,-9 26c-0.83,20.14 -0.82,40.3 -1.15,60.46v5.88L1.6,161.64c-0.12,-0.17 -0.5,-0.43 -0.48,-0.68 0.54,-24.8 -0.3,-49.73 2,-74.38 4.2,-45.46 39.8,-80 85.3,-83.64C112.6,1.05 137,1.08 161.84,0.2zM724.86,161.84L676,161.84l-0.07,-36.57c-0.3,-11.63 -0.5,-23.32 -2,-34.84 -3.08,-24.5 -20.93,-38.63 -44.4,-40.15 -19.25,-1.24 -38.6,-0.88 -57.9,-1.22h-8.32L563.31,1h6.7c20,0.3 40,0.1 59.92,1.07 50.1,2.46 87.75,37.52 92,85.73 2.18,24.43 2.06,49.1 2.92,74.04zM282.2,1.06h160.7v47.82L282.2,48.88zM48.9,443L1.13,443L1.13,282.24L48.9,282.24zM676.13,282.07L724,282.07L724,442.9h-47.87zM282,723.9v-47.85h160.94v47.85z"/>
 </vector>
