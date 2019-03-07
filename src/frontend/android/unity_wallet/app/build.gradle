@@ -36,7 +36,9 @@ android {
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
             versionCode 342
-            versionName = "2.0.1.0"
+            versionName = "2.0.1"
+            resValue "string", "about_text_app_name", "Gulden testnet $versionName ($versionCode)"
+            resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
         }
         gulden_mainnet {
             applicationId 'com.gulden.wallet'
@@ -45,7 +47,9 @@ android {
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
             versionCode 342
-            versionName = "2.0.1.0"
+            versionName = "2.0.1"
+            resValue "string", "about_text_app_name", "Gulden $versionName ($versionCode)"
+            resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
         }
     }
     // Build a separate apk for each native architecture we support.
