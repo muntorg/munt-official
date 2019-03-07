@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.main_activity_fragments.*
 import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentInteractionListener
+import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
@@ -96,6 +97,17 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
                 setWalletBalance(UnityCore.instance.balanceAmount)
             }
         }
+    }
+
+    fun onRequestAdvancedSettings(view: View? = null)
+    {
+        val intent = Intent(this, NetworkMonitorActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun onRequestSupport(view: View? = null)
+    {
+        //TODO: Implement
     }
 
     private fun gotoSendPage()

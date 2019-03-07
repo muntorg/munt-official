@@ -25,11 +25,6 @@
         android:text="@string/about_text_app_copyright"
         />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="18dp"
-        />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,24 +37,23 @@
 
         <TextView
             android:id="@+id/textViewSupport"
-            android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Support" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4" />
+            android:onClick="onRequestSupport"
+            android:padding="18dp"
+            android:text="Support"
+            android:textColor="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/textViewAdvancedSettings"
-            android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Advanced" />
+            android:onClick="onRequestAdvancedSettings"
+            android:padding="18dp"
+            android:text="Advanced"
+            android:textColor="@color/colorPrimary" />
 
         <Space
             android:layout_width="wrap_content"
