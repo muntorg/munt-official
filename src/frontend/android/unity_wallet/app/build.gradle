@@ -35,7 +35,7 @@ android {
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 342
+            versionCode 300345
             versionName = "2.0.1"
             resValue "string", "about_text_app_name", "Gulden testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
@@ -46,7 +46,7 @@ android {
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
-            versionCode 342
+            versionCode 344
             versionName = "2.0.1"
             resValue "string", "about_text_app_name", "Gulden $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
@@ -91,23 +91,4 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1' exclude group: 'com.google.code.findbugs', module: 'jsr305'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-}
-
-// Map for the version code that gives each ABI a value.
-ext.abiCodes = ['armeabi-v7a':1, 'x86':2, 'x86_64':3, 'armeabi-v8a':4]
-
-import com.android.build.OutputFile
-
-android.applicationVariants.all { variant ->
-    // Assigns a different version code for each output APK
-    // other than the universal APK.
-    variant.outputs.each { output ->
-        // Stores the value of ext.abiCodes that is associated with the ABI for this variant.
-        def baseAbiVersionCode = project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
-
-        if (baseAbiVersionCode != null)
-        {
-            output.versionCodeOverride = baseAbiVersionCode * 100000 + variant.versionCode
-        }
-    }
 }
