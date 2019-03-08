@@ -23,7 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import android.widget.Toast
-
+import com.gulden.unity_wallet.util.getAndroidVersion
+import com.gulden.unity_wallet.util.getDeviceName
 
 
 inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
@@ -110,19 +111,19 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
 
     fun onRequestSupport(view: View? = null)
     {
-        val i = Intent(Intent.ACTION_SENDTO)
-        i.type = "message/rfc822"
-        i.setData(Uri.parse("mailto:"));
-        i.putExtra(Intent.EXTRA_EMAIL, arrayOf("support@gulden.com"))
-        i.putExtra(Intent.EXTRA_SUBJECT, "Support request - Gulden android app")
-        i.putExtra(Intent.EXTRA_TEXT, "")
         try
         {
+            val i = Intent(Intent.ACTION_SENDTO)
+            i.type = "message/rfc822"
+            i.setData(Uri.parse("mailto:"));
+            i.putExtra(Intent.EXTRA_EMAIL, arrayOf("support@gulden.com"))
+            i.putExtra(Intent.EXTRA_SUBJECT, "Support request")
+            i.putExtra(Intent.EXTRA_TEXT, getDeviceName() + " / " + getAndroidVersion() + " / " +  getString(R.string.about_text_app_name) + System.getProperty("line.separator") )
             startActivity(Intent.createChooser(i, "Send mail..."))
         }
         catch (ex: android.content.ActivityNotFoundException)
         {
-            Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No email app installed.", Toast.LENGTH_SHORT).show()
         }
 
     }
