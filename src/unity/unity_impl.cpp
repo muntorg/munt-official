@@ -680,12 +680,6 @@ bool GuldenUnifiedBackend::UnlockWallet(const std::string& password)
         return false;
     }
 
-    if (!dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsLocked())
-    {
-        LogPrintf("UnlockWallet: Wallet not locked");
-        return true;
-    }
-
     return pactiveWallet->Unlock(password.c_str());
 }
 

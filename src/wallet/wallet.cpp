@@ -314,7 +314,10 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase)
             }
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 continue; // try another master key
-            return UnlockWithMasterKey(_vMasterKey);
+            if (IsLocked())
+                return UnlockWithMasterKey(_vMasterKey);
+            else
+                return true;
         }
     }
     LogPrintf("CWallet::Unlock - Failed to unlock any keys");
