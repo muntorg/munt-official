@@ -2,6 +2,7 @@ package com.gulden.unity_wallet.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,11 +12,13 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import kotlinx.android.synthetic.main.activity_enter_recovery_phrase.*
+import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 
 private const val TAG = "enter-recovery-activity"
@@ -140,7 +143,14 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         return super.onOptionsItemSelected(item)
     }
 
-    fun onAcceptRecoverFromPhrase(view: View) {
+    fun onAcceptRecoverFromPhrase(view: View)
+    {
+        if (!GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
+        {
+            Toast.makeText(applicationContext, "Invalid recovery phrase", Toast.LENGTH_LONG).show()
+            return;
+        }
+
         Authentication.instance.chooseAccessCode(this) {
             password->
             if (UnityCore.instance.isCoreReady()) {
@@ -159,7 +169,11 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     fun updateView()
     {
-        recover_from_phrase_proceed_button.isEnabled = GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase)
+        // Toggle button visual disabled/enabled indicator while still keeping it clickable
+        var buttonBackground = R.drawable.shape_rounded_button_disabled
+        if (GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
+            buttonBackground = R.drawable.shape_rounded_button_enabled
+        recover_from_phrase_proceed_button.setBackgroundResource(buttonBackground);
     }
 
 }
