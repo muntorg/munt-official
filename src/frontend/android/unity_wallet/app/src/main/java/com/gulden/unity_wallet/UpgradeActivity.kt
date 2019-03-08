@@ -77,15 +77,7 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
             }
             else
             {
-                this.runOnUiThread {
-                    Authentication.instance.chooseAccessCode(this, getString(R.string.access_code_choose_upgrade_title)) { accessCode ->
-                        thread(true) {
-                            val newPassword = accessCode.joinToString("")
-                            GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
-                        }
-                        this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
-                    }
-                }
+                chooseNewAccessCodeAndUpgrade(oldPassword, view)
             }
         }
     }
@@ -123,15 +115,7 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
                 }
                 LegacyWalletResult.VALID ->
                 {
-                    this.runOnUiThread {
-                        Authentication.instance.chooseAccessCode(this, getString(R.string.access_code_choose_upgrade_title)) { accessCode ->
-                            thread(true) {
-                                val newPassword = accessCode.joinToString("")
-                                GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, "", newPassword)
-                            }
-                            this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
-                        }
-                    }
+                    chooseNewAccessCodeAndUpgrade("", view)
                 }
                 else ->
                 {
@@ -141,6 +125,18 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
         }
 
         processingUpgrade = false
+    }
+
+    private fun chooseNewAccessCodeAndUpgrade(oldPassword: String, view: View) {
+        this.runOnUiThread {
+            Authentication.instance.chooseAccessCode(this, getString(R.string.access_code_choose_upgrade_title)) { accessCode ->
+                thread(true) {
+                    val newPassword = accessCode.joinToString("")
+                    GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
+                }
+                this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
+            }
+        }
     }
 
     @Suppress("UNUSED_PARAMETER")
