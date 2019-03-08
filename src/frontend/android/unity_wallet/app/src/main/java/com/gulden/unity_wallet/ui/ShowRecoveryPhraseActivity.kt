@@ -19,6 +19,7 @@ import androidx.core.view.MenuItemCompat
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.util.gotoWalletActivity
+import com.gulden.unity_wallet.util.setFauxButtonEnabledState
 import kotlinx.android.synthetic.main.activity_show_recovery_phrase.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
@@ -80,6 +81,13 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     @Suppress("UNUSED_PARAMETER")
     fun onAcceptRecoveryPhrase(view: View)
     {
+        // Only allow user to move on once they have acknowledged writing the recovery phrase down.
+        if (!acknowledge_recovery_phrase.isChecked)
+        {
+            Toast.makeText(applicationContext, "Write down your recovery phrase", Toast.LENGTH_LONG).show()
+            return;
+        }
+
         Authentication.instance.chooseAccessCode(this) {
             password->
             if (UnityCore.instance.isCoreReady()) {
@@ -104,8 +112,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     private fun updateView()
     {
-        // Only allow user to move on once they have acknowledged writing the recovery phrase down.
-        button_accept_recovery_phrase.isEnabled = acknowledge_recovery_phrase.isChecked
+        setFauxButtonEnabledState(button_accept_recovery_phrase, acknowledge_recovery_phrase.isChecked)
     }
 
     internal inner class ActionBarCallBack : ActionMode.Callback

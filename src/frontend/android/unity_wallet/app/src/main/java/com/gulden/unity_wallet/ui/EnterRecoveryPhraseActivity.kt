@@ -1,8 +1,6 @@
 package com.gulden.unity_wallet.ui
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,9 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.util.gotoWalletActivity
+import com.gulden.unity_wallet.util.setFauxButtonEnabledState
 import kotlinx.android.synthetic.main.activity_enter_recovery_phrase.*
-import org.jetbrains.anko.backgroundDrawable
-import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 
 private const val TAG = "enter-recovery-activity"
 
@@ -170,10 +167,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     fun updateView()
     {
         // Toggle button visual disabled/enabled indicator while still keeping it clickable
-        var buttonBackground = R.drawable.shape_rounded_button_disabled
-        if (GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
-            buttonBackground = R.drawable.shape_rounded_button_enabled
-        recover_from_phrase_proceed_button.setBackgroundResource(buttonBackground);
+        setFauxButtonEnabledState(recover_from_phrase_proceed_button, GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
     }
 
 }
