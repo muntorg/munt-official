@@ -7,6 +7,7 @@ package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -61,7 +62,16 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
             }
             "preference_change_pass_code" ->
             {
-                //TODO: Implement
+                Authentication.instance.authenticate(activity!!, getString(R.string.change_passcode_auth_title), getString(R.string.change_passcode_auth_desc)) {
+                    oldPassword->
+                    Authentication.instance.chooseAccessCode(activity!!, getString(R.string.change_passcode_auth_title)) {
+                        newPassword ->
+                        if (!GuldenUnifiedBackend.ChangePassword(oldPassword.joinToString("") , newPassword.joinToString("")))
+                        {
+                            Toast.makeText(context, "Failed to change password", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
             }
             "preference_rescan_wallet" ->
             {
@@ -101,7 +111,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
                 // ReplaceWalletLinkedFromURI can be long running, so run it in a thread that isn't the UI thread.
                 thread(start = true)
                 {
-                    if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI, password))
+                    if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI, password.joinToString("")))
                     {
                         activity.runOnUiThread {
                             AlertDialog.Builder(activity)

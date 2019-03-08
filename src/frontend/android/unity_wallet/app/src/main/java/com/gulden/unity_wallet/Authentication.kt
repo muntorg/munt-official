@@ -146,7 +146,7 @@ class Authentication {
      * Present user with authentication method.
      * On successful authentication action is executed.
      */
-    fun authenticate(context: Context, title: String?, msg: String?, action: (password: String) -> Unit) {
+    fun authenticate(context: Context, title: String?, msg: String?, action: (CharArray) -> Unit) {
 
 
         if (isBlocked(context)) {
@@ -179,7 +179,7 @@ class Authentication {
                                 if (GuldenUnifiedBackend.UnlockWallet(chosenCode.joinToString(""))) {
                                     Log.i(TAG, "successful authentication")
                                     it.dismiss()
-                                    action(chosenCode.joinToString(""))
+                                    action(chosenCode)
                                 } else {
                                     numAttemptsRemaining -= 1
                                     if (numAttemptsRemaining > 0) {
