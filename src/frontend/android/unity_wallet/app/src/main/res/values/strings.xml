@@ -212,6 +212,7 @@ file COPYING
     <string name="wallet_birth_less_than_a_year">Less than a year</string>
     <string name="wallet_birth_less_than_two_years">Less than two years</string>
     <string name="wallet_birth_unsure">Older / I\'m not sure</string>
+    <string name="link_wallet_auth_desc">Enter access code to proceed and link your wallet.</string>
     <string-array name="wallet_birth_date">
         <item>@string/wallet_birth_less_than_a_week</item>
         <item>@string/wallet_birth_less_than_a_month</item>
