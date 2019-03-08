@@ -96,22 +96,30 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
     private fun performLink(linkURI: String)
     {
-        // ReplaceWalletLinkedFromURI can be long running, so run it in a thread that isn't the UI thread.
-        thread(start = true)
-        {
-            // TODO: get real password in here
-            if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI, "123456"))
-            {
-                activity?.runOnUiThread(java.lang.Runnable {
-                    AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title)).setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning)).setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i -> dialogInterface.dismiss() }.setCancelable(true).create().show()
-                })
-            }
-            else
-            {
-                activity?.runOnUiThread(java.lang.Runnable {
-                    activity?.contentView?.snackbar(getString(R.string.rescan_started))
-                    (activity as WalletActivity).gotoReceivePage()
-                })
+        activity?.let { activity ->
+            Authentication.instance.authenticate(activity, null, getString(R.string.link_wallet_auth_desc)) { password ->
+                // ReplaceWalletLinkedFromURI can be long running, so run it in a thread that isn't the UI thread.
+                thread(start = true)
+                {
+                    if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI, password))
+                    {
+                        activity.runOnUiThread {
+                            AlertDialog.Builder(activity)
+                                    .setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title))
+                                    .setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning))
+                                    .setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) {
+                                        dialogInterface, i -> dialogInterface.dismiss()
+                                    }.setCancelable(true).create().show()
+                        }
+                    }
+                    else
+                    {
+                        activity.runOnUiThread {
+                            activity.contentView?.snackbar(getString(R.string.rescan_started))
+                            (activity as WalletActivity).gotoReceivePage()
+                        }
+                    }
+                }
             }
         }
     }
