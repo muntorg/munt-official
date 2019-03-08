@@ -162,8 +162,11 @@ gulden_unified_backend = interface +c {
     # Unlock wallet
     static UnlockWallet(password: string): bool;
 
-    # Forcefull lock wallet again
+    # Forcefully lock wallet again
     static LockWallet(): bool;
+
+    # Change the waller password
+    static ChangePassword(oldPassword: string, newPassword: string) : bool;
 
     # Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait.
     static HaveUnconfirmedFunds(): bool;

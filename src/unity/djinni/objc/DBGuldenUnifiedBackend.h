@@ -100,8 +100,12 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Unlock wallet */
 + (BOOL)UnlockWallet:(nonnull NSString *)password;
 
-/** Forcefull lock wallet again */
+/** Forcefully lock wallet again */
 + (BOOL)LockWallet;
+
+/** Change the waller password */
++ (BOOL)ChangePassword:(nonnull NSString *)oldPassword
+           newPassword:(nonnull NSString *)newPassword;
 
 /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
 + (BOOL)HaveUnconfirmedFunds;

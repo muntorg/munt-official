@@ -686,12 +686,32 @@ bool GuldenUnifiedBackend::UnlockWallet(const std::string& password)
 bool GuldenUnifiedBackend::LockWallet()
 {
     if (!pactiveWallet)
+    {
+        LogPrintf("LockWallet: No active wallet");
         return false;
+    }
 
     if (dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsLocked())
         return true;
 
     return dynamic_cast<CGuldenWallet*>(pactiveWallet)->Lock();
+}
+
+bool GuldenUnifiedBackend::ChangePassword(const std::string& oldPassword, const std::string& newPassword)
+{
+    if (!pactiveWallet)
+    {
+        LogPrintf("ChangePassword: No active wallet");
+        return false;
+    }
+
+    if (newPassword.length() == 0)
+    {
+        LogPrintf("ChangePassword: Refusing invalid password of length 0");
+        return false;
+    }
+
+    return pactiveWallet->ChangeWalletPassphrase(oldPassword.c_str(), newPassword.c_str());
 }
 
 bool GuldenUnifiedBackend::HaveUnconfirmedFunds()

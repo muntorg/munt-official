@@ -96,8 +96,11 @@ public:
     /** Unlock wallet */
     static bool UnlockWallet(const std::string & password);
 
-    /** Forcefull lock wallet again */
+    /** Forcefully lock wallet again */
     static bool LockWallet();
+
+    /** Change the waller password */
+    static bool ChangePassword(const std::string & oldPassword, const std::string & newPassword);
 
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
     static bool HaveUnconfirmedFunds();

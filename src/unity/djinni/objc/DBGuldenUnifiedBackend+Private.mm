@@ -212,6 +212,15 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)ChangePassword:(nonnull NSString *)oldPassword
+           newPassword:(nonnull NSString *)newPassword {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::ChangePassword(::djinni::String::toCpp(oldPassword),
+                                                                     ::djinni::String::toCpp(newPassword));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (BOOL)HaveUnconfirmedFunds {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::HaveUnconfirmedFunds();
