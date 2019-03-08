@@ -205,6 +205,8 @@ file COPYING
     <string name="remove_wallet_auth_title">Remove wallet</string>
     <string name="remove_wallet_auth_desc_recovery_warn">If you don\'t have the recovery phrase of your wallet you will lose it forever if you remove it now, also for funds received in the future on its old addresses.\n\n</string>
     <string name="remove_wallet_auth_desc">Enter access code to proceed and remove your wallet.</string>
+    <string name="change_passcode_auth_title">Change code</string>
+    <string name="change_passcode_auth_desc">Enter old access code to proceed and change to a new code.</string>
     <string name="image_content_description_qr_scan_target_rectangle">QR scan target rectangle</string>
     <string name="wallet_birth_heading">How old is this wallet?</string>
     <string name="wallet_birth_info">Newer wallets sync faster. Select \"Older\" if you are missing funds.</string>string>
