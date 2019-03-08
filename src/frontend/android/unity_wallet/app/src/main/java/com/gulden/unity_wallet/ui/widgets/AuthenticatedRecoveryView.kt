@@ -1,5 +1,5 @@
 // Copyright (c) 2019 The Gulden developers
-// Authored by: Willem de Jonge (willem@isnapp.nl)
+// Authored by: Willem de Jonge (willem@isnapp.nl), Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -12,6 +12,7 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.pref_view_recovery.view.*
+import kotlin.concurrent.thread
 
 class AuthenticatedRecoveryView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(context, attrs) {
 
@@ -21,7 +22,9 @@ class AuthenticatedRecoveryView(context: Context?, attrs: AttributeSet?) : ViewS
         lockedView.setOnClickListener {
             Authentication.instance.authenticate(context!!, null, context?.getString(R.string.show_recovery_msg)) {
                 displayedChild = 1
-                recoveryPhrase.text = GuldenUnifiedBackend.GetRecoveryPhrase()
+                //TODO: Reintroduce showing birth time here if/when we decide we want it in future
+                var mnemonic = GuldenUnifiedBackend.GetRecoveryPhrase()?.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ');
+                recoveryPhrase.text = mnemonic
             }
         }
         recoveryPhrase.setOnClickListener {

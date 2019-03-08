@@ -29,6 +29,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
     //fixme: (GULDEN) Change to char[] to we can securely wipe.
     internal var recoveryPhrase: String? = null
+    internal var recoveryPhraseTrimmed: String? = null
 
     private var shareActionProvider: ShareActionProvider? = null
 
@@ -39,8 +40,10 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         setContentView(R.layout.activity_show_recovery_phrase)
 
         recoveryPhrase = intent.getStringExtra(this.packageName + "recovery_phrase")
+        recoveryPhraseTrimmed = recoveryPhrase?.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ')
         recovery_phrase_text_view.run {
-            text = recoveryPhrase
+            //TODO: Reintroduce showing birth time here if/when we decide we want it in future
+            text = recoveryPhraseTrimmed
             onClick { setFocusOnRecoveryPhrase() }
         }
 
@@ -70,6 +73,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         UnityCore.instance.removeObserver(this)
         //fixme: (GULDEN) Securely wipe.
         recoveryPhrase = ""
+        recoveryPhraseTrimmed = ""
         super.onDestroy()
     }
 
@@ -122,7 +126,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
             return if (item.itemId == R.id.item_copy_to_clipboard)
             {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("backup", recoveryPhrase)
+                val clip = ClipData.newPlainText("backup", recoveryPhraseTrimmed)
                 clipboard.primaryClip = clip
                 mode.finish()
                 Toast.makeText(applicationContext, R.string.recovery_phrase_copy, Toast.LENGTH_LONG).show()
@@ -151,7 +155,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
-            intent.putExtra(Intent.EXTRA_TEXT, recoveryPhrase)
+            intent.putExtra(Intent.EXTRA_TEXT, recoveryPhraseTrimmed)
             shareActionProvider!!.setShareIntent(intent)
 
             @Suppress("DEPRECATION")
@@ -167,7 +171,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         {
             shareActionProvider = null
 
-            recovery_phrase_text_view.setText(recoveryPhrase ?: "")
+            recovery_phrase_text_view.setText(recoveryPhraseTrimmed ?: "")
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean
