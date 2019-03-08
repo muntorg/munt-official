@@ -1,6 +1,7 @@
 package com.gulden.unity_wallet.ui
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
@@ -140,6 +142,46 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         return super.onOptionsItemSelected(item)
     }
 
+    fun chooseAccessCodeAndProceed(mnemonicPhrase : String)
+    {
+        Authentication.instance.chooseAccessCode(this) {
+            password->
+            if (UnityCore.instance.isCoreReady()) {
+                if (GuldenUnifiedBackend.ContinueWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString(""))) {
+                    gotoWalletActivity(this)
+                } else {
+                    internalErrorAlert(this, "$TAG continuation failed")
+                }
+            } else {
+                // Create the new wallet, a coreReady event will follow which will proceed to the main activity
+                if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString("")))
+                    internalErrorAlert(this, "$TAG init failed")
+            }
+        }
+    }
+
+    fun promptUserForBirthDate()
+    {
+        val builder = AlertDialog.Builder(this)
+
+        //TODO: Display info message 'R.string.wallet_birth_info' here (requires a custom dialog as AlertDialog can't handle both)
+        //TODO: Create a nicer looking dialog here (look at using a bottom drawer for instance)
+        builder.setTitle(getString(R.string.wallet_birth_heading))
+                .setItems(R.array.wallet_birth_date) { dialog, selection ->
+                    val unixTime = System.currentTimeMillis() / 1000L
+                    when (selection)
+                    {
+                        0 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*7)))
+                        1 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)))
+                        2 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*30*6)))
+                        4 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)))
+                        5 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365*2)))
+                        6 -> chooseAccessCodeAndProceed(recoveryPhrase)
+                    }
+                }
+        builder.create().show()
+    }
+
     fun onAcceptRecoverFromPhrase(view: View)
     {
         if (!GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
@@ -148,19 +190,13 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
             return;
         }
 
-        Authentication.instance.chooseAccessCode(this) {
-            password->
-            if (UnityCore.instance.isCoreReady()) {
-                if (GuldenUnifiedBackend.ContinueWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString(""))) {
-                    gotoWalletActivity(this)
-                } else {
-                    internalErrorAlert(this, "$TAG continuation failed")
-                }
-            } else {
-                // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString("")))
-                    internalErrorAlert(this, "$TAG init failed")
-            }
+        if (recoveryPhrase == recoveryPhrase?.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' '))
+        {
+            promptUserForBirthDate()
+        }
+        else
+        {
+            chooseAccessCodeAndProceed(recoveryPhrase)
         }
     }
 

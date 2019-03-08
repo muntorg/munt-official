@@ -48,19 +48,7 @@ file COPYING
 
     <string name="default_currency">EUR</string>
 
-    <string-array name="currency_description_entries">
-        <item>EUR - Euro</item>
-        <item>BTC - Bitcoin</item>
-        <item>AUD - Australian dollar</item>
-        <item>BRL - Brazilian real</item>
-        <!--<item>CNY - Chinese yuan</item>-->
-        <item>GBP - British Pound</item>
-        <!--<item>RUB - Russian roebel</item>-->
-        <item>USD - US dollar</item>
-        <item>ZAR - South African rand</item>
-        <item>KRW - South Korean Won</item>
-        <item>JPY - Japanese yen</item>
-    </string-array>
+
     <string-array name="currency_codes">
         <item>EUR</item>
         <item>BTC</item>
@@ -216,5 +204,20 @@ file COPYING
     <string name="remove_wallet_auth_desc_recovery_warn">If you don\'t have the recovery phrase of your wallet you will lose it forever if you remove it now, also for funds received in the future on its old addresses.\n\n</string>
     <string name="remove_wallet_auth_desc">Enter access code to proceed and remove your wallet.</string>
     <string name="image_content_description_qr_scan_target_rectangle">QR scan target rectangle</string>
-
+    <string name="wallet_birth_heading">How old is this wallet?</string>
+    <string name="wallet_birth_info">Newer wallets sync faster. Select \"Older\" if you are missing funds.</string>string>
+    <string name="wallet_birth_less_than_a_week">Less than a week</string>
+    <string name="wallet_birth_less_than_a_month">Less than a month</string>
+    <string name="wallet_birth_less_than_six_months">Less than six months</string>
+    <string name="wallet_birth_less_than_a_year">Less than a year</string>
+    <string name="wallet_birth_less_than_two_years">Less than two years</string>
+    <string name="wallet_birth_unsure">Older / I\'m not sure</string>
+    <string-array name="wallet_birth_date">
+        <item>@string/wallet_birth_less_than_a_week</item>
+        <item>@string/wallet_birth_less_than_a_month</item>
+        <item>@string/wallet_birth_less_than_six_months</item>
+        <item>@string/wallet_birth_less_than_a_year</item>
+        <item>@string/wallet_birth_less_than_two_years</item>
+        <item>@string/wallet_birth_unsure</item>
+    </string-array>
 </resources>
