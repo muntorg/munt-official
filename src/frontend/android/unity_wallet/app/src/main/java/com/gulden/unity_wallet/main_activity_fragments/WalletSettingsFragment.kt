@@ -29,6 +29,17 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
     {
         setPreferencesFromResource(R.xml.fragment_wallet_settings, rootKey)
 
+        if (GuldenUnifiedBackend.IsMnemonicWallet())
+        {
+            preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
+            preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
+        }
+        else
+        {
+            preferenceScreen.removePreferenceRecursively("recovery_view_preference")
+            preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
+        }
+
         (activity as WalletActivity).showSettingsTitle("Wallet settings")
     }
 
