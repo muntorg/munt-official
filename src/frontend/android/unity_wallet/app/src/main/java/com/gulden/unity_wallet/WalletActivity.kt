@@ -1,5 +1,5 @@
-// Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2018-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -61,6 +61,8 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
+
+        topLayoutBarSettingsBackButton.setOnClickListener { onBackPressed() }
     }
 
     override fun onDestroy() {
@@ -197,6 +199,19 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     override fun walletBalanceChanged(balance: Long): Boolean {
         setWalletBalance(balance)
         return true
+    }
+
+    fun showSettingsTitle(title : String)
+    {
+        topLayoutBarSettingsHeader.visibility = View.VISIBLE
+        topLayoutBar.visibility = View.GONE
+        topLayoutBarSettingsTitle.text = title
+    }
+
+    fun hideSettingsTitle()
+    {
+        topLayoutBarSettingsHeader.visibility = View.GONE
+        topLayoutBar.visibility = View.VISIBLE
     }
 
     @Suppress("UNUSED_PARAMETER")
