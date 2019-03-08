@@ -129,7 +129,7 @@ class Authentication {
             negativeButton(android.R.string.cancel) { }
             positiveButton(android.R.string.ok) {
                 if (GuldenUnifiedBackend.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
-                    chooseAccessCode(context) {
+                    chooseAccessCode(context, null) {
                         unblock(context)
                     }
                 } else {
@@ -210,11 +210,11 @@ class Authentication {
         dialog.show()
     }
 
-    fun chooseAccessCode(context: Context, action: (CharArray) -> Unit) {
+    fun chooseAccessCode(context: Context, title: String?, action: (CharArray) -> Unit) {
         val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
 
         val builder = context.alert(Appcompat) {
-            this.title = context.getString(R.string.access_code_choose_title)
+            this.title = title ?: context.getString(R.string.access_code_choose_title)
             customView = contentView
             negativeButton("Cancel") {
             }

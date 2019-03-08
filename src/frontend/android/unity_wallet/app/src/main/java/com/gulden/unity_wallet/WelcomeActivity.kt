@@ -76,7 +76,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
             if (resultCode == CommonStatusCodes.SUCCESS && data != null)
             {
                 val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                Authentication.instance.chooseAccessCode(this) {
+                Authentication.instance.chooseAccessCode(this, null) {
                     password->
                     if (UnityCore.instance.isCoreReady())
                     {

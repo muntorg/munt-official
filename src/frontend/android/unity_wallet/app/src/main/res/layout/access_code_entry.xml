@@ -28,7 +28,7 @@ file COPYING
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:hint="@string/upgrade_enter_password_hint"
+        android:hint="@string/access_code_choose_hint"
         android:imeOptions="flagNoExtractUi"
         android:inputType="numberPassword"
         android:singleLine="true">

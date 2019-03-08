@@ -77,10 +77,15 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
             }
             else
             {
-                //TODO: Prompt here for password
-                var newPassword = "123456"
-                GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword);
-                this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
+                this.runOnUiThread {
+                    Authentication.instance.chooseAccessCode(this, getString(R.string.access_code_choose_upgrade_title)) { accessCode ->
+                        thread(true) {
+                            val newPassword = accessCode.joinToString("")
+                            GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
+                        }
+                        this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
+                    }
+                }
             }
         }
     }
@@ -118,9 +123,15 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
                 }
                 LegacyWalletResult.VALID ->
                 {
-                    //TODO: Prompt here for password
-                    var newPassword = "123456"
-                    GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, "", newPassword);
+                    this.runOnUiThread {
+                        Authentication.instance.chooseAccessCode(this, getString(R.string.access_code_choose_upgrade_title)) { accessCode ->
+                            thread(true) {
+                                val newPassword = accessCode.joinToString("")
+                                GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, "", newPassword)
+                            }
+                            this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
+                        }
+                    }
                 }
                 else ->
                 {

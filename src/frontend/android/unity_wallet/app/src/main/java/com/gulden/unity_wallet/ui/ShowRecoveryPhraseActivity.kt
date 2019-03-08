@@ -92,7 +92,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
             return;
         }
 
-        Authentication.instance.chooseAccessCode(this) {
+        Authentication.instance.chooseAccessCode(this, null) {
             password->
             if (UnityCore.instance.isCoreReady()) {
                 if (GuldenUnifiedBackend.ContinueWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString(""))) {

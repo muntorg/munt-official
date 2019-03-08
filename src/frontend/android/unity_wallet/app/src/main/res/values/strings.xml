@@ -180,7 +180,7 @@ file COPYING
     <string name="upgrade_explanation">Gulden wallet is now upgraded to the new Unity framework. Because of this existing wallet data needs to be upgraded. After the upgrade, the blockchain will be rescanned, this can take a while.</string>
     <string name="upgrade_btn">Upgrade</string>
     <string name="upgrade_enter_password">Enter your password</string>
-    <string name="upgrade_enter_password_hint">6 digit PIN</string>
+    <string name="upgrade_enter_password_hint">PIN</string>
     <string name="upgrade_start_fresh">Don\'t upgrade, start fresh</string>
     <string name="upgrade_start_fresh_desription">If you don\'t have the recovery phrase of your old wallet you will lose it forever if you start fresh. Are you sure?</string>
     <string name="upgrade_start_fresh_title">Start fresh?</string>
@@ -189,8 +189,10 @@ file COPYING
     <string name="unlock">Unlock</string>
     <string name="access_code_entry_title">Access code for \"Gulden\"</string>
     <string name="access_code_entry_remaining">%d attempts remaining</string>
+    <string name="access_code_choose_upgrade_title">Choose your new \"Gulden\" access code</string>
     <string name="access_code_choose_title">Choose your \"Gulden\" access code</string>
     <string name="access_code_choose_verify">Verify your access code</string>
+    <string name="access_code_choose_hint">6 digit PIN</string>
     <string name="show_recovery_msg">Don\'t show your recovery phrase to anyone, or they will be able to spend your Gulden.</string>
     <string name="send_coins_error_acknowledge">OK</string>
     <string name="authentication_blocked_title">Wallet disabled</string>

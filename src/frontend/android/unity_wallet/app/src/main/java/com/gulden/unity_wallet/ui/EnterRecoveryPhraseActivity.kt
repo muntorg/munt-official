@@ -144,7 +144,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     fun chooseAccessCodeAndProceed(mnemonicPhrase : String)
     {
-        Authentication.instance.chooseAccessCode(this) {
+        Authentication.instance.chooseAccessCode(this, null) {
             password->
             if (UnityCore.instance.isCoreReady()) {
                 if (GuldenUnifiedBackend.ContinueWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString(""))) {
