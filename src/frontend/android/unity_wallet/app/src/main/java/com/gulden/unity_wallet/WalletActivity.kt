@@ -38,8 +38,16 @@ fun AppCompatActivity.addFragment(fragment: androidx.fragment.app.Fragment, fram
     supportFragmentManager.inTransaction { add(frameId, fragment) }
 }
 
+fun AppCompatActivity.removeFragment(fragment: Any) {
+    supportFragmentManager.inTransaction{remove(fragment as androidx.fragment.app.Fragment)}
+}
+
 fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
     supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
+}
+
+fun AppCompatActivity.replaceFragmentWithBackstack(fragment: Any, frameId: Int) {
+    supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment).addToBackStack(null)}
 }
 
 class WalletActivity : UnityCore.Observer, AppBaseActivity(),
@@ -131,6 +139,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         if (sendFragment == null)
             sendFragment = SendFragment()
         replaceFragment(sendFragment!!, R.id.mainLayout)
+        clearSettingsPages()
     }
 
     fun gotoReceivePage()
@@ -138,6 +147,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         if (receiveFragment == null)
             receiveFragment = ReceiveFragment()
         replaceFragment(receiveFragment!!, R.id.mainLayout)
+        clearSettingsPages()
     }
 
     private fun gotoTransactionPage()
@@ -145,19 +155,53 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         if (transactionFragment == null)
             transactionFragment = MutationFragment()
         replaceFragment(transactionFragment!!, R.id.mainLayout)
+        clearSettingsPages()
+    }
+
+    private fun clearSettingsPages()
+    {
+        clearNestedSettingsPages()
+        if (settingsFragment != null) { removeFragment(settingsFragment!!); settingsFragment = null }
+    }
+
+    private fun clearNestedSettingsPages()
+    {
+        if (walletSettingsFragment != null) { removeFragment(walletSettingsFragment!!); walletSettingsFragment = null }
+        if (currencySettingsFragment != null) { removeFragment(currencySettingsFragment!!); currencySettingsFragment = null }
     }
 
     private fun gotoSettingsPage()
     {
-        //Always create a new settings fragment (In case we are in a nested menu and want to go back to top level)
-        settingsFragment = SettingsFragment()
+        clearNestedSettingsPages()
+        if (settingsFragment == null)
+            settingsFragment = SettingsFragment()
         replaceFragment(settingsFragment!!, R.id.mainLayout)
+    }
+
+    fun gotoWalletSettingsPage()
+    {
+        clearNestedSettingsPages()
+        if (walletSettingsFragment == null)
+            walletSettingsFragment = WalletSettingsFragment()
+
+        replaceFragmentWithBackstack(walletSettingsFragment!!, R.id.mainLayout)
+    }
+
+    fun gotoCurrencyPage()
+    {
+        clearNestedSettingsPages()
+        if (currencySettingsFragment == null)
+            currencySettingsFragment = LocalCurrencyFragment()
+
+        replaceFragmentWithBackstack(currencySettingsFragment!!, R.id.mainLayout)
     }
 
     private var sendFragment : SendFragment ?= null
     private var receiveFragment : ReceiveFragment ?= null
     private var transactionFragment : MutationFragment ?= null
     private var settingsFragment : SettingsFragment ?= null
+    private var walletSettingsFragment : WalletSettingsFragment ?= null
+    private var currencySettingsFragment : LocalCurrencyFragment ?= null
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
          when (item.itemId) {

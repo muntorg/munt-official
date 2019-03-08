@@ -40,14 +40,17 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
             preferenceScreen.removePreferenceRecursively("recovery_view_preference")
             preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
         }
-
-        (activity as WalletActivity).showSettingsTitle("Wallet settings")
     }
 
-    override fun onDestroy()
+    override fun onResume()
     {
-        super.onDestroy()
+        super.onResume()
+        (activity as WalletActivity).showSettingsTitle("Wallet settings")
 
+    }
+    override fun onStop()
+    {
+        super.onStop()
         (activity as WalletActivity).hideSettingsTitle()
     }
 

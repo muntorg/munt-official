@@ -8,6 +8,7 @@ package com.gulden.unity_wallet.main_activity_fragments
 import android.os.Bundle
 import androidx.preference.Preference
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.localCurrency
 
 
@@ -17,7 +18,6 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     {
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
     }
-
 
     override fun onResume()
     {
@@ -30,19 +30,8 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
     {
         when (preference?.key){
-            "preference_local_currency" ->
-            {
-                activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.mainLayout, LocalCurrencyFragment())
-                        ?.addToBackStack(null)
-                        ?.commit()
-            }
-            "preference_show_wallet_settings" -> {
-                activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.mainLayout, WalletSettingsFragment())
-                        ?.addToBackStack(null)
-                        ?.commit()
-            }
+            "preference_local_currency" ->  (activity as WalletActivity).gotoCurrencyPage()
+            "preference_show_wallet_settings" ->  (activity as WalletActivity).gotoWalletSettingsPage()
         }
         return super.onPreferenceTreeClick(preference)
     }
