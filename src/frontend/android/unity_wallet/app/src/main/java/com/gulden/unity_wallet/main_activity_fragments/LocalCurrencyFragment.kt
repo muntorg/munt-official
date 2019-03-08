@@ -37,27 +37,4 @@ class LocalCurrencyFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    override fun onAttach(context: Context)
-    {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener)
-        {
-            listener = context
-        }
-        else
-        {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    private var listener: OnFragmentInteractionListener? = null
-    interface OnFragmentInteractionListener
-    {
-        fun onFragmentInteraction(uri: Uri)
-    }
 }

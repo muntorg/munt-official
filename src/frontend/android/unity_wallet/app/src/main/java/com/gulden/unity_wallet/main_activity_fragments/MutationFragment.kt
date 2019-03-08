@@ -62,21 +62,12 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
         UnityCore.instance.addObserver(this)
 
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener)
-        {
-            listener = context
-        }
-        else
-        {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
     }
 
     override fun onDetach() {
         UnityCore.instance.removeObserver(this)
 
         super.onDetach()
-        listener = null
     }
 
     override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
@@ -85,11 +76,5 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }
-    }
-
-    private var listener: OnFragmentInteractionListener? = null
-    interface OnFragmentInteractionListener
-    {
-        fun onFragmentInteraction(uri: Uri)
     }
 }

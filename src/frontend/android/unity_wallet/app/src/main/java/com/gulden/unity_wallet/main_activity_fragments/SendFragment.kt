@@ -6,9 +6,7 @@
 package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableString
@@ -92,31 +90,6 @@ class SendFragment : Fragment()
         val addresses = GuldenUnifiedBackend.getAddressBookRecords()
         val adapter = AddressBookAdapter(this.context!!, addresses)
         addressBookList.adapter = adapter
-    }
-
-    override fun onAttach(context: Context)
-    {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener)
-        {
-            listener = context
-        }
-        else
-        {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach()
-    {
-        super.onDetach()
-        listener = null
-    }
-
-    private var listener: OnFragmentInteractionListener? = null
-    interface OnFragmentInteractionListener
-    {
-        fun onFragmentInteraction(uri: Uri)
     }
 
     private fun clipboardText(): String

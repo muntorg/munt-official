@@ -15,7 +15,6 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.main_activity_fragments.*
-import com.gulden.unity_wallet.main_activity_fragments.SendFragment.OnFragmentInteractionListener
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,9 +38,7 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
     supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
 }
 
-class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteractionListener,
-        ReceiveFragment.OnFragmentInteractionListener, MutationFragment.OnFragmentInteractionListener,
-        LocalCurrencyFragment.OnFragmentInteractionListener,
+class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         SharedPreferences.OnSharedPreferenceChangeListener
 {
     override fun syncProgressChanged(percent: Float): Boolean {
@@ -88,11 +85,6 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
         super.onStop()
 
         UnityCore.instance.removeObserver(this)
-    }
-
-    override fun onFragmentInteraction(uri: Uri)
-    {
-
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

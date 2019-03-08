@@ -43,30 +43,10 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         currentAddressLabel!!.setOnClickListener { setFocusOnAddress() }
     }
 
-    override fun onAttach(context: Context)
-    {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener)
-        {
-            listener = context
-        }
-        else
-        {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
-    }
-
     override fun onDetach()
     {
         super.onDetach()
         dismissActionBar()
-        listener = null
-    }
-
-    private var listener: OnFragmentInteractionListener? = null
-    interface OnFragmentInteractionListener
-    {
-        fun onFragmentInteraction(uri: Uri)
     }
 
     fun updateAddress()
