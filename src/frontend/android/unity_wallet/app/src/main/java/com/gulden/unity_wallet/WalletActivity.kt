@@ -41,7 +41,7 @@ fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
 
 class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteractionListener,
         ReceiveFragment.OnFragmentInteractionListener, MutationFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener, LocalCurrencyFragment.OnFragmentInteractionListener,
+        LocalCurrencyFragment.OnFragmentInteractionListener,
         SharedPreferences.OnSharedPreferenceChangeListener
 {
     override fun syncProgressChanged(percent: Float): Boolean {
@@ -156,18 +156,10 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(), OnFragmentInteract
         replaceFragment(settingsFragment!!, R.id.mainLayout)
     }
 
-    fun showLocalCurrenciesPage()
-    {
-        if (localCurrencies == null)
-            localCurrencies = LocalCurrencyFragment()
-        replaceFragment(localCurrencies!!, R.id.mainLayout)
-    }
-
     private var sendFragment : SendFragment ?= null
     private var receiveFragment : ReceiveFragment ?= null
     private var transactionFragment : MutationFragment ?= null
     private var settingsFragment : SettingsFragment ?= null
-    private var localCurrencies : LocalCurrencyFragment ?= null
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
          when (item.itemId) {
