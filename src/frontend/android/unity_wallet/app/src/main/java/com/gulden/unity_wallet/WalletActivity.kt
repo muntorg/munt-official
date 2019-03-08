@@ -22,8 +22,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.gulden.unity_wallet.util.getAndroidVersion
 import com.gulden.unity_wallet.util.getDeviceName
+import org.jetbrains.anko.contentView
+import org.jetbrains.anko.design.snackbar
+import kotlin.concurrent.thread
 
 
 inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
@@ -163,6 +167,34 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
             R.id.navigation_settings -> { gotoSettingsPage(); return@OnNavigationItemSelectedListener true }
         }
         false
+    }
+
+    fun performLink(linkURI: String)
+    {
+        Authentication.instance.authenticate(this, null, getString(R.string.link_wallet_auth_desc)) { password ->
+            // ReplaceWalletLinkedFromURI can be long running, so run it in a thread that isn't the UI thread.
+            thread(start = true)
+            {
+                if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI, password.joinToString("")))
+                {
+                    runOnUiThread {
+                        AlertDialog.Builder(this)
+                                .setTitle(getString(R.string.no_guldensync_warning_title))
+                                .setMessage(getString(R.string.no_guldensync_warning))
+                                .setPositiveButton(getString(R.string.button_ok)) {
+                                    dialogInterface, i -> dialogInterface.dismiss()
+                                }.setCancelable(true).create().show()
+                    }
+                }
+                else
+                {
+                    runOnUiThread {
+                        this.contentView?.snackbar(getString(R.string.rescan_started))
+                        gotoReceivePage()
+                    }
+                }
+            }
+        }
     }
 
 
