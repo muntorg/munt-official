@@ -107,8 +107,10 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
                         val dialog = builder.build()
                         dialog.setOnShowListener {
                             upgradeDialogView.password.requestFocus()
-                            val imm = application.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                            imm.showSoftInput(upgradeDialogView.password, InputMethodManager.SHOW_IMPLICIT)
+                            upgradeDialogView.password.post {
+                                val imm = application.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                imm.showSoftInput(upgradeDialogView.password, InputMethodManager.SHOW_IMPLICIT)
+                            }
                         }
                         dialog.show()
                     }

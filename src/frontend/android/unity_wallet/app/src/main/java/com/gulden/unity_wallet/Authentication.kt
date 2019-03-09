@@ -204,8 +204,10 @@ class Authentication {
                     })
 
             contentView.accessCode.requestFocus()
-            val imm = context.applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(contentView.accessCode, InputMethodManager.SHOW_IMPLICIT)
+            contentView.accessCode.post {
+                val imm = context.applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(contentView.accessCode, InputMethodManager.SHOW_IMPLICIT)
+            }
         }
         dialog.show()
     }
@@ -267,8 +269,10 @@ class Authentication {
                     })
 
             contentView.accessCode.requestFocus()
-            val imm = context.applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(contentView.accessCode, InputMethodManager.SHOW_IMPLICIT)
+            contentView.accessCode.post {
+                val imm = context.applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(contentView.accessCode, InputMethodManager.SHOW_IMPLICIT)
+            }
         }
         dialog.show()
     }
