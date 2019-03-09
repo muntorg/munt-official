@@ -6,6 +6,7 @@ Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:layout_marginLeft="0dp"
@@ -19,7 +20,8 @@ file COPYING
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:text="item" />
+        android:text="item"
+        tools:ignore="HardcodedText" />
 
     <Space
         android:layout_width="wrap_content"

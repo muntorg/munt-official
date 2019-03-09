@@ -258,12 +258,8 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         // at long distances.
         var builder = CameraSource.Builder(applicationContext, barcodeDetector).setFacing(CameraSource.CAMERA_FACING_BACK).setRequestedPreviewSize(1600, 1024).setRequestedFps(15.0f)
 
-        // make sure that auto focus is an available option
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-        {
-            if (autoFocus)
-                builder = builder.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
-        }
+        if (autoFocus)
+            builder = builder.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
 
         if (useFlash)
             builder.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH)

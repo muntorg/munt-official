@@ -33,7 +33,8 @@ file COPYING
             android:editable="false"
             android:hint="0"
             android:inputType="none"
-            tools:clickable="false" />
+            tools:clickable="false"
+            tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/send_coins_local_amount"
@@ -44,7 +45,8 @@ file COPYING
             android:editable="false"
             android:hint="0"
             android:inputType="none"
-            tools:clickable="false" />
+            tools:clickable="false"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

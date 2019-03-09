@@ -30,12 +30,6 @@ class PeerListAdapter : ListAdapter<PeerRecord, PeerListAdapter.ItemViewHolder>(
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: PeerRecord) = with(itemView) {
-            /* Concept of download peer not implemented currently
-            val style = if (item.download) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
-            itemView.peer_list_row_height.typeface = style
-            itemView.peer_list_row_version.typeface = style
-            itemView.peer_list_row_protocol.typeface = style
-            itemView.peer_list_row_ping.typeface = style */
             itemView.peer_list_row_ip.text = if (item.hostname.isEmpty()) item.ip else item.hostname
             itemView.peer_list_row_height.text = if (item.height > 0) item.height.toString() + " blocks" else null
             itemView.peer_list_row_user_agent.text = item.userAgent

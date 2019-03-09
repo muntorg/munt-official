@@ -617,39 +617,6 @@ private constructor()
     }
 
     /**
-     * Wraps the camera1 shutter callback so that the deprecated API isn't exposed.
-     */
-    private inner class PictureStartCallback : Camera.ShutterCallback
-    {
-        var mDelegate: ShutterCallback? = null
-
-        override fun onShutter()
-        {
-            mDelegate?.onShutter()
-        }
-    }
-
-    /**
-     * Wraps the final callback in the camera sequence, so that we can automatically turn the camera
-     * preview back on after the picture has been taken.
-     */
-    private inner class PictureDoneCallback : Camera.PictureCallback
-    {
-        var mDelegate: PictureCallback? = null
-
-        override fun onPictureTaken(data: ByteArray, camera: Camera)
-        {
-            mDelegate?.onPictureTaken(data)
-            synchronized(mCameraLock) {
-                if (mCamera != null)
-                {
-                    mCamera?.startPreview()
-                }
-            }
-        }
-    }
-
-    /**
      * Wraps the camera1 auto focus callback so that the deprecated API isn't exposed.
      */
     private inner class CameraAutoFocusCallback : Camera.AutoFocusCallback

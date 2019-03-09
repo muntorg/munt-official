@@ -170,7 +170,7 @@ file COPYING
             android:layout_marginLeft="@dimen/keypad_key_gap_size"
             android:layout_span="2"
             android:background="@drawable/shape_rounded_button"
-            android:text="Send"
+            android:text="@string/numeric_keypad_send_button"
             android:textColor="@android:color/white"
             app:srcCompat="@android:drawable/ic_notification_clear_all" />
 

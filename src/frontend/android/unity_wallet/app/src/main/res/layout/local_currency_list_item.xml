@@ -7,6 +7,7 @@ file COPYING
 !-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout5"
     android:layout_width="fill_parent"
     android:layout_height="60dp"
@@ -29,14 +30,16 @@ file COPYING
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Name" />
+            android:text="Name"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/textViewCurrencyCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Code" />
+            android:text="Code"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <ImageView

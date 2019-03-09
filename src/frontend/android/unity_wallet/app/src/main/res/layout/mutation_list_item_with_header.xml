@@ -6,6 +6,7 @@ Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:layout_marginLeft="0dp"
@@ -22,7 +23,8 @@ file COPYING
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="Heading"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        tools:ignore="HardcodedText" />
 
     <include
         layout="@layout/mutation_list_item"

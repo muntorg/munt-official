@@ -56,7 +56,7 @@ file COPYING
             android:layout_weight="0"
             android:onClick="onRequestSupport"
             android:padding="18dp"
-            android:text="Support"
+            android:text="@string/preferences_support_button"
             android:textColor="@color/colorPrimary" />
 
         <TextView
@@ -66,7 +66,7 @@ file COPYING
             android:layout_weight="0"
             android:onClick="onRequestAdvancedSettings"
             android:padding="18dp"
-            android:text="Advanced"
+            android:text="@string/preferences_advanced_button"
             android:textColor="@color/colorPrimary" />
 
         <Space

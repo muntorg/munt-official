@@ -81,7 +81,8 @@ file COPYING
                     android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     android:visibility="invisible"
-                    tools:textColor="@color/colorPrimary" />
+                    tools:textColor="@color/colorPrimary"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/walletBalanceLocal"
@@ -93,7 +94,8 @@ file COPYING
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
                     android:visibility="invisible"
-                    tools:textColor="@color/colorPrimary" />
+                    tools:textColor="@color/colorPrimary"
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
         </com.gulden.unity_wallet.ui.widgets.LockView>
 

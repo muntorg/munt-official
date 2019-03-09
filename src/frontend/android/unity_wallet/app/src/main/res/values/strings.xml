@@ -11,7 +11,6 @@ file COPYING
     <string name="title_transactions">Transactions</string>
     <string name="title_settings">Settings</string>
     <string name="title_activity_barcode_capture">Scan QR code</string>
-    <string name="title_activity_send_coins">Send coins</string>
     <string name="title_activity_transaction_info">Transaction info</string>
 
     <string name="action_bar_copy">Copy</string>
@@ -24,8 +23,6 @@ file COPYING
     <string name="title_activity_welcome">Welcome activity</string>
     <string name="recover_from_phrase_intro">Enter your recovery phrase from which to perform a recovery</string>
     <string name="show_recovery_phrase_EULA">By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.</string>
-    <string name="enter_recovery_phrase_overwrite_warning">This will overwrite your existing wallet, if you don\\\'t have a backup of your existing wallet any Gulden in it will be lost.</string>
-    <string name="confirm_overwrite_wallet">Overwrite wallet</string>
     <string name="recovery_phrase_continue">Continue</string>
     <string name="title_activity_enter_recovery_phrase">Enter recovery phrase</string>
     <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</string>
@@ -39,9 +36,6 @@ file COPYING
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
     <string name="send_coins_nocks_estimate_template">Approx. G %1$s including IBAN service fee</string>
 
-    <string name="network_monitor_peer_list_title">Peers</string>
-    <string name="network_monitor_block_list_title">Blocks</string>
-    <string name="network_monitor_processing_title">Processing</string>
     <string name="peer_list_fragment_empty">No peers connected</string>
     <string name="block_row_now">just now</string>
     <string name="action_browse">Browse</string>
@@ -144,7 +138,6 @@ file COPYING
     <string name="preference_fragment_fiat_label">Local currency</string>
     <string name="preference_fragment_notification_label">Notifications</string>
     <string name="preference_fragment_background_sync_label">Background synchronisation</string>
-    <string name="preference_fragment_background_network_label">Network monitor</string>
     <string name="send_coins_label_add_to_address_book">Add to address book</string>
     <string name="send_coins_label_remove_from_address_book">Remove from address book</string>
     <string name="send_fragment_scan_label">Scan QR</string>
@@ -217,6 +210,9 @@ file COPYING
     <string name="wallet_birth_less_than_two_years">Less than two years</string>
     <string name="wallet_birth_unsure">Older / I\'m not sure</string>
     <string name="link_wallet_auth_desc">Enter access code to proceed and link your wallet.</string>
+    <string name="numeric_keypad_send_button">Send</string>
+    <string name="preferences_support_button">Support</string>
+    <string name="preferences_advanced_button">Advanced</string>
     <string-array name="wallet_birth_date">
         <item>@string/wallet_birth_less_than_a_week</item>
         <item>@string/wallet_birth_less_than_a_month</item>

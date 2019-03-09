@@ -13,10 +13,11 @@ file COPYING
     android:gravity="center_vertical"
     android:paddingStart="?attr/listPreferredItemPaddingStart"
     android:paddingEnd="?attr/listPreferredItemPaddingEnd"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:baselineAligned="false">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingTop="16dp"

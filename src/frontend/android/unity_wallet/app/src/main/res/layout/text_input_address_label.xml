@@ -6,6 +6,7 @@ Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -28,7 +29,8 @@ file COPYING
             android:layout_weight="1"
             android:hint="Label"
             android:imeOptions="actionDone"
-            android:inputType="text" />
+            android:inputType="text"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 
