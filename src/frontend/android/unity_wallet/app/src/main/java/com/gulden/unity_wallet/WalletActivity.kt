@@ -23,6 +23,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.gulden.unity_wallet.util.getAndroidVersion
 import com.gulden.unity_wallet.util.getDeviceName
 import org.jetbrains.anko.contentView
@@ -38,16 +39,18 @@ fun AppCompatActivity.addFragment(fragment: androidx.fragment.app.Fragment, fram
     supportFragmentManager.inTransaction { add(frameId, fragment) }
 }
 
-fun AppCompatActivity.removeFragment(fragment: Any) {
+fun AppCompatActivity.removeFragment(fragment: Any, popFromBackstack : Boolean, name : String) {
     supportFragmentManager.inTransaction{remove(fragment as androidx.fragment.app.Fragment)}
+    if (popFromBackstack)
+        supportFragmentManager.popBackStackImmediate(name, POP_BACK_STACK_INCLUSIVE)
 }
 
 fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
     supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
 }
 
-fun AppCompatActivity.replaceFragmentWithBackstack(fragment: Any, frameId: Int) {
-    supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment).addToBackStack(null)}
+fun AppCompatActivity.replaceFragmentWithBackstack(fragment: Any, frameId: Int, name : String) {
+    supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment).addToBackStack(name)}
 }
 
 class WalletActivity : UnityCore.Observer, AppBaseActivity(),
@@ -161,13 +164,13 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     private fun clearSettingsPages()
     {
         clearNestedSettingsPages()
-        if (settingsFragment != null) { removeFragment(settingsFragment!!); settingsFragment = null }
+        if (settingsFragment != null) { removeFragment(settingsFragment!!, false, ""); settingsFragment = null }
     }
 
     private fun clearNestedSettingsPages()
     {
-        if (walletSettingsFragment != null) { removeFragment(walletSettingsFragment!!); walletSettingsFragment = null }
-        if (currencySettingsFragment != null) { removeFragment(currencySettingsFragment!!); currencySettingsFragment = null }
+        if (walletSettingsFragment != null) { removeFragment(walletSettingsFragment!!,true,  "walletsettings"); walletSettingsFragment = null }
+        if (currencySettingsFragment != null) { removeFragment(currencySettingsFragment!!, true, "currencysettings"); currencySettingsFragment = null }
     }
 
     private fun gotoSettingsPage()
@@ -184,7 +187,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         if (walletSettingsFragment == null)
             walletSettingsFragment = WalletSettingsFragment()
 
-        replaceFragmentWithBackstack(walletSettingsFragment!!, R.id.mainLayout)
+        replaceFragmentWithBackstack(walletSettingsFragment!!, R.id.mainLayout, "walletsettings")
     }
 
     fun gotoCurrencyPage()
@@ -193,7 +196,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         if (currencySettingsFragment == null)
             currencySettingsFragment = LocalCurrencyFragment()
 
-        replaceFragmentWithBackstack(currencySettingsFragment!!, R.id.mainLayout)
+        replaceFragmentWithBackstack(currencySettingsFragment!!, R.id.mainLayout, "currencysettings")
     }
 
     private var sendFragment : SendFragment ?= null
