@@ -21,7 +21,6 @@ import com.gulden.unity_wallet.WelcomeActivity
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.support.v4.alert
-import kotlin.concurrent.thread
 
 
 class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()

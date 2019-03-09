@@ -5,18 +5,14 @@
 
 package com.gulden.unity_wallet.main_activity_fragments
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.Currencies
+import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.ui.LocalCurrenciesAdapter
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_local_currencies.*
 
 

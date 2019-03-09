@@ -68,7 +68,7 @@ fun ellipsizeString(sourceString: String, maxLength: Int): String
     val halfStringLength = (maxLength - 3) / 2
     return when
     {
-        sourceString.length > maxLength -> sourceString.replaceFirst(Regex("(.{"+halfStringLength+"}).+(.{"+halfStringLength+"})"), "$1…$2")
+        sourceString.length > maxLength -> sourceString.replaceFirst(Regex("(.{$halfStringLength}).+(.{$halfStringLength})"), "$1…$2")
         else -> sourceString
     }
 }

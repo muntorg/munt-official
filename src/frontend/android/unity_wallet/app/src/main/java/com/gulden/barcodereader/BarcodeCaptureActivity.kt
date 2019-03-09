@@ -59,54 +59,54 @@ import java.io.IOException
 // Only detect barcodes that fall within our target area
 class TargetBarcodeFocusingProcessor(preview : CameraSourcePreview, detectionBox: Rect, detector: Detector<Barcode>, tracker: Tracker<Barcode>) : FocusingProcessor<Barcode>(detector, tracker)
 {
-    var detectionBoundingBox = detectionBox
-    var mPreview = preview
+    private var detectionBoundingBox = detectionBox
+    private var mPreview = preview
 
-    var widthScaleFactor = 1.0f;
-    var heightScaleFactor = 1.0f;
+    private var widthScaleFactor = 1.0f
+    private var heightScaleFactor = 1.0f
 
-    fun scaleX(horizontal: Int): Int
+    private fun scaleX(horizontal: Int): Int
     {
         return (horizontal * widthScaleFactor).toInt()
     }
 
 
-    fun scaleY(vertical: Int): Int
+    private fun scaleY(vertical: Int): Int
     {
         return (vertical * heightScaleFactor).toInt()
     }
 
-    fun translateX(x: Int): Int
+    private fun translateX(x: Int): Int
     {
         return scaleX(x)
     }
 
-    fun translateY(y: Int): Int
+    private fun translateY(y: Int): Int
     {
         return scaleY(y)
     }
 
     override fun selectFocus(detections: Detector.Detections<Barcode>?): Int
     {
-        val barcodes = detections?.getDetectedItems();
+        val barcodes = detections?.detectedItems
         heightScaleFactor = mPreview.previewHeight / (detections?.frameMetadata?.height)?.toFloat()!!
-        widthScaleFactor = mPreview.previewWidth / (detections?.frameMetadata?.width)?.toFloat()!!
+        widthScaleFactor = mPreview.previewWidth / (detections.frameMetadata?.width)?.toFloat()!!
 
         for (i in 0 .. barcodes!!.size())
         {
             val barcodeID = barcodes.keyAt(i)
             val barcode = barcodes.get(barcodeID)
-            val barcodeBoundingBox = barcode.getBoundingBox()
+            val barcodeBoundingBox = barcode.boundingBox
             barcodeBoundingBox.top = translateY(barcodeBoundingBox.top)
-            barcodeBoundingBox.bottom = translateY(barcodeBoundingBox.bottom) as Int
-            barcodeBoundingBox.left = translateX(barcodeBoundingBox.left) as Int
-            barcodeBoundingBox.right = translateX(barcodeBoundingBox.right) as Int
+            barcodeBoundingBox.bottom = translateY(barcodeBoundingBox.bottom)
+            barcodeBoundingBox.left = translateX(barcodeBoundingBox.left)
+            barcodeBoundingBox.right = translateX(barcodeBoundingBox.right)
             if (detectionBoundingBox.intersect(barcodeBoundingBox))
             {
-                return barcodeID;
+                return barcodeID
             }
         }
-        return -1;
+        return -1
     }
 }
 
@@ -142,7 +142,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         mUseFlash = intent.getBooleanExtra(UseFlash, false)
 
         scanCancelButton.setOnClickListener { finish() }
-        scanToggleFlashButton.setOnClickListener() { mUseFlash = !mUseFlash; mCameraSource?.setFlashMode(if (mUseFlash) {FLASH_MODE_TORCH} else { FLASH_MODE_OFF}) }
+        scanToggleFlashButton.setOnClickListener { mUseFlash = !mUseFlash; mCameraSource?.setFlashMode(if (mUseFlash) {FLASH_MODE_TORCH} else { FLASH_MODE_OFF}) }
 
 
         // Below relies on sizing of view items so can only run after the view is visible
@@ -222,8 +222,8 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         val barcodeDetector = BarcodeDetector.Builder(context).build()
         val tracker = BarcodeTracker(this)
 
-        var targetOverlayRect = Rect()
-        mTargetOverlay!!.getGlobalVisibleRect(targetOverlayRect);
+        val targetOverlayRect = Rect()
+        mTargetOverlay!!.getGlobalVisibleRect(targetOverlayRect)
 
         mProcessor = TargetBarcodeFocusingProcessor(mPreview!!, targetOverlayRect, barcodeDetector, tracker)
         barcodeDetector.setProcessor(mProcessor)

@@ -16,7 +16,7 @@ import com.gulden.unity_wallet.Currency
 import kotlinx.android.synthetic.main.local_currency_list_item.view.*
 import java.util.*
 
-class LocalCurrenciesAdapter(private val context: Context, private val dataSource: TreeMap<String, Currency>) : BaseAdapter() {
+class LocalCurrenciesAdapter(context: Context, private val dataSource: TreeMap<String, Currency>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {

@@ -26,8 +26,6 @@ private const val TAG = "upgrade-activity"
 
 class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
 {
-    private var haveExistingWalletFile = false;
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,32 +60,26 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
         return true
     }
 
-    fun onUpgradeWithPassword(view : View, oldPassword : String)
+    private fun onUpgradeWithPassword(view : View, oldPassword : String)
     {
         thread(true)
         {
             val result = GuldenUnifiedBackend.isValidAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword)
-            if (result == LegacyWalletResult.PASSWORD_INVALID)
+            when (result)
             {
-                this.runOnUiThread { view.longSnackbar(getString(R.string.upgrade_wrong_password)) }
-            }
-            else if (result == LegacyWalletResult.INVALID_OR_CORRUPT)
-            {
-                this.runOnUiThread { view.longSnackbar("Unable to upgrade old wallet, contact support for assistance.") }
-            }
-            else
-            {
-                chooseNewAccessCodeAndUpgrade(oldPassword, view)
+                LegacyWalletResult.PASSWORD_INVALID -> this.runOnUiThread { view.longSnackbar(getString(R.string.upgrade_wrong_password)) }
+                LegacyWalletResult.INVALID_OR_CORRUPT -> this.runOnUiThread { view.longSnackbar("Unable to upgrade old wallet, contact support for assistance.") }
+                else -> chooseNewAccessCodeAndUpgrade(oldPassword, view)
             }
         }
     }
 
-    private var processingUpgrade = false;
+    private var processingUpgrade = false
     fun onUpgrade(view: View)
     {
         if (processingUpgrade)
             return
-        processingUpgrade = true;
+        processingUpgrade = true
 
         thread(true)
         {

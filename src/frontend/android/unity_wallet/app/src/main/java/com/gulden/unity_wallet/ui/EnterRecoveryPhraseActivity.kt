@@ -1,7 +1,6 @@
 package com.gulden.unity_wallet.ui
 
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +14,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.Authentication
+import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
+import com.gulden.unity_wallet.internalErrorAlert
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import com.gulden.unity_wallet.util.setFauxButtonEnabledState
 import kotlinx.android.synthetic.main.activity_enter_recovery_phrase.*
@@ -142,7 +144,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         return super.onOptionsItemSelected(item)
     }
 
-    fun chooseAccessCodeAndProceed(mnemonicPhrase : String)
+    private fun chooseAccessCodeAndProceed(mnemonicPhrase : String)
     {
         Authentication.instance.chooseAccessCode(this, null) {
             password->
@@ -160,7 +162,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         }
     }
 
-    fun promptUserForBirthDate()
+    private fun promptUserForBirthDate()
     {
         val builder = AlertDialog.Builder(this)
 
@@ -187,10 +189,10 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         if (!GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
         {
             Toast.makeText(applicationContext, "Invalid recovery phrase", Toast.LENGTH_LONG).show()
-            return;
+            return
         }
 
-        if (recoveryPhrase == recoveryPhrase?.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' '))
+        if (recoveryPhrase == recoveryPhrase.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' '))
         {
             promptUserForBirthDate()
         }

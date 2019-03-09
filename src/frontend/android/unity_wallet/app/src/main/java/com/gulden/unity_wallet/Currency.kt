@@ -86,9 +86,8 @@ val localCurrency: Currency
 
 fun formatNative(nativeAmount: Long, useNativePrefix: Boolean = true): String
 {
-    val native = "%s %s".format(if (useNativePrefix) "G" else "",
+    return "%s %s".format(if (useNativePrefix) "G" else "",
             (DecimalFormat("+#,##0.00;-#").format(nativeAmount.toDouble() / 100000000)))
-    return native
 }
 
 fun formatNativeAndLocal(nativeAmount: Long, conversionRate: Double, useNativePrefix: Boolean = true): String

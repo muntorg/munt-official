@@ -124,7 +124,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         {
             val i = Intent(Intent.ACTION_SENDTO)
             i.type = "message/rfc822"
-            i.setData(Uri.parse("mailto:"));
+            i.data = Uri.parse("mailto:")
             i.putExtra(Intent.EXTRA_EMAIL, arrayOf("support@gulden.com"))
             i.putExtra(Intent.EXTRA_SUBJECT, "Support request")
             i.putExtra(Intent.EXTRA_TEXT, getDeviceName() + " / " + getAndroidVersion() + " / " +  getString(R.string.about_text_app_name) + System.getProperty("line.separator") )
@@ -145,7 +145,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         clearSettingsPages()
     }
 
-    fun gotoReceivePage()
+    private fun gotoReceivePage()
     {
         if (receiveFragment == null)
             receiveFragment = ReceiveFragment()

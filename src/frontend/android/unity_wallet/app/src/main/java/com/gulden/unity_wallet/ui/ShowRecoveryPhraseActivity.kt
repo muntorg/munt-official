@@ -28,7 +28,7 @@ private const val TAG = "show-recovery-activity"
 class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 {
     //fixme: (GULDEN) Change to char[] to we can securely wipe.
-    internal var recoveryPhrase: String? = null
+    private var recoveryPhrase: String? = null
     internal var recoveryPhraseTrimmed: String? = null
 
     private var shareActionProvider: ShareActionProvider? = null
@@ -89,7 +89,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         if (!acknowledge_recovery_phrase.isChecked)
         {
             Toast.makeText(applicationContext, "Write down your recovery phrase", Toast.LENGTH_LONG).show()
-            return;
+            return
         }
 
         Authentication.instance.chooseAccessCode(this, null) {
@@ -162,7 +162,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
             val color = resources.getColor(R.color.colorPrimary)
             val spannableString = SpannableString(recovery_phrase_text_view.text)
             spannableString.setSpan(BackgroundColorSpan(color), 0, recovery_phrase_text_view.text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            recovery_phrase_text_view.setText(spannableString)
+            recovery_phrase_text_view.text = spannableString
 
             return true
         }
@@ -171,7 +171,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         {
             shareActionProvider = null
 
-            recovery_phrase_text_view.setText(recoveryPhraseTrimmed ?: "")
+            recovery_phrase_text_view.text = recoveryPhraseTrimmed ?: ""
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean

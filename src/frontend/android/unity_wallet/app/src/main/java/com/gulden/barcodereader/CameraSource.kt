@@ -23,27 +23,25 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.ImageFormat
-import android.graphics.SurfaceTexture
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
 import android.os.Build
 import android.os.SystemClock
+import android.util.Log
+import android.view.Surface
+import android.view.TextureView
+import android.view.WindowManager
 import androidx.annotation.RequiresPermission
 import androidx.annotation.StringDef
-import android.util.Log
-import android.view.*
-
 import com.google.android.gms.common.images.Size
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.Frame
-
 import java.io.IOException
 import java.lang.Thread.State
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.nio.ByteBuffer
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 // Note: This requires Google Play Services 8.1 or higher, due to using indirect byte buffers for
 // storing images.
@@ -204,8 +202,8 @@ private constructor()
             // Restrict the requested range to something within the realm of possibility.  The
             // choice of 1000000 is a bit arbitrary -- intended to be well beyond resolutions that
             // devices can support.  We bound this to avoid int overflow in the code later.
-            val MAX = 1000000
-            if (width <= 0 || width > MAX || height <= 0 || height > MAX)
+            val maxPreviewSize = 1000000
+            if (width <= 0 || width > maxPreviewSize || height <= 0 || height > maxPreviewSize)
             {
                 throw IllegalArgumentException("Invalid preview size: " + width + "x" + height)
             }
@@ -448,28 +446,7 @@ private constructor()
         }
     }
 
-    /**
-     * Initiates taking a picture, which happens asynchronously.  The camera source should have been
-     * activated previously with [.start] or [.start].  The camera
-     * preview is suspended while the picture is being taken, but will resume once picture taking is
-     * done.
-     *
-     * @param shutter the callback for image capture moment, or null
-     * @param jpeg    the callback for JPEG image data, or null
-     */
-    fun takePicture(shutter: ShutterCallback, jpeg: PictureCallback)
-    {
-        synchronized(mCameraLock) {
-            if (mCamera != null)
-            {
-                val startCallback = PictureStartCallback()
-                startCallback.mDelegate = shutter
-                val doneCallback = PictureDoneCallback()
-                doneCallback.mDelegate = jpeg
-                mCamera?.takePicture(startCallback, null, null, doneCallback)
-            }
-        }
-    }
+
 
     /**
      * Gets the current focus mode setting.

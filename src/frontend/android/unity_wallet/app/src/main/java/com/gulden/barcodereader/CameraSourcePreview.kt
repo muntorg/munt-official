@@ -21,27 +21,20 @@ package com.gulden.barcodereader
 import android.Manifest
 import android.content.Context
 import android.content.res.Configuration
-import androidx.annotation.RequiresPermission
+import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import android.util.Log
-import android.view.SurfaceHolder
-import android.view.SurfaceView
-import android.view.ViewGroup
-
-import java.io.IOException
-import android.view.View.MeasureSpec
 import android.view.TextureView
-import android.graphics.SurfaceTexture
-
-
+import androidx.annotation.RequiresPermission
+import java.io.IOException
 
 
 class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : TextureView(mContext, attrs), TextureView.SurfaceTextureListener
 {
-    public var textureHeight : Int = 0
-    public var textureWidth : Int = 0
-    public var previewHeight : Int = 0
-    public var previewWidth : Int = 0
+    private var textureHeight : Int = 0
+    private var textureWidth : Int = 0
+    var previewHeight : Int = 0
+    var previewWidth : Int = 0
     private var mStartRequested: Boolean = false
     private var mSurfaceAvailable: Boolean = false
     private var mCameraSource: CameraSource? = null
@@ -68,7 +61,7 @@ class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : 
         mStartRequested = false
         mSurfaceAvailable = false
 
-        setSurfaceTextureListener(this);
+        surfaceTextureListener = this
     }
 
     /*Texture view listener overrides begin*/

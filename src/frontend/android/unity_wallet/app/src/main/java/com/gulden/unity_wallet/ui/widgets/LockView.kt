@@ -20,7 +20,7 @@ class LockView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(context, 
         }
     }
 
-    fun displayLockingState() {
+    private fun displayLockingState() {
         displayedChild = if (Authentication.instance.isLocked()) 0 else 1
     }
 

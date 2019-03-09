@@ -15,5 +15,5 @@ fun setFauxButtonEnabledState(button : Button, enabled : Boolean)
     var buttonBackground = R.drawable.shape_rounded_button_disabled
     if (enabled)
         buttonBackground = R.drawable.shape_rounded_button_enabled
-    button.setBackgroundResource(buttonBackground);
+    button.setBackgroundResource(buttonBackground)
 }

@@ -21,8 +21,6 @@ import kotlinx.android.synthetic.main.access_code_entry.view.*
 import kotlinx.android.synthetic.main.access_code_recovery.view.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
-import android.R.attr.editable
-
 
 
 private const val TAG = "authentication"
@@ -58,7 +56,7 @@ class Authentication {
      *
      */
     //TODO: lock()/unlock() should rather be driven by signals coming from the unity core.
-    fun unlock(context: Context, title: String?, msg: String?, action: () -> Unit) {
+    private fun unlock(context: Context, title: String?, msg: String?, action: () -> Unit) {
         if (isLocked()) {
             authenticate(context, title, msg) {
                 locked = false
@@ -79,7 +77,7 @@ class Authentication {
         }
     }
 
-    fun isBlocked(context: Context): Boolean {
+    private fun isBlocked(context: Context): Boolean {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val blockedUntil = preferences.getLong(BLOCKED_UNTIL_KEY, 0)
         val now = System.currentTimeMillis()
@@ -94,7 +92,7 @@ class Authentication {
         editor.apply()
     }
 
-    fun unblock(context: Context) {
+    private fun unblock(context: Context) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = preferences.edit()
         editor.remove(BLOCKED_UNTIL_KEY)
@@ -121,7 +119,7 @@ class Authentication {
         }.build().show()
     }
 
-    fun chooseNewWithRecovery(context: Context) {
+    private fun chooseNewWithRecovery(context: Context) {
         val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_recovery, null)
         context.alert(Appcompat) {
             customView = contentView
@@ -173,7 +171,7 @@ class Authentication {
                         override fun afterTextChanged(s: Editable?) {
                             if (s?.length == ACCESS_CODE_LENGTH)
                             {
-                                var chosenCode: CharArray = CharArray(ACCESS_CODE_LENGTH)
+                                var chosenCode = CharArray(ACCESS_CODE_LENGTH)
                                 s.getChars(0, s.length, chosenCode, 0)
 
                                 if (GuldenUnifiedBackend.UnlockWallet(chosenCode.joinToString(""))) {

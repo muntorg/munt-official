@@ -9,18 +9,16 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
-
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import android.graphics.Bitmap
-import androidx.core.view.MenuItemCompat
+import android.os.Bundle
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.ShareActionProvider
-import android.view.*
-import com.gulden.unity_wallet.WalletActivity
+import androidx.core.view.MenuItemCompat
+import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.WalletActivity
 import kotlinx.android.synthetic.main.fragment_receive.*
 import java.nio.ByteBuffer
 

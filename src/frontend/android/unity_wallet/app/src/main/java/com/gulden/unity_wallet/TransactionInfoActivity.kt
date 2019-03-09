@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.content_transaction_info.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onClick
-import java.text.DecimalFormat
 
 class TransactionInfoActivity : AppBaseActivity() {
 

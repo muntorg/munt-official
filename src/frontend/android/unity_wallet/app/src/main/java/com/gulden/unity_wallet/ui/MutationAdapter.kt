@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.mutation_list_item.view.*
 import kotlinx.android.synthetic.main.mutation_list_item_with_header.view.*
 import org.jetbrains.anko.textColor
 
-class MutationAdapter(private val context: Context, private var dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
+class MutationAdapter(context: Context, private var dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var rate = 0.0
 

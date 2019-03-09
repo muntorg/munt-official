@@ -58,7 +58,7 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
         replaceFragment(peersFragment!!, R.id.networkMonitorMainLayout)
     }
 
-    fun gotoBlocksPage()
+    private fun gotoBlocksPage()
     {
         if (blocksFragment == null)
             blocksFragment = BlockListFragment()
