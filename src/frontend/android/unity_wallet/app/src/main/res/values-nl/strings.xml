@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<resources>
+    <string name="default_currency">EUR</string>
+    <string name="title_send">Verstuur</string>
+    <string name="title_receive">Ontvang</string>
+    <string name="title_transactions">Transacties</string>
+    <string name="title_settings">Instellingen</string>
+    <string name="title_activity_barcode_capture">Scan QR code</string>
+    <string name="title_activity_transaction_info">Transactie info</string>
+    <string name="action_bar_copy">Kopieer</string>
+    <string name="action_bar_copy_long">Kopieer naar klembord</string>
+    <string name="action_bar_share">Delen</string>
+    <string name="action_bar_buy">Koop</string>
+    <string name="welcome_activity_create_new_wallet">Nieuwe portemonnee</string>
+    <string name="welcome_activity_recover_existing_wallet">Herstel portemonnee</string>
+    <string name="welcome_activity_sync_with_desktop">Koppel met desktop</string>
+    <string name="title_activity_welcome">Welcome activity</string>
+    <string name="recover_from_phrase_intro">Vul je herstelzin in</string>
+    <string name="show_recovery_phrase_EULA">Wanneer je de Gulden-app gebruikt ga je er uitdrukkelijk en onvoorwaardelijk mee akkoord dat alleen jij verantwoordelijk bent voor het beheren en bewaren van je Gulden.</string>
+    <string name="recovery_phrase_continue">Verder</string>
+    <string name="title_activity_enter_recovery_phrase">Voer herstelzin in</string>
+    <string name="show_recovery_phrase_introtext">Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot je zin = Guldens weg.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">Ik heb het opgeschreven</string>
+    <string name="recovery_phrase_copy">Herstelzin gekopieerd naar klembord</string>
+    <string name="address_book_empty_message">Om een adres toe te voegen, start een betaling en tap op \"Aan adresboek toevoegen\"</string>
+    <string name="address_book_empty_title">Adresboek leegmaken</string>
+    <string name="transaction_list_empty_title">Nog geen Gulden ontvangen.</string>
+    <string name="transaction_list_empty_message">Tik hier om je eerste Gulden te kopen.</string>
+    <string name="send_coins_confirm_template">%1$s NLG\n\nnaar %2$s</string>
+    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nnaar %3$s</string>
+    <string name="send_coins_nocks_estimate_template">Ongeveer G %1$s inclusief IBAN kosten.</string>
+    <string name="peer_list_fragment_empty">Geen connecties</string>
+    <string name="block_row_now">alleen nu</string>
+    <string name="action_browse">Bladeren</string>
+    <string-array name="background_sync_entries">
+        <item>Uit</item>
+        <item>Dagelijks</item>
+        <item>Altijd</item>
+    </string-array>
+    <string name="transaction_id">Transactie ID</string>
+    <string name="status">Status</string>
+    <string name="amount_label">Bedrag</string>
+    <string name="from_label">Van</string>
+    <string name="to_label">Naar</string>
+    <string name="tx_status_abandoned">Verlaten</string>
+    <string name="tx_status_conflicted">Conflicterend</string>
+    <string name="tx_status_confirming">Bevestigen %s/%s</string>
+    <string name="tx_status_unconfirmed">Onbevestigd</string>
+    <string name="tx_status_confirmed">Bevestigd in blok #%d om %s</string>
+    <string name="tx_status_unknown">Onbekend (je hebt een bug gevonden)</string>
+    <string name="no_tx_details">Geen transactiedetails voor [%s]</string>
+    <string name="no_guldensync_warning_title">Onjuiste QR code</string>
+    <string name="no_guldensync_warning">Deze QR code bevat geen geldige Gulden sync code, probeer het opnieuw met een geldige code.</string>
+    <string name="failed_guldensync_warning_title">Koppelen niet geslaagd</string>
+    <string name="failed_guldensync_unconfirmed_funds_message">Een deel van je saldo wacht nog op bevestiging. Wacht tot deze volledig bevestigd zijn voordat je nogmaals probeert te koppelen.</string>
+    <string name="guldensync_info_title">Koppelen met desktop portemonnee</string>
+    <string name="guldensync_info_message_non_empty_wallet">"Je staat op het punt om te koppelen met je desktop portemonnee. De huidige adressen in deze portemonnee worden verwijderd en zijn niet meer beschikbaar na het koppelen. Het huidige saldo in deze portemonnee wordt naar de desktop portemonnee verplaatst voor het koppelen, en zal tijdelijk niet beschikbaar zijn in deze portemonnee totdat het koppelen afgerond is. Zorg ervoor dat je een een kopie van je oude herstelzin goed bewaard, voor het geval je in de toekomst toegang wilt hebben tot deze oude adressen. "</string>
+    <string name="guldensync_info_message_empty_wallet">"Je staat op het punt om te koppelen met je desktop portemonnee. De huidige adressen in deze portemonnee worden verwijderd en zijn niet meer beschikbaar na het koppelen. Zorg ervoor dat je een een kopie van je oude herstelzin goed bewaard, voor het geval je in de toekomst toegang wilt hebben tot deze oude adressen. "</string>
+    <string name="preference_fragment_title">Voorkeuren</string>
+    <string name="preference_fragment_recovery_label">Herstelzin</string>
+    <string name="preference_fragment_link_label">Portemonnee koppelen</string>
+    <string name="preference_fragment_pass_code_label">Wijzig toegangscode</string>
+    <string name="preference_fragment_rescan_label">Portemonnee herscannen</string>
+    <string name="preference_fragment_remove_label">Verwijder portemonnee</string>
+    <string name="preference_fragment_fiat_label">Lokale valuta</string>
+    <string name="preference_fragment_notification_label">Notificaties</string>
+    <string name="preference_fragment_background_sync_label">Syncronisatie op achtergrond</string>
+    <string name="send_coins_label_add_to_address_book">Voeg toe aan adresboek</string>
+    <string name="send_coins_label_remove_from_address_book">Verwijder uit adresboek</string>
+    <string name="send_fragment_scan_label">Scan QR</string>
+    <string name="send_fragment_clipboard_label">Klembord</string>
+    <string name="send_keypad_decimal_separator">.</string>
+    <string name="send_keypad_button_delete">⌫</string>
+    <string name="chain_status_label_probable_height">Waarschijnlijke hoogte</string>
+    <string name="chain_status_label_partial_height">Gedeeltelijke chain hoogte</string>
+    <string name="chain_status_label_processed_height">Verwerkte hoogte</string>
+    <string name="chain_status_label_chain_offset">Gedeeltelijke chain offset</string>
+    <string name="chain_status_label_chain_length">Gedeeltelijke chain lengte</string>
+    <string name="chain_status_label_pruned_height">Getrimd onder hoogte</string>
+    <string name="title_peers">Peers</string>
+    <string name="title_blocks">Blokken</string>
+    <string name="title_processing">Verwerken</string>
+    <string name="image_content_description_gulden_logo">Gulden logo</string>
+    <string name="rescan_confirm_msg">Het herscannen van de blockchain kan enige tijd duren. Weet je het zeker?</string>
+    <string name="rescan_confirm_title">Herscan?</string>
+    <string name="rescan_confirm_btn">Herscan</string>
+    <string name="cancel_btn">Annuleren</string>
+    <string name="rescan_started">Herscan gestart</string>
+    <string name="upgrade_wrong_password">Onjuist wachtwoord?</string>
+    <string name="upgrade_explanation">"De Gulden portemonnee is nu bijgewerkt naar het nieuwe Unity framework. hierdoor moeten de bestaande gegevens bijgewerkt worden. Na het bijwerken volgt een herscan van de blockchain. Dit kan enige tijd duren. "</string>
+    <string name="upgrade_btn">Bijwerken</string>
+    <string name="upgrade_enter_password">Voer je wachtwoord in</string>
+    <string name="upgrade_enter_password_hint">PIN</string>
+    <string name="upgrade_start_fresh">Niet bijwerken, verse start maken</string>
+    <string name="upgrade_start_fresh_desription">Als je je herstelzin niet hebt van je oude wallet, zul je deze permanent kwijt zij als je een verse start maakt. Weet je het zeker?</string>
+    <string name="upgrade_start_fresh_title">Vers starten?</string>
+    <string name="notify_received">Bedrag ontvangen</string>
+    <string name="notify_sent">Bedrag verstuurd</string>
+    <string name="unlock">Openen</string>
+    <string name="access_code_entry_title">Toeganscode voor \"Gulden\"</string>
+    <string name="access_code_entry_remaining">%d pogingen over</string>
+    <string name="access_code_choose_upgrade_title">Kies je nieuwe \"Gulden\" toegangscode</string>
+    <string name="access_code_choose_title">Kies je \"Gulden\" toegangscode</string>
+    <string name="access_code_choose_verify">Verifiëer je toegangscode</string>
+    <string name="access_code_choose_hint">6 cijferige PIN</string>
+    <string name="show_recovery_msg">Toon je herstelzin aan NIEMAND, of ze kunnen met je Gulden aan de haal gaan!</string>
+    <string name="send_coins_error_acknowledge">OK</string>
+    <string name="authentication_blocked_title">Portemonnee uitgeschakeld</string>
+    <string name="authentication_blocked_msg_recovery">Probeer nogmaals %s of kies een nieuwe toegangscode met behulp van je herstelzin.</string>
+    <string name="authentication_blocked_msg">Probeer nogmaals %s.</string>
+    <string name="authentication_blocked_later_btn">Probeer later</string>
+    <string name="authentication_blocked_choose_new_btn">Kies nieuwe code</string>
+    <string name="access_code_recovery_incorrect">Onjuiste herstelzin.</string>
+    <string name="preference_linked_recovery_descr">Bekijk je herstelzin in de desktop app.</string>
+    <string name="remove_wallet_auth_title">Portemonnee verwijderen</string>
+    <string name="remove_wallet_auth_desc_recovery_warn">Als je de herstelzin van je portemonnee niet hebt bewaard, verlies je deze voorgoed als je deze nu verwijderd, ook voor toekomstig ontvangen bedragen op de oude adresssen.</string>
+    <string name="remove_wallet_auth_desc">"Voer je toegangscode in om door te gaan en je portemonnee te verwijderen. "</string>
+    <string name="change_passcode_auth_title">Wijzig code</string>
+    <string name="change_passcode_auth_desc">Voer je oude toegangscode in om een nieuwe code in te kunnen stellen.</string>
+    <string name="image_content_description_qr_scan_target_rectangle">QR scan doel vierkant</string>
+    <string name="wallet_birth_heading">Hoe oud is deze portemonnee?</string>
+    <string name="wallet_birth_info">Nieuwe wallets syncen sneller. Selecteer \"Ouder\" als er bedragen ontbreken.</string>string&gt;
+    <string name="wallet_birth_less_than_a_week">Jonger dan een week.</string>
+    <string name="wallet_birth_less_than_a_month">Jonger dan een maand.</string>
+    <string name="wallet_birth_less_than_six_months">Jonger dan zes maanden.</string>
+    <string name="wallet_birth_less_than_a_year">Jonger dan een jaar.</string>
+    <string name="wallet_birth_less_than_two_years">Jonger dan twee jaar.</string>
+    <string name="wallet_birth_unsure">Ouder / ik weet het niet zeker.</string>
+    <string name="link_wallet_auth_desc">Voer je toegangscode in om door te gaan en je portemonnee te koppelen.</string>
+    <string name="numeric_keypad_send_button">Verstuur</string>
+    <string name="preferences_support_button">Support</string>
+    <string name="preferences_advanced_button">Geavanceerd</string>
+</resources>

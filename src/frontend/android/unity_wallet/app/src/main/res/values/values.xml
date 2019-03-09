@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="wallet_birth_date">
+        <item>@string/wallet_birth_less_than_a_week</item>
+        <item>@string/wallet_birth_less_than_a_month</item>
+        <item>@string/wallet_birth_less_than_six_months</item>
+        <item>@string/wallet_birth_less_than_a_year</item>
+        <item>@string/wallet_birth_less_than_two_years</item>
+        <item>@string/wallet_birth_unsure</item>
+    </string-array>
+    <string-array name="currency_codes">
+        <item>EUR</item>
+        <item>BTC</item>
+        <item>AUD</item>
+        <item>BRL</item>
+        <!--<item>CNY</item>-->
+        <item>GBP</item>
+        <!--<item>RUB</item>-->
+        <item>USD</item>
+        <item>ZAR</item>
+        <item>KRW</item>
+        <item>JPY</item>
+    </string-array>
+    <string-array name="currency_names">
+        <item>Euro</item>
+        <item>Bitcoin</item>
+        <item>Australian dollar</item>
+        <item>Brazilian real</item>
+        <!--<item>Chinese yuan</item>-->
+        <item>British Pound</item>
+        <!--<item>Russian roebel</item>-->
+        <item>US dollar</item>
+        <item>South African rand</item>
+        <item>South Korean Won</item>
+        <item>Japanese yen</item>
+    </string-array>
+    <string-array name="currency_shorts">
+        <item>€</item>
+        <item>BTC</item>
+        <item>AU$</item>
+        <item>R$</item>
+        <!--<item>CN¥</item>-->
+        <item>£</item>
+        <!--<item>₽</item>-->
+        <item>US$</item>
+        <item>ZAR</item>
+        <item>₩</item>
+        <item>JP¥</item>
+    </string-array>
+    <integer-array
+        name="currency_precisions">
+        <item>2</item>
+        <item>8</item>
+        <item>2</item>
+        <item>2</item>
+        <!--<item>CN¥</item>-->
+        <item>2</item>
+        <!--<item>₽</item>-->
+        <item>2</item>
+        <item>2</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
+    <string-array name="background_sync_values">
+        <item>BACKGROUND_SYNC_OFF</item>
+        <item>BACKGROUND_SYNC_DAILY</item>
+        <item>BACKGROUND_SYNC_CONTINUOUS</item>
+    </string-array>
+    <string name="background_sync_default">BACKGROUND_SYNC_OFF</string>
+    <string name="send_keypad_digit_1">1</string>
+    <string name="send_keypad_digit_2">2</string>
+    <string name="send_keypad_digit_3">3</string>
+    <string name="send_keypad_digit_4">4</string>
+    <string name="send_keypad_digit_5">5</string>
+    <string name="send_keypad_digit_6">6</string>
+    <string name="send_keypad_digit_7">7</string>
+    <string name="send_keypad_digit_8">8</string>
+    <string name="send_keypad_digit_9">9</string>
+    <string name="send_keypad_digit_0">0</string>
+    <string name="button_ok">@android:string/ok</string>
+    <string name="button_cancel">@android:string/cancel</string>
+</resources>

@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Copyright (c) 2018 The Gulden developers
-Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
 <resources>
+    <string name="default_currency">EUR</string>
     <string name="title_send">Send</string>
     <string name="title_receive">Receive</string>
     <string name="title_transactions">Transactions</string>
     <string name="title_settings">Settings</string>
     <string name="title_activity_barcode_capture">Scan QR code</string>
     <string name="title_activity_transaction_info">Transaction info</string>
-
     <string name="action_bar_copy">Copy</string>
     <string name="action_bar_copy_long">Copy to clipboard</string>
     <string name="action_bar_share">Share</string>
@@ -35,79 +34,14 @@ file COPYING
     <string name="send_coins_confirm_template">%1$s NLG\n\nto %2$s</string>
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
     <string name="send_coins_nocks_estimate_template">Approx. G %1$s including IBAN service fee</string>
-
     <string name="peer_list_fragment_empty">No peers connected</string>
     <string name="block_row_now">just now</string>
     <string name="action_browse">Browse</string>
-
-    <string name="default_currency">EUR</string>
-
-
-    <string-array name="currency_codes">
-        <item>EUR</item>
-        <item>BTC</item>
-        <item>AUD</item>
-        <item>BRL</item>
-        <!--<item>CNY</item>-->
-        <item>GBP</item>
-        <!--<item>RUB</item>-->
-        <item>USD</item>
-        <item>ZAR</item>
-        <item>KRW</item>
-        <item>JPY</item>
-    </string-array>
-    <string-array name="currency_names">
-        <item>Euro</item>
-        <item>Bitcoin</item>
-        <item>Australian dollar</item>
-        <item>Brazilian real</item>
-        <!--<item>Chinese yuan</item>-->
-        <item>British Pound</item>
-        <!--<item>Russian roebel</item>-->
-        <item>US dollar</item>
-        <item>South African rand</item>
-        <item>South Korean Won</item>
-        <item>Japanese yen</item>
-    </string-array>
-    <string-array name="currency_shorts">
-        <item>€</item>
-        <item>BTC</item>
-        <item>AU$</item>
-        <item>R$</item>
-        <!--<item>CN¥</item>-->
-        <item>£</item>
-        <!--<item>₽</item>-->
-        <item>US$</item>
-        <item>ZAR</item>
-        <item>₩</item>
-        <item>JP¥</item>
-    </string-array>
-    <integer-array
-        name="currency_precisions">
-        <item>2</item>
-        <item>8</item>
-        <item>2</item>
-        <item>2</item>
-        <!--<item>CN¥</item>-->
-        <item>2</item>
-        <!--<item>₽</item>-->
-        <item>2</item>
-        <item>2</item>
-        <item>0</item>
-        <item>0</item>
-    </integer-array>
-
     <string-array name="background_sync_entries">
         <item>Off</item>
         <item>Daily</item>
         <item>Always</item>
     </string-array>
-    <string-array name="background_sync_values">
-        <item>BACKGROUND_SYNC_OFF</item>
-        <item>BACKGROUND_SYNC_DAILY</item>
-        <item>BACKGROUND_SYNC_CONTINUOUS</item>
-    </string-array>
-    <string name="background_sync_default">BACKGROUND_SYNC_OFF</string>
     <string name="transaction_id">Transaction ID</string>
     <string name="status">Status</string>
     <string name="amount_label">Amount</string>
@@ -121,8 +55,6 @@ file COPYING
     <string name="tx_status_unknown">Unknown (you found a bug)</string>
     <string name="no_tx_details">No transaction details for [%s]</string>
     <string name="no_guldensync_warning_title">Invalid QR code</string>
-    <string name="button_ok">@android:string/ok</string>
-    <string name="button_cancel">@android:string/cancel</string>
     <string name="no_guldensync_warning">This QR code does not contain a valid Gulden sync code, please try again with a valid code.</string>
     <string name="failed_guldensync_warning_title">Could not perform link</string>
     <string name="failed_guldensync_unconfirmed_funds_message">Some of your funds are awaiting confirmation, please allow for them to fully confirm before attempting the link process again.</string>
@@ -142,17 +74,7 @@ file COPYING
     <string name="send_coins_label_remove_from_address_book">Remove from address book</string>
     <string name="send_fragment_scan_label">Scan QR</string>
     <string name="send_fragment_clipboard_label">Clipboard</string>
-    <string name="send_keypad_digit_1">1</string>
-    <string name="send_keypad_digit_2">2</string>
-    <string name="send_keypad_digit_3">3</string>
-    <string name="send_keypad_digit_4">4</string>
-    <string name="send_keypad_digit_5">5</string>
-    <string name="send_keypad_digit_6">6</string>
-    <string name="send_keypad_digit_7">7</string>
-    <string name="send_keypad_digit_8">8</string>
-    <string name="send_keypad_digit_9">9</string>
     <string name="send_keypad_decimal_separator">.</string>
-    <string name="send_keypad_digit_0">0</string>
     <string name="send_keypad_button_delete">⌫</string>
     <string name="chain_status_label_probable_height">Probable height</string>
     <string name="chain_status_label_partial_height">Partial chain height</string>
@@ -213,12 +135,4 @@ file COPYING
     <string name="numeric_keypad_send_button">Send</string>
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Advanced</string>
-    <string-array name="wallet_birth_date">
-        <item>@string/wallet_birth_less_than_a_week</item>
-        <item>@string/wallet_birth_less_than_a_month</item>
-        <item>@string/wallet_birth_less_than_six_months</item>
-        <item>@string/wallet_birth_less_than_a_year</item>
-        <item>@string/wallet_birth_less_than_two_years</item>
-        <item>@string/wallet_birth_unsure</item>
-    </string-array>
 </resources>
