@@ -70,7 +70,7 @@ bool GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::str
                 }
                 else
                 {
-                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth), newPassword.c_str());
+                    return InitWalletFromRecoveryPhrase(wallet.walletSeedMnemonic.c_str(), newPassword.c_str());
                 }
             }
         }
@@ -92,13 +92,13 @@ LegacyWalletResult GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(const s
         {
             LogPrintf("Proto is encrypted\n");
 
-            if ( oldPassword.length() == 0 )
-            {
-                LogPrintf("Password required\n");
-                return LegacyWalletResult::ENCRYPTED_PASSWORD_REQUIRED;
-            }
             if (!wallet.validWallet)
             {
+                if ( oldPassword.length() == 0 )
+                {
+                    LogPrintf("Password required\n");
+                    return LegacyWalletResult::ENCRYPTED_PASSWORD_REQUIRED;
+                }
                 LogPrintf("Password is invalid\n");
                 return LegacyWalletResult::PASSWORD_INVALID;
             }

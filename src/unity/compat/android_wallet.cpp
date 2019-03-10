@@ -140,6 +140,16 @@ android_wallet ParseAndroidProtoWallet(std::string walletPath, std::string walle
                 for (int j=0;j<nestedFieldSet->field_count();++j)
                 {
                     auto nestedField = nestedFieldSet->field(j);
+                    // Grab the lowest possible birth date from the proto.
+                    if (nestedField.number() == 5 && nestedField.type() == 0)
+                    {
+                        //Birth dates were stored in milliseconds to convert to seconds
+                        uint64_t timeStamp = nestedField.varint()/1000;
+                        if (walletRet.walletBirth == 0 || walletRet.walletBirth > timeStamp)
+                        {
+                            walletRet.walletBirth = timeStamp;
+                        }
+                    }
                     if (keyType < 0)
                     {
                         if (nestedField.number() == 1 && nestedField.type() == 0)
@@ -194,10 +204,6 @@ android_wallet ParseAndroidProtoWallet(std::string walletPath, std::string walle
                                             break;
                                         }
                                     }
-                                }
-                                else if (nestedField.number() == 5 && nestedField.type() == 0)
-                                {
-                                    walletRet.walletBirth = nestedField.varint();
                                 }
                                 break;
                             }
