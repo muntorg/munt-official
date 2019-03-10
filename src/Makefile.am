@@ -128,6 +128,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   compat/endian.h \
   compat/sanity.h \
   compressor.h \
+  blockfilter.h \
   consensus/consensus.h \
   consensus/tx_verify.h \
   core_io.h \
@@ -330,6 +331,8 @@ crypto_libgulden_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libgulden_crypto_a_SOURCES = \
   crypto/aes.cpp \
   crypto/aes.h \
+  crypto/bytevectorhash.h \
+  crypto/bytevectorhash.cpp \
   crypto/chacha20.h \
   crypto/chacha20.cpp \
   Gulden/Common/scrypt.h \
@@ -410,6 +413,7 @@ libgulden_common_a_SOURCES = \
   chainparams.cpp \
   coins.cpp \
   compressor.cpp \
+  blockfilter.cpp \
   key.cpp \
   keystore.cpp \
   netaddress.cpp \
