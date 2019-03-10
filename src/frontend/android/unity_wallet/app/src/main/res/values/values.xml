@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Don't allow localisation of string-array directly (strings.xml) as this can lead to strange errors if there are missing or removed items in the translations !-->
+    <!-- All string arrays go here instead and then reference into strings.xml via @string/xyz  as necessary for translations !-->
     <string-array name="wallet_birth_date">
         <item>@string/wallet_birth_less_than_a_week</item>
         <item>@string/wallet_birth_less_than_a_month</item>
@@ -61,12 +63,25 @@
         <item>0</item>
         <item>0</item>
     </integer-array>
+
+    <string-array name="background_sync_entries">
+        <item>@string/background_sync_off</item>
+        <item>@string/background_sync_daily</item>
+        <item>@string/background_sync_always</item>
+    </string-array>
+
     <string-array name="background_sync_values">
         <item>BACKGROUND_SYNC_OFF</item>
         <item>BACKGROUND_SYNC_DAILY</item>
         <item>BACKGROUND_SYNC_CONTINUOUS</item>
     </string-array>
+
+    <!-- Default value that is localisable by region not language, avoid having translators deal with this !-->
+    <string name="default_currency">EUR</string>
     <string name="background_sync_default">BACKGROUND_SYNC_OFF</string>
+    <string name="title_activity_welcome">Welcome activity</string>
+
+    <!-- UI can't currently handle these being translated, so don't allow it !-->
     <string name="send_keypad_digit_1">1</string>
     <string name="send_keypad_digit_2">2</string>
     <string name="send_keypad_digit_3">3</string>
@@ -77,6 +92,12 @@
     <string name="send_keypad_digit_8">8</string>
     <string name="send_keypad_digit_9">9</string>
     <string name="send_keypad_digit_0">0</string>
+
+    <!-- Only visible in case of major error, or via things like screen readers so avoid burdening translators !-->
+    <string name="image_content_description_gulden_logo">Gulden logo</string>
+    <string name="image_content_description_qr_scan_target_rectangle">QR scan target rectangle</string>
+
+    <!-- Platform provides default translations so avoid unnecessary translation by translators !-->
     <string name="button_ok">@android:string/ok</string>
     <string name="button_cancel">@android:string/cancel</string>
 </resources>

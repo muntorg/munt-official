@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="action_bar_copy">복사</string>
+    <string name="action_bar_share">공유</string>
+    <string name="action_bar_buy">구매</string>
+    <string name="welcome_activity_create_new_wallet">새 지갑</string>
+    <string name="welcome_activity_recover_existing_wallet">지갑 복구</string>
+    <string name="welcome_activity_sync_with_desktop">데스크톱과 링크</string>
+    <string name="recover_from_phrase_intro">복구를 위해 복구 문장을 입력하세요.</string>
+    <string name="show_recovery_phrase_EULA">Gulden 앱을 사용하면 Gulden의 관리 및 저장에 대한 모든 책임이 귀하에게 있다는 사실에 명시적으로, 그리고 무조건 동의하는 것으로 간주합니다.</string>
+    <string name="recovery_phrase_continue">계속</string>
+    <string name="show_recovery_phrase_introtext">다음은 귀하의 비밀 복구 문장입니다. 이를 적어 안전하게 보관하세요.
+이 문장을 분실하면 Gulden도 잃게 됩니다. 이 문장에 다른 사람이 액세스 해도 Gulden을 잃게 됩니다.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">적었습니다.</string>
+    <string name="recovery_phrase_copy">클립보드에 복구 문장이 복사되었습니다.</string>
+    <string name="peer_list_fragment_empty">피어(Peer)에 연결되지 않은 상태입니다.</string>
+    <string name="block_row_now">바로 지금</string>
+    <string name="action_browse">블럭체인 탐색</string>
+</resources>

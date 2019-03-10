@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="action_bar_copy">Kopiuj</string>
+    <string name="action_bar_share">Udostępnij</string>
+    <string name="action_bar_buy">Zakup</string>
+    <string name="welcome_activity_create_new_wallet">Nowy portfel</string>
+    <string name="welcome_activity_recover_existing_wallet">Odzyskaj portfel</string>
+    <string name="welcome_activity_sync_with_desktop">Łącze z komputerem</string>
+    <string name="recover_from_phrase_intro">Wprowadź hasło passphrase, z którego chcesz odzyskać</string>
+    <string name="show_recovery_phrase_EULA">Korzystając z aplikacji Gulden, akceptujesz i bezwarunkowo zgadzasz się, że ponosisz wszelką odpowiedzialność za zarządzanie i przechowywanie swojego Gulden.</string>
+    <string name="recovery_phrase_continue">Kontynuj</string>
+    <string name="show_recovery_phrase_introtext">Poniżej jest sekretne hasło passphrase (kopia zapasowa), zapisz to i zachowaj w bezpiecznym miejscu. Jeśli stracisz hasło passphrase = Stracisz Gulden. Ktoś niepowołany z dostępem do hasła passphrase = stracisz Gulden.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">Zapisałem to w bezpiecznym miejscu</string>
+    <string name="recovery_phrase_copy">Hasło passphrase zostało skopiowane do schowka</string>
+    <string name="peer_list_fragment_empty">Brak połączonych partnerów</string>
+    <string name="block_row_now">tylko teraz</string>
+    <string name="action_browse">Przeglądaj</string>
+    <string name="no_guldensync_warning_title">To nie kod QR do synchronizacji z komputerem</string>
+    <string name="no_guldensync_warning">Zeskanowany kod QR nie jest przeznaczony do łączenia z komputerem, jeśli nie jest to twoim zamiarem, może to być próba oszustwa. Jeśli masz wątpliwości poproś o pomoc.</string>
+</resources>

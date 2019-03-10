@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="action_bar_copy">複製</string>
+    <string name="action_bar_share">分享</string>
+    <string name="action_bar_buy">購買</string>
+    <string name="welcome_activity_create_new_wallet">新錢包</string>
+    <string name="welcome_activity_recover_existing_wallet">復原錢包</string>
+    <string name="welcome_activity_sync_with_desktop">與桌面電腦連接</string>
+    <string name="recover_from_phrase_intro">輸入你的回復碼以回復錢包</string>
+    <string name="show_recovery_phrase_EULA">當你使用 Gulden 時，你明白並同意你將負上所有管理及儲存 Gulden 的責任。</string>
+    <string name="recovery_phrase_continue">繼續</string>
+    <string name="show_recovery_phrase_introtext">以下是你的秘密回復碼，請將它寫下及妥善保管。遺失回復碼就遺失了 Guldens。讓其他人得知了回復碼也等於遺失了 Guldens。</string>
+    <string name="recovery_phrase_acknowledge_writing_down">我已記下了它</string>
+    <string name="recovery_phrase_copy">已經把回復碼複製到剪貼簿</string>
+    <string name="peer_list_fragment_empty">沒有節點連線</string>
+    <string name="block_row_now">剛剛</string>
+    <string name="action_browse">瀏覽</string>
+</resources>

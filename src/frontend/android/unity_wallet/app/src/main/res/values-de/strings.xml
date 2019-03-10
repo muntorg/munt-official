@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="title_send">Senden</string>
+    <string name="title_receive">Empfangen</string>
+    <string name="title_transactions">Transaktionen</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="title_activity_barcode_capture">Scanne QR code</string>
+    <string name="title_activity_transaction_info">Transaktionsinformationen</string>
+    <string name="action_bar_copy">Kopieren</string>
+    <string name="action_bar_copy_long">In Zwischenablage kopieren</string>
+    <string name="action_bar_share">Teilen</string>
+    <string name="action_bar_buy">Kaufen</string>
+    <string name="welcome_activity_create_new_wallet">Neues Wallet</string>
+    <string name="welcome_activity_recover_existing_wallet">Wallet wiederherstellen</string>
+    <string name="welcome_activity_sync_with_desktop">Verbinden mit Desktop</string>
+    <string name="recover_from_phrase_intro">Deine Wiederherstellungsphrase eingeben, mit der eine Wiederherstellung durchgeführt werden soll</string>
+    <string name="show_recovery_phrase_EULA">Mit Benutzung der Gulden App erklärst du dich ausdrücklich und bedingungslos einverstanden, dass du alle Verantwortung für die Verwaltung und Speicherung deiner Gulden übernimmst.</string>
+    <string name="recovery_phrase_continue">Fortsetzen</string>
+    <string name="title_activity_enter_recovery_phrase">Wiederherstellungsphrase eingeben</string>
+    <string name="show_recovery_phrase_introtext">Unten angezeigt steht deine geheime Wiederherstellungsphrase; schreibe sie dir auf und verwahre sie sicher. Wiederherstellungsphrase verlieren = Gulden verlieren. Jemand anders Zugang zu deiner Phrase = auch Gulden weg.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">Ich habe es aufgeschrieben</string>
+    <string name="recovery_phrase_copy">Wiederherstellungsphrase in die Zwischenablage kopiert</string>
+    <string name="address_book_empty_message">Um eine Adresse hinzuzufügen, starte eine Bezahlung und tippe auf \"Zum Adressbuch hinzufügen\"</string>
+    <string name="address_book_empty_title">Adressbuch löschen</string>
+    <string name="transaction_list_empty_title">Bis jetzt wurden keine Gulden empfangen.</string>
+    <string name="transaction_list_empty_message">Hier tippen um deine ersten Gulden zu kaufen.</string>
+    <string name="send_coins_confirm_template">%1$s NLG\n\nnach %2$s</string>
+    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nnach %3$s</string>
+    <string name="send_coins_nocks_estimate_template">Ungefähr G %1$s inklusive IBAN Gebühr</string>
+    <string name="peer_list_fragment_empty">Keine Peers verbunden</string>
+    <string name="block_row_now">gerade eben</string>
+    <string name="action_browse">Im Browser öffnen</string>
+    <string name="transaction_id">Transaktions-ID</string>
+    <string name="status">Status</string>
+    <string name="amount_label">Betrag</string>
+    <string name="from_label">Von</string>
+    <string name="to_label">An</string>
+    <string name="tx_status_abandoned">Transaktion verworfen</string>
+    <string name="tx_status_conflicted">in Konflikt geraten</string>
+    <string name="tx_status_confirming">Wird bestätigt %s/%s</string>
+    <string name="tx_status_unconfirmed">Unbestätigt</string>
+    <string name="tx_status_confirmed">Bestätigt in Block #%d um %s</string>
+    <string name="tx_status_unknown">Unbekannt (du hast einen Fehler gefunden)</string>
+    <string name="no_tx_details">Keine Transaktionsdetails für [%s]</string>
+    <string name="no_guldensync_warning_title">Kein QR-Code für PC-Synchronisierung</string>
+    <string name="no_guldensync_warning">Der eingelesene QR-Code ist <u>nicht</u> zum Verbinden mit deinem PC. Wenn dies nicht deine Absicht war, dann ist es möglicherweise ein Betrugsversuch. Im Zweifelsfall bitte um Hilfe.</string>
+    <string name="failed_guldensync_warning_title">Verbindung zwischen Mobil und Desktop Wallet fehlgeschlagen</string>
+    <string name="preference_fragment_title">Einstellungen</string>
+    <string name="preference_fragment_recovery_label">Wiederherstellungsphrase</string>
+    <string name="preference_fragment_rescan_label">Wallet erneut scannen</string>
+    <string name="preference_fragment_remove_label">Wallet lösschen</string>
+    <string name="preference_fragment_fiat_label">Lokale Währung</string>
+    <string name="preference_fragment_notification_label">Benachrichtigungen</string>
+    <string name="send_fragment_scan_label">Scanne den QR Code</string>
+    <string name="send_fragment_clipboard_label">Zwischenablage</string>
+    <string name="send_keypad_decimal_separator">.</string>
+    <string name="send_keypad_button_delete">⌫</string>
+    <string name="title_peers">Peers</string>
+    <string name="title_blocks">Blöcke</string>
+    <string name="title_processing">Bearbeitung</string>
+    <string name="rescan_confirm_title">Erneut scannen?</string>
+    <string name="rescan_confirm_btn">Erneut scannen</string>
+    <string name="cancel_btn">Abbrechen</string>
+    <string name="upgrade_enter_password">Passwort eingeben</string>
+    <string name="upgrade_enter_password_hint">PIN</string>
+    <string name="unlock">Entsperren</string>
+    <string name="send_coins_error_acknowledge">OK</string>
+    <string name="authentication_blocked_title">Wallet deaktiviert</string>
+    <string name="remove_wallet_auth_title">Wallet lösschen</string>
+    <string name="numeric_keypad_send_button">Senden</string>
+    <string name="preferences_support_button">Hilfe</string>
+</resources>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
+    <!--
 Copyright (c) 2018 The Gulden developers
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
 <resources>
-    <string name="default_currency">EUR</string>
     <string name="title_send">Verstuur</string>
     <string name="title_receive">Ontvang</string>
     <string name="title_transactions">Transacties</string>
@@ -19,7 +21,6 @@ file COPYING
     <string name="welcome_activity_create_new_wallet">Nieuwe portemonnee</string>
     <string name="welcome_activity_recover_existing_wallet">Herstel portemonnee</string>
     <string name="welcome_activity_sync_with_desktop">Koppel met desktop</string>
-    <string name="title_activity_welcome">Welcome activity</string>
     <string name="recover_from_phrase_intro">Vul je herstelzin in</string>
     <string name="show_recovery_phrase_EULA">Wanneer je de Gulden-app gebruikt ga je er uitdrukkelijk en onvoorwaardelijk mee akkoord dat alleen jij verantwoordelijk bent voor het beheren en bewaren van je Gulden.</string>
     <string name="recovery_phrase_continue">Verder</string>
@@ -37,11 +38,6 @@ file COPYING
     <string name="peer_list_fragment_empty">Geen connecties</string>
     <string name="block_row_now">alleen nu</string>
     <string name="action_browse">Bladeren</string>
-    <string-array name="background_sync_entries">
-        <item>Uit</item>
-        <item>Dagelijks</item>
-        <item>Altijd</item>
-    </string-array>
     <string name="transaction_id">Transactie ID</string>
     <string name="status">Status</string>
     <string name="amount_label">Bedrag</string>
@@ -85,7 +81,6 @@ file COPYING
     <string name="title_peers">Peers</string>
     <string name="title_blocks">Blokken</string>
     <string name="title_processing">Verwerken</string>
-    <string name="image_content_description_gulden_logo">Gulden logo</string>
     <string name="rescan_confirm_msg">Het herscannen van de blockchain kan enige tijd duren. Weet je het zeker?</string>
     <string name="rescan_confirm_title">Herscan?</string>
     <string name="rescan_confirm_btn">Herscan</string>
@@ -122,9 +117,8 @@ file COPYING
     <string name="remove_wallet_auth_desc">"Voer je toegangscode in om door te gaan en je portemonnee te verwijderen. "</string>
     <string name="change_passcode_auth_title">Wijzig code</string>
     <string name="change_passcode_auth_desc">Voer je oude toegangscode in om een nieuwe code in te kunnen stellen.</string>
-    <string name="image_content_description_qr_scan_target_rectangle">QR scan doel vierkant</string>
     <string name="wallet_birth_heading">Hoe oud is deze portemonnee?</string>
-    <string name="wallet_birth_info">Nieuwe wallets syncen sneller. Selecteer \"Ouder\" als er bedragen ontbreken.</string>string&gt;
+    <string name="wallet_birth_info">Nieuwe wallets syncen sneller. Selecteer \"Ouder\" als er bedragen ontbreken.</string>
     <string name="wallet_birth_less_than_a_week">Jonger dan een week.</string>
     <string name="wallet_birth_less_than_a_month">Jonger dan een maand.</string>
     <string name="wallet_birth_less_than_six_months">Jonger dan zes maanden.</string>

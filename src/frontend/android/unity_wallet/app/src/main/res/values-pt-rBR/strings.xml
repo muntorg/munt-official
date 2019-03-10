@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="action_bar_copy">Copiar</string>
+    <string name="action_bar_share">Partilhar</string>
+    <string name="action_bar_buy">Comprar</string>
+    <string name="welcome_activity_create_new_wallet">Nova carteira</string>
+    <string name="welcome_activity_recover_existing_wallet">Recuperar carteira</string>
+    <string name="welcome_activity_sync_with_desktop">Partilhar com o desktop</string>
+    <string name="recover_from_phrase_intro">Introduzir a frase de recuperação da qual executar a recuperaçãao</string>
+    <string name="show_recovery_phrase_EULA">Ao utilizar a aplicação Gulden está a aceitar explicitamente e incondicionalmente que você é responsável por toda a gestão e armazenamento das suas Gulden.</string>
+    <string name="recovery_phrase_continue">Continuar</string>
+    <string name="show_recovery_phrase_introtext">Segue-se a sua frase secreta de recuperação, escreva-a e mantenha-a segura. Perder a frase = perder Guldens. Outra pessoa com acesso à frase = perder Guldens.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">Eu anotei-a</string>
+    <string name="recovery_phrase_copy">Frase de recuperação copiada para área de transferência</string>
+    <string name="peer_list_fragment_empty">Sem pontos conectados</string>
+    <string name="block_row_now">agora</string>
+    <string name="action_browse">Navegar</string>
+</resources>

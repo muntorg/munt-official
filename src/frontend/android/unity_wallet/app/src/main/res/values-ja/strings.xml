@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="action_bar_copy">コピー</string>
+    <string name="action_bar_share">共有</string>
+    <string name="action_bar_buy">購入</string>
+    <string name="welcome_activity_create_new_wallet">新しいウォレット</string>
+    <string name="welcome_activity_recover_existing_wallet">ウォレットの復元</string>
+    <string name="welcome_activity_sync_with_desktop">デスクトップとリンク</string>
+    <string name="recover_from_phrase_intro">復元するには、復元フレーズを入力してください</string>
+    <string name="show_recovery_phrase_EULA">Guldenアプリを使用すれば、Guldenの管理と保管に関するすべての責任を携帯できることをおわかりいただけます。</string>
+    <string name="recovery_phrase_continue">続ける</string>
+    <string name="show_recovery_phrase_introtext">以下は秘密の復元フレーズです。メモを取り、安全な場所に保管してください。フレーズをなくした場合、Guldensが失われます。誰かがこのフレーズを使用してアクセスした場合、Guldensが失われます。</string>
+    <string name="recovery_phrase_acknowledge_writing_down">メモを取りました</string>
+    <string name="recovery_phrase_copy">復元フレーズがクリップボードにコピーされました</string>
+    <string name="peer_list_fragment_empty">接続済みのピアはありません</string>
+    <string name="block_row_now">たった今</string>
+    <string name="action_browse">ブラウズ</string>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="action_bar_copy">Sao chép</string>
+    <string name="action_bar_share">Chia sẻ</string>
+    <string name="action_bar_buy">Mua</string>
+    <string name="welcome_activity_create_new_wallet">Ví mới</string>
+    <string name="welcome_activity_recover_existing_wallet">Khôi phục ví</string>
+    <string name="welcome_activity_sync_with_desktop">Liên kết với desktop</string>
+    <string name="recover_from_phrase_intro">Nhập từ khóa khôi phục của bạn qua đó để thực hiện khôi phục</string>
+    <string name="show_recovery_phrase_EULA">Bằng cách sử dụng ứng dụng Gulden bạn hiểu và đồng ý vô điều kiện rằng mình sẽ chịu hoàn toàn trách nhiệm cho việc quản lý và lưu trữ Gulden của mình.</string>
+    <string name="recovery_phrase_continue">Tiếp tục</string>
+    <string name="show_recovery_phrase_introtext">Dưới đây là từ khóa khôi phục bí mật của bạn, hãy ghi lại và lưu giữ ở nơi an toàn. Mất từ khóa = mất Guildens. Một ai đó khác có quyền truy cập vào từ khóa = mất Gulden.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">Tôi đã ghi nó lại</string>
+    <string name="recovery_phrase_copy">Từ khóa khôi phục được sao chép vào bộ nhớ đệm</string>
+    <string name="peer_list_fragment_empty">Không có mạng ngang hàng nào kết nối</string>
+    <string name="block_row_now">ngay bây giờ</string>
+    <string name="action_browse">Duyệt</string>
+</resources>

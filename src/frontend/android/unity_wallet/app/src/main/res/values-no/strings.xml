@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="action_bar_copy">Kopier</string>
+    <string name="action_bar_share">Del</string>
+    <string name="action_bar_buy">Kjøp</string>
+    <string name="welcome_activity_create_new_wallet">Ny lommebok</string>
+    <string name="welcome_activity_recover_existing_wallet">Gjenopprett lommebok</string>
+    <string name="welcome_activity_sync_with_desktop">Koble med datamaskinen</string>
+    <string name="recover_from_phrase_intro">Skriv inn gjenopprettelsesetningen som skal brukes til gjenopprettelse</string>
+    <string name="show_recovery_phrase_EULA">Ved å bruke Gulden-appen gir du ditt uforbeholdne samtykke til at du tar ditt fulle ansvar for å administrere og oppbevare dine Gulden.</string>
+    <string name="recovery_phrase_continue">Fortsett</string>
+    <string name="show_recovery_phrase_introtext">Nedenfor er din hemmelige gjenopprettelsesetning, skriv den ned og hold den sikker. Tapt setning = tapte Guldens. Andre som har tilgang til setningen = tapte Guldens.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">Jeg skrev den ned</string>
+    <string name="recovery_phrase_copy">Gjenopprettelsesetning kopiert til utklippstavlen</string>
+    <string name="peer_list_fragment_empty">Ingen peers tilkoblet</string>
+    <string name="block_row_now">akkurat nå</string>
+    <string name="action_browse">Se gjennom</string>
+</resources>

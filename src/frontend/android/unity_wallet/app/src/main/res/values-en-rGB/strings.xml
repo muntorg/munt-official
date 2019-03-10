@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
+    <!--
 Copyright (c) 2018 The Gulden developers
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
-
-<!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
-<!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
-<!-- Never place string-array items here, those should always go in values.xml !-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
 <resources>
     <string name="title_send">Send</string>
     <string name="title_receive">Receive</string>

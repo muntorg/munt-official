@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+Copyright (c) 2018 The Gulden developers
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+    <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
+    <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
+    <!-- Never place string-array items here, those should always go in values.xml !-->
+<resources>
+    <string name="action_bar_copy">Copia</string>
+    <string name="action_bar_share">Comparteix</string>
+    <string name="action_bar_buy">Compra</string>
+    <string name="welcome_activity_create_new_wallet">Nova cartera</string>
+    <string name="welcome_activity_recover_existing_wallet">Recupera cartera</string>
+    <string name="welcome_activity_sync_with_desktop">Enllaç amb escriptori</string>
+    <string name="recover_from_phrase_intro">Escriu la frase de recuperació a partir de la qual vulguis realitzar una recuperació.</string>
+    <string name="show_recovery_phrase_EULA">Si fas servir l\'aplicació Gulden, acceptes de forma explícita i incondicional que ets l\'únic responsable de la gestió i l\'emmagatzematge dels teus Gulden.</string>
+    <string name="recovery_phrase_continue">Continua</string>
+    <string name="show_recovery_phrase_introtext">A continuació es mostra la teva frase de recuperació secreta. Escriu-la i guarda-la en un lloc segur. Si perds la frase, perdràs els Guldens. Si una altra persona accedeix a la frase, també perdràs els Guldens.</string>
+    <string name="recovery_phrase_acknowledge_writing_down">L\'he escrita</string>
+    <string name="recovery_phrase_copy">Frase de recuperació copiada al porta-retalls.</string>
+    <string name="peer_list_fragment_empty">Cap parell connectat</string>
+    <string name="block_row_now">ara mateix</string>
+    <string name="action_browse">Navega</string>
+</resources>
