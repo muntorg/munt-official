@@ -108,7 +108,9 @@ class Authentication {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             val blockedUntil = preferences.getLong(BLOCKED_UNTIL_KEY, 0)
             positiveButton(context.getString(R.string.authentication_blocked_later_btn)) {}
-            if (GuldenUnifiedBackend.IsMnemonicWallet()) {
+            // TODO: recovery using the mnemonic is not possible because the (core) wallet needs to be unlocked to verify the mnemonic
+            // so this is a chicken egg problem. it could be fixed for example by storing a hashed version of the mnemonic for this purpose
+            if (false /*GuldenUnifiedBackend.IsMnemonicWallet()*/) {
                 this.message = context.getString(R.string.authentication_blocked_msg_recovery).format(
                         DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().toLowerCase())
                 neutralPressed(context.getString(R.string.authentication_blocked_choose_new_btn)) {
