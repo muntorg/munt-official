@@ -136,8 +136,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     {
         super.onStart()
 
-        // Always fully expand never peek
-        mMainlayout.layoutParams.height = fragmentActivity.window.decorView.height - 300
         mBehavior!!.skipCollapsed = true
         mBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
     }

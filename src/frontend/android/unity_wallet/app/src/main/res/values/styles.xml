@@ -57,4 +57,9 @@ file COPYING
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
+    <style name="NumPadDigit">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
 </resources>

@@ -23,14 +23,17 @@ file COPYING
 
         <Button
             android:id="@+id/button_1"
-            android:layout_height="match_parent"
+            style="@style/NumPadDigit"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/shape_rounded_button"
+            android:elegantTextHeight="false"
             android:text="@string/send_keypad_digit_1"
             android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/button_2"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/keypad_key_gap_size"
@@ -41,6 +44,7 @@ file COPYING
 
         <Button
             android:id="@+id/button_3"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:background="@drawable/shape_rounded_button"
@@ -57,6 +61,7 @@ file COPYING
 
         <Button
             android:id="@+id/button_4"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:background="@drawable/shape_rounded_button"
@@ -65,6 +70,7 @@ file COPYING
 
         <Button
             android:id="@+id/button_5"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/keypad_key_gap_size"
@@ -75,6 +81,7 @@ file COPYING
 
         <Button
             android:id="@+id/button_6"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:background="@drawable/shape_rounded_button"
@@ -90,6 +97,7 @@ file COPYING
         >
         <Button
             android:id="@+id/button_7"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:background="@drawable/shape_rounded_button"
@@ -98,6 +106,7 @@ file COPYING
 
         <Button
             android:id="@+id/button_8"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/keypad_key_gap_size"
@@ -108,6 +117,7 @@ file COPYING
 
         <Button
             android:id="@+id/button_9"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:background="@drawable/shape_rounded_button"
@@ -131,6 +141,7 @@ file COPYING
 
         <Button
             android:id="@+id/button_0"
+            style="@style/NumPadDigit"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/keypad_key_gap_size"
@@ -150,7 +161,7 @@ file COPYING
     </TableRow>
 
     <TableRow
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:gravity="center"
         android:layout_marginBottom="@dimen/keypad_key_gap_size"
         >
