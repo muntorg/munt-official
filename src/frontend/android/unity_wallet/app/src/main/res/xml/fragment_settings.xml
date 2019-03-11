@@ -16,7 +16,7 @@ file COPYING
     <Preference
         android:key="preference_show_wallet_settings"
         android:persistent="false"
-        android:summary=""
+        android:summary="Backup, recovery and linking"
         android:title="Wallet"
         app:iconSpaceReserved="false"
         tools:ignore="UnusedAttribute" />
