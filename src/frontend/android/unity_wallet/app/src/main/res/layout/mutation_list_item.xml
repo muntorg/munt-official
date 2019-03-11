@@ -9,7 +9,7 @@ file COPYING
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="30dp"
     android:layout_marginLeft="0dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -25,17 +25,9 @@ file COPYING
         tools:ignore="HardcodedText" />
 
     <Space
-        android:layout_width="40dp"
+        android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_weight="0" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_weight="0"
-        android:scaleType="fitEnd"
-        app:srcCompat="@drawable/ic_g_logo" />
 
     <TextView
         android:id="@+id/textViewAmount"

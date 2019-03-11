@@ -67,7 +67,7 @@ class MutationAdapter(context: Context, private var dataSource: ArrayList<Mutati
         }
 
         rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(mutationRecord.timestamp * 1000L))
-        rowView.textViewAmount.text = formatNativeAndLocal(mutationRecord.change,rate,false)
+        rowView.textViewAmount.text = formatNativeAndLocal(mutationRecord.change,rate)
         rowView.textViewAmount.textColor = ContextCompat.getColor(rowView.context,
                 if (mutationRecord.change >= 0) R.color.change_positive else R.color.change_negative)
         return rowView

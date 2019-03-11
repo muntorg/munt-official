@@ -10,7 +10,7 @@ file COPYING
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:layout_marginLeft="0dp"
-    android:gravity="center_vertical"
+    android:gravity="bottom"
     android:orientation="vertical"
     android:paddingLeft="0dp"
     android:paddingRight="0dp">
@@ -18,10 +18,11 @@ file COPYING
     <TextView
         android:id="@+id/transactionItemHeading"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:gravity="bottom"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:paddingBottom="10dp"
         android:text="Heading"
         android:textColor="@android:color/black"
         tools:ignore="HardcodedText" />
@@ -29,5 +30,5 @@ file COPYING
     <include
         layout="@layout/mutation_list_item"
         android:layout_width="match_parent"
-        android:layout_height="60dp" />
+        android:layout_height="30dp"/>
 </LinearLayout>

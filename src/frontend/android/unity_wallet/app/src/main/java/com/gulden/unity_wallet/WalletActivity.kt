@@ -257,8 +257,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     private fun setWalletBalance(balance : Long)
     {
         val coins = balance.toDouble() / Config.COIN
-        walletBalance.text = String.format("%.2f", coins)
-        walletBalanceLogo.visibility = View.VISIBLE
+        walletBalance.text = String.format("G %.2f", coins)
         walletBalance.visibility = View.VISIBLE
 
         this.launch( Dispatchers.Main) {
