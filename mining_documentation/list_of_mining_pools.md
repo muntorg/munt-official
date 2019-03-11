@@ -32,6 +32,7 @@ Active:
 |mininghub||mininghub|GYLqFZZ3tHThPDzuRF2oir78PW97h39178||
 |luckypool|https://gulden.luckypool.org|luckypool|GRH1SKLneAzwYn7yXdKBSuuAwwsmAz9JtQ|https://gulden.luckypool.org/index.php?page=statistics&action=round&height=783000||
 |mining-dutch.nl|www.mining-dutch.nl|-|GPfnm7iRfMkbMMDFprUBgPL4pRe92sdqYF, Ga4vnMZj3Drjh7rPknCokmkBrBsELcZF4k|https://www.mining-dutch.nl/pools/gulden.php?page=statistics&action=blocks||
+|powermining|http://powermining.pw/|-|GJDNGcbaszbXn3To1Gh1c8k5Y3QkacpbHJ|||
 
 Alive but inactive:
 ----
