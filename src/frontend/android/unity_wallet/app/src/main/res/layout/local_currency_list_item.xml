@@ -47,7 +47,7 @@ file COPYING
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingEnd="48dp"
-        android:src="@drawable/ic_glyphicons_153_check"
+        android:src="@drawable/ic_check_solid"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="parent"
