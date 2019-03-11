@@ -27,6 +27,7 @@ private const val TAG = "authentication"
 
 private const val BLOCK_DURATION = 241 * DateUtils.MINUTE_IN_MILLIS
 private const val BLOCKED_UNTIL_KEY = "authentication-blocked-until"
+private const val NUM_FAILED_ATTEMPTS_KEY = "authentication-num-failed-attempts"
 
 class Authentication {
     interface LockingObserver {
@@ -90,6 +91,8 @@ class Authentication {
         val blockUntil = System.currentTimeMillis() + BLOCK_DURATION
         editor.putLong(BLOCKED_UNTIL_KEY, blockUntil)
         editor.apply()
+
+        resetFailedAttempts(context)
     }
 
     private fun unblock(context: Context) {
@@ -166,8 +169,7 @@ class Authentication {
         dialog.setOnShowListener {
             contentView.accessCode.addTextChangedListener(
                     object : TextWatcher {
-                        //TODO: Store/Initialise this - don't reinitialise to max for every dialog creation.
-                        var numAttemptsRemaining = ACCESS_CODE_ATTEMPTS_ALLOWED
+
                         override fun afterTextChanged(s: Editable?) {
                             if (s?.length == ACCESS_CODE_LENGTH)
                             {
@@ -179,7 +181,7 @@ class Authentication {
                                     it.dismiss()
                                     action(chosenCode)
                                 } else {
-                                    numAttemptsRemaining -= 1
+                                    var numAttemptsRemaining = ACCESS_CODE_ATTEMPTS_ALLOWED - incFailedAttempts(context)
                                     if (numAttemptsRemaining > 0) {
                                         s.clear()
                                         contentView.accessCode.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake))
@@ -273,6 +275,22 @@ class Authentication {
             }
         }
         dialog.show()
+    }
+
+    private fun incFailedAttempts(context: Context): Int {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val numFailedAttempts = 1 + preferences.getInt(NUM_FAILED_ATTEMPTS_KEY, 0)
+        val editor = preferences.edit()
+        editor.putInt(NUM_FAILED_ATTEMPTS_KEY, numFailedAttempts)
+        editor.apply()
+        return numFailedAttempts
+    }
+
+    private fun resetFailedAttempts(context: Context) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = preferences.edit()
+        editor.remove(NUM_FAILED_ATTEMPTS_KEY)
+        editor.apply()
     }
 
     private var lockingObservers: MutableSet<LockingObserver> = mutableSetOf()
