@@ -29,4 +29,6 @@ file COPYING
 
     <dimen name="transaction_details_item_spacing">30dp</dimen>
 
+    <dimen name="bottom_divider_margin">0dp</dimen>
+
 </resources>

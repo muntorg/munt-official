@@ -86,20 +86,15 @@ file COPYING
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="16dp"
         android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -109,32 +104,35 @@ file COPYING
         <Button
             android:id="@+id/qrButton"
             android:layout_width="0dp"
-            android:layout_height="38dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_weight="3"
-            android:ellipsize="middle"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_weight="1"
             android:background="@drawable/shape_rounded_button"
+            android:ellipsize="middle"
             android:text="@string/send_fragment_scan_label"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
 
         <!-- NB! We have to turn off all caps as otherwise spannable strings (which we use for dual line text styling) do not work correctly!-->
         <Button
             android:id="@+id/clipboardButton"
             android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_weight="3"
-            android:maxLines="2"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_weight="1"
             android:background="@drawable/shape_rounded_button"
             android:enabled="false"
+            android:maxLines="2"
             android:text="@string/send_fragment_clipboard_label"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
