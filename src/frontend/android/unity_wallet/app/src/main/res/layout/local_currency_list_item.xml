@@ -42,12 +42,14 @@ file COPYING
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
-    <ImageView
+    <TextView
         android:id="@+id/imageViewCurrencySelected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/fa5pl"
         android:paddingEnd="48dp"
-        android:src="@drawable/ic_check_solid"
+        android:text=""
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="parent"
