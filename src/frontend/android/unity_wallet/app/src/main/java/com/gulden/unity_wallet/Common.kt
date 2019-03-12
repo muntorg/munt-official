@@ -80,3 +80,7 @@ fun internalErrorAlert(context: Context, msg: String) {
         positiveButton(android.R.string.ok) {}
     }.build().show()
 }
+
+fun String.toDoubleOrZero(): Double {
+    return toDoubleOrNull() ?: 0.0
+}

@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -25,12 +25,16 @@ import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.R.layout.text_input_address_label
+import kotlinx.android.synthetic.main.fragment_send_coins.*
+import kotlinx.android.synthetic.main.fragment_send_coins.view.*
 import kotlinx.android.synthetic.main.numeric_keypad.*
+import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
+import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 import kotlin.math.roundToInt
 
@@ -41,25 +45,32 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private var nocksJob: Job? = null
     private var orderResult: NocksOrderResult? = null
-    private lateinit var activeAmount: EditText
     private var localRate: Double = 0.0
     private lateinit var recipient: UriRecipient
     private var foreignCurrency = localCurrency
     private var isIBAN = false
-    private val amount: Double
-        get() {
-            var a = mActivitySendCoins.text.toString().toDoubleOrNull()
-            if (a == null)
-                a = 0.0
-            return a
+    private enum class EntryMode {
+        Native,
+        Local
+    }
+    private var entryMode = EntryMode.Native
+    private var amountEditStr: String = "0"
+        set(value) {
+            field = value
+            updateDisplayAmount()
         }
+
+    private val amount: Double
+        get() = amountEditStr.toDoubleOrZero()
+
     private val foreignAmount: Double
         get() {
-            var a = mActivitySendCoinsLocal.text.toString().toDoubleOrNull()
-            if (a == null)
-                a = 0.0
-            return a
+            return when (entryMode) {
+                EntryMode.Local -> amountEditStr.toDoubleOrZero()
+                EntryMode.Native -> amountEditStr.toDoubleOrZero() * localRate
+            }
         }
+
     private val recipientDisplayAddress: String
         get () {
             return if (recipient.label.isEmpty()) recipient.address else "${recipient.label} (${recipient.address})"
@@ -78,8 +89,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     private lateinit var fragmentActivity : Activity
 
     private var mBehavior: BottomSheetBehavior<*>? = null
-    private lateinit var mActivitySendCoins : EditText
-    private lateinit var mActivitySendCoinsLocal : EditText
     private lateinit var mSendCoinsReceivingStaticAddress : TextView
     private lateinit var mSendCoinsNocksEstimate : TextView
     private lateinit var mSendCoinsReceivingStaticLabel : TextView
@@ -92,18 +101,12 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         mMainlayout = View.inflate(context, R.layout.fragment_send_coins, null)
 
-        mActivitySendCoins = mMainlayout.findViewById(R.id.send_coins_amount)
-        mActivitySendCoinsLocal = mMainlayout.findViewById(R.id.send_coins_local_amount)
         mSendCoinsReceivingStaticAddress = mMainlayout.findViewById(R.id.send_coins_receiving_static_address)
         mSendCoinsNocksEstimate = mMainlayout.findViewById(R.id.send_coins_nocks_estimate)
         mSendCoinsReceivingStaticLabel = mMainlayout.findViewById(R.id.send_coins_receiving_static_label)
         mLabelRemoveFromAddressBook = mMainlayout.findViewById(R.id.labelRemoveFromAddressBook)
         mLabelAddToAddressBook = mMainlayout.findViewById(R.id.labelAddToAddressBook)
         mSendCoinsReceivingStaticAddress = mMainlayout.findViewById(R.id.send_coins_receiving_static_address)
-
-        val drawable = TextDrawable.builder().beginConfig().fontSize(mActivitySendCoins.textSize.roundToInt()).textColor(Color.BLACK).endConfig().buildRect("G", Color.TRANSPARENT)
-        drawable.setBounds(0, 0, 40, 40)
-        mActivitySendCoins.setCompoundDrawables(drawable, null, null, null)
 
         mMainlayout.findViewById<View>(R.id.button_0).setOnClickListener { view -> handleKeypadButtonClick(view) }
         mMainlayout.findViewById<View>(R.id.button_1).setOnClickListener { view -> handleKeypadButtonClick(view) }
@@ -151,27 +154,13 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             recipient = it
         }
 
-        activeAmount = mActivitySendCoins
-        activeAmount.setText(recipient.amount)
+        if (recipient.amount.isNotEmpty())
+            amountEditStr = recipient.amount
+        updateDisplayAmount()
+
         mSendCoinsReceivingStaticAddress.text = recipient.address
 
         setAddressLabel(recipient.label)
-
-        mActivitySendCoins.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus)
-            {
-                activeAmount = mActivitySendCoins
-                mMainlayout.findViewById<Button>(R.id.button_currency).text = foreignCurrency.short
-            }
-        }
-
-        mActivitySendCoinsLocal.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus)
-            {
-                activeAmount = mActivitySendCoinsLocal
-                mMainlayout.findViewById<Button>(R.id.button_currency).text = "G"
-            }
-        }
 
         if (IBANValidator.getInstance().isValid(recipient.address)) {
             foreignCurrency = Currencies.knownCurrencies["EUR"]!!
@@ -187,6 +176,31 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         return view
     }
 
+    private fun updateDisplayAmount() {
+        var primaryStr = ""
+        var secondaryStr = ""
+        val amount = amountEditStr.toDoubleOrZero()
+        when (entryMode) {
+            EntryMode.Native -> {
+                primaryStr = "G %s".format(amountEditStr)
+                if (localRate > 0.0) {
+                    secondaryStr = String.format("(%s %.${foreignCurrency.precision}f)", foreignCurrency.short, localRate * amount)
+                }
+
+
+            }
+            EntryMode.Local -> {
+                primaryStr = "%s %s".format(foreignCurrency.short, amountEditStr)
+                if (localRate > 0.0) {
+                    secondaryStr = String.format("(G %.${Config.PRECISION_SHORT}f)", amount / localRate)
+                }
+            }
+        }
+
+        (mMainlayout.findViewById<View>(R.id.send_coins_amount_primary) as TextView?)?.text = primaryStr
+        (mMainlayout.findViewById<View>(R.id.send_coins_amount_secondary) as TextView?)?.text = secondaryStr
+    }
+
     private fun confirmAndCommitGuldenPayment(view: View) {
         // create styled message from resource template and arguments bundle
         val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amount)
@@ -197,7 +211,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
             // on confirmation compose recipient and execute payment
             positiveButton("Send") {
-                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, mActivitySendCoins.text.toString())
+                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, amountEditStr)
                 Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
                         null, msg = "%s\n\nG %s".format(paymentRequest.address, nlgStr)) {
                     try {
@@ -275,44 +289,14 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         this.launch( Dispatchers.Main) {
             try {
                 localRate = fetchCurrencyRate(foreignCurrency.code)
-                val drawable = TextDrawable.builder().beginConfig().fontSize(mActivitySendCoinsLocal.textSize.roundToInt()).textColor(Color.BLACK).endConfig().buildRect(foreignCurrency.short, Color.TRANSPARENT)
-                drawable.setBounds(0, 0, 40, 40)
-                mActivitySendCoinsLocal.setCompoundDrawables(drawable, null, null, null)
-                mActivitySendCoinsLocal.visibility = View.VISIBLE
-
-                updateConversion()
 
                 if (isIBAN)
-                    mActivitySendCoinsLocal.requestFocus()
+                    entryMode = EntryMode.Local
             }
             catch (e: Throwable) {
-                mActivitySendCoinsLocal.visibility = View.GONE
+                entryMode = EntryMode.Native
             }
-        }
-    }
-
-    private fun updateConversion()
-    {
-        if (localRate <= 0.0)
-            return
-
-        if (activeAmount == mActivitySendCoins) {
-            // update local from Gulden
-            mActivitySendCoinsLocal.setText(
-                    if (amount != 0.0)
-                        String.format("%.${foreignCurrency.precision}f", localRate * amount)
-                    else
-                        ""
-            )
-        }
-        else {
-            // update Gulden from local
-            mActivitySendCoins.setText(
-                    if (foreignAmount != 0.0)
-                        String.format("%.${Config.PRECISION_SHORT}f", foreignAmount / localRate)
-                    else
-                        ""
-            )
+            updateDisplayAmount()
         }
     }
 
@@ -331,7 +315,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                     prevJob?.join()
 
-                    val quote = nocksQuote(mActivitySendCoinsLocal.text.toString())
+                    val quote = nocksQuote(String.format("%.${foreignCurrency.precision}", foreignAmount))
                     val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG.toDouble())
                     mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
                 }
@@ -369,10 +353,10 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun appendNumberToAmount(number : String)
     {
-        if (activeAmount.text.toString() == "0")
-            activeAmount.setText(number)
+        if (amountEditStr == "0")
+            amountEditStr = number
         else
-            activeAmount.setText(activeAmount.text.toString() + number)
+            amountEditStr += number
     }
 
     private fun handleKeypadButtonClick(view : View)
@@ -390,37 +374,36 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             R.id.button_9 -> appendNumberToAmount("9")
             R.id.button_0 ->
             {
-                if (activeAmount.text.isEmpty()) activeAmount.setText(activeAmount.text.toString() + "0.")
-                else if (activeAmount.text.toString() != "0") activeAmount.setText(activeAmount.text.toString() + "0")
+                if (amountEditStr.isEmpty()) amountEditStr += "0."
+                else if (amountEditStr != "0") amountEditStr += "0"
             }
             R.id.button_backspace ->
             {
-                if (activeAmount.text.toString() == "0.") activeAmount.setText("")
-                else activeAmount.setText(activeAmount.text.dropLast(1))
+                amountEditStr = if (amountEditStr.length > 1)
+                    amountEditStr.dropLast(1)
+                else
+                    "0"
             }
             R.id.button_decimal ->
             {
-                if (!activeAmount.text.contains("."))
+                if (!amountEditStr.contains("."))
                 {
-                    if (activeAmount.text.isEmpty()) activeAmount.setText("0.")
-                    else activeAmount.setText(activeAmount.text.toString() + ".")
+                    if (amountEditStr.isEmpty()) amountEditStr = "0."
+                    else amountEditStr = "$amountEditStr."
                 }
             }
             R.id.button_currency ->
             {
-                if (mActivitySendCoins.isFocused)
-                {
-                    mActivitySendCoinsLocal.requestFocus()
+                entryMode = when (entryMode) {
+                    EntryMode.Local -> EntryMode.Native
+                    EntryMode.Native -> EntryMode.Local
                 }
-                else
-                {
-                    mActivitySendCoins.requestFocus()
-                }
+                updateDisplayAmount()
             }
             R.id.button_send ->
             {
                 run {
-                    if (activeAmount.text.isEmpty())
+                    if (amountEditStr.isEmpty())
                     {
                         errorMessage("Enter an amount to pay")
                         return@run
@@ -435,7 +418,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             }
 
         }
-        updateConversion()
         updateNocksEstimate()
     }
 
