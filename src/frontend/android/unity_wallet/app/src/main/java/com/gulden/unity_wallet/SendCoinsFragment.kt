@@ -8,7 +8,6 @@ package com.gulden.unity_wallet
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,26 +16,21 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import com.amulyakhare.textdrawable.TextDrawable
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
+import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
-import kotlinx.android.synthetic.main.fragment_send_coins.*
-import kotlinx.android.synthetic.main.fragment_send_coins.view.*
 import kotlinx.android.synthetic.main.numeric_keypad.*
-import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
-import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
-import kotlin.math.roundToInt
 
 
 class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
@@ -351,12 +345,43 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
     }
 
-    private fun appendNumberToAmount(number : String)
-    {
+    private fun allowedDecimals(): Int {
+        return when(entryMode) {
+            EntryMode.Native -> PRECISION_SHORT
+            EntryMode.Local -> foreignCurrency.precision
+        }
+    }
+
+    private fun numDecimals(amount:String): Int {
+        val pos = amount.indexOfLast { it == '.' }
+        return if (pos > 0) amount.length - pos - 1 else 0
+    }
+
+    private fun chopExcessDecimals() {
+        if (numDecimals(amountEditStr) > allowedDecimals()) {
+            amountEditStr = amountEditStr.substring(0, amountEditStr.length - (numDecimals(amountEditStr) - allowedDecimals()))
+        }
+    }
+
+    private fun appendNumberToAmount(number : String) {
         if (amountEditStr == "0")
             amountEditStr = number
-        else
-            amountEditStr += number
+        else {
+            if (!amountEditStr.contains(".") || numDecimals(amountEditStr) < allowedDecimals())
+                amountEditStr += number
+            else {
+                if (numDecimals(amountEditStr) < allowedDecimals())
+                    amountEditStr += number
+                else {
+                    amountEditStr = buildString {
+                        append(amountEditStr)
+                        deleteCharAt(lastIndexOf("."))
+                        append(number)
+                        insert(length - allowedDecimals(), ".")
+                    }.trimStart('0')
+                }
+            }
+        }
     }
 
     private fun handleKeypadButtonClick(view : View)
@@ -398,6 +423,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     EntryMode.Local -> EntryMode.Native
                     EntryMode.Native -> EntryMode.Local
                 }
+                chopExcessDecimals()
                 updateDisplayAmount()
             }
             R.id.button_send ->
