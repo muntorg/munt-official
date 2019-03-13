@@ -53,6 +53,7 @@
 #include "validation/versionbitsvalidation.h"
 #include "versionbits.h"
 #include "warnings.h"
+#include "blockfilter.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
@@ -3385,7 +3386,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
 
                 // When not in full sync mode we should not have any full validation status so clear it.
                 // This should normally not happen. An edge case is when with full sync mode in a previous session and
-                // in a later sessio0n switching to pure partial sync.
+                // in a later session switching to pure partial sync.
                 if (pindex->nHeight != 0) {
                     pindex->nStatus &= ~(BLOCK_VALID_TREE | BLOCK_VALID_TRANSACTIONS | BLOCK_VALID_CHAIN | BLOCK_VALID_SCRIPTS);
                     pindex->nChainTx = 0;
@@ -4326,61 +4327,93 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
     // To ensure that context checks can be done on headers from *time* onwards, a window of
     // at least 576 headers is required. So the youngest block that is before the requested time
     // should have at least 576 headers before it.
-    const CBlockIndex* youngestBefore = partialChain.FindYoungest(time, [](int64_t before, const CBlockIndex* index){
+    const CBlockIndex* youngestBefore = partialChain.FindYoungest(time, [](int64_t before, const CBlockIndex* index)
+    {
         return index->GetBlockTime() < before;
     });
 
     if (IsPartialSyncActive())
+    {
         LogPrintf("Partial chain height = %d offset = %d.\n", partialChain.Height(), partialChain.HeightOffset());
+    }
 
-    if (    IsPartialSyncActive()
-         && youngestBefore && (youngestBefore->nHeight <= 576 || youngestBefore->nHeight - partialChain.HeightOffset() > 576))
+    if (IsPartialSyncActive() && youngestBefore && (youngestBefore->nHeight <= 576 || youngestBefore->nHeight - partialChain.HeightOffset() > 576))
     {
         LogPrintf("Partial sync continues.\n");
     }
-    else {
+    else
+    {
         if (IsPartialSyncActive()) // IsPartialSyncActive() => above checks for time and/or 576 window failed
         {
             LogPrintf("Partial sync in progress but starting point is too young for requested start. Sync reset.\n");
             ResetPartialSync();
         }
 
-        // Search checkpoint with at least a 576 block height difference to the checkpoint that is the youngest before
-        // the desired starting time. This way when we reach the latter checkpoint there will be enough data to do context checks
-        // the largest windows for context checking is the DELTA algorithm, which needs 576 blocks.
-        CheckPointEntry entry;
-        int youngestHeight = Checkpoints::LastCheckpointAt(time, entry);
-        int olderHeight = youngestHeight;
-        while (olderHeight > 0 && youngestHeight - olderHeight <= 576)
+
+        // Determine the first checkpoint that comes before wallet birth date
+        uint64_t nWalletBirthBlockHard = Checkpoints::LastCheckpointBeforeTime(time);
+
+        // Now determine the first checkpoint of actual interest using block filters
+        uint64_t nWalletBirthBlockSoft = Checkpoints::LastCheckPointHeight();
+        if (pactiveWallet)
         {
-            olderHeight = Checkpoints::LastCheckpointAt(entry.nTime - 1, entry);
+            LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+
+            GCSFilter::ElementSet elementSet;
+            for (const auto& [accountUUID, forAccount] : pactiveWallet->mapAccounts)
+            {
+                (unused) accountUUID;
+                std::set<CKeyID> setAddresses;
+                forAccount->GetKeys(setAddresses);
+                for (const auto& key : setAddresses)
+                {
+                    //fixme: (2.1) Alter the blockfilter to use just the keys instead of the full script
+                    //This will be more efficient in terms of space and time and simplify code like this
+                    CScript searchScript = CScript() << OP_DUP << OP_HASH160 << ToByteVector(key) << OP_EQUALVERIFY << OP_CHECKSIG;
+                    std::vector<unsigned char> searchData(searchScript.begin(), searchScript.end());
+                    elementSet.insert(searchData);
+                }
+            }
+            std::vector<std::tuple<uint64_t, uint64_t>> cpRanges;
+            getBlockFilterBirthAndRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft, elementSet, cpRanges);
+            std::swap(cpRanges, partialChain.cpRanges);
         }
-        // if no suitable checkpoint was found use Genesis
-        if (olderHeight < 0)
+        else
         {
-            olderHeight = Checkpoints::LastCheckpointAt(Params().GenesisBlock().GetBlockTime(), entry);
-            assert(olderHeight == 0);
+            nWalletBirthBlockSoft = nWalletBirthBlockHard;
         }
 
-        if (olderHeight - 576 >= chainActive.Height() || !isFullSyncMode())
+
+        //fixme: (2.2) We don't always necessarily need to go back an entire checkpoint.
+        // We could instead look at difference in time between original birth date and checkpoint to see if its necessary
+        // Or alternatively we could just skip delta checks in the rare case where it isn't etc.
+        // However if checkpoint gaps are small enough it doesn't matter, so this is a very minor issue and possibly not worth further effort
+        // Leave this for now but revisit in future.
+
+        // Now determine the actual checkpoint we will use.
+        // This checkpoint needs to be at least 576 blocks before the one we were actually interested in, to ensure we can context check properly when we reach the actual data
+        // The largest window for context checking is the DELTA algorithm, which needs 576 blocks of prior context to work properly.
+        uint64_t nOffsetContextBirthCheckpoint = Checkpoints::LastCheckpointBeforeBlock(nWalletBirthBlockSoft-576);
+
+        if (nOffsetContextBirthCheckpoint - 576 >= (uint64_t)chainActive.Height() || !isFullSyncMode())
         {
             // inititalize partial sync
-            partialChain.SetHeightOffset(olderHeight);
-            CBlockIndex* index = InsertBlockIndex(entry.hash);
-            index->nHeight = olderHeight;
+            partialChain.SetHeightOffset(nOffsetContextBirthCheckpoint);
+            CBlockIndex* index = InsertBlockIndex(Params().Checkpoints().find(nOffsetContextBirthCheckpoint)->second.hash);
+            index->nHeight = nOffsetContextBirthCheckpoint;
             index->RaisePartialValidity(BLOCK_PARTIAL_TREE);
             partialChain.SetTip(index);
             pindexBestPartial = index;
 
             setDirtyBlockIndex.insert(index);
 
-            LogPrintf("Partial headers started from built-in checkpoint with height=%d\n", olderHeight);
+            LogPrintf("Partial headers started from built-in checkpoint with height=%d\n", nOffsetContextBirthCheckpoint);
 
             // from now IsPartialSyncActive() == true, as the offset is set and the partial chain has at least one entry
         }
         else
         {
-            LogPrintf("Partial headers NOT started started as full chain is ahead of required offset, height=%d offset=%d\n", chainActive.Height(), olderHeight);
+            LogPrintf("Partial headers NOT started started as full chain is ahead of required offset, height=%d offset=%d\n", chainActive.Height(), nOffsetContextBirthCheckpoint);
             return false;
         }
     }
