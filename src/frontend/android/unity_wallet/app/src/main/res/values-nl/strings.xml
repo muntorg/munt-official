@@ -38,6 +38,9 @@ file COPYING
     <string name="peer_list_fragment_empty">Geen connecties</string>
     <string name="block_row_now">alleen nu</string>
     <string name="action_browse">Bladeren</string>
+    <string name="background_sync_off">Uit</string>
+    <string name="background_sync_daily">Dagelijks</string>
+    <string name="background_sync_always">Altijd</string>
     <string name="transaction_id">Transactie ID</string>
     <string name="status">Status</string>
     <string name="amount_label">Bedrag</string>

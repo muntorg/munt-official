@@ -38,6 +38,9 @@ file COPYING
     <string name="peer_list_fragment_empty">Keine Peers verbunden</string>
     <string name="block_row_now">gerade eben</string>
     <string name="action_browse">Im Browser öffnen</string>
+    <string name="background_sync_off">Aus</string>
+    <string name="background_sync_daily">Täglich</string>
+    <string name="background_sync_always">Immer</string>
     <string name="transaction_id">Transaktions-ID</string>
     <string name="status">Status</string>
     <string name="amount_label">Betrag</string>
