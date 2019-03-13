@@ -23,6 +23,9 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 
 /** Start the library */
 + (int32_t)InitUnityLib:(nonnull NSString *)dataDir
+       staticFilterPath:(nonnull NSString *)staticFilterPath
+     staticFilterOffset:(int64_t)staticFilterOffset
+     staticFilterLength:(int64_t)staticFilterLength
                 testnet:(BOOL)testnet
                 signals:(nullable id<DBGuldenUnifiedFrontend>)signals;
 

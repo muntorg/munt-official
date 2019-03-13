@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
 
-data class UnityConfig(val dataDir: String, val testnet: Boolean)
+data class UnityConfig(val dataDir: String, val apkPath: String, val staticFilterOffset: Long, val staticFilterLength: Long, val testnet: Boolean)
 
 class UnityCore {
     interface Observer {
@@ -63,7 +63,7 @@ class UnityCore {
             thread(true)
             {
                 System.loadLibrary("gulden_unity_jni")
-                GuldenUnifiedBackend.InitUnityLib(cfg.dataDir, cfg.testnet, coreLibrarySignalHandler)
+                GuldenUnifiedBackend.InitUnityLib(cfg.dataDir, cfg.apkPath, cfg.staticFilterOffset, cfg.staticFilterLength, cfg.testnet, coreLibrarySignalHandler)
             }
 
             started = true

@@ -512,7 +512,7 @@ bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 }
 
 
-int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
+int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
 {
     // Force the datadir to specific place on e.g. android devices
     if (!dataDir.empty())
@@ -527,6 +527,9 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, bool test
     // Turn SPV mode on
     SoftSetArg("-fullsync", "0");
     SoftSetArg("-spv", "1");
+    SoftSetArg("-spvstaticfilterfile", staticFilterPath);
+    SoftSetArg("-spvstaticfilterfileoffset", i64tostr(staticFilterOffset));
+    SoftSetArg("-spvstaticfilterfilelength", i64tostr(staticFilterLength));
 
     // Minimise lookahead size for performance reasons
     SoftSetArg("-accountpool", "1");

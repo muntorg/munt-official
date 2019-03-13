@@ -30,7 +30,7 @@ public:
     static constexpr int32_t VERSION = 1;
 
     /** Start the library */
-    static int32_t InitUnityLib(const std::string & data_dir, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend> & signals);
+    static int32_t InitUnityLib(const std::string & data_dir, const std::string & staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend> & signals);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletFromRecoveryPhrase(const std::string & phrase, const std::string & password);
