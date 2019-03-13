@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_BLOCKFILTER_H
-#define BITCOIN_BLOCKFILTER_H
+#ifndef GULDEN_BLOCKFILTER_H
+#define GULDEN_BLOCKFILTER_H
 
 #include <stdint.h>
 #include <string>
@@ -14,6 +14,7 @@
 #include <serialize.h>
 #include <uint256.h>
 #include <undo.h>
+#include "chain.h"
 #include <crypto/bytevectorhash.h>
 
 /**
@@ -107,12 +108,12 @@ std::string ListBlockFilterTypes();
  */
 class BlockFilter
 {
-private:
+protected:
     BlockFilterType m_filter_type;
     uint256 m_block_hash;
     GCSFilter m_filter;
 
-    bool BuildParams(GCSFilter::Params& params) const;
+    virtual bool BuildParams(GCSFilter::Params& params) const;
 
 public:
 
@@ -166,4 +167,16 @@ public:
     }
 };
 
-#endif // BITCOIN_BLOCKFILTER_H
+
+//! Special sub class used only for filtercp used my SPV sync, not for network messages or anything consensus related.
+class RangedCPBlockFilter : public BlockFilter
+{
+public:
+    //! Construct a new RangedCPBlockFilter of the specified type from a range.
+    //! Filter contains startRange->endRange - inclusive of start range, exclusive of end range
+    RangedCPBlockFilter(const CBlockIndex* startRange, const CBlockIndex* endRange);
+private:
+    virtual bool BuildParams(GCSFilter::Params& params) const;
+};
+
+#endif // GULDEN_BLOCKFILTER_H

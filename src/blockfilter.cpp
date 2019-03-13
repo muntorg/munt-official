@@ -9,6 +9,8 @@
 #include <primitives/transaction.h>
 #include <script/script.h>
 #include <streams.h>
+#include <validation/validation.h>
+#include "blockstore.h"
 
 /// SerType used to serialize parameters in GCS filter encoding.
 static constexpr int GCS_SER_TYPE = SER_NETWORK;
@@ -239,11 +241,8 @@ std::string ListBlockFilterTypes()
     return ret.str();
 }
 
-static GCSFilter::ElementSet BasicFilterElements(const CBlock& block,
-                                                 const CBlockUndo& block_undo)
+static void BasicFilterElements(GCSFilter::ElementSet& elements, const CBlock& block, const CBlockUndo& block_undo)
 {
-    GCSFilter::ElementSet elements;
-
     for (const CTransactionRef& tx : block.vtx) {
         for (const CTxOut& txout : tx->vout) {
             const CScript& script = txout.output.scriptPubKey;
@@ -260,6 +259,12 @@ static GCSFilter::ElementSet BasicFilterElements(const CBlock& block,
         }
     }
 
+}
+
+static GCSFilter::ElementSet BasicFilterElements(const CBlock& block, const CBlockUndo& block_undo)
+{
+    GCSFilter::ElementSet elements;
+    BasicFilterElements(elements, block, block_undo);
     return elements;
 }
 
@@ -319,3 +324,65 @@ uint256 BlockFilter::ComputeHeader(const uint256& prev_header) const
     return result;
 }
 
+RangedCPBlockFilter::RangedCPBlockFilter(const CBlockIndex* startRange, const CBlockIndex* endRange)
+: BlockFilter()
+{
+    GCSFilter::Params params;
+    if (!BuildParams(params))
+    {
+        throw std::invalid_argument("unknown filter_type");
+    }
+    GCSFilter::ElementSet elements;
+    const CBlockIndex* pIndex = endRange;
+    while (true)
+    {
+        CBlock block;
+        if (!ReadBlockFromDisk(block, pIndex, Params()))
+        {
+            throw std::invalid_argument("BlockFilter: error reading block from disk");
+        }
+        CBlockUndo blockUndo;
+        if (pIndex->pprev)
+        {
+            CDiskBlockPos pos = pIndex->GetUndoPos();
+            if (pos.IsNull())
+            {
+                throw std::invalid_argument("BlockFilter: error reading undo pos from disk");
+            }
+
+            if (!blockStore.UndoReadFromDisk(blockUndo, pos, pIndex->pprev->GetBlockHashPoW2()))
+            {
+                throw std::invalid_argument("BlockFilter: error reading undo data from disk");
+            }
+        }
+        BasicFilterElements(elements, block, blockUndo);
+        if (pIndex == startRange)
+            break;
+        pIndex=pIndex->pprev;
+    }
+    m_filter = GCSFilter(params, elements);
+}
+
+bool RangedCPBlockFilter::BuildParams(GCSFilter::Params& params) const
+{
+    params.m_siphash_k0 = 0;
+    params.m_siphash_k1 = 0;
+    // Filters have a false positive rate of '1/M' while M needs to be roughly '2^P' for optimal space usage, with some possible variance.
+    // Ultimately both P and M, must be altered
+    // For our purposes a "relatively high" false positive rate (e.g. about 1%) is tolerable
+    // Some non-comprehensive testing of various sizes leaves us with the following rough results to work with
+    //gaps: 1000 blocks
+    //P=8  M=256    2965052 bytes      false positive rate = (69/908) ranges
+    //P=10 M=1034   3585205 bytes      false positive rate = (15/908) ranges
+    //P=10 M=2048   3878673 bytes      false positive rate = (9/908) ranges
+    //P=6 M=4096    21772036 bytes     false positive rate = (7/908) ranges
+    //P=12 M=4096   4199978 bytes      false positive rate = (4/908) ranges
+    //gaps: 100 blocks
+    //P=12 M=4096   6280492 bytes
+    //P=12 M=5700   6449605 bytes
+    //We have settled on the current settings for now (using gaps of 200 blocks), however these can easily be changed for future releases
+    //When/if we decide on more appropriate settings.
+    params.m_P = 12;
+    params.m_M = 4096;
+    return true;
+}
