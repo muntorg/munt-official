@@ -221,7 +221,7 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
         std::vector<CTransactionRef> vtxConflicted; // dummy for now
         wallet.BlockConnected(block, pindex, vtxConflicted);
 
-        UpdateLastProcessed(pindex);
+        UpdateLastProcessed((CBlockIndex*)pindex);
 
         RequestBlocks();
 
