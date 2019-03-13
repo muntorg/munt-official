@@ -33,6 +33,7 @@
 
 #include "txdb.h"
 #include "coins.h"
+#include "blockfilter.h"
 #include "primitives/transaction.h"
 
 #include <Gulden/util.h>
@@ -484,6 +485,59 @@ static UniValue enablewitnessing(const JSONRPCRequest& request)
     }
 
     witnessingEnabled = true;
+    return true;
+}
+
+static UniValue dumpfiltercheckpoints(const JSONRPCRequest& request)
+{
+     if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "dumpfiltercheckpoints \"filename\"\n"
+            "\nExamples:\n"
+            + HelpExampleCli("dumpfiltercheckpoints", ""));
+
+    std::ofstream file;
+    boost::filesystem::path filepath = request.params[0].get_str();
+    filepath = boost::filesystem::absolute(filepath);
+    file.open(filepath.string().c_str());
+    if (!file.is_open())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
+
+    LogPrintf("Dumping filter checkpoints:\n");
+    int nStart = 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
+    int nInterval1 = 500;
+    int nInterval2 = 100;
+    int nCrossOver = 500000;
+    if (chainActive.Tip() != NULL)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet); // cs_main required for ReadBlockFromDisk.
+
+        std::vector<unsigned char> allFilters;
+        allFilters.reserve(3000000);
+        int nMaxHeight = chainActive.Height();
+        for (int i=nStart; i+nInterval2 < nMaxHeight;)
+        {
+            int nInterval = nInterval1;
+            if (i >= nCrossOver)
+                nInterval = nInterval2;
+
+            RangedCPBlockFilter filter(chainActive[i-1], chainActive[i+nInterval-1]);
+            const std::vector<unsigned char>& filterData = filter.GetEncodedFilter();
+            {
+                std::vector<unsigned char> filterSizeVector;
+                CVectorWriter sizeWriter(0, 0, filterSizeVector, 0);
+                WriteCompactSize(sizeWriter, filterData.size());
+                std::copy(filterSizeVector.cbegin(), filterSizeVector.cend(), std::back_inserter(allFilters));
+            }
+            std::copy(filterData.cbegin(), filterData.cend(), std::back_inserter(allFilters));
+
+            i += nInterval;
+        }
+        LogPrintf("size: %d\n", allFilters.size());
+        file.write((const char*)&allFilters[0], allFilters.size());
+    }
+
+    file.close();
     return true;
 }
 
@@ -3212,6 +3266,7 @@ static const CRPCCommand commands[] =
     { "witness",                 "disablewitnessing",               &disablewitnessing,              true,    {} },
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
+    { "developer",               "dumpfiltercheckpoints",           &dumpfiltercheckpoints,          true,    {} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
     { "developer",               "dumpdiffarray",                   &dumpdiffarray,                  true,    {"height"} },
     { "developer",               "verifywitnessaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
