@@ -77,7 +77,7 @@
     </string-array>
 
     <!-- Default value that is localisable by region not language, avoid having translators deal with this !-->
-    <string name="default_currency">EUR</string>
+    <string name="default_currency_code">EUR</string>
     <string name="background_sync_default">BACKGROUND_SYNC_OFF</string>
     <string name="title_activity_welcome">Welcome activity</string>
 

@@ -10,10 +10,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import kotlin.random.Random
+import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
 
-data class NocksQuoteResult(val amountNLG: String)
+data class NocksQuoteResult(val amountNLG: Double)
 
-data class NocksOrderResult(val depositAddress: String, val depositAmountNLG: String)
+data class NocksOrderResult(val depositAddress: String, val depositAmountNLG: Double)
 
 private const val NOCKS_HOST = "www.nocks.com"
 
@@ -51,7 +52,12 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
             .header("User-Agent", Config.USER_AGENT)
             .post(RequestBody.create(MediaType.get("application/json; charset=utf-8"), jsonParams))
             .build()
-    val client = OkHttpClient()
+
+    val builder = OkHttpClient.Builder()
+    if (BuildConfig.DEBUG) {
+        builder.addInterceptor(OkHttpProfilerInterceptor() )
+    }
+    val client = builder.build()
 
     // execute on IO thread pool
     val result = withContext(IO) {
@@ -67,28 +73,28 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
     return adapter.fromJson(result)
 }
 
-suspend fun nocksQuote(amountEuro: String): NocksQuoteResult
+suspend fun nocksQuote(amountEuro: Double): NocksQuoteResult
 {
     return if (FAKE_NOCKS_SERVICE) {
         delay(500)
         val amount = Random.nextDouble(300.0, 400.0)
-        NocksQuoteResult(amountNLG = String.format("%.${Config.PRECISION_FULL}f", amount))
+        NocksQuoteResult(amountNLG = amount)
     }
     else {
         val result = nocksRequest<NocksQuoteApiResult>("price", "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"fee\": \"yes\", \"amountType\": \"withdrawal\"}")
-        val amountNLG = result?.success?.amount
-        NocksQuoteResult(String.format("%.${Config.PRECISION_FULL}f", amountNLG))
+        val amountNLG = result?.success?.amount!!
+        NocksQuoteResult(amountNLG)
     }
 }
 
-suspend fun nocksOrder(amountEuro: String, destinationIBAN:String): NocksOrderResult
+suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String): NocksOrderResult
 {
     if (FAKE_NOCKS_SERVICE) {
         delay(500)
         val amount = Random.nextDouble(300.0, 400.0)
         return NocksOrderResult(
                 depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c",
-                depositAmountNLG = String.format("%.${Config.PRECISION_FULL}f", amount))
+                depositAmountNLG = amount)
     }
     else {
         val result = nocksRequest<NocksOrderApiResult>(
@@ -100,6 +106,6 @@ suspend fun nocksOrder(amountEuro: String, destinationIBAN:String): NocksOrderRe
 
         return NocksOrderResult(
                 depositAddress = result.success?.deposit!!,
-                depositAmountNLG = String.format("%.${Config.PRECISION_FULL}f", result.success?.depositAmount))
+                depositAmountNLG = result.success?.depositAmount!!)
     }
 }

@@ -102,3 +102,10 @@ fun formatNativeAndLocal(nativeAmount: Long, conversionRate: Double, useNativePr
     else
         native
 }
+
+/**
+ * Convert native amount to locale agnostic, ie. api/json compatible string
+ */
+fun wireFormatNative(nativeAmount: Double): String {
+    return String.format(Locale.ROOT,"%.${Config.PRECISION_FULL}f", nativeAmount)
+}

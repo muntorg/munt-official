@@ -9,6 +9,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.util.logging.Level
+import java.util.logging.Logger
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -24,11 +26,13 @@ class ExampleUnitTest
 
     @Test fun liveNocksQuote()
     {
-        var amount = -1.0
+        val amountEUR = 5.0
+        var amountNLG = -1.0
         runBlocking {
-            amount = nocksQuote("5.0").amountNLG.toDouble()
+            amountNLG = nocksQuote(amountEUR).amountNLG
         }
-        assertTrue(amount > 0.0)
+        Logger.getAnonymousLogger().log(Level.INFO, "quote for EUR %f is %f NLG".format(amountEUR, amountNLG))
+        assertTrue(amountNLG > 0.0)
     }
 
     @Test fun liveNocksOrder()
@@ -37,12 +41,12 @@ class ExampleUnitTest
         runBlocking {
             // REMARK: this is a generated random IBAN which is not verified with Nocks
             // to have the test pass replace with a verified IBAN
-            order = nocksOrder("5.0", "NL69ABNA3528973196")
+            order = nocksOrder(5.0, "NL69ABNA3528973196")
         }
 
         System.out.println("Nocks order: ${order.depositAmountNLG} NLG to ${order.depositAddress}")
 
-        assertTrue(order.depositAmountNLG.toDouble() > 0.0 &&
+        assertTrue(order.depositAmountNLG > 0.0 &&
                 order.depositAddress.isNotEmpty())
     }
 }

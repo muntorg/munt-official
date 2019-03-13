@@ -24,12 +24,13 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
-import kotlinx.android.synthetic.main.numeric_keypad.*
+import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 
@@ -223,12 +224,12 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     }
 
     private fun confirmAndCommitIBANPayment(view: View) {
-        button_send.isEnabled = false
+        mMainlayout.button_send.isEnabled = false
         this.launch {
             try {
                 // request order from Nocks
                 val orderResult = nocksOrder(
-                        amountEuro = String.format("%.${foreignCurrency.precision}f", foreignAmount),
+                        amountEuro = foreignAmount,
                         destinationIBAN = recipient.address)
 
                 // create styled message from resource template and arguments bundle
@@ -242,8 +243,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                     // on confirmation compose recipient and execute payment
                     positiveButton("Send") {
-                        button_send.isEnabled = true
-                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG)
+                        mMainlayout.button_send.isEnabled = true
+                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, wireFormatNative(orderResult.depositAmountNLG))
                         try {
                             GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
                             dismiss()
@@ -257,11 +258,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     negativeButton("Cancel") {}
                 }
                         .show()
-                button_send.isEnabled = true
+                mMainlayout.button_send.isEnabled = true
 
             } catch (e: Throwable) {
                 errorMessage("IBAN order failed")
-                button_send.isEnabled = true
+                mMainlayout.button_send.isEnabled = true
             }
         }
     }
@@ -309,8 +310,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                     prevJob?.join()
 
-                    val quote = nocksQuote(String.format("%.${foreignCurrency.precision}", foreignAmount))
-                    val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG.toDouble())
+                    val quote = nocksQuote(foreignAmount)
+                    val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG)
                     mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
                 }
                 catch (_: CancellationException) {

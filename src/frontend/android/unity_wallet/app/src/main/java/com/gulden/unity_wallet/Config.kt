@@ -12,7 +12,7 @@ class Config {
         val BLOCK_EXPLORER = Uri.parse("https://blockchain.gulden.com")!!
 
         private fun getDefaultCurrencyCode(): String {
-            return AppContext.instance.getString(R.string.default_currency)
+            return AppContext.instance.getString(R.string.default_currency_code)
         }
     }
 }
