@@ -4355,6 +4355,9 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
 
         // Now determine the first checkpoint of actual interest using block filters
         uint64_t nWalletBirthBlockSoft = Checkpoints::LastCheckPointHeight();
+
+        //fixme: (2.2) - Look closer into this - unclear what behaviour should be if there is SPV but no wallet (or if it should be allowed at all?)
+        #ifdef ENABLE_WALLET
         if (pactiveWallet)
         {
             LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
@@ -4379,6 +4382,7 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
             std::swap(cpRanges, partialChain.cpRanges);
         }
         else
+        #endif
         {
             nWalletBirthBlockSoft = nWalletBirthBlockHard;
         }
