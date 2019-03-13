@@ -157,6 +157,12 @@ void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)
     //Assign the bare minimum keys here, let the rest take place in the background thread
     walletInstance->TopUpKeyPool(1);
 
+    //SPV special case - we need to allocate all the addresses now already for better filtering.
+    if (GetBoolArg("-spv", DEFAULT_SPV))
+    {
+        walletInstance->TopUpKeyPool(10);
+    }
+
     GuldenAppManager::gApp->SecureWipeRecoveryDetails();
 }
 
@@ -705,6 +711,12 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
 
     //Assign the bare minimum keys here, let the rest take place in the background thread
     walletInstance->TopUpKeyPool(1);
+
+    //SPV special case - we need to allocate all the addresses now already for better filtering.
+    if (GetBoolArg("-spv", DEFAULT_SPV))
+    {
+        walletInstance->TopUpKeyPool(10);
+    }
 }
 
 bool CWallet::InitLoadWallet()
