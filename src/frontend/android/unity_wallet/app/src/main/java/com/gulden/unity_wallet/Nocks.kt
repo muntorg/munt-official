@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import kotlin.random.Random
+import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
 
 data class NocksQuoteResult(val amountNLG: String)
 
@@ -51,7 +52,12 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
             .header("User-Agent", Config.USER_AGENT)
             .post(RequestBody.create(MediaType.get("application/json; charset=utf-8"), jsonParams))
             .build()
-    val client = OkHttpClient()
+
+    val builder = OkHttpClient.Builder()
+    if (BuildConfig.DEBUG) {
+        builder.addInterceptor(OkHttpProfilerInterceptor() )
+    }
+    val client = builder.build()
 
     // execute on IO thread pool
     val result = withContext(IO) {

@@ -80,6 +80,7 @@ dependencies {
     implementation('android.arch.work:work-runtime-ktx:1.0.0-beta03') { exclude group: 'com.google.guava', module: 'listenablefuture' }
     implementation "commons-validator:commons-validator:1.6" exclude module: "commons-logging"
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.itkacher.okhttpprofiler:okhttpprofiler:1.0.5'
     implementation 'com.squareup.moshi:moshi:1.8.0'
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
