@@ -48,7 +48,7 @@ namespace Checkpoints {
     {
         for (const auto& i: boost::adaptors::reverse(Params().Checkpoints()))
         {
-            if (i.first <= blockHeight)
+            if ((uint64_t)i.first <= blockHeight)
             {
                 return i.first;
             }
@@ -60,7 +60,7 @@ namespace Checkpoints {
     {
         for (const auto& i: boost::adaptors::reverse(Params().Checkpoints()))
         {
-            if (i.second.nTime <= atTime)
+            if ((uint64_t)i.second.nTime <= atTime)
             {
                 return i.first;
             }
