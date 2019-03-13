@@ -1440,7 +1440,8 @@ inline void static SendBlockTransactions(const CBlock& block, const BlockTransac
     connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCKTXN, resp));
 }
 
-static void ProcessPriorityRequests() {
+static uint32_t ProcessPriorityRequests() {
+    uint32_t numProcessed=0;
     LOCK(cs_main);
     while (!blocksToDownloadFirst.empty()) {
         const PriorityBlockRequest &r = *blocksToDownloadFirst.begin();
@@ -1450,7 +1451,9 @@ static void ProcessPriorityRequests() {
             break;
         }
 
-        if (r.pindex->nStatus & BLOCK_HAVE_DATA) {
+        // Normal/non SPV case
+        if (r.pindex->nStatus & BLOCK_HAVE_DATA)
+        {
             CBlock loadBlock;
             if (!ReadBlockFromDisk(loadBlock, r.pindex, Params())) {
                 throw std::runtime_error(std::string(__func__) + "Can't read block from disk");
@@ -1463,10 +1466,22 @@ static void ProcessPriorityRequests() {
 
             blocksToDownloadFirst.pop_front();
         }
-        else {
+        // SPV filtercp block
+        else if (r.pindex->nStatus & BLOCK_VALID_MASK)
+        {
+            ++numProcessed;
+            auto currentBlock = std::make_shared<const CBlock>(CBlock(r.pindex->GetBlockHeader()));
+            r.callback(currentBlock, r.pindex);
+            LogPrint(BCLog::NET, "processed filtercp accelerated block request (%s) height=%d\n", r.pindex->GetBlockHashPoW2().ToString(), r.pindex->nHeight);
+            blocksToDownloadFirst.pop_front();
+        }
+        // Error
+        else
+        {
             throw std::runtime_error(std::string(__func__) + " No data for downloaded block, block index inconsistency.");
         }
     }
+    return numProcessed;
 }
 
 bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, int64_t nTimeReceived, const CChainParams& chainparams, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
@@ -1756,6 +1771,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 }); 
             }
         }
+        return true;
     }
 
 
@@ -3366,7 +3382,15 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
     {
         LOCK(pfrom->cs_vProcessMsg);
         if (pfrom->vProcessMsg.empty())
+        {
+            // In the case of SPV we may have pending priority requests which we want to process immediately, regardless of not having actually received any messages.
+            if (ProcessPriorityRequests() > 0)
+            {
+                fMoreWork = true;
+                return fMoreWork;
+            }
             return false;
+        }
         // Just take one message
         msgs.splice(msgs.begin(), pfrom->vProcessMsg, pfrom->vProcessMsg.begin());
         pfrom->nProcessQueueSize -= msgs.front().vRecv.size() + CMessageHeader::HEADER_SIZE;
@@ -3457,7 +3481,11 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
     }
 
     // msg might have fullfilled priority request(s), deliver it
-    ProcessPriorityRequests();
+    if (ProcessPriorityRequests() > 0)
+    {
+        fMoreWork = true;
+    }
+
 
     LOCK(cs_main);
     SendRejectsAndCheckIfBanned(pfrom, connman);
@@ -4132,7 +4160,9 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload, const PriorityDownloadCallback_t& callback) {
     LOCK(cs_main);
     for (const CBlockIndex* pindex: blocksToDownload) {
-        bool downloaded = pindex->nStatus & BLOCK_HAVE_DATA;
+        // We might have a valid block with no actual data, in the case of SPV filtering
+        // In that case we want to pretend it is downloaded, so we mark it as downloaded here
+        bool downloaded = (pindex->nStatus & BLOCK_HAVE_DATA) || ((pindex->nStatus & BLOCK_VALID_MASK) == BLOCK_VALID_MASK);
         blocksToDownloadFirst.push_back({pindex, downloaded, callback});
     }
 }
