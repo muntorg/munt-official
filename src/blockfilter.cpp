@@ -432,9 +432,9 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         uint64_t nStaticFilterLength = GetArg("-spvstaticfilterfilelength", std::numeric_limits<uint64_t>::max());
 
         uint64_t nStartIndex = 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
-        int nInterval1 = 500;
-        int nInterval2 = 100;
-        int nCrossOver = 500000;
+        uint64_t nInterval1 = 500;
+        uint64_t nInterval2 = 100;
+        uint64_t nCrossOver = 500000;
         uint32_t nRanges=0;
         dataFile.seekg(nStaticFilterOffset);
         while (((uint64_t)dataFile.tellg() - nStaticFilterOffset < nStaticFilterLength) && (dataFile.peek() != EOF))
