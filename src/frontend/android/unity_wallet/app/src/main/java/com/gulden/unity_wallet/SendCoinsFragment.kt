@@ -30,7 +30,6 @@ import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
-import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 
@@ -461,7 +460,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             dialog.dismiss()
             val label = input.text.toString()
             val record = AddressRecord(mSendCoinsReceivingStaticAddress.text.toString(), "Send", label)
-            GuldenUnifiedBackend.addAddressBookRecord(record)
+            UnityCore.instance.addAddressBookRecord(record)
             setAddressLabel(label)
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
@@ -472,7 +471,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     fun handleRemoveFromAddressBookClick(view : View)
     {
         val record = AddressRecord(mSendCoinsReceivingStaticAddress.text.toString(), "Send", mSendCoinsReceivingStaticLabel.text.toString())
-        GuldenUnifiedBackend.deleteAddressBookRecord(record)
+        UnityCore.instance.deleteAddressBookRecord(record)
         setAddressLabel("")
     }
 }

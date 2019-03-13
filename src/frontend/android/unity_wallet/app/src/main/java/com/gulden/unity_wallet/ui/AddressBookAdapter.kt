@@ -14,8 +14,13 @@ import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.address_book_list_item.view.*
 
-class AddressBookAdapter(context: Context, private val dataSource: ArrayList<AddressRecord>) : BaseAdapter() {
+class AddressBookAdapter(context: Context, private var dataSource: ArrayList<AddressRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+    fun updateDataSource(newDataSource: ArrayList<AddressRecord>) {
+        dataSource = newDataSource
+        notifyDataSetChanged()
+    }
 
     override fun getCount(): Int {
         return dataSource.size

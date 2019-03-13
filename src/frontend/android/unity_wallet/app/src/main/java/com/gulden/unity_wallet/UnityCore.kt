@@ -24,6 +24,7 @@ class UnityCore {
         fun haveExistingWallet(): Boolean { return false }
         fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {}
         fun updatedTransaction(transaction: TransactionRecord): Boolean { return false }
+        fun onAddressBookChanged() {}
     }
 
     companion object {
@@ -107,6 +108,17 @@ class UnityCore {
             }
         }
 
+    // TODO wrappers here could be moved into core later
+    fun addAddressBookRecord(record: AddressRecord) {
+        GuldenUnifiedBackend.addAddressBookRecord(record)
+        coreLibrarySignalHandler.notifyAddressBookChanged()
+    }
+
+    fun deleteAddressBookRecord(record: AddressRecord) {
+        GuldenUnifiedBackend.deleteAddressBookRecord(record)
+        coreLibrarySignalHandler.notifyAddressBookChanged()
+    }
+
     // Handle signals from core library, convert and broadcast to all registered observers
     private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
         override fun logPrint(str: String?) {
@@ -182,6 +194,14 @@ class UnityCore {
             observersLock.withLock {
                 observers.forEach {
                     it.wrapper { it.observer.createNewWallet() }
+                }
+            }
+        }
+
+        /*override*/ fun notifyAddressBookChanged() {
+            observersLock.withLock {
+                observers.forEach {
+                    it.wrapper { it.observer.onAddressBookChanged() }
                 }
             }
         }

@@ -6,6 +6,7 @@
 package com.gulden.unity_wallet.main_activity_fragments
 
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -22,16 +23,14 @@ import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.jniunifiedbackend.UriRecord
-import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.SendCoinsFragment
-import com.gulden.unity_wallet.ellipsizeString
+import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.AddressBookAdapter
-import com.gulden.unity_wallet.uriRecipient
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
+import org.jetbrains.anko.support.v4.runOnUiThread
 
 
-class SendFragment : Fragment()
+class SendFragment : Fragment(), UnityCore.Observer
 {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -92,6 +91,19 @@ class SendFragment : Fragment()
         addressBookList.adapter = adapter
     }
 
+    override fun onAttach(context: Context)
+    {
+        UnityCore.instance.addObserver(this)
+
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        UnityCore.instance.removeObserver(this)
+
+        super.onDetach()
+    }
+
     private fun clipboardText(): String
     {
         val clipboard = ContextCompat.getSystemService(context!!, ClipboardManager::class.java)
@@ -142,6 +154,14 @@ class SendFragment : Fragment()
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    override fun onAddressBookChanged() {
+        val addresses = GuldenUnifiedBackend.getAddressBookRecords()
+        runOnUiThread {
+            val adapter = addressBookList.adapter as AddressBookAdapter
+            adapter.updateDataSource(addresses)
         }
     }
 
