@@ -30,6 +30,7 @@ import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 
@@ -228,7 +229,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             try {
                 // request order from Nocks
                 val orderResult = nocksOrder(
-                        amountEuro = String.format("%.${foreignCurrency.precision}f", foreignAmount),
+                        amountEuro = foreignAmount,
                         destinationIBAN = recipient.address)
 
                 // create styled message from resource template and arguments bundle
@@ -243,7 +244,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     // on confirmation compose recipient and execute payment
                     positiveButton("Send") {
                         mMainlayout.button_send.isEnabled = true
-                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG)
+                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, wireFormatNative(orderResult.depositAmountNLG))
                         try {
                             GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
                             dismiss()
@@ -309,8 +310,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                     prevJob?.join()
 
-                    val quote = nocksQuote(String.format("%.${foreignCurrency.precision}", foreignAmount))
-                    val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG.toDouble())
+                    val quote = nocksQuote(foreignAmount)
+                    val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG)
                     mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
                 }
                 catch (_: CancellationException) {
