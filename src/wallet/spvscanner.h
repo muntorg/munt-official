@@ -40,10 +40,10 @@ private:
     int64_t startTime;
 
     // SPV scan processed up to this block
-    const CBlockIndex* lastProcessed;
+    CBlockIndex* lastProcessed;
 
-    // Blocks (lastProcessed .. requstTip] have been requested and are pending
-    const CBlockIndex* requestTip;
+    // Blocks (lastProcessed .. requestTip] have been requested and are pending
+    CBlockIndex* requestTip;
 
     // Session start height for progress reporting
     int startHeight;
@@ -65,9 +65,11 @@ private:
     void RequestBlocks();
 
     // Update value of lastProcessed to pindex and persist it to the wallet db
-    void UpdateLastProcessed(const CBlockIndex* pindex);
+    void UpdateLastProcessed(CBlockIndex* pindex);
 
     void ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex);
+
+    bool CanSkipBlockFetch(const CBlockIndex* pIndex, uint64_t lastCheckPointHeight);
 
     // timestamp of peristed last processed block
     int64_t lastPersistedBlockTime;

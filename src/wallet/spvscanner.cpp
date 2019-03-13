@@ -8,6 +8,7 @@
 #include "timedata.h"
 #include "../validation/validation.h"
 #include "wallet.h"
+#include "checkpoints.h"
 
 #include <algorithm>
 
@@ -105,6 +106,29 @@ const CBlockIndex* CSPVScanner::LastBlockProcessed() const
     return lastProcessed;
 }
 
+// If we are before the first range or not in one of the ranges then we can skip fetching the data.
+// If we are in one of the ranges or if we are after the last checkpoint then we must fetch the data.
+bool CSPVScanner::CanSkipBlockFetch(const CBlockIndex* pIndex, uint64_t lastCheckPointHeight)
+{
+    if ((uint64_t)pIndex->nHeight > lastCheckPointHeight)
+        return false;
+
+    for (const auto& [rangeStart, rangeEnd] : partialChain.cpRanges)
+    {
+        if ((uint64_t)pIndex->nHeight > rangeStart)
+        {
+            if ((uint64_t)pIndex->nHeight < rangeEnd)
+                return false;
+        }
+        else
+        {
+            // Short circuit optimisation: Ranges are ordered so if we aren't > this first one then we won't be > than any of the subsequent ones.
+            break;
+        }
+    }
+    return true;
+}
+
 void CSPVScanner::RequestBlocks()
 {
     LOCK2(cs_main, wallet.cs_wallet);
@@ -131,24 +155,42 @@ void CSPVScanner::RequestBlocks()
     }
 
     // skip blocks that are before startTime
-    const CBlockIndex* skip = lastProcessed;
+    CBlockIndex* skip = lastProcessed;
     while (skip->GetBlockTime() < startTime && partialChain.Height() > skip->nHeight)
+    {
         skip = partialChain.Next(skip);
-    if (skip != lastProcessed) {
+    }
+    if (skip != lastProcessed)
+    {
         LogPrint(BCLog::WALLET, "Skipping %d old blocks for SPV scan, up to height %d\n", skip->nHeight - lastProcessed->nHeight, skip->nHeight);
         UpdateLastProcessed(skip);
-        if (lastProcessed->nHeight > requestTip->nHeight) {
+        if (lastProcessed->nHeight > requestTip->nHeight)
+        {
             requestTip = lastProcessed;
         }
     }
 
     std::vector<const CBlockIndex*> blocksToRequest;
 
-    // add requests for as long as nMaxPendingRequests is not reached and there are still heigher blocks in headerChain
-    while (requestTip->nHeight - lastProcessed->nHeight < MAX_PENDING_REQUESTS &&
-           partialChain.Height() > requestTip->nHeight) {
-
+    // add requests for as long as nMaxPendingRequests is not reached and there are still higher blocks in headerChain
+    // In the special case of 'skipped' blocks we allow a higher restriction - as they don't represent real network processing so won't starve peers
+    int nNumSkipped=0;
+    while ((requestTip->nHeight - lastProcessed->nHeight - nNumSkipped < MAX_PENDING_REQUESTS) &&
+          (requestTip->nHeight - lastProcessed->nHeight < 5000) &&
+          (partialChain.Height() > requestTip->nHeight)
+          )
+    {
         requestTip = partialChain.Next(requestTip);
+        if (CanSkipBlockFetch(requestTip, Checkpoints::LastCheckPointHeight()))
+        {
+            requestTip->nStatus |= BLOCK_VALID_MASK;
+            ++nNumSkipped;
+            LogPrint(BCLog::WALLET, "Skip block fetch [%d]\n", requestTip->nHeight);
+        }
+        else
+        {
+            LogPrint(BCLog::WALLET, "Unable to skip block fetch [%d]\n", requestTip->nHeight);
+        }
         blocksToRequest.push_back(requestTip);
     }
 
@@ -292,7 +334,7 @@ void CSPVScanner::NotifyUnifiedProgress()
     }
 }
 
-void CSPVScanner::UpdateLastProcessed(const CBlockIndex* pindex)
+void CSPVScanner::UpdateLastProcessed(CBlockIndex* pindex)
 {
     AssertLockHeld(cs_main);
 
