@@ -6,6 +6,9 @@ mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs | true
 
 NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
 
+mkdir src/frontend/android/unity_wallet/app/src/main/assets/ | true
+cp src/data/staticfiltercp src/frontend/android/unity_wallet/app/src/main/assets/
+
 for i in $( dirname ${BASH_SOURCE[0]} )/build_targets/*
 do
   source ${i}
