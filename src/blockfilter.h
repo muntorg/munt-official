@@ -1,6 +1,13 @@
 // Copyright (c) 2018 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #ifndef GULDEN_BLOCKFILTER_H
 #define GULDEN_BLOCKFILTER_H
@@ -168,15 +175,20 @@ public:
 };
 
 
-//! Special sub class used only for filtercp used my SPV sync, not for network messages or anything consensus related.
+//! Special sub class used only for filtercp used by SPV sync, not for network messages or anything consensus related.
 class RangedCPBlockFilter : public BlockFilter
 {
 public:
     //! Construct a new RangedCPBlockFilter of the specified type from a range.
     //! Filter contains startRange->endRange - inclusive of start range, exclusive of end range
     RangedCPBlockFilter(const CBlockIndex* startRange, const CBlockIndex* endRange);
+
+    //! Reconstruct from parts.
+    RangedCPBlockFilter(std::vector<unsigned char> filter);
 private:
     virtual bool BuildParams(GCSFilter::Params& params) const;
 };
+
+void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& cpRanges);
 
 #endif // GULDEN_BLOCKFILTER_H
