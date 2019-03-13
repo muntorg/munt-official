@@ -1,6 +1,13 @@
 // Copyright (c) 2018 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #include <sstream>
 
@@ -11,6 +18,7 @@
 #include <streams.h>
 #include <validation/validation.h>
 #include "blockstore.h"
+#include "checkpoints.h"
 
 /// SerType used to serialize parameters in GCS filter encoding.
 static constexpr int GCS_SER_TYPE = SER_NETWORK;
@@ -363,6 +371,15 @@ RangedCPBlockFilter::RangedCPBlockFilter(const CBlockIndex* startRange, const CB
     m_filter = GCSFilter(params, elements);
 }
 
+RangedCPBlockFilter::RangedCPBlockFilter(std::vector<unsigned char> filter)
+{
+    GCSFilter::Params params;
+    if (!BuildParams(params)) {
+        throw std::invalid_argument("unknown filter_type");
+    }
+    m_filter = GCSFilter(params, std::move(filter));
+}
+
 bool RangedCPBlockFilter::BuildParams(GCSFilter::Params& params) const
 {
     params.m_siphash_k0 = 0;
@@ -371,6 +388,7 @@ bool RangedCPBlockFilter::BuildParams(GCSFilter::Params& params) const
     // Ultimately both P and M, must be altered
     // For our purposes a "relatively high" false positive rate (e.g. about 1%) is tolerable
     // Some non-comprehensive testing of various sizes leaves us with the following rough results to work with
+    // Tests done using a test vector of 20 random addresses per run and averaging over several runs
     //gaps: 1000 blocks
     //P=8  M=256    2965052 bytes      false positive rate = (69/908) ranges
     //P=10 M=1034   3585205 bytes      false positive rate = (15/908) ranges
@@ -380,9 +398,67 @@ bool RangedCPBlockFilter::BuildParams(GCSFilter::Params& params) const
     //gaps: 100 blocks
     //P=12 M=4096   6280492 bytes
     //P=12 M=5700   6449605 bytes
-    //We have settled on the current settings for now (using gaps of 200 blocks), however these can easily be changed for future releases
+    //We have settled on the current settings for now (using gaps of 100 blocks), however these can easily be changed for future releases
+    //P=12 M=4096   FP = (20 / 4603) = 0,0043%
     //When/if we decide on more appropriate settings.
     params.m_P = 12;
     params.m_M = 4096;
     return true;
+}
+
+
+//fixme: (2.1) We can potentially further improve this by indexing only the actual key hashes and not the entire script
+//This should be slightly smaller and faster
+void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& cpRanges)
+{
+    std::string dataFilePath = GetArg("-spvstaticfilterfile", "");
+    if (dataFilePath.empty())
+    {
+        LogPrintf("Running without a static filtercp file\n");
+        nSoftBirthDate = nHardBirthDate;
+        return;
+    }
+    else
+    {
+        std::ifstream dataFile(dataFilePath);
+        if (!dataFile.good())
+        {
+            LogPrintf("Failed to read static filtercp file\n");
+            nSoftBirthDate = nHardBirthDate;
+            return;
+        }
+        LogPrintf("Loading static filtercp file\n");
+        uint64_t nStaticFilterOffset = GetArg("-spvstaticfilterfileoffset", (uint64_t)0);
+        uint64_t nStaticFilterLength = GetArg("-spvstaticfilterfilelength", std::numeric_limits<uint64_t>::max());
+
+        uint64_t nStartIndex = 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
+        int nInterval1 = 500;
+        int nInterval2 = 100;
+        int nCrossOver = 500000;
+        uint32_t nRanges=0;
+        dataFile.seekg(nStaticFilterOffset);
+        while (((uint64_t)dataFile.tellg() - nStaticFilterOffset < nStaticFilterLength) && (dataFile.peek() != EOF))
+        {
+            int nInterval = nInterval1;
+            if (nStartIndex >= nCrossOver)
+                nInterval = nInterval2;
+            size_t nDataSize = ReadCompactSize(dataFile);
+            std::vector<unsigned char> data;
+            data.resize(nDataSize);
+            dataFile.read((char*)&data[0], nDataSize);
+            RangedCPBlockFilter rangeFilter(data);
+            ++nRanges;
+            if (rangeFilter.GetFilter().MatchAny(walletAddresses))
+            {
+                // Move the birth date forwards as far as possible from the 'hard' birthdate while still including all possible matches
+                if (nStartIndex > nHardBirthDate && nStartIndex < nSoftBirthDate)
+                {
+                    nSoftBirthDate = nStartIndex;
+                }
+                cpRanges.push_back(std::tuple(nStartIndex, nStartIndex+nInterval));
+            }
+            nStartIndex+=nInterval;
+        }
+        LogPrintf("Hard birth block=%d; Soft birth block=%d; Last checkpoint=%d; Addresses=%d; Ranges=%d/%d\n", nHardBirthDate, nSoftBirthDate, Checkpoints::LastCheckPointHeight(), walletAddresses.size(), cpRanges.size(), nRanges);
+    }
 }
