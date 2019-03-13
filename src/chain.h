@@ -717,6 +717,8 @@ public:
         return it == endRange ? -1 : (*it)->nHeight;
     }
 
+    // Up until latest built in checkpoint height we are only interested in these ranges and not all blocks.
+    std::vector<std::tuple<uint64_t, uint64_t>> cpRanges;
 private:
     int nHeightOffset;
 };
