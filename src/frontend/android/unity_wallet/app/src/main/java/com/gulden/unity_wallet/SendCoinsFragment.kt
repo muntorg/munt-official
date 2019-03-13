@@ -24,7 +24,7 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
-import kotlinx.android.synthetic.main.numeric_keypad.*
+import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
@@ -223,7 +223,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     }
 
     private fun confirmAndCommitIBANPayment(view: View) {
-        button_send.isEnabled = false
+        mMainlayout.button_send.isEnabled = false
         this.launch {
             try {
                 // request order from Nocks
@@ -242,7 +242,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                     // on confirmation compose recipient and execute payment
                     positiveButton("Send") {
-                        button_send.isEnabled = true
+                        mMainlayout.button_send.isEnabled = true
                         val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG)
                         try {
                             GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
@@ -257,11 +257,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     negativeButton("Cancel") {}
                 }
                         .show()
-                button_send.isEnabled = true
+                mMainlayout.button_send.isEnabled = true
 
             } catch (e: Throwable) {
                 errorMessage("IBAN order failed")
-                button_send.isEnabled = true
+                mMainlayout.button_send.isEnabled = true
             }
         }
     }
