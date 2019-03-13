@@ -17,6 +17,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+    aaptOptions {
+        noCompress 'staticfiltercp'
+    }
     buildTypes {
         all {
             minifyEnabled true
@@ -66,7 +69,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.material:material:1.1.0-alpha04'
     implementation 'androidx.versionedparcelable:versionedparcelable:1.1.0-alpha01'

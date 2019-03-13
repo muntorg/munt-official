@@ -34,8 +34,9 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 
         AppContext.instance = baseContext
 
+        var assetFD = assets?.openFd("staticfiltercp")
         UnityCore.instance.configure(
-                UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, testnet = Constants.TEST)
+            UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, apkPath = applicationContext.packageResourcePath, staticFilterOffset = assetFD?.startOffset!!, staticFilterLength = assetFD.length!!, testnet = Constants.TEST)
         )
 
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
