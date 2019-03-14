@@ -22,11 +22,11 @@ file COPYING
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- 63dp margin to offset the bottom navigation bar, so that lock icon aligns with same one on transaction screen (where there is no bar)-->
+        <!-- 62dp margin to offset the bottom navigation bar, so that lock icon aligns with same one on transaction screen (where there is no bar)-->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="63dp">
+            android:layout_marginTop="62dp">
 
             <ImageView
                 android:id="@+id/unlockImage"
