@@ -1439,7 +1439,7 @@ bool CWalletTx::InMempool() const
 bool CWalletTx::IsTrusted() const
 {
     // Quick answer in most cases
-    if (!CheckFinalTx(*this, chainActive))
+    if (!CheckFinalTx(*this, IsPartialSyncActive() ? partialChain : chainActive))
         return false;
     int nDepth = GetDepthInMainChain();
     if (nDepth >= 1)
