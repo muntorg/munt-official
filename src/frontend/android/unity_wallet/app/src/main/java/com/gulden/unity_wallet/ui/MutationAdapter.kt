@@ -1,5 +1,5 @@
-// Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2018-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -17,10 +17,15 @@ import com.gulden.unity_wallet.formatNativeAndLocal
 import kotlinx.android.synthetic.main.mutation_list_item.view.*
 import kotlinx.android.synthetic.main.mutation_list_item_with_header.view.*
 import org.jetbrains.anko.textColor
+import java.util.*
 
 class MutationAdapter(context: Context, private var dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var rate = 0.0
+
+    //NB! This may cause a minor cosmetic glitch if user is on transaction screen when year crosses over (years just won't display so nothing too terrible)
+    //This is preferable to the performance penalty of constantly creating calendar instances
+    private val currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
     fun updateRate(rate_: Double) {
         rate = rate_
@@ -47,11 +52,25 @@ class MutationAdapter(context: Context, private var dataSource: ArrayList<Mutati
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val mutationRecord = getItem(position) as MutationRecord
-        val date = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(mutationRecord.timestamp * 1000L))
+        val date = if (java.util.Date(mutationRecord.timestamp * 1000L).year + 1900 != currentYear)
+        {
+            java.text.SimpleDateFormat("dd MMM. yyyy").format(java.util.Date(mutationRecord.timestamp * 1000L))
+        }
+        else
+        {
+            java.text.SimpleDateFormat("MMMM dd").format(java.util.Date(mutationRecord.timestamp * 1000L))
+        }
         var prevDate = ""
         if (position != 0) {
             val prevMutationRecord = getItem(position-1) as MutationRecord
-            prevDate = java.text.SimpleDateFormat("dd MMMM").format(java.util.Date(prevMutationRecord.timestamp * 1000L))
+            prevDate = if (java.util.Date(prevMutationRecord.timestamp * 1000L).year + 1900 != currentYear)
+            {
+                java.text.SimpleDateFormat("dd MMM. yyyy").format(java.util.Date(prevMutationRecord.timestamp * 1000L))
+            }
+            else
+            {
+                java.text.SimpleDateFormat("MMMM dd").format(java.util.Date(prevMutationRecord.timestamp * 1000L))
+            }
         }
 
 
