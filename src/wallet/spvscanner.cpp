@@ -183,7 +183,7 @@ void CSPVScanner::RequestBlocks()
         requestTip = partialChain.Next(requestTip);
         if (CanSkipBlockFetch(requestTip, Checkpoints::LastCheckPointHeight()))
         {
-            requestTip->nStatus |= BLOCK_PARTIAL_MASK;
+            requestTip->nStatus |= BLOCK_VALID_MASK;
             ++nNumSkipped;
             LogPrint(BCLog::WALLET, "Skip block fetch [%d]\n", requestTip->nHeight);
         }

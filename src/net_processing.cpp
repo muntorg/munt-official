@@ -1467,7 +1467,7 @@ static uint32_t ProcessPriorityRequests() {
             blocksToDownloadFirst.pop_front();
         }
         // SPV filtercp block
-        else if (r.pindex->nStatus & BLOCK_PARTIAL_MASK)
+        else if (r.pindex->nStatus & BLOCK_VALID_MASK)
         {
             ++numProcessed;
             auto currentBlock = std::make_shared<const CBlock>(CBlock(r.pindex->GetBlockHeader()));
@@ -4162,7 +4162,7 @@ void AddPriorityDownload(const std::vector<const CBlockIndex*>& blocksToDownload
     for (const CBlockIndex* pindex: blocksToDownload) {
         // We might have a valid block with no actual data, in the case of SPV filtering
         // In that case we want to pretend it is downloaded, so we mark it as downloaded here
-        bool downloaded = (pindex->nStatus & BLOCK_HAVE_DATA) || ((pindex->nStatus & BLOCK_PARTIAL_MASK) == BLOCK_PARTIAL_MASK);
+        bool downloaded = (pindex->nStatus & BLOCK_HAVE_DATA) || ((pindex->nStatus & BLOCK_VALID_MASK) == BLOCK_VALID_MASK);
         blocksToDownloadFirst.push_back({pindex, downloaded, callback});
     }
 }
