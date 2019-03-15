@@ -183,15 +183,14 @@ void CSPVScanner::RequestBlocks()
         requestTip = partialChain.Next(requestTip);
         if (CanSkipBlockFetch(requestTip, Checkpoints::LastCheckPointHeight()))
         {
-            requestTip->nStatus |= BLOCK_VALID_MASK;
             ++nNumSkipped;
             LogPrint(BCLog::WALLET, "Skip block fetch [%d]\n", requestTip->nHeight);
         }
         else
         {
             LogPrint(BCLog::WALLET, "Unable to skip block fetch [%d]\n", requestTip->nHeight);
+            blocksToRequest.push_back(requestTip);
         }
-        blocksToRequest.push_back(requestTip);
     }
 
     if (!blocksToRequest.empty()) {
@@ -213,7 +212,20 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
         }
     }
 
-    // if this is the block we're waiting for process it and request new block(s)
+    // The block we're getting might have skipped some because they were filtered out and so never requested.
+    // Blocks are guarantueed to be delivered in requested order and therefore we can safely "fastforward" the lastProcessed
+    // knowing that the blocks in between have never been requested.
+    if (lastProcessed->nHeight < Checkpoints::LastCheckPointHeight() && pindex->pprev != lastProcessed) {
+        CBlockIndex* pSkip = lastProcessed;
+        while (pindex->pprev != pSkip && pSkip != nullptr) {
+            pSkip = partialChain.Next(pSkip);
+        }
+
+        assert(pSkip != nullptr); // The block has a pprev that is not in partialChain, impossible that it was requested
+
+        UpdateLastProcessed(pSkip);
+    }
+
     if (pindex->pprev == lastProcessed) {
         LogPrint(BCLog::WALLET, "SPV processing block %d\n", pindex->nHeight);
 
