@@ -80,6 +80,8 @@ private:
     // blocks processed since last persist
     int blocksSincePersist;
 
+    int nRequestsPending;
+
     // bookeeping for monitoring
     static std::atomic<int> lastProcessedHeight;
 };
