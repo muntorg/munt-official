@@ -59,6 +59,7 @@ void CSPVScanner::Init()
     lastPersistedBlockTime = 0;
     lastPersistTime = 0;
     startHeight = -1;
+    nRequestsPending = 0;
 
     // init scan starting time to birth of first key
     startTime =  wallet.nTimeFirstKey;
@@ -175,10 +176,7 @@ void CSPVScanner::RequestBlocks()
     // add requests for as long as nMaxPendingRequests is not reached and there are still higher blocks in headerChain
     // In the special case of 'skipped' blocks we allow a higher restriction - as they don't represent real network processing so won't starve peers
     int nNumSkipped=0;
-    while ((requestTip->nHeight - lastProcessed->nHeight - nNumSkipped < MAX_PENDING_REQUESTS) &&
-          (requestTip->nHeight - lastProcessed->nHeight < 5000) &&
-          (partialChain.Height() > requestTip->nHeight)
-          )
+    while (nRequestsPending < MAX_PENDING_REQUESTS && partialChain.Height() > requestTip->nHeight)
     {
         requestTip = partialChain.Next(requestTip);
         if (CanSkipBlockFetch(requestTip, Checkpoints::LastCheckPointHeight()))
@@ -190,6 +188,7 @@ void CSPVScanner::RequestBlocks()
         {
             LogPrint(BCLog::WALLET, "Unable to skip block fetch [%d]\n", requestTip->nHeight);
             blocksToRequest.push_back(requestTip);
+            nRequestsPending++;
         }
     }
 
@@ -202,6 +201,8 @@ void CSPVScanner::RequestBlocks()
 void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex)
 {
     LOCK2(cs_main, wallet.cs_wallet);
+
+    nRequestsPending--;
 
     // if chainActive is up-to-date no SPV blocks need to be requested, we can update SPV to the activeChain
     if (chainActive.Tip() == partialChain.Tip()) {
