@@ -409,7 +409,7 @@ bool RangedCPBlockFilter::BuildParams(GCSFilter::Params& params) const
 
 //fixme: (2.1) We can potentially further improve this by indexing only the actual key hashes and not the entire script
 //This should be slightly smaller and faster
-void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& cpRanges)
+void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& blockFilterRanges)
 {
     std::string dataFilePath = GetArg("-spvstaticfilterfile", "");
     if (dataFilePath.empty())
@@ -455,10 +455,10 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
                 {
                     nSoftBirthDate = nStartIndex;
                 }
-                cpRanges.push_back(std::tuple(nStartIndex, nStartIndex+nInterval));
+                blockFilterRanges.push_back(std::tuple(nStartIndex, nStartIndex+nInterval));
             }
             nStartIndex+=nInterval;
         }
-        LogPrintf("Hard birth block=%d; Soft birth block=%d; Last checkpoint=%d; Addresses=%d; Ranges=%d/%d\n", nHardBirthDate, nSoftBirthDate, Checkpoints::LastCheckPointHeight(), walletAddresses.size(), cpRanges.size(), nRanges);
+        LogPrintf("Hard birth block=%d; Soft birth block=%d; Last checkpoint=%d; Addresses=%d; Ranges=%d/%d\n", nHardBirthDate, nSoftBirthDate, Checkpoints::LastCheckPointHeight(), walletAddresses.size(), blockFilterRanges.size(), nRanges);
     }
 }
