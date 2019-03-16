@@ -189,6 +189,6 @@ private:
     virtual bool BuildParams(GCSFilter::Params& params) const;
 };
 
-void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& cpRanges);
+void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& blockFilterRanges);
 
 #endif // GULDEN_BLOCKFILTER_H

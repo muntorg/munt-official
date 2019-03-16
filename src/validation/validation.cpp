@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -4377,9 +4377,12 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
                     elementSet.insert(searchData);
                 }
             }
-            std::vector<std::tuple<uint64_t, uint64_t>> cpRanges;
-            getBlockFilterBirthAndRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft, elementSet, cpRanges);
-            std::swap(cpRanges, partialChain.cpRanges);
+            std::vector<std::tuple<uint64_t, uint64_t>> blockFilterRanges;
+            getBlockFilterBirthAndRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft, elementSet, blockFilterRanges);
+            {
+                LOCK(partialChain.cs_blockFilterRanges);
+                std::swap(blockFilterRanges, partialChain.blockFilterRanges);
+            }
         }
         else
         #endif

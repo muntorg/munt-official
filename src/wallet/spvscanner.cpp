@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The Gulden developers
+// Copyright (c) 2018-2019 The Gulden developers
 // Authored by: Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -111,10 +111,11 @@ const CBlockIndex* CSPVScanner::LastBlockProcessed() const
 // If we are in one of the ranges or if we are after the last checkpoint then we must fetch the data.
 bool CSPVScanner::CanSkipBlockFetch(const CBlockIndex* pIndex, uint64_t lastCheckPointHeight)
 {
+    AssertLockHeld(partialChain.cs_blockFilterRanges);
     if ((uint64_t)pIndex->nHeight > lastCheckPointHeight)
         return false;
 
-    for (const auto& [rangeStart, rangeEnd] : partialChain.cpRanges)
+    for (const auto& [rangeStart, rangeEnd] : partialChain.blockFilterRanges)
     {
         if ((uint64_t)pIndex->nHeight > rangeStart)
         {
@@ -176,19 +177,22 @@ void CSPVScanner::RequestBlocks()
     // add requests for as long as nMaxPendingRequests is not reached and there are still higher blocks in headerChain
     // In the special case of 'skipped' blocks we allow a higher restriction - as they don't represent real network processing so won't starve peers
     int nNumSkipped=0;
-    while (nRequestsPending < MAX_PENDING_REQUESTS && partialChain.Height() > requestTip->nHeight)
     {
-        requestTip = partialChain.Next(requestTip);
-        if (CanSkipBlockFetch(requestTip, Checkpoints::LastCheckPointHeight()))
+        LOCK(partialChain.cs_blockFilterRanges);
+        while (nRequestsPending < MAX_PENDING_REQUESTS && partialChain.Height() > requestTip->nHeight)
         {
-            ++nNumSkipped;
-            LogPrint(BCLog::WALLET, "Skip block fetch [%d]\n", requestTip->nHeight);
-        }
-        else
-        {
-            LogPrint(BCLog::WALLET, "Unable to skip block fetch [%d]\n", requestTip->nHeight);
-            blocksToRequest.push_back(requestTip);
-            nRequestsPending++;
+            requestTip = partialChain.Next(requestTip);
+            if (CanSkipBlockFetch(requestTip, Checkpoints::LastCheckPointHeight()))
+            {
+                ++nNumSkipped;
+                LogPrint(BCLog::WALLET, "Skip block fetch [%d]\n", requestTip->nHeight);
+            }
+            else
+            {
+                LogPrint(BCLog::WALLET, "Unable to skip block fetch [%d]\n", requestTip->nHeight);
+                blocksToRequest.push_back(requestTip);
+                nRequestsPending++;
+            }
         }
     }
 

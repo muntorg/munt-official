@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -718,7 +718,9 @@ public:
     }
 
     // Up until latest built in checkpoint height we are only interested in these ranges and not all blocks.
-    std::vector<std::tuple<uint64_t, uint64_t>> cpRanges;
+    //fixme: (2.1) Move this into spvscanner rather.
+    CCriticalSection cs_blockFilterRanges;
+    std::vector<std::tuple<uint64_t, uint64_t>> blockFilterRanges;
 private:
     int nHeightOffset;
 };
