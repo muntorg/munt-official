@@ -4387,6 +4387,17 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
     if (IsPartialSyncActive() && youngestBefore && (youngestBefore->nHeight <= 576 || youngestBefore->nHeight - partialChain.HeightOffset() > 576))
     {
         LogPrintf("Partial sync continues.\n");
+
+        if (youngestBefore->nHeight < Checkpoints::LastCheckPointHeight())
+        {
+            // Determine the first checkpoint that comes before wallet birth date
+            uint64_t nWalletBirthBlockHard = Checkpoints::LastCheckpointBeforeTime(time);
+
+            // Now determine the first checkpoint of actual interest using block filters
+            uint64_t nWalletBirthBlockSoft = Checkpoints::LastCheckPointHeight();
+
+            ComputeNewFilterRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft);
+        }
     }
     else
     {
