@@ -35,7 +35,7 @@ const int PERSIST_BLOCK_COUNT = 500;
 // limit UI update notifications (except when catched up)
 const int UI_UPDATE_LIMIT = 50;
 
-std::atomic<int> CSPVScanner::lastProcessedHeight = 0;
+std::atomic<int> CSPVScanner::lastProcessedBlockHeight = 0;
 
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet),
@@ -54,7 +54,7 @@ void CSPVScanner::Init()
 {
     AssertLockHeld(cs_main);
 
-    lastProcessed = nullptr;
+    blockLastProcessed = nullptr;
     lastProgressReported = -1.0f;
     lastPersistedBlockTime = 0;
     lastPersistTime = 0;
@@ -104,7 +104,7 @@ bool CSPVScanner::StartScan()
 const CBlockIndex* CSPVScanner::LastBlockProcessed() const
 {
     LOCK(cs_main);
-    return lastProcessed;
+    return blockLastProcessed;
 }
 
 // If we are before the first range or not in one of the ranges then we can skip fetching the data.
@@ -135,15 +135,15 @@ void CSPVScanner::RequestBlocks()
 {
     LOCK2(cs_main, wallet.cs_wallet);
 
-    // put lastProcessed and/or requestTip back on chain if forked
-    while (!partialChain.Contains(requestTip)) {
-        if (requestTip->nHeight > lastProcessed->nHeight) {
-            CancelPriorityDownload(requestTip, std::bind(&CSPVScanner::ProcessPriorityRequest, this, std::placeholders::_1, std::placeholders::_2));
-            requestTip = requestTip->pprev;
+    // put blockLastProcessed and/or blockRequestTip back on chain if forked
+    while (!partialChain.Contains(blockRequestTip)) {
+        if (blockRequestTip->nHeight > blockLastProcessed->nHeight) {
+            CancelPriorityDownload(blockRequestTip, std::bind(&CSPVScanner::ProcessPriorityRequest, this, std::placeholders::_1, std::placeholders::_2));
+            blockRequestTip = blockRequestTip->pprev;
         }
-        else { // so here requestTip == lastProcessed
+        else { // so here blockRequestTip == blockLastProcessed
             std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
-            if (ReadBlockFromDisk(*pblock, lastProcessed, Params())) {
+            if (ReadBlockFromDisk(*pblock, blockLastProcessed, Params())) {
                 wallet.BlockDisconnected(pblock);
             }
             else {
@@ -151,24 +151,24 @@ void CSPVScanner::RequestBlocks()
                 // So pruning has to keep at least as many blocks back as the longest fork we are willing to handle.
                 assert(false);
             }
-            UpdateLastProcessed(lastProcessed->pprev);
-            requestTip = lastProcessed;
+            UpdateLastProcessed(blockLastProcessed->pprev);
+            blockRequestTip = blockLastProcessed;
         }
     }
 
     // skip blocks that are before startTime
-    CBlockIndex* skip = lastProcessed;
+    CBlockIndex* skip = blockLastProcessed;
     while (skip->GetBlockTime() < startTime && partialChain.Height() > skip->nHeight)
     {
         skip = partialChain.Next(skip);
     }
-    if (skip != lastProcessed)
+    if (skip != blockLastProcessed)
     {
-        LogPrint(BCLog::WALLET, "Skipping %d old blocks for SPV scan, up to height %d\n", skip->nHeight - lastProcessed->nHeight, skip->nHeight);
+        LogPrint(BCLog::WALLET, "Skipping %d old blocks for SPV scan, up to height %d\n", skip->nHeight - blockLastProcessed->nHeight, skip->nHeight);
         UpdateLastProcessed(skip);
-        if (lastProcessed->nHeight > requestTip->nHeight)
+        if (blockLastProcessed->nHeight > blockRequestTip->nHeight)
         {
-            requestTip = lastProcessed;
+            blockRequestTip = blockLastProcessed;
         }
     }
 
@@ -179,25 +179,25 @@ void CSPVScanner::RequestBlocks()
     int nNumSkipped=0;
     {
         LOCK(partialChain.cs_blockFilterRanges);
-        while (nRequestsPending < MAX_PENDING_REQUESTS && partialChain.Height() > requestTip->nHeight)
+        while (nRequestsPending < MAX_PENDING_REQUESTS && partialChain.Height() > blockRequestTip->nHeight)
         {
-            requestTip = partialChain.Next(requestTip);
-            if (CanSkipBlockFetch(requestTip, Checkpoints::LastCheckPointHeight()))
+            blockRequestTip = partialChain.Next(blockRequestTip);
+            if (CanSkipBlockFetch(blockRequestTip, Checkpoints::LastCheckPointHeight()))
             {
                 ++nNumSkipped;
-                LogPrint(BCLog::WALLET, "Skip block fetch [%d]\n", requestTip->nHeight);
+                LogPrint(BCLog::WALLET, "Skip block fetch [%d]\n", blockRequestTip->nHeight);
             }
             else
             {
-                LogPrint(BCLog::WALLET, "Unable to skip block fetch [%d]\n", requestTip->nHeight);
-                blocksToRequest.push_back(requestTip);
+                LogPrint(BCLog::WALLET, "Unable to skip block fetch [%d]\n", blockRequestTip->nHeight);
+                blocksToRequest.push_back(blockRequestTip);
                 nRequestsPending++;
             }
         }
     }
 
     if (!blocksToRequest.empty()) {
-        LogPrint(BCLog::WALLET, "Requesting %d blocks for SPV, up to height %d\n", blocksToRequest.size(), requestTip->nHeight);
+        LogPrint(BCLog::WALLET, "Requesting %d blocks for SPV, up to height %d\n", blocksToRequest.size(), blockRequestTip->nHeight);
         AddPriorityDownload(blocksToRequest, std::bind(&CSPVScanner::ProcessPriorityRequest, this, std::placeholders::_1, std::placeholders::_2));
     }
 }
@@ -211,17 +211,17 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
     // if chainActive is up-to-date no SPV blocks need to be requested, we can update SPV to the activeChain
     if (chainActive.Tip() == partialChain.Tip()) {
         LogPrint(BCLog::WALLET, "chainActive is up-to-date, skipping SPV processing block %d\n", pindex->nHeight);
-        if (lastProcessed != partialChain.Tip()) {
+        if (blockLastProcessed != partialChain.Tip()) {
             UpdateLastProcessed(chainActive.Tip());
-            requestTip = lastProcessed;
+            blockRequestTip = blockLastProcessed;
         }
     }
 
     // The block we're getting might have skipped some because they were filtered out and so never requested.
-    // Blocks are guarantueed to be delivered in requested order and therefore we can safely "fastforward" the lastProcessed
+    // Blocks are guaranteed to be delivered in requested order and therefore we can safely "fastforward" the blockLastProcessed
     // knowing that the blocks in between have never been requested.
-    if (lastProcessed->nHeight < Checkpoints::LastCheckPointHeight() && pindex->pprev != lastProcessed) {
-        CBlockIndex* pSkip = lastProcessed;
+    if (blockLastProcessed->nHeight < Checkpoints::LastCheckPointHeight() && pindex->pprev != blockLastProcessed) {
+        CBlockIndex* pSkip = blockLastProcessed;
         while (pindex->pprev != pSkip && pSkip != nullptr) {
             pSkip = partialChain.Next(pSkip);
         }
@@ -231,7 +231,7 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
         UpdateLastProcessed(pSkip);
     }
 
-    if (pindex->pprev == lastProcessed) {
+    if (pindex->pprev == blockLastProcessed) {
         LogPrint(BCLog::WALLET, "SPV processing block %d\n", pindex->nHeight);
 
 
@@ -249,7 +249,7 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
 
         blocksSincePersist++;
 
-        ExpireMempoolForPartialSync(lastProcessed);
+        ExpireMempoolForPartialSync(blockLastProcessed);
     }
 }
 
@@ -259,20 +259,20 @@ void CSPVScanner::HeaderTipChanged(const CBlockIndex* pTip)
     if (pTip)
     {
         // initialization on the first header tip notification
-        if (lastProcessed == nullptr)
+        if (blockLastProcessed == nullptr)
         {
             if (partialChain.Height() >= partialChain.HeightOffset()
                     && partialChain[partialChain.HeightOffset()]->GetBlockTime() <= startTime)
             {
-                // use start of partial chain to init lastProcessed
+                // use start of partial chain to init blockLastProcessed
                 // forks are handled when requesting blocks which will also fast-forward to startTime
                 // should the headerChain be very early
-                lastProcessed = partialChain[partialChain.HeightOffset()];
-                requestTip = lastProcessed;
-                startHeight = lastProcessed->nHeight;
+                blockLastProcessed = partialChain[partialChain.HeightOffset()];
+                blockRequestTip = blockLastProcessed;
+                startHeight = blockLastProcessed->nHeight;
 
                 LogPrint(BCLog::WALLET, "SPV init using %s (height = %d) as last processed block\n",
-                         lastProcessed->GetBlockHashPoW2().ToString(), lastProcessed->nHeight);
+                          blockLastProcessed->GetBlockHashPoW2().ToString(), blockLastProcessed->nHeight);
             }
             else
             {
@@ -308,8 +308,8 @@ void CSPVScanner::ResetUnifiedProgressNotification()
 
     lastProgressReported = -1.0f;
     startHeight = -1;
-    if (lastProcessed)
-        startHeight = lastProcessed->nHeight;
+    if (blockLastProcessed)
+        startHeight = blockLastProcessed->nHeight;
     NotifyUnifiedProgress();
 }
 
@@ -331,9 +331,9 @@ void CSPVScanner::NotifyUnifiedProgress()
 
         if (probableHeight > 0 && startHeight >= 0 &&
             probableHeight != startHeight &&
-            lastProcessed != nullptr && lastProcessed->nHeight > 0)
+                blockLastProcessed != nullptr && blockLastProcessed->nHeight > 0)
         {
-            float pgs = (lastProcessed->nHeight - startHeight)/float(probableHeight - startHeight);
+            float pgs = (blockLastProcessed->nHeight - startHeight)/float(probableHeight - startHeight);
             newProgress += (1.0f - CONNECTION_WEIGHT) * pgs;
         }
         else if (probableHeight == startHeight)
@@ -355,9 +355,9 @@ void CSPVScanner::UpdateLastProcessed(CBlockIndex* pindex)
 {
     AssertLockHeld(cs_main);
 
-    lastProcessed = pindex;
+    blockLastProcessed = pindex;
 
-    lastProcessedHeight = lastProcessed ? lastProcessed->nHeight : 0;
+    lastProcessedBlockHeight = blockLastProcessed ? blockLastProcessed->nHeight : 0;
 
     int64_t now = GetAdjustedTime();
     if (now - lastPersistTime > PERSIST_INTERVAL_SEC || blocksSincePersist >= PERSIST_BLOCK_COUNT)
@@ -368,24 +368,24 @@ void CSPVScanner::Persist()
 {
     LOCK(cs_main);
 
-    if (lastProcessed != nullptr && lastProcessed->GetBlockTime() > lastPersistedBlockTime)
+    if (blockLastProcessed != nullptr && blockLastProcessed->GetBlockTime() > lastPersistedBlockTime)
     {
         // persist & prune block index
         PersistAndPruneForPartialSync();
 
         // persist lastProcessed
         CWalletDB walletdb(*wallet.dbw);
-        walletdb.WriteLastSPVBlockProcessed(partialChain.GetLocatorPoW2(lastProcessed), lastProcessed->GetBlockTime());
+        walletdb.WriteLastSPVBlockProcessed(partialChain.GetLocatorPoW2(blockLastProcessed), blockLastProcessed->GetBlockTime());
 
         // now that we are sure both the index and lastProcessed time locator have been saved
         // compute the new pruning height for the next iteration
 
-        int64_t forkTimeLimit = lastProcessed->GetBlockTime() - 2 * MAX_FORK_DURATION;
+        int64_t forkTimeLimit = blockLastProcessed->GetBlockTime() - 2 * MAX_FORK_DURATION;
 
         int maxPruneHeight =
                 // determine oldest block that is at most forkTimeLimit in the past
                 partialChain.LowerBound(partialChain.HeightOffset(),
-                                        std::min(lastProcessed->nHeight, partialChain.Height()),
+                                        std::min(blockLastProcessed->nHeight, partialChain.Height()),
                                         forkTimeLimit,
                                         [](const CBlockIndex* index, int64_t limit){ return index->GetBlockTime() < limit; })
                 // the block before that is the youngest that is more than forkTimeLimit ago
@@ -397,12 +397,12 @@ void CSPVScanner::Persist()
             SetMaxSPVPruneHeight(maxPruneHeight);
 
         lastPersistTime = GetAdjustedTime();
-        lastPersistedBlockTime = lastProcessed->GetBlockTime();
+        lastPersistedBlockTime = blockLastProcessed->GetBlockTime();
         blocksSincePersist = 0;
     }
 }
 
 int CSPVScanner::getProcessedHeight()
 {
-    return lastProcessedHeight;
+    return lastProcessedBlockHeight;
 }

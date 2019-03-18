@@ -25,7 +25,7 @@ public:
     CSPVScanner(const CSPVScanner&) = delete;
     CSPVScanner& operator=(const CSPVScanner&) = delete;
 
-    // write locator for lastProcessed to db for resuming next session, call sparingly
+    // write locator for blockLastProcessed to db for resuming next session, call sparingly
     void Persist();
 
     void ResetUnifiedProgressNotification();
@@ -40,10 +40,10 @@ private:
     int64_t startTime;
 
     // SPV scan processed up to this block
-    CBlockIndex* lastProcessed;
+    CBlockIndex* blockLastProcessed;
 
-    // Blocks (lastProcessed .. requestTip] have been requested and are pending
-    CBlockIndex* requestTip;
+    // Blocks (blockLastProcessed .. blockRequestTip] have been requested and are pending
+    CBlockIndex* blockRequestTip;
 
     // Session start height for progress reporting
     int startHeight;
@@ -64,7 +64,7 @@ private:
 
     void RequestBlocks();
 
-    // Update value of lastProcessed to pindex and persist it to the wallet db
+    // Update value of blockLastProcessed to pindex and persist it to the wallet db
     void UpdateLastProcessed(CBlockIndex* pindex);
 
     void ProcessPriorityRequest(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex);
@@ -82,8 +82,8 @@ private:
 
     int nRequestsPending;
 
-    // bookeeping for monitoring
-    static std::atomic<int> lastProcessedHeight;
+    // book keeping for monitoring
+    static std::atomic<int> lastProcessedBlockHeight;
 };
 
 #endif // SPVSCANNER_H
