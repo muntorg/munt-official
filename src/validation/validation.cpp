@@ -2854,9 +2854,6 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
                 return true;
         }
 
-        if (!CheckBlockHeader(block, state, chainparams.GetConsensus(), !fAssumePOWGood))
-            return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
-
         // Get prev block index if we don't have it yet
         if (!pindexPrev)
         {
@@ -2865,6 +2862,22 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
                 return state.DoS(10, error("%s: prev block not found", __func__), 0, "prev-blk-not-found");
             pindexPrev = (*mi).second;
         }
+
+        //fixme: (2.2) - Reconsider this when/if we have partial filtered header sync functional.
+        //On SPV (Android) for instance these scrypt checks on the headers are really expensive.
+        //We bypass this with a small random chance of still checking.
+        //NB! Previously this was before the pindexPrev call - it is fine for it to be after, however if we alter this further consider putting it before again.
+        //
+        //Note:
+        // 1) This check gets called again (and not skipped) for any actual blocks we fetch from within CheckBlock()
+        // 2) An attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
+        // 3) We still check randomly
+        // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some more headers after detecint wrong chain)
+        // So this is not really a major weakening of security in any way and still more than sufficient.
+        if (!fAssumePOWGood && IsPartialSyncActive() && pindexPrev->nHeight < Checkpoints::LastCheckPointHeight() && (GetRandInt(100) % 100 != 0))
+            fAssumePOWGood = true;
+        if (!CheckBlockHeader(block, state, chainparams.GetConsensus(), !fAssumePOWGood))
+            return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
 
         if (pindexPrev->nStatus & BLOCK_FAILED_MASK)
             return state.DoS(100, error("%s: prev block invalid", __func__), REJECT_INVALID, "bad-prevblk");
