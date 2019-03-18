@@ -4327,7 +4327,7 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
     // Once we are beyond the last checkpoint there is no filtering anymore
     if (nWalletBirthBlockHard >= (uint64_t)Checkpoints::LastCheckPointHeight())
     {
-        LOCK(cs_main);
+        LOCK(partialChain.cs_blockFilterRanges);
         partialChain.blockFilterRanges.clear();
         partialChain.blockFilterRanges.shrink_to_fit();
         LogPrintf("Hard birth block passed last checkpoint, cleared filter ranges.\n");

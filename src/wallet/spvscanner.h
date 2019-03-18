@@ -58,6 +58,9 @@ private:
     int numConnections;
     void OnNumConnectionsChanged(int newNumConnections);
 
+    // triggerred by NotifyKeyPoolToppedUp to recompute filter ranges when keys are added
+    void onKeyPoolToppedUp();
+
     // Calculate unified progress and trigger
     float lastProgressReported;
     void NotifyUnifiedProgress();

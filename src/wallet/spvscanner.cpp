@@ -85,6 +85,11 @@ void CSPVScanner::ResetScan()
     Init();
 
     ResetUnifiedProgressNotification();
+
+    {
+        LOCK(wallet.cs_wallet);
+        wallet.NotifyKeyPoolToppedUp.disconnect(boost::bind(&CSPVScanner::onKeyPoolToppedUp, this));
+    }
 }
 
 bool CSPVScanner::StartScan()
@@ -95,6 +100,10 @@ bool CSPVScanner::StartScan()
         uiInterface.NotifyNumConnectionsChanged.connect(boost::bind(&CSPVScanner::OnNumConnectionsChanged, this, _1));
         HeaderTipChanged(partialChain.Tip());
         NotifyUnifiedProgress();
+        {
+            LOCK(wallet.cs_wallet);
+            wallet.NotifyKeyPoolToppedUp.connect(boost::bind(&CSPVScanner::onKeyPoolToppedUp, this));
+        }
         return true;
     }
     else
@@ -105,6 +114,21 @@ const CBlockIndex* CSPVScanner::LastBlockProcessed() const
 {
     LOCK(cs_main);
     return blockLastProcessed;
+}
+
+void CSPVScanner::onKeyPoolToppedUp()
+{
+    static std::atomic_flag computingRanges;
+
+    if (computingRanges.test_and_set())
+    {
+        std::thread([&]() {
+            uint64_t nBirthBLockHard = lastProcessedBlockHeight;
+            uint64_t nDummyBlockSoft = Checkpoints::LastCheckPointHeight();
+            ComputeNewFilterRanges(nBirthBLockHard, nDummyBlockSoft);
+            computingRanges.clear();
+        }).detach();
+    }
 }
 
 // If we are before the first range or not in one of the ranges then we can skip fetching the data.

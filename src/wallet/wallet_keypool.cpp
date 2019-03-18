@@ -64,61 +64,62 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
     unsigned int nNew = 0;
     bool bAnyNonHDAccountsLockedAndRequireKeys = false;
 
-    LOCK2(cs_main, cs_wallet);
-
-    CWalletDB walletdb(*dbw);
-
-    // Top up key pool
-    unsigned int nAccountTargetSize;
-    if (nTargetKeypoolSize > 0)
-        nAccountTargetSize = nTargetKeypoolSize;
-    else
-        nAccountTargetSize = GetArg("-keypool", 5);
-
-    //Find current unique highest key index across *all* keypools.
-    int64_t nIndex = 1;
-    for (auto accountPair : mapAccounts)
+    // enclosed in block to ensure that NotifyKeyPoolToppedUp (at end) is called outside the locks
     {
-        for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
-        {
-            auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
-            if (!keyPool.empty())
-                nIndex = std::max( nIndex, *(--keyPool.end()) + 1 );
-        }
-    }
+        LOCK2(cs_main, cs_wallet);
 
-    for (auto accountPair : mapAccounts)
-    {
-        const auto& accountUUID = accountPair.first;
-        auto& account = accountPair.second;
-        if ( (forAccount == nullptr) || (forAccount->getUUID() == accountUUID) )
-        {
-            // If account uses a fixed keypool then never generate new keys to add to it.
-            if (account->IsFixedKeyPool())
-                continue;
+        CWalletDB walletdb(*dbw);
 
-            for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+        // Top up key pool
+        unsigned int nAccountTargetSize;
+        if (nTargetKeypoolSize > 0)
+            nAccountTargetSize = nTargetKeypoolSize;
+        else
+            nAccountTargetSize = GetArg("-keypool", 5);
+
+        //Find current unique highest key index across *all* keypools.
+        int64_t nIndex = 1;
+        for (auto accountPair : mapAccounts)
+        {
+            for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
             {
-                auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? account->setKeyPoolExternal : account->setKeyPoolInternal );
-                while (keyPool.size() < nAccountTargetSize)
-                {
-                    // We can't allocate any keys here if we are a non HD account that is locked - so don't and instead just signal to caller that there is an issue.
-                    if (!account->IsHD() && account->IsLocked())
-                    {
-                        bAnyNonHDAccountsLockedAndRequireKeys = true;
-                        break;
-                    }
-                    else
-                    {
-                        if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*account, keyChain), getUUIDAsString(accountUUID), keyChain ) ) )
-                            throw std::runtime_error(std::string(__func__) + ": writing generated key failed");
-                        keyPool.insert(nIndex);
-                        LogPrintf("keypool [%s:%s] added key %d, size=%u\n", account->getLabel(), (keyChain == KEYCHAIN_CHANGE ? "change" : "external"), nIndex, keyPool.size());
+                auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountPair.second->setKeyPoolExternal : accountPair.second->setKeyPoolInternal );
+                if (!keyPool.empty())
+                    nIndex = std::max( nIndex, *(--keyPool.end()) + 1 );
+            }
+        }
 
-                        // Limit generation for this loop - rest will be generated later
-                        ++nNew;
-                        if (nMaxNewAllocations != 0 && nNew >= nMaxNewAllocations)
-                            return nNew;
+        for (auto accountPair : mapAccounts)
+        {
+            const auto& accountUUID = accountPair.first;
+            auto& account = accountPair.second;
+            if ( (forAccount == nullptr) || (forAccount->getUUID() == accountUUID) )
+            {
+                // If account uses a fixed keypool then never generate new keys to add to it.
+                if (account->IsFixedKeyPool())
+                    continue;
+
+                for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+                {
+                    auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? account->setKeyPoolExternal : account->setKeyPoolInternal );
+                    while (keyPool.size() < nAccountTargetSize && (nMaxNewAllocations == 0 || nNew < nMaxNewAllocations))
+                    {
+                        // We can't allocate any keys here if we are a non HD account that is locked - so don't and instead just signal to caller that there is an issue.
+                        if (!account->IsHD() && account->IsLocked())
+                        {
+                            bAnyNonHDAccountsLockedAndRequireKeys = true;
+                            break;
+                        }
+                        else
+                        {
+                            if (!walletdb.WritePool( ++nIndex, CKeyPool(GenerateNewKey(*account, keyChain), getUUIDAsString(accountUUID), keyChain ) ) )
+                                throw std::runtime_error(std::string(__func__) + ": writing generated key failed");
+                            keyPool.insert(nIndex);
+                            LogPrintf("keypool [%s:%s] added key %d, size=%u\n", account->getLabel(), (keyChain == KEYCHAIN_CHANGE ? "change" : "external"), nIndex, keyPool.size());
+
+                            // Limit generation for this loop, keeping count using nNew - rest will be generated later
+                            ++nNew;
+                        }
                     }
                 }
             }
@@ -126,6 +127,10 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
     }
     if (bAnyNonHDAccountsLockedAndRequireKeys && (nNew == 0))
         return -1;
+
+    if (nNew > 0)
+        NotifyKeyPoolToppedUp();
+
     return nNew;
 }
 
