@@ -284,6 +284,10 @@ bool CHDSeed::IsCrypted() const
 
 bool CHDSeed::Lock()
 {
+    // We can't lock if we are not encrypted, nothing to do.
+    if (!encrypted)
+        return false;
+
     // The below is a 'SecureString' - so no memory burn necessary, it should burn itself.
     unencryptedMnemonic = "";
     // The below is a 'SecureString' - so no memory burn necessary, it should burn itself.
