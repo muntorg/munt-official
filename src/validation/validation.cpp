@@ -4322,6 +4322,53 @@ void ResetPartialSync()
     PersistAndPruneForPartialSync();
 }
 
+void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBirthBlockSoft)
+{
+    // Once we are beyond the last checkpoint there is no filtering anymore
+    if (nWalletBirthBlockHard >= (uint64_t)Checkpoints::LastCheckPointHeight())
+    {
+        LOCK(cs_main);
+        partialChain.blockFilterRanges.clear();
+        partialChain.blockFilterRanges.shrink_to_fit();
+        LogPrintf("Hard birth block passed last checkpoint, cleared filter ranges.\n");
+        return;
+    }
+
+    //fixme: (2.2) - Look closer into this - unclear what behaviour should be if there is SPV but no wallet (or if it should be allowed at all?)
+    #ifdef ENABLE_WALLET
+    if (pactiveWallet)
+    {
+        LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
+
+        GCSFilter::ElementSet elementSet;
+        for (const auto& [accountUUID, forAccount] : pactiveWallet->mapAccounts)
+        {
+            (unused) accountUUID;
+            std::set<CKeyID> setAddresses;
+            forAccount->GetKeys(setAddresses);
+            for (const auto& key : setAddresses)
+            {
+                //fixme: (2.1) Alter the blockfilter to use just the keys instead of the full script
+                //This will be more efficient in terms of space and time and simplify code like this
+                CScript searchScript = CScript() << OP_DUP << OP_HASH160 << ToByteVector(key) << OP_EQUALVERIFY << OP_CHECKSIG;
+                std::vector<unsigned char> searchData(searchScript.begin(), searchScript.end());
+                elementSet.insert(searchData);
+            }
+        }
+        std::vector<std::tuple<uint64_t, uint64_t>> blockFilterRanges;
+        getBlockFilterBirthAndRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft, elementSet, blockFilterRanges);
+        {
+            LOCK(partialChain.cs_blockFilterRanges);
+            std::swap(blockFilterRanges, partialChain.blockFilterRanges);
+        }
+    }
+    else
+    #endif
+    {
+        nWalletBirthBlockSoft = nWalletBirthBlockHard;
+    }
+}
+
 bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
 {
     // To ensure that context checks can be done on headers from *time* onwards, a window of
@@ -4349,47 +4396,13 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
             ResetPartialSync();
         }
 
-
         // Determine the first checkpoint that comes before wallet birth date
         uint64_t nWalletBirthBlockHard = Checkpoints::LastCheckpointBeforeTime(time);
 
         // Now determine the first checkpoint of actual interest using block filters
         uint64_t nWalletBirthBlockSoft = Checkpoints::LastCheckPointHeight();
 
-        //fixme: (2.2) - Look closer into this - unclear what behaviour should be if there is SPV but no wallet (or if it should be allowed at all?)
-        #ifdef ENABLE_WALLET
-        if (pactiveWallet)
-        {
-            LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-
-            GCSFilter::ElementSet elementSet;
-            for (const auto& [accountUUID, forAccount] : pactiveWallet->mapAccounts)
-            {
-                (unused) accountUUID;
-                std::set<CKeyID> setAddresses;
-                forAccount->GetKeys(setAddresses);
-                for (const auto& key : setAddresses)
-                {
-                    //fixme: (2.1) Alter the blockfilter to use just the keys instead of the full script
-                    //This will be more efficient in terms of space and time and simplify code like this
-                    CScript searchScript = CScript() << OP_DUP << OP_HASH160 << ToByteVector(key) << OP_EQUALVERIFY << OP_CHECKSIG;
-                    std::vector<unsigned char> searchData(searchScript.begin(), searchScript.end());
-                    elementSet.insert(searchData);
-                }
-            }
-            std::vector<std::tuple<uint64_t, uint64_t>> blockFilterRanges;
-            getBlockFilterBirthAndRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft, elementSet, blockFilterRanges);
-            {
-                LOCK(partialChain.cs_blockFilterRanges);
-                std::swap(blockFilterRanges, partialChain.blockFilterRanges);
-            }
-        }
-        else
-        #endif
-        {
-            nWalletBirthBlockSoft = nWalletBirthBlockHard;
-        }
-
+        ComputeNewFilterRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft);
 
         //fixme: (2.2) We don't always necessarily need to go back an entire checkpoint.
         // We could instead look at difference in time between original birth date and checkpoint to see if its necessary
