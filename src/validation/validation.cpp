@@ -2872,9 +2872,9 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
         // 1) This check gets called again (and not skipped) for any actual blocks we fetch from within CheckBlock()
         // 2) An attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
         // 3) We still check randomly
-        // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some more headers after detecint wrong chain)
+        // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some more headers after detecting wrong chain)
         // So this is not really a major weakening of security in any way and still more than sufficient.
-        if (!fAssumePOWGood && IsPartialSyncActive() && pindexPrev->nHeight < Checkpoints::LastCheckPointHeight() && (GetRandInt(100) % 100 != 0))
+        if (!fAssumePOWGood && IsPartialSyncActive() && pindexPrev->nHeight < Checkpoints::LastCheckPointHeight() && (GetRandInt(400) != 10))
             fAssumePOWGood = true;
         if (!CheckBlockHeader(block, state, chainparams.GetConsensus(), !fAssumePOWGood))
             return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));

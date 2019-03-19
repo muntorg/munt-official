@@ -1226,11 +1226,12 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
 {
     LOCK2(cs_main, cs_wallet);
 
+    auto& chain = IsPartialSyncActive() ? partialChain : chainActive;
     int conflictconfirms = 0;
     if (mapBlockIndex.count(hashBlock)) {
         CBlockIndex* pindex = mapBlockIndex[hashBlock];
-        if (chainActive.Contains(pindex)) {
-            conflictconfirms = -(chainActive.Height() - pindex->nHeight + 1);
+        if (chain.Contains(pindex)) {
+            conflictconfirms = -(chain.Height() - pindex->nHeight + 1);
         }
     }
     // If number of conflict confirms cannot be determined, this means
@@ -1553,7 +1554,7 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins,
             if (!::IsMine(forAccount, *pcoin))
                 continue;
 
-            if (!CheckFinalTx(*pcoin, chainActive))
+            if (!CheckFinalTx(*pcoin, IsPartialSyncActive() ? partialChain : chainActive))
                 continue;
 
             if (pcoin->IsCoinBase() && pcoin->GetBlocksToMaturity() > 0)
@@ -2423,7 +2424,8 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
             mapKeyBirth[it->first] = it->second.nCreateTime;
 
     // map in which we'll infer heights of other keys
-    CBlockIndex *pindexMax = chainActive[std::max(0, chainActive.Height() - 144)]; // the tip can be reorganized; use a 144-block safety margin
+    auto& chain = IsPartialSyncActive() ? partialChain : chainActive;
+    CBlockIndex *pindexMax = chain[std::max(0, chain.Height() - 144)]; // the tip can be reorganized; use a 144-block safety margin
     std::map<CKeyID, CBlockIndex*> mapKeyFirstBlock;
     std::set<CKeyID> setKeys;
     for (const auto accountPair : mapAccounts)
@@ -2447,7 +2449,7 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
         // iterate over all wallet transactions...
         const CWalletTx &wtx = (*it).second;
         BlockMap::const_iterator blit = mapBlockIndex.find(wtx.hashBlock);
-        if (blit != mapBlockIndex.end() && chainActive.Contains(blit->second)) {
+        if (blit != mapBlockIndex.end() && chain.Contains(blit->second)) {
             // ... which are already in a block
             int nHeight = blit->second->nHeight;
             for(const CTxOut &txout : wtx.tx->vout) {
