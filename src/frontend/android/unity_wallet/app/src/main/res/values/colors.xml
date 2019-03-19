@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Copyright (c) 2018 The Gulden developers
-Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
@@ -18,11 +18,19 @@ file COPYING
     <color name="buttonBorder">#40FFFFFF</color>
 
     <!-- background -->
-    <color name="bg_bright">#ffffffff</color>
+    <color name="bg_bright">#FFFFFF</color>
     <color name="bg_less_bright">#ffe8e8f0</color>
     <color name="bg_list">#40ffffff</color>
+    <color name="bg_main">#f3f3f3</color>
 
     <!-- mutation depending on balance effect -->
     <color name="change_positive">#4CAF50</color>
     <color name="change_negative">#ff000000</color>
+
+    <!-- mutation depending on balance effect -->
+    <color name="darkGray">#555555</color>
+    <color name="mediumGray">#7f7f7f</color>
+    <color name="lightGray">#cccccc</color>
+    <color name="veryLightGray">#f3f3f3</color>
+
 </resources>

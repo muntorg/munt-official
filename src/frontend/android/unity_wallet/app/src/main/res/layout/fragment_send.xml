@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Copyright (c) 2018-2019 The Gulden developers
-Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
@@ -84,17 +84,16 @@ file COPYING
 
     <View
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/ThinHorizontalDivider"/>
 
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:background="@color/bg_bright"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -116,6 +115,7 @@ file COPYING
             android:ellipsize="middle"
             android:text="@string/send_fragment_scan_label"
             android:textAllCaps="false"
+            style="?android:attr/borderlessButtonStyle"
             android:textColor="@android:color/white" />
 
         <!-- NB! We have to turn off all caps as otherwise spannable strings (which we use for dual line text styling) do not work correctly!-->
@@ -135,6 +135,7 @@ file COPYING
             android:maxLines="2"
             android:text="@string/send_fragment_clipboard_label"
             android:textAllCaps="false"
+            style="?android:attr/borderlessButtonStyle"
             android:textColor="@android:color/white" />
 
     </LinearLayout>

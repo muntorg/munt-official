@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Copyright (c) 2018-2019 The Gulden developers
-Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
@@ -34,23 +34,21 @@ file COPYING
             android:minWidth="200dp"
             android:minHeight="200dp"
             android:scaleType="fitCenter"
-            android:src="@null" />
+            android:src="@null"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/currentAddressLabel"
+            android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <View
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/bottom_divider_margin"
-        android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        style="@style/ThinHorizontalDivider"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
