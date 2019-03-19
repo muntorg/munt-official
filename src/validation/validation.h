@@ -640,7 +640,7 @@ void SetMaxSPVPruneHeight(int height);
 /**
  * Compute new filter ranges, stored in partialChain.blockFilterRanges.
  * Filter range starts at nWalletBirthBlockHard and moves nWalletBirthBlockSoft down to the
- * first block that might contatin data for the activeWallet.
+ * first block that might contain data for the activeWallet.
  */
 void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBirthBlockSoft);
 
