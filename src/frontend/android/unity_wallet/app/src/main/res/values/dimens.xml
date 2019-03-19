@@ -31,4 +31,6 @@ file COPYING
 
     <dimen name="bottom_divider_margin">0dp</dimen>
 
+    <!-- This is a hack/workaround to suppress enlargement of selected item -->
+    <dimen tools:override="true" name="design_bottom_navigation_active_text_size">@dimen/design_bottom_navigation_text_size</dimen>
 </resources>
