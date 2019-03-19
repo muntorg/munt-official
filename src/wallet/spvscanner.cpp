@@ -141,7 +141,7 @@ bool CSPVScanner::CanSkipBlockFetch(const CBlockIndex* pIndex, uint64_t lastChec
 
     for (const auto& [rangeStart, rangeEnd] : partialChain.blockFilterRanges)
     {
-        if ((uint64_t)pIndex->nHeight > rangeStart)
+        if ((uint64_t)pIndex->nHeight >= rangeStart)
         {
             if ((uint64_t)pIndex->nHeight < rangeEnd)
                 return false;
