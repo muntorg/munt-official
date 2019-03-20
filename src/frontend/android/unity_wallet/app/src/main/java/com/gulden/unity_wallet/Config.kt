@@ -10,6 +10,7 @@ class Config {
         val DEFAULT_CURRENCY_CODE get() = getDefaultCurrencyCode()
         const val USER_AGENT = "/${BuildConfig.APPLICATION_ID}:${BuildConfig.VERSION_NAME}/"
         val BLOCK_EXPLORER = Uri.parse("https://blockchain.gulden.com")!!
+        const val AUDIBLE_NOTIFICATIONS_INTERVAL = 30 * 1000
 
         private fun getDefaultCurrencyCode(): String {
             return AppContext.instance.getString(R.string.default_currency_code)

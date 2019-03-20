@@ -28,6 +28,8 @@ private const val TAG = "activity-manager"
 
 class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
 {
+    var lastAudibleNotification = 0L
+
     override fun onCreate()
     {
         super.onCreate()
@@ -66,33 +68,39 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     }
 
     override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
-            val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-            // only notify of mutations that are not initiated by our own payments, have a net change effect != 0
-            // and when notifications are enabled in preferences
-            if (preferences.getBoolean("preference_notify_transaction_activity", true)
-                    && !selfCommitted
-                    && mutation.change != 0L) {
-                val notificationIntent = Intent(this, WalletActivity::class.java)
-                val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        // only notify of mutations that are not initiated by our own payments, have a net change effect != 0
+        // and when notifications are enabled in preferences
+        if (preferences.getBoolean("preference_notify_transaction_activity", true)
+                && !selfCommitted
+                && mutation.change != 0L) {
+            val notificationIntent = Intent(this, WalletActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
-                val title = getString(if (mutation.change > 0) R.string.notify_received else R.string.notify_sent)
-                val notification = NotificationCompat.Builder(this)
-                        .setContentTitle(title)
-                        .setTicker(title)
-                        .setContentText(formatNative(mutation.change))
-                        .setSmallIcon(R.drawable.ic_g_logo)
-                        //.setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
-                        .setContentIntent(pendingIntent)
-                        .setOngoing(false)
-                        .setAutoCancel(true)
-                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        //.setPublicVersion()
-                        //.setTimeoutAfter()
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .build()
-                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.notify(1, notification)
+            val title = getString(if (mutation.change > 0) R.string.notify_received else R.string.notify_sent)
+            val notification = with(NotificationCompat.Builder(this)) {
+                setSmallIcon(R.drawable.ic_g_logo)
+                setContentTitle(title)
+                setTicker(title)
+                setContentText(formatNative(mutation.change))
+                //setPublicVersion()
+                //setTimeoutAfter()
+                setContentIntent(pendingIntent)
+                setOngoing(false)
+                setAutoCancel(true)
+                setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                setDefaults(Notification.DEFAULT_ALL)
+                //setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
+                val now = System.currentTimeMillis()
+                if (now - lastAudibleNotification > Config.AUDIBLE_NOTIFICATIONS_INTERVAL)
+                    lastAudibleNotification = now
+                else
+                    setOnlyAlertOnce(true)
+                build()
             }
+            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.notify(1, notification)
+        }
     }
 
     override fun updatedTransaction(transaction: TransactionRecord): Boolean {
