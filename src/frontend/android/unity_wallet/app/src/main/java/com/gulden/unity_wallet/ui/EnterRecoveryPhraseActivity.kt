@@ -176,16 +176,13 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
                     val unixTime = System.currentTimeMillis() / 1000L
                     when (selection)
                     {
-                        0 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*7)))
-                        1 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)))
-                        2 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*30*6)))
-                        3 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)))
-                        4 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365*2)))
+                        0 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)))
+                        1 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)))
                         // Optimisation - To be strictly correct this should set to 0 (scan from genesis)
                         // However we can 'cheat' here, because we know that we didn't have any recovery phrase style wallets (using current phrase system) available before block 250000
                         // So we can use the hardcoded timestamp of block 250000 instead '1441212522' - this saves fetching 250k unnecessary headers etc.
                         //TODO: We should maybe rather move this optimisation into the core where it is transparent to the various platform applications
-                        5 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, 1441212522))
+                        2 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, 1441212522))
                     }
                 }
         builder.create().show()

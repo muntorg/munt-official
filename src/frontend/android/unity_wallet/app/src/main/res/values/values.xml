@@ -3,11 +3,8 @@
     <!-- Don't allow localisation of string-array directly (strings.xml) as this can lead to strange errors if there are missing or removed items in the translations !-->
     <!-- All string arrays go here instead and then reference into strings.xml via @string/xyz  as necessary for translations !-->
     <string-array name="wallet_birth_date">
-        <item>@string/wallet_birth_less_than_a_week</item>
         <item>@string/wallet_birth_less_than_a_month</item>
-        <item>@string/wallet_birth_less_than_six_months</item>
         <item>@string/wallet_birth_less_than_a_year</item>
-        <item>@string/wallet_birth_less_than_two_years</item>
         <item>@string/wallet_birth_unsure</item>
     </string-array>
     <string-array name="currency_codes">
