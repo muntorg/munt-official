@@ -15,7 +15,7 @@ file COPYING
     >
 
     <View
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="59dp"
         style="@style/ThinHorizontalDivider"/>
 
     <TextView
