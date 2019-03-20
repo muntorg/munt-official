@@ -131,7 +131,6 @@ file COPYING
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
             android:background="@drawable/shape_rounded_button"
-            android:enabled="false"
             android:maxLines="2"
             android:text="@string/send_fragment_clipboard_label"
             android:textAllCaps="false"

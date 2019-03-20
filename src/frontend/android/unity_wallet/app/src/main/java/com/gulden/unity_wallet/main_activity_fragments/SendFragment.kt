@@ -27,6 +27,8 @@ import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.AddressBookAdapter
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.support.v4.runOnUiThread
 
 
@@ -56,6 +58,13 @@ class SendFragment : Fragment(), UnityCore.Observer
             }
             if (recipient != null) {
                 SendCoinsFragment.newInstance(recipient).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+            }
+            else {
+                context?.run {
+                    alert(Appcompat, getString(R.string.clipboard_no_valid_address)) {
+                        positiveButton(getString(android.R.string.ok)) {}
+                    }.show()
+                }
             }
         }
 
@@ -124,18 +133,15 @@ class SendFragment : Fragment(), UnityCore.Observer
         {
             IBANValidator.getInstance().isValid(text) || GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid ->
             {
-                clipboardButton.isEnabled = true
                 setClipButtonText(text)
             }
             uriRecipient(text).valid ->
             {
-                clipboardButton.isEnabled = true
                 setClipButtonText(uriRecipient(text).address)
             }
             else ->
             {
                 clipboardButton.text = getString(R.string.send_fragment_clipboard_label)
-                clipboardButton.isEnabled = false
             }
         }
     }
