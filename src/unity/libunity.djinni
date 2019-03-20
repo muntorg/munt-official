@@ -76,7 +76,9 @@ address_record = record {
 peer_record = record {
     ip : string;
     hostname : string;
-    height : i32;
+    start_height : i32;
+    synced_height : i32;
+    common_height : i32;
     latency : i32;
     userAgent : string;
     protocol : i64;

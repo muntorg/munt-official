@@ -10,7 +10,11 @@ public final class PeerRecord {
 
     /*package*/ final String mHostname;
 
-    /*package*/ final int mHeight;
+    /*package*/ final int mStartHeight;
+
+    /*package*/ final int mSyncedHeight;
+
+    /*package*/ final int mCommonHeight;
 
     /*package*/ final int mLatency;
 
@@ -21,13 +25,17 @@ public final class PeerRecord {
     public PeerRecord(
             String ip,
             String hostname,
-            int height,
+            int startHeight,
+            int syncedHeight,
+            int commonHeight,
             int latency,
             String userAgent,
             long protocol) {
         this.mIp = ip;
         this.mHostname = hostname;
-        this.mHeight = height;
+        this.mStartHeight = startHeight;
+        this.mSyncedHeight = syncedHeight;
+        this.mCommonHeight = commonHeight;
         this.mLatency = latency;
         this.mUserAgent = userAgent;
         this.mProtocol = protocol;
@@ -41,8 +49,16 @@ public final class PeerRecord {
         return mHostname;
     }
 
-    public int getHeight() {
-        return mHeight;
+    public int getStartHeight() {
+        return mStartHeight;
+    }
+
+    public int getSyncedHeight() {
+        return mSyncedHeight;
+    }
+
+    public int getCommonHeight() {
+        return mCommonHeight;
     }
 
     public int getLatency() {
@@ -62,7 +78,9 @@ public final class PeerRecord {
         return "PeerRecord{" +
                 "mIp=" + mIp +
                 "," + "mHostname=" + mHostname +
-                "," + "mHeight=" + mHeight +
+                "," + "mStartHeight=" + mStartHeight +
+                "," + "mSyncedHeight=" + mSyncedHeight +
+                "," + "mCommonHeight=" + mCommonHeight +
                 "," + "mLatency=" + mLatency +
                 "," + "mUserAgent=" + mUserAgent +
                 "," + "mProtocol=" + mProtocol +

@@ -10,20 +10,26 @@
 struct PeerRecord final {
     std::string ip;
     std::string hostname;
-    int32_t height;
+    int32_t start_height;
+    int32_t synced_height;
+    int32_t common_height;
     int32_t latency;
     std::string userAgent;
     int64_t protocol;
 
     PeerRecord(std::string ip_,
                std::string hostname_,
-               int32_t height_,
+               int32_t start_height_,
+               int32_t synced_height_,
+               int32_t common_height_,
                int32_t latency_,
                std::string userAgent_,
                int64_t protocol_)
     : ip(std::move(ip_))
     , hostname(std::move(hostname_))
-    , height(std::move(height_))
+    , start_height(std::move(start_height_))
+    , synced_height(std::move(synced_height_))
+    , common_height(std::move(common_height_))
     , latency(std::move(latency_))
     , userAgent(std::move(userAgent_))
     , protocol(std::move(protocol_))

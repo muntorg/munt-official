@@ -8,7 +8,9 @@
 
 - (nonnull instancetype)initWithIp:(nonnull NSString *)ip
                           hostname:(nonnull NSString *)hostname
-                            height:(int32_t)height
+                       startHeight:(int32_t)startHeight
+                      syncedHeight:(int32_t)syncedHeight
+                      commonHeight:(int32_t)commonHeight
                            latency:(int32_t)latency
                          userAgent:(nonnull NSString *)userAgent
                           protocol:(int64_t)protocol
@@ -16,7 +18,9 @@
     if (self = [super init]) {
         _ip = [ip copy];
         _hostname = [hostname copy];
-        _height = height;
+        _startHeight = startHeight;
+        _syncedHeight = syncedHeight;
+        _commonHeight = commonHeight;
         _latency = latency;
         _userAgent = [userAgent copy];
         _protocol = protocol;
@@ -26,14 +30,18 @@
 
 + (nonnull instancetype)peerRecordWithIp:(nonnull NSString *)ip
                                 hostname:(nonnull NSString *)hostname
-                                  height:(int32_t)height
+                             startHeight:(int32_t)startHeight
+                            syncedHeight:(int32_t)syncedHeight
+                            commonHeight:(int32_t)commonHeight
                                  latency:(int32_t)latency
                                userAgent:(nonnull NSString *)userAgent
                                 protocol:(int64_t)protocol
 {
     return [[self alloc] initWithIp:ip
                            hostname:hostname
-                             height:height
+                        startHeight:startHeight
+                       syncedHeight:syncedHeight
+                       commonHeight:commonHeight
                             latency:latency
                           userAgent:userAgent
                            protocol:protocol];
@@ -41,7 +49,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p ip:%@ hostname:%@ height:%@ latency:%@ userAgent:%@ protocol:%@>", self.class, (void *)self, self.ip, self.hostname, @(self.height), @(self.latency), self.userAgent, @(self.protocol)];
+    return [NSString stringWithFormat:@"<%@ %p ip:%@ hostname:%@ startHeight:%@ syncedHeight:%@ commonHeight:%@ latency:%@ userAgent:%@ protocol:%@>", self.class, (void *)self, self.ip, self.hostname, @(self.startHeight), @(self.syncedHeight), @(self.commonHeight), @(self.latency), self.userAgent, @(self.protocol)];
 }
 
 @end

@@ -6,13 +6,17 @@
 @interface DBPeerRecord : NSObject
 - (nonnull instancetype)initWithIp:(nonnull NSString *)ip
                           hostname:(nonnull NSString *)hostname
-                            height:(int32_t)height
+                       startHeight:(int32_t)startHeight
+                      syncedHeight:(int32_t)syncedHeight
+                      commonHeight:(int32_t)commonHeight
                            latency:(int32_t)latency
                          userAgent:(nonnull NSString *)userAgent
                           protocol:(int64_t)protocol;
 + (nonnull instancetype)peerRecordWithIp:(nonnull NSString *)ip
                                 hostname:(nonnull NSString *)hostname
-                                  height:(int32_t)height
+                             startHeight:(int32_t)startHeight
+                            syncedHeight:(int32_t)syncedHeight
+                            commonHeight:(int32_t)commonHeight
                                  latency:(int32_t)latency
                                userAgent:(nonnull NSString *)userAgent
                                 protocol:(int64_t)protocol;
@@ -21,7 +25,11 @@
 
 @property (nonatomic, readonly, nonnull) NSString * hostname;
 
-@property (nonatomic, readonly) int32_t height;
+@property (nonatomic, readonly) int32_t startHeight;
+
+@property (nonatomic, readonly) int32_t syncedHeight;
+
+@property (nonatomic, readonly) int32_t commonHeight;
 
 @property (nonatomic, readonly) int32_t latency;
 

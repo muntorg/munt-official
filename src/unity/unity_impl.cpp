@@ -933,9 +933,27 @@ std::vector<PeerRecord> GuldenUnifiedBackend::getPeers()
     if (g_connman) {
         std::vector<CNodeStats> vstats;
         g_connman->GetNodeStats(vstats);
-        for (CNodeStats& nstat: vstats) {
-            ret.push_back(PeerRecord(nstat.addr.ToString(), nstat.addr.HostnameLookup(), nstat.nStartingHeight,
-                                 int32_t(nstat.dPingTime * 1000), nstat.cleanSubVer, nstat.nVersion));
+        for (CNodeStats& nstat: vstats)
+        {
+            int64_t nSyncedHeight = 0;
+            int64_t nCommonHeight = 0;
+            CNodeStateStats stateStats;
+            TRY_LOCK(cs_main, lockMain);
+            if (lockMain && GetNodeStateStats(nstat.nodeid, stateStats))
+            {
+                nSyncedHeight = stateStats.nSyncHeight;
+                nCommonHeight = stateStats.nCommonHeight;
+            }
+
+            PeerRecord rec(nstat.addr.ToString(),
+                           nstat.addr.HostnameLookup(),
+                           nstat.nStartingHeight,
+                           nSyncedHeight,
+                           nCommonHeight,
+                           int32_t(nstat.dPingTime * 1000),
+                           nstat.cleanSubVer,
+                           nstat.nVersion);
+            ret.emplace_back(rec);
         }
     }
 
