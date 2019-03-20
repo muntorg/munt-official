@@ -30,8 +30,9 @@ class PeerListAdapter : ListAdapter<PeerRecord, PeerListAdapter.ItemViewHolder>(
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: PeerRecord) = with(itemView) {
+
             itemView.peer_list_row_ip.text = if (item.hostname.isEmpty()) item.ip else item.hostname
-            itemView.peer_list_row_height.text = if (item.height > 0) item.height.toString() + " blocks" else null
+            itemView.peer_list_row_height.text = if (item.syncedHeight > 0) item.syncedHeight.toString() + " blocks" else if (item.startHeight > 0) item.startHeight.toString() + " blocks" else null
             itemView.peer_list_row_user_agent.text = item.userAgent
             itemView.peer_list_row_protocol.text = item.protocol.toString()
             itemView.peer_list_row_ping.text = item.latency.toString()+"ms"
