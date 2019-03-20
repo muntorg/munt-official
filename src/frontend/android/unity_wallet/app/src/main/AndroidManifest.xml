@@ -28,7 +28,7 @@
         <activity
             android:name=".IntroActivity"
             android:label="@string/app_name"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/Theme.Transparent">
             <!-- As we are transparent don't request a screenOrientation - this causes errors on some phones -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
