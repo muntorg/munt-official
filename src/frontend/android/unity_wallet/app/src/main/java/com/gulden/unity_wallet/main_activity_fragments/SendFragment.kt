@@ -83,8 +83,8 @@ class SendFragment : Fragment(), UnityCore.Observer
         //TODO: Improve this, and consider moving more of the work into unity core
         //TODO: Handle amounts passed as paramaters etc.
         val address = payToURI.host
-        val amount = payToURI.getQueryParameter("amount")
-        val label = payToURI.getQueryParameter("label")
+        val amount = if (payToURI.queryParameterNames.contains("amount")) payToURI.getQueryParameter("amount") else "0"
+        val label = if (payToURI.queryParameterNames.contains("label")) payToURI.getQueryParameter("label") else ""
         var recipient : UriRecipient? = null
         if (IBANValidator.getInstance().isValid(address))
         {
