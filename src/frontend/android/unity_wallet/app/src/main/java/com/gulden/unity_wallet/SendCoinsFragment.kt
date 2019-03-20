@@ -195,6 +195,20 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         (mMainlayout.findViewById<View>(R.id.send_coins_amount_secondary) as TextView?)?.text = secondaryStr
     }
 
+    private fun performAuthenticatedPayment(d : Dialog, request : UriRecipient, message : String)
+    {
+        Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
+                null, msg = message) {
+            try {
+                GuldenUnifiedBackend.performPaymentToRecipient(request)
+                d.dismiss()
+            }
+            catch (exception: RuntimeException) {
+                errorMessage(exception.message!!)
+            }
+        }
+    }
+
     private fun confirmAndCommitGuldenPayment(view: View) {
         // create styled message from resource template and arguments bundle
         val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amount)
@@ -206,16 +220,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             // on confirmation compose recipient and execute payment
             positiveButton("Send") {
                 val paymentRequest = UriRecipient(true, recipient.address, recipient.label, amountEditStr)
-                Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
-                        null, msg = "%s\n\nG %s".format(paymentRequest.address, nlgStr)) {
-                    try {
-                        GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
-                        dismiss()
-                    }
-                    catch (exception: RuntimeException) {
-                        errorMessage(exception.message!!)
-                    }
-                }
+                performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
             }
 
             negativeButton("Cancel") {}
@@ -245,8 +250,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                         mMainlayout.button_send.isEnabled = true
                         val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, wireFormatNative(orderResult.depositAmountNLG))
                         try {
-                            GuldenUnifiedBackend.performPaymentToRecipient(paymentRequest)
-                            dismiss()
+                            performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
                         }
                         catch (exception: RuntimeException) {
                             errorMessage(exception.message!!)
