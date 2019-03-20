@@ -117,9 +117,6 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         updateView()
 
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
-
-        // WARNING WARNING WARNING Do NOT COMMIT THIS!!!!
-        recover_from_phrase_text_view.setText("gain crew dilemma skin pair tenant castle deny verb document bright ripple")
     }
 
     override fun onDestroy() {
