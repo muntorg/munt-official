@@ -8,6 +8,8 @@ package com.gulden.unity_wallet
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
+import android.nfc.NdefMessage
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -78,6 +80,17 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         preferences.registerOnSharedPreferenceChangeListener(this)
 
         topLayoutBarSettingsBackButton.setOnClickListener { onBackPressed() }
+
+
+        val intentUri = intent.data
+        val scheme = intentUri?.getScheme()
+        if ((Intent.ACTION_VIEW == intent.action) && intentUri != null && scheme != null
+                && (scheme.toLowerCase().startsWith("gulden") || scheme.toLowerCase().startsWith("guldencoin") || scheme.toLowerCase().startsWith("iban") || scheme.toLowerCase().startsWith("sepa")))
+        {
+            if (sendFragment == null)
+                sendFragment = SendFragment()
+            sendFragment?.handleURI(intentUri, this)
+        }
     }
 
     override fun onDestroy() {

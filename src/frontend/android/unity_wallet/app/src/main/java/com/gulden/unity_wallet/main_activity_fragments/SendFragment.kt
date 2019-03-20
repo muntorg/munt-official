@@ -8,6 +8,7 @@ package com.gulden.unity_wallet.main_activity_fragments
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannableString
@@ -75,6 +76,34 @@ class SendFragment : Fragment(), UnityCore.Observer
         }
 
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
+    }
+
+    fun handleURI(payToURI : Uri, forActivity : WalletActivity)
+    {
+        //TODO: Improve this, and consider moving more of the work into unity core
+        //TODO: Handle amounts passed as paramaters etc.
+        val address = payToURI.host
+        val amount = payToURI.getQueryParameter("amount")
+        val label = payToURI.getQueryParameter("label")
+        var recipient : UriRecipient? = null
+        if (IBANValidator.getInstance().isValid(address))
+        {
+            recipient = UriRecipient(false, address, label, amount)
+        }
+        else if (GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String,String>())).valid)
+        {
+            recipient = GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>()))
+            recipient = UriRecipient(recipient.valid, recipient.address, if (recipient.label!="") recipient.label else label, amount)
+        }
+        else if (uriRecipient(address).valid)
+        {
+            recipient = UriRecipient(true, address, label, amount)
+        }
+
+        if (recipient != null)
+        {
+            SendCoinsFragment.newInstance(recipient).show(forActivity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+        }
     }
 
     override fun onResume() {

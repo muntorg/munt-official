@@ -44,7 +44,24 @@
             android:name=".WalletActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <!-- URI handlers for send fragment-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <data android:scheme="gulden"/>
+                <data android:scheme="Gulden"/>
+                <data android:scheme="guldencoin"/>
+                <data android:scheme="Guldencoin"/>
+                <data android:scheme="iban"/>
+                <data android:scheme="Iban"/>
+                <data android:scheme="IBAN"/>
+                <data android:scheme="sepa"/>
+                <data android:scheme="Sepa"/>
+                <data android:scheme="SEPA"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".WelcomeActivity"
             android:label="@string/title_activity_welcome"
