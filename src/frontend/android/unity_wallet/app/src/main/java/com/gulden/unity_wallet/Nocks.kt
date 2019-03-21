@@ -5,12 +5,10 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import kotlin.random.Random
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
+import okhttp3.*
+import java.util.*
 
 data class NocksQuoteResult(val amountNLG: Double)
 
@@ -53,11 +51,26 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
             .post(RequestBody.create(MediaType.get("application/json; charset=utf-8"), jsonParams))
             .build()
 
+    // Force okhttp to include specific SSL certificates that are required, otherwise these calls simply fail unexpectedly on various devices.
+    // See: https://github.com/square/okhttp/issues/3894
+    val spec = ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
+            .tlsVersions(TlsVersion.TLS_1_2, TlsVersion.TLS_1_1, TlsVersion.TLS_1_0)
+            .cipherSuites(
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA)
+            .build();
+
+
     val builder = OkHttpClient.Builder()
     if (BuildConfig.DEBUG) {
         builder.addInterceptor(OkHttpProfilerInterceptor() )
     }
-    val client = builder.build()
+    val client = builder.connectionSpecs(Collections.singletonList(spec)).build()
+
+
+
 
     // execute on IO thread pool
     val result = withContext(IO) {
