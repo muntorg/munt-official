@@ -8,8 +8,6 @@ package com.gulden.unity_wallet
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.nfc.NdefMessage
-import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity

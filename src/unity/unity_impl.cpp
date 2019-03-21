@@ -858,7 +858,6 @@ TransactionRecord GuldenUnifiedBackend::getTransaction(const std::string & txHas
     return calculateTransactionRecordForWalletTransaction(wtx);
 }
 
-extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
 std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
 {
     std::vector<MutationRecord> ret;
