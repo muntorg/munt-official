@@ -60,6 +60,20 @@
         <item>0</item>
         <item>0</item>
     </integer-array>
+    <integer-array
+        name="currency_rate_precisions">
+        <item>4</item>
+        <item>8</item>
+        <item>4</item>
+        <item>4</item>
+        <!--<item>CN¥</item>-->
+        <item>4</item>
+        <!--<item>₽</item>-->
+        <item>4</item>
+        <item>4</item>
+        <item>2</item>
+        <item>2</item>
+    </integer-array>
 
     <string-array name="background_sync_entries">
         <item>@string/background_sync_off</item>

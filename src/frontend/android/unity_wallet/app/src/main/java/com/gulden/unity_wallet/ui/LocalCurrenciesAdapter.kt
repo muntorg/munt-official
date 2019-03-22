@@ -11,13 +11,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.AppContext
 import com.gulden.unity_wallet.Currency
+import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.localCurrency
 import kotlinx.android.synthetic.main.local_currency_list_item.view.*
 import java.util.*
 
 class LocalCurrenciesAdapter(context: Context, private val dataSource: TreeMap<String, Currency>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private var allRates = mapOf<String, Double>()
 
     override fun getCount(): Int {
         return dataSource.size
@@ -46,9 +49,22 @@ class LocalCurrenciesAdapter(context: Context, private val dataSource: TreeMap<S
         {
             View.GONE
         }
+        if (currencyRecord.code == localCurrency.code && allRates.containsKey(currencyRecord.code)) {
+            val rate = allRates.getValue(currencyRecord.code)
+            rowView.exchangeRateView.text = currencyRecord.formatRate(rate)
+            rowView.exchangeRateView.visibility = View.VISIBLE
+        }
+        else {
+            rowView.exchangeRateView.visibility = View.GONE
+        }
         return rowView
     }
 
     fun setSelectedPosition(position: Int) = PreferenceManager.getDefaultSharedPreferences(AppContext.instance).edit().putString("preference_local_currency", getItem(position)?.code).apply()
+
+    fun updateAllRates(rates: Map<String, Double>) {
+        allRates = rates
+        notifyDataSetChanged()
+    }
 }
 
