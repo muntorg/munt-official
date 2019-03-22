@@ -109,6 +109,7 @@ file COPYING
                 android:id="@+id/send_coins_receiving_static_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:textColor="@color/lightText"
