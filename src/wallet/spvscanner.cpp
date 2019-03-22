@@ -81,6 +81,7 @@ void CSPVScanner::ResetScan()
 
     StopPartialHeaders(std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1));
     wallet.NotifyKeyPoolToppedUp.disconnect(boost::bind(&CSPVScanner::onKeyPoolToppedUp, this));
+    CancelAllPriorityDownloads();
 
     // erase persisted spv progress
     CWalletDB walletdb(*wallet.dbw);
