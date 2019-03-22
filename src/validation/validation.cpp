@@ -4382,6 +4382,11 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
     }
 }
 
+void StopPartialHeaders(const std::function<void(const CBlockIndex*)>& notifyCallback)
+{
+    headerTipSignal.disconnect_all_slots();
+}
+
 bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
 {
     // To ensure that context checks can be done on headers from *time* onwards, a window of

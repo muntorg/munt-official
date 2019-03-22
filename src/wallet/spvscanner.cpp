@@ -60,6 +60,7 @@ void CSPVScanner::Init()
     lastPersistTime = 0;
     startHeight = -1;
     nRequestsPending = 0;
+    lastProcessedBlockHeight = 0;
 
     // init scan starting time to birth of first key
     startTime =  wallet.nTimeFirstKey;
@@ -76,7 +77,10 @@ void CSPVScanner::Init()
 
 void CSPVScanner::ResetScan()
 {
-    LOCK(cs_main);
+    LOCK2(cs_main, wallet.cs_wallet);
+
+    StopPartialHeaders(std::bind(&CSPVScanner::HeaderTipChanged, this, std::placeholders::_1));
+    wallet.NotifyKeyPoolToppedUp.disconnect(boost::bind(&CSPVScanner::onKeyPoolToppedUp, this));
 
     // erase persisted spv progress
     CWalletDB walletdb(*wallet.dbw);
@@ -86,10 +90,6 @@ void CSPVScanner::ResetScan()
 
     ResetUnifiedProgressNotification();
 
-    {
-        LOCK(wallet.cs_wallet);
-        wallet.NotifyKeyPoolToppedUp.disconnect(boost::bind(&CSPVScanner::onKeyPoolToppedUp, this));
-    }
 }
 
 bool CSPVScanner::StartScan()
@@ -120,10 +120,14 @@ void CSPVScanner::onKeyPoolToppedUp()
 {
     static std::atomic_flag computingRanges;
 
+    const CBlockIndex* pIndexLast = LastBlockProcessed();
+    if (pIndexLast == nullptr)
+        return;
+
     if (computingRanges.test_and_set())
     {
-        std::thread([&]() {
-            uint64_t nBirthBLockHard = lastProcessedBlockHeight;
+        std::thread([&, pIndexLast]() {
+            uint64_t nBirthBLockHard = pIndexLast->nHeight;
             uint64_t nDummyBlockSoft = Checkpoints::LastCheckPointHeight();
             ComputeNewFilterRanges(nBirthBLockHard, nDummyBlockSoft);
             computingRanges.clear();
