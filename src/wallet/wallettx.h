@@ -227,18 +227,18 @@ public:
     }
 
     //! filter decides which addresses will count towards the debit
-    CAmount GetDebit(const isminefilter& filter, CAccount* forAccount=NULL) const;
-    CAmount GetCredit(const isminefilter& filter, CAccount* forAccount=NULL) const;
-    CAmount GetImmatureCredit(bool fUseCache=true, const CAccount* forAccount=NULL) const;
-    CAmount GetImmatureCreditIncludingLockedWitnesses(bool fUseCache=true, const CAccount* forAccount=NULL) const;
-    CAmount GetAvailableCredit(bool fUseCache=true, const CAccount* forAccount=NULL) const;
-    CAmount GetAvailableCreditIncludingLockedWitnesses(bool fUseCache=true, const CAccount* forAccount=NULL) const;
-    CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache=true, const CAccount* forAccount=NULL) const;
-    CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache=true, const CAccount* forAccount=NULL) const;
+    CAmount GetDebit(const isminefilter& filter, CAccount* forAccount=NULL, bool includeChildren=false) const;
+    CAmount GetCredit(const isminefilter& filter, CAccount* forAccount=NULL, bool includeChildren=false) const;
+    CAmount GetImmatureCredit(bool fUseCache=true, const CAccount* forAccount=NULL, bool includeChildren=false) const;
+    CAmount GetImmatureCreditIncludingLockedWitnesses(bool fUseCache=true, const CAccount* forAccount=NULL, bool includeChildren=false) const;
+    CAmount GetAvailableCredit(bool fUseCache=true, const CAccount* forAccount=NULL, bool includeChildren=false) const;
+    CAmount GetAvailableCreditIncludingLockedWitnesses(bool fUseCache=true, const CAccount* forAccount=NULL, bool includeChildren=false) const;
+    CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache=true, const CAccount* forAccount=NULL, bool includeChildren=false) const;
+    CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache=true, const CAccount* forAccount=NULL, bool includeChildren=false) const;
     CAmount GetChange() const;
 
     void GetAmounts(std::list<COutputEntry>& listReceived,
-                    std::list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from=NULL) const;
+                    std::list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from=NULL, bool includeChildren=false) const;
 
     bool IsFromMe(const isminefilter& filter) const
     {

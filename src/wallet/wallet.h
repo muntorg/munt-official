@@ -790,8 +790,8 @@ public:
      * Returns amount of debit if the input matches the
      * filter, otherwise returns 0
      */
-    CAmount GetDebit(const CTxIn& txin, const isminefilter& filter, CAccount* forAccount=NULL) const;
-    CAmount GetCredit(const CTxOut& txout, const isminefilter& filte, CAccount* forAccount=NULL) const;
+    CAmount GetDebit(const CTxIn& txin, const isminefilter& filter, CAccount* forAccount=NULL, bool includeChildren=false) const;
+    CAmount GetCredit(const CTxOut& txout, const isminefilter& filter, CAccount* forAccount=NULL, bool includeChildren=false) const;
     bool IsChange(const CTxOut& txout) const;
     CAmount GetChange(const CTxOut& txout) const;
     bool IsMine(const CTransaction& tx) const;

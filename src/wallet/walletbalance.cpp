@@ -19,8 +19,9 @@
 
 // Note that this function doesn't distinguish between a 0-valued input,
 // and a not-"is mine" (according to the filter) input.
-CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccount* forAccount) const
+CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccount* forAccount, bool includeChildren) const
 {
+    CAmount ret = 0;
     {
         LOCK(cs_wallet);
         std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
@@ -31,20 +32,46 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccoun
             {
                 if ( (forAccount && (::IsMine(*forAccount, prev.tx->vout[txin.prevout.n]) & filter)) || (!forAccount && (IsMine(prev.tx->vout[txin.prevout.n]) & filter)) )
                 {
-                    return prev.tx->vout[txin.prevout.n].nValue;
+                    ret = prev.tx->vout[txin.prevout.n].nValue;
+                }
+            }
+        }
+        if (forAccount && includeChildren)
+        {
+            for (const auto& accountItem : mapAccounts)
+            {
+                const auto& childAccount = accountItem.second;
+                if (childAccount->getParentUUID() == forAccount->getUUID())
+                {
+                    ret += GetDebit(txin, filter, forAccount, false);
                 }
             }
         }
     }
-    return 0;
+    return ret;
 }
 
 
-CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter, CAccount* forAccount) const
+CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter, CAccount* forAccount, bool includeChildren) const
 {
+    CAmount ret = 0;
     if (!MoneyRange(txout.nValue))
         throw std::runtime_error(std::string(__func__) + ": value out of range");
-    return ( ( (forAccount && ::IsMine(*forAccount, txout) & filter) || (!forAccount && IsMine(txout) & filter) ) ? txout.nValue : 0);
+    if ( (forAccount && ::IsMine(*forAccount, txout) & filter) || (!forAccount && IsMine(txout) & filter) )
+        ret = txout.nValue;
+
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                ret += GetCredit(txout, filter, forAccount, false);
+            }
+        }
+    }
+    return ret;
 }
 
 CAmount CWallet::GetChange(const CTxOut& txout) const
@@ -92,7 +119,7 @@ CAmount CWallet::GetChange(const CTransaction& tx) const
     return nChange;
 }
 
-CAmount CWalletTx::GetDebit(const isminefilter& filter, CAccount* forAccount) const
+CAmount CWalletTx::GetDebit(const isminefilter& filter, CAccount* forAccount, bool includeChildren) const
 {
     if (tx->vin.empty())
         return 0;
@@ -118,10 +145,21 @@ CAmount CWalletTx::GetDebit(const isminefilter& filter, CAccount* forAccount) co
             debit += watchDebitCached[forAccount];
         }
     }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : pwallet->mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                debit += GetDebit(filter, childAccount, false);
+            }
+        }
+    }
     return debit;
 }
 
-CAmount CWalletTx::GetCredit(const isminefilter& filter, CAccount* forAccount) const
+CAmount CWalletTx::GetCredit(const isminefilter& filter, CAccount* forAccount, bool includeChildren) const
 {
     // Must wait until coinbase is safely deep enough in the chain before valuing it
     if (IsCoinBase() && GetBlocksToMaturity() > 0)
@@ -149,13 +187,24 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter, CAccount* forAccount) c
             credit += watchCreditCached[forAccount];
         }
     }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : pwallet->mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                credit += GetCredit(filter, childAccount, false);
+            }
+        }
+    }
     return credit;
 }
 
 //fixme: (2.1) As the cache is -after- some of the checks and the calls after the checks are basically the same as for normal getcredit
 //Is there any point to immatureCreditCached, or can we just share the getcredit cache and always call the tests.
 //NB! We must always call the tests as obviously they change so can't be cached.
-CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount) const
+CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount, bool includeChildren) const
 {
     if (pwallet == 0)
         return 0;
@@ -164,34 +213,48 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount)
     if (!IsCoinBase() || GetBlocksToMaturity() <= 0 || GetDepthInMainChain() < 0)
         return 0;
 
-    if (fUseCache && immatureCreditCached.find(forAccount) != immatureCreditCached.end())
-        return immatureCreditCached[forAccount];
-
     CAmount nCredit = 0;
-    uint256 hashTx = GetHash();
-    for (unsigned int i = 0; i < tx->vout.size(); i++)
+    if (fUseCache && immatureCreditCached.find(forAccount) != immatureCreditCached.end())
     {
-        if (!pwallet->IsSpent(hashTx, i))
+        nCredit = immatureCreditCached[forAccount];
+    }
+    else
+    {
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            const CTxOut &txout = tx->vout[i];
-            if (!forAccount || IsMine(*forAccount, txout))
+            if (!pwallet->IsSpent(hashTx, i))
             {
-                if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
+                const CTxOut &txout = tx->vout[i];
+                if (!forAccount || IsMine(*forAccount, txout))
                 {
-                    nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
-                    if (!MoneyRange(nCredit))
-                        throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+                    if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
+                    {
+                        nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                        if (!MoneyRange(nCredit))
+                            throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+                    }
                 }
+            }
+        }
+        immatureCreditCached[forAccount] = nCredit;
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : pwallet->mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nCredit += GetImmatureCredit(fUseCache, childAccount, false);
             }
         }
     }
 
-    immatureCreditCached[forAccount] = nCredit;
-
     return nCredit;
 }
 
-CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, const CAccount* forAccount) const
+CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, const CAccount* forAccount, bool includeChildren) const
 {
     if (pwallet == 0)
         return 0;
@@ -199,53 +262,22 @@ CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, con
     // Must wait until coinbase is safely deep enough in the chain before valuing it
     if (!IsCoinBase() || GetBlocksToMaturity() <= 0 || GetDepthInMainChain() < 0)
         return 0;
+
+    CAmount nCredit = 0;
 
     if (fUseCache && immatureCreditCachedIncludingLockedWitnesses.find(forAccount) != immatureCreditCachedIncludingLockedWitnesses.end())
-        return immatureCreditCachedIncludingLockedWitnesses[forAccount];
-
-    CAmount nCredit = 0;
-    uint256 hashTx = GetHash();
-    for (unsigned int i = 0; i < tx->vout.size(); i++)
     {
-        if (!pwallet->IsSpent(hashTx, i))
-        {
-            const CTxOut &txout = tx->vout[i];
-            if (!forAccount || IsMine(*forAccount, txout))
-            {
-                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
-                if (!MoneyRange(nCredit))
-                    throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
-            }
-        }
+        nCredit = immatureCreditCachedIncludingLockedWitnesses[forAccount];
     }
-
-    immatureCreditCachedIncludingLockedWitnesses[forAccount] = nCredit;
-
-    return nCredit;
-}
-
-CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount) const
-{
-    if (pwallet == 0)
-        return 0;
-
-    // Must wait until coinbase is safely deep enough in the chain before valuing it
-    if ((IsCoinBase() && GetBlocksToMaturity() > 0) || GetDepthInMainChain() < 0)
-        return 0;
-
-    if (fUseCache && availableCreditCached.find(forAccount) != availableCreditCached.end())
-        return availableCreditCached[forAccount];
-
-    CAmount nCredit = 0;
-    uint256 hashTx = GetHash();
-    for (unsigned int i = 0; i < tx->vout.size(); i++)
+    else
     {
-        if (!pwallet->IsSpent(hashTx, i))
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            const CTxOut &txout = tx->vout[i];
-            if (!forAccount || IsMine(*forAccount, txout))
+            if (!pwallet->IsSpent(hashTx, i))
             {
-                if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
+                const CTxOut &txout = tx->vout[i];
+                if (!forAccount || IsMine(*forAccount, txout))
                 {
                     nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
                     if (!MoneyRange(nCredit))
@@ -253,14 +285,25 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
                 }
             }
         }
-    }
 
-    availableCreditCached[forAccount] = nCredit;
+        immatureCreditCachedIncludingLockedWitnesses[forAccount] = nCredit;
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : pwallet->mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nCredit += GetImmatureCreditIncludingLockedWitnesses(fUseCache, childAccount, false);
+            }
+        }
+    }
 
     return nCredit;
 }
 
-CAmount CWalletTx::GetAvailableCreditIncludingLockedWitnesses(bool fUseCache, const CAccount* forAccount) const
+CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount, bool includeChildren) const
 {
     if (pwallet == 0)
         return 0;
@@ -269,47 +312,128 @@ CAmount CWalletTx::GetAvailableCreditIncludingLockedWitnesses(bool fUseCache, co
     if ((IsCoinBase() && GetBlocksToMaturity() > 0) || GetDepthInMainChain() < 0)
         return 0;
 
-    if (fUseCache && availableCreditCachedIncludingLockedWitnesses.find(forAccount) != availableCreditCachedIncludingLockedWitnesses.end())
-        return availableCreditCachedIncludingLockedWitnesses[forAccount];
-
     CAmount nCredit = 0;
-    uint256 hashTx = GetHash();
-    for (unsigned int i = 0; i < tx->vout.size(); i++)
+    if (fUseCache && availableCreditCached.find(forAccount) != availableCreditCached.end())
     {
-        if (!pwallet->IsSpent(hashTx, i))
+        nCredit = availableCreditCached[forAccount];
+    }
+    else
+    {
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            const CTxOut &txout = tx->vout[i];
-            if (!forAccount || IsMine(*forAccount, txout))
+            if (!pwallet->IsSpent(hashTx, i))
             {
-                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
-                if (!MoneyRange(nCredit))
-                    throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+                const CTxOut &txout = tx->vout[i];
+                if (!forAccount || IsMine(*forAccount, txout))
+                {
+                    if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
+                    {
+                        nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                        if (!MoneyRange(nCredit))
+                            throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+                    }
+                }
+            }
+        }
+        availableCreditCached[forAccount] = nCredit;
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : pwallet->mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nCredit += GetAvailableCredit(fUseCache, childAccount, false);
             }
         }
     }
 
-    availableCreditCachedIncludingLockedWitnesses[forAccount] = nCredit;
+    return nCredit;
+}
+
+CAmount CWalletTx::GetAvailableCreditIncludingLockedWitnesses(bool fUseCache, const CAccount* forAccount, bool includeChildren) const
+{
+    if (pwallet == 0)
+        return 0;
+
+    // Must wait until coinbase is safely deep enough in the chain before valuing it
+    if ((IsCoinBase() && GetBlocksToMaturity() > 0) || GetDepthInMainChain() < 0)
+        return 0;
+
+    CAmount nCredit = 0;
+    if (fUseCache && availableCreditCachedIncludingLockedWitnesses.find(forAccount) != availableCreditCachedIncludingLockedWitnesses.end())
+    {
+        nCredit = availableCreditCachedIncludingLockedWitnesses[forAccount];
+    }
+    else
+    {
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < tx->vout.size(); i++)
+        {
+            if (!pwallet->IsSpent(hashTx, i))
+            {
+                const CTxOut &txout = tx->vout[i];
+                if (!forAccount || IsMine(*forAccount, txout))
+                {
+                    nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                    if (!MoneyRange(nCredit))
+                        throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+                }
+            }
+        }
+        availableCreditCachedIncludingLockedWitnesses[forAccount] = nCredit;
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : pwallet->mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nCredit += GetAvailableCreditIncludingLockedWitnesses(fUseCache, childAccount, false);
+            }
+        }
+    }
 
     return nCredit;
 }
 
-CAmount CWalletTx::GetImmatureWatchOnlyCredit(const bool& fUseCache, const CAccount* forAccount) const
+CAmount CWalletTx::GetImmatureWatchOnlyCredit(const bool& fUseCache, const CAccount* forAccount, bool includeChildren) const
 {
     if (GetDepthInMainChain() < 0)
         return 0;
 
+    CAmount nCredit = 0;
     if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain())
     {
         if (fUseCache && immatureWatchCreditCached.find(forAccount) != immatureWatchCreditCached.end())
-            return immatureWatchCreditCached[forAccount];
-        immatureWatchCreditCached[forAccount] = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
-        return immatureWatchCreditCached[forAccount];
+        {
+            nCredit = immatureWatchCreditCached[forAccount];
+        }
+        else
+        {
+            immatureWatchCreditCached[forAccount] = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
+            nCredit = immatureWatchCreditCached[forAccount];
+        }
+        if (forAccount && includeChildren)
+        {
+            for (const auto& accountItem : pwallet->mapAccounts)
+            {
+                const auto& childAccount = accountItem.second;
+                if (childAccount->getParentUUID() == forAccount->getUUID())
+                {
+                    nCredit += GetImmatureWatchOnlyCredit(fUseCache, childAccount, false);
+                }
+            }
+        }
     }
 
-    return 0;
+    return nCredit;
 }
 
-CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache, const CAccount* forAccount) const
+CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache, const CAccount* forAccount, bool includeChildren) const
 {
     if (pwallet == 0)
         return 0;
@@ -318,22 +442,37 @@ CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache, const CAcc
     if ((IsCoinBase() && GetBlocksToMaturity() > 0) || GetDepthInMainChain() < 0)
         return 0;
 
-    if (fUseCache && availableWatchCreditCached.find(forAccount) != availableWatchCreditCached.end())
-        return availableWatchCreditCached[forAccount];
-
     CAmount nCredit = 0;
-    for (unsigned int i = 0; i < tx->vout.size(); i++)
+    if (fUseCache && availableWatchCreditCached.find(forAccount) != availableWatchCreditCached.end())
     {
-        if (!pwallet->IsSpent(GetHash(), i))
+        nCredit = availableWatchCreditCached[forAccount];
+    }
+    else
+    {
+        for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            const CTxOut &txout = tx->vout[i];
-            nCredit += pwallet->GetCredit(txout, ISMINE_WATCH_ONLY);
-            if (!MoneyRange(nCredit))
-                throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+            if (!pwallet->IsSpent(GetHash(), i))
+            {
+                const CTxOut &txout = tx->vout[i];
+                nCredit += pwallet->GetCredit(txout, ISMINE_WATCH_ONLY);
+                if (!MoneyRange(nCredit))
+                    throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+            }
+        }
+
+        availableWatchCreditCached[forAccount] = nCredit;
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& accountItem : pwallet->mapAccounts)
+        {
+            const auto& childAccount = accountItem.second;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nCredit += GetAvailableWatchOnlyCredit(fUseCache, childAccount, false);
+            }
         }
     }
-
-    availableWatchCreditCached[forAccount] = nCredit;
     return nCredit;
 }
 

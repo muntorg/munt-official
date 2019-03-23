@@ -20,7 +20,7 @@ int64_t CWalletTx::GetTxTime() const
 }
 
 void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
-                           std::list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from) const
+                           std::list<COutputEntry>& listSent, CAmount& nFee, const isminefilter& filter, CKeyStore* from, bool includeChildren) const
 {
     if (!from)
         from = pwallet->activeAccount;
@@ -51,8 +51,21 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
                 const auto& prevOut =  prev.tx->vout[txin.prevout.n];
 
                 isminetype fIsMine = IsMine(*from, prevOut);
+                if (includeChildren && !(fIsMine & filter))
+                {
+                    for (const auto& accountItem : pwallet->mapAccounts)
+                    {
+                        const auto& childAccount = accountItem.second;
+                        if (childAccount->getParentUUID() == dynamic_cast<CAccount*>(from)->getUUID())
+                        {
+                            fIsMine = IsMine(*childAccount, prevOut);
+                            if (fIsMine & filter)
+                                break;
+                        }
+                    }
+                }
 
-                if ((fIsMine & filter))
+                if (fIsMine & filter)
                 {
                     CTxDestination address;
                     if (!ExtractDestination(prevOut, address) && !prevOut.IsUnspendable())
@@ -77,22 +90,36 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
     {
         const CTxOut& txout = tx->vout[i];
         isminetype fIsMine = IsMine(*from, txout);
-        if (!(fIsMine & filter))
-            continue;
-
-        // Get the destination address
-        CTxDestination address;
-        if (!ExtractDestination(txout, address) && !txout.IsUnspendable())
+        if (includeChildren && !(fIsMine & filter))
         {
-            LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
-                     this->GetHash().ToString());
-            address = CNoDestination();
+            for (const auto& accountItem : pwallet->mapAccounts)
+            {
+                const auto& childAccount = accountItem.second;
+                if (childAccount->getParentUUID() == dynamic_cast<CAccount*>(from)->getUUID())
+                {
+                    fIsMine = IsMine(*childAccount, txout);
+                    if (fIsMine & filter)
+                        break;
+                }
+            }
         }
 
-        COutputEntry output = {address, txout.nValue, (int)i};
+        if (fIsMine & filter)
+        {
+            // Get the destination address
+            CTxDestination address;
+            if (!ExtractDestination(txout, address) && !txout.IsUnspendable())
+            {
+                LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
+                        this->GetHash().ToString());
+                address = CNoDestination();
+            }
 
-        // We are receiving the output, add it as a "received" entry
-        listReceived.push_back(output);
+            COutputEntry output = {address, txout.nValue, (int)i};
+
+            // We are receiving the output, add it as a "received" entry
+            listReceived.push_back(output);
+        }
     }
 
 }
