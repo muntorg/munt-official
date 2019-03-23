@@ -7,6 +7,7 @@ import org.json.JSONObject
 import java.net.URL
 import java.text.DecimalFormat
 import java.util.*
+import kotlin.math.roundToLong
 
 private const val TAG = "currency"
 
@@ -21,11 +22,10 @@ private const val GULDEN_MARKET_URL = "https://api.gulden.com/api/v1/ticker"
  */
 suspend fun fetchCurrencyRate(code: String): Double
 {
-    // 1st iteration
-    // 1. fetch rates from server
-    // 2. return rate queried for
-    // 3. or throw some exception
+    return fetchAllCurrencyRates().getValue(code)
+}
 
+suspend fun fetchAllCurrencyRates(): Map<String, Double> {
     // fetch rate data from server
     lateinit var data: String
     try {
@@ -54,10 +54,23 @@ suspend fun fetchCurrencyRate(code: String): Double
         throw e
     }
 
-    return rates.getValue(code)
+    return rates
 }
 
-data class Currency (val code: String, val name: String, val short: String, val precision: Int )
+data class Currency (val code: String, val name: String, val short: String, val precision: Int, val ratePrecision: Int) {
+    fun formatRate(rate: Double, usePrefix: Boolean = true): String
+    {
+        val appliedPrecision = if (Config.USE_RATE_PRECISION) ratePrecision else precision
+        val rateStr = if (appliedPrecision > 0) {
+            val pattern = "#,##0.%s;-#".format("0".repeat(appliedPrecision))
+            DecimalFormat(pattern).format(rate)
+        }
+        else {
+            rate.roundToLong().toString()
+        }
+        return "%s %s".format(short, rateStr)
+    }
+}
 
 class Currencies {
     companion object {
@@ -68,9 +81,10 @@ class Currencies {
             val names = AppContext.instance.resources.getStringArray(R.array.currency_names)
             val shorts = AppContext.instance.resources.getStringArray(R.array.currency_shorts)
             val precisions = AppContext.instance.resources.getIntArray(R.array.currency_precisions)
+            val ratePrecisions = AppContext.instance.resources.getIntArray(R.array.currency_rate_precisions)
 
             for (i in 0 until codes.size) {
-                val c = Currency(code = codes[i], name = names[i], short = shorts[i], precision = precisions[i])
+                val c = Currency(code = codes[i], name = names[i], short = shorts[i], precision = precisions[i], ratePrecision = ratePrecisions[i])
                 knownCurrencies[codes[i]] = c
             }
         }

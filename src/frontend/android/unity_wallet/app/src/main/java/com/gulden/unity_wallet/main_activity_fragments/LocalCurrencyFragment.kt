@@ -12,8 +12,12 @@ import android.view.ViewGroup
 import com.gulden.unity_wallet.Currencies
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
+import com.gulden.unity_wallet.fetchAllCurrencyRates
 import com.gulden.unity_wallet.ui.LocalCurrenciesAdapter
+import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.fragment_local_currencies.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class LocalCurrencyFragment : androidx.fragment.app.Fragment() {
@@ -38,6 +42,15 @@ class LocalCurrencyFragment : androidx.fragment.app.Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?)
     {
         super.onActivityCreated(savedInstanceState)
+
+        // Get conversion rates
+        (this.activity as AppBaseActivity).launch(Dispatchers.Main) {
+            try {
+                (currenciesList.adapter as LocalCurrenciesAdapter).updateAllRates(fetchAllCurrencyRates())
+            } catch (e: Throwable) {
+                // silently ignore failure of getting rate here
+            }
+        }
 
         val adapter = LocalCurrenciesAdapter(this.context!!, Currencies.knownCurrencies)
         currenciesList.adapter = adapter

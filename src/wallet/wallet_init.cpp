@@ -766,6 +766,9 @@ void CWallet::EraseWalletSeedsAndAccounts()
 {
     LOCK2(cs_main, cs_wallet);
 
+    if (pSPVScanner)
+        pSPVScanner->ResetScan();
+
     CWalletDB walletdb(*dbw);
 
     // Purge all current accounts/seeds from the system
