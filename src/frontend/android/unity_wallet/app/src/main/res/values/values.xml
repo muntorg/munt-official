@@ -23,15 +23,15 @@
     <string-array name="currency_names">
         <item>Euro</item>
         <item>Bitcoin</item>
-        <item>Australian dollar</item>
-        <item>Brazilian real</item>
-        <!--<item>Chinese yuan</item>-->
+        <item>Australian Dollar</item>
+        <item>Brazilian Real</item>
+        <!--<item>Chinese Yuan</item>-->
         <item>British Pound</item>
-        <!--<item>Russian roebel</item>-->
-        <item>US dollar</item>
-        <item>South African rand</item>
+        <!--<item>Russian Roebel</item>-->
+        <item>US Dollar</item>
+        <item>South African Rand</item>
         <item>South Korean Won</item>
-        <item>Japanese yen</item>
+        <item>Japanese Yen</item>
     </string-array>
     <string-array name="currency_shorts">
         <item>€</item>
