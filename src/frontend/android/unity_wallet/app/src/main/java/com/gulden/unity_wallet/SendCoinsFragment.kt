@@ -356,33 +356,57 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
     }
 
-    private fun numDecimals(amount:String): Int {
+    private fun numFractionalDigits(amount:String): Int {
         val pos = amount.indexOfLast { it == '.' }
         return if (pos > 0) amount.length - pos - 1 else 0
     }
 
+    private fun numWholeDigits(amount:String): Int {
+        val pos = amount.indexOfFirst { it == '.' }
+        return if (pos > 0) pos else amount.length
+    }
+
     private fun chopExcessDecimals() {
-        if (numDecimals(amountEditStr) > allowedDecimals()) {
-            amountEditStr = amountEditStr.substring(0, amountEditStr.length - (numDecimals(amountEditStr) - allowedDecimals()))
+        if (numFractionalDigits(amountEditStr) > allowedDecimals()) {
+            amountEditStr = amountEditStr.substring(0, amountEditStr.length - (numFractionalDigits(amountEditStr) - allowedDecimals()))
         }
     }
 
     private fun appendNumberToAmount(number : String) {
         if (amountEditStr == "0")
+        {
             amountEditStr = number
-        else {
-            if (!amountEditStr.contains(".") || numDecimals(amountEditStr) < allowedDecimals())
-                amountEditStr += number
-            else {
-                if (numDecimals(amountEditStr) < allowedDecimals())
+        }
+        else
+        {
+            if (!amountEditStr.contains("."))
+            {
+                if (numWholeDigits(amountEditStr) < 8)
+                {
                     amountEditStr += number
-                else {
-                    amountEditStr = buildString {
-                        append(amountEditStr)
-                        deleteCharAt(lastIndexOf("."))
-                        append(number)
-                        insert(length - allowedDecimals(), ".")
-                    }.trimStart('0')
+                }
+            }
+            else if (numFractionalDigits(amountEditStr) < allowedDecimals())
+            {
+                amountEditStr += number
+            }
+            else
+            {
+                if (numFractionalDigits(amountEditStr) < allowedDecimals())
+                {
+                    amountEditStr += number
+                }
+                else
+                {
+                    if (numWholeDigits(amountEditStr) < 8)
+                    {
+                        amountEditStr = buildString {
+                            append(amountEditStr)
+                            deleteCharAt(lastIndexOf("."))
+                            append(number)
+                            insert(length - allowedDecimals(), ".")
+                        }.trimStart('0')
+                    }
                 }
             }
         }
