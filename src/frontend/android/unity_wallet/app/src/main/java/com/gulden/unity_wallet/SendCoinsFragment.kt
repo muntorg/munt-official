@@ -48,6 +48,15 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         Local
     }
     private var entryMode = EntryMode.Native
+        set(value)
+        {
+            field = value
+            when (entryMode)
+            {
+                EntryMode.Local -> mMainlayout.findViewById<Button>(R.id.button_currency).text = "G"
+                EntryMode.Native -> mMainlayout.findViewById<Button>(R.id.button_currency).text = foreignCurrency.short
+            }
+        }
     private var amountEditStr: String = "0"
         set(value) {
             field = value
