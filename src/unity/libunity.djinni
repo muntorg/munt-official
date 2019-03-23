@@ -74,6 +74,7 @@ address_record = record {
 } deriving(parcelable)
 
 peer_record = record {
+    id : i64;
     ip : string;
     hostname : string;
     start_height : i32;

@@ -28,6 +28,7 @@ class PeerListFragment : Fragment(), CoroutineScope {
                               savedInstanceState: Bundle?): View? {
 
         val adapter = PeerListAdapter()
+        adapter.setHasStableIds(true)
 
         val viewModel = ViewModelProviders.of(this).get(PeerListViewModel::class.java)
 
@@ -58,6 +59,9 @@ class PeerListFragment : Fragment(), CoroutineScope {
             recycler.layoutManager = LinearLayoutManager(context)
             recycler.adapter = adapter
             recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
+            // Turn off item animation as it causes annoying flicker (scroll bar appearing and disappearing) every time we do an update (every 3000ms)
+            recycler.itemAnimator = null
         }
 
         return view

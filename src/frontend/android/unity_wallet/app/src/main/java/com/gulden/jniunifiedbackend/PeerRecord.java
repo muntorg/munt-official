@@ -6,6 +6,8 @@ package com.gulden.jniunifiedbackend;
 public final class PeerRecord {
 
 
+    /*package*/ final long mId;
+
     /*package*/ final String mIp;
 
     /*package*/ final String mHostname;
@@ -23,6 +25,7 @@ public final class PeerRecord {
     /*package*/ final long mProtocol;
 
     public PeerRecord(
+            long id,
             String ip,
             String hostname,
             int startHeight,
@@ -31,6 +34,7 @@ public final class PeerRecord {
             int latency,
             String userAgent,
             long protocol) {
+        this.mId = id;
         this.mIp = ip;
         this.mHostname = hostname;
         this.mStartHeight = startHeight;
@@ -39,6 +43,10 @@ public final class PeerRecord {
         this.mLatency = latency;
         this.mUserAgent = userAgent;
         this.mProtocol = protocol;
+    }
+
+    public long getId() {
+        return mId;
     }
 
     public String getIp() {
@@ -76,7 +84,8 @@ public final class PeerRecord {
     @Override
     public String toString() {
         return "PeerRecord{" +
-                "mIp=" + mIp +
+                "mId=" + mId +
+                "," + "mIp=" + mIp +
                 "," + "mHostname=" + mHostname +
                 "," + "mStartHeight=" + mStartHeight +
                 "," + "mSyncedHeight=" + mSyncedHeight +

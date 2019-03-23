@@ -25,7 +25,8 @@ private:
     friend ::djinni::JniClass<NativePeerRecord>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/PeerRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;IIIILjava/lang/String;J)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JLjava/lang/String;Ljava/lang/String;IIIILjava/lang/String;J)V") };
+    const jfieldID field_mId { ::djinni::jniGetFieldID(clazz.get(), "mId", "J") };
     const jfieldID field_mIp { ::djinni::jniGetFieldID(clazz.get(), "mIp", "Ljava/lang/String;") };
     const jfieldID field_mHostname { ::djinni::jniGetFieldID(clazz.get(), "mHostname", "Ljava/lang/String;") };
     const jfieldID field_mStartHeight { ::djinni::jniGetFieldID(clazz.get(), "mStartHeight", "I") };

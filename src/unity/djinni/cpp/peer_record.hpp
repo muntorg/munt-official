@@ -8,6 +8,7 @@
 #include <utility>
 
 struct PeerRecord final {
+    int64_t id;
     std::string ip;
     std::string hostname;
     int32_t start_height;
@@ -17,7 +18,8 @@ struct PeerRecord final {
     std::string userAgent;
     int64_t protocol;
 
-    PeerRecord(std::string ip_,
+    PeerRecord(int64_t id_,
+               std::string ip_,
                std::string hostname_,
                int32_t start_height_,
                int32_t synced_height_,
@@ -25,7 +27,8 @@ struct PeerRecord final {
                int32_t latency_,
                std::string userAgent_,
                int64_t protocol_)
-    : ip(std::move(ip_))
+    : id(std::move(id_))
+    , ip(std::move(ip_))
     , hostname(std::move(hostname_))
     , start_height(std::move(start_height_))
     , synced_height(std::move(synced_height_))

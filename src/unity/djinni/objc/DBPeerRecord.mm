@@ -6,7 +6,8 @@
 
 @implementation DBPeerRecord
 
-- (nonnull instancetype)initWithIp:(nonnull NSString *)ip
+- (nonnull instancetype)initWithId:(int64_t)id
+                                ip:(nonnull NSString *)ip
                           hostname:(nonnull NSString *)hostname
                        startHeight:(int32_t)startHeight
                       syncedHeight:(int32_t)syncedHeight
@@ -16,6 +17,7 @@
                           protocol:(int64_t)protocol
 {
     if (self = [super init]) {
+        _id = id;
         _ip = [ip copy];
         _hostname = [hostname copy];
         _startHeight = startHeight;
@@ -28,7 +30,8 @@
     return self;
 }
 
-+ (nonnull instancetype)peerRecordWithIp:(nonnull NSString *)ip
++ (nonnull instancetype)peerRecordWithId:(int64_t)id
+                                      ip:(nonnull NSString *)ip
                                 hostname:(nonnull NSString *)hostname
                              startHeight:(int32_t)startHeight
                             syncedHeight:(int32_t)syncedHeight
@@ -37,7 +40,8 @@
                                userAgent:(nonnull NSString *)userAgent
                                 protocol:(int64_t)protocol
 {
-    return [[self alloc] initWithIp:ip
+    return [[self alloc] initWithId:id
+                                 ip:ip
                            hostname:hostname
                         startHeight:startHeight
                        syncedHeight:syncedHeight
@@ -49,7 +53,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p ip:%@ hostname:%@ startHeight:%@ syncedHeight:%@ commonHeight:%@ latency:%@ userAgent:%@ protocol:%@>", self.class, (void *)self, self.ip, self.hostname, @(self.startHeight), @(self.syncedHeight), @(self.commonHeight), @(self.latency), self.userAgent, @(self.protocol)];
+    return [NSString stringWithFormat:@"<%@ %p id:%@ ip:%@ hostname:%@ startHeight:%@ syncedHeight:%@ commonHeight:%@ latency:%@ userAgent:%@ protocol:%@>", self.class, (void *)self, @(self.id), self.ip, self.hostname, @(self.startHeight), @(self.syncedHeight), @(self.commonHeight), @(self.latency), self.userAgent, @(self.protocol)];
 }
 
 @end

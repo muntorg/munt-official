@@ -15,6 +15,8 @@ import com.gulden.jniunifiedbackend.PeerRecord
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.peer_list_row.view.*
 
+
+
 class PeerListAdapter : ListAdapter<PeerRecord, PeerListAdapter.ItemViewHolder>(DiffCallback())  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -37,6 +39,12 @@ class PeerListAdapter : ListAdapter<PeerRecord, PeerListAdapter.ItemViewHolder>(
             itemView.peer_list_row_protocol.text = item.protocol.toString()
             itemView.peer_list_row_ping.text = item.latency.toString()+"ms"
         }
+    }
+
+    override fun getItemId(position: Int): Long
+    {
+        val product = getItem(position)
+        return product.id
     }
 }
 

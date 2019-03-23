@@ -944,7 +944,8 @@ std::vector<PeerRecord> GuldenUnifiedBackend::getPeers()
                 nCommonHeight = stateStats.nCommonHeight;
             }
 
-            PeerRecord rec(nstat.addr.ToString(),
+            PeerRecord rec(nstat.nodeid,
+                           nstat.addr.ToString(),
                            nstat.addr.HostnameLookup(),
                            nstat.nStartingHeight,
                            nSyncedHeight,

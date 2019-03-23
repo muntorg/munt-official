@@ -10,7 +10,8 @@ namespace djinni_generated {
 auto PeerRecord::toCpp(ObjcType obj) -> CppType
 {
     assert(obj);
-    return {::djinni::String::toCpp(obj.ip),
+    return {::djinni::I64::toCpp(obj.id),
+            ::djinni::String::toCpp(obj.ip),
             ::djinni::String::toCpp(obj.hostname),
             ::djinni::I32::toCpp(obj.startHeight),
             ::djinni::I32::toCpp(obj.syncedHeight),
@@ -22,7 +23,8 @@ auto PeerRecord::toCpp(ObjcType obj) -> CppType
 
 auto PeerRecord::fromCpp(const CppType& cpp) -> ObjcType
 {
-    return [[DBPeerRecord alloc] initWithIp:(::djinni::String::fromCpp(cpp.ip))
+    return [[DBPeerRecord alloc] initWithId:(::djinni::I64::fromCpp(cpp.id))
+                                         ip:(::djinni::String::fromCpp(cpp.ip))
                                    hostname:(::djinni::String::fromCpp(cpp.hostname))
                                 startHeight:(::djinni::I32::fromCpp(cpp.start_height))
                                syncedHeight:(::djinni::I32::fromCpp(cpp.synced_height))

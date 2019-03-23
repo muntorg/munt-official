@@ -4,7 +4,8 @@
 #import <Foundation/Foundation.h>
 
 @interface DBPeerRecord : NSObject
-- (nonnull instancetype)initWithIp:(nonnull NSString *)ip
+- (nonnull instancetype)initWithId:(int64_t)id
+                                ip:(nonnull NSString *)ip
                           hostname:(nonnull NSString *)hostname
                        startHeight:(int32_t)startHeight
                       syncedHeight:(int32_t)syncedHeight
@@ -12,7 +13,8 @@
                            latency:(int32_t)latency
                          userAgent:(nonnull NSString *)userAgent
                           protocol:(int64_t)protocol;
-+ (nonnull instancetype)peerRecordWithIp:(nonnull NSString *)ip
++ (nonnull instancetype)peerRecordWithId:(int64_t)id
+                                      ip:(nonnull NSString *)ip
                                 hostname:(nonnull NSString *)hostname
                              startHeight:(int32_t)startHeight
                             syncedHeight:(int32_t)syncedHeight
@@ -20,6 +22,8 @@
                                  latency:(int32_t)latency
                                userAgent:(nonnull NSString *)userAgent
                                 protocol:(int64_t)protocol;
+
+@property (nonatomic, readonly) int64_t id;
 
 @property (nonatomic, readonly, nonnull) NSString * ip;
 
