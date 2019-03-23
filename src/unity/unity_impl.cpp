@@ -53,8 +53,8 @@ std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
 
 void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations)
 {
-    int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
-    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount);
+    int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
+    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
 
     uint64_t time = wtx->nTimeSmart;
     std::string hash = wtx->GetHash().ToString();
@@ -94,7 +94,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     std::list<COutputEntry> listSent;
     CAmount nFee;
 
-    wtx.GetAmounts(listReceived, listSent, nFee, ISMINE_SPENDABLE, nullptr);
+    wtx.GetAmounts(listReceived, listSent, nFee, ISMINE_SPENDABLE, nullptr, true);
     if ((!listSent.empty() || nFee != 0) )
     {
         for(const COutputEntry& s : listSent)
@@ -147,7 +147,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     }
 
     return TransactionRecord(wtx.GetHash().ToString(), wtx.nTimeSmart,
-                             wtx.GetCredit(ISMINE_SPENDABLE) - wtx.GetDebit(ISMINE_SPENDABLE),
+                             wtx.GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true) - wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true),
                              nFee, status, wtx.nHeight, wtx.nBlockTime, wtx.GetDepthInMainChain(),
                              receivedOutputs, sentOutputs);
 }
