@@ -219,9 +219,16 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
     }
 
-    private fun confirmAndCommitGuldenPayment(view: View) {
+    private fun confirmAndCommitGuldenPayment(view: View)
+    {
+        val sendAmount : String = when (entryMode)
+        {
+            EntryMode.Local -> (amountEditStr.toDoubleOrZero()/localRate).toString()
+            EntryMode.Native -> amountEditStr
+        }
+
         // create styled message from resource template and arguments bundle
-        val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amount)
+        val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", sendAmount.toDoubleOrZero())
         val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
 
         // alert dialog for confirmation
@@ -229,7 +236,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
             // on confirmation compose recipient and execute payment
             positiveButton("Send") {
-                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, amountEditStr)
+                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, sendAmount)
                 performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
             }
 
