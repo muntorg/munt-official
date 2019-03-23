@@ -60,8 +60,10 @@ class PeerListFragment : Fragment(), CoroutineScope {
             recycler.adapter = adapter
             recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-            // Turn off item animation as it causes annoying flicker (scroll bar appearing and disappearing) every time we do an update (every 3000ms)
+            // Turn off item animation as it causes annoying flicker every time we do an update (every 3000ms)
             recycler.itemAnimator = null
+            // Turn off scroll bar fading as otherwise the scroll bar annoyingly keeps appearing and re-appearing when we do an update (every 3000ms)
+            recycler.isScrollbarFadingEnabled = false
         }
 
         return view
