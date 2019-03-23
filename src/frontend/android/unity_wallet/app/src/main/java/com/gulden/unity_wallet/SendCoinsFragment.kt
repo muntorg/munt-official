@@ -116,6 +116,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         mMainlayout.findViewById<View>(R.id.button_currency).setOnClickListener { view -> handleKeypadButtonClick(view) }
         mMainlayout.findViewById<View>(R.id.button_decimal).setOnClickListener { view -> handleKeypadButtonClick(view) }
         mMainlayout.findViewById<View>(R.id.button_backspace).setOnClickListener { view -> handleKeypadButtonClick(view) }
+        mMainlayout.findViewById<View>(R.id.button_backspace).setOnLongClickListener { view -> handleKeypadButtonLongClick(view) }
         mMainlayout.findViewById<View>(R.id.labelAddToAddressBook).setOnClickListener { view -> handleAddToAddressBookClick(view) }
         mMainlayout.findViewById<View>(R.id.labelRemoveFromAddressBook).setOnClickListener { view -> handleRemoveFromAddressBookClick(view) }
 
@@ -410,6 +411,19 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 }
             }
         }
+    }
+
+    private fun handleKeypadButtonLongClick(view : View) : Boolean
+    {
+        when (view.id)
+        {
+            R.id.button_backspace ->
+            {
+                amountEditStr = "0"
+            }
+        }
+        updateNocksEstimate()
+        return true
     }
 
     private fun handleKeypadButtonClick(view : View)
