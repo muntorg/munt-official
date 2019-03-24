@@ -187,7 +187,7 @@ class Authentication {
                                     if (numAttemptsRemaining > 0) {
                                         s.clear()
                                         contentView.accessCode.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake))
-                                        contentView.attemptsRemaining.text = context.getString(R.string.access_code_entry_remaining).format(numAttemptsRemaining)
+                                        contentView.attemptsRemaining.text = context.resources.getQuantityString(R.plurals.access_code_entry_remaining, numAttemptsRemaining, numAttemptsRemaining)
                                     } else {
                                         Log.i(TAG, "failed authentication")
                                         block(context)

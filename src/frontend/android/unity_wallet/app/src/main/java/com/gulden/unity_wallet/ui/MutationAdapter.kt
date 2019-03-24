@@ -5,6 +5,7 @@
 
 package com.gulden.unity_wallet.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
 import com.gulden.jniunifiedbackend.MutationRecord
+import com.gulden.jniunifiedbackend.TransactionStatus
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.formatNativeAndLocal
 import kotlinx.android.synthetic.main.mutation_list_item.view.*
@@ -22,6 +24,7 @@ import java.util.*
 class MutationAdapter(context: Context, private var dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var rate = 0.0
+    private var mContext = context
 
     //NB! This may cause a minor cosmetic glitch if user is on transaction screen when year crosses over (years just won't display so nothing too terrible)
     //This is preferable to the performance penalty of constantly creating calendar instances
@@ -87,8 +90,28 @@ class MutationAdapter(context: Context, private var dataSource: ArrayList<Mutati
 
         rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(mutationRecord.timestamp * 1000L))
         rowView.textViewAmount.text = formatNativeAndLocal(mutationRecord.change,rate)
-        rowView.textViewAmount.textColor = ContextCompat.getColor(rowView.context,
-                if (mutationRecord.change >= 0) R.color.change_positive else R.color.change_negative)
+        rowView.textViewAmount.textColor = ContextCompat.getColor(rowView.context, if (mutationRecord.change >= 0) R.color.change_positive else R.color.change_negative)
+
+        if (mutationRecord.status == TransactionStatus.CONFIRMED)
+        {
+            rowView.textViewStatus.text = ""
+        }
+        else if (mutationRecord.status == TransactionStatus.CONFIRMING)
+        {
+            rowView.textViewStatus.text = mContext.resources.getQuantityString(R.plurals.transaction_confirmation_text, mutationRecord.depth, mutationRecord.depth);
+        }
+        else if (mutationRecord.status == TransactionStatus.CONFLICTED)
+        {
+            rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_conflicted)
+        }
+        else if (mutationRecord.status == TransactionStatus.ABANDONED)
+        {
+            rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_abandoned)
+        }
+        else if (mutationRecord.status == TransactionStatus.UNCONFIRMED)
+        {
+            rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_pending)
+        }
         return rowView
     }
 }
