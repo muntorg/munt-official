@@ -140,6 +140,7 @@ file COPYING
     <string name="transaction_confirmation_text_conflicted">Conflicted</string>
     <string name="transaction_confirmation_text_abandoned">Abandoned</string>
     <string name="transaction_confirmation_text_pending">Pending</string>
+    <string name="receive_fragment_share_title">Share Gulden address</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d confirmation</item>
         <item quantity="other">%d confirmations</item>
