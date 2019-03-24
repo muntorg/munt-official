@@ -49,9 +49,15 @@ file COPYING
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="android:background">@color/bg_bright</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="titleTextColor">@color/colorPrimary</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+    </style>
 
     <style name="MyActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/colorPrimary</item>
