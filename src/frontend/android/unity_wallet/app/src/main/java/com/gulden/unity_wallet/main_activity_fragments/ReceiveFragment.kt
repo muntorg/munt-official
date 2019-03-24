@@ -41,11 +41,6 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         }
     }
 
-    override fun onDetach()
-    {
-        super.onDetach()
-    }
-
     fun updateAddress()
     {
         if (currentAddressQrView != null)
