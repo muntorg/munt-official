@@ -1,26 +1,21 @@
-// Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2018-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
 package com.gulden.unity_wallet.main_activity_fragments
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ActionMode
-import androidx.appcompat.widget.ShareActionProvider
-import androidx.core.view.MenuItemCompat
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import kotlinx.android.synthetic.main.fragment_receive.*
 import java.nio.ByteBuffer
+
+
 
 
 /* Handle display of current address; as well as copying/sharing of address */
@@ -37,14 +32,18 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         super.onActivityCreated(savedInstanceState)
 
         updateAddress()
-        currentAddressQrView!!.setOnClickListener { setFocusOnAddress() }
-        currentAddressLabel!!.setOnClickListener { setFocusOnAddress() }
+        buyButton.setOnClickListener { (activity as WalletActivity).gotoBuyActivity() }
+        shareButton.setOnClickListener {
+            val share = Intent(Intent.ACTION_SEND)
+            share.type = "text/plain"
+            share.putExtra(Intent.EXTRA_TEXT, currentAddressLabel.text)
+            startActivity(Intent.createChooser(share, getString(R.string.receive_fragment_share_title)))
+        }
     }
 
     override fun onDetach()
     {
         super.onDetach()
-        dismissActionBar()
     }
 
     fun updateAddress()
@@ -57,101 +56,6 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageData.pixelData))
             currentAddressQrView.setImageBitmap(bitmap)
             currentAddressLabel.text = address
-            updateShareActionProvider(address)
         }
-    }
-
-    private var shareActionProvider: ShareActionProvider? = null
-    private var actionBarCallback: ActionBarCallBack? = null
-    private var storedMode: ActionMode? = null
-
-    private fun updateShareActionProvider(stringValue: String)
-    {
-        if (shareActionProvider != null)
-        {
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/plain"
-            intent.putExtra(Intent.EXTRA_TEXT, stringValue)
-            shareActionProvider?.setShareIntent(intent)
-        }
-    }
-
-
-    internal inner class ActionBarCallBack : ActionMode.Callback
-    {
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean
-        {
-            if (item.itemId == R.id.item_copy_to_clipboard)
-            {
-                val clipboard = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("address", currentAddressLabel.text)
-                clipboard.primaryClip = clip
-                mode.finish()
-                return true
-            }
-            else if (item.itemId == R.id.item_buy_gulden)
-            {
-                (activity as WalletActivity).gotoBuyActivity()
-                return true
-            }
-
-            return false
-        }
-
-
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean
-        {
-            mode.menuInflater.inflate(R.menu.share_menu, menu)
-
-            // Handle buy button
-            val itemBuy = menu.findItem(R.id.item_buy_gulden)
-            itemBuy.isVisible = true
-
-            // Handle copy button
-            //MenuItem itemCopy = menu.findItem(R.id.item_copy_to_clipboard);
-
-            // Handle share button
-            val itemShare = menu.findItem(R.id.action_share)
-            shareActionProvider = MenuItemCompat.getActionProvider(itemShare) as ShareActionProvider
-            MenuItemCompat.setActionProvider(itemShare, shareActionProvider)
-
-            updateAddress()
-
-            return true
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode)
-        {
-            shareActionProvider = null
-            updateAddress()
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean
-        {
-            return false
-        }
-    }
-
-    private fun setFocusOnAddress()
-    {
-        if (actionBarCallback == null)
-        {
-            actionBarCallback = ActionBarCallBack()
-            storedMode = (activity as AppCompatActivity).startSupportActionMode(actionBarCallback!!)
-        }
-        else
-        {
-            dismissActionBar()
-        }
-    }
-
-    private fun dismissActionBar()
-    {
-        if (storedMode != null)
-        {
-            storedMode!!.finish()
-        }
-        shareActionProvider = null
-        actionBarCallback = null
     }
 }
