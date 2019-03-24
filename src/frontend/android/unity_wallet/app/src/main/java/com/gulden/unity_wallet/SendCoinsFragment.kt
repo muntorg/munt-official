@@ -130,8 +130,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         mMainlayout.findViewById<View>(R.id.labelRemoveFromAddressBook).setOnClickListener { view -> handleRemoveFromAddressBookClick(view) }
 
 
-        mMainlayout.findViewById<Button>(R.id.button_currency).text = foreignCurrency.short
-
         dialog.setContentView(mMainlayout)
 
         mBehavior = BottomSheetBehavior.from(mMainlayout.parent as View)
