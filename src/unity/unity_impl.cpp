@@ -223,6 +223,22 @@ void handlePostInitMain()
     // Update transaction/balance changes
     if (pactiveWallet)
     {
+        // Fire events for transaction depth changes (up to depth 10 only)
+        pactiveWallet->NotifyTransactionDepthChanged.connect( [&](CWallet* pwallet, const uint256& hash)
+        {
+            DS_LOCK2(cs_main, pwallet->cs_wallet);
+            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
+            {
+                const CWalletTx& wtx = pwallet->mapWallet[hash];
+                LogPrintf("unity: notify transaction depth changed %s",hash.ToString().c_str());
+                if (signalHandler)
+                {
+                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
+                    signalHandler->notifyUpdatedTransaction(walletTransaction);
+                }
+            }
+        } );
+        // Fire events for transaction status changes, or new transactions (this won't fire for simple depth changes)
         pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted)
         {
             {
