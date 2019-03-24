@@ -1334,6 +1334,16 @@ void CWallet::BlockConnected(const std::shared_ptr<const CBlock>& pblock, const 
     for (size_t i = 0; i < pblock->vtx.size(); i++) {
         SyncTransaction(pblock->vtx[i], pindex, i);
     }
+
+    // Sort pending wallet transactions based on their initial wallet insertion order
+    for(const auto& [hash, wtx] : mapWallet)
+    {
+        int nDepth = wtx.GetDepthInMainChain();
+        if (nDepth > 0 && nDepth < 10)
+        {
+            NotifyTransactionDepthChanged(this, hash);
+        }
+    }
 }
 
 void CWallet::BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) {
