@@ -51,6 +51,29 @@ std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 CCriticalSection cs_monitoringListeners;
 std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
 
+const int RECOMMENDED_CONFIRMATIONS = 3;
+
+TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
+{
+    TransactionStatus status;
+    int depth = wtx->GetDepthInMainChain();
+    if (depth < 0)
+        status = TransactionStatus::CONFLICTED;
+    else if (depth == 0) {
+        if (wtx->isAbandoned())
+            status = TransactionStatus::ABANDONED;
+        else
+            status = TransactionStatus::UNCONFIRMED;
+    }
+    else if (depth < RECOMMENDED_CONFIRMATIONS) {
+        status = TransactionStatus::CONFIRMING;
+    }
+    else {
+        status = TransactionStatus::CONFIRMED;
+    }
+    return status;
+}
+
 void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations)
 {
     int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
@@ -58,6 +81,9 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
 
     uint64_t time = wtx->nTimeSmart;
     std::string hash = wtx->GetHash().ToString();
+
+    TransactionStatus status = getStatusForTransaction(wtx);
+    int depth = wtx->GetDepthInMainChain();
 
     // if any funds were subtracted the transaction was sent by us
     if (subtracted > 0)
@@ -69,19 +95,19 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
         if (subtracted - fee == added)
         {
             // amount received
-            mutations.push_back(MutationRecord(added - change, time, hash));
+            mutations.push_back(MutationRecord(added - change, time, hash, status, depth));
 
             // amount send including fee
-            mutations.push_back(MutationRecord(change - subtracted, time, hash));
+            mutations.push_back(MutationRecord(change - subtracted, time, hash, status, depth));
         }
         else
         {
-            mutations.push_back(MutationRecord(added - subtracted, time, hash));
+            mutations.push_back(MutationRecord(added - subtracted, time, hash, status, depth));
         }
     }
     else if (added != 0) // nothing subtracted so we received funds
     {
-        mutations.push_back(MutationRecord(added, time, hash));
+        mutations.push_back(MutationRecord(added, time, hash, status, depth));
     }
 }
 
@@ -126,25 +152,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         }
     }
 
-    const int RECOMMENDED_CONFIRMATIONS = 3;
-
-    int depth = wtx.GetDepthInMainChain();
-
-    TransactionStatus status;
-    if (depth < 0)
-        status = TransactionStatus::CONFLICTED;
-    else if (depth == 0) {
-        if (wtx.isAbandoned())
-            status = TransactionStatus::ABANDONED;
-        else
-            status = TransactionStatus::UNCONFIRMED;
-    }
-    else if (depth < RECOMMENDED_CONFIRMATIONS) {
-        status = TransactionStatus::CONFIRMING;
-    }
-    else {
-        status = TransactionStatus::CONFIRMED;
-    }
+    TransactionStatus status = getStatusForTransaction(&wtx);
 
     return TransactionRecord(wtx.GetHash().ToString(), wtx.nTimeSmart,
                              wtx.GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true) - wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true),

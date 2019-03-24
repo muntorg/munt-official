@@ -12,13 +12,21 @@ public final class MutationRecord {
 
     /*package*/ final String mTxHash;
 
+    /*package*/ final TransactionStatus mStatus;
+
+    /*package*/ final int mDepth;
+
     public MutationRecord(
             long change,
             long timestamp,
-            String txHash) {
+            String txHash,
+            TransactionStatus status,
+            int depth) {
         this.mChange = change;
         this.mTimestamp = timestamp;
         this.mTxHash = txHash;
+        this.mStatus = status;
+        this.mDepth = depth;
     }
 
     public long getChange() {
@@ -33,12 +41,22 @@ public final class MutationRecord {
         return mTxHash;
     }
 
+    public TransactionStatus getStatus() {
+        return mStatus;
+    }
+
+    public int getDepth() {
+        return mDepth;
+    }
+
     @Override
     public String toString() {
         return "MutationRecord{" +
                 "mChange=" + mChange +
                 "," + "mTimestamp=" + mTimestamp +
                 "," + "mTxHash=" + mTxHash +
+                "," + "mStatus=" + mStatus +
+                "," + "mDepth=" + mDepth +
         "}";
     }
 

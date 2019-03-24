@@ -38,6 +38,8 @@ mutation_record = record {
     change : i64;
     timestamp : i64;
     txHash : string;
+    status : transaction_status;
+    depth : i32;
 }
 
 transaction_record = record {
