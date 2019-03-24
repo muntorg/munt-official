@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.MutationRecord
+import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.MutationAdapter
 import com.gulden.unity_wallet.util.AppBaseActivity
@@ -70,10 +71,22 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
     }
 
     override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
+        //TODO: Update only the single mutation we have received
         val mutations = GuldenUnifiedBackend.getMutationHistory()
         runOnUiThread {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }
+    }
+
+    override fun updatedTransaction(transaction: TransactionRecord): Boolean
+    {
+        //TODO: Update only the single mutation we have received
+        val mutations = GuldenUnifiedBackend.getMutationHistory()
+        runOnUiThread {
+            val adapter = mutationList.adapter as MutationAdapter
+            adapter.updateDataSource(mutations)
+        }
+        return true
     }
 }
