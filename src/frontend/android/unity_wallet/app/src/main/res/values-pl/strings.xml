@@ -123,6 +123,7 @@ file COPYING
     <string name="wallet_birth_heading">W jakim wieku jest ten portfel?</string>
     <string name="wallet_birth_info">Nowsze portfele synchronizują się szybciej. Wybierz \"Starsze\", jeśli brakuje funduszy.</string>
     <string name="wallet_birth_less_than_a_week">Mniej niż tydzień</string>
+    <string name="wallet_birth_less_than_a_month">Mniej niż miesiąc</string>
     <string name="wallet_birth_less_than_six_months">Mniej niż sześć miesięcy</string>
     <string name="wallet_birth_less_than_a_year">Mniej niż rok</string>
     <string name="wallet_birth_less_than_two_years">Mniej niż dwa lata</string>
@@ -131,4 +132,5 @@ file COPYING
     <string name="numeric_keypad_send_button">Wysłać</string>
     <string name="preferences_support_button">Wsparcie</string>
     <string name="preferences_advanced_button">Zaawansowane</string>
+    <string name="clipboard_no_valid_address">Brak prawidłowego adresu Gulden w schowku</string>
 </resources>

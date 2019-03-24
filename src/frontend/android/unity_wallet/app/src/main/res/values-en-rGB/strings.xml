@@ -132,4 +132,5 @@ file COPYING
     <string name="numeric_keypad_send_button">Send</string>
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Advanced</string>
+    <string name="clipboard_no_valid_address">No valid Gulden address on clipboard</string>
 </resources>
