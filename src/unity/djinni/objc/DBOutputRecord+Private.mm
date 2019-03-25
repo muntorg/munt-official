@@ -12,14 +12,16 @@ auto OutputRecord::toCpp(ObjcType obj) -> CppType
     assert(obj);
     return {::djinni::I64::toCpp(obj.amount),
             ::djinni::String::toCpp(obj.address),
-            ::djinni::String::toCpp(obj.label)};
+            ::djinni::String::toCpp(obj.label),
+            ::djinni::Bool::toCpp(obj.isMine)};
 }
 
 auto OutputRecord::fromCpp(const CppType& cpp) -> ObjcType
 {
     return [[DBOutputRecord alloc] initWithAmount:(::djinni::I64::fromCpp(cpp.amount))
                                           address:(::djinni::String::fromCpp(cpp.address))
-                                            label:(::djinni::String::fromCpp(cpp.label))];
+                                            label:(::djinni::String::fromCpp(cpp.label))
+                                           isMine:(::djinni::Bool::fromCpp(cpp.isMine))];
 }
 
 }  // namespace djinni_generated

@@ -19,8 +19,8 @@ struct TransactionRecord final {
     int32_t height;
     int64_t blockTime;
     int32_t depth;
-    std::vector<OutputRecord> receivedOutputs;
-    std::vector<OutputRecord> sentOutputs;
+    std::vector<OutputRecord> inputs;
+    std::vector<OutputRecord> outputs;
 
     TransactionRecord(std::string txHash_,
                       int64_t timeStamp_,
@@ -30,8 +30,8 @@ struct TransactionRecord final {
                       int32_t height_,
                       int64_t blockTime_,
                       int32_t depth_,
-                      std::vector<OutputRecord> receivedOutputs_,
-                      std::vector<OutputRecord> sentOutputs_)
+                      std::vector<OutputRecord> inputs_,
+                      std::vector<OutputRecord> outputs_)
     : txHash(std::move(txHash_))
     , timeStamp(std::move(timeStamp_))
     , amount(std::move(amount_))
@@ -40,7 +40,7 @@ struct TransactionRecord final {
     , height(std::move(height_))
     , blockTime(std::move(blockTime_))
     , depth(std::move(depth_))
-    , receivedOutputs(std::move(receivedOutputs_))
-    , sentOutputs(std::move(sentOutputs_))
+    , inputs(std::move(inputs_))
+    , outputs(std::move(outputs_))
     {}
 };

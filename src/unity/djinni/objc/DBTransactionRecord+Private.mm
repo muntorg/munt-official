@@ -20,8 +20,8 @@ auto TransactionRecord::toCpp(ObjcType obj) -> CppType
             ::djinni::I32::toCpp(obj.height),
             ::djinni::I64::toCpp(obj.blockTime),
             ::djinni::I32::toCpp(obj.depth),
-            ::djinni::List<::djinni_generated::OutputRecord>::toCpp(obj.receivedOutputs),
-            ::djinni::List<::djinni_generated::OutputRecord>::toCpp(obj.sentOutputs)};
+            ::djinni::List<::djinni_generated::OutputRecord>::toCpp(obj.inputs),
+            ::djinni::List<::djinni_generated::OutputRecord>::toCpp(obj.outputs)};
 }
 
 auto TransactionRecord::fromCpp(const CppType& cpp) -> ObjcType
@@ -34,8 +34,8 @@ auto TransactionRecord::fromCpp(const CppType& cpp) -> ObjcType
                                                 height:(::djinni::I32::fromCpp(cpp.height))
                                              blockTime:(::djinni::I64::fromCpp(cpp.blockTime))
                                                  depth:(::djinni::I32::fromCpp(cpp.depth))
-                                       receivedOutputs:(::djinni::List<::djinni_generated::OutputRecord>::fromCpp(cpp.receivedOutputs))
-                                           sentOutputs:(::djinni::List<::djinni_generated::OutputRecord>::fromCpp(cpp.sentOutputs))];
+                                                inputs:(::djinni::List<::djinni_generated::OutputRecord>::fromCpp(cpp.inputs))
+                                               outputs:(::djinni::List<::djinni_generated::OutputRecord>::fromCpp(cpp.outputs))];
 }
 
 }  // namespace djinni_generated

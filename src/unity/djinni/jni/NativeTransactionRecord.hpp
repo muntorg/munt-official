@@ -34,8 +34,8 @@ private:
     const jfieldID field_mHeight { ::djinni::jniGetFieldID(clazz.get(), "mHeight", "I") };
     const jfieldID field_mBlockTime { ::djinni::jniGetFieldID(clazz.get(), "mBlockTime", "J") };
     const jfieldID field_mDepth { ::djinni::jniGetFieldID(clazz.get(), "mDepth", "I") };
-    const jfieldID field_mReceivedOutputs { ::djinni::jniGetFieldID(clazz.get(), "mReceivedOutputs", "Ljava/util/ArrayList;") };
-    const jfieldID field_mSentOutputs { ::djinni::jniGetFieldID(clazz.get(), "mSentOutputs", "Ljava/util/ArrayList;") };
+    const jfieldID field_mInputs { ::djinni::jniGetFieldID(clazz.get(), "mInputs", "Ljava/util/ArrayList;") };
+    const jfieldID field_mOutputs { ::djinni::jniGetFieldID(clazz.get(), "mOutputs", "Ljava/util/ArrayList;") };
 };
 
 }  // namespace djinni_generated

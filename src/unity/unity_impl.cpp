@@ -113,51 +113,75 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
 
 TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx& wtx)
 {
-    std::vector<OutputRecord> sentOutputs;
-    std::vector<OutputRecord> receivedOutputs;
+    CWallet* pwallet = pactiveWallet;
 
-    std::list<COutputEntry> listReceived;
-    std::list<COutputEntry> listSent;
-    CAmount nFee;
+    std::vector<OutputRecord> inputs;
+    std::vector<OutputRecord> outputs;
 
-    wtx.GetAmounts(listReceived, listSent, nFee, ISMINE_SPENDABLE, nullptr, true);
-    if ((!listSent.empty() || nFee != 0) )
-    {
-        for(const COutputEntry& s : listSent)
+    int64_t subtracted = wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
+    int64_t added = wtx.GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
+
+    CAmount fee = 0;
+    // if any funds were subtracted the transaction was sent by us
+    if (subtracted > 0)
+        fee = subtracted - wtx.tx->GetValueOut();
+
+    const CTransaction& tx = *wtx.tx;
+
+    for (const CTxIn& txin: tx.vin) {
+        std::string address;
+        CGuldenAddress addr;
+        CTxDestination dest = CNoDestination();
+
+        // Try to extract destination, this is not possible in general. Only if the previous
+        // ouput of our input happens to be in our wallet. Which will usually only be the case for
+        // our own transactions.
+        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.getHash());
+        if (mi != pwallet->mapWallet.end())
         {
-            std::string address;
-            CGuldenAddress addr;
-            if (addr.Set(s.destination))
-                address = addr.ToString();
-            std::string label;
-            if (pactiveWallet->mapAddressBook.count(CGuldenAddress(s.destination).ToString())) {
-                label = pactiveWallet->mapAddressBook[CGuldenAddress(s.destination).ToString()].name;
+            const CWalletTx& prev = (*mi).second;
+            if (txin.prevout.n < prev.tx->vout.size())
+            {
+                const auto& prevOut =  prev.tx->vout[txin.prevout.n];
+                if (!ExtractDestination(prevOut, dest) && !prevOut.IsUnspendable())
+                {
+                    LogPrintf("Unknown transaction type found, txid %s\n", wtx.GetHash().ToString());
+                    dest = CNoDestination();
+                }
             }
-            sentOutputs.push_back(OutputRecord(s.amount, address, label));
         }
+        if (addr.Set(dest))
+            address = addr.ToString();
+        std::string label;
+        if (pwallet->mapAddressBook.count(address))
+            label = pwallet->mapAddressBook[address].name;
+        inputs.push_back(OutputRecord(0, address, label, pwallet->IsMine(txin)));
     }
-    if (listReceived.size() > 0)
-    {
-        for(const COutputEntry& r : listReceived)
+
+    for (const CTxOut& txout: tx.vout) {
+        std::string address;
+        CGuldenAddress addr;
+        CTxDestination dest;
+        if (!ExtractDestination(txout, dest) && !txout.IsUnspendable())
         {
-            std::string address;
-            CGuldenAddress addr;
-            if (addr.Set(r.destination))
-                address = addr.ToString();
-            std::string label;
-            if (pactiveWallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString())) {
-                label = pactiveWallet->mapAddressBook[CGuldenAddress(r.destination).ToString()].name;
-            }
-            receivedOutputs.push_back(OutputRecord(r.amount, address, label));
+            LogPrintf("Unknown transaction type found, txid %s\n", tx.GetHash().ToString());
+            dest = CNoDestination();
         }
+
+        if (addr.Set(dest))
+            address = addr.ToString();
+        std::string label;
+        if (pwallet->mapAddressBook.count(address))
+            label = pwallet->mapAddressBook[address].name;
+        outputs.push_back(OutputRecord(txout.nValue, address, label, pwallet->IsMine(txout)));
     }
 
     TransactionStatus status = getStatusForTransaction(&wtx);
 
     return TransactionRecord(wtx.GetHash().ToString(), wtx.nTimeSmart,
-                             wtx.GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true) - wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true),
-                             nFee, status, wtx.nHeight, wtx.nBlockTime, wtx.GetDepthInMainChain(),
-                             receivedOutputs, sentOutputs);
+                             added - subtracted,
+                             fee, status, wtx.nHeight, wtx.nBlockTime, wtx.GetDepthInMainChain(),
+                             inputs, outputs);
 }
 
 static void notifyBalanceChanged(CWallet* pwallet)

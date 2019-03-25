@@ -14,8 +14,8 @@
                                 height:(int32_t)height
                              blockTime:(int64_t)blockTime
                                  depth:(int32_t)depth
-                       receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
-                           sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs;
+                                inputs:(nonnull NSArray<DBOutputRecord *> *)inputs
+                               outputs:(nonnull NSArray<DBOutputRecord *> *)outputs;
 + (nonnull instancetype)transactionRecordWithTxHash:(nonnull NSString *)txHash
                                           timeStamp:(int64_t)timeStamp
                                              amount:(int64_t)amount
@@ -24,8 +24,8 @@
                                              height:(int32_t)height
                                           blockTime:(int64_t)blockTime
                                               depth:(int32_t)depth
-                                    receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
-                                        sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs;
+                                             inputs:(nonnull NSArray<DBOutputRecord *> *)inputs
+                                            outputs:(nonnull NSArray<DBOutputRecord *> *)outputs;
 
 @property (nonatomic, readonly, nonnull) NSString * txHash;
 
@@ -43,8 +43,8 @@
 
 @property (nonatomic, readonly) int32_t depth;
 
-@property (nonatomic, readonly, nonnull) NSArray<DBOutputRecord *> * receivedOutputs;
+@property (nonatomic, readonly, nonnull) NSArray<DBOutputRecord *> * inputs;
 
-@property (nonatomic, readonly, nonnull) NSArray<DBOutputRecord *> * sentOutputs;
+@property (nonatomic, readonly, nonnull) NSArray<DBOutputRecord *> * outputs;
 
 @end

@@ -6,15 +6,19 @@
 @interface DBOutputRecord : NSObject
 - (nonnull instancetype)initWithAmount:(int64_t)amount
                                address:(nonnull NSString *)address
-                                 label:(nonnull NSString *)label;
+                                 label:(nonnull NSString *)label
+                                isMine:(BOOL)isMine;
 + (nonnull instancetype)outputRecordWithAmount:(int64_t)amount
                                        address:(nonnull NSString *)address
-                                         label:(nonnull NSString *)label;
+                                         label:(nonnull NSString *)label
+                                        isMine:(BOOL)isMine;
 
 @property (nonatomic, readonly) int64_t amount;
 
 @property (nonatomic, readonly, nonnull) NSString * address;
 
 @property (nonatomic, readonly, nonnull) NSString * label;
+
+@property (nonatomic, readonly) BOOL isMine;
 
 @end

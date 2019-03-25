@@ -14,8 +14,8 @@
                                 height:(int32_t)height
                              blockTime:(int64_t)blockTime
                                  depth:(int32_t)depth
-                       receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
-                           sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs
+                                inputs:(nonnull NSArray<DBOutputRecord *> *)inputs
+                               outputs:(nonnull NSArray<DBOutputRecord *> *)outputs
 {
     if (self = [super init]) {
         _txHash = [txHash copy];
@@ -26,8 +26,8 @@
         _height = height;
         _blockTime = blockTime;
         _depth = depth;
-        _receivedOutputs = [receivedOutputs copy];
-        _sentOutputs = [sentOutputs copy];
+        _inputs = [inputs copy];
+        _outputs = [outputs copy];
     }
     return self;
 }
@@ -40,8 +40,8 @@
                                              height:(int32_t)height
                                           blockTime:(int64_t)blockTime
                                               depth:(int32_t)depth
-                                    receivedOutputs:(nonnull NSArray<DBOutputRecord *> *)receivedOutputs
-                                        sentOutputs:(nonnull NSArray<DBOutputRecord *> *)sentOutputs
+                                             inputs:(nonnull NSArray<DBOutputRecord *> *)inputs
+                                            outputs:(nonnull NSArray<DBOutputRecord *> *)outputs
 {
     return [[self alloc] initWithTxHash:txHash
                               timeStamp:timeStamp
@@ -51,13 +51,13 @@
                                  height:height
                               blockTime:blockTime
                                   depth:depth
-                        receivedOutputs:receivedOutputs
-                            sentOutputs:sentOutputs];
+                                 inputs:inputs
+                                outputs:outputs];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p txHash:%@ timeStamp:%@ amount:%@ fee:%@ status:%@ height:%@ blockTime:%@ depth:%@ receivedOutputs:%@ sentOutputs:%@>", self.class, (void *)self, self.txHash, @(self.timeStamp), @(self.amount), @(self.fee), @(self.status), @(self.height), @(self.blockTime), @(self.depth), self.receivedOutputs, self.sentOutputs];
+    return [NSString stringWithFormat:@"<%@ %p txHash:%@ timeStamp:%@ amount:%@ fee:%@ status:%@ height:%@ blockTime:%@ depth:%@ inputs:%@ outputs:%@>", self.class, (void *)self, self.txHash, @(self.timeStamp), @(self.amount), @(self.fee), @(self.status), @(self.height), @(self.blockTime), @(self.depth), self.inputs, self.outputs];
 }
 
 @end

@@ -24,9 +24,9 @@ public final class TransactionRecord implements android.os.Parcelable {
 
     /*package*/ final int mDepth;
 
-    /*package*/ final ArrayList<OutputRecord> mReceivedOutputs;
+    /*package*/ final ArrayList<OutputRecord> mInputs;
 
-    /*package*/ final ArrayList<OutputRecord> mSentOutputs;
+    /*package*/ final ArrayList<OutputRecord> mOutputs;
 
     public TransactionRecord(
             String txHash,
@@ -37,8 +37,8 @@ public final class TransactionRecord implements android.os.Parcelable {
             int height,
             long blockTime,
             int depth,
-            ArrayList<OutputRecord> receivedOutputs,
-            ArrayList<OutputRecord> sentOutputs) {
+            ArrayList<OutputRecord> inputs,
+            ArrayList<OutputRecord> outputs) {
         this.mTxHash = txHash;
         this.mTimeStamp = timeStamp;
         this.mAmount = amount;
@@ -47,8 +47,8 @@ public final class TransactionRecord implements android.os.Parcelable {
         this.mHeight = height;
         this.mBlockTime = blockTime;
         this.mDepth = depth;
-        this.mReceivedOutputs = receivedOutputs;
-        this.mSentOutputs = sentOutputs;
+        this.mInputs = inputs;
+        this.mOutputs = outputs;
     }
 
     public String getTxHash() {
@@ -83,12 +83,12 @@ public final class TransactionRecord implements android.os.Parcelable {
         return mDepth;
     }
 
-    public ArrayList<OutputRecord> getReceivedOutputs() {
-        return mReceivedOutputs;
+    public ArrayList<OutputRecord> getInputs() {
+        return mInputs;
     }
 
-    public ArrayList<OutputRecord> getSentOutputs() {
-        return mSentOutputs;
+    public ArrayList<OutputRecord> getOutputs() {
+        return mOutputs;
     }
 
     @Override
@@ -102,8 +102,8 @@ public final class TransactionRecord implements android.os.Parcelable {
                 "," + "mHeight=" + mHeight +
                 "," + "mBlockTime=" + mBlockTime +
                 "," + "mDepth=" + mDepth +
-                "," + "mReceivedOutputs=" + mReceivedOutputs +
-                "," + "mSentOutputs=" + mSentOutputs +
+                "," + "mInputs=" + mInputs +
+                "," + "mOutputs=" + mOutputs +
         "}";
     }
 
@@ -130,10 +130,10 @@ public final class TransactionRecord implements android.os.Parcelable {
         this.mHeight = in.readInt();
         this.mBlockTime = in.readLong();
         this.mDepth = in.readInt();
-        this.mReceivedOutputs = new ArrayList<OutputRecord>();
-        in.readList(this.mReceivedOutputs, getClass().getClassLoader());
-        this.mSentOutputs = new ArrayList<OutputRecord>();
-        in.readList(this.mSentOutputs, getClass().getClassLoader());
+        this.mInputs = new ArrayList<OutputRecord>();
+        in.readList(this.mInputs, getClass().getClassLoader());
+        this.mOutputs = new ArrayList<OutputRecord>();
+        in.readList(this.mOutputs, getClass().getClassLoader());
     }
 
     @Override
@@ -151,8 +151,8 @@ public final class TransactionRecord implements android.os.Parcelable {
         out.writeInt(this.mHeight);
         out.writeLong(this.mBlockTime);
         out.writeInt(this.mDepth);
-        out.writeList(this.mReceivedOutputs);
-        out.writeList(this.mSentOutputs);
+        out.writeList(this.mInputs);
+        out.writeList(this.mOutputs);
     }
 
 }
