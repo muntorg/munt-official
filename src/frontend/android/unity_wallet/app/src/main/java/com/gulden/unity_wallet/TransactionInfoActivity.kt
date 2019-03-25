@@ -8,7 +8,9 @@ package com.gulden.unity_wallet
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.gulden.jniunifiedbackend.GuldenMonitorListener
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.TransactionRecord
@@ -16,9 +18,12 @@ import com.gulden.jniunifiedbackend.TransactionStatus
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_transaction_info.*
 import kotlinx.android.synthetic.main.content_transaction_info.*
+import kotlinx.android.synthetic.main.transaction_info_item.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.jetbrains.anko.textAppearance
+import org.jetbrains.anko.textColor
 
 class TransactionInfoActivity : AppBaseActivity() {
 
@@ -43,34 +48,91 @@ class TransactionInfoActivity : AppBaseActivity() {
             // status
             status.text = statusText(tx)
 
-            // Amount instantly and update with rate conversion
+            // Amount instantly
             amount.text = formatNativeAndLocal(tx.amount, 0.0)
-            this.launch(Dispatchers.Main) {
-                try {
-                    amount.text = formatNativeAndLocal(tx.amount, fetchCurrencyRate(localCurrency.code))
-                } catch (e: Throwable) {
-                    // silently ignore failure of getting rate here
-                }
-            }
+            setAmountAndColor(amount, tx.amount, 0.0, true)
 
-            // To outpoints
-            tx.sentOutputs.forEach { output ->
-                val v = TextView(this)
-                v.text = output.address
+            // inputs
+            tx.inputs.forEach { output ->
+                val v = layoutInflater.inflate(R.layout.transaction_info_item, null)
+                if (output.address.isNotEmpty())
+                    v.address.text = output.address
+                else {
+                    v.address.text = "unavailable"
+                    v.address.textAppearance = R.style.TxDetailMissing
+                }
+                if (output.isMine)
+                    v.subscript.text = getString(R.string.tx_detail_wallet_address)
+                else {
+                    if (output.label.isNotEmpty())
+                        v.subscript.text = output.label
+                    else
+                        v.subscript.text = getString(R.string.tx_detail_sending_address)
+                }
                 from_container.addView(v)
             }
 
-            // To outpoints
-            tx.receivedOutputs.forEach { output ->
-                val v = TextView(this)
-                v.text = output.address
-                to_container.addView(v)
+            // Update amount and display tx output details after getting rate (or failure)
+            this.launch(Dispatchers.Main) {
+                var rate = 0.0
+                try {
+                    rate = fetchCurrencyRate(localCurrency.code)
+                } catch (e: Throwable) {
+                    // silently ignore failure of getting rate here
+                }
+
+                this@TransactionInfoActivity.setAmountAndColor(amount, tx.amount, rate, true)
+
+                // outputs
+                val signedByMe = tx.fee > 0
+                tx.outputs.forEach { output ->
+                    if (output.isMine && !signedByMe) {
+                        val v = layoutInflater.inflate(R.layout.transaction_info_item, null)
+                        v.address.text = output.address
+                        v.subscript.text = getString(R.string.tx_detail_wallet_address)
+                        v.amount.textColor = ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_positive)
+                        v.amount.text = formatNativeAndLocal(output.amount, rate, true, false)
+                        to_container.addView(v)
+                    }
+                    else if (!output.isMine && signedByMe) {
+                        val v = layoutInflater.inflate(R.layout.transaction_info_item, null)
+                        v.address.text = output.address
+                        if (output.label.isNotEmpty())
+                            v.subscript.text = output.label
+                        else
+                            v.subscript.text = getString(R.string.tx_detail_payment_address)
+                        v.amount.textColor = ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_negative)
+                        v.amount.text = formatNativeAndLocal(-output.amount, rate, true, false)
+                        to_container.addView(v)
+                    } else {
+                        // output.isMine && signedByMe, this is likely change so don't display
+                        // !output.isMine && !signedByMe, this is likely change for the other side or something else we don't care about
+                    }
+                }
+
+                // fee
+                if (signedByMe) { // transaction created by me, show fee
+                    val v = layoutInflater.inflate(R.layout.transaction_info_item, null)
+                    v.address.visibility = View.GONE
+                    v.subscript.text = getString(R.string.tx_detail_network_fee)
+                    this@TransactionInfoActivity.setAmountAndColor(v.amount, -tx.fee, rate,false)
+                    to_container.addView(v)
+                }
             }
         }
         catch (e: Throwable)
         {
             transactionId.text = getString(R.string.no_tx_details).format(txHash)
         }
+    }
+
+    private fun setAmountAndColor(textView: TextView, nativeAmount: Long, rate: Double, nativeFirst: Boolean = true) {
+        textView.textColor = ContextCompat.getColor(this,
+                if (nativeAmount > 0)
+                    R.color.change_positive
+                else
+                    R.color.change_negative)
+        textView.text = formatNativeAndLocal(nativeAmount, rate, true, nativeFirst)
     }
 
     private fun statusText(tx: TransactionRecord): String {

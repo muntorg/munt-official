@@ -147,4 +147,8 @@ file COPYING
     </plurals>
     <string name="preferences_license_button">License</string>
     <string name="license_title">License</string>
+    <string name="tx_detail_wallet_address">Wallet address</string>
+    <string name="tx_detail_sending_address">Sending address</string>
+    <string name="tx_detail_payment_address">Payment address</string>
+    <string name="tx_detail_network_fee">Gulden network fee</string>
 </resources>

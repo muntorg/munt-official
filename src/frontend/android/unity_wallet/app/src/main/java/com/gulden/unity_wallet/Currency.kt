@@ -104,14 +104,17 @@ fun formatNative(nativeAmount: Long, useNativePrefix: Boolean = true): String
             (DecimalFormat("+#,##0.00;-#").format(nativeAmount.toDouble() / 100000000)))
 }
 
-fun formatNativeAndLocal(nativeAmount: Long, conversionRate: Double, useNativePrefix: Boolean = true): String
+fun formatNativeAndLocal(nativeAmount: Long, conversionRate: Double, useNativePrefix: Boolean = true, nativeFirst: Boolean = true): String
 {
     val native = formatNative(nativeAmount, useNativePrefix)
 
     return if (conversionRate > 0.0) {
         val pattern = "+#,##0.%s;-#".format("0".repeat(localCurrency.precision))
-        "%s (%s %s)".format(native, localCurrency.short,
-                DecimalFormat(pattern).format(conversionRate * nativeAmount.toDouble() / 100000000) )
+        val local = DecimalFormat(pattern).format(conversionRate * nativeAmount.toDouble() / 100000000)
+        if (nativeFirst)
+            "%s (%s %s)".format(native, localCurrency.short, local)
+        else
+            "(%s %s) %s".format(localCurrency.short, local, native)
     }
     else
         native

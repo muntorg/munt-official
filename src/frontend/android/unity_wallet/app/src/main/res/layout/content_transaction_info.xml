@@ -81,6 +81,9 @@ file COPYING
             android:layout_height="wrap_content"
             android:text="@string/from_label" />
 
+        <View
+            android:layout_width="match_parent"
+            style="@style/ThinHorizontalDivider"/>
         <LinearLayout
             android:id="@+id/from_container"
             style="@style/TxDetailParagraph"
@@ -99,6 +102,9 @@ file COPYING
             android:layout_height="wrap_content"
             android:text="@string/to_label" />
 
+        <View
+            android:layout_width="match_parent"
+            style="@style/ThinHorizontalDivider"/>
         <LinearLayout
             android:id="@+id/to_container"
             style="@style/TxDetailParagraph"
