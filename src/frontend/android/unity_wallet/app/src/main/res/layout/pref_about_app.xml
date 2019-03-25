@@ -50,7 +50,7 @@ file COPYING
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:onClick="onRequestSupport"
-            android:padding="18dp"
+            android:padding="10dp"
             android:text="@string/preferences_support_button"
             android:textColor="@color/colorPrimary" />
 
@@ -60,8 +60,18 @@ file COPYING
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:onClick="onRequestAdvancedSettings"
-            android:padding="18dp"
+            android:padding="10dp"
             android:text="@string/preferences_advanced_button"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/textViewLicense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:onClick="onRequestLicense"
+            android:padding="10dp"
+            android:text="@string/preferences_license_button"
             android:textColor="@color/colorPrimary" />
 
         <Space

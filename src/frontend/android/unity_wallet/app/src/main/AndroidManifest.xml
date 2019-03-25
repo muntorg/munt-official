@@ -92,6 +92,10 @@
             android:label="Network monitor"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".LicenseActivity"
+            android:label="License"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".SyncService" />
 

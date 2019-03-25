@@ -148,6 +148,11 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
 
     }
 
+    fun onRequestLicense(view: View? = null)
+    {
+        startActivity(Intent(this, LicenseActivity::class.java))
+    }
+
     private fun gotoSendPage()
     {
         if (sendFragment == null)

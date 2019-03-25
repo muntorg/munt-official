@@ -145,4 +145,6 @@ file COPYING
         <item quantity="one">%d confirmation</item>
         <item quantity="other">%d confirmations</item>
     </plurals>
+    <string name="preferences_license_button">License</string>
+    <string name="license_title">License</string>
 </resources>
