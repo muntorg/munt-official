@@ -82,4 +82,11 @@ file COPYING
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
+    <style name="TxDetailHeader">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TxDetailParagraph">
+    </style>
+
 </resources>

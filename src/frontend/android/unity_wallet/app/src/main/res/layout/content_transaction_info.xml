@@ -25,18 +25,16 @@ file COPYING
 
         <TextView
             android:id="@+id/transactionId_label"
+            style="@style/TxDetailHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/transaction_id"
-            android:textColor="@color/darkText"
-            android:textSize="18sp" />
+            android:text="@string/transaction_id" />
 
         <TextView
             android:id="@+id/transactionId"
+            style="@style/TxDetailParagraph"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/lightText"
-            />
+            android:layout_height="wrap_content" />
 
         <Space
             android:layout_width="match_parent"
@@ -44,18 +42,16 @@ file COPYING
 
         <TextView
             android:id="@+id/status_label"
+            style="@style/TxDetailHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/status"
-            android:textColor="@color/darkText"
-            android:textSize="18sp" />
+            android:text="@string/status" />
 
         <TextView
             android:id="@+id/status"
+            style="@style/TxDetailParagraph"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/lightText"
-            />
+            android:layout_height="wrap_content" />
 
         <Space
             android:layout_width="match_parent"
@@ -63,18 +59,16 @@ file COPYING
 
         <TextView
             android:id="@+id/amount_label"
+            style="@style/TxDetailHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/amount_label"
-            android:textColor="@color/darkText"
-            android:textSize="18sp" />
+            android:text="@string/amount_label" />
 
         <TextView
             android:id="@+id/amount"
+            style="@style/TxDetailParagraph"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/lightText"
-            />
+            android:layout_height="wrap_content" />
 
         <Space
             android:layout_width="match_parent"
@@ -82,19 +76,17 @@ file COPYING
 
         <TextView
             android:id="@+id/from_label"
+            style="@style/TxDetailHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/from_label"
-            android:textColor="@color/darkText"
-            android:textSize="18sp" />
+            android:text="@string/from_label" />
 
         <LinearLayout
             android:id="@+id/from_container"
+            style="@style/TxDetailParagraph"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:textColor="@color/lightText"
-            />
+            android:orientation="vertical" />
 
         <Space
             android:layout_width="match_parent"
@@ -102,19 +94,17 @@ file COPYING
 
         <TextView
             android:id="@+id/to_label"
+            style="@style/TxDetailHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/to_label"
-            android:textColor="@color/darkText"
-            android:textSize="18sp" />
+            android:text="@string/to_label" />
 
         <LinearLayout
             android:id="@+id/to_container"
+            style="@style/TxDetailParagraph"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:textColor="@color/lightText"
-            />
+            android:orientation="vertical" />
 
     </LinearLayout>
 </ScrollView>
