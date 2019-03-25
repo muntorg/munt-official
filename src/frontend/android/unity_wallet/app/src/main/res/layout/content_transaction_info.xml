@@ -9,7 +9,7 @@ file COPYING
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@color/veryLightGray"
     tools:context=".TransactionInfoActivity"
     tools:showIn="@layout/activity_transaction_info">
 

@@ -27,6 +27,16 @@ file COPYING
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_transaction_info" />
+    <LinearLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <View
+            style="@style/ThinHorizontalDivider"
+            android:layout_width="match_parent" />
+
+        <include layout="@layout/content_transaction_info" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

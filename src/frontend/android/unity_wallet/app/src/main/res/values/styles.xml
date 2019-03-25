@@ -54,6 +54,10 @@ file COPYING
         <item name="android:background">@color/bg_bright</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="titleTextColor">@color/colorPrimary</item>
+        <!-- remove shadow below action bar -->
+        <item name="android:elevation">0dp</item>
+        <!-- Support library compatibility -->
+        <item name="elevation">0dp</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
