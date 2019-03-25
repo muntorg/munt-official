@@ -8,6 +8,7 @@ package com.gulden.unity_wallet
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -172,6 +173,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             foreignCurrency = localCurrency
             isIBAN = false
         }
+
+        mSendCoinsNocksEstimate.visibility = if (isIBAN) View.VISIBLE else View.GONE
 
         setupRate()
 

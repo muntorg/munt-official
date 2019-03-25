@@ -92,6 +92,7 @@ file COPYING
         android:id="@+id/send_coins_info_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
         android:orientation="vertical"
         android:showDividers="middle"
         app:layout_constraintRight_toRightOf="parent"
@@ -142,6 +143,7 @@ file COPYING
 
         <TextView
             android:id="@+id/send_coins_nocks_estimate"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
