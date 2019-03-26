@@ -3,10 +3,8 @@
 
 package com.gulden.jniunifiedbackend;
 
-public final class OutputRecord implements android.os.Parcelable {
+public final class InputRecord implements android.os.Parcelable {
 
-
-    /*package*/ final long mAmount;
 
     /*package*/ final String mAddress;
 
@@ -14,19 +12,13 @@ public final class OutputRecord implements android.os.Parcelable {
 
     /*package*/ final boolean mIsMine;
 
-    public OutputRecord(
-            long amount,
+    public InputRecord(
             String address,
             String label,
             boolean isMine) {
-        this.mAmount = amount;
         this.mAddress = address;
         this.mLabel = label;
         this.mIsMine = isMine;
-    }
-
-    public long getAmount() {
-        return mAmount;
     }
 
     public String getAddress() {
@@ -43,30 +35,28 @@ public final class OutputRecord implements android.os.Parcelable {
 
     @Override
     public String toString() {
-        return "OutputRecord{" +
-                "mAmount=" + mAmount +
-                "," + "mAddress=" + mAddress +
+        return "InputRecord{" +
+                "mAddress=" + mAddress +
                 "," + "mLabel=" + mLabel +
                 "," + "mIsMine=" + mIsMine +
         "}";
     }
 
 
-    public static final android.os.Parcelable.Creator<OutputRecord> CREATOR
-        = new android.os.Parcelable.Creator<OutputRecord>() {
+    public static final android.os.Parcelable.Creator<InputRecord> CREATOR
+        = new android.os.Parcelable.Creator<InputRecord>() {
         @Override
-        public OutputRecord createFromParcel(android.os.Parcel in) {
-            return new OutputRecord(in);
+        public InputRecord createFromParcel(android.os.Parcel in) {
+            return new InputRecord(in);
         }
 
         @Override
-        public OutputRecord[] newArray(int size) {
-            return new OutputRecord[size];
+        public InputRecord[] newArray(int size) {
+            return new InputRecord[size];
         }
     };
 
-    public OutputRecord(android.os.Parcel in) {
-        this.mAmount = in.readLong();
+    public InputRecord(android.os.Parcel in) {
         this.mAddress = in.readString();
         this.mLabel = in.readString();
         this.mIsMine = in.readByte() != 0;
@@ -79,7 +69,6 @@ public final class OutputRecord implements android.os.Parcelable {
 
     @Override
     public void writeToParcel(android.os.Parcel out, int flags) {
-        out.writeLong(this.mAmount);
         out.writeString(this.mAddress);
         out.writeString(this.mLabel);
         out.writeByte(this.mIsMine ? (byte)1 : 0);

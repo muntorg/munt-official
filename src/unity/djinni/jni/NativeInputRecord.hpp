@@ -4,29 +4,28 @@
 #pragma once
 
 #include "djinni_support.hpp"
-#include "output_record.hpp"
+#include "input_record.hpp"
 
 namespace djinni_generated {
 
-class NativeOutputRecord final {
+class NativeInputRecord final {
 public:
-    using CppType = ::OutputRecord;
+    using CppType = ::InputRecord;
     using JniType = jobject;
 
-    using Boxed = NativeOutputRecord;
+    using Boxed = NativeInputRecord;
 
-    ~NativeOutputRecord();
+    ~NativeInputRecord();
 
     static CppType toCpp(JNIEnv* jniEnv, JniType j);
     static ::djinni::LocalRef<JniType> fromCpp(JNIEnv* jniEnv, const CppType& c);
 
 private:
-    NativeOutputRecord();
-    friend ::djinni::JniClass<NativeOutputRecord>;
+    NativeInputRecord();
+    friend ::djinni::JniClass<NativeInputRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/OutputRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JLjava/lang/String;Ljava/lang/String;Z)V") };
-    const jfieldID field_mAmount { ::djinni::jniGetFieldID(clazz.get(), "mAmount", "J") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/InputRecord") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;Z)V") };
     const jfieldID field_mAddress { ::djinni::jniGetFieldID(clazz.get(), "mAddress", "Ljava/lang/String;") };
     const jfieldID field_mLabel { ::djinni::jniGetFieldID(clazz.get(), "mLabel", "Ljava/lang/String;") };
     const jfieldID field_mIsMine { ::djinni::jniGetFieldID(clazz.get(), "mIsMine", "Z") };

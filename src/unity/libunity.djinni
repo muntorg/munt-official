@@ -51,8 +51,8 @@ transaction_record = record {
     height : i32;
     blockTime : i64;
     depth : i32;
-    receivedOutputs : list<output_record>;
-    sentOutputs : list<output_record>;
+    inputs : list<input_record>;
+    outputs : list<output_record>;
 } deriving(parcelable)
 
 transaction_status = enum {
@@ -63,10 +63,17 @@ transaction_status = enum {
     conflicted;
 }
 
+input_record = record {
+    address : string;
+    label : string;
+    isMine : bool;
+} deriving(parcelable)
+
 output_record = record {
     amount : i64;
     address : string;
     label : string;
+    isMine : bool;
 } deriving(parcelable)
 
 address_record = record {

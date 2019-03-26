@@ -89,4 +89,8 @@ file COPYING
     <style name="TxDetailParagraph">
     </style>
 
+    <style name="TxDetailMissing">
+        <item name="android:textStyle">italic</item>
+    </style>
+
 </resources>

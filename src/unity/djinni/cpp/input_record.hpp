@@ -3,22 +3,18 @@
 
 #pragma once
 
-#include <cstdint>
 #include <string>
 #include <utility>
 
-struct OutputRecord final {
-    int64_t amount;
+struct InputRecord final {
     std::string address;
     std::string label;
     bool isMine;
 
-    OutputRecord(int64_t amount_,
-                 std::string address_,
-                 std::string label_,
-                 bool isMine_)
-    : amount(std::move(amount_))
-    , address(std::move(address_))
+    InputRecord(std::string address_,
+                std::string label_,
+                bool isMine_)
+    : address(std::move(address_))
     , label(std::move(label_))
     , isMine(std::move(isMine_))
     {}
