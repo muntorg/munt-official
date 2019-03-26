@@ -90,7 +90,7 @@ file COPYING
     <string name="cancel_btn">Cancel</string>
     <string name="rescan_started">Rescan started</string>
     <string name="upgrade_wrong_password">Wrong password?</string>
-    <string name="upgrade_explanation">Gulden wallet is now upgraded to the new Unity framework. Because of this existing wallet data needs to be upgraded. After the upgrade, the blockchain will be rescanned, this can take a while.</string>
+    <string name="upgrade_explanation">Gulden requires an update. This can take a few minutes, but Gulden will be faster, easier to use and more lightweight as a result.</string>
     <string name="upgrade_btn">Upgrade</string>
     <string name="upgrade_enter_password">Enter your password</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -139,8 +139,16 @@ file COPYING
     <string name="transaction_confirmation_text_conflicted">Conflicted</string>
     <string name="transaction_confirmation_text_abandoned">Abandoned</string>
     <string name="transaction_confirmation_text_pending">Pending</string>
+    <string name="receive_fragment_share_title">Share Gulden address</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d confirmation</item>
         <item quantity="other">%d confirmations</item>
     </plurals>
+    <string name="preferences_license_button">License</string>
+    <string name="license_title">License</string>
+    <string name="tx_detail_wallet_address">Wallet address</string>
+    <string name="tx_detail_sending_address">Sending address</string>
+    <string name="tx_detail_payment_address">Payment address</string>
+    <string name="tx_detail_network_fee">Gulden network fee</string>
+    <string name="send_dialog_empty_amout_when_sending">No amount entered</string>
 </resources>

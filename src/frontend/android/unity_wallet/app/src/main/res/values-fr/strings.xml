@@ -38,6 +38,9 @@ file COPYING
     <string name="peer_list_fragment_empty">Aucun pair connecté</string>
     <string name="block_row_now">Maintenant</string>
     <string name="action_browse">Naviguer</string>
+    <string name="background_sync_off">Désactivé</string>
+    <string name="background_sync_daily">Quotidien</string>
+    <string name="background_sync_always">Toujours</string>
     <string name="transaction_id">ID de transaction</string>
     <string name="status">État</string>
     <string name="amount_label">Montant</string>
@@ -128,4 +131,12 @@ file COPYING
     <string name="numeric_keypad_send_button">Envoyer</string>
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Avancé</string>
+    <string name="clipboard_no_valid_address">Pas d\'adresse Gulden valide dans le presse-papiers</string>
+    <string name="transaction_confirmation_text_conflicted">Conflit</string>
+    <string name="transaction_confirmation_text_abandoned">Abandonné</string>
+    <string name="transaction_confirmation_text_pending">En attente</string>
+    <plurals name="transaction_confirmation_text">
+        <item quantity="one">%d confirmation</item>
+        <item quantity="other">%d confirmations</item>
+    </plurals>
 </resources>

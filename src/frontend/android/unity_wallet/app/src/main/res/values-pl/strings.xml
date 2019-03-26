@@ -132,4 +132,13 @@ file COPYING
     <string name="preferences_support_button">Wsparcie</string>
     <string name="preferences_advanced_button">Zaawansowane</string>
     <string name="clipboard_no_valid_address">Brak prawidłowego adresu Gulden w schowku</string>
+    <string name="transaction_confirmation_text_conflicted">Konflikt</string>
+    <string name="transaction_confirmation_text_abandoned">Opuszczony</string>
+    <string name="transaction_confirmation_text_pending">W oczekiwaniu</string>
+    <plurals name="transaction_confirmation_text">
+        <item quantity="one">%d potwierdzenie</item>
+        <item quantity="other">%d potwierdzenia</item>
+        <item quantity="few">%d potwierdzenia</item>
+        <item quantity="many">%d potwierdzeniń</item>
+    </plurals>
 </resources>
