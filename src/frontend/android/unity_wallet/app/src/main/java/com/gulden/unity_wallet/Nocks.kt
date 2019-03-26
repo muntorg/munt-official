@@ -36,6 +36,17 @@ data class NocksError (
 )
 
 @JsonSerializable
+data class NocksSimpleError (
+     var error: String
+)
+
+@JsonSerializable
+data class NocksListError (
+    var error: List<String>?
+)
+
+
+@JsonSerializable
 data class SuccessValueNocksQuote (
     var amount: Double = -1.0
 )
@@ -118,6 +129,39 @@ fun escapeStringToJSON(inputString : String) : String
     return b.readUtf8()
 }
 
+private fun extractNocksError(input : String) : String
+{
+    try
+    {
+        val adapterError = moshi?.adapter(NocksError::class.java)
+        val error1 = adapterError?.fromJson(input)
+        return error1?.error?.message!!
+    }
+    catch (e: Throwable)
+    {
+        try
+        {
+            val adapterError = moshi?.adapter(NocksSimpleError::class.java)
+            val error2 = adapterError?.fromJson(input)
+            return error2?.error!!
+        }
+        catch (e: Throwable)
+        {
+            try
+            {
+                val adapterError = moshi?.adapter(NocksListError::class.java)
+                val error3 = adapterError?.fromJson(input)
+                return error3?.error!![0]
+            }
+            catch (e: Throwable)
+            {
+                return "Nocks request error"
+            }
+        }
+    }
+    return ""
+}
+
 private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, jsonParams: String): ResultType?
 {
     val request = Request.Builder()
@@ -150,22 +194,12 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
         }
     }
 
-    if (error)
+    // Error code should always be set if error, however in se it isn't we do a rudimentary start of string search for "error as well" (as we had at least one case of this in the past)
+    if (error || result.startsWith("{\"error"))
     {
-        var message: String
-        // Nocks errors come in different forms so we can't handle it in the moshi class
-        // Instead marshall the error via an intermediate type into our eventual return type
-        try
-        {
-            val adapterError = moshi?.adapter(NocksError::class.java)
-            var error = adapterError?.fromJson(result)
-            message = error?.error?.message!!
-        }
-        catch (e: Throwable)
-        {
-            message = "Nocks request error"
-        }
-
+        // Nocks errors come in different forms so we can't handle it in the moshi class directly as it is too complex
+        // Instead marshall the error via several intermediate types, tot ry and parse the error as best as possible - and then insert it into our eventual return type in a way it understands
+        var message= extractNocksError(result);
         val adapter = moshi?.adapter(ResultType::class.java)
         return adapter?.fromJson("{\"errorMessage\": \"$message\"}")!!
     }
