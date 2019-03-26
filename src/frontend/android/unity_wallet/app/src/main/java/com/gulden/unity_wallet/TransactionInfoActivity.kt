@@ -83,10 +83,13 @@ class TransactionInfoActivity : AppBaseActivity() {
 
                 this@TransactionInfoActivity.setAmountAndColor(amount, tx.amount, rate, true)
 
+                // internal transfer if all inputs and outputs are mine
+                val internalTransfer = (tx.inputs.size == tx.inputs.count { it.isMine }) && (tx.outputs.size == tx.outputs.count { it.isMine })
+
                 // outputs
                 val signedByMe = tx.fee > 0
                 tx.outputs.forEach { output ->
-                    if (output.isMine && !signedByMe) {
+                    if (output.isMine && !signedByMe || internalTransfer) {
                         val v = layoutInflater.inflate(R.layout.transaction_info_item, null)
                         v.address.text = output.address
                         v.subscript.text = getString(R.string.tx_detail_wallet_address)
