@@ -1,13 +1,15 @@
 package com.gulden.unity_wallet
 
-import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
+import com.squareup.moshi.JsonAdapter
 import okhttp3.*
+import se.ansman.kotshi.JsonSerializable
+import se.ansman.kotshi.KotshiJsonAdapterFactory
 import java.util.*
 
 data class NocksQuoteResult(val amountNLG: Double)
@@ -19,31 +21,42 @@ private const val NOCKS_HOST = "www.nocks.com"
 // TODO: Use host sandbox.nocks.com for testnet build
 private const val FAKE_NOCKS_SERVICE = false
 
-@JsonClass(generateAdapter = true)
-class NocksQuoteApiResult
-{
-    class SuccessValue {
-        var amount: Double = -1.0
-    }
-    var error: String? = null
-    var success: SuccessValue? = null
-}
+@JsonSerializable
+data class SuccessValueNocksQuote (
+    var amount: Double = -1.0
+)
 
-@JsonClass(generateAdapter = true)
-class NocksOrderApiResult
-{
-    class SuccessValue {
-        var depositAmount: Double = -1.0
-        var deposit: String? = null
-        var expirationTimestamp: String? = null
-        var withdrawalAmount: String? = null
-        var withdrawalOriginal: String? = null
+@JsonSerializable
+data class NocksQuoteApiResult (
+    var success: SuccessValueNocksQuote? = null,
+    var error: List<String>? = null,
+    var errorMessage: String? = null
+)
+
+@JsonSerializable
+data class SuccessValueNocksOrder (
+    var depositAmount: Double = -1.0,
+    var deposit: String? = null,
+    var expirationTimestamp: String? = null,
+    var withdrawalAmount: String? = null,
+    var withdrawalOriginal: String? = null
+)
+
+@JsonSerializable
+data class NocksOrderApiResult (
+    var error: String? = null,
+    var success: SuccessValueNocksOrder? = null
+)
+
+@KotshiJsonAdapterFactory
+abstract class ApplicationJsonAdapterFactory : JsonAdapter.Factory {
+    companion object {
+        val INSTANCE: ApplicationJsonAdapterFactory = KotshiApplicationJsonAdapterFactory()
     }
-    var error: String? = null
-    var success: SuccessValue? = null
 }
 
 var client : OkHttpClient? = null
+var moshi : Moshi? = null
 
 // Only create one client per session so that we avoid unnecessary extra SSL handshakes and can take advantage of connection pooling etc.
 fun initNocks()
@@ -67,6 +80,7 @@ fun initNocks()
         builder.addInterceptor(OkHttpProfilerInterceptor() )
     }
     client = builder.connectionSpecs(Collections.singletonList(spec)).build()
+    moshi = Moshi.Builder().add(ApplicationJsonAdapterFactory.INSTANCE).build()
 }
 
 // Release client when we are done with current session
@@ -74,6 +88,7 @@ fun terminateNocks()
 {
     //TODO: Cancel all unpaid payment requests here.
     client = null
+    moshi = null
 }
 
 private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, jsonParams: String): ResultType?
@@ -86,16 +101,16 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
 
     // execute on IO thread pool
     val result = withContext(IO) {
-        val response = client.newCall(request).execute()
-        val body = response.body()
+        val response = client?.newCall(request)?.execute()
+        val body = response?.body()
         if (body != null)
             body.string()
         else
             throw RuntimeException("Null body in Nocks response.")
     }
 
-    val adapter = Moshi.Builder().build().adapter<ResultType>(ResultType::class.java)
-    return adapter.fromJson(result)
+    val adapter = moshi?.adapter(ResultType::class.java)
+    return adapter?.fromJson(result)
 }
 
 suspend fun nocksQuote(amountEuro: Double): NocksQuoteResult
