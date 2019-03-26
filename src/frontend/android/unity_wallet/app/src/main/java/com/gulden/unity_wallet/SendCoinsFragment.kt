@@ -467,6 +467,62 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         return true
     }
 
+    private fun handleSendButtonIBAN(view : View)
+    {
+        val contentView = LayoutInflater.from(context).inflate(R.layout.iban_name_entry, null)
+        val builder = context!!.alert(Appcompat) {
+            this.title = "Enter recipient"
+            customView = contentView
+            positiveButton("Pay") {
+                confirmAndCommitIBANPayment(view, contentView.name.text.toString(), contentView.description.text.toString())
+            }
+            negativeButton("Cancel") {
+            }
+        }
+        val dialog = builder.build()
+
+        dialog.setOnShowListener {
+            val okBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            okBtn.isEnabled = false
+            contentView.name.addTextChangedListener(
+                    object : TextWatcher {
+                        override fun afterTextChanged(s: Editable?) {
+                            s?.run {
+                                okBtn.isEnabled = isNotEmpty()
+                            }
+                        }
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    })
+
+            //Ensure keyboard/IMM shows by default
+            contentView.name.requestFocus()
+            contentView.name.post {
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(contentView.name, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun handleSendButton(view : View)
+    {
+        run {
+            if ((amountEditStr.isEmpty()) || (foreignAmount<=0 && amount<=0))
+            {
+                errorMessage("Enter an amount to pay")
+                return@run
+            }
+
+            when
+            {
+                isIBAN -> handleSendButtonIBAN(view)
+                else -> confirmAndCommitGuldenPayment(view)
+            }
+        }
+    }
+
     private fun handleKeypadButtonClick(view : View)
     {
         when (view.id)
@@ -511,55 +567,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             }
             R.id.button_send ->
             {
-                run {
-                    if ((amountEditStr.isEmpty()) || (foreignAmount<=0 && amount<=0))
-                    {
-                        errorMessage("Enter an amount to pay")
-                        return@run
-                    }
-
-                    when
-                    {
-                        isIBAN -> {
-                            val contentView = LayoutInflater.from(context).inflate(R.layout.iban_name_entry, null)
-                            val builder = context!!.alert(Appcompat) {
-                                this.title = "Enter recipient"
-                                customView = contentView
-                                positiveButton("Pay") {
-                                    confirmAndCommitIBANPayment(view, contentView.name.text.toString(), contentView.description.text.toString())
-                                }
-                                negativeButton("Cancel") {
-                                }
-                            }
-                            val dialog = builder.build()
-
-                            dialog.setOnShowListener {
-                                val okBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                                okBtn.isEnabled = false
-                                contentView.name.addTextChangedListener(
-                                        object : TextWatcher {
-                                            override fun afterTextChanged(s: Editable?) {
-                                                s?.run {
-                                                    okBtn.isEnabled = isNotEmpty()
-                                                }
-                                            }
-                                            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                                            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                                        })
-
-                                //Ensure keyboard/IMM shows by default
-                                contentView.name.requestFocus()
-                                contentView.name.post {
-                                    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                                    imm.showSoftInput(contentView.name, InputMethodManager.SHOW_IMPLICIT)
-                                }
-                            }
-
-                            dialog.show()
-                        }
-                        else -> confirmAndCommitGuldenPayment(view)
-                    }
-                }
+                handleSendButton(view)
             }
 
         }
