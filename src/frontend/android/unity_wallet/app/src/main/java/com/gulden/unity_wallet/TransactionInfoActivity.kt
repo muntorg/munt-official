@@ -58,7 +58,7 @@ class TransactionInfoActivity : AppBaseActivity() {
                 if (output.address.isNotEmpty())
                     v.address.text = output.address
                 else {
-                    v.address.text = "unavailable"
+                    v.address.text = getString(R.string.tx_detail_address_unavailable)
                     v.address.textAppearance = R.style.TxDetailMissing
                 }
                 if (output.isMine)

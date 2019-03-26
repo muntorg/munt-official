@@ -356,7 +356,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     val quote = nocksQuote(foreignAmount)
                     if (quote.amountNLG < 0)
                     {
-                        mSendCoinsNocksEstimate.text = "Error: " + quote.errorText
+                        mSendCoinsNocksEstimate.text = getString(R.string.nocks_error_prefix) + quote.errorText
                     }
                     else
                     {
@@ -368,7 +368,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     // silently pass job cancellation
                 }
                 catch (e: Throwable) {
-                    mSendCoinsNocksEstimate.text = "Could not fetch transaction quote"
+                    mSendCoinsNocksEstimate.text = getString(R.string.nocks_error_unable_to_fetch_quote)
                 }
             }
         }

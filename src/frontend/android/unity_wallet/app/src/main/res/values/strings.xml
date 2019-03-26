@@ -152,4 +152,10 @@ file COPYING
     <string name="tx_detail_payment_address">Payment address</string>
     <string name="tx_detail_network_fee">Gulden network fee</string>
     <string name="send_dialog_empty_amout_when_sending">No amount entered</string>
+    <string name="iban_account_holder_info_text">Enter the correct name of the account holder to prevent delay.</string>
+    <string name="iban_account_holder_name">Name</string>
+    <string name="iban_account_holder_description">Description (optional)</string>
+    <string name="tx_detail_address_unavailable">unavailable</string>
+    <string name="nocks_error_unable_to_fetch_quote">Could not fetch transaction quote</string>
+    <string name="nocks_error_prefix">Error:</string>
 </resources>

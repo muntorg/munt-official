@@ -12,7 +12,7 @@ file COPYING
     android:paddingRight="24dp">
 
     <TextView
-        android:text="Enter the correct name of the account holder to prevent delay."
+        android:text="@string/iban_account_holder_info_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -21,16 +21,18 @@ file COPYING
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:hint="Name"
+        android:hint="@string/iban_account_holder_name"
         android:singleLine="true"
-        android:inputType="text"/>
+        android:inputType="text">
+        <requestFocus/>
+    </EditText>
 
     <EditText
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:hint="Description (optional)"
+        android:hint="@string/iban_account_holder_description"
         android:singleLine="true"
         android:inputType="text"/>
 
