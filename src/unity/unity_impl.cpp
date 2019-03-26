@@ -31,6 +31,7 @@
 #include "uri_recipient.hpp"
 #include "mutation_record.hpp"
 #include "transaction_record.hpp"
+#include "input_record.hpp"
 #include "output_record.hpp"
 #include "address_record.hpp"
 #include "peer_record.hpp"
@@ -115,7 +116,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 {
     CWallet* pwallet = pactiveWallet;
 
-    std::vector<OutputRecord> inputs;
+    std::vector<InputRecord> inputs;
     std::vector<OutputRecord> outputs;
 
     int64_t subtracted = wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
@@ -155,7 +156,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         std::string label;
         if (pwallet->mapAddressBook.count(address))
             label = pwallet->mapAddressBook[address].name;
-        inputs.push_back(OutputRecord(0, address, label, pwallet->IsMine(txin)));
+        inputs.push_back(InputRecord(address, label, pwallet->IsMine(txin)));
     }
 
     for (const CTxOut& txout: tx.vout) {

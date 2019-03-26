@@ -24,7 +24,7 @@ public final class TransactionRecord implements android.os.Parcelable {
 
     /*package*/ final int mDepth;
 
-    /*package*/ final ArrayList<OutputRecord> mInputs;
+    /*package*/ final ArrayList<InputRecord> mInputs;
 
     /*package*/ final ArrayList<OutputRecord> mOutputs;
 
@@ -37,7 +37,7 @@ public final class TransactionRecord implements android.os.Parcelable {
             int height,
             long blockTime,
             int depth,
-            ArrayList<OutputRecord> inputs,
+            ArrayList<InputRecord> inputs,
             ArrayList<OutputRecord> outputs) {
         this.mTxHash = txHash;
         this.mTimeStamp = timeStamp;
@@ -83,7 +83,7 @@ public final class TransactionRecord implements android.os.Parcelable {
         return mDepth;
     }
 
-    public ArrayList<OutputRecord> getInputs() {
+    public ArrayList<InputRecord> getInputs() {
         return mInputs;
     }
 
@@ -130,7 +130,7 @@ public final class TransactionRecord implements android.os.Parcelable {
         this.mHeight = in.readInt();
         this.mBlockTime = in.readLong();
         this.mDepth = in.readInt();
-        this.mInputs = new ArrayList<OutputRecord>();
+        this.mInputs = new ArrayList<InputRecord>();
         in.readList(this.mInputs, getClass().getClassLoader());
         this.mOutputs = new ArrayList<OutputRecord>();
         in.readList(this.mOutputs, getClass().getClassLoader());

@@ -14,7 +14,7 @@
                                 height:(int32_t)height
                              blockTime:(int64_t)blockTime
                                  depth:(int32_t)depth
-                                inputs:(nonnull NSArray<DBOutputRecord *> *)inputs
+                                inputs:(nonnull NSArray<DBInputRecord *> *)inputs
                                outputs:(nonnull NSArray<DBOutputRecord *> *)outputs
 {
     if (self = [super init]) {
@@ -40,7 +40,7 @@
                                              height:(int32_t)height
                                           blockTime:(int64_t)blockTime
                                               depth:(int32_t)depth
-                                             inputs:(nonnull NSArray<DBOutputRecord *> *)inputs
+                                             inputs:(nonnull NSArray<DBInputRecord *> *)inputs
                                             outputs:(nonnull NSArray<DBOutputRecord *> *)outputs
 {
     return [[self alloc] initWithTxHash:txHash

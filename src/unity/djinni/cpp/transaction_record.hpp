@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "input_record.hpp"
 #include "output_record.hpp"
 #include "transaction_status.hpp"
 #include <cstdint>
@@ -19,7 +20,7 @@ struct TransactionRecord final {
     int32_t height;
     int64_t blockTime;
     int32_t depth;
-    std::vector<OutputRecord> inputs;
+    std::vector<InputRecord> inputs;
     std::vector<OutputRecord> outputs;
 
     TransactionRecord(std::string txHash_,
@@ -30,7 +31,7 @@ struct TransactionRecord final {
                       int32_t height_,
                       int64_t blockTime_,
                       int32_t depth_,
-                      std::vector<OutputRecord> inputs_,
+                      std::vector<InputRecord> inputs_,
                       std::vector<OutputRecord> outputs_)
     : txHash(std::move(txHash_))
     , timeStamp(std::move(timeStamp_))

@@ -3,6 +3,7 @@
 
 #include "NativeTransactionRecord.hpp"  // my header
 #include "Marshal.hpp"
+#include "NativeInputRecord.hpp"
 #include "NativeOutputRecord.hpp"
 #include "NativeTransactionStatus.hpp"
 
@@ -23,7 +24,7 @@ auto NativeTransactionRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::dji
                                                            ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.height)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.blockTime)),
                                                            ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.depth)),
-                                                           ::djinni::get(::djinni::List<::djinni_generated::NativeOutputRecord>::fromCpp(jniEnv, c.inputs)),
+                                                           ::djinni::get(::djinni::List<::djinni_generated::NativeInputRecord>::fromCpp(jniEnv, c.inputs)),
                                                            ::djinni::get(::djinni::List<::djinni_generated::NativeOutputRecord>::fromCpp(jniEnv, c.outputs)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
@@ -41,7 +42,7 @@ auto NativeTransactionRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
             ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mHeight)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mBlockTime)),
             ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mDepth)),
-            ::djinni::List<::djinni_generated::NativeOutputRecord>::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mInputs)),
+            ::djinni::List<::djinni_generated::NativeInputRecord>::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mInputs)),
             ::djinni::List<::djinni_generated::NativeOutputRecord>::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mOutputs))};
 }
 

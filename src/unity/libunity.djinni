@@ -51,7 +51,7 @@ transaction_record = record {
     height : i32;
     blockTime : i64;
     depth : i32;
-    inputs : list<output_record>;
+    inputs : list<input_record>;
     outputs : list<output_record>;
 } deriving(parcelable)
 
@@ -62,6 +62,12 @@ transaction_status = enum {
     abandoned;
     conflicted;
 }
+
+input_record = record {
+    address : string;
+    label : string;
+    isMine : bool;
+} deriving(parcelable)
 
 output_record = record {
     amount : i64;
