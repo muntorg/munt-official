@@ -64,7 +64,7 @@ data class NocksOrderApiResult (
 @KotshiJsonAdapterFactory
 abstract class ApplicationJsonAdapterFactory : JsonAdapter.Factory {
     companion object {
-        val INSTANCE: ApplicationJsonAdapterFactory = KotshiApplicationJsonAdapterFactory()
+        val INSTANCE: ApplicationJsonAdapterFactory? = KotshiApplicationJsonAdapterFactory
     }
 }
 

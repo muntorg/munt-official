@@ -43,7 +43,7 @@ android {
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 300348
+            versionCode 300356
             versionName = "2.0.1"
             resValue "string", "about_text_app_name", "Gulden testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
@@ -54,7 +54,7 @@ android {
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
-            versionCode 338
+            versionCode 355
             versionName = "2.0.1"
             resValue "string", "about_text_app_name", "Gulden $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
@@ -90,8 +90,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.14.0'
     implementation 'com.itkacher.okhttpprofiler:okhttpprofiler:1.0.5'
     implementation 'com.squareup.moshi:moshi:1.8.0'
-    implementation 'se.ansman.kotshi:api:1.0.6'
-    kapt 'se.ansman.kotshi:compiler:1.0.6'
+    implementation 'se.ansman.kotshi:api:2.0-rc1'
+    kapt 'se.ansman.kotshi:compiler:2.0-rc1'
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-design:$anko_version"
