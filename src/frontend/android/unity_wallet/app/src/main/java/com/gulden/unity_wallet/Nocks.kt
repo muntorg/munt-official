@@ -192,7 +192,7 @@ suspend fun nocksQuote(amountEuro: Double): NocksQuoteResult
     }
 }
 
-suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String): NocksOrderResult
+suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String, name:String = ""): NocksOrderResult
 {
     if (FAKE_NOCKS_SERVICE) {
         delay(500)
@@ -200,9 +200,15 @@ suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String): NocksOrderRe
         return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount, errorText = "")
     }
     else {
+        val json =
+                if (name.isEmpty())
+                    "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\"}"
+                else
+                    "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\", \"name\": \"$name\"}"
+
         val result = nocksRequest<NocksOrderApiResult>(
                 "transaction",
-                "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\"}")
+                json)
 
         var errorMessage = ""
         var depositAddress = ""

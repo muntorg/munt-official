@@ -52,13 +52,35 @@ class ExampleUnitTest
         lateinit var order: NocksOrderResult
         runBlocking {
             // REMARK: this is a generated random IBAN which is not verified with Nocks
-            // to have the test pass replace with a verified IBAN
-            order = nocksOrder(5.0, "NL69ABNA3528973196")
+            // there is no realtime verification of the name and IBAN at Nocks
+            // the order succeeds regardless what name is used
+            order = nocksOrder(5.0, "NL69ABNA5560006823", "xyz gulden unit test")
+            order
         }
 
-        System.out.println("Nocks order: ${order.depositAmountNLG} NLG to ${order.depositAddress}")
+        if (order.errorText != "")
+            System.out.println(order.errorText)
+        else
+            System.out.println("Nocks order: ${order.depositAmountNLG} NLG to ${order.depositAddress}")
 
         assertTrue(order.depositAmountNLG > 0.0 &&
                 order.depositAddress.isNotEmpty())
+
+        lateinit var order2: NocksOrderResult
+        runBlocking {
+            // REMARK: this is a generated random IBAN which is not verified with Nocks
+            // there is no realtime verification of the name and IBAN at Nocks
+            // the order succeeds regardless what name is used
+            order2 = nocksOrder(5.0, "NL69ABNA5560006823")
+            order2
+        }
+
+
+        if (order2.errorText != "")
+            System.out.println(order2.errorText)
+        else
+            System.out.println("Nocks order: ${order2.depositAmountNLG} NLG to ${order2.depositAddress}")
+
+        assertTrue(order2.errorText.contains("Your IBAN isn't verified", true))
     }
 }
