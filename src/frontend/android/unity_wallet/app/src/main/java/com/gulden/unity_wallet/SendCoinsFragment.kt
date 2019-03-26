@@ -28,6 +28,7 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
+import kotlinx.android.synthetic.main.access_code_entry.view.*
 import kotlinx.android.synthetic.main.iban_name_entry.view.*
 import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
@@ -550,6 +551,13 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                                             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                                             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                                         })
+
+                                //Ensure keyboard/IMM shows by default
+                                contentView.name.requestFocus()
+                                contentView.name.post {
+                                    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                    imm.showSoftInput(contentView.name, InputMethodManager.SHOW_IMPLICIT)
+                                }
                             }
 
                             dialog.show()
@@ -580,15 +588,15 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             setAddressLabel(label)
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
-        val d = builder.create()
-        d.setOnShowListener {
+        val dialog = builder.create()
+        dialog.setOnShowListener {
             viewInflated.addAddressInput.requestFocus()
             viewInflated.addAddressInput.post {
                 val imm = fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(viewInflated.addAddressInput, InputMethodManager.SHOW_IMPLICIT)
             }
         }
-        d.show()
+        dialog.show()
     }
 
     @Suppress("UNUSED_PARAMETER")
