@@ -50,7 +50,7 @@ class BlockListAdapter : ListAdapter<BlockInfoRecord, BlockListAdapter.ItemViewH
                 popupMenu.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.blocks_context_browse -> {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.withAppendedPath(Config.BLOCK_EXPLORER, "/block/" + item.blockHash))
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Config.BLOCK_EXPLORER_BLOCK_TEMPLATE.format(item.blockHash)))
                             context.startActivity(intent)
                         }
                     }

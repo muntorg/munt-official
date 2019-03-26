@@ -41,7 +41,7 @@ class TransactionInfoActivity : AppBaseActivity() {
 
             // view transaction in browser
             transactionId.onClick {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.withAppendedPath(Config.BLOCK_EXPLORER, "/tx/" + tx.txHash))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Config.BLOCK_EXPLORER_TX_TEMPLATE.format(tx.txHash)))
                 startActivity(intent)
             }
 
