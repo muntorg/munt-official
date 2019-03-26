@@ -151,4 +151,5 @@ file COPYING
     <string name="tx_detail_sending_address">Sending address</string>
     <string name="tx_detail_payment_address">Payment address</string>
     <string name="tx_detail_network_fee">Gulden network fee</string>
+    <string name="send_dialog_empty_amout_when_sending">No amount entered</string>
 </resources>

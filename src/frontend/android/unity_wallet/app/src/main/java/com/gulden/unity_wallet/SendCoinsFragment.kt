@@ -32,6 +32,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import kotlin.coroutines.CoroutineContext
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import kotlinx.android.synthetic.main.text_input_address_label.*
 
 
@@ -249,6 +250,12 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun confirmAndCommitIBANPayment(view: View) {
         mMainlayout.button_send.isEnabled = false
+        if (foreignAmount<=0)
+        {
+            Toast.makeText(context, getString(R.string.send_dialog_empty_amout_when_sending), Toast.LENGTH_LONG).show()
+            mMainlayout.button_send.isEnabled = true
+            return;
+        }
         this.launch {
             try {
                 // request order from Nocks
