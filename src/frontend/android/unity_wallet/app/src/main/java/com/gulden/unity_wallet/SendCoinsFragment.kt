@@ -262,6 +262,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 if (orderResult.errorText != "")
                 {
                     errorMessage(orderResult.errorText)
+                    mMainlayout.button_send.isEnabled = true
                 }
                 else
                 {
@@ -283,6 +284,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                             catch (exception: RuntimeException)
                             {
                                 errorMessage(exception.message!!)
+                                mMainlayout.button_send.isEnabled = true
                             }
 
                         }
