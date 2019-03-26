@@ -8,7 +8,6 @@ package com.gulden.unity_wallet
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +31,8 @@ import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import kotlin.coroutines.CoroutineContext
+import android.view.inputmethod.InputMethodManager
+import kotlinx.android.synthetic.main.text_input_address_label.*
 
 
 class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
@@ -529,7 +530,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         val layoutInflater : LayoutInflater = fragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val viewInflated : View = layoutInflater.inflate(text_input_address_label, view.rootView as ViewGroup, false)
         viewInflated.labelAddAddressAddress.text = mSendCoinsReceivingStaticAddress.text
-        val input = viewInflated.findViewById(R.id.input) as EditText
+        val input = viewInflated.findViewById(R.id.addAddressInput) as EditText
         builder.setView(viewInflated)
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             dialog.dismiss()
@@ -539,7 +540,15 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             setAddressLabel(label)
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
-        builder.show()
+        val d = builder.create()
+        d.setOnShowListener {
+            viewInflated.addAddressInput.requestFocus()
+            viewInflated.addAddressInput.post {
+                val imm = fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(viewInflated.addAddressInput, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+        d.show()
     }
 
     @Suppress("UNUSED_PARAMETER")

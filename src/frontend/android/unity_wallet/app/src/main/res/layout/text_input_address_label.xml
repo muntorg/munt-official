@@ -28,17 +28,19 @@ file COPYING
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:text="address"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText">
+        </TextView>
 
-        <AutoCompleteTextView
-            android:id="@+id/input"
+        <EditText
+            android:id="@+id/addAddressInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Label"
             android:imeOptions="actionDone"
             android:inputType="text"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText">
+        </EditText>
 
     </LinearLayout>
 
