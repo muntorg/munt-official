@@ -89,7 +89,7 @@ fun initNocks()
             .build()
 
     val builder = OkHttpClient.Builder()
-    if (BuildConfig.DEBUG) {
+    if (BuildConfig.DEBUG && System.getProperty("java.runtime.name").contains("android", true)) {
         builder.addInterceptor(OkHttpProfilerInterceptor() )
     }
     client = builder.connectionSpecs(Collections.singletonList(spec)).build()
@@ -120,8 +120,8 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
     val result = withContext(IO) {
         val response = client?.newCall(request)?.execute()
         val body = response?.body()
-        code = response?.code()!!
-        if (response.code() >= 400)
+        code = response?.code() ?: 0
+        if (code >= 400)
             error = true
 
         if (body != null)
@@ -192,7 +192,7 @@ suspend fun nocksQuote(amountEuro: Double): NocksQuoteResult
     }
 }
 
-suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String): NocksOrderResult
+suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String, name:String = "", description: String = ""): NocksOrderResult
 {
     if (FAKE_NOCKS_SERVICE) {
         delay(500)
@@ -200,9 +200,15 @@ suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String): NocksOrderRe
         return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount, errorText = "")
     }
     else {
+        val json =
+                if (name.isEmpty())
+                    "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\"}"
+                else
+                    "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\", \"name\": \"$name\", \"text\": \"$description\"}"
+
         val result = nocksRequest<NocksOrderApiResult>(
                 "transaction",
-                "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\"}")
+                json)
 
         var errorMessage = ""
         var depositAddress = ""
