@@ -89,7 +89,7 @@ fun initNocks()
             .build()
 
     val builder = OkHttpClient.Builder()
-    if (BuildConfig.DEBUG) {
+    if (BuildConfig.DEBUG && System.getProperty("java.runtime.name").contains("android", true)) {
         builder.addInterceptor(OkHttpProfilerInterceptor() )
     }
     client = builder.connectionSpecs(Collections.singletonList(spec)).build()
@@ -120,8 +120,8 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
     val result = withContext(IO) {
         val response = client?.newCall(request)?.execute()
         val body = response?.body()
-        code = response?.code()!!
-        if (response.code() >= 400)
+        code = response?.code() ?: 0
+        if (code >= 400)
             error = true
 
         if (body != null)

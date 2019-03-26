@@ -6,9 +6,11 @@
 package com.gulden.unity_wallet
 
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.Before
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -19,6 +21,16 @@ import java.util.logging.Logger
  */
 class ExampleUnitTest
 {
+    @Before
+    fun setUp() {
+        initNocks()
+    }
+
+    @After
+    fun tearDown() {
+        terminateNocks()
+    }
+
     @Test fun addition_isCorrect()
     {
         assertEquals(4, 2 + 2)
