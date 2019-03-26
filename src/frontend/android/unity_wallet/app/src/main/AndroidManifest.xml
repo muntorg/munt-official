@@ -49,15 +49,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <data android:scheme="gulden"/>
-                <data android:scheme="Gulden"/>
+                <data android:scheme="Gulden" tools:ignore="AppLinkUrlError" />
                 <data android:scheme="guldencoin"/>
-                <data android:scheme="Guldencoin"/>
+                <data android:scheme="Guldencoin" tools:ignore="AppLinkUrlError" />
                 <data android:scheme="iban"/>
-                <data android:scheme="Iban"/>
-                <data android:scheme="IBAN"/>
+                <data android:scheme="Iban" tools:ignore="AppLinkUrlError" />
+                <data android:scheme="IBAN" tools:ignore="AppLinkUrlError" />
                 <data android:scheme="sepa"/>
-                <data android:scheme="Sepa"/>
-                <data android:scheme="SEPA"/>
+                <data android:scheme="Sepa" tools:ignore="AppLinkUrlError" />
+                <data android:scheme="SEPA" tools:ignore="AppLinkUrlError" />
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>

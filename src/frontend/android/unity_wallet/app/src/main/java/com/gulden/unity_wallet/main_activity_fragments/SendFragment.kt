@@ -102,7 +102,7 @@ class SendFragment : Fragment(), UnityCore.Observer
 
         if (recipient != null)
         {
-            SendCoinsFragment.newInstance(recipient).show(forActivity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+            SendCoinsFragment.newInstance(recipient).show(forActivity.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
         }
     }
 

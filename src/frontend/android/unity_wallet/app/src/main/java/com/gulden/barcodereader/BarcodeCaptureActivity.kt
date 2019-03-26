@@ -29,7 +29,6 @@ import android.graphics.Rect
 import android.hardware.Camera
 import android.hardware.Camera.Parameters.FLASH_MODE_OFF
 import android.hardware.Camera.Parameters.FLASH_MODE_TORCH
-import android.os.Build
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.app.ActivityCompat
