@@ -5,9 +5,12 @@ set -x
 mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs | true
 
 NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ASSETS=src/frontend/android/unity_wallet/app/src/main/assets/
 
-mkdir src/frontend/android/unity_wallet/app/src/main/assets/ | true
-cp src/data/staticfiltercp src/frontend/android/unity_wallet/app/src/main/assets/
+mkdir $ASSETS | true
+cp src/data/staticfiltercp $ASSETS
+source $DIR/../thirdparty.licenses.sh > src/frontend/android/unity_wallet/app/src/main/assets/core-packages.licenses
 
 for i in $( dirname ${BASH_SOURCE[0]} )/build_targets/*
 do
