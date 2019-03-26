@@ -101,7 +101,6 @@ file COPYING
     <string name="notify_sent">Bedrag verstuurd</string>
     <string name="unlock">Openen</string>
     <string name="access_code_entry_title">Toeganscode voor \"Gulden\"</string>
-    <string name="access_code_entry_remaining">%d pogingen over</string>
     <string name="access_code_choose_upgrade_title">Kies je nieuwe \"Gulden\" toegangscode</string>
     <string name="access_code_choose_title">Kies je \"Gulden\" toegangscode</string>
     <string name="access_code_choose_verify">Verifiëer je toegangscode</string>
@@ -133,4 +132,11 @@ file COPYING
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Geavanceerd</string>
     <string name="clipboard_no_valid_address">Geen gelding Gulden adres op het klembord</string>
+    <string name="transaction_confirmation_text_conflicted">Conflicterend</string>
+    <string name="transaction_confirmation_text_abandoned">Verlaten</string>
+    <string name="transaction_confirmation_text_pending">In behandeling</string>
+    <plurals name="transaction_confirmation_text">
+        <item quantity="one">%d bevestiging</item>
+        <item quantity="other">%d bevestigingen</item>
+    </plurals>
 </resources>

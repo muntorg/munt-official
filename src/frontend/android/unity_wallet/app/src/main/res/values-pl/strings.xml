@@ -101,7 +101,6 @@ file COPYING
     <string name="notify_sent">Wysłane fundusze</string>
     <string name="unlock">Odblokować</string>
     <string name="access_code_entry_title">Kod dostępu do \"Gulden\"</string>
-    <string name="access_code_entry_remaining">%d pozostało prób</string>
     <string name="access_code_choose_upgrade_title">Wybierz swój nowy kod dostępu \"Gulden\"</string>
     <string name="access_code_choose_title">Wybierz swój kod dostępu \"Gulden\"</string>
     <string name="access_code_choose_verify">Zweryfikuj swój kod dostępu</string>

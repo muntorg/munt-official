@@ -101,7 +101,10 @@ file COPYING
     <string name="notify_sent">Funds sent</string>
     <string name="unlock">Unlock</string>
     <string name="access_code_entry_title">Access code for \"Gulden\"</string>
-    <string name="access_code_entry_remaining">%d attempts remaining</string>
+    <plurals name="access_code_entry_remaining">
+        <item quantity="one">%d attempt remaining</item>
+        <item quantity="other">%d attempts remaining</item>
+    </plurals>
     <string name="access_code_choose_upgrade_title">Choose your new \"Gulden\" access code</string>
     <string name="access_code_choose_title">Choose your \"Gulden\" access code</string>
     <string name="access_code_choose_verify">Verify your access code</string>
@@ -133,4 +136,11 @@ file COPYING
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Advanced</string>
     <string name="clipboard_no_valid_address">No valid Gulden address on clipboard</string>
+    <string name="transaction_confirmation_text_conflicted">Conflicted</string>
+    <string name="transaction_confirmation_text_abandoned">Abandoned</string>
+    <string name="transaction_confirmation_text_pending">Pending</string>
+    <plurals name="transaction_confirmation_text">
+        <item quantity="one">%d confirmation</item>
+        <item quantity="other">%d confirmations</item>
+    </plurals>
 </resources>

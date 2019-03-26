@@ -98,7 +98,6 @@ file COPYING
     <string name="notify_sent">Fonds envoyés</string>
     <string name="unlock">Déverrouiller</string>
     <string name="access_code_entry_title">Code d\'accès pour \"Gulden\"</string>
-    <string name="access_code_entry_remaining">%d Nombre de tentatives restantes</string>
     <string name="access_code_choose_upgrade_title">Choisissez votre nouveau code d\'accès \"Gulden\"</string>
     <string name="access_code_choose_title">Choisissez votre code d\'accès \"Gulden\"</string>
     <string name="access_code_choose_verify">Vérifiez votre code d\'accès</string>
