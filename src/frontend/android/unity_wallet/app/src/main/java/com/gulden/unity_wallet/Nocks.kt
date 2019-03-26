@@ -7,7 +7,9 @@ import kotlinx.coroutines.withContext
 import kotlin.random.Random
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
 import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonWriter
 import okhttp3.*
+import okio.Buffer
 import se.ansman.kotshi.JsonSerializable
 import se.ansman.kotshi.KotshiJsonAdapterFactory
 import java.util.*
@@ -104,6 +106,18 @@ fun terminateNocks()
     moshi = null
 }
 
+fun escapeStringToJSON(inputString : String) : String
+{
+    if (inputString.isEmpty())
+        return "\"\""
+
+    val b = Buffer() // okio.Buffer
+    val writer = JsonWriter.of(b)
+    writer.value(inputString)
+    writer.flush()
+    return b.readUtf8()
+}
+
 private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, jsonParams: String): ResultType?
 {
     val request = Request.Builder()
@@ -194,6 +208,9 @@ suspend fun nocksQuote(amountEuro: Double): NocksQuoteResult
 
 suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String, name:String = "", description: String = ""): NocksOrderResult
 {
+    var nameEscaped = escapeStringToJSON(name);
+    var descriptionEscaped = escapeStringToJSON(description)
+
     if (FAKE_NOCKS_SERVICE) {
         delay(500)
         val amount = Random.nextDouble(300.0, 400.0)
@@ -204,7 +221,7 @@ suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String, name:String =
                 if (name.isEmpty())
                     "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\"}"
                 else
-                    "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\", \"name\": \"$name\", \"text\": \"$description\"}"
+                    "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\", \"name\": $nameEscaped, \"text\": $descriptionEscaped}"
 
         val result = nocksRequest<NocksOrderApiResult>(
                 "transaction",
