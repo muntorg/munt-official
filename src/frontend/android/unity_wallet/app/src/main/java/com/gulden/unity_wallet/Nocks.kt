@@ -43,13 +43,13 @@ class NocksOrderApiResult
     var success: SuccessValue? = null
 }
 
-private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, jsonParams: String): ResultType?
+var client : OkHttpClient? = null
+
+// Only create one client per session so that we avoid unnecessary extra SSL handshakes and can take advantage of connection pooling etc.
+fun initNocks()
 {
-    val request = Request.Builder()
-            .url("https://$NOCKS_HOST/api/$endpoint")
-            .header("User-Agent", Config.USER_AGENT)
-            .post(RequestBody.create(MediaType.get("application/json; charset=utf-8"), jsonParams))
-            .build()
+    // Clean up any previously failed nocks sessions
+    terminateNocks()
 
     // Force okhttp to include specific SSL certificates that are required, otherwise these calls simply fail unexpectedly on various devices.
     // See: https://github.com/square/okhttp/issues/3894
@@ -60,17 +60,29 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
                     CipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
                     CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
                     CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA)
-            .build();
-
+            .build()
 
     val builder = OkHttpClient.Builder()
     if (BuildConfig.DEBUG) {
         builder.addInterceptor(OkHttpProfilerInterceptor() )
     }
-    val client = builder.connectionSpecs(Collections.singletonList(spec)).build()
+    client = builder.connectionSpecs(Collections.singletonList(spec)).build()
+}
 
+// Release client when we are done with current session
+fun terminateNocks()
+{
+    //TODO: Cancel all unpaid payment requests here.
+    client = null
+}
 
-
+private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, jsonParams: String): ResultType?
+{
+    val request = Request.Builder()
+            .url("https://$NOCKS_HOST/api/$endpoint")
+            .header("User-Agent", Config.USER_AGENT)
+            .post(RequestBody.create(MediaType.get("application/json; charset=utf-8"), jsonParams))
+            .build()
 
     // execute on IO thread pool
     val result = withContext(IO) {

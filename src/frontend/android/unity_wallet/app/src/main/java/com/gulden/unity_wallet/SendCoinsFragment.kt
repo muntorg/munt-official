@@ -168,6 +168,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         if (IBANValidator.getInstance().isValid(recipient.address)) {
             foreignCurrency = Currencies.knownCurrencies["EUR"]!!
             isIBAN = true
+            initNocks()
         }
         else {
             foreignCurrency = localCurrency
@@ -296,6 +297,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     override fun onDestroy() {
         super.onDestroy()
+
+        if (isIBAN)
+        {
+            terminateNocks()
+        }
 
         coroutineContext[Job]!!.cancel()
     }
