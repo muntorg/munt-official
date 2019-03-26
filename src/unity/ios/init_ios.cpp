@@ -7,6 +7,9 @@
 #include "chain.h"
 #include "init.h"
 
+#include "unity/djinni/cpp/legacy_wallet_result.hpp"
+#include "unity/djinni/cpp/gulden_unified_backend.hpp"
+
 extern std::string HelpMessage(HelpMessageMode mode)
 {
     return "";
@@ -44,4 +47,19 @@ void InitRPCMining()
 bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler)
 {
     return true;
+}
+
+bool GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword, const std::string& newPassword)
+{
+    // only exists here to keep the compiler happy, never call this on iOS
+    LogPrintf("DO NOT call GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet on iOS\n");
+    assert(false);
+}
+
+LegacyWalletResult GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword)
+{
+    // only exists here to keep the compiler happy, never call this on iOS
+    LogPrintf("DO NOT call GuldenUnifiedBackend::isValidAndroidLegacyProtoWallet on iOS\n");
+    assert(false);
+    return LegacyWalletResult::INVALID_OR_CORRUPT;
 }
