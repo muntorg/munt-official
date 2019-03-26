@@ -96,6 +96,8 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
     val request = Request.Builder()
             .url("https://$NOCKS_HOST/api/$endpoint")
             .header("User-Agent", Config.USER_AGENT)
+            .header("Content-Type", "application/json")
+            .header("Accept", "application/json")
             .post(RequestBody.create(MediaType.get("application/json; charset=utf-8"), jsonParams))
             .build()
 
