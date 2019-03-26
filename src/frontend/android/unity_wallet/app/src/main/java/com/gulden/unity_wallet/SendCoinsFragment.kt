@@ -12,9 +12,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,6 +26,7 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
+import kotlinx.android.synthetic.main.iban_name_entry.view.*
 import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
@@ -31,9 +34,6 @@ import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import kotlin.coroutines.CoroutineContext
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import kotlinx.android.synthetic.main.text_input_address_label.*
 
 
 class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
@@ -248,7 +248,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }.show()
     }
 
-    private fun confirmAndCommitIBANPayment(view: View) {
+    private fun confirmAndCommitIBANPayment(view: View, name: String, description: String) {
         mMainlayout.button_send.isEnabled = false
         if (foreignAmount<=0)
         {
@@ -259,7 +259,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         this.launch {
             try {
                 // request order from Nocks
-                val orderResult = nocksOrder(amountEuro = foreignAmount, destinationIBAN = recipient.address)
+
+                val orderResult = nocksOrder(amountEuro = foreignAmount, destinationIBAN = recipient.address, name = name, description = description)
 
                 if (orderResult.errorText != "")
                 {
@@ -289,7 +290,9 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                         }
 
-                        negativeButton("Cancel") {}
+                        negativeButton("Cancel") {
+                            // TODO cancel the transaction with Nocks
+                        }
                     }.show()
                     mMainlayout.button_send.isEnabled = true
                 }
@@ -520,7 +523,23 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                     when
                     {
-                        isIBAN -> confirmAndCommitIBANPayment(view)
+                        isIBAN -> {
+                            val contentView = LayoutInflater.from(context).inflate(R.layout.iban_name_entry, null)
+                            val builder = context!!.alert(Appcompat) {
+                                this.title = "Enter recipient"
+                                customView = contentView
+                                positiveButton("Pay") {
+                                    confirmAndCommitIBANPayment(view, contentView.name.text.toString(), contentView.description.text.toString())
+                                }
+                                negativeButton("Cancel") {
+                                }
+                            }
+                            val dialog = builder.build()
+
+                            // TODO prevent going forward with empty name field
+
+                            dialog.show()
+                        }
                         else -> confirmAndCommitGuldenPayment(view)
                     }
                 }
