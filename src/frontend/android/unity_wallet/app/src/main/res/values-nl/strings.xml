@@ -90,7 +90,7 @@ file COPYING
     <string name="cancel_btn">Annuleren</string>
     <string name="rescan_started">Herscan gestart</string>
     <string name="upgrade_wrong_password">Onjuist wachtwoord?</string>
-    <string name="upgrade_explanation">"De Gulden portemonnee is nu bijgewerkt naar het nieuwe Unity framework. hierdoor moeten de bestaande gegevens bijgewerkt worden. Na het bijwerken volgt een herscan van de blockchain. Dit kan enige tijd duren. "</string>
+    <string name="upgrade_explanation">Gulden moet worden geüpdatet. Dit kan enkele minuten duren, maar Gulden zal daar sneller, makkelijker en lichter door werken.</string>
     <string name="upgrade_btn">Bijwerken</string>
     <string name="upgrade_enter_password">Voer je wachtwoord in</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -135,8 +135,22 @@ file COPYING
     <string name="transaction_confirmation_text_conflicted">Conflicterend</string>
     <string name="transaction_confirmation_text_abandoned">Verlaten</string>
     <string name="transaction_confirmation_text_pending">In behandeling</string>
+    <string name="receive_fragment_share_title">Deel Gulden adres</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d bevestiging</item>
         <item quantity="other">%d bevestigingen</item>
     </plurals>
+    <string name="preferences_license_button">Licensie</string>
+    <string name="license_title">Licensie</string>
+    <string name="tx_detail_wallet_address">Adres portemonnee</string>
+    <string name="tx_detail_sending_address">Verzendadres</string>
+    <string name="tx_detail_payment_address">Betaaladres</string>
+    <string name="tx_detail_network_fee">Gulden netwerkkosten</string>
+    <string name="send_dialog_empty_amout_when_sending">Geen bedrag ingevuld</string>
+    <string name="iban_account_holder_info_text">Voer de correcte naam in van de bankrekeninghouder om vertraging te voorkomen.</string>
+    <string name="iban_account_holder_name">Naam</string>
+    <string name="iban_account_holder_description">Omschrijving (optioneel)</string>
+    <string name="tx_detail_address_unavailable">niet beschikbaar</string>
+    <string name="nocks_error_unable_to_fetch_quote">Kan geschat Guldenbedrag niet ophalen</string>
+    <string name="nocks_error_prefix">Fout:</string>
 </resources>

@@ -91,7 +91,7 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase hast fal
     <string name="cancel_btn">Abbrechen</string>
     <string name="rescan_started">Erneuter Scan gestartet</string>
     <string name="upgrade_wrong_password">Falsches Passwort?</string>
-    <string name="upgrade_explanation">Gulden Wallet wurde jetzt auf das neue Unity-Framework aktualisiert. Aus diesem Grund müssen vorhandene Wallet-Daten aktualisiert werden. Nach dem Upgrade wird die Blockchain erneut gescannt. Dies kann eine Weile dauern.</string>
+    <string name="upgrade_explanation">Gulden benötigt eine Aktualisierung. Dies kann einige Minuten dauern. Danach ist Gulden schneller, einfacher zu verwenden und eine leichtgewichtigere Anwendung.</string>
     <string name="upgrade_btn">Aktualisierung</string>
     <string name="upgrade_enter_password">Passwort eingeben</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -152,4 +152,10 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase hast fal
     <string name="tx_detail_payment_address">Zahlungsadresse</string>
     <string name="tx_detail_network_fee">Gulden Netzwerk-Gebühr</string>
     <string name="send_dialog_empty_amout_when_sending">Kein Betrag eingegeben</string>
+    <string name="iban_account_holder_info_text">Gib den korrekten Namen des Kontoinhabers ein, um eine Verzögerung zu vermeiden.</string>
+    <string name="iban_account_holder_name">Name</string>
+    <string name="iban_account_holder_description">Beschreibung (optional)</string>
+    <string name="tx_detail_address_unavailable">nicht verfügbar</string>
+    <string name="nocks_error_unable_to_fetch_quote">Der geschätzte Gulden-Betrag kann nicht abgerufen werden</string>
+    <string name="nocks_error_prefix">Fehler:</string>
 </resources>
