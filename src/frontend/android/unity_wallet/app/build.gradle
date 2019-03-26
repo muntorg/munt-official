@@ -1,3 +1,7 @@
+plugins {
+    id "com.jaredsburrows.license" version "0.8.42"
+}
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -100,4 +104,13 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1' exclude group: 'com.google.code.findbugs', module: 'jsr305'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+}
+
+licenseReport {
+    generateHtmlReport = true
+    generateJsonReport = true
+
+    // These options are ignored for Java projects
+    copyHtmlReportToAssets = true
+    copyJsonReportToAssets = true
 }
