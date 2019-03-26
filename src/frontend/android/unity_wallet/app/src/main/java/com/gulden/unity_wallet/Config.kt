@@ -1,7 +1,5 @@
 package com.gulden.unity_wallet
 
-import android.net.Uri
-
 class Config {
     companion object {
         const val COIN = 100000000

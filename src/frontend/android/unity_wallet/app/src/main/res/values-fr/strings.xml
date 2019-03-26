@@ -146,7 +146,6 @@ file COPYING
     <string name="tx_detail_sending_address">Adresse d\'envoi</string>
     <string name="tx_detail_payment_address">Adresse de paiement</string>
     <string name="tx_detail_network_fee">Frais de réseau Gulden</string>
-    <string name="send_dialog_empty_amout_when_sending">Aucun montant entré</string>
     <string name="iban_account_holder_info_text">Entrez le nom correct du titulaire du compte pour éviter tout retard.</string>
     <string name="iban_account_holder_name">Nom</string>
     <string name="iban_account_holder_description">Description (facultatif)</string>

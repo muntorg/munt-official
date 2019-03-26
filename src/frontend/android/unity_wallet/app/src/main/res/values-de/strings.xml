@@ -151,7 +151,6 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase hast fal
     <string name="tx_detail_sending_address">Sendeadresse</string>
     <string name="tx_detail_payment_address">Zahlungsadresse</string>
     <string name="tx_detail_network_fee">Gulden Netzwerk-Gebühr</string>
-    <string name="send_dialog_empty_amout_when_sending">Kein Betrag eingegeben</string>
     <string name="iban_account_holder_info_text">Gib den korrekten Namen des Kontoinhabers ein, um eine Verzögerung zu vermeiden.</string>
     <string name="iban_account_holder_name">Name</string>
     <string name="iban_account_holder_description">Beschreibung (optional)</string>

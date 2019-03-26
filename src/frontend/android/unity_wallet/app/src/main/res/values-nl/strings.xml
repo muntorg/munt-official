@@ -146,7 +146,6 @@ file COPYING
     <string name="tx_detail_sending_address">Verzendadres</string>
     <string name="tx_detail_payment_address">Betaaladres</string>
     <string name="tx_detail_network_fee">Gulden netwerkkosten</string>
-    <string name="send_dialog_empty_amout_when_sending">Geen bedrag ingevuld</string>
     <string name="iban_account_holder_info_text">Voer de correcte naam in van de bankrekeninghouder om vertraging te voorkomen.</string>
     <string name="iban_account_holder_name">Naam</string>
     <string name="iban_account_holder_description">Omschrijving (optioneel)</string>

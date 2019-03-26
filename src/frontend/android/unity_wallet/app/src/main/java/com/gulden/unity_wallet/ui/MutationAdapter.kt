@@ -27,7 +27,7 @@ class MutationAdapter(context: Context, private var dataSource: ArrayList<Mutati
 
     //NB! This may cause a minor cosmetic glitch if user is on transaction screen when year crosses over (years just won't display so nothing too terrible)
     //This is preferable to the performance penalty of constantly creating calendar instances
-    private val currentYear = Calendar.getInstance().get(Calendar.YEAR);
+    private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
     fun updateRate(rate_: Double) {
         rate = rate_
@@ -97,7 +97,7 @@ class MutationAdapter(context: Context, private var dataSource: ArrayList<Mutati
         }
         else if (mutationRecord.status == TransactionStatus.CONFIRMING)
         {
-            rowView.textViewStatus.text = mContext.resources.getQuantityString(R.plurals.transaction_confirmation_text, mutationRecord.depth, mutationRecord.depth);
+            rowView.textViewStatus.text = mContext.resources.getQuantityString(R.plurals.transaction_confirmation_text, mutationRecord.depth, mutationRecord.depth)
         }
         else if (mutationRecord.status == TransactionStatus.CONFLICTED)
         {

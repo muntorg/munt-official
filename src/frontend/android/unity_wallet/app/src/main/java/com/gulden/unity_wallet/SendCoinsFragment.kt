@@ -18,7 +18,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -28,7 +27,6 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
-import kotlinx.android.synthetic.main.access_code_entry.view.*
 import kotlinx.android.synthetic.main.iban_name_entry.view.*
 import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
@@ -514,17 +512,12 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             R.id.button_send ->
             {
                 run {
-                    if (amountEditStr.isEmpty())
+                    if ((amountEditStr.isEmpty()) || (foreignAmount<=0 && amount<=0))
                     {
                         errorMessage("Enter an amount to pay")
                         return@run
                     }
 
-                    if (foreignAmount<=0 && amount<=0)
-                    {
-                        Toast.makeText(context, getString(R.string.send_dialog_empty_amout_when_sending), Toast.LENGTH_LONG).show()
-                        return;
-                    }
                     when
                     {
                         isIBAN -> {
