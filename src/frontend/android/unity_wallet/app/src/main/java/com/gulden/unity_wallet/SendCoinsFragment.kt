@@ -252,12 +252,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun confirmAndCommitIBANPayment(view: View, name: String, description: String) {
         mMainlayout.button_send.isEnabled = false
-        if (foreignAmount<=0)
-        {
-            Toast.makeText(context, getString(R.string.send_dialog_empty_amout_when_sending), Toast.LENGTH_LONG).show()
-            mMainlayout.button_send.isEnabled = true
-            return;
-        }
         this.launch {
             try {
                 // request order from Nocks
@@ -523,6 +517,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                         return@run
                     }
 
+                    if (foreignAmount<=0 && amount<=0)
+                    {
+                        Toast.makeText(context, getString(R.string.send_dialog_empty_amout_when_sending), Toast.LENGTH_LONG).show()
+                        return;
+                    }
                     when
                     {
                         isIBAN -> {
