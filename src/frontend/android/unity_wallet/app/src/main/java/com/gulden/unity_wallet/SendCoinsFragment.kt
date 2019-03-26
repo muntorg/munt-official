@@ -251,37 +251,40 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         this.launch {
             try {
                 // request order from Nocks
-                val orderResult = nocksOrder(
-                        amountEuro = foreignAmount,
-                        destinationIBAN = recipient.address)
+                val orderResult = nocksOrder(amountEuro = foreignAmount, destinationIBAN = recipient.address)
 
-                // create styled message from resource template and arguments bundle
-                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG.toDouble())
-                val message = getString(R.string.send_coins_iban_confirm_template,
-                        String.format("%.${foreignCurrency.precision}f", foreignAmount),
-                        nlgStr, recipientDisplayAddress)
-
-                // alert dialog for confirmation
-                fragmentActivity.alert(Appcompat, message, "Send Gulden to IBAN?") {
-
-                    // on confirmation compose recipient and execute payment
-                    positiveButton("Send") {
-                        mMainlayout.button_send.isEnabled = true
-                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, wireFormatNative(orderResult.depositAmountNLG))
-                        try {
-                            performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
-                        }
-                        catch (exception: RuntimeException) {
-                            errorMessage(exception.message!!)
-                        }
-
-                    }
-
-                    negativeButton("Cancel") {}
+                if (orderResult.errorText != "")
+                {
+                    errorMessage(orderResult.errorText)
                 }
-                        .show()
-                mMainlayout.button_send.isEnabled = true
+                else
+                {
+                    // create styled message from resource template and arguments bundle
+                    val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG)
+                    val message = getString(R.string.send_coins_iban_confirm_template, String.format("%.${foreignCurrency.precision}f", foreignAmount), nlgStr, recipientDisplayAddress)
 
+                    // alert dialog for confirmation
+                    fragmentActivity.alert(Appcompat, message, "Send Gulden to IBAN?") {
+
+                        // on confirmation compose recipient and execute payment
+                        positiveButton("Send") {
+                            mMainlayout.button_send.isEnabled = true
+                            val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, wireFormatNative(orderResult.depositAmountNLG))
+                            try
+                            {
+                                performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
+                            }
+                            catch (exception: RuntimeException)
+                            {
+                                errorMessage(exception.message!!)
+                            }
+
+                        }
+
+                        negativeButton("Cancel") {}
+                    }.show()
+                    mMainlayout.button_send.isEnabled = true
+                }
             } catch (e: Throwable) {
                 errorMessage("IBAN order failed")
                 mMainlayout.button_send.isEnabled = true
@@ -338,8 +341,15 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     prevJob?.join()
 
                     val quote = nocksQuote(foreignAmount)
-                    val nlg = String.format("%.${Config.PRECISION_SHORT}f", quote.amountNLG)
-                    mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
+                    if (quote.amountNLG < 0)
+                    {
+                        mSendCoinsNocksEstimate.text = "Error: " + quote.errorText
+                    }
+                    else
+                    {
+                        val nlg = quote.amountNLG
+                        mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
+                    }
                 }
                 catch (_: CancellationException) {
                     // silently pass job cancellation
