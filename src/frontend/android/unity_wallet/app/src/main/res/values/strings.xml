@@ -157,6 +157,8 @@ file COPYING
     <string name="tx_detail_address_unavailable">unavailable</string>
     <string name="nocks_error_unable_to_fetch_quote">Could not fetch transaction quote</string>
     <string name="nocks_error_prefix">Error:</string>
-    <string name="notification_transaction_channel_name">Gulden transactions</string>
-    <string name="notification_transaction_channel_description">Notifications of incoming and outgoing transactions from Gulden app</string>
+    <string name="notification_transaction_channel_name">Transactions</string>
+    <string name="notification_transaction_channel_description">Transaction notifications</string>
+    <string name="notification_service_channel_name">Service</string>
+    <string name="notification_service_channel_description">Service to keep data synchronised and monitor for transactions when the app is closed, can be turned on/off from inside the app settings</string>
 </resources>
