@@ -319,6 +319,9 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun setupRate()
     {
+        if (!isIBAN)
+            entryMode = EntryMode.Native
+
         this.launch( Dispatchers.Main) {
             try {
                 localRate = fetchCurrencyRate(foreignCurrency.code)
