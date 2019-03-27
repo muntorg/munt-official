@@ -580,7 +580,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     private fun handleAddToAddressBookClick(view : View)
     {
         val builder = AlertDialog.Builder(fragmentActivity)
-        builder.setTitle("Add address")
+        builder.setTitle(getString(R.string.dialog_title_add_address))
         val layoutInflater : LayoutInflater = fragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val viewInflated : View = layoutInflater.inflate(text_input_address_label, view.rootView as ViewGroup, false)
         viewInflated.labelAddAddressAddress.text = mSendCoinsReceivingStaticAddress.text

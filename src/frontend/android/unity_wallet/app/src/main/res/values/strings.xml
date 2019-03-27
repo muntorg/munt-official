@@ -157,4 +157,5 @@ file COPYING
     <string name="notification_transaction_channel_description">Transaction notifications</string>
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service to keep data synchronised and monitor for transactions when the app is closed, can be turned on/off from inside the app settings</string>
+    <string name="dialog_title_add_address">Add address</string>
 </resources>
