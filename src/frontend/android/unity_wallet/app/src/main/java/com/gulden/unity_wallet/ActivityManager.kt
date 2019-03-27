@@ -5,10 +5,7 @@
 
 package com.gulden.unity_wallet
 
-import android.app.Application
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -16,6 +13,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
@@ -67,6 +65,47 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         }
     }
 
+    // O upwards requires notification channels
+    private var notificationChannel : NotificationChannel? = null
+    fun getNotificationChannelID() : String
+    {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        {
+            if (notificationChannel == null)
+            {
+                var mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager;
+
+                // The id of the channel.
+                var id = "gulden_transactions_notification_channel";
+
+                // The user-visible name of the channel.
+                var name = getString(R.string.notification_transaction_channel_name)
+
+                // The user-visible description of the channel.
+                var description = getString(R.string.notification_transaction_channel_description)
+
+                // Default importance, adjustable by user in preferences
+                var importance = NotificationManager.IMPORTANCE_MAX;
+
+                notificationChannel = NotificationChannel(id, name, importance);
+
+                // Sets the notification light color for notifications posted to this, if the device supports this feature.
+                notificationChannel?.enableLights(true);
+                notificationChannel?.setLightColor(Color.GREEN);
+
+                // Sets vibration for notifications
+                notificationChannel?.enableVibration(true);
+                notificationChannel?.setVibrationPattern(longArrayOf(0, 1000, 500, 1000))
+
+                notificationChannel?.setDescription(description);
+                mNotificationManager.createNotificationChannel(notificationChannel);
+            }
+            if (notificationChannel != null)
+                return notificationChannel?.id!!
+        }
+        return "";
+    }
+
     override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         // only notify of mutations that are not initiated by our own payments, have a net change effect != 0
@@ -85,6 +124,8 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                 setContentText(formatNative(mutation.change))
                 //setPublicVersion()
                 //setTimeoutAfter()
+                if (getNotificationChannelID() != "")
+                    setChannelId(getNotificationChannelID())
                 setContentIntent(pendingIntent)
                 setOngoing(false)
                 setAutoCancel(true)
