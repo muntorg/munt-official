@@ -42,21 +42,11 @@ file COPYING
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp">
-
-            <ListView
-                android:id="@+id/addressBookList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="8dp"
-                android:divider="@null"
-                android:dividerHeight="0dp">
-
-            </ListView>
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp">
 
             <LinearLayout
-                android:id="@+id/emptyAddressBookView"
+                android:id="@+id/layoutAddressBook"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_margin="8dp"
@@ -65,19 +55,79 @@ file COPYING
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                >
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/layoutAddressBookHeader"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/address_book_empty_title" />
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="1dp"
+                        android:textColor="@android:color/black"
+                        android:text="@string/address_book_title" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10" />
+
+                    <TextView
+                        android:id="@+id/imageViewAddToAddressBook"
+                        android:textColor="@android:color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fa5ps"
+                        android:paddingLeft="24dp"
+                        android:paddingTop="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        android:text=""
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="HardcodedText,SpUsage" />
+
+                </LinearLayout>
+
+                <!-- Set large margin right so that users don't accidentally click list items when aiming for "add" button -->
+                <ListView
+                    android:id="@+id/addressBookList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/address_book_empty_message" />
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="50dp"
+                    android:divider="@null"
+                    android:dividerHeight="0dp">
+                </ListView>
 
+                <LinearLayout
+                    android:id="@+id/emptyAddressBookView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="50dp"
+                        android:text="@string/address_book_empty_message" />
+
+                </LinearLayout>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.gulden.unity_wallet.ui.widgets.LockView>
