@@ -30,7 +30,7 @@ file COPYING
     <string name="recovery_phrase_copy">La phrase de récupération est copiée dans le presse-papier</string>
     <string name="address_book_empty_message">Pour ajouter une adresse, lancez un paiement et touchez \"Ajouter au carnet d\'adresses\".</string>
     <string name="address_book_title">Carnet d\'adresses</string>
-    <string name="transaction_list_empty_title">Aucun Gulden n\'a reçu jusqu\'à présent.</string>
+    <string name="transaction_list_empty_title">Aucun transaction n\'a reçu jusqu\'à présent.</string>
     <string name="transaction_list_empty_message">Touchez ici pour acheter votre premier Gulden.</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nà %2$s</string>
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nà %3$s</string>
@@ -73,8 +73,6 @@ file COPYING
     <string name="send_coins_label_remove_from_address_book">Retirer du carnet d\'adresses</string>
     <string name="send_fragment_scan_label">Scannez le QR code</string>
     <string name="send_fragment_clipboard_label">Le presse-papier</string>
-    <string name="send_keypad_decimal_separator">.</string>
-    <string name="send_keypad_button_delete">⌫</string>
     <string name="chain_status_label_probable_height">Hauteur probable</string>
     <string name="chain_status_label_partial_height">Hauteur de chaîne partielle</string>
     <string name="chain_status_label_processed_height">Hauteur traitée</string>
@@ -90,7 +88,7 @@ file COPYING
     <string name="cancel_btn">Annuler</string>
     <string name="rescan_started">Rescan a commencé</string>
     <string name="upgrade_wrong_password">Mot de passe erroné?</string>
-    <string name="upgrade_explanation">Le portefeuille Gulden est maintenant mis à niveau vers le nouveau cadre Unity. Pour cette raison, les données des portefeuilles existants doivent être mises à jour. Après la mise à niveau, la chaîne de blocage sera à nouveau numérisée, ce qui peut prendre un certain temps.</string>
+    <string name="upgrade_explanation">Gulden a besoin d\'une mise à jour. Cela peut prendre quelques minutes, mais Gulden sera plus rapide, plus facile à utiliser et plus léger.</string>
     <string name="upgrade_btn">Mise à niveau</string>
     <string name="upgrade_enter_password">Entrez votre mot de passe</string>
     <string name="upgrade_enter_password_hint">NIP</string>
@@ -149,6 +147,9 @@ file COPYING
     <string name="nocks_error_unable_to_fetch_quote">Impossible d\'obtenir le devis de la transaction</string>
     <string name="nocks_error_prefix">Erreur</string>
     <string name="notification_transaction_channel_name">Transactions</string>
+    <string name="notification_transaction_channel_description">Notification des transactions</string>
+    <string name="notification_service_channel_name">Service</string>
+    <string name="notification_service_channel_description">Service pour garder les données synchronisées et surveiller les transactions lorsque l\'application est fermée, peut être activé/désactivé depuis les paramètres de l\'application.</string>
     <string name="dialog_title_add_address">Ajouter une adresse</string>
     <string name="hint_iban_or_gulden_address">Gulden ou IBAN adresse</string>
     <string name="address_book_empty_title">Carnet d\'adresses vide</string>

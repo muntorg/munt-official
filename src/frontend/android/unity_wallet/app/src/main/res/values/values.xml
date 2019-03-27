@@ -103,6 +103,8 @@
     <string name="send_keypad_digit_8">8</string>
     <string name="send_keypad_digit_9">9</string>
     <string name="send_keypad_digit_0">0</string>
+    <string name="send_keypad_decimal_separator">.</string>
+    <string name="send_keypad_button_delete">⌫</string>
 
     <!-- Only visible in case of major error, or via things like screen readers so avoid burdening translators !-->
     <string name="image_content_description_gulden_logo">Gulden logo</string>

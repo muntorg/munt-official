@@ -74,8 +74,6 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="send_coins_label_remove_from_address_book">Vom Adressbuch entfernen</string>
     <string name="send_fragment_scan_label">Scanne den QR Code</string>
     <string name="send_fragment_clipboard_label">Zwischenablage</string>
-    <string name="send_keypad_decimal_separator">.</string>
-    <string name="send_keypad_button_delete">⌫</string>
     <string name="chain_status_label_probable_height">Wahrscheinliche Höhe</string>
     <string name="chain_status_label_partial_height">Teilweise Kettenhöhe</string>
     <string name="chain_status_label_processed_height">Bearbeitete Höhe</string>

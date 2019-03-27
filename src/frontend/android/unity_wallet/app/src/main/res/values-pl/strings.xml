@@ -73,8 +73,6 @@ file COPYING
     <string name="send_coins_label_remove_from_address_book">Usuń z książki adresowej</string>
     <string name="send_fragment_scan_label">Skanuj QR</string>
     <string name="send_fragment_clipboard_label">Schowek</string>
-    <string name="send_keypad_decimal_separator">.</string>
-    <string name="send_keypad_button_delete">⌫</string>
     <string name="chain_status_label_probable_height">Prawdopodobna wysokość</string>
     <string name="chain_status_label_partial_height">Częściowa wysokość łańcucha</string>
     <string name="chain_status_label_processed_height">Przetworzona wysokość</string>
