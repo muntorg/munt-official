@@ -10,11 +10,17 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html
 import android.text.SpannableString
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -26,7 +32,9 @@ import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.jniunifiedbackend.UriRecord
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.AddressBookAdapter
+import kotlinx.android.synthetic.main.add_address_entry.view.*
 import kotlinx.android.synthetic.main.fragment_send.*
+import kotlinx.android.synthetic.main.iban_name_entry.view.*
 import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
@@ -68,6 +76,10 @@ class SendFragment : Fragment(), UnityCore.Observer
             }
         }
 
+        imageViewAddToAddressBook.setOnClickListener {
+            handleAddToAddressBookButtonClick(view)
+        }
+
         qrButton.setOnClickListener {
             val intent = Intent(context, BarcodeCaptureActivity::class.java)
             intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
@@ -75,6 +87,35 @@ class SendFragment : Fragment(), UnityCore.Observer
         }
 
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
+    }
+
+    private fun handleAddToAddressBookButtonClick(view : View)
+    {
+        val builder = AlertDialog.Builder(this.context!!)
+        builder.setTitle(getString(R.string.dialog_title_add_address))
+        val layoutInflater : LayoutInflater = this.context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val viewInflated : View = layoutInflater.inflate(R.layout.add_address_entry, view.rootView as ViewGroup, false)
+        val inputAddress = viewInflated.findViewById(R.id.address) as EditText
+        val inputLabel = viewInflated.findViewById(R.id.addressName) as EditText
+        builder.setView(viewInflated)
+        builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
+            val address = inputAddress.text.toString()
+            val label = inputLabel.text.toString()
+            val record = AddressRecord(address, "Send", label)
+            UnityCore.instance.addAddressBookRecord(record)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            viewInflated.address.requestFocus()
+            viewInflated.address.post {
+                val imm = this.context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(viewInflated.address, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+        dialog.show()
     }
 
     fun handleURI(payToURI : Uri, forActivity : WalletActivity)
