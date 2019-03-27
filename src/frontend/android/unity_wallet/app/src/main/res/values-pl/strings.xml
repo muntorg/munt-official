@@ -135,10 +135,23 @@ file COPYING
     <string name="transaction_confirmation_text_conflicted">Konflikt</string>
     <string name="transaction_confirmation_text_abandoned">Opuszczony</string>
     <string name="transaction_confirmation_text_pending">W oczekiwaniu</string>
+    <string name="receive_fragment_share_title">Udostępnij adres Gulden</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d potwierdzenie</item>
         <item quantity="other">%d potwierdzenia</item>
         <item quantity="few">%d potwierdzenia</item>
         <item quantity="many">%d potwierdzeniń</item>
     </plurals>
+    <string name="preferences_license_button">Licencja</string>
+    <string name="license_title">Licencja</string>
+    <string name="tx_detail_wallet_address">Adres portfela</string>
+    <string name="tx_detail_sending_address">Adres wysyłania</string>
+    <string name="tx_detail_payment_address">Adres do płatności</string>
+    <string name="tx_detail_network_fee">Opłata za sieć Gulden</string>
+    <string name="iban_account_holder_info_text">Wprowadź poprawną nazwę właściciela konta, aby zapobiec opóźnieniu.</string>
+    <string name="iban_account_holder_name">Imię</string>
+    <string name="iban_account_holder_description">Opis (opcjonalnie)</string>
+    <string name="tx_detail_address_unavailable">niedostępne</string>
+    <string name="nocks_error_unable_to_fetch_quote">Nie można pobrać wyceny transakcji</string>
+    <string name="nocks_error_prefix">Błąd:</string>
 </resources>
