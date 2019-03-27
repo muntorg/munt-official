@@ -125,12 +125,8 @@ file COPYING
     <string name="change_passcode_auth_title">Change code</string>
     <string name="change_passcode_auth_desc">Enter old access code to proceed and change to a new code.</string>
     <string name="wallet_birth_heading">How old is this wallet?</string>
-    <string name="wallet_birth_info">Newer wallets sync faster. Select \"Older\" if you are missing funds.</string>
-    <string name="wallet_birth_less_than_a_week">Less than a week</string>
     <string name="wallet_birth_less_than_a_month">Less than a month</string>
-    <string name="wallet_birth_less_than_six_months">Less than six months</string>
     <string name="wallet_birth_less_than_a_year">Less than a year</string>
-    <string name="wallet_birth_less_than_two_years">Less than two years</string>
     <string name="wallet_birth_unsure">Older / I\'m not sure</string>
     <string name="link_wallet_auth_desc">Enter access code to proceed and link your wallet.</string>
     <string name="numeric_keypad_send_button">Send</string>
