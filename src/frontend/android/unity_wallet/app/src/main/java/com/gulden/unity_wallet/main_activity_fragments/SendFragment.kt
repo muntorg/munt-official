@@ -45,7 +45,6 @@ class SendFragment : Fragment(), UnityCore.Observer
         super.onViewCreated(view, savedInstanceState)
 
         clipboardButton.setOnClickListener {
-            val intent = Intent(context, SendCoinsFragment::class.java)
             val text = clipboardText()
             val recipient = when {
                 IBANValidator.getInstance().isValid(text) ->
@@ -82,7 +81,7 @@ class SendFragment : Fragment(), UnityCore.Observer
     {
         //TODO: Improve this, and consider moving more of the work into unity core
         //TODO: Handle amounts passed as paramaters etc.
-        val address = payToURI.host
+        val address = if (payToURI.host!=null) payToURI.host else ""
         val amount = if (payToURI.queryParameterNames.contains("amount")) payToURI.getQueryParameter("amount") else "0"
         val label = if (payToURI.queryParameterNames.contains("label")) payToURI.getQueryParameter("label") else ""
         var recipient : UriRecipient? = null
