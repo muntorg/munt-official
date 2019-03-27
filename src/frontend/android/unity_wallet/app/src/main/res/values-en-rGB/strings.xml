@@ -29,9 +29,9 @@ file COPYING
     <string name="recovery_phrase_acknowledge_writing_down">I wrote it down</string>
     <string name="recovery_phrase_copy">Recovery phrase copied to clipboard</string>
     <string name="address_book_empty_message">To add an address, start a payment and tap \"Add to address book\".</string>
-    <string name="address_book_empty_title">Empty address book</string>
-    <string name="transaction_list_empty_title">No Gulden received so far.</string>
-    <string name="transaction_list_empty_message">Touch here to buy your first Gulden.</string>
+    <string name="address_book_title">Address book</string>
+    <string name="transaction_list_empty_title">No Transactions received</string>
+    <string name="transaction_list_empty_message">Touch here to buy your first Gulden</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nto %2$s</string>
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
     <string name="send_coins_nocks_estimate_template">Approx. G %1$s including IBAN service fee</string>
@@ -124,12 +124,8 @@ file COPYING
     <string name="change_passcode_auth_title">Change code</string>
     <string name="change_passcode_auth_desc">Enter old access code to proceed and change to a new code.</string>
     <string name="wallet_birth_heading">How old is this wallet?</string>
-    <string name="wallet_birth_info">Newer wallets sync faster. Select \"Older\" if you are missing funds.</string>
-    <string name="wallet_birth_less_than_a_week">Less than a week</string>
     <string name="wallet_birth_less_than_a_month">Less than a month</string>
-    <string name="wallet_birth_less_than_six_months">Less than six months</string>
     <string name="wallet_birth_less_than_a_year">Less than a year</string>
-    <string name="wallet_birth_less_than_two_years">Less than two years</string>
     <string name="wallet_birth_unsure">Older / I\'m not sure</string>
     <string name="link_wallet_auth_desc">Enter access code to proceed and link your wallet.</string>
     <string name="numeric_keypad_send_button">Send</string>
@@ -156,4 +152,15 @@ file COPYING
     <string name="tx_detail_address_unavailable">unavailable</string>
     <string name="nocks_error_unable_to_fetch_quote">Could not fetch transaction quote</string>
     <string name="nocks_error_prefix">Error:</string>
+    <string name="notification_transaction_channel_name">Transactions</string>
+    <string name="notification_transaction_channel_description">Transaction notifications</string>
+    <string name="notification_service_channel_name">Service</string>
+    <string name="notification_service_channel_description">Service to keep data synchronised and monitor for transactions when the app is closed, can be turned on/off from inside the app settings</string>
+    <string name="dialog_title_add_address">Add address</string>
+    <string name="hint_iban_or_gulden_address">Gulden or IBAN address</string>
+    <string name="address_book_empty_title">Empty address book</string>
+    <string name="wallet_birth_info">Newer wallets sync faster. Select \"Older\" if you are missing funds.</string>
+    <string name="wallet_birth_less_than_a_week">Less than a week</string>
+    <string name="wallet_birth_less_than_six_months">Less than six months</string>
+    <string name="wallet_birth_less_than_two_years">Less than two years</string>
 </resources>

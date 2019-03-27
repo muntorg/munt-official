@@ -29,7 +29,7 @@ file COPYING
     <string name="recovery_phrase_acknowledge_writing_down">Je l\'ai écrit</string>
     <string name="recovery_phrase_copy">La phrase de récupération est copiée dans le presse-papier</string>
     <string name="address_book_empty_message">Pour ajouter une adresse, lancez un paiement et touchez \"Ajouter au carnet d\'adresses\".</string>
-    <string name="address_book_empty_title">Carnet d\'adresses vide</string>
+    <string name="address_book_title">Carnet d\'adresses</string>
     <string name="transaction_list_empty_title">Aucun Gulden n\'a reçu jusqu\'à présent.</string>
     <string name="transaction_list_empty_message">Touchez ici pour acheter votre premier Gulden.</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nà %2$s</string>
@@ -120,12 +120,8 @@ file COPYING
     <string name="change_passcode_auth_title">Modifier le code</string>
     <string name="change_passcode_auth_desc">Entrez l\'ancien code d\'accès pour continuer et changer de code.</string>
     <string name="wallet_birth_heading">Quel âge a ce portefeuille?</string>
-    <string name="wallet_birth_info">Les nouveaux portefeuilles se synchronisent plus rapidement. Sélectionnez \"plus ancien\" s\'il vous manque des fonds.</string>
-    <string name="wallet_birth_less_than_a_week">Moins d\'une semaine</string>
     <string name="wallet_birth_less_than_a_month">Moins d\'un mois</string>
-    <string name="wallet_birth_less_than_six_months">Moins de six mois</string>
     <string name="wallet_birth_less_than_a_year">Moins d\'un an</string>
-    <string name="wallet_birth_less_than_two_years">Moins de deux ans</string>
     <string name="wallet_birth_unsure">Plus vieux / Je ne suis pas sûr</string>
     <string name="link_wallet_auth_desc">Entrez le code d\'accès pour continuer et lier votre porte-monnaie.</string>
     <string name="numeric_keypad_send_button">Envoyer</string>
@@ -152,4 +148,12 @@ file COPYING
     <string name="tx_detail_address_unavailable">indisponible</string>
     <string name="nocks_error_unable_to_fetch_quote">Impossible d\'obtenir le devis de la transaction</string>
     <string name="nocks_error_prefix">Erreur</string>
+    <string name="notification_transaction_channel_name">Transactions</string>
+    <string name="dialog_title_add_address">Ajouter une adresse</string>
+    <string name="hint_iban_or_gulden_address">Gulden ou IBAN adresse</string>
+    <string name="address_book_empty_title">Carnet d\'adresses vide</string>
+    <string name="wallet_birth_info">Les nouveaux portefeuilles se synchronisent plus rapidement. Sélectionnez \"plus ancien\" s\'il vous manque des fonds.</string>
+    <string name="wallet_birth_less_than_a_week">Moins d\'une semaine</string>
+    <string name="wallet_birth_less_than_six_months">Moins de six mois</string>
+    <string name="wallet_birth_less_than_two_years">Moins de deux ans</string>
 </resources>

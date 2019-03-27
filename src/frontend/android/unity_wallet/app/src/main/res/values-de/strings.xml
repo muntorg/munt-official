@@ -29,7 +29,7 @@ file COPYING
     <string name="recovery_phrase_acknowledge_writing_down">Ich habe es aufgeschrieben</string>
     <string name="recovery_phrase_copy">Wiederherstellungsphrase in die Zwischenablage kopiert</string>
     <string name="address_book_empty_message">Um eine Adresse hinzuzufügen, starte eine Bezahlung und tippe auf \"Zum Adressbuch hinzufügen\"</string>
-    <string name="address_book_empty_title">Adressbuch löschen</string>
+    <string name="address_book_title">Adressbuch</string>
     <string name="transaction_list_empty_title">Bis jetzt wurden keine Gulden empfangen.</string>
     <string name="transaction_list_empty_message">Hier tippen um deine ersten Gulden zu kaufen.</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nnach %2$s</string>
@@ -58,9 +58,9 @@ file COPYING
     <string name="failed_guldensync_warning_title">Verbindung zwischen Mobil und Desktop Wallet fehlgeschlagen</string>
     <string name="failed_guldensync_unconfirmed_funds_message">Einige deiner Geldmittel warten noch auf ihre Bestätigung. Bitte erlaube Ihnen vollständig bestätigt zu werden, bevor du die Verbindung zwischen Mobil und Destkop Wallet erneut versuchst.</string>
     <string name="guldensync_info_title">Verbinden mit Desktop Wallet</string>
-    <string name="guldensync_info_message_non_empty_wallet">Du bist kurz davor eine Verbindung zum Desktop Wallet herzustellen. Die jetzigen Adressen in diesem Wallet werden gelöscht und nach der Verbindung nicht länger verfügbar sein. Die Geldmittel werden vor der Verbindung zum Desktop Wallet transferiert und sind kurzfristig nicht verfügbar bis die Verbindung erfolgreich hergestellt wurde. Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase hast falls du später wieder darauf zugreifen willst.</string>
-    <string name="guldensync_info_message_empty_wallet">Du bist kurz davor eine Verbindung zum Desktop Wallet herzustellen. Die jetzigen Adressen in diesem Wallet werden gelöscht und nach der Verbindung nicht länger verfügbar sein.
-Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase hast falls du später wieder darauf zugreifen willst.</string>
+    <string name="guldensync_info_message_non_empty_wallet">Du bist im Begriff, eine Verbindung zum Desktop Wallet herzustellen. Die aktuellen Adressen in diesem Wallet werden gelöscht und sind nach der Verbindung nicht länger verfügbar. Die aktuellen Geldmittel werden vor der Verbindung zum Desktop Wallet transferiert und sind kurzfristig nicht verfügbar, bis die Verbindung hergestellt wurde. Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeichert hast, falls du später wieder darauf zugreifen musst.</string>
+    <string name="guldensync_info_message_empty_wallet">Du bist im Begriff, eine Verbindung zum Desktop Wallet herzustellen. Die aktuellen Adressen in diesem Wallet werden gelöscht und sind nach der Verbindung nicht länger verfügbar.
+Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeichert hast, falls du später wieder darauf zugreifen musst.</string>
     <string name="preference_fragment_title">Einstellungen</string>
     <string name="preference_fragment_recovery_label">Wiederherstellungsphrase</string>
     <string name="preference_fragment_link_label">Wallet verbinden</string>
@@ -125,12 +125,8 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase hast fal
     <string name="change_passcode_auth_title">Zugangscode ändern</string>
     <string name="change_passcode_auth_desc">Gib den alten Zugangscode ein um einen neuen hinzuzufügen.</string>
     <string name="wallet_birth_heading">Wie alt ist dieses Wallet?</string>
-    <string name="wallet_birth_info">Neuere Wallets werden schneller synchronisiert. Wählen Sie „Älter / Ich bin mir nicht sicher“, wenn Geldmittel fehlen.</string>
-    <string name="wallet_birth_less_than_a_week">Weniger als eine Woche</string>
     <string name="wallet_birth_less_than_a_month">Weniger als ein Monat</string>
-    <string name="wallet_birth_less_than_six_months">Weniger als sechs Monate</string>
     <string name="wallet_birth_less_than_a_year">Weniger als ein Jahr</string>
-    <string name="wallet_birth_less_than_two_years">Weniger als zwei Jahre</string>
     <string name="wallet_birth_unsure">Älter / Ich bin mir nicht sicher</string>
     <string name="link_wallet_auth_desc">Zugangscode eingeben, um fortzufahren und Ihre Wallet zu verbinden.</string>
     <string name="numeric_keypad_send_button">Senden</string>
@@ -157,4 +153,15 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase hast fal
     <string name="tx_detail_address_unavailable">nicht verfügbar</string>
     <string name="nocks_error_unable_to_fetch_quote">Der geschätzte Gulden-Betrag kann nicht abgerufen werden</string>
     <string name="nocks_error_prefix">Fehler:</string>
+    <string name="notification_transaction_channel_name">Transaktionen</string>
+    <string name="notification_transaction_channel_description">Transaktionsbenachrichtigungen</string>
+    <string name="notification_service_channel_name">Service</string>
+    <string name="notification_service_channel_description">Dienst, der die Daten synchron hält und Transaktionen überwacht, wenn die App geschlossen wird, kann in den App-Einstellungen aktiviert / deaktiviert werden</string>
+    <string name="dialog_title_add_address">Adresse hinzufügen</string>
+    <string name="hint_iban_or_gulden_address">Gulden-Adresse oder IBAN-Kontonummer</string>
+    <string name="address_book_empty_title">Adressbuch löschen</string>
+    <string name="wallet_birth_info">Neuere Wallets werden schneller synchronisiert. Wählen Sie „Älter / Ich bin mir nicht sicher“, wenn Geldmittel fehlen.</string>
+    <string name="wallet_birth_less_than_a_week">Weniger als eine Woche</string>
+    <string name="wallet_birth_less_than_six_months">Weniger als sechs Monate</string>
+    <string name="wallet_birth_less_than_two_years">Weniger als zwei Jahre</string>
 </resources>

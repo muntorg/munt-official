@@ -29,9 +29,9 @@ file COPYING
     <string name="recovery_phrase_acknowledge_writing_down">Ik heb het opgeschreven</string>
     <string name="recovery_phrase_copy">Herstelzin gekopieerd naar klembord</string>
     <string name="address_book_empty_message">Om een adres toe te voegen, start een betaling en tap op \"Aan adresboek toevoegen\"</string>
-    <string name="address_book_empty_title">Maak adresboek leeg</string>
-    <string name="transaction_list_empty_title">Nog geen Gulden ontvangen.</string>
-    <string name="transaction_list_empty_message">Tik hier om je eerste Gulden te kopen.</string>
+    <string name="address_book_title">Adresboek</string>
+    <string name="transaction_list_empty_title">Geen transacties ontvangen</string>
+    <string name="transaction_list_empty_message">Tik hier om je eerste Guldens te kopen</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nnaar %2$s</string>
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nnaar %3$s</string>
     <string name="send_coins_nocks_estimate_template">Ongeveer G %1$s inclusief IBAN-kosten.</string>
@@ -120,12 +120,8 @@ file COPYING
     <string name="change_passcode_auth_title">Wijzig code</string>
     <string name="change_passcode_auth_desc">Voer je oude toegangscode in om een nieuwe code in te kunnen stellen.</string>
     <string name="wallet_birth_heading">Hoe oud is deze portemonnee?</string>
-    <string name="wallet_birth_info">Nieuwe wallets syncen sneller. Selecteer \"Ouder\" als er bedragen ontbreken.</string>
-    <string name="wallet_birth_less_than_a_week">Jonger dan een week.</string>
     <string name="wallet_birth_less_than_a_month">Jonger dan een maand.</string>
-    <string name="wallet_birth_less_than_six_months">Jonger dan zes maanden.</string>
     <string name="wallet_birth_less_than_a_year">Jonger dan een jaar.</string>
-    <string name="wallet_birth_less_than_two_years">Jonger dan twee jaar.</string>
     <string name="wallet_birth_unsure">Ouder / ik weet het niet zeker.</string>
     <string name="link_wallet_auth_desc">Voer je toegangscode in om door te gaan en je portemonnee te koppelen.</string>
     <string name="numeric_keypad_send_button">Verstuur</string>
@@ -152,4 +148,15 @@ file COPYING
     <string name="tx_detail_address_unavailable">niet beschikbaar</string>
     <string name="nocks_error_unable_to_fetch_quote">Kan geschat Guldenbedrag niet ophalen</string>
     <string name="nocks_error_prefix">Fout:</string>
+    <string name="notification_transaction_channel_name">Transacties</string>
+    <string name="notification_transaction_channel_description">Transactie notificatie</string>
+    <string name="notification_service_channel_name">Service</string>
+    <string name="notification_service_channel_description">Service om data te synchroniseren en transacties te signaleren terwijl de app afgesloten is, kan aan/uit gezet worden in de instellingen van de app.</string>
+    <string name="dialog_title_add_address">Adres toevoegen</string>
+    <string name="hint_iban_or_gulden_address">Gulden of IBAN adres</string>
+    <string name="address_book_empty_title">Maak adresboek leeg</string>
+    <string name="wallet_birth_info">Nieuwe wallets syncen sneller. Selecteer \"Ouder\" als er bedragen ontbreken.</string>
+    <string name="wallet_birth_less_than_a_week">Jonger dan een week.</string>
+    <string name="wallet_birth_less_than_six_months">Jonger dan zes maanden.</string>
+    <string name="wallet_birth_less_than_two_years">Jonger dan twee jaar.</string>
 </resources>

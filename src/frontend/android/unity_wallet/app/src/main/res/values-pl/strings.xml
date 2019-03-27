@@ -29,9 +29,9 @@ file COPYING
     <string name="recovery_phrase_acknowledge_writing_down">Zapisałem to w bezpiecznym miejscu</string>
     <string name="recovery_phrase_copy">Hasło passphrase zostało skopiowane do schowka</string>
     <string name="address_book_empty_message">Aby dodać adres, rozpocznij płatność i dotknij \"Dodaj do książki adresowej\".</string>
-    <string name="address_book_empty_title">Pusta książka adresowa</string>
-    <string name="transaction_list_empty_title">Nie otrzymano jeszcze żadnych Gulden.</string>
-    <string name="transaction_list_empty_message">Kliknij tutaj, aby kupić swój pierwszy Gulden.</string>
+    <string name="address_book_title">Książka adresowa</string>
+    <string name="transaction_list_empty_title">Brak otrzymanych transakcji</string>
+    <string name="transaction_list_empty_message">Dotknij tutaj, aby kupić swój pierwszy Gulden</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nto %2$s</string>
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
     <string name="send_coins_nocks_estimate_template">Około. G %1$s, w tym opłata za usługę IBAN</string>
@@ -90,7 +90,7 @@ file COPYING
     <string name="cancel_btn">Anuluj</string>
     <string name="rescan_started">Rozpoczęto skanowanie</string>
     <string name="upgrade_wrong_password">Niewłaściwe hasło?</string>
-    <string name="upgrade_explanation">Portfel Guldena został uaktualniony do nowej struktury. Z tego powodu istniejące dane portfela wymagają aktualizacji. Po aktualizacji, łańcuch bloków zostanie ponownie przeskanowany, może to trochę potrwać.</string>
+    <string name="upgrade_explanation">Gulden wymaga aktualizacji. Może to zająć kilka minut, Gulden będzie szybszy, łatwiejszy w użyciu i w rezultacie bardziej lekki.</string>
     <string name="upgrade_btn">Aktualizacja</string>
     <string name="upgrade_enter_password">Wprowadź hasło</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -120,12 +120,8 @@ file COPYING
     <string name="change_passcode_auth_title">Zmień kod</string>
     <string name="change_passcode_auth_desc">Wprowadź stary kod dostępu, aby kontynuować i zmienić na nowy kod.</string>
     <string name="wallet_birth_heading">W jakim wieku jest ten portfel?</string>
-    <string name="wallet_birth_info">Nowsze portfele synchronizują się szybciej. Wybierz \"Starsze\", jeśli brakuje funduszy.</string>
-    <string name="wallet_birth_less_than_a_week">Mniej niż tydzień</string>
     <string name="wallet_birth_less_than_a_month">Mniej niż miesiąc</string>
-    <string name="wallet_birth_less_than_six_months">Mniej niż sześć miesięcy</string>
     <string name="wallet_birth_less_than_a_year">Mniej niż rok</string>
-    <string name="wallet_birth_less_than_two_years">Mniej niż dwa lata</string>
     <string name="wallet_birth_unsure">Starszy / nie jestem pewien</string>
     <string name="link_wallet_auth_desc">Wprowadź kod dostępu, aby kontynuować i połączyć swój portfel.</string>
     <string name="numeric_keypad_send_button">Wysłać</string>
@@ -154,4 +150,15 @@ file COPYING
     <string name="tx_detail_address_unavailable">niedostępne</string>
     <string name="nocks_error_unable_to_fetch_quote">Nie można pobrać wyceny transakcji</string>
     <string name="nocks_error_prefix">Błąd:</string>
+    <string name="notification_transaction_channel_name">Transakcje</string>
+    <string name="notification_transaction_channel_description">Powiadomienia o transakcjach</string>
+    <string name="notification_service_channel_name">Usługa</string>
+    <string name="notification_service_channel_description">Usługa umożliwiająca synchronizację danych i monitorowanie transakcji po zamknięciu aplikacji, można ją włączyć / wyłączyć z poziomu ustawień aplikacji</string>
+    <string name="dialog_title_add_address">Dodaj adres</string>
+    <string name="hint_iban_or_gulden_address">Gulden lub IBAN adres</string>
+    <string name="address_book_empty_title">Pusta książka adresowa</string>
+    <string name="wallet_birth_info">Nowsze portfele synchronizują się szybciej. Wybierz \"Starsze\", jeśli brakuje funduszy.</string>
+    <string name="wallet_birth_less_than_a_week">Mniej niż tydzień</string>
+    <string name="wallet_birth_less_than_six_months">Mniej niż sześć miesięcy</string>
+    <string name="wallet_birth_less_than_two_years">Mniej niż dwa lata</string>
 </resources>
