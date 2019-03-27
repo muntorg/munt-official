@@ -54,7 +54,8 @@ file COPYING
                 android:id="@+id/emptyMutationListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
+                android:layout_marginTop="38dp"
+                android:layout_marginLeft="8dp"
                 android:gravity="top"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@+id/divider"
@@ -65,12 +66,14 @@ file COPYING
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
                     android:onClick="gotoBuyActivity"
                     android:text="@string/transaction_list_empty_title" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="1dp"
                     android:layout_marginTop="16dp"
                     android:onClick="gotoBuyActivity"
                     android:text="@string/transaction_list_empty_message" />

@@ -5,15 +5,16 @@ Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="40dp"
     android:layout_marginLeft="0dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:paddingLeft="9dp"
+    android:paddingRight="8dp">
 
     <TextView
         android:id="@+id/textViewLabel"
