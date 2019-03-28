@@ -21,14 +21,19 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+
+    //This file can't (and shouldn't ever) be compressed.
     aaptOptions {
         noCompress 'staticfiltercp'
     }
+
     //Latest okhttp requires java 8 minimum.
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+
     buildTypes {
         all {
             minifyEnabled true
@@ -39,6 +44,8 @@ android {
             debuggable true
         }
     }
+
+    // Flavour specific config.
     flavorDimensions "default"
     productFlavors {
         gulden_testnet {
@@ -64,6 +71,7 @@ android {
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
         }
     }
+
     // Build a separate apk for each native architecture we support.
     splits
     {
