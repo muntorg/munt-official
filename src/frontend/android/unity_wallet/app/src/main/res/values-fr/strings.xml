@@ -152,9 +152,4 @@ file COPYING
     <string name="notification_service_channel_description">Service pour garder les données synchronisées et surveiller les transactions lorsque l\'application est fermée, peut être activé/désactivé depuis les paramètres de l\'application.</string>
     <string name="dialog_title_add_address">Ajouter une adresse</string>
     <string name="hint_iban_or_gulden_address">Gulden ou IBAN adresse</string>
-    <string name="address_book_empty_title">Carnet d\'adresses vide</string>
-    <string name="wallet_birth_info">Les nouveaux portefeuilles se synchronisent plus rapidement. Sélectionnez \"plus ancien\" s\'il vous manque des fonds.</string>
-    <string name="wallet_birth_less_than_a_week">Moins d\'une semaine</string>
-    <string name="wallet_birth_less_than_six_months">Moins de six mois</string>
-    <string name="wallet_birth_less_than_two_years">Moins de deux ans</string>
 </resources>

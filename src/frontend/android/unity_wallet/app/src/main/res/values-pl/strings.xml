@@ -154,9 +154,4 @@ file COPYING
     <string name="notification_service_channel_description">Usługa umożliwiająca synchronizację danych i monitorowanie transakcji po zamknięciu aplikacji, można ją włączyć / wyłączyć z poziomu ustawień aplikacji</string>
     <string name="dialog_title_add_address">Dodaj adres</string>
     <string name="hint_iban_or_gulden_address">Gulden lub IBAN adres</string>
-    <string name="address_book_empty_title">Pusta książka adresowa</string>
-    <string name="wallet_birth_info">Nowsze portfele synchronizują się szybciej. Wybierz \"Starsze\", jeśli brakuje funduszy.</string>
-    <string name="wallet_birth_less_than_a_week">Mniej niż tydzień</string>
-    <string name="wallet_birth_less_than_six_months">Mniej niż sześć miesięcy</string>
-    <string name="wallet_birth_less_than_two_years">Mniej niż dwa lata</string>
 </resources>

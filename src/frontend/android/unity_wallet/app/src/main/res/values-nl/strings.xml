@@ -152,9 +152,4 @@ file COPYING
     <string name="notification_service_channel_description">Service om data te synchroniseren en transacties te signaleren terwijl de app afgesloten is, kan aan/uit gezet worden in de instellingen van de app.</string>
     <string name="dialog_title_add_address">Adres toevoegen</string>
     <string name="hint_iban_or_gulden_address">Gulden of IBAN adres</string>
-    <string name="address_book_empty_title">Maak adresboek leeg</string>
-    <string name="wallet_birth_info">Nieuwe wallets syncen sneller. Selecteer \"Ouder\" als er bedragen ontbreken.</string>
-    <string name="wallet_birth_less_than_a_week">Jonger dan een week.</string>
-    <string name="wallet_birth_less_than_six_months">Jonger dan zes maanden.</string>
-    <string name="wallet_birth_less_than_two_years">Jonger dan twee jaar.</string>
 </resources>
