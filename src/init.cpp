@@ -1150,7 +1150,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
             uacomments.push_back(cmt);
         }
     }
-    strSubVersion = FormatSubVersion(CLIENT_NAME, CLIENT_VERSION, uacomments);
+
+    //fixme: (2.1) - HIGH - Sanitize this in some way or handle this differently (e.g. allow unity to set this but not desktop users via command line)
+    strSubVersion = FormatSubVersion(GetArg("-clientname", CLIENT_NAME), CLIENT_VERSION, uacomments);
     if (strSubVersion.size() > MAX_SUBVERSION_LENGTH) {
         return InitError(strprintf(errortr("Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments."),
             strSubVersion.size(), MAX_SUBVERSION_LENGTH));

@@ -590,6 +590,10 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     SoftSetArg("-maxmempool", "5");
     SoftSetArg("-maxconnections", "8");
 
+    //fixme: (2.1) (UNITY) (iOS) - Temporarily hardcoding for android, set this on a per app basis.
+    // Change client name
+    SoftSetArg("-clientname", "Gulden android");
+
     // Testnet
     if (testnet)
     {
