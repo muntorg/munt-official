@@ -29,6 +29,12 @@ class UnityCore {
 
     companion object {
         val instance: UnityCore = UnityCore()
+        // Have we previously received an "existing wallet" event at any point
+        // Some parts of the codebase need to check this in case it happened before they registered as a listener
+        var receivedExistingWalletEvent = false
+        // Have we previously received a "create new wallet" event at any point
+        // Some parts of the codebase need to check this in case it happened before they registered as a listener
+        var receivedCreateNewWalletEvent = false
     }
 
     @Synchronized
@@ -183,6 +189,7 @@ class UnityCore {
         }
 
         override fun notifyInitWithExistingWallet() {
+            receivedExistingWalletEvent = true
             observersLock.withLock {
                 observers.forEach {
                     it.wrapper { it.observer.haveExistingWallet() }
@@ -191,6 +198,7 @@ class UnityCore {
         }
 
         override fun notifyInitWithoutExistingWallet() {
+            receivedCreateNewWalletEvent = true
             observersLock.withLock {
                 observers.forEach {
                     it.wrapper { it.observer.createNewWallet() }

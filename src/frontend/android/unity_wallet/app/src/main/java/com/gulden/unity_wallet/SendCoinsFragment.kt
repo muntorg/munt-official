@@ -86,9 +86,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     companion object {
         const val EXTRA_RECIPIENT = "recipient"
-        fun newInstance(recipient: UriRecipient) = SendCoinsFragment().apply {
+        const val EXTRA_FINISH_ACTIVITY_ON_CLOSE = "finish_on_close"
+        fun newInstance(recipient: UriRecipient, finishActivityOnClose : Boolean) = SendCoinsFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(EXTRA_RECIPIENT, recipient)
+                putBoolean(EXTRA_FINISH_ACTIVITY_ON_CLOSE, finishActivityOnClose)
             }
         }
     }
@@ -315,6 +317,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
 
         coroutineContext[Job]!!.cancel()
+
+        // Let the invisible URI activity know to close itself
+        arguments?.getBoolean(EXTRA_FINISH_ACTIVITY_ON_CLOSE)?.let {
+            if (it) { activity?.finish() }
+        }
     }
 
     private fun setupRate()

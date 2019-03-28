@@ -65,7 +65,7 @@ class SendFragment : Fragment(), UnityCore.Observer
                     null
             }
             if (recipient != null) {
-                SendCoinsFragment.newInstance(recipient).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
             }
             else {
                 context?.run {
@@ -164,34 +164,6 @@ class SendFragment : Fragment(), UnityCore.Observer
         dialog.show()
     }
 
-    fun handleURI(payToURI : Uri, forActivity : WalletActivity)
-    {
-        //TODO: Improve this, and consider moving more of the work into unity core
-        //TODO: Handle amounts passed as paramaters etc.
-        val address = if (payToURI.host!=null) payToURI.host else ""
-        val amount = if (payToURI.queryParameterNames.contains("amount")) payToURI.getQueryParameter("amount") else "0"
-        val label = if (payToURI.queryParameterNames.contains("label")) payToURI.getQueryParameter("label") else ""
-        var recipient : UriRecipient? = null
-        if (IBANValidator.getInstance().isValid(address))
-        {
-            recipient = UriRecipient(false, address, label, amount)
-        }
-        else if (GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String,String>())).valid)
-        {
-            recipient = GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>()))
-            recipient = UriRecipient(recipient.valid, recipient.address, if (recipient.label!="") recipient.label else label, amount)
-        }
-        else if (uriRecipient(address).valid)
-        {
-            recipient = UriRecipient(true, address, label, amount)
-        }
-
-        if (recipient != null)
-        {
-            SendCoinsFragment.newInstance(recipient).show(forActivity.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         checkClipboardEnable()
@@ -206,7 +178,7 @@ class SendFragment : Fragment(), UnityCore.Observer
         addressBookList.setOnItemClickListener { parent, _, position, _ ->
             val address = parent.adapter.getItem(position) as AddressRecord
             val recipient = UriRecipient(true, address.address, address.name, "0")
-            SendCoinsFragment.newInstance(recipient).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+            SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
         }
 
         // TODO: Only update if there has been a change, not always.
@@ -269,7 +241,7 @@ class SendFragment : Fragment(), UnityCore.Observer
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
                     val recipient = uriRecipient(barcode.displayValue)
                     if (recipient.valid) {
-                        SendCoinsFragment.newInstance(recipient).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                        SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
                     }
                 }
             }
