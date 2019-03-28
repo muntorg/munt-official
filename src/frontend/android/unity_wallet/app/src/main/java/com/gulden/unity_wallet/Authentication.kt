@@ -180,6 +180,7 @@ class Authentication {
 
                                 if (GuldenUnifiedBackend.UnlockWallet(chosenCode.joinToString(""))) {
                                     Log.i(TAG, "successful authentication")
+                                    resetFailedAttempts(context)
                                     it.dismiss()
                                     action(chosenCode)
                                 } else {
