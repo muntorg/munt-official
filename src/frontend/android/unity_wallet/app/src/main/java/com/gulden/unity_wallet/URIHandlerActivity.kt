@@ -25,7 +25,7 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
     fun toastAndExit()
     {
         handleURI = false
-        Toast.makeText(this, "You need to set up a Gulden wallet before you can use this URI", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.toast_warn_uri_attempt_before_wallet_creation), Toast.LENGTH_SHORT).show()
         finish()
     }
 
