@@ -549,7 +549,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             R.id.button_0 ->
             {
                 if (amountEditStr.isEmpty()) amountEditStr += "0."
-                else if (amountEditStr != "0") amountEditStr += "0"
+                else if (amountEditStr != "0") appendNumberToAmount("0")
             }
             R.id.button_backspace ->
             {
