@@ -98,7 +98,7 @@ file COPYING
     <string name="notify_received">Bedrag ontvangen</string>
     <string name="notify_sent">Bedrag verstuurd</string>
     <string name="unlock">Openen</string>
-    <string name="access_code_entry_title">Toeganscode voor \"Gulden\"</string>
+    <string name="access_code_entry_title">Toegangscode voor \"Gulden\"</string>
     <string name="access_code_choose_upgrade_title">Kies je nieuwe \"Gulden\" toegangscode</string>
     <string name="access_code_choose_title">Kies je \"Gulden\" toegangscode</string>
     <string name="access_code_choose_verify">Verifiëer je toegangscode</string>
@@ -125,7 +125,7 @@ file COPYING
     <string name="numeric_keypad_send_button">Verstuur</string>
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Geavanceerd</string>
-    <string name="clipboard_no_valid_address">Geen gelding Gulden adres op het klembord</string>
+    <string name="clipboard_no_valid_address">Geen geldig Gulden adres op het klembord</string>
     <string name="transaction_confirmation_text_conflicted">Conflicterend</string>
     <string name="transaction_confirmation_text_abandoned">Verlaten</string>
     <string name="transaction_confirmation_text_pending">In behandeling</string>
@@ -152,4 +152,11 @@ file COPYING
     <string name="notification_service_channel_description">Service om data te synchroniseren en transacties te signaleren terwijl de app afgesloten is, kan aan/uit gezet worden in de instellingen van de app.</string>
     <string name="dialog_title_add_address">Adres toevoegen</string>
     <string name="hint_iban_or_gulden_address">Gulden of IBAN adres</string>
+    <string name="toast_warn_uri_attempt_before_wallet_creation">Je moet een Gulden wallet instellen voordat je deze URI kunt gebruiken</string>
+    <string name="preference_fragment_link_summary">Koppel je mobiele portemonnee aan je desktop portemonnee</string>
+    <string name="preference_fragment_remove_summary">Verwijder deze portemonnee om een nieuwe te starten of te herstellen</string>
+    <string name="preference_fragment_unlink_label">Ontkoppel portemonnee</string>
+    <string name="preference_fragment_unlink_summary">Ontkoppel deze portemonnee om een nieuwe te starten of te herstellen</string>
+    <string name="title_wallet_settings">Instellingen portemonnee</string>
+    <string name="title_select_currency">Selecteer valuta</string>
 </resources>

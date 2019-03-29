@@ -44,7 +44,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onResume()
     {
         super.onResume()
-        (activity as WalletActivity).showSettingsTitle("Wallet settings")
+        (activity as WalletActivity).showSettingsTitle(getString(R.string.title_wallet_settings))
 
     }
     override fun onStop()

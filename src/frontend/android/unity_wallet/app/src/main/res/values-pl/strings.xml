@@ -154,4 +154,5 @@ file COPYING
     <string name="notification_service_channel_description">Usługa umożliwiająca synchronizację danych i monitorowanie transakcji po zamknięciu aplikacji, można ją włączyć / wyłączyć z poziomu ustawień aplikacji</string>
     <string name="dialog_title_add_address">Dodaj adres</string>
     <string name="hint_iban_or_gulden_address">Gulden lub IBAN adres</string>
+    <string name="toast_warn_uri_attempt_before_wallet_creation">Przed użyciem tego identyfikatora URI musisz skonfigurować portfel Gulden</string>
 </resources>

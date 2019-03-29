@@ -30,7 +30,7 @@ class LocalCurrencyFragment : androidx.fragment.app.Fragment() {
     override fun onResume()
     {
         super.onResume()
-        (activity as WalletActivity).showSettingsTitle("Select currency")
+        (activity as WalletActivity).showSettingsTitle(getString(R.string.title_select_currency))
     }
 
     override fun onStop()
