@@ -85,7 +85,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                 val description = getString(R.string.notification_transaction_channel_description)
 
                 // Default importance, adjustable by user in preferences
-                val importance = NotificationManager.IMPORTANCE_MAX
+                val importance = NotificationManager.IMPORTANCE_HIGH
 
                 notificationChannel = NotificationChannel(id, name, importance)
 
