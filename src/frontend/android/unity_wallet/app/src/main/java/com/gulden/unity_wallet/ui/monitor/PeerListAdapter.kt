@@ -5,6 +5,7 @@
 
 package com.gulden.unity_wallet.ui.monitor
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ class PeerListAdapter : ListAdapter<PeerRecord, PeerListAdapter.ItemViewHolder>(
             itemView.peer_list_row_height.text = if (item.syncedHeight > 0) item.syncedHeight.toString() + " blocks" else if (item.startHeight > 0) item.startHeight.toString() + " blocks" else null
             itemView.peer_list_row_user_agent.text = item.userAgent
             itemView.peer_list_row_protocol.text = item.protocol.toString()
+            @SuppressLint("SetTextI18n")
             itemView.peer_list_row_ping.text = item.latency.toString()+"ms"
         }
     }

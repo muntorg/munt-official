@@ -22,12 +22,8 @@ import org.jetbrains.anko.design.longSnackbar
 import java.io.File
 import kotlin.concurrent.thread
 
-private const val TAG = "upgrade-activity"
-
 class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
 {
-    private var haveExistingWalletFile = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -22,7 +22,7 @@ import org.apache.commons.validator.routines.IBANValidator
 //TODO - dedup some of the common code this shares with IntroActivity
 class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
 {
-    fun toastAndExit()
+    private fun toastAndExit()
     {
         handleURI = false
         Toast.makeText(this, getString(R.string.toast_warn_uri_attempt_before_wallet_creation), Toast.LENGTH_SHORT).show()
@@ -53,7 +53,7 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
         return true
     }
 
-    fun handleURIAndClose()
+    private fun handleURIAndClose()
     {
         if ((intentUri != null) && (scheme != null))
         {
@@ -83,8 +83,8 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
         }
     }
 
-    var intentUri : Uri? = null
-    var scheme : String? = null
+    private var intentUri : Uri? = null
+    private var scheme : String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

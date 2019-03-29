@@ -26,7 +26,7 @@ private const val TAG = "activity-manager"
 
 class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
 {
-    var lastAudibleNotification = 0L
+    private var lastAudibleNotification = 0L
 
     override fun onCreate()
     {
@@ -34,7 +34,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 
         AppContext.instance = baseContext
 
-        var assetFD = assets?.openFd("staticfiltercp")
+        val assetFD = assets?.openFd("staticfiltercp")
         UnityCore.instance.configure(
             UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, apkPath = applicationContext.packageResourcePath, staticFilterOffset = assetFD?.startOffset!!, staticFilterLength = assetFD.length, testnet = Constants.TEST)
         )
@@ -67,43 +67,43 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 
     // O upwards requires notification channels
     private var notificationChannel : NotificationChannel? = null
-    fun getNotificationChannelID() : String
+    private fun getNotificationChannelID() : String
     {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
         {
             if (notificationChannel == null)
             {
-                var mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager;
+                val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
                 // The id of the channel.
-                var id = "gulden_transactions_notification_channel";
+                val id = "gulden_transactions_notification_channel"
 
                 // The user-visible name of the channel.
-                var name = getString(R.string.notification_transaction_channel_name)
+                val name = getString(R.string.notification_transaction_channel_name)
 
                 // The user-visible description of the channel.
-                var description = getString(R.string.notification_transaction_channel_description)
+                val description = getString(R.string.notification_transaction_channel_description)
 
                 // Default importance, adjustable by user in preferences
-                var importance = NotificationManager.IMPORTANCE_MAX;
+                val importance = NotificationManager.IMPORTANCE_MAX
 
-                notificationChannel = NotificationChannel(id, name, importance);
+                notificationChannel = NotificationChannel(id, name, importance)
 
                 // Sets the notification light color for notifications posted to this, if the device supports this feature.
-                notificationChannel?.enableLights(true);
-                notificationChannel?.setLightColor(Color.GREEN);
+                notificationChannel?.enableLights(true)
+                notificationChannel?.setLightColor(Color.GREEN)
 
                 // Sets vibration for notifications
-                notificationChannel?.enableVibration(true);
+                notificationChannel?.enableVibration(true)
                 notificationChannel?.setVibrationPattern(longArrayOf(0, 1000, 500, 1000))
 
-                notificationChannel?.setDescription(description);
-                mNotificationManager.createNotificationChannel(notificationChannel);
+                notificationChannel?.setDescription(description)
+                mNotificationManager.createNotificationChannel(notificationChannel)
             }
             if (notificationChannel != null)
                 return notificationChannel?.id!!
         }
-        return "";
+        return ""
     }
 
     override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {

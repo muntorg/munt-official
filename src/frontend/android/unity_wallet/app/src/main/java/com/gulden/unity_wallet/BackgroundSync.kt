@@ -89,7 +89,7 @@ class SyncService : Service(), UnityCore.Observer
         {
             val notificationChannel = NotificationChannel(channelID, getString(R.string.notification_service_channel_name), NotificationManager.IMPORTANCE_LOW)
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(notificationChannel)
-            notificationChannel.description = getString(R.string.notification_service_channel_description);
+            notificationChannel.description = getString(R.string.notification_service_channel_description)
             notificationChannel.enableLights(false)
             notificationChannel.setShowBadge(false)
         }

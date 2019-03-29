@@ -197,7 +197,7 @@ private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, j
     {
         // Nocks errors come in different forms so we can't handle it in the moshi class directly as it is too complex
         // Instead marshall the error via several intermediate types, tot ry and parse the error as best as possible - and then insert it into our eventual return type in a way it understands
-        var message= extractNocksError(result)
+        val message= extractNocksError(result)
         val adapter = moshi?.adapter(ResultType::class.java)
         return adapter?.fromJson("{\"errorMessage\": \"$message\"}")!!
     }
@@ -240,8 +240,8 @@ suspend fun nocksQuote(amountEuro: Double): NocksQuoteResult
 
 suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String, name:String = "", description: String = ""): NocksOrderResult
 {
-    var nameEscaped = escapeStringToJSON(name)
-    var descriptionEscaped = escapeStringToJSON(description)
+    val nameEscaped = escapeStringToJSON(name)
+    val descriptionEscaped = escapeStringToJSON(description)
 
     if (FAKE_NOCKS_SERVICE) {
         delay(500)

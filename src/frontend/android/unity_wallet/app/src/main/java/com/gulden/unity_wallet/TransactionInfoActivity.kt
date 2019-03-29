@@ -94,7 +94,7 @@ class TransactionInfoActivity : AppBaseActivity() {
                         v.address.text = output.address
                         v.subscript.text = getString(R.string.tx_detail_wallet_address)
                         v.amount.textColor = ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_positive)
-                        v.amount.text = formatNativeAndLocal(output.amount, rate, true, false)
+                        v.amount.text = formatNativeAndLocal(output.amount, rate, useNativePrefix = true, nativeFirst = false)
                         to_container.addView(v)
                     }
                     else if (!output.isMine && signedByMe) {
@@ -105,7 +105,7 @@ class TransactionInfoActivity : AppBaseActivity() {
                         else
                             v.subscript.text = getString(R.string.tx_detail_payment_address)
                         v.amount.textColor = ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_negative)
-                        v.amount.text = formatNativeAndLocal(-output.amount, rate, true, false)
+                        v.amount.text = formatNativeAndLocal(-output.amount, rate, useNativePrefix = true, nativeFirst = false)
                         to_container.addView(v)
                     } else {
                         // output.isMine && signedByMe, this is likely change so don't display

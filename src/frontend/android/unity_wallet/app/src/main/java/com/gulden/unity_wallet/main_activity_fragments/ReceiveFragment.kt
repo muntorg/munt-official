@@ -41,7 +41,7 @@ class ReceiveFragment : androidx.fragment.app.Fragment()
         }
     }
 
-    fun updateAddress()
+    private fun updateAddress()
     {
         if (currentAddressQrView != null)
         {

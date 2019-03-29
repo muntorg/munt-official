@@ -184,7 +184,7 @@ class Authentication {
                                     it.dismiss()
                                     action(chosenCode)
                                 } else {
-                                    var numAttemptsRemaining = ACCESS_CODE_ATTEMPTS_ALLOWED - incFailedAttempts(context)
+                                    val numAttemptsRemaining = ACCESS_CODE_ATTEMPTS_ALLOWED - incFailedAttempts(context)
                                     if (numAttemptsRemaining > 0) {
                                         s.clear()
                                         contentView.accessCode.startAnimation(AnimationUtils.loadAnimation(context, R.anim.shake))
