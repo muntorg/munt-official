@@ -28,11 +28,16 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 {
     private var lastAudibleNotification = 0L
 
+    companion object {
+        lateinit var coreInstance: UnityCore
+    }
+
     override fun onCreate()
     {
         super.onCreate()
 
         AppContext.instance = baseContext
+        coreInstance = UnityCore.instance
 
         val assetFD = assets?.openFd("staticfiltercp")
         UnityCore.instance.configure(
