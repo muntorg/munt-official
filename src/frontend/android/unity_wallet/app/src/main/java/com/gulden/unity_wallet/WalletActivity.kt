@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
@@ -63,6 +64,16 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
+        if (!UnityCore.started)
+        {
+            Log.e("WalletActivity", "Starting wallet activity without Unity in place - jumping back to intro activity")
+            val intent = Intent(this, IntroActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+
+            finish()
+            return
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
