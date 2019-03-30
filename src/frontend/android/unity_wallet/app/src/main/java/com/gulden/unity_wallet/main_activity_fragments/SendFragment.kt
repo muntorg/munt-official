@@ -13,7 +13,6 @@ import android.text.Editable
 import android.text.Html
 import android.text.SpannableString
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -179,25 +178,10 @@ class SendFragment : Fragment(), UnityCore.Observer
             SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
         }
 
-        try
-        {
-            // TODO: Only update if there has been a change, not always.
-            val addresses = GuldenUnifiedBackend.getAddressBookRecords()
-            val adapter = AddressBookAdapter(this.context!!, addresses)
-            addressBookList.adapter = adapter
-        }
-        catch (error : UnsatisfiedLinkError)
-        {
-            Log.e("SendFragment", "Unsatisfiedlinkerror calling into unity backend")
-            UnityCore.started = false
-            UnityCore.receivedCreateNewWalletEvent = false
-            UnityCore.receivedExistingWalletEvent = false
-            val intent = Intent(activity, IntroActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-            (activity as WalletActivity).finish()
-            return
-        }
+        // TODO: Only update if there has been a change, not always.
+        val addresses = GuldenUnifiedBackend.getAddressBookRecords()
+        val adapter = AddressBookAdapter(this.context!!, addresses)
+        addressBookList.adapter = adapter
     }
 
     override fun onAttach(context: Context)
