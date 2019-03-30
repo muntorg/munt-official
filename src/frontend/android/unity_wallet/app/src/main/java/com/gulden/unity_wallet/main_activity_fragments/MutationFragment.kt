@@ -8,6 +8,7 @@ package com.gulden.unity_wallet.main_activity_fragments
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,25 +36,43 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
 
         mutationList?.emptyView = emptyMutationListView
 
-        val mutations = GuldenUnifiedBackend.getMutationHistory()
+        try
+        {
+            val mutations = GuldenUnifiedBackend.getMutationHistory()
 
-        val adapter = MutationAdapter(this.context!!, mutations)
-        mutationList.adapter = adapter
+            val adapter = MutationAdapter(this.context!!, mutations)
+            mutationList.adapter = adapter
 
-        mutationList.setOnItemClickListener { parent, _, position, _ ->
-            val mutation = parent.adapter.getItem(position) as MutationRecord
-            val intent = Intent(this.context, TransactionInfoActivity::class.java)
-            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.txHash)
-            startActivity(intent)
-        }
-
-        // Update with rate conversion
-        (this.activity as AppBaseActivity).launch(Dispatchers.Main) {
-            try {
-                (mutationList.adapter as MutationAdapter).updateRate(fetchCurrencyRate(localCurrency.code))
-            } catch (e: Throwable) {
-                // silently ignore failure of getting rate here
+            mutationList.setOnItemClickListener { parent, _, position, _ ->
+                val mutation = parent.adapter.getItem(position) as MutationRecord
+                val intent = Intent(this.context, TransactionInfoActivity::class.java)
+                intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.txHash)
+                startActivity(intent)
             }
+
+            // Update with rate conversion
+            (this.activity as AppBaseActivity).launch(Dispatchers.Main) {
+                try
+                {
+                    (mutationList.adapter as MutationAdapter).updateRate(fetchCurrencyRate(localCurrency.code))
+                }
+                catch (e: Throwable)
+                {
+                    // silently ignore failure of getting rate here
+                }
+            }
+        }
+        catch (error : UnsatisfiedLinkError)
+        {
+            Log.e("MutationFragment", "Unsatisfiedlinkerror calling into unity backend")
+            UnityCore.started = false
+            UnityCore.receivedCreateNewWalletEvent = false
+            UnityCore.receivedExistingWalletEvent = false
+            val intent = Intent(activity, IntroActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            (activity as WalletActivity).finish()
+            return
         }
     }
 
