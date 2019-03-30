@@ -35,6 +35,8 @@ class UnityCore {
         // Have we previously received a "create new wallet" event at any point
         // Some parts of the codebase need to check this in case it happened before they registered as a listener
         var receivedCreateNewWalletEvent = false
+        // Have we previously been started
+        var started = false
     }
 
     @Synchronized
@@ -81,7 +83,6 @@ class UnityCore {
     }
 
     private var config: UnityConfig? = null
-    private var started: Boolean = false
     private var coreReady: Boolean = false
 
     class ObserverEntry(val observer: Observer, val wrapper: (() ->Unit) -> Unit)
