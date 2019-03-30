@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,23 @@ import kotlin.concurrent.thread
 class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
 {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        // If we are restoring from a saved state, but the core is gone then we cannot continue in a sane way.
+        // Instead go immediately back to the IntroActivity and let it figure out what to do next.
+        if (!UnityCore.started)
+        {
+            Log.e("UpgradeActivity", "Starting upgrade activity without Unity in place - jumping back to intro activity")
+            super.onCreate(null)
+            val intent = Intent(this, IntroActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+
+            finish()
+            return
+        }
+        else
+        {
+            super.onCreate(savedInstanceState)
+        }
 
         setContentView(R.layout.activity_upgrade)
 
@@ -35,7 +52,14 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
     override fun onDestroy() {
         super.onDestroy()
 
-        UnityCore.instance.removeObserver(this)
+        try
+        {
+            UnityCore.instance.removeObserver(this)
+        }
+        catch (e : Exception)
+        {
+
+        }
     }
 
     override fun onCoreReady(): Boolean {
