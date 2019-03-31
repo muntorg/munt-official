@@ -159,4 +159,6 @@ file COPYING
     <string name="preference_fragment_unlink_summary">Ontkoppel deze portemonnee om een nieuwe te starten of te herstellen</string>
     <string name="title_wallet_settings">Instellingen portemonnee</string>
     <string name="title_select_currency">Selecteer valuta</string>
+    <string name="label_sync_progress_connecting">Verbinden…</string>
+    <string name="label_sync_progress_syncing">Synchroniseren %.1f%%</string>
 </resources>

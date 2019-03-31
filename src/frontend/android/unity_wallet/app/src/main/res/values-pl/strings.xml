@@ -155,4 +155,12 @@ file COPYING
     <string name="dialog_title_add_address">Dodaj adres</string>
     <string name="hint_iban_or_gulden_address">Gulden lub IBAN adres</string>
     <string name="toast_warn_uri_attempt_before_wallet_creation">Przed użyciem tego identyfikatora URI musisz skonfigurować portfel Gulden</string>
+    <string name="preference_fragment_link_summary">Połącz swój mobilny portfel z portfelem na komputerze</string>
+    <string name="preference_fragment_remove_summary">Usuń ten portfel, aby uruchomić lub odzyskać inny portfel</string>
+    <string name="preference_fragment_unlink_label">Odłącz portfel</string>
+    <string name="preference_fragment_unlink_summary">Odłącz ten portfel, aby uruchomić lub odzyskać inny portfel</string>
+    <string name="title_wallet_settings">Ustawienia portfela</string>
+    <string name="title_select_currency">Wybierz walutę</string>
+    <string name="label_sync_progress_connecting">Złączony</string>
+    <string name="label_sync_progress_syncing">Synchronizacja %.1f%%</string>
 </resources>
