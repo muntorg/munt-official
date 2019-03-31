@@ -156,7 +156,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         std::string label;
         if (pwallet->mapAddressBook.count(address))
             label = pwallet->mapAddressBook[address].name;
-        inputs.push_back(InputRecord(address, label, pwallet->IsMine(txin)));
+        inputs.push_back(InputRecord(address, label, static_cast<const CGuldenWallet*>(pwallet)->IsMine(*pactiveWallet->activeAccount, txin)));
     }
 
     for (const CTxOut& txout: tx.vout) {
@@ -174,7 +174,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         std::string label;
         if (pwallet->mapAddressBook.count(address))
             label = pwallet->mapAddressBook[address].name;
-        outputs.push_back(OutputRecord(txout.nValue, address, label, pwallet->IsMine(txout)));
+        outputs.push_back(OutputRecord(txout.nValue, address, label, IsMine(*pactiveWallet->activeAccount, txout)));
     }
 
     TransactionStatus status = getStatusForTransaction(&wtx);
@@ -190,7 +190,7 @@ static void notifyBalanceChanged(CWallet* pwallet)
     if (pwallet && signalHandler)
     {
         WalletBalances balances;
-        pwallet->GetBalances(balances, nullptr, false);
+        pwallet->GetBalances(balances, pactiveWallet->activeAccount, true);
         signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
     }
 }
@@ -776,7 +776,7 @@ bool GuldenUnifiedBackend::HaveUnconfirmedFunds()
         return true;
 
     WalletBalances balances;
-    pactiveWallet->GetBalances(balances, nullptr, false);
+    pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
 
     if (balances.unconfirmedIncludingLocked > 0 || balances.immatureIncludingLocked > 0)
     {
@@ -791,7 +791,7 @@ int64_t GuldenUnifiedBackend::GetBalance()
         return 0;
 
     WalletBalances balances;
-    pactiveWallet->GetBalances(balances, nullptr, false);
+    pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
     return balances.availableIncludingLocked + balances.unconfirmedIncludingLocked + balances.immatureIncludingLocked;
 }
 
