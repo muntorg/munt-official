@@ -44,62 +44,105 @@ file COPYING
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.gulden.unity_wallet.ui.widgets.LockView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/topLayoutBar"
             android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
             android:layout_height="50dp"
             android:layout_margin="0dp"
             android:background="@color/bg_bright">
 
-            <ImageView
-                android:id="@+id/walletLogo"
-                android:layout_width="wrap_content"
+            <com.gulden.unity_wallet.ui.widgets.LockView
+                android:id="@+id/topLayoutBarLockView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingTop="18dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="12dp"
-                android:background="@color/bg_bright"
-                android:contentDescription="@string/image_content_description_gulden_logo"
-                android:visibility="visible"
-                app:srcCompat="@drawable/ic_gulden_logo_text" />
+                android:layout_marginTop="4dp"
+                android:measureAllChildren="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingTop="4dp"
-                android:paddingStart="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/walletBalance"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="0.00"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="22sp"
-                    android:visibility="invisible"
-                    tools:ignore="HardcodedText"
-                    tools:textColor="@color/colorPrimary" />
+                    android:orientation="horizontal"
+                    android:id="@+id/linearLayout8">
 
-                <TextView
-                    android:id="@+id/walletBalanceLocal"
+                    <ImageView
+                        android:id="@+id/walletLogo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@color/bg_bright"
+                        android:contentDescription="@string/image_content_description_gulden_logo"
+                        android:paddingLeft="16dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/syncProgressTextual1"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_gulden_logo_text"
+                        tools:layout_conversion_absoluteHeight="18dp"
+                        tools:layout_conversion_absoluteWidth="91dp" />
+
+                    <TextView
+                        android:id="@+id/syncProgressTextual1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:translationY="3sp"
+                        android:text="@string/label_sync_progress_connecting"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/walletLogo"
+                        app:layout_constraintStart_toEndOf="@+id/walletLogo"
+                        tools:ignore="HardcodedText"
+                        tools:textColor="@color/colorPrimaryDark" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="€0.00"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    android:visibility="invisible"
-                    tools:ignore="HardcodedText"
-                    tools:textColor="@color/colorPrimary" />
-            </LinearLayout>
-        </com.gulden.unity_wallet.ui.widgets.LockView>
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp">
+
+                    <TextView
+                        android:id="@+id/walletBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.00"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="22sp"
+                        tools:ignore="HardcodedText"
+                        tools:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/walletBalanceLocal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(€0.00)"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        tools:ignore="HardcodedText"
+                        tools:textColor="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/syncProgressTextual2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:text="@string/label_sync_progress_connecting"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="14sp"
+                        tools:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+            </com.gulden.unity_wallet.ui.widgets.LockView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/topLayoutBarSettingsHeader"

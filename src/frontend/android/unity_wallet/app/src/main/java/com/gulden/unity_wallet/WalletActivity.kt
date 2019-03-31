@@ -87,6 +87,8 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         syncProgress.max = 1000000
+        syncProgressTextual1.text = ""
+        syncProgressTextual2.text = ""
 
         if (sendFragment == null)
             sendFragment = SendFragment()
@@ -276,11 +278,22 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
 
     private fun setSyncProgress(percent: Float)
     {
+        val textualProgress = if (percent <= 0.0) getString(R.string.label_sync_progress_connecting) else getString(R.string.label_sync_progress_syncing).format(percent)
         syncProgress.progress = (syncProgress.max * (percent/100)).toInt()
+        syncProgressTextual1.text = textualProgress
+        syncProgressTextual2.text = textualProgress
         if (percent < 100.0)
+        {
+            syncProgressTextual1.visibility = View.VISIBLE
+            syncProgressTextual2.visibility = View.VISIBLE
             syncProgress.visibility = View.VISIBLE
+        }
         else
+        {
+            syncProgressTextual1.visibility = View.INVISIBLE
+            syncProgressTextual2.visibility = View.INVISIBLE
             syncProgress.visibility = View.INVISIBLE
+        }
     }
 
     private fun setWalletBalance(balance : Long)

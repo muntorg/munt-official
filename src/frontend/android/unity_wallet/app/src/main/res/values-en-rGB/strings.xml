@@ -163,4 +163,6 @@ file COPYING
     <string name="preference_fragment_unlink_summary">Unlink this wallet in order to start or recover another wallet</string>
     <string name="title_wallet_settings">Wallet settings</string>
     <string name="title_select_currency">Select currency</string>
+    <string name="label_sync_progress_connecting">Connecting…</string>
+    <string name="label_sync_progress_syncing">Syncing %.1f%%</string>
 </resources>
