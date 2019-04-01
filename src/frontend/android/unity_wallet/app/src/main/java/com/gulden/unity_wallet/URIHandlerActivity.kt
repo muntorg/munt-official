@@ -32,7 +32,6 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
     private var handleURI = true
     override fun createNewWallet(): Boolean
     {
-
         toastAndExit()
         return true
     }
@@ -57,28 +56,46 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
     {
         if ((intentUri != null) && (scheme != null))
         {
-            //TODO: Improve this, and consider moving more of the work into unity core
-            val address = if (intentUri?.host!=null) intentUri?.host else ""
-            val amount = if (intentUri?.queryParameterNames?.contains("amount")!!) intentUri?.getQueryParameter("amount") else "0"
-            val label = if (intentUri?.queryParameterNames?.contains("label")!!) intentUri?.getQueryParameter("label") else ""
-            var recipient : UriRecipient? = null
-            if (IBANValidator.getInstance().isValid(address))
+            try
             {
-                recipient = UriRecipient(false, address, label, amount)
-            }
-            else if (GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String,String>())).valid)
-            {
-                recipient = GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>()))
-                recipient = UriRecipient(recipient.valid, recipient.address, if (recipient.label!="") recipient.label else label, amount)
-            }
-            else if (uriRecipient(address!!).valid)
-            {
-                recipient = UriRecipient(true, address, label, amount)
-            }
+                //TODO: Improve this, and consider moving more of the work into unity core
+                var address = ""
+                var amount = "0"
+                var label = ""
 
-            if (recipient != null)
+                //If Uri has been parsed as hierarchial force it to reparse as non-hierarchial so that we can access any query portions correctly.
+                if (!intentUri!!.isHierarchical)
+                {
+                    intentUri = Uri.parse(intentUri.toString().replaceFirst(":", "://"))
+                }
+                if (intentUri?.host != null) address = intentUri!!.host
+                if (intentUri?.queryParameterNames?.contains("amount")!!) amount = intentUri!!.getQueryParameter("amount")
+                if (intentUri?.queryParameterNames?.contains("label")!!) label = intentUri!!.getQueryParameter("label") else ""
+
+                var recipient: UriRecipient? = null
+                if (IBANValidator.getInstance().isValid(address))
+                {
+                    recipient = UriRecipient(false, address, label, amount)
+                }
+                else if (GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>())).valid)
+                {
+                    recipient = GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>()))
+                    recipient = UriRecipient(recipient.valid, recipient.address, if (recipient.label != "") recipient.label else label, amount)
+                }
+                else if (uriRecipient(address!!).valid)
+                {
+                    recipient = UriRecipient(true, address, label, amount)
+                }
+
+                if (recipient != null)
+                {
+                    SendCoinsFragment.newInstance(recipient, true).show(supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                }
+            }
+            catch (e : Exception)
             {
-                SendCoinsFragment.newInstance(recipient, true).show(supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                //TODO: Improve error handling here
+                finish()
             }
         }
     }
