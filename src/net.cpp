@@ -2636,8 +2636,10 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
 
         if (!pnode->fResumeSendActive) {
             pnode->fResumeSendActive = true;
+            pnode->AddRef();
             boost::asio::post(get_io_context(), [this, pnode]() {
                 this->ResumeSend(pnode);
+                pnode->Release();
             });
         }
     }
