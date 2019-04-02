@@ -13,6 +13,7 @@ import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.localCurrency
+import java.lang.Exception
 
 
 class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
@@ -42,8 +43,15 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     {
         super.onResume()
 
-        val localCurrencyPreference : Preference = findPreference("preference_local_currency")
-        localCurrencyPreference.summary = localCurrency.code
+        try
+        {
+            val localCurrencyPreference: Preference = findPreference("preference_local_currency")
+            localCurrencyPreference.summary = localCurrency.code
+        }
+        catch(e : Exception)
+        {
+            //TODO: Look into why we have a stack trace with KotlinNullPointerException here.
+        }
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean

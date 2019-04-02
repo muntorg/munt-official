@@ -106,7 +106,6 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
                 startActivity(intent)
 
                 finish()
-                return
             }
         }
     }
