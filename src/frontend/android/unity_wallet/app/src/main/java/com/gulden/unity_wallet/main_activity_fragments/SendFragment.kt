@@ -199,8 +199,16 @@ class SendFragment : Fragment(), UnityCore.Observer
 
     private fun clipboardText(): String
     {
-        val clipboard = ContextCompat.getSystemService(context!!, ClipboardManager::class.java)
-        return (clipboard?.primaryClip?.getItemAt(0)?.coerceToText(context)).toString()
+        try
+        {
+            val clipboard = ContextCompat.getSystemService(context!!, ClipboardManager::class.java)
+            return (clipboard?.primaryClip?.getItemAt(0)?.coerceToText(context)).toString()
+        }
+        catch (e : Exception)
+        {
+            //TODO: We are receiving SecurityException here on some LG G3 android 6 devices, during performResume() - look into in more detail
+            return ""
+        }
     }
 
     private fun setClipButtonText(text : String)
