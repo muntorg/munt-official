@@ -3,7 +3,8 @@
 MISC - Minor maintainence release, update checkpoints and other minor changes
 CORE - Introduce some code to automatically detect and clear the failed verification status of blocks in certain situations where it is safe to do so. This will make it easier for users who fail to update before a fork to update after the fork without having to issue any manual commands.
 CORE - Add some additional logging of error conditions to the witness loop.
-UI - Fix a small dispaly update issue when switching between witness and normal accounts in some instances..
+UI - Fix a display issue with "local currency" mouseover tooltips.
+UI - Fix a small dispaly update issue when switching between witness and normal accounts in some instances.
 
 
 
