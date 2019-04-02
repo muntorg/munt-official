@@ -166,4 +166,6 @@ file COPYING
     <string name="title_select_currency">Select currency</string>
     <string name="label_sync_progress_connecting">Connecting…</string>
     <string name="label_sync_progress_syncing">Syncing %.1f%%</string>
+    <string name="preference_fragment_hide_balance">Hide balance</string>
+    <string name="show_balance_when_synced">Balance shows when fully synchronised.</string>
 </resources>

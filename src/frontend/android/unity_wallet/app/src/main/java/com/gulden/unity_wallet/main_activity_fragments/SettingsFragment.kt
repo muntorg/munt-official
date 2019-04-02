@@ -7,6 +7,9 @@ package com.gulden.unity_wallet.main_activity_fragments
 
 import android.os.Bundle
 import androidx.preference.Preference
+import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreference
+import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.localCurrency
@@ -17,6 +20,22 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
     {
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
+
+        val pref = findPreference<SwitchPreference>("preference_hide_balance")
+        pref.setOnPreferenceChangeListener { preference, newValue ->
+            val switch = preference as SwitchPreference
+            val hide = newValue as Boolean
+
+            // require authentication to disable hide balance
+            if (!hide) {
+                Authentication.instance.authenticate(context!!, null,null) {
+                    switch.isChecked = false
+                }
+                return@setOnPreferenceChangeListener false
+            }
+            else
+                return@setOnPreferenceChangeListener true
+        }
     }
 
     override fun onResume()
