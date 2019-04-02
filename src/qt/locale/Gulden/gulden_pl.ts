@@ -224,6 +224,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Oszacowanie konwersji</translation>
     </message>
     <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Adres</translation>
+    </message>
+    <message>
         <source>Wallet balances</source>
         <translation>Saldo portfela</translation>
     </message>
@@ -3925,6 +3929,33 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Yes</source>
         <translation>Tak</translation>
+    </message>
+</context>
+<context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres skopiowany do schowka</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Skopiuj adres do schowka</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Wynikowy URI jest zbyt długi, spróbuj zmniejszyć tekst etykiety / wiadomości.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Mój adres witness</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Dla tego konta nie został wygenerowany prawidłowy adres witness</translation>
     </message>
 </context>
 <context>
