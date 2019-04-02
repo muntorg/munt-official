@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.util.AttributeSet
+import android.view.Gravity
 import android.widget.Toast
 import android.widget.ViewSwitcher
 import androidx.preference.PreferenceManager
@@ -19,20 +20,31 @@ import org.jetbrains.anko.runOnUiThread
 
 class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(context, attrs), Authentication.LockingObserver, UnityCore.Observer, OnSharedPreferenceChangeListener {
 
+    private var syncToastShowed = false // used to show it just once (unless triggered explicitly by tapping)
+    private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val isHideBalanceSet: Boolean
+            get() {
+              return preferences.getBoolean("preference_hide_balance", true)
+            }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
         val viewWhenHidden = getChildAt(0)
         viewWhenHidden.setOnClickListener {
-            val isSynced = UnityCore.instance.progressPercent >= 100.0
-
-            if (isSynced)
+            if (Authentication.instance.isLocked() && isHideBalanceSet)
                 Authentication.instance.unlock(context!!, null, null)
             else
-                Toast.makeText(context, context.getString(R.string.show_balance_when_synced), Toast.LENGTH_LONG).show()
+                // not locked or hide balance pref is disabled so balance is not showing because not synced
+                showSyncToast()
         }
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         preferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    private fun showSyncToast() {
+        val toast = Toast.makeText(context, context.getString(R.string.show_balance_when_synced), Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.TOP, 0 ,0)
+        toast.show()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -42,12 +54,18 @@ class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(co
 
     private fun updateViewState() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val isHideBalanceSet = preferences.getBoolean("preference_hide_balance", true)
         val isSynced = UnityCore.instance.progressPercent >= 100.0
         val isLocked = Authentication.instance.isLocked()
 
         val showBalance = isSynced && !(isLocked && isHideBalanceSet)
         displayedChild = if (showBalance) 1 else 0
+
+        // when balance not shown due to not being synced show toast (just once)
+        if (!isSynced && !(isLocked && isHideBalanceSet) && !syncToastShowed)
+        {
+            showSyncToast()
+            syncToastShowed = true
+        }
     }
 
     override fun onAttachedToWindow() {
