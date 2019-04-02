@@ -5,7 +5,9 @@
 
 package com.gulden.unity_wallet.ui.monitor
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.unity_wallet.*
@@ -17,7 +19,24 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
 {
     override fun onCreate(savedInstanceState: Bundle?)
     {
-        super.onCreate(savedInstanceState)
+        // If we are restoring from a saved state, but the core is gone then we cannot continue in a sane way.
+        // Instead go immediately back to the IntroActivity and let it figure out what to do next.
+        if (!UnityCore.started)
+        {
+            Log.e("NetworkMonitorActivity", "Starting network monitor activity without Unity in place - jumping back to intro activity")
+            super.onCreate(null)
+            val intent = Intent(this, IntroActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+
+            finish()
+            return
+        }
+        else
+        {
+            super.onCreate(savedInstanceState)
+        }
+
         setContentView(R.layout.activity_network_monitor)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
