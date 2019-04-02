@@ -87,11 +87,26 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
         thread(true)
         {
             val result = GuldenUnifiedBackend.isValidAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword)
-            when (result)
+            try
             {
-                LegacyWalletResult.ENCRYPTED_PASSWORD_REQUIRED, LegacyWalletResult.PASSWORD_INVALID -> this.runOnUiThread { view.longSnackbar(getString(R.string.upgrade_wrong_password)) }
-                LegacyWalletResult.INVALID_OR_CORRUPT -> this.runOnUiThread { view.longSnackbar("Unable to upgrade old wallet, contact support for assistance.") }
-                else -> chooseNewAccessCodeAndUpgrade(oldPassword, view)
+                when (result)
+                {
+                    LegacyWalletResult.ENCRYPTED_PASSWORD_REQUIRED, LegacyWalletResult.PASSWORD_INVALID -> this.runOnUiThread { view.longSnackbar(getString(R.string.upgrade_wrong_password)) }
+                    LegacyWalletResult.INVALID_OR_CORRUPT -> this.runOnUiThread { view.longSnackbar("Unable to upgrade old wallet, contact support for assistance.") }
+                    else -> chooseNewAccessCodeAndUpgrade(oldPassword, view)
+                }
+            }
+            catch (e : Exception)
+            {
+                //TODO: look into this closer... We receive in some limited cases a BadTokenException here - instead of crashing for now we catch it and restart the app.
+                Log.e("UpgradeActivity", "Starting upgrade activity without Unity in place - jumping back to intro activity")
+                super.onCreate(null)
+                val intent = Intent(this, IntroActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+
+                finish()
+                return
             }
         }
     }
