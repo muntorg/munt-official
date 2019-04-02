@@ -167,5 +167,5 @@ file COPYING
     <string name="label_sync_progress_connecting">Connecting…</string>
     <string name="label_sync_progress_syncing">Syncing %.1f%%</string>
     <string name="preference_fragment_hide_balance">Hide balance</string>
-    <string name="show_balance_when_synced">Balance shows when fully synchronised.</string>
+    <string name="show_balance_when_synced">Balance not visible. Please wait.</string>
 </resources>

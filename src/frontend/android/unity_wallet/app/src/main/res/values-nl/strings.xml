@@ -161,4 +161,6 @@ file COPYING
     <string name="title_select_currency">Selecteer valuta</string>
     <string name="label_sync_progress_connecting">Verbinden…</string>
     <string name="label_sync_progress_syncing">Synchroniseren %.1f%%</string>
+    <string name="preference_fragment_hide_balance">Verberg saldo</string>
+    <string name="show_balance_when_synced">Saldo pas beschikbaar na volledige synchronisatie</string>
 </resources>
