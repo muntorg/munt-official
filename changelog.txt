@@ -6,6 +6,8 @@ CORE - Add some additional logging of error conditions to the witness loop.
 CORE - Fix a potential race condition in networking code, that may have been the cause of very rare intermittent network related crashes. Detected on android as part of "unity" project.
 UI - Fix a display issue with "local currency" mouse-over tooltips.
 UI - Fix a small display update issue when switching between witness and normal accounts in some instances.
+UI - Clean up the language selection list in options dialog.
+ZMQ - Fix a bug in the NotifyStalledWitness ZMQ code.
 
 
 
