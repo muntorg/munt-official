@@ -41,11 +41,11 @@ files:
 script: |
   WRAP_DIR=$HOME/wrapped
   HOSTS="x86_64-apple-darwin11"
-  CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage"
+  CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-tests --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage"
   FAKETIME_HOST_PROGS=""
   FAKETIME_PROGS="ar ranlib date dmg genisoimage"
-  HOST_CFLAGS="-O2 -g"
-  HOST_CXXFLAGS="-O2 -g"
+  HOST_CFLAGS="-O3 -g"
+  HOST_CXXFLAGS="-O3 -g"
   HOST_LDFLAGS=
 
 
