@@ -31,6 +31,7 @@
 		E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE01216C964E0038C745 /* libssl.a */; };
 		E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */; };
 		E6AE404921EF4A500019A54A /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AE404821EF4A500019A54A /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EBCA222254B2BA00B02F24 /* staticfiltercp in Resources */ = {isa = PBXBuildFile; fileRef = E6EBCA212254B2BA00B02F24 /* staticfiltercp */; };
 		E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0421EF24A900320806 /* DBQrCodeRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF721EF24A800320806 /* DBQrCodeRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0521EF24A900320806 /* DBGuldenMonitorListener.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -72,6 +73,7 @@
 		E68FAE01216C964E0038C745 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../depends/aarch64-ios/lib/libssl.a"; sourceTree = "<group>"; };
 		E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb_cxx-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb_cxx-4.8.a"; sourceTree = "<group>"; };
 		E6AE404821EF4A500019A54A /* DBOutputRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBOutputRecord.h; path = ../../djinni/objc/DBOutputRecord.h; sourceTree = "<group>"; };
+		E6EBCA212254B2BA00B02F24 /* staticfiltercp */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercp; path = ../../../../data/staticfiltercp; sourceTree = "<group>"; };
 		E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMonitorRecord.h; path = ../../../djinni/objc/DBMonitorRecord.h; sourceTree = "<group>"; };
 		E6EC7CF721EF24A800320806 /* DBQrCodeRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBQrCodeRecord.h; path = ../../../djinni/objc/DBQrCodeRecord.h; sourceTree = "<group>"; };
 		E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenMonitorListener.h; path = ../../../djinni/objc/DBGuldenMonitorListener.h; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 		E64203E221638CD6004A77FF = {
 			isa = PBXGroup;
 			children = (
+				E6EBCA1E2254AAFD00B02F24 /* Resources */,
 				E6AE404821EF4A500019A54A /* DBOutputRecord.h */,
 				E65D47B021639AF100033ED1 /* source */,
 				E64203EE21638CD6004A77FF /* GuldenCore */,
@@ -187,6 +190,14 @@
 				E61A1287217136DE000069F0 /* dummy.m */,
 			);
 			path = source;
+			sourceTree = "<group>";
+		};
+		E6EBCA1E2254AAFD00B02F24 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E6EBCA212254B2BA00B02F24 /* staticfiltercp */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,6 +285,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6EBCA222254B2BA00B02F24 /* staticfiltercp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
