@@ -421,7 +421,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
     else
     {
         std::ifstream dataFile(dataFilePath);
-        if (!dataFile.good())
+        if (!dataFile.good() || dataFile.peek() == EOF)
         {
             LogPrintf("Failed to read static filtercp file\n");
             nSoftBirthDate = nHardBirthDate;
@@ -430,6 +430,8 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         LogPrintf("Loading static filtercp file\n");
         uint64_t nStaticFilterOffset = GetArg("-spvstaticfilterfileoffset", (uint64_t)0);
         uint64_t nStaticFilterLength = GetArg("-spvstaticfilterfilelength", std::numeric_limits<uint64_t>::max());
+        if (nStaticFilterLength == 0)
+            std::numeric_limits<uint64_t>::max();
 
         uint64_t nStartIndex = 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
         uint64_t nInterval1 = 500;

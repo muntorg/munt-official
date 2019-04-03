@@ -138,10 +138,14 @@ void CSPVScanner::onKeyPoolToppedUp()
 
 // If we are before the first range or not in one of the ranges then we can skip fetching the data.
 // If we are in one of the ranges or if we are after the last checkpoint then we must fetch the data.
+// If we have no filter ranges then we must fetch the data.
 bool CSPVScanner::CanSkipBlockFetch(const CBlockIndex* pIndex, uint64_t lastCheckPointHeight)
 {
     AssertLockHeld(partialChain.cs_blockFilterRanges);
     if ((uint64_t)pIndex->nHeight > lastCheckPointHeight)
+        return false;
+
+    if (partialChain.blockFilterRanges.empty())
         return false;
 
     for (const auto& [rangeStart, rangeEnd] : partialChain.blockFilterRanges)

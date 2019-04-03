@@ -4442,7 +4442,7 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
         // Now determine the actual checkpoint we will use.
         // This checkpoint needs to be at least 576 blocks before the one we were actually interested in, to ensure we can context check properly when we reach the actual data
         // The largest window for context checking is the DELTA algorithm, which needs 576 blocks of prior context to work properly.
-        uint64_t nOffsetContextBirthCheckpoint = Checkpoints::LastCheckpointBeforeBlock(nWalletBirthBlockSoft-576);
+        uint64_t nOffsetContextBirthCheckpoint = nWalletBirthBlockSoft >= 576 ? Checkpoints::LastCheckpointBeforeBlock(nWalletBirthBlockSoft-576) : 0;
 
         if (nOffsetContextBirthCheckpoint - 576 >= (uint64_t)chainActive.Height() || !isFullSyncMode())
         {
