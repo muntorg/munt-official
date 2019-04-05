@@ -287,22 +287,73 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         }
         else
         {
-            syncProgressTextual.visibility = View.INVISIBLE
+            syncProgressTextual.visibility = View.GONE
             syncProgress.visibility = View.INVISIBLE
         }
     }
 
     private fun setWalletBalance(balance : Long)
     {
-        val coins = balance.toDouble() / Config.COIN
+        val coins = balance.toFloat() / Config.COIN
         walletBalance.text = String.format("G %.2f", coins)
         walletBalance.visibility = View.VISIBLE
+
+        try
+        {
+            val scale = resources.configuration.fontScale
+            val widthDP = resources.configuration.screenWidthDp
+            if (widthDP < 400 && walletBalance.text.length > 10)
+            {
+                walletBalance.textSize = 20 * scale
+                walletBalanceLocal.textSize = 16 * scale
+            }
+            else if (widthDP < 500 && walletBalance.text.length > 14)
+            {
+                walletBalance.textSize = 20 * scale
+                walletBalanceLocal.textSize = 16 * scale
+            }
+        }
+        catch (e : Exception)
+        {
+
+        }
 
         this.launch( Dispatchers.Main) {
             try {
                 val rate = fetchCurrencyRate(localCurrency.code)
                 walletBalanceLocal.text = String.format(" (${localCurrency.short} %.${localCurrency.precision}f)",
                         coins * rate)
+                try
+                {
+                    val scale = resources.configuration.fontScale
+                    val widthDP = resources.configuration.screenWidthDp
+                    if (widthDP < 400 && walletBalanceLocal.text.length > 14 && walletBalance.text.length > 10)
+                    {
+                        walletBalance.textSize = 18 * scale
+                        walletBalanceLocal.textSize = 14 * scale
+                    }
+                    else if (walletBalanceLocal.text.length > 16)
+                    {
+                        walletBalanceLocal.textSize = 14 * scale
+                    }
+                    else if (widthDP < 500 && walletBalanceLocal.text.length > 14 && walletBalance.text.length > 10)
+                    {
+                        walletBalance.textSize = 18 * scale
+                        walletBalanceLocal.textSize = 16 * scale
+                    }
+                    else if (widthDP < 500 && walletBalanceLocal.text.length > 14 && walletBalance.text.length > 8)
+                    {
+                        walletBalanceLocal.textSize = 14 * scale
+                    }
+                    else if (widthDP < 500 && walletBalanceLocal.text.length > 14)
+                    {
+                        walletBalanceLocal.textSize = 14 * scale
+                    }
+                }
+                catch (e : Exception)
+                {
+
+                }
                 walletBalanceLocal.visibility = View.VISIBLE
             }
             catch (e: Throwable) {
