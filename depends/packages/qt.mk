@@ -170,10 +170,17 @@ define $(package)_preprocess_cmds
   sed -i.old "s|QMAKE_CFLAGS            = |!host_build: QMAKE_CFLAGS            = $($(package)_cflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_LFLAGS            = |!host_build: QMAKE_LFLAGS            = $($(package)_ldflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_CXXFLAGS          = |!host_build: QMAKE_CXXFLAGS            = $($(package)_cxxflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
+  sed -i.old "s|debug_and_release|release|g" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QWT_CONFIG.*QwtOpenGL||" qwt/qwtconfig.pri && \
   sed -i.old "s|QWT_CONFIG.*QwtDesigner||" qwt/qwtconfig.pri && \
   sed -i.old "s|QWT_CONFIG.*QwtWidgets||" qwt/qwtconfig.pri && \
-  sed -i.old "s|QWT_CONFIG.*QwtSvg||" qwt/qwtconfig.pri
+  sed -i.old "s|QWT_CONFIG.*QwtSvg||" qwt/qwtconfig.pri  && \
+  sed -i.old "s|QWT_CONFIG.*QwtDll||" qwt/qwtconfig.pri  && \
+  sed -i.old "s|QWT_INSTALL_PREFIX.*=.*|QWT_INSTALL_PREFIX = $(host_prefix)|" qwt/qwtconfig.pri && \
+  sed -i.old "s|CONFIG.*=.*debug_and_release|CONFIG+=release|" qwt/qwtbuild.pri && \
+  sed -i.old "s|CONFIG.*=.*build_all||" qwt/qwtbuild.pri && \
+  echo "unix|mingw {QWT_CONFIG     += QwtPkgConfig }" >> qwt/qwtconfig.pri && \
+  echo "unix|mingw {QMAKE_PKGCONFIG_VERSION = $($(package)_qwt_version) }" >> qwt/qwtconfig.pri
 endef
 
 define $(package)_config_cmds
