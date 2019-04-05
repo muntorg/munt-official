@@ -135,7 +135,7 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
            BOOST_CPPFLAGS="-I$_AX_BOOST_BASE_boost_path/include"
            for _AX_BOOST_BASE_boost_path_tmp in $multiarch_libsubdir $libsubdirs; do
                 AC_MSG_CHECKING([for boostlib >= $1 ($WANT_BOOST_VERSION) lib path in "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp"])
-                AS_IF([test -d "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp" && test -r "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp" ],[
+                AS_IF([test -d "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp" && test -r "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp" && ls "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp/libboost_"* >/dev/null 2>&1],[
                         AC_MSG_RESULT([yes])
                         BOOST_LDFLAGS="-L$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp";
                         break;
