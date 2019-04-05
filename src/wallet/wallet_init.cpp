@@ -439,16 +439,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     }
     else if (loadState == EXISTING_WALLET)
     {
-        //Clean up a slight issue in 1.6.0 -> 1.6.3 wallets where a "usehd=0" account was created but no active account set.
-        if (!walletInstance->activeAccount)
-        {
-            if (!walletInstance->mapAccounts.empty()) {
-                CWalletDB walletdb(*walletInstance->dbw);
-                walletInstance->setActiveAccount(walletdb, walletInstance->mapAccounts.begin()->second);
-            }
-            else
-                throw std::runtime_error("Wallet contains no accounts, but is marked as upgraded.");
-        }
+        CAccount* firstAccount = nullptr;
 
         //Detect any HD account seed gaps.
         bool indexError=false;
@@ -471,6 +462,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                         {
                             nIndex = nIndex & ~BIP32_HARDENED_KEY_LIMIT;
                         }
+                        if (!firstAccount && nIndex == 0)
+                            firstAccount = account;
                         allIndexes.insert(nIndex);
                     }
                 }
@@ -513,6 +506,26 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             CAlert::Notify(strErrorMessage, true, true);
             LogPrintf("%s", strErrorMessage.c_str());
             uiInterface.ThreadSafeMessageBox(strErrorMessage,"", CClientUIInterface::MSG_ERROR);
+        }
+
+        //Clean up a slight issue in 1.6.0 -> 1.6.3 wallets where a "usehd=0" account was created but no active account set.
+        if (!walletInstance->activeAccount)
+        {
+            if (!walletInstance->mapAccounts.empty())
+            {
+                CWalletDB walletdb(*walletInstance->dbw);
+                walletInstance->setActiveAccount(walletdb, firstAccount ? firstAccount : walletInstance->mapAccounts.begin()->second);
+            }
+            else
+                throw std::runtime_error("Wallet contains no accounts, but is marked as upgraded.");
+        }
+        //fixme: (FUTURE) - Remove this eventually
+        //Work around issue in early android SPV wallets where if there are multiple accounts we end up with the wrong one active somehow.
+        //We should remove this in the future, but only once we are sure it is fully solved.
+        else if(firstAccount && (GetBoolArg("-spv", DEFAULT_SPV)) && walletInstance->activeAccount != firstAccount)
+        {
+            CWalletDB walletdb(*walletInstance->dbw);
+            walletInstance->setActiveAccount(walletdb, firstAccount);
         }
 
         //Clean up an issue with some wallets that didn't delete one of the seeds correctly

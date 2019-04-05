@@ -500,7 +500,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool incl
             {
                 if (pcoin->IsTrusted() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
                 {
-                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(useCache, forAccount) : pcoin->GetAvailableCredit(useCache, forAccount);
+                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(useCache, forAccount, false) : pcoin->GetAvailableCredit(useCache, forAccount, false);
                 }
             }
 
@@ -513,7 +513,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool incl
             const auto& childAccount = accountItem.second;
             if (childAccount->getParentUUID() == forAccount->getUUID())
             {
-                nTotal += GetBalance(childAccount, includePoW2LockedWitnesses, false);
+                nTotal += GetBalance(childAccount, useCache, includePoW2LockedWitnesses, false);
             }
         }
     }
@@ -556,7 +556,7 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeP
             {
                 if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
                 {
-                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetAvailableCredit(true, forAccount);
+                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount, false) : pcoin->GetAvailableCredit(true, forAccount, false);
                 }
             }
         }
@@ -587,7 +587,7 @@ CAmount CWallet::GetImmatureBalance(const CAccount* forAccount, bool includePoW2
             {
                 if (!forAccount || ::IsMine(forAccount, *pcoin))
                 {
-                    nTotal += includePoW2LockedWitnesses ? pcoin->GetImmatureCreditIncludingLockedWitnesses(true, forAccount) : pcoin->GetImmatureCredit(true, forAccount);
+                    nTotal += includePoW2LockedWitnesses ? pcoin->GetImmatureCreditIncludingLockedWitnesses(true, forAccount, false) : pcoin->GetImmatureCredit(true, forAccount, false);
                 }
             }
         }
