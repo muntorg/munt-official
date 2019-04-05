@@ -163,4 +163,6 @@ file COPYING
     <string name="title_select_currency">Wybierz walutę</string>
     <string name="label_sync_progress_connecting">Złączony</string>
     <string name="label_sync_progress_syncing">Synchronizacja %.1f%%</string>
+    <string name="preference_fragment_hide_balance">Ukryj saldo</string>
+    <string name="show_balance_when_synced">Saldo nie jest widoczne. Proszę czekać.</string>
 </resources>
