@@ -2095,8 +2095,12 @@ bool CWallet::DelAddressBook(const std::string& address)
 
     NotifyAddressBookChanged(this, address, "", ::IsMine(*this, CGuldenAddress(address).Get()) != ISMINE_NO, "", CT_DELETED);
 
-    CWalletDB(*dbw).ErasePurpose(CGuldenAddress(address).ToString());
-    return CWalletDB(*dbw).EraseName(CGuldenAddress(address).ToString());
+    // if address is a valid string encoding of a Gulden address use that for delete key,
+    // else it is most likely an IBAN address and then use that directly as key
+    CGuldenAddress guldenAddress;
+    std::string deleteKey = guldenAddress.SetString(address) ? guldenAddress.ToString() : address;
+    CWalletDB(*dbw).ErasePurpose(deleteKey);
+    return CWalletDB(*dbw).EraseName(deleteKey);
 }
 
 std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
