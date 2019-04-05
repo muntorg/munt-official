@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
 import kotlinx.android.synthetic.main.address_book_list_item.view.*
 
 class AddressBookAdapter(private var dataSource: ArrayList<AddressRecord>, val onItemClick: (position: Int, address: AddressRecord) -> Unit) : RecyclerView.Adapter<AddressBookAdapter.MyViewHolder>() {
@@ -46,5 +47,9 @@ class AddressBookAdapter(private var dataSource: ArrayList<AddressRecord>, val o
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
+    }
+
+    fun removeAt(position: Int) {
+        UnityCore.instance.deleteAddressBookRecord(dataSource[position])
     }
 }
