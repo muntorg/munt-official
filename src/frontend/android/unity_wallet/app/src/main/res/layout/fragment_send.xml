@@ -105,14 +105,14 @@ file COPYING
                 </LinearLayout>
 
                 <!-- Set large margin right so that users don't accidentally click list items when aiming for "add" button -->
-                <ListView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/addressBookList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginRight="50dp"
                     android:divider="@null"
                     android:dividerHeight="0dp">
-                </ListView>
+                </androidx.recyclerview.widget.RecyclerView>
 
                 <LinearLayout
                     android:id="@+id/emptyAddressBookView"

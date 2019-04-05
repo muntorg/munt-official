@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -21,6 +21,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
@@ -40,7 +41,6 @@ import org.jetbrains.anko.support.v4.runOnUiThread
 
 class SendFragment : Fragment(), UnityCore.Observer
 {
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         return inflater.inflate(R.layout.fragment_send, container, false)
@@ -170,18 +170,31 @@ class SendFragment : Fragment(), UnityCore.Observer
     {
         super.onActivityCreated(savedInstanceState)
 
-        addressBookList?.emptyView = emptyAddressBookView
-
-        addressBookList.setOnItemClickListener { parent, _, position, _ ->
-            val address = parent.adapter.getItem(position) as AddressRecord
+        val addresses = GuldenUnifiedBackend.getAddressBookRecords()
+        val adapter = AddressBookAdapter(addresses) { position, address ->
             val recipient = UriRecipient(true, address.address, address.name, "0")
             SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
         }
 
-        // TODO: Only update if there has been a change, not always.
-        val addresses = GuldenUnifiedBackend.getAddressBookRecords()
-        val adapter = AddressBookAdapter(this.context!!, addresses)
         addressBookList.adapter = adapter
+        addressBookList.layoutManager = LinearLayoutManager(context)
+
+        updateEmptyViewState()
+    }
+
+    private fun updateEmptyViewState()
+    {
+        val adapter = addressBookList.adapter
+        adapter?.run {
+            if (itemCount > 0) {
+                addressBookList.visibility = View.VISIBLE
+                emptyAddressBookView.visibility = View.GONE
+            }
+            else {
+                addressBookList.visibility = View.GONE
+                emptyAddressBookView.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onAttach(context: Context)
@@ -256,10 +269,11 @@ class SendFragment : Fragment(), UnityCore.Observer
     }
 
     override fun onAddressBookChanged() {
-        val addresses = GuldenUnifiedBackend.getAddressBookRecords()
+        val newAddresses = GuldenUnifiedBackend.getAddressBookRecords()
         runOnUiThread {
             val adapter = addressBookList.adapter as AddressBookAdapter
-            adapter.updateDataSource(addresses)
+            adapter.updateDataSource(newAddresses)
+            updateEmptyViewState()
         }
     }
 
