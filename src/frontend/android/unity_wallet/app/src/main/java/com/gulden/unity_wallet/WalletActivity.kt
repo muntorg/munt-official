@@ -384,11 +384,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     @Suppress("UNUSED_PARAMETER")
     fun gotoBuyActivity(view : View? = null)
     {
-        val urlBuilder = Uri.Builder()
-        urlBuilder.scheme("https")
-        urlBuilder.path("gulden.com/purchase")
-        urlBuilder.appendQueryParameter("receive_address", GuldenUnifiedBackend.GetReceiveAddress().toString())
-        val intent = Intent(Intent.ACTION_VIEW, urlBuilder.build())
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Config.PURCHASE_TEMPLATE.format(GuldenUnifiedBackend.GetReceiveAddress().toString())))
         if (intent.resolveActivity(packageManager) != null)
         {
             startActivity(intent)
