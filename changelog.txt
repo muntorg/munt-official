@@ -1,8 +1,8 @@
 2.1.0.5
 
-MISC - Update to newer version of Qt which should improve various minor UI aspects.
+CORE - Introduce builds of the UI client for all architectures ("arm" and "aarch" previously did not have)
 CORE - Introduce "riscv64" to the list of officially supported architectures.
-
+MISC - Update to newer version of Qt which should improve various minor UI aspects.
 
 
 
