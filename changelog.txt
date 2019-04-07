@@ -1,3 +1,12 @@
+2.1.0.5
+
+MISC - Update to newer version of Qt which should improve various minor UI aspects.
+CORE - Introduce "riscv64" to the list of officially supported architectures.
+
+
+
+
+
 2.1.0.4
 
 MISC - Minor maintenance release, update checkpoints and other minor changes
