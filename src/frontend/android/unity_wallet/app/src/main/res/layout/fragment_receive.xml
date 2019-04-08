@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright (c) 2018-2019 The Gulden developers
 Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 Distributed under the GULDEN software license, see the accompanying
@@ -14,42 +13,44 @@ file COPYING
     android:gravity="center_vertical|center_horizontal"
     tools:context=".main_activity_fragments.ReceiveFragment">
 
-    <LinearLayout
-        android:id="@+id/linearLayout4"
+    <Space
+        android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="parent"
+        android:layout_height="24dp" />
+
+    <ImageView
+        android:id="@+id/currentAddressQrView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:src="@null"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="200dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/currentAddressLabel"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="4dp"
+        android:textAlignment="center"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/currentAddressQrView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxWidth="200dp"
-            android:maxHeight="200dp"
-            android:minWidth="200dp"
-            android:minHeight="200dp"
-            android:scaleType="fitCenter"
-            android:src="@null"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:id="@+id/currentAddressLabel"
-            android:layout_marginTop="24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/currentAddressQrView"
+        app:layout_constraintBottom_toTopOf="@id/divider" />
 
     <View
         android:id="@+id/divider"
+        style="@style/ThinHorizontalDivider"
         app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/ThinHorizontalDivider"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/buttonLayout"
@@ -64,6 +65,7 @@ file COPYING
 
         <Button
             android:id="@+id/buyButton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
@@ -76,11 +78,11 @@ file COPYING
             android:background="@drawable/shape_rounded_button"
             android:text="@string/action_bar_buy"
             android:textAllCaps="false"
-            style="?android:attr/borderlessButtonStyle"
             android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/shareButton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
@@ -94,7 +96,6 @@ file COPYING
             android:maxLines="2"
             android:text="@string/action_bar_share"
             android:textAllCaps="false"
-            style="?android:attr/borderlessButtonStyle"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
