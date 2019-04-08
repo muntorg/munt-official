@@ -16,6 +16,7 @@ import androidx.preference.PreferenceManager
 import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
+import org.jetbrains.anko.dimen
 import org.jetbrains.anko.runOnUiThread
 
 class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(context, attrs), Authentication.LockingObserver, UnityCore.Observer, OnSharedPreferenceChangeListener {
@@ -43,7 +44,7 @@ class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(co
 
     private fun showSyncToast() {
         val toast = Toast.makeText(context, context.getString(R.string.show_balance_when_synced), Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.TOP, 0 ,0)
+        toast.setGravity(Gravity.TOP, 0 , context.dimen(R.dimen.top_toast_offset))
         toast.show()
     }
 
