@@ -104,7 +104,9 @@ script: |
   tar -C ${BASEPREFIX}/SDKs -xf ${BUILD_DIR}/MacOSX10.11.sdk.tar.gz
 
   # Build dependencies for each host
+  ORIGWRAPPATH="$PATH"
   for i in $HOSTS; do
+    export PATH=${BASEPREFIX}/${i}/native/bin:${ORIGWRAPPATH}
     make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
   done
 
