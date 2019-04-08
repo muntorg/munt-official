@@ -111,49 +111,29 @@ class SendFragment : Fragment(), UnityCore.Observer
         dialog.setOnShowListener {
             val okBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             okBtn.isEnabled = false
-            //TODO: dedup
-            inputAddress.addTextChangedListener(
-                    object : TextWatcher {
-                        override fun afterTextChanged(s: Editable?) {
-                            s?.run {
-                                val address = inputAddress.text.toString()
-                                val label = inputLabel.text.toString()
-                                var enable = false
-                                if (address != "" && label != "")
-                                {
-                                    if (IBANValidator.getInstance().isValid(address) || GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>())).valid)
-                                    {
-                                        enable = true
-                                    }
-                                }
-                                okBtn.isEnabled = enable
-                            }
-                        }
-                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                    })
-            //TODO: dedup
-            inputLabel.addTextChangedListener(
-                    object : TextWatcher {
-                        override fun afterTextChanged(s: Editable?) {
-                            s?.run {
-                                val address = inputAddress.text.toString()
-                                val label = inputLabel.text.toString()
-                                var enable = false
-                                if (address != "" && label != "")
-                                {
-                                    if (IBANValidator.getInstance().isValid(address) || GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>())).valid)
-                                    {
-                                        enable = true
-                                    }
-                                }
-                                okBtn.isEnabled = enable
-                            }
-                        }
-                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                    })
 
+            val textChangedListener = object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    s?.run {
+                        val address = inputAddress.text.toString()
+                        val label = inputLabel.text.toString()
+                        var enable = false
+                        if (address != "" && label != "")
+                        {
+                            if (IBANValidator.getInstance().isValid(address) || GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>())).valid)
+                            {
+                                enable = true
+                            }
+                        }
+                        okBtn.isEnabled = enable
+                    }
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            }
+
+            inputAddress.addTextChangedListener(textChangedListener)
+            inputLabel.addTextChangedListener(textChangedListener)
 
             viewInflated.address.requestFocus()
             viewInflated.address.post {

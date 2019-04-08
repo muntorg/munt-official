@@ -5,6 +5,7 @@
 
 package com.gulden.unity_wallet.main_activity_fragments
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -23,60 +24,47 @@ import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.support.v4.alert
 
 
-class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
-{
-    override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?)
-    {
+class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat() {
+    override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.fragment_wallet_settings, rootKey)
 
-        if (GuldenUnifiedBackend.IsMnemonicWallet())
-        {
+        if (GuldenUnifiedBackend.IsMnemonicWallet()) {
             preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
             preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
-        }
-        else
-        {
+        } else {
             preferenceScreen.removePreferenceRecursively("recovery_view_preference")
             preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
         }
     }
 
-    override fun onResume()
-    {
+    override fun onResume() {
         super.onResume()
         (activity as WalletActivity).showSettingsTitle(getString(R.string.title_wallet_settings))
 
     }
-    override fun onStop()
-    {
+
+    override fun onStop() {
         super.onStop()
         (activity as WalletActivity).hideSettingsTitle()
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean
-    {
-        when (preference?.key){
-            "preference_link_wallet" ->
-            {
+    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+        when (preference?.key) {
+            "preference_link_wallet" -> {
                 val intent = Intent(context, BarcodeCaptureActivity::class.java)
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
                 startActivityForResult(intent, WalletSettingsFragment.REQUEST_CODE_SCAN_FOR_LINK)
             }
-            "preference_change_pass_code" ->
-            {
-                Authentication.instance.authenticate(activity!!, getString(R.string.change_passcode_auth_title), getString(R.string.change_passcode_auth_desc)) {
-                    oldPassword->
-                    Authentication.instance.chooseAccessCode(activity!!, getString(R.string.change_passcode_auth_title)) {
-                        newPassword ->
-                        if (!GuldenUnifiedBackend.ChangePassword(oldPassword.joinToString("") , newPassword.joinToString("")))
-                        {
+            "preference_change_pass_code" -> {
+                Authentication.instance.authenticate(activity!!, getString(R.string.change_passcode_auth_title), getString(R.string.change_passcode_auth_desc)) { oldPassword ->
+                    Authentication.instance.chooseAccessCode(activity!!, getString(R.string.change_passcode_auth_title)) { newPassword ->
+                        if (!GuldenUnifiedBackend.ChangePassword(oldPassword.joinToString(""), newPassword.joinToString(""))) {
                             Toast.makeText(context, "Failed to change password", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
             }
-            "preference_rescan_wallet" ->
-            {
+            "preference_rescan_wallet" -> {
                 alert(getString(R.string.rescan_confirm_msg), getString(R.string.rescan_confirm_title)) {
 
                     // on confirmation compose recipient and execute payment
@@ -87,8 +75,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
                     negativeButton(getString(R.string.cancel_btn)) {}
                 }.show()
             }
-            "preference_remove_wallet", "preference_unlink_wallet" ->
-            {
+            "preference_remove_wallet", "preference_unlink_wallet" -> {
                 val msg = "%s%s".format(
                         if (GuldenUnifiedBackend.IsMnemonicWallet())
                             getString(R.string.remove_wallet_auth_desc_recovery_warn)
@@ -106,18 +93,13 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-    {
-        if (requestCode == WalletSettingsFragment.REQUEST_CODE_SCAN_FOR_LINK)
-        {
-            if (resultCode == CommonStatusCodes.SUCCESS)
-            {
-                if (data != null)
-                {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == WalletSettingsFragment.REQUEST_CODE_SCAN_FOR_LINK) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
 
-                    if (!GuldenUnifiedBackend.IsValidLinkURI(barcode.displayValue))
-                    {
+                    if (!GuldenUnifiedBackend.IsValidLinkURI(barcode.displayValue)) {
                         AlertDialog.Builder(context!!)
                                 .setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title))
                                 .setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning))
@@ -130,60 +112,46 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat()
                         return
                     }
 
-                    if (GuldenUnifiedBackend.HaveUnconfirmedFunds())
-                    {
-                        AlertDialog.Builder(context!!).setTitle(getString(com.gulden.unity_wallet.R.string.failed_guldensync_warning_title))
-                                .setMessage(getString(com.gulden.unity_wallet.R.string.failed_guldensync_unconfirmed_funds_message))
+                    // dialog helper used below
+                    fun performDialog(titleResId: Int, msgResId: Int, withCancel: Boolean, action: (dialogInterface: DialogInterface) -> Unit) {
+                        val builder = AlertDialog.Builder(context!!)
+                                .setTitle(getString(titleResId))
+                                .setMessage(getString(msgResId))
                                 .setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i ->
-                                    dialogInterface.dismiss() }
+                                    action(dialogInterface)
+                                }
                                 .setCancelable(true)
-                                .create()
-                                .show()
+                        if (withCancel)
+                            builder.setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel)) { dialogInterface, i ->
+                                dialogInterface.dismiss()
+                            }
+                        builder.create().show()
+                    }
+
+                    if (GuldenUnifiedBackend.HaveUnconfirmedFunds()) {
+                        performDialog(R.string.failed_guldensync_warning_title, R.string.failed_guldensync_unconfirmed_funds_message, false) {
+                            it.dismiss()
+                        }
                         return
                     }
 
                     //TODO: Refuse to link if we are in the process of a sync.
 
-                    if (GuldenUnifiedBackend.GetBalance() > 0)
-                    {
-                        AlertDialog.Builder(context!!)
-                                .setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_non_empty_wallet))
-                                .setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i ->
-                                    dialogInterface.dismiss()
-                                    (activity as WalletActivity).performLink(barcode.displayValue)
-                                }
-                                .setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel)) { dialogInterface, i->
-                                    dialogInterface.dismiss()
-                                }
-                                .setCancelable(true)
-                                .create()
-                                .show()
-                    }
-                    else
-                    {
-                        AlertDialog.Builder(context!!)
-                                .setTitle(getString(com.gulden.unity_wallet.R.string.guldensync_info_title)).setMessage(getString(com.gulden.unity_wallet.R.string.guldensync_info_message_empty_wallet))
-                                .setPositiveButton(getString(com.gulden.unity_wallet.R.string.button_ok)) { dialogInterface, i ->
-                                    dialogInterface.dismiss()
-                                    (activity as WalletActivity).performLink(barcode.displayValue)
-                                }
-                                .setNegativeButton(getString(com.gulden.unity_wallet.R.string.button_cancel)) { dialogInterface, i ->
-                                    dialogInterface.dismiss()
-                                }.setCancelable(true)
-                                .create()
-                                .show()
+                    performDialog(
+                            R.string.guldensync_info_title,
+                            if (GuldenUnifiedBackend.GetBalance() > 0) R.string.guldensync_info_message_non_empty_wallet else R.string.guldensync_info_message_empty_wallet, true
+                    ) {
+                        it.dismiss()
+                        (activity as WalletActivity).performLink(barcode.displayValue)
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
-    companion object
-    {
+    companion object {
         private const val REQUEST_CODE_SCAN_FOR_LINK = 0
     }
 }
