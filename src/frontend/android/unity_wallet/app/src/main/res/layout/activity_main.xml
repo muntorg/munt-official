@@ -96,6 +96,7 @@ file COPYING
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
+                    android:id="@+id/balanceSection"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -116,7 +117,7 @@ file COPYING
                         tools:ignore="HardcodedText"
                         tools:textColor="@color/colorPrimary" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/walletBalanceLocal"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
