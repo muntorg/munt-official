@@ -42,16 +42,9 @@ class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(co
     }
 
     private fun showSyncToast() {
-        try
-        {
-            val toast = Toast.makeText(context, context.getString(R.string.show_balance_when_synced), Toast.LENGTH_LONG)
-            toast.setGravity(Gravity.TOP, 0, 0)
-            toast.show()
-        }
-        catch (e : Exception)
-        {
-
-        }
+        val toast = Toast.makeText(context, context.getString(R.string.show_balance_when_synced), Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.TOP, 0 ,0)
+        toast.show()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
