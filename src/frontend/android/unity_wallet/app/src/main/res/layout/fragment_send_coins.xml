@@ -121,8 +121,8 @@ file COPYING
                 android:id="@+id/send_coins_receiving_static_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
+                android:ellipsize="middle"
+                android:singleLine="true"
                 android:textColor="@color/lightText" />
 
         </LinearLayout>
