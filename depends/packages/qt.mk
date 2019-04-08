@@ -26,7 +26,7 @@ $(package)_extra_sources += $($(package)_qttools_file_name)
 $(package)_extra_sources += $($(package)_qwt_file_name)
 
 #Work around for a mingw issue where the .pc files contain an incorrect path inside Libs.private
-$(package)_patch_qwt_pc_files = find $($(package)_staging_dir) -name *Qt*Qwt*.pc | xargs sed -ri 's|$($(package)_build_dir)/lib|$$$${libdir}|' &&
+$(package)_patch_qwt_pc_files = find $($(package)_staging_dir) -name *Qt*Qwt*.pc | xargs sed -ri 's|$($(package)_build_dir)/lib|$$$${libdir}|g' &&
 
 
 define $(package)_set_vars
