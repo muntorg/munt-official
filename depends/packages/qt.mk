@@ -25,6 +25,10 @@ $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 $(package)_extra_sources += $($(package)_qwt_file_name)
 
+#Work around for a mingw issue where the .pc files contain an incorrect path inside Libs.private
+$(package)_patch_qwt_pc_files = find $($(package)_staging_dir) -name *Qt*Qwt*.pc | xargs sed -ri 's|$($(package)_build_dir)/lib|$$$${libdir}|' &&
+
+
 define $(package)_set_vars
 $(package)_config_opts_release = -release
 $(package)_config_opts_debug = -debug
@@ -212,6 +216,7 @@ define $(package)_stage_cmds
   $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qwt INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
+  $($(package)_patch_qwt_pc_files) \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
     cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
   fi
