@@ -19,6 +19,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -27,6 +28,8 @@ import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
+import com.gulden.unity_wallet.ui.getDisplayDimensions
+import kotlinx.android.synthetic.main.fragment_send_coins.view.*
 import kotlinx.android.synthetic.main.iban_name_entry.view.*
 import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
@@ -34,6 +37,7 @@ import kotlinx.coroutines.*
 import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
+import org.jetbrains.anko.dimen
 import kotlin.coroutines.CoroutineContext
 
 
@@ -109,6 +113,31 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         mMainlayout = View.inflate(context, R.layout.fragment_send_coins, null)
+
+        // test layout using display dimens
+        val outSize = getDisplayDimensions(context!!)
+        mMainlayout!!.measure(outSize.x, outSize.y)
+
+        // height that the entire bottom sheet wants to be
+        val preferredHeight = mMainlayout.measuredHeight
+
+        // maximum height that we allow it to be, to be sure that the balance shows through (if not hidden)
+        val allowedHeight = outSize.y - context!!.dimen(R.dimen.top_space_send_coins)
+
+        // programmatically adjust layout, only if needed
+        if (preferredHeight > allowedHeight) {
+            // for the preferredHeight numeric_keypad is square due to the ratio constraint, squeeze it to fit allowed height
+            val newHeight = outSize.x - (preferredHeight - allowedHeight)
+
+            // setup new layout params, stripping ratio constaint and adding newly calculatied height
+            val params = mMainlayout.numeric_keypad_holder.layoutParams as ConstraintLayout.LayoutParams
+            params.dimensionRatio = null
+            params.height = newHeight
+            params.matchConstraintMaxHeight = newHeight
+
+            // apply new layout
+            mMainlayout.numeric_keypad_holder.layoutParams = params
+        }
 
         mSendCoinsReceivingStaticAddress = mMainlayout.findViewById(R.id.send_coins_receiving_static_address)
         mSendCoinsNocksEstimate = mMainlayout.findViewById(R.id.send_coins_nocks_estimate)

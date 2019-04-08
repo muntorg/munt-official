@@ -35,4 +35,5 @@ file COPYING
     <dimen tools:override="true" name="design_bottom_navigation_active_text_size">@dimen/design_bottom_navigation_text_size</dimen>
 
     <dimen name="top_toast_offset">60dp</dimen>
+    <dimen name="top_space_send_coins">54dp</dimen>
 </resources>
