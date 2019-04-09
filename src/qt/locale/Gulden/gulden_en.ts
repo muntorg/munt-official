@@ -949,7 +949,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Backup wallet</translation>
     </message>
     <message>
-        <location line="+942"/>
+        <location line="+943"/>
         <source>Imported key</source>
         <translation>Imported key</translation>
     </message>
@@ -1982,7 +1982,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>OptionsDialog</name>
     <message>
-        <location filename="../../optionsdialog.cpp" line="+289"/>
+        <location filename="../../optionsdialog.cpp" line="+328"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -2259,12 +2259,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&amp;OK</translation>
     </message>
     <message>
-        <location filename="../../optionsdialog.cpp" line="-181"/>
+        <location filename="../../optionsdialog.cpp" line="-188"/>
         <source>default</source>
         <translation>default</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+46"/>
         <source>H&amp;ide to dock on close</source>
         <translation>H&amp;ide to dock on close</translation>
     </message>
@@ -5139,7 +5139,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
 <context>
     <name>toolbar</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1179"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1180"/>
         <source>Account toolbar</source>
         <translation>Account toolbar</translation>
     </message>

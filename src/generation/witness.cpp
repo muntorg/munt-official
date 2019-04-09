@@ -549,7 +549,10 @@ void static GuldenWitness()
                                     // Don't attempt to witness if we have nowhere to pay the rewards.
                                     // ScriptForWitnessing will have alerted the user.
                                     if (coinbaseScript == nullptr)
+                                    {
+                                        LogPrintf("GuldenWitness: [Error] Failed to create payout for witness [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
                                         continue;
+                                    }
                                     reserveKeys[selectedWitnessAccount->getUUID()] = coinbaseScript;
                                 }
 
@@ -567,7 +570,7 @@ void static GuldenWitness()
                                     std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript, true, nullptr, true));
                                     if (!pblocktemplate.get())
                                     {
-                                        LogPrintf("Error in GuldenWitness: Failed to get block template.\n");
+                                        LogPrintf("GuldenWitness: [Error] Failed to get block template.\n");
                                         continue;
                                     }
 
@@ -621,11 +624,19 @@ void static GuldenWitness()
                                     /** Do the witness operation (Sign the block using our witness key) and broadcast the final product to the network. **/
                                     if (SignBlockAsWitness(pWitnessBlock, witnessInfo.selectedWitnessTransaction))
                                     {
-                                        LogPrint(BCLog::WITNESS, "GuldenWitness: witness found %s", pWitnessBlock->GetHashPoW2().ToString());
+                                        LogPrint(BCLog::WITNESS, "GuldenWitness: witness block found %s", pWitnessBlock->GetHashPoW2().ToString());
                                         ProcessBlockFound(pWitnessBlock, chainparams);
                                         coinbaseScript->keepScriptOnDestroy();
                                         continue;
                                     }
+                                    else
+                                    {
+                                        LogPrintf("GuldenWitness: [Error] Signature error, failed to witness block.\n");
+                                    }
+                                }
+                                else
+                                {
+                                    LogPrintf("GuldenWitness: [Error] Coinbase error, failed to create coinbase for witness block.\n");
                                 }
                             }
                         }

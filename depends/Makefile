@@ -5,6 +5,7 @@ WORK_PATH = $(BASEDIR)/work
 BASE_CACHE ?= $(BASEDIR)/built
 SDK_PATH ?= $(BASEDIR)/SDKs
 NO_QT ?=
+RAPIDCHECK ?=
 NO_WALLET ?=
 NO_UPNP ?=
 FALLBACK_DOWNLOAD_PATH ?= 
@@ -93,11 +94,17 @@ qt_packages_$(NO_QT) = $(qt_packages) $(qt_$(host_os)_packages) $(qt_$(host_arch
 wallet_packages_$(NO_WALLET) = $(wallet_packages)
 upnp_packages_$(NO_UPNP) = $(upnp_packages)
 
+rapidcheck_packages_$(RAPIDCHECK) = $(rapidcheck_packages)
+
 packages += $($(host_arch)_$(host_os)_packages) $($(host_os)_packages) $(qt_packages_) $(wallet_packages_) $(upnp_packages_)
 native_packages += $($(host_arch)_$(host_os)_native_packages) $($(host_os)_native_packages)
 
 ifneq ($(qt_packages_),)
 native_packages += $(qt_native_packages)
+endif
+
+ifeq ($(rapidcheck_packages_),)
+packages += $(rapidcheck_packages)
 endif
 
 all_packages = $(packages) $(native_packages)
@@ -167,7 +174,7 @@ $(host_prefix)/share/config.site: check-packages
 check-packages: check-sources
 
 clean-all: clean
-	@rm -rf $(SOURCES_PATH) x86_64* i686* mips* arm* aarch64*
+	@rm -rf $(SOURCES_PATH) x86_64* i686* mips* arm* aarch64* riscv32* riscv64*
 
 clean:
 	@rm -rf $(WORK_PATH) $(BASE_CACHE) $(BUILD)
@@ -178,7 +185,7 @@ install: check-packages $(host_prefix)/share/config.site
 download-one: check-sources $(all_sources)
 
 download-osx:
-	@$(MAKE) -s HOST=x86_64-apple-darwin11 download-one
+	@$(MAKE) -s HOST=x86_64-apple-darwin14 download-one
 download-linux:
 	@$(MAKE) -s HOST=x86_64-unknown-linux-gnu download-one
 download-win:

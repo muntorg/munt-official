@@ -712,7 +712,7 @@
     </message>
     <message>
         <source>The transaction was rejected with the following reason: %1</source>
-        <translation>A transação foi negada pela seguinte razão: %1</translation>
+        <translation>A&#xa0;transação foi negada pela seguinte razão: %1</translation>
     </message>
     <message>
         <source>A fee higher than %1 is considered an absurdly high fee.</source>
@@ -1188,8 +1188,8 @@
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
         <translation>
-            <numerusform>maduro em mais %n bloco</numerusform>
-            <numerusform>maduro em mais %n blocos</numerusform>
+            <numerusform>maduro&#xa0;em mais %n bloco</numerusform>
+            <numerusform>maduro&#xa0;em mais %n blocos</numerusform>
         </translation>
     </message>
     <message>
