@@ -188,9 +188,9 @@ void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBal
     if (!labelBalance || !labelBalanceForex)
         return;
 
-    CAmount displayBalanceAvailable = balances.availableExcludingLocked;
     CAmount displayBalanceLocked = balances.totalLocked;
     CAmount displayBalanceImmatureOrUnconfirmed = balances.immatureExcludingLocked + balances.unconfirmedExcludingLocked;
+    CAmount displayBalanceAvailable = balances.availableExcludingLocked;
     CAmount displayBalanceTotal = displayBalanceLocked + displayBalanceAvailable + displayBalanceImmatureOrUnconfirmed;
 
     if (displayBalanceTotal < 0)
@@ -199,21 +199,27 @@ void GUI::setBalance(const WalletBalances& balances, const CAmount& watchOnlyBal
         displayBalanceLocked = 0;
     if (displayBalanceImmatureOrUnconfirmed < 0)
         displayBalanceImmatureOrUnconfirmed = 0;
-    if (displayBalanceTotal < 0)
-        displayBalanceTotal = 0;
+    if (displayBalanceAvailable < 0)
+        displayBalanceAvailable = 0;
 
     labelBalance->setText(GuldenUnits::format(GuldenUnits::NLG, displayBalanceTotal, false, GuldenUnits::separatorStandard, 2));
     if (displayBalanceTotal > 0 && optionsModel)
     {
-        QString forexLabel = QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2);
+        std::string currencyCode = optionsModel->guldenSettings->getLocalCurrency().toStdString();
+        CAmount forexBalanceTotal = ticker->convertGuldenToForex(displayBalanceTotal, currencyCode);
+        CAmount forexBalanceLocked = ticker->convertGuldenToForex(displayBalanceLocked, currencyCode);
+        CAmount forexBalanceImmatureOrUnconfirmed = ticker->convertGuldenToForex(displayBalanceImmatureOrUnconfirmed, currencyCode);
+        CAmount forexBalanceAvailable = ticker->convertGuldenToForex(displayBalanceAvailable, currencyCode);
+
+        QString forexLabel = QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, forexBalanceTotal, false, GuldenUnits::separatorAlways, 2);
         labelBalanceForex->setText(QString("(") + forexLabel + QString(")"));
         QString forexToolTip;
         forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"><b>%1</b>&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Conversion estimate")).arg("");
         forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\"></td><td style=\"white-space: nowrap;\" align=\"right\"></td></tr>");
-        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceTotal, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceLocked, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Pending")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceImmatureOrUnconfirmed, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
-        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, ticker->convertGuldenToForex(displayBalanceAvailable, optionsModel->guldenSettings->getLocalCurrency().toStdString()), false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Total")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, forexBalanceTotal, false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Locked")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, forexBalanceLocked, false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Pending")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, forexBalanceImmatureOrUnconfirmed, false, GuldenUnits::separatorAlways, 2));
+        forexToolTip += QString("<tr><td style=\"white-space: nowrap;\" align=\"left\">%1&nbsp;&nbsp;&nbsp;&nbsp;</td><td style=\"white-space: nowrap;\" align=\"right\">%2</td></tr>").arg(tr("Spendable")).arg(QString::fromStdString(CurrencySymbolForCurrencyCode(optionsModel->guldenSettings->getLocalCurrency().toStdString())) + QString("\u2009") + GuldenUnits::format(GuldenUnits::NLG, forexBalanceAvailable, false, GuldenUnits::separatorAlways, 2));
         labelBalanceForex->setToolTip(forexToolTip);
         if (labelBalance->isVisible())
             labelBalanceForex->setVisible(true);

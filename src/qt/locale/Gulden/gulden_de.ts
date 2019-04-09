@@ -220,8 +220,16 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
         <translation>Verfügbar</translation>
     </message>
     <message>
+        <source>Conversion estimate</source>
+        <translation>Conversion-Schätzung</translation>
+    </message>
+    <message>
         <source>&amp;Address</source>
         <translation>&amp;Adresse</translation>
+    </message>
+    <message>
+        <source>Wallet balances</source>
+        <translation>Wallet Saldo</translation>
     </message>
     <message>
         <source>Check for Updates</source>
@@ -837,7 +845,7 @@ Witness Gewicht: %5</translation>
     </message>
     <message>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation>Die Wallet-Verschlüsselung ist aufgrund eines internen Fehlers fehlgeschlagen. Ihre Wallet wurde nicht verschlüsselt.</translation>
+        <translation>Die Wallet-Verschlüsselung ist auf grund eines internen Fehlers fehlgeschlagen. Ihre Wallet wurde nicht verschlüsselt.</translation>
     </message>
     <message>
         <source>The supplied passphrases do not match.</source>
@@ -1546,6 +1554,10 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     <message>
         <source>Spendable</source>
         <translation>Verfügbar</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Conversion-Schätzung</translation>
     </message>
 </context>
 <context>
@@ -3358,7 +3370,7 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     </message>
     <message>
         <source>Lock time remaining</source>
-        <translation>Restlaufzeit</translation>
+        <translation>Restlaufzeit der Sperre</translation>
     </message>
     <message>
         <source>Locked from</source>
@@ -3916,6 +3928,18 @@ In zukünftigen Versionen von Gulden wird es möglich sein, dieses Konto wieder 
     <message>
         <source>Copy address to clipboard</source>
         <translation>Kopiere Adresse in Zwischenablage</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resultierende URI ist zu lang, bitte den Text für Bezeichnung/Nachricht kürzen.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Meine Witnessadresse</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Für dieses Konto wurde keine gültige Witnessadresse generiert</translation>
     </message>
 </context>
 <context>

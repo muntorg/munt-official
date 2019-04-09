@@ -16,7 +16,7 @@
     </message>
     <message>
         <source>Enter name of account.</source>
-        <translation>Cambia nome dell&apos;account</translation>
+        <translation>Inserisci nome dell&apos;account</translation>
     </message>
     <message>
         <source>Delete account</source>
@@ -24,7 +24,7 @@
     </message>
     <message>
         <source>Copy sync code</source>
-        <translation>Copia il codice di sincronizzazione</translation>
+        <translation>Copia codice di sincronizzazione</translation>
     </message>
     <message>
         <source>Done</source>
@@ -41,13 +41,13 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation>Scansiona il QR con un dispositivo per collegare il dispositivo al tuo portafoglio</translation>
+        <translation>Scansiona il QR con un dispositivo idoneo al witnessing per collegare il dispositivo al tuo portafoglio</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
         <translation>Clicca qui per rendere visibile il codice QR.
-ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo codice QR in quanto altrimenti potrebbe essere utilizzato per guadagnare per tuo conto e rubare i tuoi guadagni.</translation>
+ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo codice QR in quanto  potrebbe essere utilizzato per guadagnare per tuo conto e rubare i tuoi guadagni dal witness.</translation>
     </message>
     <message>
         <source>Account not empty, please first empty your account before trying to delete it.</source>

@@ -8,9 +8,26 @@ RPC - Add an optional purge option to 'deleteseed' command.
 
 
 
+2.1.0.5
+
+CORE - Introduce builds of the UI client for all architectures ("arm" and "aarch64" previously did not have)
+CORE - Introduce "riscv64" to the list of officially supported architectures.
+CORE - Introduce AppImage installers for "arm" and "aarch64"
+MISC - Update to newer version of Qt which should improve various minor UI aspects.
+
+
+
+
 2.1.0.4
 
-UI - Fix a small dispaly update issue when switching between witness and normal accounts in some instances.
+MISC - Minor maintenance release, update checkpoints and other minor changes
+CORE - Introduce some code to automatically detect and clear the failed verification status of blocks in certain situations where it is safe to do so. This will make it easier for users who fail to update before a fork to update after the fork without having to issue any manual commands.
+CORE - Add some additional logging of error conditions to the witness loop.
+CORE - Fix a potential race condition in networking code, that may have been the cause of very rare intermittent network related crashes. Detected on android as part of "unity" project.
+UI - Fix a display issue with "local currency" mouse-over tooltips.
+UI - Fix a small display update issue when switching between witness and normal accounts in some instances.
+UI - Clean up the language selection list in options dialog.
+ZMQ - Fix a bug in the NotifyStalledWitness ZMQ code.
 
 
 

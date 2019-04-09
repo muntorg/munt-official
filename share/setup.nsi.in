@@ -88,14 +88,14 @@ Section -Main SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
     File @abs_top_srcdir@/release/@GULDEN_GUI_NAME@@EXEEXT@
-    File @abs_top_srcdir@/release/*.dll
+    #File @abs_top_srcdir@/release/*.dll
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING_upstream
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING_gulden
-    SetOutPath $INSTDIR\platforms
-    File @abs_top_srcdir@/release/platforms/*
-    SetOutPath $INSTDIR\imageformats
-    File @abs_top_srcdir@/release/imageformats/*
+    #SetOutPath $INSTDIR\platforms
+    #File @abs_top_srcdir@/release/platforms/*
+    #SetOutPath $INSTDIR\imageformats
+    #File @abs_top_srcdir@/release/imageformats/*
     SetOutPath $INSTDIR\daemon
     File @abs_top_srcdir@/release/@GULDEN_DAEMON_NAME@@EXEEXT@
     File @abs_top_srcdir@/release/@GULDEN_CLI_NAME@@EXEEXT@

@@ -1,6 +1,7 @@
 ---
 name: "Gulden-osx-2.1.0"
 enable_cache: true
+distro: "ubuntu"
 suites:
 - "bionic"
 architectures:
@@ -24,9 +25,9 @@ packages:
 - "libcap-dev"
 - "libz-dev"
 - "libbz2-dev"
-- "python"
-- "python-dev"
-- "python-setuptools"
+- "python3"
+- "python3-dev"
+- "python3-setuptools"
 - "fonts-tuffy"
 - "gperf"
 - "ruby"
@@ -39,8 +40,10 @@ remotes:
 files:
 - "MacOSX10.11.sdk.tar.gz"
 script: |
+  set -e -o pipefail
+
   WRAP_DIR=$HOME/wrapped
-  HOSTS="x86_64-apple-darwin11"
+  HOSTS="x86_64-apple-darwin14"
   CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage"
   FAKETIME_HOST_PROGS=""
   FAKETIME_PROGS="ar ranlib date dmg genisoimage"
@@ -50,6 +53,7 @@ script: |
 
 
   export QT_RCC_TEST=1
+  export QT_RCC_SOURCE_DATE_OVERRIDE=1
   export GZIP="-9n"
   export TAR_OPTIONS="--mtime="$REFERENCE_DATE\\\ $REFERENCE_TIME""
   export TZ="UTC"
@@ -65,7 +69,7 @@ script: |
 
   function create_global_faketime_wrappers {
   for prog in ${FAKETIME_PROGS}; do
-    echo '#!/bin/bash' > ${WRAP_DIR}/${prog}
+    echo '#!/usr/bin/env bash' > ${WRAP_DIR}/${prog}
     echo "REAL=\`which -a ${prog} | grep -v ${WRAP_DIR}/${prog} | head -1\`" >> ${WRAP_DIR}/${prog}
     echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1' >> ${WRAP_DIR}/${prog}
     echo "export FAKETIME=\"$1\"" >> ${WRAP_DIR}/${prog}
@@ -77,7 +81,7 @@ script: |
   function create_per-host_faketime_wrappers {
   for i in $HOSTS; do
     for prog in ${FAKETIME_HOST_PROGS}; do
-        echo '#!/bin/bash' > ${WRAP_DIR}/${i}-${prog}
+        echo '#!/usr/bin/env bash' > ${WRAP_DIR}/${i}-${prog}
         echo "REAL=\`which -a ${i}-${prog} | grep -v ${WRAP_DIR}/${i}-${prog} | head -1\`" >> ${WRAP_DIR}/${i}-${prog}
         echo 'export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1' >> ${WRAP_DIR}/${i}-${prog}
         echo "export FAKETIME=\"$1\"" >> ${WRAP_DIR}/${i}-${prog}
@@ -100,9 +104,9 @@ script: |
   tar -C ${BASEPREFIX}/SDKs -xf ${BUILD_DIR}/MacOSX10.11.sdk.tar.gz
 
   # Build dependencies for each host
+  ORIGWRAPPATH="$PATH"
   for i in $HOSTS; do
-    export HOST_NATIVE_PATH=${PATH}
-    export PATH=${PATH}:/home/ubuntu/build/Gulden/depends/${i}/native/bin/
+    export PATH=${BASEPREFIX}/${i}/native/bin:${ORIGWRAPPATH}
     make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
   done
 
@@ -113,7 +117,6 @@ script: |
   export PATH=${WRAP_DIR}:${PATH}
 
   # Create the release tarball using (arbitrarily) the first host
-  export GIT_DIR="$PWD/.git"
   ./autogen.sh
   CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/
   make dist
@@ -127,27 +130,28 @@ script: |
   find Gulden-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   popd
 
+  # Workaround for tarball not building with the bare tag version (prep)
+  make -C src obj/build.h
+
   ORIGPATH="$PATH"
   # Extract the release tarball into a dir for each host and build
   for i in ${HOSTS}; do
-    export PATH=/home/ubuntu/build/Gulden/depends/${i}/lib/pkgconfig:${BASEPREFIX}/${i}/native/bin:${ORIGPATH}
+    export PATH=${BASEPREFIX}/${i}/native/bin:${ORIGPATH}
     mkdir -p distsrc-${i}
     cd distsrc-${i}
     INSTALLPATH=`pwd`/installed/${DISTNAME}
     mkdir -p ${INSTALLPATH}
     tar --strip-components=1 -xf ../$SOURCEDIST
 
+    # Workaround for tarball not building with the bare tag version
+    echo '#!/bin/true' >share/genbuild.sh
+    mkdir src/obj
+    cp ../src/obj/build.h src/obj/
 
-    # Gross hack - prevent static qt libs from screwing up build
-    sed -i.old "s|Libs.private:.*|Libs.private:|" /home/ubuntu/build/Gulden/depends/${i}/lib/pkgconfig/Qt5*.pc
-
-    echo "<<<<<<<<<<<<<<<<<<<< START make Gulden >>>>>>>>>>>>>>>>>>>"
-    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --enable-shared="qt" --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}"
+    CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS}
     make ${MAKEOPTS}
     make install-strip DESTDIR=${INSTALLPATH}
 
-
-    echo "<<<<<<<<<<<<<<<<<<<< START make deploydir >>>>>>>>>>>>>>>>>>>"
     make osx_volname
     make deploydir
     OSX_VOLNAME="$(cat osx_volname)"
@@ -163,9 +167,6 @@ script: |
     find . | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-osx-unsigned.tar.gz
     popd
 
-
-
-    echo "<<<<<<<<<<<<<<<<<<<< START make deploy >>>>>>>>>>>>>>>>>>>"    
     make deploy
     ${WRAP_DIR}/dmg dmg "${OSX_VOLNAME}.dmg" ${OUTDIR}/${DISTNAME}-osx-unsigned.dmg
 
