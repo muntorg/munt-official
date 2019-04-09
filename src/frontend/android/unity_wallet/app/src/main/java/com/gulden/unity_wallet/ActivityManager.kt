@@ -158,11 +158,4 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         //TODO: This lock call should be powered via core events and not directly
         Authentication.instance.lock()
     }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun firstActivityStarted()
-    {
-        GuldenUnifiedBackend.ResetUnifiedProgress()
-    }
-
 }
