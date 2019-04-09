@@ -22,6 +22,8 @@ import org.jetbrains.anko.runOnUiThread
 class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(context, attrs), Authentication.LockingObserver, UnityCore.Observer, OnSharedPreferenceChangeListener {
 
     private var syncToastShowed = false // used to show it just once (unless triggered explicitly by tapping)
+    private var syncToastLastShowed = 0L
+    private val SYNC_TOAST_RATE_LIMIT_MS = 10000 // show toast only if previously shown at least this long ago
     private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val isHideBalanceSet: Boolean
             get() {
@@ -43,9 +45,13 @@ class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(co
     }
 
     private fun showSyncToast() {
-        val toast = Toast.makeText(context, context.getString(R.string.show_balance_when_synced), Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.TOP, 0 , context.dimen(R.dimen.top_toast_offset))
-        toast.show()
+        val now = System.currentTimeMillis()
+        if (now - syncToastLastShowed > SYNC_TOAST_RATE_LIMIT_MS) {
+            val toast = Toast.makeText(context, context.getString(R.string.show_balance_when_synced), Toast.LENGTH_LONG)
+            toast.setGravity(Gravity.TOP, 0 , context.dimen(R.dimen.top_toast_offset))
+            toast.show()
+            syncToastLastShowed = now
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
