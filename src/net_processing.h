@@ -24,22 +24,14 @@ static const int64_t ORPHAN_TX_EXPIRE_TIME = 20 * 60;
 static const int64_t ORPHAN_TX_EXPIRE_INTERVAL = 5 * 60;
 /** Default number of orphan+recently-replaced txn to keep around for block reconstruction */
 static const unsigned int DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN = 100;
-/** Headers download timeout expressed in microseconds
- *  Timeout = base + per_header * (expected number of headers) */
-static constexpr int64_t HEADERS_DOWNLOAD_TIMEOUT_BASE = 15 * 60 * 1000000; // 15 minutes
-static constexpr int64_t HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER = 1000; // 1ms/header
-/** Reverse headers download timeout expressed in microseconds
- *  Timeout = base + per_header * (expected number of headers)
- *  Using a model of bits/sec throughput to find a suitable number.
- *    Tb = througput in bits/sec, assume 2Mbit quite slow for current standards, however roundtrip latency also
- *         takes a big part in throughput
- *    Hb = Headersize in bits = 80 * 8 = 640
- *    Hb / Tb = 305 usec/header
- *    So for example when reverse downloading 700K headers it is expected to complete in 700K * 30usec + 1min which
- *    is about 4.5min (this is really very slow, in practice we should see most reverse headers sync complete well under a minute).
-*/
-static constexpr int64_t RHEADERS_DOWNLOAD_TIMEOUT_BASE = 1 * 60 * 1000000; // 1 minute
-static constexpr int64_t RHEADERS_DOWNLOAD_TIMEOUT_PER_HEADER = 305; // 305usec/header
+/** Timeout for the header request/response cycle during synchronisation
+ * This time can and should be quite tight as we want to quickly drop peers that are not very responsive
+ * Because of the tight timeout care shuld be taken that only "external" time is measured, ie.
+ * the timeout should be reset as soon as an incoming header is known to be the response, not after fully processing
+ * it which might take considerable time on some platforms. The timeout should be set again as soon as a new header
+ * request message is pushed out.
+ */
+static constexpr int64_t HEADERS_DOWNLOAD_RESPONSE_TIMEOUT = 7 * 1000000; // 7 seconds
 
 /** When most recent header is newer, then block download is allowed when using SPV
  * (and automatic block requests is enabled). */

@@ -255,8 +255,8 @@ struct CNodeState {
         fSyncStarted = false;
         fRHeadersSyncStarted = false;
         fPartialSyncStarted = false;
-        nHeadersSyncTimeout = 0;
-        nPartialHeadersSyncTimeout = 0;
+        nHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
+        nPartialHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
         nStallingSince = 0;
         nDownloadingSince = 0;
         nBlocksInFlight = 0;
@@ -1478,6 +1478,21 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         return true;
     }
 
+    if (IsArgSet("-dropsyncheaderstest"))
+    {
+        // rig artificially unresponsive peer
+        LOCK(cs_main);
+        CNodeState *nodestate = State(pfrom->GetId());
+
+        if (GetRand(GetArg("-dropsyncheaderstest", 0)) == 0 // select random
+            && (strCommand == NetMsgType::HEADERS || strCommand == NetMsgType::RHEADERS) // header messages
+            && vRecv.size() > 1000 // which are large (ie. not an announcement but most likely a response to a header request)
+            && (nodestate->fPartialSyncStarted || nodestate->fSyncStarted || nodestate->fRHeadersSyncStarted) ) // when syncing
+        {
+            LogPrintf("dropsyncheaderstest DROPPED A HEADER for node %d\n", pfrom->GetId());
+            return true;
+        }
+    }
 
     if (!(pfrom->GetLocalServices() & NODE_BLOOM) &&
               (strCommand == NetMsgType::FILTERLOAD ||
@@ -2774,7 +2789,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             }
             hashLastBlock = header.GetHashPoW2();
         }
+
+        // reset header request/response timeout
+        if (nodestate->fPartialSyncStarted)
+            nodestate->nPartialHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
+        else if (nodestate->fSyncStarted || nodestate->fRHeadersSyncStarted)
+            nodestate->nHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
         }
+
 
         CValidationState state;
         if (!ProcessNewBlockHeaders(headers, state, chainparams, &pindexLast)) {
@@ -2849,6 +2871,13 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             const CChain& chain = connectsToPartial ? partialChain : chainActive;
             CBlockLocator locator = chain.GetLocatorPoW2(pindexLast);
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, locator, uint256()));
+
+            // set new header request/response timeout
+            int64_t timeout = GetTimeMicros() + HEADERS_DOWNLOAD_RESPONSE_TIMEOUT;
+            if (nodestate->fPartialSyncStarted)
+                nodestate->nPartialHeadersSyncTimeout = timeout;
+            else if (nodestate->fSyncStarted || nodestate->fRHeadersSyncStarted)
+                nodestate->nHeadersSyncTimeout = timeout;
         }
 
         bool fCanDirectFetch = CanDirectFetch(chainparams.GetConsensus());
@@ -3587,9 +3616,11 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         if (fFetch && !state.fPartialSyncStarted && nPartialSyncStarted == 0 && IsPartialSyncActive() &&  !pto->fClient && !fImporting && !fReindex) {
             state.fPartialSyncStarted = true;
             nPartialSyncStarted++;
-            int64_t startTime = partialChain[partialChain.Height()]->GetBlockTime();
-            state.nPartialHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE
-                    + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - startTime)/(consensusParams.nPowTargetSpacing);
+
+            // set header request/response timeout, but not when chain near present as there might not be new headers to expect
+            if (!IsPartialNearPresent())
+                state.nPartialHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_RESPONSE_TIMEOUT;
+
             connman.PushMessage(pto, msgMaker.Make(NetMsgType::GETHEADERS, partialChain.GetLocatorPoW2(pindexBestPartial), uint256()));
         }
 
@@ -3608,8 +3639,8 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 state.fRHeadersSyncStarted = true;
                 nRHeaderSyncStarted++;
 
-                state.nHeadersSyncTimeout = GetTimeMicros() + RHEADERS_DOWNLOAD_TIMEOUT_BASE
-                        + RHEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (lastCheckPointHeight - pindexBestHeader->nHeight);
+                // set header request/response timeout, always as for reverse headers sure to expect a response
+                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_RESPONSE_TIMEOUT;
 
                 LogPrintf("initial reverse getrheaders (%d) to peer=%d (startheight:%d)\n", lastCheckPointHeight - vReverseHeaders.size(),
                          pto->GetId(), pto->nStartingHeight);
@@ -3624,13 +3655,12 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             // Only actively request headers from a single peer, unless we're close to today.
             else if ((nRHeaderSyncStarted == 0 && nSyncStarted == 0 && fFetch) || pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60) {
                 state.fSyncStarted = true;
-                // The timeout is based on the timestamp of the last header, the genesis however has a date of 2002-01-01
-                // which will lead to a bogus timeout. Therefore the timestamp of block 1 is used. This has a datetime
-                // of Mar 29, 2014 12:09:22 PM which is equal to 1396094962 seconds since epoch
-                int64_t startTime = pindexBestHeader->nHeight == 0 ? 1396094962
-                                                                   : pindexBestHeader->GetBlockTime();
-                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_TIMEOUT_BASE
-                        + HEADERS_DOWNLOAD_TIMEOUT_PER_HEADER * (GetAdjustedTime() - startTime)/(consensusParams.nPowTargetSpacing);
+
+                // set header request/response timeout, but not when close to today (headers will be requested from all peers so a single one not
+                // giving a response is ok)
+                if (pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60)
+                    state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_RESPONSE_TIMEOUT;
+
                 nSyncStarted++;
                 const CBlockIndex *pindexStart = pindexBestHeader;
                 /* If possible, start at the block preceding the currently
@@ -3977,79 +4007,23 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             }
         }
 
-        // Check partial header sync timeout only if timeout is active
-        if (state.fPartialSyncStarted && state.nPartialHeadersSyncTimeout < std::numeric_limits<int64_t>::max())
+        // Check partial sync header request/response timeout
+        if (state.fPartialSyncStarted && state.nPartialHeadersSyncTimeout < std::numeric_limits<int64_t>::max() && nNow > state.nPartialHeadersSyncTimeout)
         {
-            if (!IsPartialNearPresent())
-            {
-                // Trigger timeout, but not if there are no other nPreferredDownload peers
-                if (nNow > state.nPartialHeadersSyncTimeout && (nPreferredDownload - state.fPreferredDownload >= 1))
-                {
-                    if (!pto->fWhitelisted) {
-                        LogPrintf("Timeout downloading headers from peer=%d, disconnecting\n", pto->GetId());
-                        pto->fDisconnect = true;
-                        return true;
-                    } else {
-                        LogPrintf("Timeout downloading partial headers from whitelisted peer=%d, not disconnecting\n", pto->GetId());
-                        // Reset the headers sync state so that we have a
-                        // chance to try downloading from a different peer.
-                        state.fPartialSyncStarted = false;
-                        nPartialSyncStarted--;
-                        state.nPartialHeadersSyncTimeout = 0;
-                    }
-                }
-            }
-            else
-            {
-                // Timeout check occured while headers near present, perhaps there are no newer headers.
-                // Just disable the timeout. If the peer is stalled completely it will be disconnected at some point
-                // and even if not (ie. it is misbehaving) some ohter peer will send us a header announcement at
-                // some point which will then trigger us to request more headers from it.
-                state.nPartialHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
-            }
+            LogPrintf("Timeout downloading headers from peer=%d, disconnecting\n", pto->GetId());
+            pto->fDisconnect = true;
+            state.nPartialHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
+            return true;
         }
 
-        // Check for headers sync timeouts
-        if ((state.fSyncStarted || state.fRHeadersSyncStarted) && state.nHeadersSyncTimeout < std::numeric_limits<int64_t>::max()) {
-            // Detect whether this is a stalling initial-headers-sync peer
-            if (pindexBestHeader->GetBlockTime() <= GetAdjustedTime() - 24*60*60) {
-                if (nNow > state.nHeadersSyncTimeout && (nSyncStarted + nRHeaderSyncStarted) == 1 && (nPreferredDownload - state.fPreferredDownload >= 1)) {
-                    // Disconnect a (non-whitelisted) peer if it is our only sync peer,
-                    // and we have others we could be using instead.
-                    // Note: If all our peers are inbound, then we won't
-                    // disconnect our sync peer for stalling; we have bigger
-                    // problems if we can't get any outbound peers.
-                    if (!pto->fWhitelisted) {
-                        LogPrintf("Timeout downloading headers from peer=%d, disconnecting\n", pto->GetId());
-                        pto->fDisconnect = true;
-                        return true;
-                    } else {
-                        LogPrintf("Timeout downloading headers from whitelisted peer=%d, not disconnecting\n", pto->GetId());
-                        // Reset the headers sync state so that we have a
-                        // chance to try downloading from a different peer.
-                        // Note: this will also result in at least one more
-                        // getheaders message to be sent to
-                        // this peer (eventually).
-                        if (state.fSyncStarted) {
-                            state.fSyncStarted = false;
-                            nSyncStarted--;
-                        }
-                        else {
-                            state.fRHeadersSyncStarted = false;
-                            nRHeaderSyncStarted--;
-                        }
-                        state.fSyncStarted = false;
-                        nSyncStarted--;
-                        state.nHeadersSyncTimeout = 0;
-                    }
-                }
-            } else {
-                // After we've caught up once, reset the timeout so we can't trigger
-                // disconnect later.
-                state.nHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
-            }
+        // Check normal sync header request/response timeout
+        if ((state.fSyncStarted || state.fRHeadersSyncStarted) && state.nHeadersSyncTimeout < std::numeric_limits<int64_t>::max() && nNow > state.nHeadersSyncTimeout)
+        {
+            LogPrintf("Timeout downloading headers from peer=%d, disconnecting\n", pto->GetId());
+            pto->fDisconnect = true;
+            state.nHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
+            return true;
         }
-
 
         //
         // Message: getdata (blocks)
