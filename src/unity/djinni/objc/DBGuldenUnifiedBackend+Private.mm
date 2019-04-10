@@ -47,14 +47,16 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
      staticFilterOffset:(int64_t)staticFilterOffset
      staticFilterLength:(int64_t)staticFilterLength
                 testnet:(BOOL)testnet
-                signals:(nullable id<DBGuldenUnifiedFrontend>)signals {
+                signals:(nullable id<DBGuldenUnifiedFrontend>)signals
+              extraArgs:(nonnull NSString *)extraArgs {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::InitUnityLib(::djinni::String::toCpp(dataDir),
                                                                    ::djinni::String::toCpp(staticFilterPath),
                                                                    ::djinni::I64::toCpp(staticFilterOffset),
                                                                    ::djinni::I64::toCpp(staticFilterLength),
                                                                    ::djinni::Bool::toCpp(testnet),
-                                                                   ::djinni_generated::GuldenUnifiedFrontend::toCpp(signals));
+                                                                   ::djinni_generated::GuldenUnifiedFrontend::toCpp(signals),
+                                                                   ::djinni::String::toCpp(extraArgs));
         return ::djinni::I32::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }

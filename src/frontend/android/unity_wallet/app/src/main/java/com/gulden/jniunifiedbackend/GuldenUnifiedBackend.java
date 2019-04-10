@@ -11,15 +11,19 @@ public abstract class GuldenUnifiedBackend {
     /** Interface constants */
     public static final int VERSION = 1;
 
-    /** Start the library */
-    public static int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals)
+    /**
+     * Start the library
+     * extraArgs - any additional commandline arguments as passed to GuldenD
+     */
+    public static int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs)
     {
         return CppProxy.InitUnityLib(dataDir,
                                      staticFilterPath,
                                      staticFilterOffset,
                                      staticFilterLength,
                                      testnet,
-                                     signals);
+                                     signals,
+                                     extraArgs);
     }
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
@@ -302,7 +306,7 @@ public abstract class GuldenUnifiedBackend {
             super.finalize();
         }
 
-        public static native int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals);
+        public static native int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs);
 
         public static native boolean InitWalletFromRecoveryPhrase(String phrase, String password);
 

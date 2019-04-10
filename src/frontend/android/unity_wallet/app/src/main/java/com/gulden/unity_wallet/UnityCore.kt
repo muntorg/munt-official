@@ -71,7 +71,7 @@ class UnityCore {
             thread(true)
             {
                 System.loadLibrary("gulden_unity_jni")
-                GuldenUnifiedBackend.InitUnityLib(cfg.dataDir, cfg.apkPath, cfg.staticFilterOffset, cfg.staticFilterLength, cfg.testnet, coreLibrarySignalHandler)
+                GuldenUnifiedBackend.InitUnityLib(cfg.dataDir, cfg.apkPath, cfg.staticFilterOffset, cfg.staticFilterLength, cfg.testnet, coreLibrarySignalHandler, "")
             }
 
             started = true

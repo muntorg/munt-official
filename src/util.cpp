@@ -326,7 +326,13 @@ void ArgsManager::ParseParameters(int argc, const char* const argv[])
     mapArgs.clear();
     mapMultiArgs.clear();
 
-    for (int i = 1; i < argc; i++)
+    ParseExtraParameters(argc - 1, argv + 1);
+}
+
+void ArgsManager::ParseExtraParameters(int argc, const char*const argv[])
+{
+    LOCK(cs_args);
+    for (int i = 0; i < argc; i++)
     {
         std::string str(argv[i]);
         std::string strValue;
