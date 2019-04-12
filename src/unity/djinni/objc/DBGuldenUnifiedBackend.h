@@ -6,6 +6,7 @@
 #import "DBLegacyWalletResult.h"
 #import "DBMonitorRecord.h"
 #import "DBMutationRecord.h"
+#import "DBPaymentResultStatus.h"
 #import "DBPeerRecord.h"
 #import "DBQrCodeRecord.h"
 #import "DBTransactionRecord.h"
@@ -127,7 +128,8 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 + (nonnull DBUriRecipient *)IsValidRecipient:(nonnull DBUriRecord *)request;
 
 /** Attempt to pay a recipient, will throw on failure with description */
-+ (void)performPaymentToRecipient:(nonnull DBUriRecipient *)request;
++ (DBPaymentResultStatus)performPaymentToRecipient:(nonnull DBUriRecipient *)request
+                                      substractFee:(BOOL)substractFee;
 
 /** Get list of all transactions wallet has been involved in */
 + (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory;

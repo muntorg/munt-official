@@ -108,6 +108,11 @@ legacy_wallet_result = enum {
     valid;
 }
 
+payment_result_status = enum {
+    success;
+    insufficient_funds;
+}
+
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
@@ -194,7 +199,7 @@ gulden_unified_backend = interface +c {
     static IsValidRecipient(request : uri_record): uri_recipient;
 
     # Attempt to pay a recipient, will throw on failure with description
-    static performPaymentToRecipient(request : uri_recipient);
+    static performPaymentToRecipient(request : uri_recipient, substract_fee: bool ) : payment_result_status;
 
     # Get list of all transactions wallet has been involved in
     static getTransactionHistory() : list<transaction_record>;

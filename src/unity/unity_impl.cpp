@@ -38,6 +38,7 @@
 #include "block_info_record.hpp"
 #include "monitor_record.hpp"
 #include "gulden_monitor_listener.hpp"
+#include "payment_result_status.hpp"
 #ifdef __ANDROID__
 #include "djinni_support.hpp"
 #endif
@@ -842,7 +843,7 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
     return UriRecipient(true, address, label, amount);
 }
 
-void GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & request)
+PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & request, bool substract_fee)
 {
     if (!pactiveWallet)
         throw std::runtime_error(_("No active internal wallet."));
@@ -856,9 +857,7 @@ void GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
         throw std::runtime_error(_("Invalid address"));
     }
 
-    bool fSubtractFeeFromAmount = false;
-
-    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, substract_fee, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 
@@ -869,6 +868,9 @@ void GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
     CReserveKeyOrScript reservekey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_CHANGE);
     if (!pactiveWallet->CreateTransaction(pactiveWallet->activeAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
     {
+        if (!substract_fee && request.amount + nFeeRequired > GetBalance()) {
+            return PaymentResultStatus::INSUFFICIENT_FUNDS;
+        }
         LogPrintf("performPaymentToRecipient: failed to create transaction %s",strError.c_str());
         throw std::runtime_error(strprintf(_("Failed to create transaction\n%s"), strError));
     }
@@ -880,6 +882,8 @@ void GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
         LogPrintf("performPaymentToRecipient: failed to commit transaction %s",strError.c_str());
         throw std::runtime_error(strprintf(_("Transaction rejected, reason: %s"), state.GetRejectReason()));
     }
+
+    return PaymentResultStatus::SUCCESS;
 }
 
 std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()

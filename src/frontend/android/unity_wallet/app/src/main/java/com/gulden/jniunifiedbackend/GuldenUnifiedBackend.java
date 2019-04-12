@@ -195,9 +195,10 @@ public abstract class GuldenUnifiedBackend {
     }
 
     /** Attempt to pay a recipient, will throw on failure with description */
-    public static void performPaymentToRecipient(UriRecipient request)
+    public static PaymentResultStatus performPaymentToRecipient(UriRecipient request, boolean substractFee)
     {
-        CppProxy.performPaymentToRecipient(request);
+        return CppProxy.performPaymentToRecipient(request,
+                                                  substractFee);
     }
 
     /** Get list of all transactions wallet has been involved in */
@@ -358,7 +359,7 @@ public abstract class GuldenUnifiedBackend {
 
         public static native UriRecipient IsValidRecipient(UriRecord request);
 
-        public static native void performPaymentToRecipient(UriRecipient request);
+        public static native PaymentResultStatus performPaymentToRecipient(UriRecipient request, boolean substractFee);
 
         public static native ArrayList<TransactionRecord> getTransactionHistory();
 

@@ -10,6 +10,7 @@
 #import "DBLegacyWalletResult+Private.h"
 #import "DBMonitorRecord+Private.h"
 #import "DBMutationRecord+Private.h"
+#import "DBPaymentResultStatus+Private.h"
 #import "DBPeerRecord+Private.h"
 #import "DBQrCodeRecord+Private.h"
 #import "DBTransactionRecord+Private.h"
@@ -256,9 +257,12 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (void)performPaymentToRecipient:(nonnull DBUriRecipient *)request {
++ (DBPaymentResultStatus)performPaymentToRecipient:(nonnull DBUriRecipient *)request
+                                      substractFee:(BOOL)substractFee {
     try {
-        ::GuldenUnifiedBackend::performPaymentToRecipient(::djinni_generated::UriRecipient::toCpp(request));
+        auto objcpp_result_ = ::GuldenUnifiedBackend::performPaymentToRecipient(::djinni_generated::UriRecipient::toCpp(request),
+                                                                                ::djinni::Bool::toCpp(substractFee));
+        return ::djinni::Enum<::PaymentResultStatus, DBPaymentResultStatus>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

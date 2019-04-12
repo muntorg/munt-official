@@ -11,6 +11,7 @@
 class GuldenMonitorListener;
 class GuldenUnifiedFrontend;
 enum class LegacyWalletResult;
+enum class PaymentResultStatus;
 struct AddressRecord;
 struct BlockInfoRecord;
 struct MonitorRecord;
@@ -118,7 +119,7 @@ public:
     static UriRecipient IsValidRecipient(const UriRecord & request);
 
     /** Attempt to pay a recipient, will throw on failure with description */
-    static void performPaymentToRecipient(const UriRecipient & request);
+    static PaymentResultStatus performPaymentToRecipient(const UriRecipient & request, bool substract_fee);
 
     /** Get list of all transactions wallet has been involved in */
     static std::vector<TransactionRecord> getTransactionHistory();
