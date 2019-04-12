@@ -12,13 +12,13 @@ public final class UriRecipient implements android.os.Parcelable {
 
     /*package*/ final String mLabel;
 
-    /*package*/ final String mAmount;
+    /*package*/ final long mAmount;
 
     public UriRecipient(
             boolean valid,
             String address,
             String label,
-            String amount) {
+            long amount) {
         this.mValid = valid;
         this.mAddress = address;
         this.mLabel = label;
@@ -37,7 +37,7 @@ public final class UriRecipient implements android.os.Parcelable {
         return mLabel;
     }
 
-    public String getAmount() {
+    public long getAmount() {
         return mAmount;
     }
 
@@ -69,7 +69,7 @@ public final class UriRecipient implements android.os.Parcelable {
         this.mValid = in.readByte() != 0;
         this.mAddress = in.readString();
         this.mLabel = in.readString();
-        this.mAmount = in.readString();
+        this.mAmount = in.readLong();
     }
 
     @Override
@@ -82,7 +82,7 @@ public final class UriRecipient implements android.os.Parcelable {
         out.writeByte(this.mValid ? (byte)1 : 0);
         out.writeString(this.mAddress);
         out.writeString(this.mLabel);
-        out.writeString(this.mAmount);
+        out.writeLong(this.mAmount);
     }
 
 }

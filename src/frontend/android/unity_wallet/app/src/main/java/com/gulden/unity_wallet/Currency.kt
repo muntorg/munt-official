@@ -7,6 +7,7 @@ import org.json.JSONObject
 import java.net.URL
 import java.text.DecimalFormat
 import java.util.*
+import kotlin.math.floor
 import kotlin.math.roundToLong
 
 private const val TAG = "currency"
@@ -125,4 +126,8 @@ fun formatNativeAndLocal(nativeAmount: Long, conversionRate: Double, useNativePr
  */
 fun wireFormatNative(nativeAmount: Double): String {
     return String.format(Locale.ROOT,"%.${Config.PRECISION_FULL}f", nativeAmount)
+}
+
+fun Double.toNative(): Long {
+    return floor(this * 100000000.0).toLong()
 }

@@ -817,16 +817,19 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
      // return if URI is not valid or is no Gulden: URI
     std::string lowerCaseScheme = boost::algorithm::to_lower_copy(request.scheme);
     if (lowerCaseScheme != "guldencoin" && lowerCaseScheme != "gulden")
-        return UriRecipient(false, "", "", "");
+        return UriRecipient(false, "", "", 0);
 
     if (!CGuldenAddress(request.path).IsValid())
-        return UriRecipient(false, "", "", "");
+        return UriRecipient(false, "", "", 0);
 
     std::string address = request.path;
     std::string label = "";
-    std::string amount = "";
+    CAmount amount = 0;
     if (request.items.find("amount") != request.items.end())
-        amount = request.items.find("amount")->second;
+    {
+        ParseMoney(request.items.find("amount")->second, amount);
+    }
+
     if (pactiveWallet)
     {
         DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
@@ -853,16 +856,9 @@ void GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & reques
         throw std::runtime_error(_("Invalid address"));
     }
 
-    CAmount nAmount;
-    if (!ParseMoney(request.amount, nAmount))
-    {
-        LogPrintf("performPaymentToRecipient: invalid amount %s", request.amount.c_str());
-        throw std::runtime_error(_("Invalid amount"));
-    }
-
     bool fSubtractFeeFromAmount = false;
 
-    CRecipient recipient = GetRecipientForDestination(address.Get(), nAmount, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 

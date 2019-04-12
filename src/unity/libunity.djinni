@@ -31,7 +31,7 @@ uri_recipient = record {
     valid : bool;
     address : string;
     label : string;
-    amount : string;
+    amount : i64;
 } deriving(parcelable)
 
 mutation_record = record {

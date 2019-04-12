@@ -191,8 +191,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             recipient = it
         }
 
-        if (recipient.amount.isNotEmpty())
-            amountEditStr = recipient.amount
+        if (recipient.amount != 0L)
+            amountEditStr = formatNative(recipient.amount, false)
         updateDisplayAmount()
 
         mSendCoinsReceivingStaticAddress.text = recipient.address
@@ -272,7 +272,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
             // on confirmation compose recipient and execute payment
             positiveButton("Send") {
-                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, sendAmount)
+                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, sendAmount.toDoubleOrZero().toNative())
                 performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
             }
 
@@ -305,7 +305,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                         // on confirmation compose recipient and execute payment
                         positiveButton("Send") {
                             mMainlayout.button_send.isEnabled = true
-                            val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, wireFormatNative(orderResult.depositAmountNLG))
+                            val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG.toNative())
                             try
                             {
                                 performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))

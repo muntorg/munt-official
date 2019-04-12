@@ -9,13 +9,13 @@
 - (nonnull instancetype)initWithValid:(BOOL)valid
                               address:(nonnull NSString *)address
                                 label:(nonnull NSString *)label
-                               amount:(nonnull NSString *)amount
+                               amount:(int64_t)amount
 {
     if (self = [super init]) {
         _valid = valid;
         _address = [address copy];
         _label = [label copy];
-        _amount = [amount copy];
+        _amount = amount;
     }
     return self;
 }
@@ -23,7 +23,7 @@
 + (nonnull instancetype)uriRecipientWithValid:(BOOL)valid
                                       address:(nonnull NSString *)address
                                         label:(nonnull NSString *)label
-                                       amount:(nonnull NSString *)amount
+                                       amount:(int64_t)amount
 {
     return [[self alloc] initWithValid:valid
                                address:address
@@ -33,7 +33,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p valid:%@ address:%@ label:%@ amount:%@>", self.class, (void *)self, @(self.valid), self.address, self.label, self.amount];
+    return [NSString stringWithFormat:@"<%@ %p valid:%@ address:%@ label:%@ amount:%@>", self.class, (void *)self, @(self.valid), self.address, self.label, @(self.amount)];
 }
 
 @end

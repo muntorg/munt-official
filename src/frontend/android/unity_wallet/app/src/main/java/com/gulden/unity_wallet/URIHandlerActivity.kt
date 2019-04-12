@@ -60,7 +60,7 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
             {
                 //TODO: Improve this, and consider moving more of the work into unity core
                 var address = ""
-                var amount = "0"
+                var amount = 0L
                 var label = ""
 
                 //If Uri has been parsed as hierarchial force it to reparse as non-hierarchial so that we can access any query portions correctly.
@@ -69,7 +69,7 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
                     intentUri = Uri.parse(intentUri.toString().replaceFirst(":", "://"))
                 }
                 if (intentUri?.host != null) address = intentUri!!.host
-                if (intentUri?.queryParameterNames?.contains("amount")!!) amount = intentUri!!.getQueryParameter("amount")
+                if (intentUri?.queryParameterNames?.contains("amount")!!) amount = intentUri!!.getQueryParameter("amount").toDoubleOrZero().toNative()
                 if (intentUri?.queryParameterNames?.contains("label")!!) label = intentUri!!.getQueryParameter("label") else ""
 
                 var recipient: UriRecipient? = null

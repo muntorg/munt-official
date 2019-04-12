@@ -25,11 +25,11 @@ private:
     friend ::djinni::JniClass<NativeUriRecipient>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/UriRecipient") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(ZLjava/lang/String;Ljava/lang/String;J)V") };
     const jfieldID field_mValid { ::djinni::jniGetFieldID(clazz.get(), "mValid", "Z") };
     const jfieldID field_mAddress { ::djinni::jniGetFieldID(clazz.get(), "mAddress", "Ljava/lang/String;") };
     const jfieldID field_mLabel { ::djinni::jniGetFieldID(clazz.get(), "mLabel", "Ljava/lang/String;") };
-    const jfieldID field_mAmount { ::djinni::jniGetFieldID(clazz.get(), "mAmount", "Ljava/lang/String;") };
+    const jfieldID field_mAmount { ::djinni::jniGetFieldID(clazz.get(), "mAmount", "J") };
 };
 
 }  // namespace djinni_generated
