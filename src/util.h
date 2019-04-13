@@ -205,6 +205,8 @@ protected:
     std::map<std::string, std::vector<std::string> > mapMultiArgs;
 public:
     void ParseParameters(int argc, const char*const argv[]);
+    /** Parse additional parameters, overwriting but not clearing previous paramers */
+    void ParseExtraParameters(int argc, const char*const argv[]);
     void ReadConfigFile(const std::string& confPath);
     std::vector<std::string> GetArgs(const std::string& strArg);
 /**

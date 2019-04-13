@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,7 +25,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+import com.gulden.unity_wallet.ui.getDisplayDimensions
 import com.gulden.unity_wallet.util.getAndroidVersion
 import com.gulden.unity_wallet.util.getDeviceName
 import org.jetbrains.anko.contentView
@@ -304,6 +307,18 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                 walletBalanceLocal.text = String.format(" (${localCurrency.short} %.${localCurrency.precision}f)",
                         coins * rate)
                 walletBalanceLocal.visibility = View.VISIBLE
+
+                // set auto size text if native and local amounts will not fity on a single line
+                // this will only kick in in very very rare circumstances
+                // like huge balance (> G 10M and very limited device with largest font setting)
+                // (before the sync text was moved out of balance display it was a lot easier to trigger)
+                val outSize = getDisplayDimensions(this@WalletActivity)
+                balanceSection.measure(outSize.x, outSize.y)
+                val preferredWidth = balanceSection.measuredWidth
+                TextViewCompat.setAutoSizeTextTypeWithDefaults(
+                        walletBalanceLocal,
+                        if (preferredWidth > outSize.x)  TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM else TextView.AUTO_SIZE_TEXT_TYPE_NONE)
+                balanceSection.invalidate()
             }
             catch (e: Throwable) {
                 walletBalanceLocal.text = ""

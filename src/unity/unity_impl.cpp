@@ -44,6 +44,7 @@
 
 // External libraries
 #include <boost/algorithm/string.hpp>
+#include <boost/program_options/parsers.hpp>
 #include <qrencode.h>
 #include <memory>
 
@@ -561,7 +562,7 @@ bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 }
 
 
-int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals)
+int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals, const std::string& extraArgs)
 {
     // Force the datadir to specific place on e.g. android devices
     if (!dataDir.empty())
@@ -606,6 +607,14 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     SoftSetArg("-reverseheaders", "false");
 
     signalHandler = signals;
+
+    if (!extraArgs.empty()) {
+        std::vector<const char*> args;
+        auto splitted = boost::program_options::split_unix(extraArgs);
+        for(const auto& part: splitted)
+            args.push_back(part.c_str());
+        gArgs.ParseExtraParameters(int(args.size()), args.data());
+    }
 
     return InitUnity();
 }

@@ -66,7 +66,7 @@ file COPYING
         />
 
     <include
-        android:id="@+id/numeric_keypad"
+        android:id="@+id/numeric_keypad_holder"
         layout="@layout/numeric_keypad"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -112,16 +112,18 @@ file COPYING
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
-                android:maxLines="3"
+                android:maxLines="1"
                 android:textColor="@color/lightText"
                 android:singleLine="false"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/send_coins_receiving_static_address"
-                android:textColor="@color/lightText"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:textColor="@color/lightText" />
 
         </LinearLayout>
 
