@@ -23,6 +23,7 @@ FOUNDATION_EXPORT const unsigned char gulden_staticVersionString[];
 #import "DBGuldenUnifiedFrontend.h"
 #import "DBBalanceRecord.h"
 #import "DBLegacyWalletResult.h"
+#import "DBPaymentResultStatus.h"
 #import "DBPeerRecord.h"
 #import "DBQrCodeRecord.h"
 #import "DBTransactionStatus.h"
