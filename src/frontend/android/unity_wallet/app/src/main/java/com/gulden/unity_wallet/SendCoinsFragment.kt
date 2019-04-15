@@ -242,29 +242,15 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         (mMainlayout.findViewById<View>(R.id.send_coins_amount_secondary) as TextView?)?.text = secondaryStr
     }
 
-    private fun performAuthenticatedPayment(d : Dialog, request : UriRecipient, message : String, substractFee: Boolean = false)
+    private fun performAuthenticatedPayment(d : Dialog, request : UriRecipient, msg: String?, substractFee: Boolean = false)
     {
+        val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", request.amount.toDouble() / 100000000)
+        val message = msg ?: getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
         Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
                 null, msg = message) {
             try {
-                // TODO: split cases where amount is obviously too much without having to attempt tx first to determine fee
-                val result = GuldenUnifiedBackend.performPaymentToRecipient(request, substractFee)
-                when (result) {
-                    PaymentResultStatus.SUCCESS -> d.dismiss()
-                    PaymentResultStatus.INSUFFICIENT_FUNDS -> {
-                        // offer choice to lower the amount
-                        fragmentActivity.alert(Appcompat, getString(R.string.send_all_instead_msg), getString(R.string.send_all_instead_title)) {
-                            positiveButton(getString(R.string.send_all_btn)) {
-                                val amount = GuldenUnifiedBackend.GetBalance()
-                                val sendAllRequest = UriRecipient(true, recipient.address, recipient.label, amount)
-                                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amount.toDouble() / 100000000)
-                                val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
-                                performAuthenticatedPayment(dialog!!, sendAllRequest, "%s\n\nG %s".format(sendAllRequest.address, message), true)
-                            }
-                            negativeButton(getString(R.string.cancel_btn)) {}
-                        }.show()
-                    }
-                }
+                GuldenUnifiedBackend.performPaymentToRecipient(request, substractFee)
+                d.dismiss()
             }
             catch (exception: RuntimeException) {
                 errorMessage(exception.message!!)
@@ -272,29 +258,48 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
     }
 
-    private fun confirmAndCommitGuldenPayment(view: View)
-    {
-        val sendAmount : String = when (entryMode)
-        {
-            EntryMode.Local -> (amountEditStr.toDoubleOrZero()/localRate).toString()
+    private fun confirmAndCommitGuldenPayment(view: View) {
+        val amountNLG = when (entryMode) {
+            EntryMode.Local -> (amountEditStr.toDoubleOrZero() / localRate).toString()
             EntryMode.Native -> amountEditStr
-        }
+        }.toDoubleOrZero()
 
-        // create styled message from resource template and arguments bundle
-        val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", sendAmount.toDoubleOrZero())
-        val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
+        val amountNative = amountNLG.toNative()
 
-        // alert dialog for confirmation
-        fragmentActivity.alert(Appcompat, message, "Send Gulden?") {
+        try {
+            val paymentRequest = UriRecipient(true, recipient.address, recipient.label, amountNative)
+            val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
+            if (fee + amountNative > GuldenUnifiedBackend.GetBalance()) {
+                // alert dialog for confirmation of payment and reduction of amount since amount + fee exceeds balance
+                fragmentActivity.alert(Appcompat, getString(R.string.send_all_instead_msg), getString(R.string.send_all_instead_title)) {
 
-            // on confirmation compose recipient and execute payment
-            positiveButton("Send") {
-                val paymentRequest = UriRecipient(true, recipient.address, recipient.label, sendAmount.toDoubleOrZero().toNative())
-                performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
+                    // on confirmation compose recipient with reduced amount and execute payment with substract fee from amount
+                    positiveButton(getString(R.string.send_all_btn)) {
+                        val sendAllRequest = UriRecipient(true, recipient.address, recipient.label, GuldenUnifiedBackend.GetBalance())
+                        performAuthenticatedPayment(dialog!!, sendAllRequest, null,true)
+                    }
+
+                    negativeButton(getString(R.string.cancel_btn)) {}
+                }.show()
+            } else {
+                // create styled message from resource template and arguments bundle
+                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amountNLG)
+                val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
+
+                // alert dialog for confirmation
+                fragmentActivity.alert(Appcompat, message, getString(R.string.send_gulden_title)) {
+
+                    // on confirmation compose recipient and execute payment
+                    positiveButton(getString(R.string.send_btn)) {
+                        performAuthenticatedPayment(dialog!!, paymentRequest, null,false)
+                    }
+
+                    negativeButton(getString(R.string.cancel_btn)) {}
+                }.show()
             }
-
-            negativeButton("Cancel") {}
-        }.show()
+        } catch (exception: RuntimeException) {
+            errorMessage(exception.message!!)
+        }
     }
 
     private fun confirmAndCommitIBANPayment(view: View, name: String, description: String) {
@@ -317,10 +322,10 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     val message = getString(R.string.send_coins_iban_confirm_template, String.format("%.${foreignCurrency.precision}f", foreignAmount), nlgStr, recipientDisplayAddress)
 
                     // alert dialog for confirmation
-                    fragmentActivity.alert(Appcompat, message, "Send Gulden to IBAN?") {
+                    fragmentActivity.alert(Appcompat, message, getString(R.string.send_to_iban_title)) {
 
                         // on confirmation compose recipient and execute payment
-                        positiveButton("Send") {
+                        positiveButton(getString(R.string.send_btn)) {
                             mMainlayout.button_send.isEnabled = true
                             val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG.toNative())
                             try
@@ -335,14 +340,14 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                         }
 
-                        negativeButton("Cancel") {
+                        negativeButton(getString(R.string.cancel_btn)) {
                             // TODO cancel the transaction with Nocks
                         }
                     }.show()
                     mMainlayout.button_send.isEnabled = true
                 }
             } catch (e: Throwable) {
-                errorMessage("IBAN order failed")
+                errorMessage(getString(R.string.iban_order_failed))
                 mMainlayout.button_send.isEnabled = true
             }
         }
