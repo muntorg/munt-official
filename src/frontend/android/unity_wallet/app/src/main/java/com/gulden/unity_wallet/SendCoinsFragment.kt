@@ -25,6 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.PaymentResultStatus
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
@@ -241,13 +242,29 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         (mMainlayout.findViewById<View>(R.id.send_coins_amount_secondary) as TextView?)?.text = secondaryStr
     }
 
-    private fun performAuthenticatedPayment(d : Dialog, request : UriRecipient, message : String)
+    private fun performAuthenticatedPayment(d : Dialog, request : UriRecipient, message : String, substractFee: Boolean = false)
     {
         Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
                 null, msg = message) {
             try {
-                GuldenUnifiedBackend.performPaymentToRecipient(request)
-                d.dismiss()
+                // TODO: split cases where amount is obviously too much without having to attempt tx first to determine fee
+                val result = GuldenUnifiedBackend.performPaymentToRecipient(request, substractFee)
+                when (result) {
+                    PaymentResultStatus.SUCCESS -> d.dismiss()
+                    PaymentResultStatus.INSUFFICIENT_FUNDS -> {
+                        // offer choice to lower the amount
+                        fragmentActivity.alert(Appcompat, getString(R.string.send_all_instead_msg), getString(R.string.send_all_instead_title)) {
+                            positiveButton(getString(R.string.send_all_btn)) {
+                                val amount = GuldenUnifiedBackend.GetBalance()
+                                val sendAllRequest = UriRecipient(true, recipient.address, recipient.label, amount)
+                                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amount.toDouble() / 100000000)
+                                val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
+                                performAuthenticatedPayment(dialog!!, sendAllRequest, "%s\n\nG %s".format(sendAllRequest.address, message), true)
+                            }
+                            negativeButton(getString(R.string.cancel_btn)) {}
+                        }.show()
+                    }
+                }
             }
             catch (exception: RuntimeException) {
                 errorMessage(exception.message!!)
