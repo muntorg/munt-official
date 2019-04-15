@@ -257,6 +257,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (int64_t)feeForRecipient:(nonnull DBUriRecipient *)request {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::feeForRecipient(::djinni_generated::UriRecipient::toCpp(request));
+        return ::djinni::I64::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (DBPaymentResultStatus)performPaymentToRecipient:(nonnull DBUriRecipient *)request
                                       substractFee:(BOOL)substractFee {
     try {

@@ -194,6 +194,12 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.IsValidRecipient(request);
     }
 
+    /** Compute the fee required to send amount to given recipient */
+    public static long feeForRecipient(UriRecipient request)
+    {
+        return CppProxy.feeForRecipient(request);
+    }
+
     /** Attempt to pay a recipient, will throw on failure with description */
     public static PaymentResultStatus performPaymentToRecipient(UriRecipient request, boolean substractFee)
     {
@@ -358,6 +364,8 @@ public abstract class GuldenUnifiedBackend {
         public static native void DoRescan();
 
         public static native UriRecipient IsValidRecipient(UriRecord request);
+
+        public static native long feeForRecipient(UriRecipient request);
 
         public static native PaymentResultStatus performPaymentToRecipient(UriRecipient request, boolean substractFee);
 

@@ -127,6 +127,9 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Check if text/address is something we are capable of sending money too */
 + (nonnull DBUriRecipient *)IsValidRecipient:(nonnull DBUriRecord *)request;
 
+/** Compute the fee required to send amount to given recipient */
++ (int64_t)feeForRecipient:(nonnull DBUriRecipient *)request;
+
 /** Attempt to pay a recipient, will throw on failure with description */
 + (DBPaymentResultStatus)performPaymentToRecipient:(nonnull DBUriRecipient *)request
                                       substractFee:(BOOL)substractFee;

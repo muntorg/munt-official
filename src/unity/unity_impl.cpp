@@ -843,6 +843,39 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
     return UriRecipient(true, address, label, amount);
 }
 
+
+int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
+{
+    if (!pactiveWallet)
+        throw std::runtime_error(_("No active internal wallet."));
+
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    CGuldenAddress address(request.address);
+    if (!address.IsValid())
+    {
+        LogPrintf("feeForRecipient: invalid address %s", request.address.c_str());
+        throw std::runtime_error(_("Invalid address"));
+    }
+
+    CRecipient recipient = GetRecipientForDestination(address.Get(), std::min(GetBalance(), request.amount), true, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+    std::vector<CRecipient> vecSend;
+    vecSend.push_back(recipient);
+
+    CWalletTx wtx;
+    CAmount nFeeRequired;
+    int nChangePosRet = -1;
+    std::string strError;
+    CReserveKeyOrScript reservekey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_CHANGE);
+    if (!pactiveWallet->CreateTransaction(pactiveWallet->activeAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError, NULL, false))
+    {
+        LogPrintf("feeForRecipient: failed to create transaction %s",strError.c_str());
+        throw std::runtime_error(strprintf(_("Failed to calculate fee\n%s"), strError));
+    }
+
+    return nFeeRequired;
+}
+
 PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & request, bool substract_fee)
 {
     if (!pactiveWallet)

@@ -198,6 +198,9 @@ gulden_unified_backend = interface +c {
     # Check if text/address is something we are capable of sending money too
     static IsValidRecipient(request : uri_record): uri_recipient;
 
+    # Compute the fee required to send amount to given recipient
+    static feeForRecipient(request : uri_recipient) : i64;
+
     # Attempt to pay a recipient, will throw on failure with description
     static performPaymentToRecipient(request : uri_recipient, substract_fee: bool ) : payment_result_status;
 
