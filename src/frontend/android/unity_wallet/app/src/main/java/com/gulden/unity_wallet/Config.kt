@@ -12,6 +12,7 @@ class Config {
         const val PURCHASE_TEMPLATE = "https://gulden.com/purchase?receive_address=%s"
         const val AUDIBLE_NOTIFICATIONS_INTERVAL = 30 * 1000
         const val USE_RATE_PRECISION = true
+        const val RATE_FETCH_INTERVAL = 60 * 1000 // minimum interval for fetching new exchange rates
 
         private fun getDefaultCurrencyCode(): String {
             return AppContext.instance.getString(R.string.default_currency_code)
