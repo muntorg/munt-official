@@ -87,7 +87,7 @@ class ExampleUnitTest
                 order = nocks.nocksOrder(5.0, NocksService.Symbol.EUR,"NL69ABNA5560006823", "xyz gulden unit test")
                 order
             }
-            System.out.println("Nocks order: ${order.depositAmountNLG} NLG to ${order.depositAddress} for ${order.amountEUR} EUR")
+            System.out.println("Nocks order: ${order.depositAmountNLG} NLG to ${order.depositAddress} for ${order.amountEUR} EUR uuid ${order.uuid}")
             assertTrue(order.depositAmountNLG > 0.0 && order.depositAddress.isNotEmpty())
         }
         catch (e: NocksException) {

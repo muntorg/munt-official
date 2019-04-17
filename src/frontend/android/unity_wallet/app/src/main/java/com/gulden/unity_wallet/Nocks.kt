@@ -15,7 +15,7 @@ import se.ansman.kotshi.KotshiJsonAdapterFactory
 import java.util.*
 
 data class NocksQuoteResult(val amountNLG: Double, val amountEUR: Double)
-data class NocksOrderResult(val depositAddress: String, val depositAmountNLG: Double, val amountEUR: Double)
+data class NocksOrderResult(val depositAddress: String, val depositAmountNLG: Double, val amountEUR: Double, val uuid:String)
 
 // TODO: Use host sandbox.nocks.com for testnet build
 private const val FAKE_NOCKS_SERVICE = false
@@ -219,7 +219,7 @@ class NocksService {
         if (FAKE_NOCKS_SERVICE) {
             delay(500)
             val amount = Random.nextDouble(300.0, 400.0)
-            return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount, amountEUR = 1.0 / amount)
+            return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount, amountEUR = 1.0 / amount, uuid = "88e30c05-e427-4b36-aa2a-44b89e480355")
         } else {
             val params = NocksTransactionParams(source_currency = "NLG", target_currency = "EUR", target_address = destinationIBAN,
                     name = nameStripped, description = descriptionStripped, amount = NocksAmount(amount.toString(), amtCurrency.symbol))
@@ -243,7 +243,9 @@ class NocksService {
                 if (targetCurrency != Symbol.EUR.symbol)
                     throw NocksException("Invalid target currency")
 
-                return NocksOrderResult(depositAddress = guldenAddress, depositAmountNLG = amountNLG, amountEUR = amountEUR)
+                val uuid = context.read<String>("\$.data.uuid")
+
+                return NocksOrderResult(depositAddress = guldenAddress, depositAmountNLG = amountNLG, amountEUR = amountEUR, uuid = uuid)
             } catch (e: NocksException) {
                 throw e
             } catch (e: Throwable) {

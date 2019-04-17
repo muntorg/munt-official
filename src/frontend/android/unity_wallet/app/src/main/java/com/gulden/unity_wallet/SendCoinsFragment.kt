@@ -315,7 +315,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, amountNative)
                 val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
                 if (fee + amountNative > GuldenUnifiedBackend.GetBalance()) {
-                    // TODO cancel the previous order with Nocks
+                    // Desirable to cancel the previous transaction order with Nocks, this is however not possible with anonymous transactions (discussed with Patrick Kivits)
 
                     // alert dialog for confirmation of payment and reduction of amount since amount + fee exceeds balance
                     // a new Nocks order is placed now using max NLG amount
@@ -374,7 +374,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             }
 
             negativeButton(getString(R.string.cancel_btn)) {
-                // TODO cancel the transaction with Nocks
+                // Desirable to cancel transaction with Nocks, this is however not possible with anonymous transactions (discussed with Patrick Kivits)
             }
         }.show()
     }
