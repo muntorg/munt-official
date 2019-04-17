@@ -23,16 +23,6 @@ import java.util.logging.Logger
  */
 class ExampleUnitTest
 {
-    @Before
-    fun setUp() {
-        initNocks()
-    }
-
-    @After
-    fun tearDown() {
-        terminateNocks()
-    }
-
     @Test fun addition_isCorrect()
     {
         assertEquals(4, 2 + 2)
@@ -40,11 +30,13 @@ class ExampleUnitTest
 
     @Test fun liveNocksQuote()
     {
+        val nocks = NocksService()
+
         val amountEUR = 5.0
         var amountNLG = -1.0
         runBlocking {
             try {
-                amountNLG = nocksQuote(amountEUR).amountNLG
+                amountNLG = nocks.nocksQuote(amountEUR).amountNLG
             }
             catch (e: NocksException) {
                 Logger.getAnonymousLogger().log(Level.INFO, "Nocks error: ${e.errorText}")
@@ -78,13 +70,15 @@ class ExampleUnitTest
 
     @Test fun liveNocksOrder()
     {
+        val nocks = NocksService()
+
         lateinit var order: NocksOrderResult
         try {
             runBlocking {
                 // REMARK: this is a generated random IBAN which is not verified with Nocks
                 // there is no realtime verification of the name and IBAN at Nocks
                 // the order succeeds regardless what name is used
-                order = nocksOrder(5.0, "NL69ABNA5560006823", "xyz gulden unit test")
+                order = nocks.nocksOrder(5.0, "NL69ABNA5560006823", "xyz gulden unit test")
                 order
             }
             System.out.println("Nocks order: ${order.depositAmountNLG} NLG to ${order.depositAddress}")
@@ -101,7 +95,7 @@ class ExampleUnitTest
                 // REMARK: this is a generated random IBAN which is not verified with Nocks
                 // there is no realtime verification of the name and IBAN at Nocks
                 // the order succeeds regardless what name is used
-                order2 = nocksOrder(5.0, "NL69ABNA5560006823")
+                order2 = nocks.nocksOrder(5.0, "NL69ABNA5560006823")
                 order2
             }
             System.out.println("Nocks order: ${order2.depositAmountNLG} NLG to ${order2.depositAddress}")

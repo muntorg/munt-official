@@ -52,6 +52,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     private lateinit var recipient: UriRecipient
     private var foreignCurrency = localCurrency
     private var isIBAN = false
+    private var nocks: NocksService? = null
     private enum class EntryMode {
         Native,
         Local
@@ -203,7 +204,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         if (IBANValidator.getInstance().isValid(recipient.address)) {
             foreignCurrency = Currencies.knownCurrencies["EUR"]!!
             isIBAN = true
-            initNocks()
+            nocks = NocksService()
         }
         else {
             foreignCurrency = localCurrency
@@ -306,7 +307,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         mMainlayout.button_send.isEnabled = false
         this.launch {
             try {
-                val orderResult = nocksOrder(amountEuro = foreignAmount, destinationIBAN = recipient.address, name = name, description = description)
+                val orderResult = nocks!!.nocksOrder(amountEuro = foreignAmount, destinationIBAN = recipient.address, name = name, description = description)
 
                 // create styled message from resource template and arguments bundle
                 val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG)
@@ -352,10 +353,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     override fun onDestroy() {
         super.onDestroy()
 
-        if (isIBAN)
-        {
-            terminateNocks()
-        }
+        if (nocks != null)
+            nocks = null
 
         coroutineContext[Job]!!.cancel()
 
@@ -400,7 +399,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     prevJob?.join()
 
                     try {
-                        val quote = nocksQuote(foreignAmount)
+                        val quote = nocks!!.nocksQuote(foreignAmount)
                         val nlg = quote.amountNLG
                         mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
                     }
