@@ -306,33 +306,42 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         mMainlayout.button_send.isEnabled = false
         this.launch {
             try {
-                // TODO check if funds required exceeds balance
                 val orderResult = nocks!!.nocksOrder(amount = foreignAmount, amtCurrency = NocksService.Symbol.EUR, destinationIBAN = recipient.address, name = name, description = description)
 
-                // create styled message from resource template and arguments bundle
-                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG)
-                val message = getString(R.string.send_coins_iban_confirm_template, String.format("%.${foreignCurrency.precision}f", foreignAmount), nlgStr, recipientDisplayAddress)
+                // test if amount exceeds balance
+                // note that testing if the transaction exceeds balance has to be done with an order (placed above already), when using a quote the actual rate when placing the order could already be different and also
+                // the recipient is needed to calculate the network fee
+                val amountNative = orderResult.depositAmountNLG.toNative()
+                val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, amountNative)
+                val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
+                if (fee + amountNative > GuldenUnifiedBackend.GetBalance()) {
+                    // TODO cancel the previous order with Nocks
 
-                // alert dialog for confirmation
-                fragmentActivity.alert(Appcompat, message, getString(R.string.send_to_iban_title)) {
+                    // alert dialog for confirmation of payment and reduction of amount since amount + fee exceeds balance
+                    // a new Nocks order is placed now using max NLG amount
+                    fragmentActivity.alert(Appcompat, getString(R.string.send_all_instead_msg), getString(R.string.send_all_instead_title)) {
 
-                    // on confirmation compose recipient and execute payment
-                    positiveButton(getString(R.string.send_btn)) {
-                        mMainlayout.button_send.isEnabled = true
-                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG.toNative())
-                        try {
-                            performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
-                        } catch (exception: RuntimeException) {
-                            errorMessage(exception.message!!)
-                            mMainlayout.button_send.isEnabled = true
+                        // on confirmation compose recipient with reduced amount and execute payment with substract fee from amount
+                        positiveButton(getString(R.string.send_all_btn)) {
+                            this@SendCoinsFragment.launch {
+                                try {
+                                    val orderAllResult = nocks!!.nocksOrder(amount = GuldenUnifiedBackend.GetBalance() / 100000000.0, amtCurrency = NocksService.Symbol.NLG, destinationIBAN = recipient.address, name = name, description = description)
+                                    finalConfirmAndCommitIBANPayment(orderAllResult, true)
+                                } catch (e: NocksException) {
+                                    errorMessage(e.errorText)
+                                    mMainlayout.button_send.isEnabled = true
+                                } catch (e: Throwable) {
+                                    errorMessage(getString(R.string.iban_order_failed))
+                                    mMainlayout.button_send.isEnabled = true
+                                }
+                            }
                         }
 
-                    }
-
-                    negativeButton(getString(R.string.cancel_btn)) {
-                        // TODO cancel the transaction with Nocks
-                    }
-                }.show()
+                        negativeButton(getString(R.string.cancel_btn)) {}
+                    }.show()
+                } else {
+                    finalConfirmAndCommitIBANPayment(orderResult)
+                }
                 mMainlayout.button_send.isEnabled = true
             } catch (e: NocksException) {
                 errorMessage(e.errorText)
@@ -342,6 +351,32 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 mMainlayout.button_send.isEnabled = true
             }
         }
+    }
+
+    private fun finalConfirmAndCommitIBANPayment(orderResult: NocksOrderResult, substractFee: Boolean = false) {
+        // create styled message from resource template and arguments bundle
+        val nlgStr = String.format("%.${PRECISION_SHORT}f", orderResult.depositAmountNLG)
+        val message = getString(R.string.send_coins_iban_confirm_template, String.format("%.${foreignCurrency.precision}f", orderResult.amountEUR), nlgStr, recipientDisplayAddress)
+
+        // alert dialog for confirmation
+        fragmentActivity.alert(Appcompat, message, getString(R.string.send_to_iban_title)) {
+
+            // on confirmation compose recipient and execute payment
+            positiveButton(getString(R.string.send_btn)) {
+                mMainlayout.button_send.isEnabled = true
+                val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG.toNative())
+                try {
+                    performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message), substractFee)
+                } catch (exception: RuntimeException) {
+                    errorMessage(exception.message!!)
+                    mMainlayout.button_send.isEnabled = true
+                }
+            }
+
+            negativeButton(getString(R.string.cancel_btn)) {
+                // TODO cancel the transaction with Nocks
+            }
+        }.show()
     }
 
     private fun errorMessage(msg: String) {
