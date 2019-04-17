@@ -1,0 +1,19 @@
+{
+  "name": "gulden-electron-sample",
+  "version": "0.0.1",
+  "description": "A minimal Electron application using Gulden unified backend",
+  "author": "Malcolm MacLeod",
+  "license": "Gulden",
+  "main": "main.js",
+  "homepage": "https://www.Gulden.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gulden/gulden-official"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^4.1.4"
+  }
+}

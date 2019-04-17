@@ -40,15 +40,15 @@
                                userAgent:(nonnull NSString *)userAgent
                                 protocol:(int64_t)protocol
 {
-    return [[self alloc] initWithId:id
-                                 ip:ip
-                           hostname:hostname
-                        startHeight:startHeight
-                       syncedHeight:syncedHeight
-                       commonHeight:commonHeight
-                            latency:latency
-                          userAgent:userAgent
-                           protocol:protocol];
+    return [(DBPeerRecord*)[self alloc] initWithId:id
+                                                ip:ip
+                                          hostname:hostname
+                                       startHeight:startHeight
+                                      syncedHeight:syncedHeight
+                                      commonHeight:commonHeight
+                                           latency:latency
+                                         userAgent:userAgent
+                                          protocol:protocol];
 }
 
 - (NSString *)description

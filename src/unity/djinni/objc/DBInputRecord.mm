@@ -22,9 +22,9 @@
                                          label:(nonnull NSString *)label
                                         isMine:(BOOL)isMine
 {
-    return [[self alloc] initWithAddress:address
-                                   label:label
-                                  isMine:isMine];
+    return [(DBInputRecord*)[self alloc] initWithAddress:address
+                                                   label:label
+                                                  isMine:isMine];
 }
 
 - (NSString *)description

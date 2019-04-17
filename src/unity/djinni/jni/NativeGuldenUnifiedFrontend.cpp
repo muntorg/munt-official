@@ -21,74 +21,79 @@ void NativeGuldenUnifiedFrontend::JavaProxy::notifyUnifiedProgress(float c_progr
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyUnifiedProgress,
-                           ::djinni::get(::djinni::F32::fromCpp(jniEnv, c_progress)));
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyUnifiedProgress,
+                                       ::djinni::get(::djinni::F32::fromCpp(jniEnv, c_progress)));
     ::djinni::jniExceptionCheck(jniEnv);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
-bool NativeGuldenUnifiedFrontend::JavaProxy::notifyBalanceChange(const ::BalanceRecord & c_new_balance) {
+void NativeGuldenUnifiedFrontend::JavaProxy::notifyBalanceChange(const ::BalanceRecord & c_new_balance) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    auto jret = jniEnv->CallBooleanMethod(Handle::get().get(), data.method_notifyBalanceChange,
-                                          ::djinni::get(::djinni_generated::NativeBalanceRecord::fromCpp(jniEnv, c_new_balance)));
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyBalanceChange,
+                                       ::djinni::get(::djinni_generated::NativeBalanceRecord::fromCpp(jniEnv, c_new_balance)));
     ::djinni::jniExceptionCheck(jniEnv);
-    return ::djinni::Bool::toCpp(jniEnv, jret);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
 void NativeGuldenUnifiedFrontend::JavaProxy::notifyNewMutation(const ::MutationRecord & c_mutation, bool c_self_committed) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyNewMutation,
-                           ::djinni::get(::djinni_generated::NativeMutationRecord::fromCpp(jniEnv, c_mutation)),
-                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c_self_committed)));
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyNewMutation,
+                                       ::djinni::get(::djinni_generated::NativeMutationRecord::fromCpp(jniEnv, c_mutation)),
+                                       ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c_self_committed)));
     ::djinni::jniExceptionCheck(jniEnv);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
-bool NativeGuldenUnifiedFrontend::JavaProxy::notifyUpdatedTransaction(const ::TransactionRecord & c_transaction) {
+void NativeGuldenUnifiedFrontend::JavaProxy::notifyUpdatedTransaction(const ::TransactionRecord & c_transaction) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    auto jret = jniEnv->CallBooleanMethod(Handle::get().get(), data.method_notifyUpdatedTransaction,
-                                          ::djinni::get(::djinni_generated::NativeTransactionRecord::fromCpp(jniEnv, c_transaction)));
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyUpdatedTransaction,
+                                       ::djinni::get(::djinni_generated::NativeTransactionRecord::fromCpp(jniEnv, c_transaction)));
     ::djinni::jniExceptionCheck(jniEnv);
-    return ::djinni::Bool::toCpp(jniEnv, jret);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
 void NativeGuldenUnifiedFrontend::JavaProxy::notifyInitWithExistingWallet() {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyInitWithExistingWallet);
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyInitWithExistingWallet);
     ::djinni::jniExceptionCheck(jniEnv);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
 void NativeGuldenUnifiedFrontend::JavaProxy::notifyInitWithoutExistingWallet() {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyInitWithoutExistingWallet);
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyInitWithoutExistingWallet);
     ::djinni::jniExceptionCheck(jniEnv);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
-bool NativeGuldenUnifiedFrontend::JavaProxy::notifyShutdown() {
+void NativeGuldenUnifiedFrontend::JavaProxy::notifyShutdown() {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    auto jret = jniEnv->CallBooleanMethod(Handle::get().get(), data.method_notifyShutdown);
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyShutdown);
     ::djinni::jniExceptionCheck(jniEnv);
-    return ::djinni::Bool::toCpp(jniEnv, jret);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
-bool NativeGuldenUnifiedFrontend::JavaProxy::notifyCoreReady() {
+void NativeGuldenUnifiedFrontend::JavaProxy::notifyCoreReady() {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    auto jret = jniEnv->CallBooleanMethod(Handle::get().get(), data.method_notifyCoreReady);
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyCoreReady);
     ::djinni::jniExceptionCheck(jniEnv);
-    return ::djinni::Bool::toCpp(jniEnv, jret);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
 void NativeGuldenUnifiedFrontend::JavaProxy::logPrint(const std::string & c_str) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeGuldenUnifiedFrontend>::get();
-    jniEnv->CallVoidMethod(Handle::get().get(), data.method_logPrint,
-                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_str)));
+    auto jret = jniEnv->CallVoidMethod(Handle::get().get(), data.method_logPrint,
+                                       ::djinni::get(::djinni::String::fromCpp(jniEnv, c_str)));
     ::djinni::jniExceptionCheck(jniEnv);
+    return ::djinni::void::toCpp(jniEnv, jret);
 }
 
 }  // namespace djinni_generated

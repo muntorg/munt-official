@@ -19,8 +19,8 @@
 + (nonnull instancetype)qrCodeRecordWithWidth:(int32_t)width
                                     pixelData:(nonnull NSData *)pixelData
 {
-    return [[self alloc] initWithWidth:width
-                             pixelData:pixelData];
+    return [(DBQrCodeRecord*)[self alloc] initWithWidth:width
+                                              pixelData:pixelData];
 }
 
 - (NSString *)description

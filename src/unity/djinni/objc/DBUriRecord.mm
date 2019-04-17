@@ -22,9 +22,9 @@
                                        path:(nonnull NSString *)path
                                       items:(nonnull NSDictionary<NSString *, NSString *> *)items
 {
-    return [[self alloc] initWithScheme:scheme
-                                   path:path
-                                  items:items];
+    return [(DBUriRecord*)[self alloc] initWithScheme:scheme
+                                                 path:path
+                                                items:items];
 }
 
 - (NSString *)description

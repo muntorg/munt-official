@@ -28,11 +28,11 @@
                                     processedSPVHeight:(int32_t)processedSPVHeight
                                         probableHeight:(int32_t)probableHeight
 {
-    return [[self alloc] initWithPartialHeight:partialHeight
-                                 partialOffset:partialOffset
-                                  prunedHeight:prunedHeight
-                            processedSPVHeight:processedSPVHeight
-                                probableHeight:probableHeight];
+    return [(DBMonitorRecord*)[self alloc] initWithPartialHeight:partialHeight
+                                                   partialOffset:partialOffset
+                                                    prunedHeight:prunedHeight
+                                              processedSPVHeight:processedSPVHeight
+                                                  probableHeight:probableHeight];
 }
 
 - (NSString *)description

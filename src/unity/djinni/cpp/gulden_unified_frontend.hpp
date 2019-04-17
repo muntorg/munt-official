@@ -9,7 +9,7 @@ struct BalanceRecord;
 struct MutationRecord;
 struct TransactionRecord;
 
-/** This interface will be implemented in Java and ObjC and can be called from C++. */
+/** Interface to receive events from the core */
 class GuldenUnifiedFrontend {
 public:
     virtual ~GuldenUnifiedFrontend() {}
@@ -20,7 +20,7 @@ public:
      */
     virtual void notifyUnifiedProgress(float progress) = 0;
 
-    virtual bool notifyBalanceChange(const BalanceRecord & new_balance) = 0;
+    virtual void notifyBalanceChange(const BalanceRecord & new_balance) = 0;
 
     /**
      * Notification of new mutations.
@@ -31,15 +31,15 @@ public:
      */
     virtual void notifyNewMutation(const MutationRecord & mutation, bool self_committed) = 0;
 
-    virtual bool notifyUpdatedTransaction(const TransactionRecord & transaction) = 0;
+    virtual void notifyUpdatedTransaction(const TransactionRecord & transaction) = 0;
 
     virtual void notifyInitWithExistingWallet() = 0;
 
     virtual void notifyInitWithoutExistingWallet() = 0;
 
-    virtual bool notifyShutdown() = 0;
+    virtual void notifyShutdown() = 0;
 
-    virtual bool notifyCoreReady() = 0;
+    virtual void notifyCoreReady() = 0;
 
     virtual void logPrint(const std::string & str) = 0;
 };

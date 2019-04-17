@@ -46,6 +46,9 @@ LIBSECP256K1=secp256k1/libsecp256k1.la
 if ENABLE_ZMQ
 LIBGULDEN_ZMQ=libgulden_zmq.a
 endif
+if BUILD_GULDEN_LIBS_NODE_JS
+LIBGULDEN_UNITY_NODE_JS=libgulden_unity_node_js.la
+endif
 if BUILD_GULDEN_LIBS_JNI
 LIBGULDEN_UNITY_JNI=libgulden_unity_jni.la
 endif
@@ -74,7 +77,7 @@ EXTRA_LIBRARIES += \
   $(LIBGULDEN_WALLET) \
   $(LIBGULDEN_ZMQ)
 
-lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI)
+lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI) $(LIBGULDEN_UNITY_NODE_JS)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
@@ -471,7 +474,67 @@ libgulden_cli_a_SOURCES = \
 nodist_libgulden_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
-# Gulden-unity library #
+# Gulden-unity library (for node.js)#
+if BUILD_GULDEN_LIBS_NODE_JS
+
+DJINNI_CPP_GEN = \
+  unity/djinni/cpp/address_record.hpp \
+  unity/djinni/cpp/balance_record.hpp \
+  unity/djinni/cpp/block_info_record.hpp \
+  unity/djinni/cpp/gulden_unified_backend.cpp \
+  unity/djinni/cpp/gulden_unified_backend.hpp \
+  unity/djinni/cpp/gulden_unified_frontend.hpp \
+  unity/djinni/cpp/legacy_wallet_result.hpp \
+  unity/djinni/cpp/gulden_monitor_listener.hpp \
+  unity/djinni/cpp/monitor_record.hpp \
+  unity/djinni/cpp/mutation_record.hpp \
+  unity/djinni/cpp/peer_record.hpp \
+  unity/djinni/cpp/qr_code_record.hpp \
+  unity/djinni/cpp/transaction_record.hpp \
+  unity/djinni/cpp/transaction_status.hpp \
+  unity/djinni/cpp/input_record.hpp \
+  unity/djinni/cpp/output_record.hpp \
+  unity/djinni/cpp/uri_recipient.hpp \
+  unity/djinni/cpp/uri_record.hpp
+
+DJINNI_NODE_JS_GEN = \
+  unity/djinni/node_js/guldenunifiedbackend.cpp \
+  unity/djinni/node_js/NJSGuldenMonitorListener.cpp \
+  unity/djinni/node_js/NJSGuldenMonitorListener.hpp \
+  unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.cpp \
+  unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.hpp \
+  unity/djinni/node_js/NJSGuldenUnifiedFrontend.cpp \
+  unity/djinni/node_js/NJSGuldenUnifiedFrontend.hpp \
+  unity/djinni/node_js/NJSObjectWrapper.hpp
+
+libgulden_unity_node_js_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
+libgulden_unity_node_js_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+
+libgulden_unity_node_js_la_SOURCES = \
+  unity/libinit.cpp \
+  unity/libinit.h \
+  unity/node_js/logging_node_js.cpp \
+  unity/node_js/init_node_js.cpp \
+  $(libgulden_wallet_a_SOURCES) \
+  $(libgulden_common_a_SOURCES) \
+  $(libgulden_util_a_SOURCES) \
+  $(libgulden_node_a_SOURCES) \
+  $(libgulden_consensus_a_SOURCES) \
+  $(crypto_libgulden_crypto_a_SOURCES) \
+  unity/unity_impl.h \
+  unity/unity_impl.cpp \
+  $(DJINNI_CPP_GEN) \
+  $(DJINNI_NODE_JS_GEN) \
+  $(GULDEN_CORE_H)
+
+
+libgulden_unity_node_js_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) 
+libgulden_unity_node_js_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode
+libgulden_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+endif
+
+# Gulden-unity library (for java)#
 if BUILD_GULDEN_LIBS_JNI
 libgulden_unity_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(PROTOBUF_CFLAGS)
 libgulden_unity_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
