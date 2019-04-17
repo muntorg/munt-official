@@ -25,7 +25,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.jniunifiedbackend.PaymentResultStatus
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
@@ -307,7 +306,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         mMainlayout.button_send.isEnabled = false
         this.launch {
             try {
-                val orderResult = nocks!!.nocksOrder(amountEuro = foreignAmount, destinationIBAN = recipient.address, name = name, description = description)
+                // TODO check if funds required exceeds balance
+                val orderResult = nocks!!.nocksOrder(amount = foreignAmount, amtCurrency = NocksService.Symbol.EUR, destinationIBAN = recipient.address, name = name, description = description)
 
                 // create styled message from resource template and arguments bundle
                 val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG)
@@ -399,7 +399,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                     prevJob?.join()
 
                     try {
-                        val quote = nocks!!.nocksQuote(foreignAmount)
+                        val quote = nocks!!.nocksQuote(foreignAmount, NocksService.Symbol.EUR)
                         val nlg = quote.amountNLG
                         mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
                     }

@@ -13,10 +13,8 @@ import se.ansman.kotshi.JsonSerializable
 import se.ansman.kotshi.KotshiJsonAdapterFactory
 import java.util.*
 
-data class NocksQuoteResult(val amountNLG: Double)
-data class NocksOrderResult(val depositAddress: String, val depositAmountNLG: Double)
-
-private const val NOCKS_HOST = "api.nocks.com"
+data class NocksQuoteResult(val amountNLG: Double, val amountEUR: Double)
+data class NocksOrderResult(val depositAddress: String, val depositAmountNLG: Double, val amountEUR: Double)
 
 // TODO: Use host sandbox.nocks.com for testnet build
 private const val FAKE_NOCKS_SERVICE = false
@@ -89,7 +87,7 @@ data class NocksTransactionParams(
 @KotshiJsonAdapterFactory
 abstract class ApplicationJsonAdapterFactory : JsonAdapter.Factory {
     companion object {
-        val INSTANCE: ApplicationJsonAdapterFactory? = KotshiApplicationJsonAdapterFactory
+        val INSTANCE: ApplicationJsonAdapterFactory = KotshiApplicationJsonAdapterFactory
     }
 }
 
@@ -97,8 +95,17 @@ class NocksException(val errorText: String) : RuntimeException(errorText)
 
 class NocksService {
 
+    enum class Symbol(val symbol: String) {
+        NLG("NLG"),
+        EUR("EUR")
+    }
+
     private var client: OkHttpClient
     private var moshi: Moshi
+
+    @Suppress("ConstantConditionIf")
+    private val apiHost:String
+        get() = if (BuildConfig.TESTNET) "sandbox.nocks.com" else "api.nocks.com"
 
     // Only create one client per session so that we avoid unnecessary extra SSL handshakes and can take advantage of connection pooling etc.
     init {
@@ -151,7 +158,7 @@ class NocksService {
 
         // build request
         val request = Request.Builder()
-                .url("https://$NOCKS_HOST/api/v2/$endpoint")
+                .url("https://${apiHost}/api/v2/$endpoint")
                 .header("User-Agent", Config.USER_AGENT)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
@@ -175,13 +182,13 @@ class NocksService {
 
     }
 
-    private suspend inline fun <reified ResultType, RequestType : Any> nocksRequestParsed(endpoint: String, params: RequestType): ResultType {
-        val responseBody = nocksRequestBody<RequestType>(endpoint, params)
+    private suspend inline fun <reified ResultType, reified RequestType : Any> nocksRequestParsed(endpoint: String, params: RequestType): ResultType {
+        val responseBody = nocksRequestBody(endpoint, params)
 
         // try parsing response body as expected result type regardless of status or error, if there is an error the
         // adapter will throw, which is catched and then the error is extracted
         try {
-            val resultAdapter = moshi!!.adapter(ResultType::class.java).failOnUnknown().nonNull()
+            val resultAdapter = moshi.adapter(ResultType::class.java).failOnUnknown().nonNull()
             return resultAdapter.fromJson(responseBody)!!
         } catch (e: Throwable) {
             val message = extractNocksError(responseBody)
@@ -189,21 +196,21 @@ class NocksService {
         }
     }
 
-    suspend fun nocksQuote(amountEuro: Double): NocksQuoteResult {
+    suspend fun nocksQuote(amount: Double, amtCurrency: Symbol): NocksQuoteResult {
         return if (FAKE_NOCKS_SERVICE) {
             delay(500)
-            val amount = Random.nextDouble(300.0, 400.0)
-            NocksQuoteResult(amountNLG = amount)
+            val randomAmount = Random.nextDouble(300.0, 400.0)
+            NocksQuoteResult(amountNLG = randomAmount, amountEUR = 1.0 / randomAmount)
         } else {
             // note that Double.toString() always uses dot "." for decimal separator it is not localized
             // see https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-
-            val params = NocksQuoteParams("NLG", "EUR", NocksAmount(amountEuro.toString(), "EUR"))
+            val params = NocksQuoteParams("NLG", "EUR", NocksAmount(amount.toString(), amtCurrency.symbol))
             val result = nocksRequestParsed<NocksQuoteResponse, NocksQuoteParams>("transaction/quote", params)
-            return NocksQuoteResult(amountNLG = result.data.source_amount.amount.toDouble())
+            NocksQuoteResult(amountNLG = result.data.source_amount.amount.toDouble(), amountEUR = result.data.target_amount.amount.toDouble())
         }
     }
 
-    suspend fun nocksOrder(amountEuro: Double, destinationIBAN: String, name: String = "", description: String = ""): NocksOrderResult {
+    suspend fun nocksOrder(amount: Double, amtCurrency: Symbol, destinationIBAN: String, name: String = "", description: String = ""): NocksOrderResult {
         // May only contain letters, numbers, dashes and spaces. Nothing else is allowed, so don't escape but just strip away others.
         val re = Regex("[^-A-Za-z0-9 ]")
         val nameStripped = re.replace(name, "")
@@ -212,10 +219,10 @@ class NocksService {
         if (FAKE_NOCKS_SERVICE) {
             delay(500)
             val amount = Random.nextDouble(300.0, 400.0)
-            return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount)
+            return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount, amountEUR = 1.0 / amount)
         } else {
             val params = NocksTransactionParams(source_currency = "NLG", target_currency = "EUR", target_address = destinationIBAN,
-                    name = nameStripped, description = descriptionStripped, amount = NocksAmount(amountEuro.toString(), "EUR"))
+                    name = nameStripped, description = descriptionStripped, amount = NocksAmount(amount.toString(), amtCurrency.symbol))
 
             try {
                 // Nocks v2 API transaction has a quite a complex structure of which we need only a couple of fields that are deeply nested inside
@@ -226,11 +233,17 @@ class NocksService {
 
                 val amountNLG = context.read<String>("\$.data.source_amount.amount").toDouble()
                 val sourceCurrency = context.read<String>("\$.data.source_amount.currency")
-                if (sourceCurrency != "NLG")
+                if (sourceCurrency != Symbol.NLG.symbol)
                     throw NocksException("Invalid source currency")
 
                 val guldenAddress = context.read<List<String>>("\$.data.payments.data[*].metadata.address").first()
-                return NocksOrderResult(depositAddress = guldenAddress, depositAmountNLG = amountNLG)
+
+                val amountEUR = context.read<String>("\$.data.target_amount.amount").toDouble()
+                val targetCurrency = context.read<String>("\$.data.target_amount.currency")
+                if (targetCurrency != Symbol.EUR.symbol)
+                    throw NocksException("Invalid target currency")
+
+                return NocksOrderResult(depositAddress = guldenAddress, depositAmountNLG = amountNLG, amountEUR = amountEUR)
             } catch (e: NocksException) {
                 throw e
             } catch (e: Throwable) {
