@@ -557,6 +557,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         val builder = context!!.alert(Appcompat) {
             this.title = "Enter recipient"
             customView = contentView
+            if (recipient.label.isNotEmpty())
+                contentView.name.setText(recipient.label)
             positiveButton("Pay") {
                 confirmAndCommitIBANPayment(view, contentView.name.text.toString(), contentView.description.text.toString())
             }
@@ -567,7 +569,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
         dialog.setOnShowListener {
             val okBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            okBtn.isEnabled = false
+            okBtn.isEnabled = contentView.name.text.isNotEmpty()
             contentView.name.addTextChangedListener(
                     object : TextWatcher {
                         override fun afterTextChanged(s: Editable?) {
