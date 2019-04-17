@@ -8,6 +8,7 @@ import kotlin.random.Random
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
 import com.jayway.jsonpath.JsonPath
 import com.squareup.moshi.JsonAdapter
+import kotlinx.coroutines.coroutineScope
 import okhttp3.*
 import se.ansman.kotshi.JsonSerializable
 import se.ansman.kotshi.KotshiJsonAdapterFactory
@@ -151,9 +152,9 @@ class NocksService {
         }
     }
 
-    private suspend inline fun <RequestType : Any> nocksRequestBody(endpoint: String, params: RequestType): String {
+    private suspend inline fun <reified RequestType : Any> nocksRequestBody(endpoint: String, params: RequestType): String = coroutineScope {
         // transform params to json
-        val paramAdapter = moshi?.adapter(params.javaClass)
+        val paramAdapter = moshi.adapter(params.javaClass)
         val jsonParams = paramAdapter!!.toJson(params)
 
         // build request
@@ -178,8 +179,7 @@ class NocksService {
             bodyStr
         }
 
-        return responseBody
-
+        responseBody
     }
 
     private suspend inline fun <reified ResultType, reified RequestType : Any> nocksRequestParsed(endpoint: String, params: RequestType): ResultType {
