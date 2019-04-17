@@ -6,19 +6,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 import com.itkacher.okhttpprofiler.OkHttpProfilerInterceptor
+import com.jayway.jsonpath.JsonPath
 import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.JsonWriter
 import okhttp3.*
-import okio.Buffer
 import se.ansman.kotshi.JsonSerializable
 import se.ansman.kotshi.KotshiJsonAdapterFactory
 import java.util.*
 
+data class NocksQuoteResult(val amountNLG: Double)
+data class NocksOrderResult(val depositAddress: String, val depositAmountNLG: Double)
 
-data class NocksQuoteResult(val amountNLG: Double, val errorText: String)
-data class NocksOrderResult(val depositAddress: String, val depositAmountNLG: Double, val errorText: String)
-
-private const val NOCKS_HOST = "www.nocks.com"
+private const val NOCKS_HOST = "api.nocks.com"
 
 // TODO: Use host sandbox.nocks.com for testnet build
 private const val FAKE_NOCKS_SERVICE = false
@@ -45,34 +43,48 @@ data class NocksListError (
     var error: List<String>?
 )
 
-
 @JsonSerializable
-data class SuccessValueNocksQuote (
-    var amount: Double = -1.0
+data class NocksAmount(
+        val amount: String,
+        val currency: String
 )
 
 @JsonSerializable
-data class NocksQuoteApiResult (
-    var success: SuccessValueNocksQuote? = null,
-    var error: List<String>? = null,
-    var errorMessage: String? = null
-)
+data class NocksQuoteParams(
+        val source_currency: String,
+        val target_currency: String,
+        val amount: NocksAmount,
+        val payment_method: PaymentMethod = PaymentMethod("gulden")
+) {
+    data class PaymentMethod(val method: String)
+}
 
 @JsonSerializable
-data class SuccessValueNocksOrder (
-    var depositAmount: Double = -1.0,
-    var deposit: String? = null,
-    var expirationTimestamp: String? = null,
-    var withdrawalAmount: String? = null,
-    var withdrawalOriginal: String? = null
-)
+data class NocksQuoteResponse(
+        val data: Data,
+        val status: Int
+) {
+    data class Data(
+            val source_amount: NocksAmount,
+            val target_amount: NocksAmount,
+            val fee_amount: NocksAmount,
+            val rate: String,
+            val rate_reversed: String
+    )
+}
 
 @JsonSerializable
-data class NocksOrderApiResult (
-    var error: List<String>? = null,
-    var errorMessage: String? = null,
-    var success: SuccessValueNocksOrder? = null
-)
+data class NocksTransactionParams(
+        val source_currency: String,
+        val target_currency: String,
+        val target_address: String,
+        val name: String,
+        val description: String = "",
+        val amount: NocksAmount,
+        val payment_method: PaymentMethod = PaymentMethod("gulden")
+) {
+    data class PaymentMethod(val method: String)
+}
 
 @KotshiJsonAdapterFactory
 abstract class ApplicationJsonAdapterFactory : JsonAdapter.Factory {
@@ -80,6 +92,8 @@ abstract class ApplicationJsonAdapterFactory : JsonAdapter.Factory {
         val INSTANCE: ApplicationJsonAdapterFactory? = KotshiApplicationJsonAdapterFactory
     }
 }
+
+class NocksException(val errorText: String) : RuntimeException(errorText)
 
 var client : OkHttpClient? = null
 var moshi : Moshi? = null
@@ -102,7 +116,7 @@ fun initNocks()
             .build()
 
     val builder = OkHttpClient.Builder()
-    if (BuildConfig.DEBUG && System.getProperty("java.runtime.name").contains("android", true)) {
+    if (BuildConfig.DEBUG && (System.getProperty("java.runtime.name")?.contains("android", true) == true)) {
         builder.addInterceptor(OkHttpProfilerInterceptor() )
     }
     client = builder.connectionSpecs(Collections.singletonList(spec)).build()
@@ -115,18 +129,6 @@ fun terminateNocks()
     //TODO: Cancel all unpaid payment requests here.
     client = null
     moshi = null
-}
-
-fun escapeStringToJSON(inputString : String) : String
-{
-    if (inputString.isEmpty())
-        return "\"\""
-
-    val b = Buffer() // okio.Buffer
-    val writer = JsonWriter.of(b)
-    writer.value(inputString)
-    writer.flush()
-    return b.readUtf8()
 }
 
 private fun extractNocksError(input : String) : String
@@ -161,50 +163,50 @@ private fun extractNocksError(input : String) : String
     }
 }
 
-private suspend inline fun <reified ResultType> nocksRequest(endpoint: String, jsonParams: String): ResultType?
+private suspend inline fun <RequestType : Any> nocksRequestBody(endpoint: String, params: RequestType): String
 {
+    // transform params to json
+    val paramAdapter = moshi?.adapter(params.javaClass)
+    val jsonParams =  paramAdapter!!.toJson(params)
+
+    // build request
     val request = Request.Builder()
-            .url("https://$NOCKS_HOST/api/$endpoint")
+            .url("https://$NOCKS_HOST/api/v2/$endpoint")
             .header("User-Agent", Config.USER_AGENT)
             .header("Content-Type", "application/json")
             .header("Accept", "application/json")
             .post(RequestBody.create(MediaType.get("application/json; charset=utf-8"), jsonParams))
             .build()
 
-    var error=false
-    // execute on IO thread pool
-    val result = withContext(IO) {
-        val response = client?.newCall(request)?.execute()
-        val body = response?.body()
-        val code = response?.code() ?: 0
-        if (code >= 400)
-            error = true
+    // execute request suspended on IO thread pool and return response body
+    val responseBody = withContext(IO) {
+        val response = client!!.newCall(request).execute()
 
-        if (body != null)
-        {
-            error = false
-            body.string()
-        }
-        else
-        {
-            error = true
-            "{\"error\": {\"Null body in Nocks response\"}}"
-        }
+        val bodyStr = response.body()?.string() ?: throw NocksException("Null body in Nocks response")
+
+        if (response.code() < 200 || response.code() >= 300)
+            throw NocksException(extractNocksError(bodyStr))
+
+        bodyStr
     }
 
-    // Error code should always be set if error, however in se it isn't we do a rudimentary start of string search for "error as well" (as we had at least one case of this in the past)
-    if (error || result.startsWith("{\"error"))
-    {
-        // Nocks errors come in different forms so we can't handle it in the moshi class directly as it is too complex
-        // Instead marshall the error via several intermediate types, tot ry and parse the error as best as possible - and then insert it into our eventual return type in a way it understands
-        val message= extractNocksError(result)
-        val adapter = moshi?.adapter(ResultType::class.java)
-        return adapter?.fromJson("{\"errorMessage\": \"$message\"}")!!
+    return responseBody
+
+}
+
+private suspend inline fun <reified ResultType, RequestType : Any> nocksRequestParsed(endpoint: String, params: RequestType): ResultType
+{
+    val responseBody = nocksRequestBody<RequestType>(endpoint, params)
+
+    // try parsing response body as expected result type regardless of status or error, if there is an error the
+    // adapter will throw, which is catched and then the error is extracted
+    try {
+        val resultAdapter = moshi!!.adapter(ResultType::class.java).failOnUnknown().nonNull()
+        return resultAdapter.fromJson(responseBody)!!
     }
-    else
-    {
-        val adapter = moshi?.adapter(ResultType::class.java)
-        return adapter?.fromJson(result)
+    catch (e: Throwable) {
+        val message= extractNocksError(responseBody)
+        throw NocksException(message)
     }
 }
 
@@ -213,76 +215,53 @@ suspend fun nocksQuote(amountEuro: Double): NocksQuoteResult
     return if (FAKE_NOCKS_SERVICE) {
         delay(500)
         val amount = Random.nextDouble(300.0, 400.0)
-        NocksQuoteResult(amountNLG = amount, errorText =  "")
+        NocksQuoteResult(amountNLG = amount)
     }
     else {
-        var strAmount = amountEuro.toString()
-        strAmount = strAmount.replace(",",".")
-        var strAmountLen = strAmount.length
-        val result = nocksRequest<NocksQuoteApiResult>("price", "{\"pair\": \"NLG_EUR\", \"amount\": \"$strAmount\", \"fee\": \"yes\", \"amountType\": \"withdrawal\"}")
-        val amount = if (result?.success != null) { result.success?.amount!! } else -1.0
-        var errorMessage = ""
-        if (result?.error != null)
-        {
-            errorMessage = result.error!![0]
-        }
-        else if (result?.errorMessage != null)
-        {
-            errorMessage = result.errorMessage!!
-        }
-        else if (amount < 0)
-        {
-            errorMessage = "Unknown error"
-        }
-        NocksQuoteResult(amountNLG = amount, errorText = errorMessage)
+        // note that Double.toString() always uses dot "." for decimal separator it is not localized
+        // see https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#toString-double-
+        val params = NocksQuoteParams("NLG", "EUR", NocksAmount(amountEuro.toString(), "EUR"))
+        val result = nocksRequestParsed<NocksQuoteResponse, NocksQuoteParams>("transaction/quote", params)
+        return NocksQuoteResult(amountNLG = result.data.source_amount.amount.toDouble())
     }
 }
 
 suspend fun nocksOrder(amountEuro: Double, destinationIBAN:String, name:String = "", description: String = ""): NocksOrderResult
 {
-    val nameEscaped = escapeStringToJSON(name)
-    val descriptionEscaped = escapeStringToJSON(description)
+    // May only contain letters, numbers, dashes and spaces. Nothing else is allowed, so don't escape but just strip away others.
+    val re = Regex("[^-A-Za-z0-9 ]")
+    val nameStripped = re.replace(name, "")
+    val descriptionStripped = re.replace(description, "")
 
     if (FAKE_NOCKS_SERVICE) {
         delay(500)
         val amount = Random.nextDouble(300.0, 400.0)
-        return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount, errorText = "")
+        return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount)
     }
     else {
-        val json =
-                if (name.isEmpty())
-                    "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\"}"
-                else
-                    "{\"pair\": \"NLG_EUR\", \"amount\": \"$amountEuro\", \"withdrawal\": \"$destinationIBAN\", \"name\": $nameEscaped, \"text\": $descriptionEscaped}"
+        val params = NocksTransactionParams(source_currency = "NLG", target_currency = "EUR", target_address = destinationIBAN,
+                name = nameStripped, description = descriptionStripped, amount = NocksAmount(amountEuro.toString(), "EUR"))
 
-        val result = nocksRequest<NocksOrderApiResult>(
-                "transaction",
-                json)
+        try {
+            // Nocks v2 API transaction has a quite a complex structure of which we need only a couple of fields that are deeply nested inside
+            // See the nocks-tx-sample.json in the unit tests
+            // So we don't have model classes to deserialize the json but JsonPath is used to easily get the few values needed
+            val body = nocksRequestBody("transaction", params)
+            val context = JsonPath.parse(body)
 
-        var errorMessage = ""
-        var depositAddress = ""
-        var depositAmountNLG = -1.0
-        if (result?.success != null)
-        {
-            if (result.success?.withdrawalOriginal != destinationIBAN) throw RuntimeException("Withdrawal address modified, please contact a developer for assistance.")
-            depositAddress = result.success?.deposit!!
-            depositAmountNLG = result.success?.depositAmount!!
+            val amountNLG = context.read<String>("\$.data.source_amount.amount").toDouble()
+            val sourceCurrency = context.read<String>("\$.data.source_amount.currency")
+            if (sourceCurrency != "NLG")
+                throw NocksException("Invalid source currency")
+
+            val guldenAddress = context.read<List<String>>("\$.data.payments.data[*].metadata.address").first()
+            return NocksOrderResult(depositAddress = guldenAddress, depositAmountNLG = amountNLG)
         }
-        else
-        {
-            if (result?.error != null)
-            {
-                errorMessage = result.error!![0]
-            }
-            else if (result?.errorMessage != null)
-            {
-                errorMessage = result.errorMessage!!
-            }
-            else
-            {
-                errorMessage = "Unknown error"
-            }
+        catch (e: NocksException) {
+            throw e
         }
-        return NocksOrderResult(depositAddress, depositAmountNLG, errorMessage)
+        catch (e: Throwable) {
+            throw NocksException("Error decoding Nocks request")
+        }
     }
 }

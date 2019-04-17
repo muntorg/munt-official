@@ -306,46 +306,36 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         mMainlayout.button_send.isEnabled = false
         this.launch {
             try {
-                // request order from Nocks
-
                 val orderResult = nocksOrder(amountEuro = foreignAmount, destinationIBAN = recipient.address, name = name, description = description)
 
-                if (orderResult.errorText != "")
-                {
-                    errorMessage(orderResult.errorText)
-                    mMainlayout.button_send.isEnabled = true
-                }
-                else
-                {
-                    // create styled message from resource template and arguments bundle
-                    val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG)
-                    val message = getString(R.string.send_coins_iban_confirm_template, String.format("%.${foreignCurrency.precision}f", foreignAmount), nlgStr, recipientDisplayAddress)
+                // create styled message from resource template and arguments bundle
+                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", orderResult.depositAmountNLG)
+                val message = getString(R.string.send_coins_iban_confirm_template, String.format("%.${foreignCurrency.precision}f", foreignAmount), nlgStr, recipientDisplayAddress)
 
-                    // alert dialog for confirmation
-                    fragmentActivity.alert(Appcompat, message, getString(R.string.send_to_iban_title)) {
+                // alert dialog for confirmation
+                fragmentActivity.alert(Appcompat, message, getString(R.string.send_to_iban_title)) {
 
-                        // on confirmation compose recipient and execute payment
-                        positiveButton(getString(R.string.send_btn)) {
+                    // on confirmation compose recipient and execute payment
+                    positiveButton(getString(R.string.send_btn)) {
+                        mMainlayout.button_send.isEnabled = true
+                        val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG.toNative())
+                        try {
+                            performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
+                        } catch (exception: RuntimeException) {
+                            errorMessage(exception.message!!)
                             mMainlayout.button_send.isEnabled = true
-                            val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG.toNative())
-                            try
-                            {
-                                performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message))
-                            }
-                            catch (exception: RuntimeException)
-                            {
-                                errorMessage(exception.message!!)
-                                mMainlayout.button_send.isEnabled = true
-                            }
-
                         }
 
-                        negativeButton(getString(R.string.cancel_btn)) {
-                            // TODO cancel the transaction with Nocks
-                        }
-                    }.show()
-                    mMainlayout.button_send.isEnabled = true
-                }
+                    }
+
+                    negativeButton(getString(R.string.cancel_btn)) {
+                        // TODO cancel the transaction with Nocks
+                    }
+                }.show()
+                mMainlayout.button_send.isEnabled = true
+            } catch (e: NocksException) {
+                errorMessage(e.errorText)
+                mMainlayout.button_send.isEnabled = true
             } catch (e: Throwable) {
                 errorMessage(getString(R.string.iban_order_failed))
                 mMainlayout.button_send.isEnabled = true
@@ -409,15 +399,14 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                     prevJob?.join()
 
-                    val quote = nocksQuote(foreignAmount)
-                    if (quote.amountNLG < 0)
-                    {
-                        mSendCoinsNocksEstimate.text = getString(R.string.nocks_error_prefix) + quote.errorText
-                    }
-                    else
-                    {
+                    try {
+                        val quote = nocksQuote(foreignAmount)
                         val nlg = quote.amountNLG
                         mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
+                    }
+                    catch (e: NocksException) {
+                        e.errorText
+                        mSendCoinsNocksEstimate.text = getString(R.string.nocks_error_prefix) + e.errorText
                     }
                 }
                 catch (_: CancellationException) {
