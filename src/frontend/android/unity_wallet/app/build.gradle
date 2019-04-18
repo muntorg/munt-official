@@ -25,6 +25,7 @@ android {
     //This file can't (and shouldn't ever) be compressed.
     aaptOptions {
         noCompress 'staticfiltercp'
+        noCompress 'staticfiltercptestnet'
     }
 
     //Latest okhttp requires java 8 minimum.
@@ -61,6 +62,7 @@ android {
             resValue "string", "about_text_app_name", "Gulden testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
         }
+
         gulden_mainnet {
             applicationId 'com.gulden.wallet'
             archivesBaseName = 'gulden'
@@ -71,6 +73,15 @@ android {
             versionName = "2.0.1"
             resValue "string", "about_text_app_name", "Gulden $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
+        }
+    }
+
+    sourceSets {
+        gulden_testnet {
+            assets.srcDirs = ['src/main/assets', 'src/main/assetsTestnet']
+        }
+        gulden_mainnet {
+            assets.srcDirs = ['src/main/assets', 'src/main/assetsMainnet']
         }
     }
 
