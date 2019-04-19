@@ -3861,7 +3861,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             pto->vInventoryBlockToSend.clear();
 
             // Check whether periodic sends should happen
-            bool fSendTrickle = pto->fWhitelisted;
+            bool fSendTrickle = pto->fWhitelisted || IsPartialSyncActive();
             if (pto->nNextInvSend < nNow) {
                 fSendTrickle = true;
                 // Use half the delay for outbound peers, as there is less privacy concern for them.
