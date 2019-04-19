@@ -1,6 +1,14 @@
-#bin/bash
+#!/bin/bash
 
-git clone --single-branch --branch gulden https://github.com/mjmacleod/djinni.git
+GULDEN_DJINNI_REPO=https://github.com/mjmacleod/djinni.git
+
+#if [ ! -d djinni ]; then
+#	git clone --single-branch --branch gulden ${GULDEN_DJINNI_REPO}
+#else
+#	cd djinni
+#	git pull origin
+#	cd ..
+#fi
 rm -rf src/unity/djinni/*
 
 djinni/src/run \
