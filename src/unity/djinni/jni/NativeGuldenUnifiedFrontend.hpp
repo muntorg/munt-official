@@ -48,15 +48,15 @@ private:
     };
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/GuldenUnifiedFrontend") };
-    const jmethodID method_notifyUnifiedProgress { ::djinni::jniGetMethodID(clazz.get(), "notifyUnifiedProgress", "(F)void") };
-    const jmethodID method_notifyBalanceChange { ::djinni::jniGetMethodID(clazz.get(), "notifyBalanceChange", "(Lcom/gulden/jniunifiedbackend/BalanceRecord;)void") };
-    const jmethodID method_notifyNewMutation { ::djinni::jniGetMethodID(clazz.get(), "notifyNewMutation", "(Lcom/gulden/jniunifiedbackend/MutationRecord;Z)void") };
-    const jmethodID method_notifyUpdatedTransaction { ::djinni::jniGetMethodID(clazz.get(), "notifyUpdatedTransaction", "(Lcom/gulden/jniunifiedbackend/TransactionRecord;)void") };
-    const jmethodID method_notifyInitWithExistingWallet { ::djinni::jniGetMethodID(clazz.get(), "notifyInitWithExistingWallet", "()void") };
-    const jmethodID method_notifyInitWithoutExistingWallet { ::djinni::jniGetMethodID(clazz.get(), "notifyInitWithoutExistingWallet", "()void") };
-    const jmethodID method_notifyShutdown { ::djinni::jniGetMethodID(clazz.get(), "notifyShutdown", "()void") };
-    const jmethodID method_notifyCoreReady { ::djinni::jniGetMethodID(clazz.get(), "notifyCoreReady", "()void") };
-    const jmethodID method_logPrint { ::djinni::jniGetMethodID(clazz.get(), "logPrint", "(Ljava/lang/String;)void") };
+    const jmethodID method_notifyUnifiedProgress { ::djinni::jniGetMethodID(clazz.get(), "notifyUnifiedProgress", "(F)V") };
+    const jmethodID method_notifyBalanceChange { ::djinni::jniGetMethodID(clazz.get(), "notifyBalanceChange", "(Lcom/gulden/jniunifiedbackend/BalanceRecord;)V") };
+    const jmethodID method_notifyNewMutation { ::djinni::jniGetMethodID(clazz.get(), "notifyNewMutation", "(Lcom/gulden/jniunifiedbackend/MutationRecord;Z)V") };
+    const jmethodID method_notifyUpdatedTransaction { ::djinni::jniGetMethodID(clazz.get(), "notifyUpdatedTransaction", "(Lcom/gulden/jniunifiedbackend/TransactionRecord;)V") };
+    const jmethodID method_notifyInitWithExistingWallet { ::djinni::jniGetMethodID(clazz.get(), "notifyInitWithExistingWallet", "()V") };
+    const jmethodID method_notifyInitWithoutExistingWallet { ::djinni::jniGetMethodID(clazz.get(), "notifyInitWithoutExistingWallet", "()V") };
+    const jmethodID method_notifyShutdown { ::djinni::jniGetMethodID(clazz.get(), "notifyShutdown", "()V") };
+    const jmethodID method_notifyCoreReady { ::djinni::jniGetMethodID(clazz.get(), "notifyCoreReady", "()V") };
+    const jmethodID method_logPrint { ::djinni::jniGetMethodID(clazz.get(), "logPrint", "(Ljava/lang/String;)V") };
 };
 
 }  // namespace djinni_generated
