@@ -7,6 +7,7 @@
 #include "legacy_wallet_result.hpp"
 #include "monitor_record.hpp"
 #include "mutation_record.hpp"
+#include "payment_result_status.hpp"
 #include "peer_record.hpp"
 #include "qr_code_record.hpp"
 #include "transaction_record.hpp"

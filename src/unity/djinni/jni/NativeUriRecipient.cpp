@@ -16,7 +16,7 @@ auto NativeUriRecipient::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni::
                                                            ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.valid)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.address)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.label)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.amount)))};
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.amount)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
@@ -28,7 +28,7 @@ auto NativeUriRecipient::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
     return {::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mValid)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mAddress)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mLabel)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mAmount))};
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAmount))};
 }
 
 }  // namespace djinni_generated

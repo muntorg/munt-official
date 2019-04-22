@@ -2,11 +2,13 @@ package com.gulden.unity_wallet
 
 import android.preference.PreferenceManager
 import android.util.Log
+import com.gulden.unity_wallet.Config.Companion.RATE_FETCH_INTERVAL
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URL
 import java.text.DecimalFormat
 import java.util.*
+import kotlin.math.floor
 import kotlin.math.roundToLong
 
 private const val TAG = "currency"
@@ -26,6 +28,22 @@ suspend fun fetchCurrencyRate(code: String): Double
 }
 
 suspend fun fetchAllCurrencyRates(): Map<String, Double> {
+    // use cached currency rates if last fetch within RATE_FETCH_INTERVAL
+    val now = System.currentTimeMillis()
+    if (now - currencyRatesLastFetched > RATE_FETCH_INTERVAL) {
+        currencyRates = reallyfetchAllCurrencyRates()
+        currencyRatesLastFetched = now
+    }
+    return currencyRates
+}
+
+// caching of currency rates
+private var currencyRatesLastFetched = 0L
+private var currencyRates = mapOf<String, Double>()
+
+private suspend fun reallyfetchAllCurrencyRates(): Map<String, Double> {
+    Log.i(TAG, "reallyfetchAllCurrencyRates")
+
     // fetch rate data from server
     lateinit var data: String
     try {
@@ -125,4 +143,8 @@ fun formatNativeAndLocal(nativeAmount: Long, conversionRate: Double, useNativePr
  */
 fun wireFormatNative(nativeAmount: Double): String {
     return String.format(Locale.ROOT,"%.${Config.PRECISION_FULL}f", nativeAmount)
+}
+
+fun Double.toNative(): Long {
+    return floor(this * 100000000.0).toLong()
 }

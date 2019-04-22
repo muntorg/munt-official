@@ -10,6 +10,7 @@
 #include "NativeLegacyWalletResult.hpp"
 #include "NativeMonitorRecord.hpp"
 #include "NativeMutationRecord.hpp"
+#include "NativePaymentResultStatus.hpp"
 #include "NativePeerRecord.hpp"
 #include "NativeQrCodeRecord.hpp"
 #include "NativeTransactionRecord.hpp"
@@ -280,12 +281,23 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacken
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_performPaymentToRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request)
+CJNIEXPORT jlong JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_feeForRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        ::GuldenUnifiedBackend::performPaymentToRecipient(::djinni_generated::NativeUriRecipient::toCpp(jniEnv, j_request));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+        auto r = ::GuldenUnifiedBackend::feeForRecipient(::djinni_generated::NativeUriRecipient::toCpp(jniEnv, j_request));
+        return ::djinni::release(::djinni::I64::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_performPaymentToRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request, jboolean j_substractFee)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::performPaymentToRecipient(::djinni_generated::NativeUriRecipient::toCpp(jniEnv, j_request),
+                                                                   ::djinni::Bool::toCpp(jniEnv, j_substractFee));
+        return ::djinni::release(::djinni_generated::NativePaymentResultStatus::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
 CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_getTransactionHistory(JNIEnv* jniEnv, jobject /*this*/)

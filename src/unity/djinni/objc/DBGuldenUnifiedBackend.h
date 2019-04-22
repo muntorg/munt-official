@@ -6,6 +6,7 @@
 #import "DBLegacyWalletResult.h"
 #import "DBMonitorRecord.h"
 #import "DBMutationRecord.h"
+#import "DBPaymentResultStatus.h"
 #import "DBPeerRecord.h"
 #import "DBQrCodeRecord.h"
 #import "DBTransactionRecord.h"
@@ -126,8 +127,12 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Check if text/address is something we are capable of sending money too */
 + (nonnull DBUriRecipient *)IsValidRecipient:(nonnull DBUriRecord *)request;
 
+/** Compute the fee required to send amount to given recipient */
++ (int64_t)feeForRecipient:(nonnull DBUriRecipient *)request;
+
 /** Attempt to pay a recipient, will throw on failure with description */
-+ (void)performPaymentToRecipient:(nonnull DBUriRecipient *)request;
++ (DBPaymentResultStatus)performPaymentToRecipient:(nonnull DBUriRecipient *)request
+                                      substractFee:(BOOL)substractFee;
 
 /** Get list of all transactions wallet has been involved in */
 + (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory;

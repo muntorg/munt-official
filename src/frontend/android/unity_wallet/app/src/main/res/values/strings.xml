@@ -170,4 +170,11 @@ file COPYING
     <string name="show_balance_when_synced">Balance not visible. Please wait.</string>
     <string name="copied_to_clipboard_toast">Copied</string>
     <string name="gulden_address_clipboard_label">Gulden address</string>
+    <string name="send_all_instead_title">Insufficient balance</string>
+    <string name="send_all_instead_msg">Lower the amount and send all your Gulden instead? Amount transferred will be all your gulden minus network fee.</string>
+    <string name="send_all_btn">Send all</string>
+    <string name="send_gulden_title">Send Gulden?</string>
+    <string name="send_btn">Send</string>
+    <string name="send_to_iban_title">Send Gulden to IBAN?</string>
+    <string name="iban_order_failed">IBAN order failed</string>
 </resources>

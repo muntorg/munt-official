@@ -56,7 +56,7 @@ class SendFragment : Fragment(), UnityCore.Observer
             val text = clipboardText()
             val recipient = when {
                 IBANValidator.getInstance().isValid(text) ->
-                    UriRecipient(false, text, "", "")
+                    UriRecipient(false, text, "", 0)
                 GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid ->
                     GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>()))
                 uriRecipient(text).valid ->
@@ -155,7 +155,7 @@ class SendFragment : Fragment(), UnityCore.Observer
 
         val addresses = GuldenUnifiedBackend.getAddressBookRecords()
         val adapter = AddressBookAdapter(addresses) { position, address ->
-            val recipient = UriRecipient(true, address.address, address.name, "0")
+            val recipient = UriRecipient(true, address.address, address.name, 0)
             SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
         }
 

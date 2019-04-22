@@ -1725,6 +1725,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 item.second.RelayTo(pfrom);
         }
 
+        // Trigger mempool to be send when synced. This way transaction that were created recently but perhaps not reached the network
+        // yet due to connectity issues (which can easily happen on mobile devices) are broadcasted to all new peers.
+        pfrom->fSendMempool = IsPartialNearPresent();
+
 #pragma message("Ban 797017 peers. Remove for relase!")
 // it's annoying and slows down getting good peer connections
 // still it is doubltful if we want to keep a thing like this in a release
@@ -3877,7 +3881,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             pto->vInventoryBlockToSend.clear();
 
             // Check whether periodic sends should happen
-            bool fSendTrickle = pto->fWhitelisted;
+            bool fSendTrickle = pto->fWhitelisted || IsPartialSyncActive();
             if (pto->nNextInvSend < nNow) {
                 fSendTrickle = true;
                 // Use half the delay for outbound peers, as there is less privacy concern for them.
@@ -3906,9 +3910,11 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                     const uint256& hash = txinfo.tx->GetHash();
                     CInv inv(MSG_TX, hash);
                     pto->setInventoryTxToSend.erase(hash);
-                    if (filterrate) {
-                        if (txinfo.feeRate.GetFeePerK() < filterrate)
-                            continue;
+                    // the feeperkb != 0 is a hack to ensure that entries going into the mempool
+                    // while in pure partial sync are always send out
+                    if (   (filterrate && txinfo.feeRate.GetFeePerK() < filterrate)
+                        && txinfo.feeRate.GetFeePerK() != 0) {
+                        continue;
                     }
                     if (pto->pfilter) {
                         if (!pto->pfilter->IsRelevantAndUpdate(*txinfo.tx)) continue;

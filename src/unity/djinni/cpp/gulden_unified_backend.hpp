@@ -11,6 +11,7 @@
 class GuldenMonitorListener;
 class GuldenUnifiedFrontend;
 enum class LegacyWalletResult;
+enum class PaymentResultStatus;
 struct AddressRecord;
 struct BlockInfoRecord;
 struct MonitorRecord;
@@ -117,8 +118,11 @@ public:
     /** Check if text/address is something we are capable of sending money too */
     static UriRecipient IsValidRecipient(const UriRecord & request);
 
+    /** Compute the fee required to send amount to given recipient */
+    static int64_t feeForRecipient(const UriRecipient & request);
+
     /** Attempt to pay a recipient, will throw on failure with description */
-    static void performPaymentToRecipient(const UriRecipient & request);
+    static PaymentResultStatus performPaymentToRecipient(const UriRecipient & request, bool substract_fee);
 
     /** Get list of all transactions wallet has been involved in */
     static std::vector<TransactionRecord> getTransactionHistory();

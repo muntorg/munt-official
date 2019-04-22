@@ -7,11 +7,11 @@
 - (nonnull instancetype)initWithValid:(BOOL)valid
                               address:(nonnull NSString *)address
                                 label:(nonnull NSString *)label
-                               amount:(nonnull NSString *)amount;
+                               amount:(int64_t)amount;
 + (nonnull instancetype)uriRecipientWithValid:(BOOL)valid
                                       address:(nonnull NSString *)address
                                         label:(nonnull NSString *)label
-                                       amount:(nonnull NSString *)amount;
+                                       amount:(int64_t)amount;
 
 @property (nonatomic, readonly) BOOL valid;
 
@@ -19,6 +19,6 @@
 
 @property (nonatomic, readonly, nonnull) NSString * label;
 
-@property (nonatomic, readonly, nonnull) NSString * amount;
+@property (nonatomic, readonly) int64_t amount;
 
 @end

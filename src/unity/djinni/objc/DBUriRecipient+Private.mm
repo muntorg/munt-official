@@ -13,7 +13,7 @@ auto UriRecipient::toCpp(ObjcType obj) -> CppType
     return {::djinni::Bool::toCpp(obj.valid),
             ::djinni::String::toCpp(obj.address),
             ::djinni::String::toCpp(obj.label),
-            ::djinni::String::toCpp(obj.amount)};
+            ::djinni::I64::toCpp(obj.amount)};
 }
 
 auto UriRecipient::fromCpp(const CppType& cpp) -> ObjcType
@@ -21,7 +21,7 @@ auto UriRecipient::fromCpp(const CppType& cpp) -> ObjcType
     return [[DBUriRecipient alloc] initWithValid:(::djinni::Bool::fromCpp(cpp.valid))
                                          address:(::djinni::String::fromCpp(cpp.address))
                                            label:(::djinni::String::fromCpp(cpp.label))
-                                          amount:(::djinni::String::fromCpp(cpp.amount))];
+                                          amount:(::djinni::I64::fromCpp(cpp.amount))];
 }
 
 }  // namespace djinni_generated

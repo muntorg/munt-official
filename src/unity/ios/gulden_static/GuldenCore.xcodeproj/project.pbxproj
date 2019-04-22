@@ -30,7 +30,8 @@
 		E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE00216C964E0038C745 /* libcrypto.a */; };
 		E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE01216C964E0038C745 /* libssl.a */; };
 		E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */; };
-		E6AE404921EF4A500019A54A /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6AE404821EF4A500019A54A /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6CEA4252264AA2D00C87DC5 /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6CEA4262264AA2D00C87DC5 /* DBPaymentResultStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EBCA222254B2BA00B02F24 /* staticfiltercp in Resources */ = {isa = PBXBuildFile; fileRef = E6EBCA212254B2BA00B02F24 /* staticfiltercp */; };
 		E6EBCA242254B77A00B02F24 /* GuldenCoreUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E6EBCA232254B77A00B02F24 /* GuldenCoreUtil.m */; };
 		E6EBCA262254B7AF00B02F24 /* GuldenCoreUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EBCA252254B7AF00B02F24 /* GuldenCoreUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -74,7 +75,8 @@
 		E68FAE00216C964E0038C745 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../../depends/aarch64-ios/lib/libcrypto.a"; sourceTree = "<group>"; };
 		E68FAE01216C964E0038C745 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../depends/aarch64-ios/lib/libssl.a"; sourceTree = "<group>"; };
 		E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb_cxx-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb_cxx-4.8.a"; sourceTree = "<group>"; };
-		E6AE404821EF4A500019A54A /* DBOutputRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DBOutputRecord.h; path = ../../djinni/objc/DBOutputRecord.h; sourceTree = "<group>"; };
+		E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBOutputRecord.h; path = ../../../djinni/objc/DBOutputRecord.h; sourceTree = "<group>"; };
+		E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBPaymentResultStatus.h; path = ../../../djinni/objc/DBPaymentResultStatus.h; sourceTree = "<group>"; };
 		E6EBCA212254B2BA00B02F24 /* staticfiltercp */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercp; path = ../../../../data/staticfiltercp; sourceTree = "<group>"; };
 		E6EBCA232254B77A00B02F24 /* GuldenCoreUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GuldenCoreUtil.m; sourceTree = "<group>"; };
 		E6EBCA252254B7AF00B02F24 /* GuldenCoreUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCoreUtil.h; sourceTree = "<group>"; };
@@ -123,7 +125,6 @@
 			isa = PBXGroup;
 			children = (
 				E6EBCA1E2254AAFD00B02F24 /* Resources */,
-				E6AE404821EF4A500019A54A /* DBOutputRecord.h */,
 				E65D47B021639AF100033ED1 /* source */,
 				E64203EE21638CD6004A77FF /* GuldenCore */,
 				E64203ED21638CD6004A77FF /* Products */,
@@ -150,6 +151,8 @@
 				E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */,
 				E6EC7CFC21EF24A800320806 /* DBBlockInfoRecord.h */,
 				E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */,
+				E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */,
+				E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */,
 				E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */,
 				E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */,
 				E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */,
@@ -219,10 +222,11 @@
 				E6EC7D0521EF24A900320806 /* DBGuldenMonitorListener.h in Headers */,
 				E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */,
 				E6EC7D0721EF24A900320806 /* DBUriRecord.h in Headers */,
-				E6AE404921EF4A500019A54A /* DBOutputRecord.h in Headers */,
 				E6EC7D0621EF24A900320806 /* DBGuldenUnifiedBackend.h in Headers */,
 				E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */,
 				E6EC7D0921EF24A900320806 /* DBBlockInfoRecord.h in Headers */,
+				E6CEA4262264AA2D00C87DC5 /* DBPaymentResultStatus.h in Headers */,
+				E6CEA4252264AA2D00C87DC5 /* DBOutputRecord.h in Headers */,
 				E6EC7D0421EF24A900320806 /* DBQrCodeRecord.h in Headers */,
 				E6EC7D0821EF24A900320806 /* DBGuldenUnifiedFrontend.h in Headers */,
 				E67BA0882209C84600223B01 /* DBTransactionStatus.h in Headers */,
