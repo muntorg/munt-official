@@ -266,6 +266,12 @@ AC_ARG_WITH([utils],
   [build_gulden_utils=$withval],
   [build_gulden_utils=yes])
 
+AC_ARG_WITH([node-js-libs],
+  [AS_HELP_STRING([--with-node-js-libs],
+  [build node.js unity library (default=no)])],
+  [build_gulden_libs_node_js=yes],
+  [build_gulden_libs_node_js=no])
+
 AC_ARG_WITH([jni-libs],
   [AS_HELP_STRING([--with-jni-libs],
   [build jni unity library (default=no)])],
@@ -730,7 +736,7 @@ GULDEN_QT_INIT
 dnl sets $gulden_enable_qt, $gulden_enable_qt_test, $gulden_enable_qt_dbus
 GULDEN_QT_CONFIGURE([$use_pkgconfig], [qt5])
 
-if test x$build_gulden_utils$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnononononono; then
+if test x$build_gulden_utils$build_gulden_libs_node_js$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnonononononono; then
     use_boost=no
 else
     use_boost=yes
@@ -1061,6 +1067,11 @@ AC_MSG_CHECKING([whether to build utils (Gulden-cli Gulden-tx)])
 AM_CONDITIONAL([BUILD_GULDEN_UTILS], [test x$build_gulden_utils = xyes])
 AC_MSG_RESULT($build_gulden_utils)
 
+AC_MSG_CHECKING([whether to build node.js libraries])
+AM_CONDITIONAL([BUILD_GULDEN_LIBS_NODE_JS], [test x$build_gulden_libs_node_js = xyes])
+AC_MSG_RESULT($build_gulden_libs_node_js)
+
+
 AC_MSG_CHECKING([whether to build jni libraries])
 AM_CONDITIONAL([BUILD_GULDEN_LIBS_JNI], [test x$build_gulden_libs_jni = xyes])
 AC_MSG_RESULT($build_gulden_libs_jni)
@@ -1197,7 +1208,7 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_gulden_utils$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnonononononono; then
+if test x$build_gulden_utils$build_gulden_libs_node_js$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnononononononono; then
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-jni-libs --with-objc-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
@@ -1347,3 +1358,7 @@ echo "  CXXFLAGS      = $CXXFLAGS"
 echo "  LDFLAGS       = $LDFLAGS"
 echo "  ARFLAGS       = $ARFLAGS"
 echo
+echo " Libraries:"
+echo "     jni:     $build_gulden_libs_jni"
+echo "     objc:    $build_gulden_libs_objc"
+echo "     node_js: $build_gulden_libs_node_js"

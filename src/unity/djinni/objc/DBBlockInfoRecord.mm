@@ -22,9 +22,9 @@
                                         timeStamp:(int64_t)timeStamp
                                         blockHash:(nonnull NSString *)blockHash
 {
-    return [[self alloc] initWithHeight:height
-                              timeStamp:timeStamp
-                              blockHash:blockHash];
+    return [(DBBlockInfoRecord*)[self alloc] initWithHeight:height
+                                                  timeStamp:timeStamp
+                                                  blockHash:blockHash];
 }
 
 - (NSString *)description

@@ -3,7 +3,7 @@
 
 package com.gulden.jniunifiedbackend;
 
-/** This interface will be implemented in Java and ObjC and can be called from C++. */
+/** Interface to receive events from the core */
 public abstract class GuldenUnifiedFrontend {
     /**
      * Fraction of work done since session start or last progress reset [0..1]
@@ -11,7 +11,7 @@ public abstract class GuldenUnifiedFrontend {
      */
     public abstract void notifyUnifiedProgress(float progress);
 
-    public abstract boolean notifyBalanceChange(BalanceRecord newBalance);
+    public abstract void notifyBalanceChange(BalanceRecord newBalance);
 
     /**
      * Notification of new mutations.
@@ -22,15 +22,15 @@ public abstract class GuldenUnifiedFrontend {
      */
     public abstract void notifyNewMutation(MutationRecord mutation, boolean selfCommitted);
 
-    public abstract boolean notifyUpdatedTransaction(TransactionRecord transaction);
+    public abstract void notifyUpdatedTransaction(TransactionRecord transaction);
 
     public abstract void notifyInitWithExistingWallet();
 
     public abstract void notifyInitWithoutExistingWallet();
 
-    public abstract boolean notifyShutdown();
+    public abstract void notifyShutdown();
 
-    public abstract boolean notifyCoreReady();
+    public abstract void notifyCoreReady();
 
     public abstract void logPrint(String str);
 }

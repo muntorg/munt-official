@@ -22,9 +22,9 @@
                                          purpose:(nonnull NSString *)purpose
                                             name:(nonnull NSString *)name
 {
-    return [[self alloc] initWithAddress:address
-                                 purpose:purpose
-                                    name:name];
+    return [(DBAddressRecord*)[self alloc] initWithAddress:address
+                                                   purpose:purpose
+                                                      name:name];
 }
 
 - (NSString *)description

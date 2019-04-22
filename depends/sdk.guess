@@ -1,0 +1,21 @@
+#! /bin/sh
+# Attempt to guess an SDK path for MacOS
+# Copyright 2019 The gulden developers
+# Originally written by Malcolm MacLeod (mmacleod@gmx.com)
+
+if [ -d "$1/SDKs" ]; then
+  echo "$1/SDKs"
+  exit 0
+fi
+
+if [ -d "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/" ]; then
+   echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/"
+   exit 0
+fi
+
+if [ -d "/Library/Developer/CommandLineTools/SDKs/" ]; then
+   echo "/Library/Developer/CommandLineTools/SDKs/"
+   exit 0
+fi
+
+exit 0

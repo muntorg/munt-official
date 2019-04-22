@@ -28,11 +28,11 @@
                                           status:(DBTransactionStatus)status
                                            depth:(int32_t)depth
 {
-    return [[self alloc] initWithChange:change
-                              timestamp:timestamp
-                                 txHash:txHash
-                                 status:status
-                                  depth:depth];
+    return [(DBMutationRecord*)[self alloc] initWithChange:change
+                                                 timestamp:timestamp
+                                                    txHash:txHash
+                                                    status:status
+                                                     depth:depth];
 }
 
 - (NSString *)description

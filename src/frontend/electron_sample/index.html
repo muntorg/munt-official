@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Gulden electron sample</title>
+  </head>
+  <body>
+    <h1>Gulden electron sample</h1>
+
+    Node.js: <script>document.write(process.versions.node)</script>,
+    Chromium: <script>document.write(process.versions.chrome)</script>,
+    Electron: <script>document.write(process.versions.electron)</script>
+
+    <p>sync progress: <span id="sync_progress"></span></p>
+    <p>balance: <span id="balance"></span></p>
+    <p>address: <span id="address"></span></p>
+    <p>last log message: <span id="lastlog"></span></p>
+    <script>
+    require('electron').ipcRenderer.on('notifyCoreReady', (event) => {
+        document.getElementById("address").innerHTML = require('electron').remote.getGlobal("guldenbackend").GetReceiveAddress()
+    })
+    require('electron').ipcRenderer.on('logPrint', (event, message) => {
+        document.getElementById("lastlog").innerHTML = message
+    })
+    require('electron').ipcRenderer.on('notifyUnifiedProgress', (event, progress) => {
+        document.getElementById("sync_progress").innerHTML = progress + "%"
+    })
+    require('electron').ipcRenderer.on('notifyBalanceChange', (event, new_balance) => {
+        if (new_balance > 0)
+        {
+            document.getElementById("balance").innerHTML = new_balance / 100000000
+        }
+        else
+        {
+            document.getElementById("balance").innerHTML = 0
+        }
+    })
+    require('electron').ipcRenderer.on('notifyNewMutation', (event, mutation, self_committed) => {
+        //empty
+    })
+    require('electron').ipcRenderer.on('notifyUpdatedTransaction', (event, transaction) => {
+        //empty
+    })
+    require('electron').ipcRenderer.on('notifyInitWithExistingWallet', (event) => {
+        //empty
+    })
+    require('electron').ipcRenderer.on('notifyInitWithoutExistingWallet', (event) => {
+        //empty
+    })
+    require('electron').ipcRenderer.on('notifyShutdown', (event) => {
+        //empty
+    })
+    </script>
+  </body>
+</html>
