@@ -1,11 +1,5 @@
 OSX_MIN_VERSION=10.10
 OSX_SDK_VERSION=10.14
-ifeq ($(SDK_PATH),)
-  FINAL_SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-else
-  FINAL_SDK_PATH=SDK_PATH=$(SDK_PATH)
-endif
-
 OSX_SDK=$(SDK_PATH)/MacOSX$(OSX_SDK_VERSION).sdk
 OSX_SYSROOT=--sysroot $(OSX_SDK)
 
@@ -21,7 +15,7 @@ build_darwin_SHA256SUM=shasum -a 256
 build_darwin_DOWNLOAD=curl --location --fail --connect-timeout $(DOWNLOAD_CONNECT_TIMEOUT) --retry $(DOWNLOAD_RETRIES) -o
 
 #darwin host on darwin builder. overrides darwin host preferences.
-darwin_CC=$(shell xcrun -f clang) -mmacosx-version-min=$(OSX_MIN_VERSION) $(OSX_SSROOT)
+darwin_CC=$(shell xcrun -f clang) -mmacosx-version-min=$(OSX_MIN_VERSION) $(OSX_SYSROOT)
 darwin_CXX:=$(shell xcrun -f clang++) -mmacosx-version-min=$(OSX_MIN_VERSION) -stdlib=libc++ $(OSX_SYSROOT)
 darwin_AR:=$(shell xcrun -f ar)
 darwin_RANLIB:=$(shell xcrun -f ranlib)
