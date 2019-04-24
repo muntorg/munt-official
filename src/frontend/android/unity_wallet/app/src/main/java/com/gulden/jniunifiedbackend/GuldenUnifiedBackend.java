@@ -14,6 +14,8 @@ public abstract class GuldenUnifiedBackend {
     /**
      * Start the library
      * extraArgs - any additional commandline arguments as passed to GuldenD
+     * NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
+     * If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
      */
     public static int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs)
     {
@@ -24,6 +26,18 @@ public abstract class GuldenUnifiedBackend {
                                      testnet,
                                      signals,
                                      extraArgs);
+    }
+
+    /** Threaded implementation of InitUnityLib */
+    public static void InitUnityLibThreaded(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs)
+    {
+        CppProxy.InitUnityLibThreaded(dataDir,
+                                      staticFilterPath,
+                                      staticFilterOffset,
+                                      staticFilterLength,
+                                      testnet,
+                                      signals,
+                                      extraArgs);
     }
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
@@ -314,6 +328,8 @@ public abstract class GuldenUnifiedBackend {
         }
 
         public static native int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs);
+
+        public static native void InitUnityLibThreaded(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs);
 
         public static native boolean InitWalletFromRecoveryPhrase(String phrase, String password);
 

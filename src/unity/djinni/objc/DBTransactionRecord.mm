@@ -43,16 +43,16 @@
                                              inputs:(nonnull NSArray<DBInputRecord *> *)inputs
                                             outputs:(nonnull NSArray<DBOutputRecord *> *)outputs
 {
-    return [[self alloc] initWithTxHash:txHash
-                              timeStamp:timeStamp
-                                 amount:amount
-                                    fee:fee
-                                 status:status
-                                 height:height
-                              blockTime:blockTime
-                                  depth:depth
-                                 inputs:inputs
-                                outputs:outputs];
+    return [(DBTransactionRecord*)[self alloc] initWithTxHash:txHash
+                                                    timeStamp:timeStamp
+                                                       amount:amount
+                                                          fee:fee
+                                                       status:status
+                                                       height:height
+                                                    blockTime:blockTime
+                                                        depth:depth
+                                                       inputs:inputs
+                                                      outputs:outputs];
 }
 
 - (NSString *)description

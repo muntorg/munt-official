@@ -118,7 +118,11 @@ gulden_unified_backend = interface +c {
 
     # Start the library
     # extraArgs - any additional commandline arguments as passed to GuldenD
+    # NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
+    # If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
     static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool, signals : gulden_unified_frontend, extraArgs : string): i32;
+    # Threaded implementation of InitUnityLib
+    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool, signals : gulden_unified_frontend, extraArgs : string);
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletFromRecoveryPhrase(phrase : string, password : string): bool;
@@ -247,25 +251,25 @@ gulden_unified_backend = interface +c {
     const version: i32 = 1;
 }
 
-# This interface will be implemented in Java and ObjC and can be called from C++.
-gulden_unified_frontend = interface +j +o {
+# Interface to receive events from the core
+gulden_unified_frontend = interface +j +o +n {
     # Fraction of work done since session start or last progress reset [0..1]
     # Unified progress combines connection state, header and block sync
-    notifyUnifiedProgress(progress : f32);
-    notifyBalanceChange(new_balance : balance_record): bool;
+    notifyUnifiedProgress(progress : f32): &;
+    notifyBalanceChange(new_balance : balance_record): &;
     # Notification of new mutations.
     # If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
     # reached us in another way. In general this will be because we received funds from someone, hower there are
     # also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
     # or another wallet instance using the same keys as ours).
-    notifyNewMutation(mutation : mutation_record, self_committed: bool);
-    notifyUpdatedTransaction(transaction : transaction_record): bool;
-    notifyInitWithExistingWallet();
-    notifyInitWithoutExistingWallet();
-    notifyShutdown(): bool;
-    notifyCoreReady(): bool;
+    notifyNewMutation(mutation : mutation_record, self_committed: bool): &;
+    notifyUpdatedTransaction(transaction : transaction_record): &;
+    notifyInitWithExistingWallet(): &;
+    notifyInitWithoutExistingWallet(): &;
+    notifyShutdown(): &;
+    notifyCoreReady(): &;
 
-    logPrint(str : string);
+    logPrint(str : string): &;
 }
 
 # monitoring stats
@@ -278,7 +282,7 @@ monitor_record = record {
 }
 
 # Monitoring events
-gulden_monitor_listener = interface +j +o {
+gulden_monitor_listener = interface +j +o +n {
     onPartialChain(height : i32, probable_height : i32, offset : i32);
     onPruned(height : i32);
     onProcessedSPVBlocks(height : i32);

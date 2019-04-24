@@ -27,11 +27,10 @@ public:
             [djinni_private_get_proxied_objc_object() notifyUnifiedProgress:(::djinni::F32::fromCpp(c_progress))];
         }
     }
-    bool notifyBalanceChange(const ::BalanceRecord & c_new_balance) override
+    void notifyBalanceChange(const ::BalanceRecord & c_new_balance) override
     {
         @autoreleasepool {
-            auto objcpp_result_ = [djinni_private_get_proxied_objc_object() notifyBalanceChange:(::djinni_generated::BalanceRecord::fromCpp(c_new_balance))];
-            return ::djinni::Bool::toCpp(objcpp_result_);
+            [djinni_private_get_proxied_objc_object() notifyBalanceChange:(::djinni_generated::BalanceRecord::fromCpp(c_new_balance))];
         }
     }
     void notifyNewMutation(const ::MutationRecord & c_mutation, bool c_self_committed) override
@@ -41,11 +40,10 @@ public:
                                                           selfCommitted:(::djinni::Bool::fromCpp(c_self_committed))];
         }
     }
-    bool notifyUpdatedTransaction(const ::TransactionRecord & c_transaction) override
+    void notifyUpdatedTransaction(const ::TransactionRecord & c_transaction) override
     {
         @autoreleasepool {
-            auto objcpp_result_ = [djinni_private_get_proxied_objc_object() notifyUpdatedTransaction:(::djinni_generated::TransactionRecord::fromCpp(c_transaction))];
-            return ::djinni::Bool::toCpp(objcpp_result_);
+            [djinni_private_get_proxied_objc_object() notifyUpdatedTransaction:(::djinni_generated::TransactionRecord::fromCpp(c_transaction))];
         }
     }
     void notifyInitWithExistingWallet() override
@@ -60,18 +58,16 @@ public:
             [djinni_private_get_proxied_objc_object() notifyInitWithoutExistingWallet];
         }
     }
-    bool notifyShutdown() override
+    void notifyShutdown() override
     {
         @autoreleasepool {
-            auto objcpp_result_ = [djinni_private_get_proxied_objc_object() notifyShutdown];
-            return ::djinni::Bool::toCpp(objcpp_result_);
+            [djinni_private_get_proxied_objc_object() notifyShutdown];
         }
     }
-    bool notifyCoreReady() override
+    void notifyCoreReady() override
     {
         @autoreleasepool {
-            auto objcpp_result_ = [djinni_private_get_proxied_objc_object() notifyCoreReady];
-            return ::djinni::Bool::toCpp(objcpp_result_);
+            [djinni_private_get_proxied_objc_object() notifyCoreReady];
         }
     }
     void logPrint(const std::string & c_str) override

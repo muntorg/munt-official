@@ -43,16 +43,16 @@
                                                    immatureLocked:(int64_t)immatureLocked
                                                       totalLocked:(int64_t)totalLocked
 {
-    return [[self alloc] initWithAvailableIncludingLocked:availableIncludingLocked
-                                 availableExcludingLocked:availableExcludingLocked
-                                          availableLocked:availableLocked
-                               unconfirmedIncludingLocked:unconfirmedIncludingLocked
-                               unconfirmedExcludingLocked:unconfirmedExcludingLocked
-                                        unconfirmedLocked:unconfirmedLocked
-                                  immatureIncludingLocked:immatureIncludingLocked
-                                  immatureExcludingLocked:immatureExcludingLocked
-                                           immatureLocked:immatureLocked
-                                              totalLocked:totalLocked];
+    return [(DBBalanceRecord*)[self alloc] initWithAvailableIncludingLocked:availableIncludingLocked
+                                                   availableExcludingLocked:availableExcludingLocked
+                                                            availableLocked:availableLocked
+                                                 unconfirmedIncludingLocked:unconfirmedIncludingLocked
+                                                 unconfirmedExcludingLocked:unconfirmedExcludingLocked
+                                                          unconfirmedLocked:unconfirmedLocked
+                                                    immatureIncludingLocked:immatureIncludingLocked
+                                                    immatureExcludingLocked:immatureExcludingLocked
+                                                             immatureLocked:immatureLocked
+                                                                totalLocked:totalLocked];
 }
 
 - (NSString *)description

@@ -25,10 +25,10 @@
                                          label:(nonnull NSString *)label
                                         isMine:(BOOL)isMine
 {
-    return [[self alloc] initWithAmount:amount
-                                address:address
-                                  label:label
-                                 isMine:isMine];
+    return [(DBOutputRecord*)[self alloc] initWithAmount:amount
+                                                 address:address
+                                                   label:label
+                                                  isMine:isMine];
 }
 
 - (NSString *)description

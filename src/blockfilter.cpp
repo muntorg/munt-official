@@ -364,7 +364,7 @@ RangedCPBlockFilter::RangedCPBlockFilter(const CBlockIndex* startRange, const CB
             }
         }
         BasicFilterElements(elements, block, blockUndo);
-        if (pIndex == startRange)
+        if (pIndex == startRange || pIndex->pprev == nullptr)
             break;
         pIndex=pIndex->pprev;
     }
@@ -433,7 +433,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         if (nStaticFilterLength == 0)
             std::numeric_limits<uint64_t>::max();
 
-        uint64_t nStartIndex = 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
+        uint64_t nStartIndex = IsArgSet("-testnet") ? 0 : 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
         uint64_t nInterval1 = 500;
         uint64_t nInterval2 = 100;
         uint64_t nCrossOver = 500000;

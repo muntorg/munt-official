@@ -9,10 +9,12 @@
 SRCDIR=@abs_top_srcdir@
 BUILDDIR=@abs_top_builddir@
 EXEEXT=@EXEEXT@
+RPCAUTH=@abs_top_srcdir@/share/rpcauth/rpcauth.py
 
 [components]
 # Which components are enabled. These are commented out by `configure` if they were disabled when running config.
 @ENABLE_WALLET_TRUE@ENABLE_WALLET=true
-@BUILD_GULDEN_UTILS_TRUE@ENABLE_UTILS=true
+@BUILD_GULDEN_CLI_TRUE@ENABLE_CLI=true
 @BUILD_GULDEND_TRUE@ENABLE_GULDEND=true
+@ENABLE_FUZZ_TRUE@ENABLE_FUZZ=true
 @ENABLE_ZMQ_TRUE@ENABLE_ZMQ=true

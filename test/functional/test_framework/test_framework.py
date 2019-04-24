@@ -1,46 +1,38 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Bitcoin Core developers
+# Copyright (c) 2014-2019 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Base class for RPC testing."""
 
-from collections import deque
+import configparser
 from enum import Enum
 import logging
-import optparse
+import argparse
 import os
+import pdb
 import shutil
-import subprocess
 import sys
 import tempfile
 import time
 
+from .authproxy import JSONRPCException
+from . import coverage
+from .test_node import TestNode
+from .mininode import NetworkThread
 from .util import (
-    PortSeed,
     MAX_NODES,
-    GuldenD_processes,
+    PortSeed,
+    assert_equal,
     check_json_precision,
     connect_nodes_bi,
-    disable_mocktime,
     disconnect_nodes,
-    enable_coverage,
-    enable_mocktime,
-    get_mocktime,
-    get_rpc_proxy,
+    get_datadir_path,
     initialize_datadir,
-    log_filename,
     p2p_port,
-    rpc_url,
-    set_node_times,
-    _start_node,
-    _start_nodes,
-    _stop_node,
-    _stop_nodes,
     sync_blocks,
     sync_mempools,
-    wait_for_GuldenD_start,
 )
-from .authproxy import JSONRPCException
+
 
 class TestStatus(Enum):
     PASSED = 1
@@ -51,102 +43,133 @@ TEST_EXIT_PASSED = 0
 TEST_EXIT_FAILED = 1
 TEST_EXIT_SKIPPED = 77
 
-class GuldenTestFramework(object):
+TMPDIR_PREFIX = "gulden_func_test_"
+
+
+class SkipTest(Exception):
+    """This exception is raised to skip a test"""
+
+    def __init__(self, message):
+        self.message = message
+
+
+class GuldenTestMetaClass(type):
+    """Metaclass for GuldenTestFramework.
+
+    Ensures that any attempt to register a subclass of `GuldenTestFramework`
+    adheres to a standard whereby the subclass overrides `set_test_params` and
+    `run_test` but DOES NOT override either `__init__` or `main`. If any of
+    those standards are violated, a ``TypeError`` is raised."""
+
+    def __new__(cls, clsname, bases, dct):
+        if not clsname == 'GuldenTestFramework':
+            if not ('run_test' in dct and 'set_test_params' in dct):
+                raise TypeError("GuldenTestFramework subclasses must override "
+                                "'run_test' and 'set_test_params'")
+            if '__init__' in dct or 'main' in dct:
+                raise TypeError("GuldenTestFramework subclasses may not override "
+                                "'__init__' or 'main'")
+
+        return super().__new__(cls, clsname, bases, dct)
+
+
+class GuldenTestFramework(metaclass=GuldenTestMetaClass):
     """Base class for a Gulden test script.
 
-    Individual Gulden test scripts should subclass this class and override the following methods:
+    Individual Gulden test scripts should subclass this class and override the set_test_params() and run_test() methods.
 
-    - __init__()
+    Individual tests can also override the following methods to customize the test setup:
+
     - add_options()
     - setup_chain()
     - setup_network()
-    - run_test()
+    - setup_nodes()
 
-    The main() method should not be overridden.
+    The __init__() and main() methods should not be overridden.
 
     This class also contains various public and private helper methods."""
 
-    # Methods to override in subclass test scripts.
     def __init__(self):
-        self.num_nodes = 4
+        """Sets test framework defaults. Do not override this method. Instead, override the set_test_params() method"""
         self.setup_clean_chain = False
-        self.nodes = None
+        self.nodes = []
+        self.network_thread = None
+        self.rpc_timeout = 60  # Wait for up to 60 seconds for the RPC server to respond
+        self.supports_cli = False
+        self.bind_to_localhost_only = True
+        self.set_test_params()
 
-    def add_options(self, parser):
-        pass
-
-    def setup_chain(self):
-        self.log.info("Initializing test directory "+self.options.tmpdir)
-        if self.setup_clean_chain:
-            self._initialize_chain_clean(self.options.tmpdir, self.num_nodes)
-        else:
-            self._initialize_chain(self.options.tmpdir, self.num_nodes, self.options.cachedir)
-
-    def setup_network(self):
-        self.setup_nodes()
-
-        # Connect the nodes as a "chain".  This allows us
-        # to split the network between nodes 1 and 2 to get
-        # two halves that can work on competing chains.
-        for i in range(self.num_nodes - 1):
-            connect_nodes_bi(self.nodes, i, i + 1)
-        self.sync_all()
-
-    def setup_nodes(self):
-        extra_args = None
-        if hasattr(self, "extra_args"):
-            extra_args = self.extra_args
-        self.nodes = _start_nodes(self.num_nodes, self.options.tmpdir, extra_args)
-
-    def run_test(self):
-        raise NotImplementedError
-
-    # Main function. This should not be overridden by the subclass test scripts.
+        assert hasattr(self, "num_nodes"), "Test must set self.num_nodes in set_test_params()"
 
     def main(self):
+        """Main function. This should not be overridden by the subclass test scripts."""
 
-        parser = optparse.OptionParser(usage="%prog [options]")
-        parser.add_option("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                          help="Leave GuldenDs and test.* datadir on exit or error")
-        parser.add_option("--noshutdown", dest="noshutdown", default=False, action="store_true",
-                          help="Don't stop GuldenDs after the test execution")
-        parser.add_option("--srcdir", dest="srcdir", default=os.path.normpath(os.path.dirname(os.path.realpath(__file__))+"/../../../src"),
-                          help="Source directory containing GuldenD/Gulden-cli (default: %default)")
-        parser.add_option("--cachedir", dest="cachedir", default=os.path.normpath(os.path.dirname(os.path.realpath(__file__))+"/../../cache"),
-                          help="Directory for caching pregenerated datadirs")
-        parser.add_option("--tmpdir", dest="tmpdir", help="Root directory for datadirs")
-        parser.add_option("-l", "--loglevel", dest="loglevel", default="INFO",
-                          help="log events at this level and higher to the console. Can be set to DEBUG, INFO, WARNING, ERROR or CRITICAL. Passing --loglevel DEBUG will output all logs to console. Note that logs at all levels are always written to the test_framework.log file in the temporary test directory.")
-        parser.add_option("--tracerpc", dest="trace_rpc", default=False, action="store_true",
-                          help="Print out all RPC calls as they are made")
-        parser.add_option("--portseed", dest="port_seed", default=os.getpid(), type='int',
-                          help="The seed to use for assigning port numbers (default: current process id)")
-        parser.add_option("--coveragedir", dest="coveragedir",
-                          help="Write tested RPC commands into this directory")
-        parser.add_option("--configfile", dest="configfile",
-                          help="Location of the test framework config file")
+        parser = argparse.ArgumentParser(usage="%(prog)s [options]")
+        parser.add_argument("--nocleanup", dest="nocleanup", default=False, action="store_true",
+                            help="Leave GuldenDs and test.* datadir on exit or error")
+        parser.add_argument("--noshutdown", dest="noshutdown", default=False, action="store_true",
+                            help="Don't stop GuldenDs after the test execution")
+        parser.add_argument("--cachedir", dest="cachedir", default=os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../cache"),
+                            help="Directory for caching pregenerated datadirs (default: %(default)s)")
+        parser.add_argument("--tmpdir", dest="tmpdir", help="Root directory for datadirs")
+        parser.add_argument("-l", "--loglevel", dest="loglevel", default="INFO",
+                            help="log events at this level and higher to the console. Can be set to DEBUG, INFO, WARNING, ERROR or CRITICAL. Passing --loglevel DEBUG will output all logs to console. Note that logs at all levels are always written to the test_framework.log file in the temporary test directory.")
+        parser.add_argument("--tracerpc", dest="trace_rpc", default=False, action="store_true",
+                            help="Print out all RPC calls as they are made")
+        parser.add_argument("--portseed", dest="port_seed", default=os.getpid(), type=int,
+                            help="The seed to use for assigning port numbers (default: current process id)")
+        parser.add_argument("--coveragedir", dest="coveragedir",
+                            help="Write tested RPC commands into this directory")
+        parser.add_argument("--configfile", dest="configfile",
+                            default=os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../config.ini"),
+                            help="Location of the test framework config file (default: %(default)s)")
+        parser.add_argument("--pdbonfailure", dest="pdbonfailure", default=False, action="store_true",
+                            help="Attach a python debugger if test fails")
+        parser.add_argument("--usecli", dest="usecli", default=False, action="store_true",
+                            help="use Gulden-cli instead of RPC for all commands")
+        parser.add_argument("--perf", dest="perf", default=False, action="store_true",
+                            help="profile running nodes with perf for the duration of the test")
         self.add_options(parser)
-        (self.options, self.args) = parser.parse_args()
-
-        if self.options.coveragedir:
-            enable_coverage(self.options.coveragedir)
+        self.options = parser.parse_args()
 
         PortSeed.n = self.options.port_seed
 
-        os.environ['PATH'] = self.options.srcdir+":"+self.options.srcdir+"/qt:"+os.environ['PATH']
-
         check_json_precision()
+
+        self.options.cachedir = os.path.abspath(self.options.cachedir)
+
+        config = configparser.ConfigParser()
+        config.read_file(open(self.options.configfile))
+        self.config = config
+        self.options.GuldenD = os.getenv("GuldenD", default=config["environment"]["BUILDDIR"] + '/src/GuldenD' + config["environment"]["EXEEXT"])
+        self.options.guldencli = os.getenv("GULDENCLI", default=config["environment"]["BUILDDIR"] + '/src/Gulden-cli' + config["environment"]["EXEEXT"])
+
+        os.environ['PATH'] = os.pathsep.join([
+            os.path.join(config['environment']['BUILDDIR'], 'src'),
+            os.path.join(config['environment']['BUILDDIR'], 'src', 'qt'),
+            os.environ['PATH']
+        ])
 
         # Set up temp directory and start logging
         if self.options.tmpdir:
+            self.options.tmpdir = os.path.abspath(self.options.tmpdir)
             os.makedirs(self.options.tmpdir, exist_ok=False)
         else:
-            self.options.tmpdir = tempfile.mkdtemp(prefix="test")
+            self.options.tmpdir = tempfile.mkdtemp(prefix=TMPDIR_PREFIX)
         self._start_logging()
+
+        self.log.debug('Setting up network thread')
+        self.network_thread = NetworkThread()
+        self.network_thread.start()
 
         success = TestStatus.FAILED
 
         try:
+            if self.options.usecli:
+                if not self.supports_cli:
+                    raise SkipTest("--usecli specified but test does not support using CLI")
+                self.skip_if_no_cli()
+            self.skip_test_if_missing_module()
             self.setup_chain()
             self.setup_network()
             self.run_test()
@@ -165,58 +188,207 @@ class GuldenTestFramework(object):
         except KeyboardInterrupt as e:
             self.log.warning("Exiting after keyboard interrupt")
 
+        if success == TestStatus.FAILED and self.options.pdbonfailure:
+            print("Testcase failed. Attaching python debugger. Enter ? for help")
+            pdb.set_trace()
+
+        self.log.debug('Closing down network thread')
+        self.network_thread.close()
         if not self.options.noshutdown:
             self.log.info("Stopping nodes")
             if self.nodes:
                 self.stop_nodes()
         else:
+            for node in self.nodes:
+                node.cleanup_on_exit = False
             self.log.info("Note: GuldenDs were not stopped and may still be running")
 
-        if not self.options.nocleanup and not self.options.noshutdown and success != TestStatus.FAILED:
-            self.log.info("Cleaning up")
-            shutil.rmtree(self.options.tmpdir)
+        should_clean_up = (
+            not self.options.nocleanup and
+            not self.options.noshutdown and
+            success != TestStatus.FAILED and
+            not self.options.perf
+        )
+        if should_clean_up:
+            self.log.info("Cleaning up {} on exit".format(self.options.tmpdir))
+            cleanup_tree_on_exit = True
+        elif self.options.perf:
+            self.log.warning("Not cleaning up dir {} due to perf data".format(self.options.tmpdir))
+            cleanup_tree_on_exit = False
         else:
-            self.log.warning("Not cleaning up dir %s" % self.options.tmpdir)
-            if os.getenv("PYTHON_DEBUG", ""):
-                # Dump the end of the debug logs, to aid in debugging rare
-                # travis failures.
-                import glob
-                filenames = [self.options.tmpdir + "/test_framework.log"]
-                filenames += glob.glob(self.options.tmpdir + "/node*/regtest/debug.log")
-                MAX_LINES_TO_PRINT = 1000
-                for fn in filenames:
-                    try:
-                        with open(fn, 'r') as f:
-                            print("From" , fn, ":")
-                            print("".join(deque(f, MAX_LINES_TO_PRINT)))
-                    except OSError:
-                        print("Opening file %s failed." % fn)
-                        traceback.print_exc()
+            self.log.warning("Not cleaning up dir {}".format(self.options.tmpdir))
+            cleanup_tree_on_exit = False
 
         if success == TestStatus.PASSED:
             self.log.info("Tests successful")
-            sys.exit(TEST_EXIT_PASSED)
+            exit_code = TEST_EXIT_PASSED
         elif success == TestStatus.SKIPPED:
             self.log.info("Test skipped")
-            sys.exit(TEST_EXIT_SKIPPED)
+            exit_code = TEST_EXIT_SKIPPED
         else:
             self.log.error("Test failed. Test logging available at %s/test_framework.log", self.options.tmpdir)
-            logging.shutdown()
-            sys.exit(TEST_EXIT_FAILED)
+            self.log.error("Hint: Call {} '{}' to consolidate all logs".format(os.path.normpath(os.path.dirname(os.path.realpath(__file__)) + "/../combine_logs.py"), self.options.tmpdir))
+            exit_code = TEST_EXIT_FAILED
+        logging.shutdown()
+        if cleanup_tree_on_exit:
+            shutil.rmtree(self.options.tmpdir)
+        sys.exit(exit_code)
+
+    # Methods to override in subclass test scripts.
+    def set_test_params(self):
+        """Tests must this method to change default values for number of nodes, topology, etc"""
+        raise NotImplementedError
+
+    def add_options(self, parser):
+        """Override this method to add command-line options to the test"""
+        pass
+
+    def skip_test_if_missing_module(self):
+        """Override this method to skip a test if a module is not compiled"""
+        pass
+
+    def setup_chain(self):
+        """Override this method to customize blockchain setup"""
+        self.log.info("Initializing test directory " + self.options.tmpdir)
+        if self.setup_clean_chain:
+            self._initialize_chain_clean()
+        else:
+            self._initialize_chain()
+
+    def setup_network(self):
+        """Override this method to customize test network topology"""
+        self.setup_nodes()
+
+        # Connect the nodes as a "chain".  This allows us
+        # to split the network between nodes 1 and 2 to get
+        # two halves that can work on competing chains.
+        for i in range(self.num_nodes - 1):
+            connect_nodes_bi(self.nodes, i, i + 1)
+        self.sync_all()
+
+    def setup_nodes(self):
+        """Override this method to customize test node setup"""
+        extra_args = None
+        if hasattr(self, "extra_args"):
+            extra_args = self.extra_args
+        self.add_nodes(self.num_nodes, extra_args)
+        self.start_nodes()
+        self.import_deterministic_coinbase_privkeys()
+        if not self.setup_clean_chain:
+            for n in self.nodes:
+                assert_equal(n.getblockchaininfo()["blocks"], 199)
+            # To ensure that all nodes are out of IBD, the most recent block
+            # must have a timestamp not too old (see IsInitialBlockDownload()).
+            self.log.debug('Generate a block with current time')
+            block_hash = self.nodes[0].generate(1)[0]
+            block = self.nodes[0].getblock(blockhash=block_hash, verbosity=0)
+            for n in self.nodes:
+                n.submitblock(block)
+                chain_info = n.getblockchaininfo()
+                assert_equal(chain_info["blocks"], 200)
+                assert_equal(chain_info["initialblockdownload"], False)
+
+    def import_deterministic_coinbase_privkeys(self):
+        for n in self.nodes:
+            try:
+                n.getwalletinfo()
+            except JSONRPCException as e:
+                assert str(e).startswith('Method not found')
+                continue
+
+            n.importprivkey(privkey=n.get_deterministic_priv_key().key, label='coinbase')
+
+    def run_test(self):
+        """Tests must override this method to define test logic"""
+        raise NotImplementedError
 
     # Public helper methods. These can be accessed by the subclass test scripts.
 
-    def start_node(self, i, dirname, extra_args=None, rpchost=None, timewait=None, binary=None, stderr=None):
-        return _start_node(i, dirname, extra_args, rpchost, timewait, binary, stderr)
+    def add_nodes(self, num_nodes, extra_args=None, *, rpchost=None, binary=None):
+        """Instantiate TestNode objects.
 
-    def start_nodes(self, num_nodes, dirname, extra_args=None, rpchost=None, timewait=None, binary=None):
-        return _start_nodes(num_nodes, dirname, extra_args, rpchost, timewait, binary)
+        Should only be called once after the nodes have been specified in
+        set_test_params()."""
+        if self.bind_to_localhost_only:
+            extra_confs = [["bind=127.0.0.1"]] * num_nodes
+        else:
+            extra_confs = [[]] * num_nodes
+        if extra_args is None:
+            extra_args = [[]] * num_nodes
+        if binary is None:
+            binary = [self.options.GuldenD] * num_nodes
+        assert_equal(len(extra_confs), num_nodes)
+        assert_equal(len(extra_args), num_nodes)
+        assert_equal(len(binary), num_nodes)
+        for i in range(num_nodes):
+            self.nodes.append(TestNode(
+                i,
+                get_datadir_path(self.options.tmpdir, i),
+                rpchost=rpchost,
+                timewait=self.rpc_timeout,
+                GuldenD=binary[i],
+                Gulden_cli=self.options.guldencli,
+                coverage_dir=self.options.coveragedir,
+                cwd=self.options.tmpdir,
+                extra_conf=extra_confs[i],
+                extra_args=extra_args[i],
+                use_cli=self.options.usecli,
+                start_perf=self.options.perf,
+            ))
 
-    def stop_node(self, num_node):
-        _stop_node(self.nodes[num_node], num_node)
+    def start_node(self, i, *args, **kwargs):
+        """Start a GuldenD"""
 
-    def stop_nodes(self):
-        _stop_nodes(self.nodes)
+        node = self.nodes[i]
+
+        node.start(*args, **kwargs)
+        node.wait_for_rpc_connection()
+
+        if self.options.coveragedir is not None:
+            coverage.write_all_rpc_commands(self.options.coveragedir, node.rpc)
+
+    def start_nodes(self, extra_args=None, *args, **kwargs):
+        """Start multiple GuldenDs"""
+
+        if extra_args is None:
+            extra_args = [None] * self.num_nodes
+        assert_equal(len(extra_args), self.num_nodes)
+        try:
+            for i, node in enumerate(self.nodes):
+                node.start(extra_args[i], *args, **kwargs)
+            for node in self.nodes:
+                node.wait_for_rpc_connection()
+        except:
+            # If one node failed to start, stop the others
+            self.stop_nodes()
+            raise
+
+        if self.options.coveragedir is not None:
+            for node in self.nodes:
+                coverage.write_all_rpc_commands(self.options.coveragedir, node.rpc)
+
+    def stop_node(self, i, expected_stderr='', wait=0):
+        """Stop a GuldenD test node"""
+        self.nodes[i].stop_node(expected_stderr, wait=wait)
+        self.nodes[i].wait_until_stopped()
+
+    def stop_nodes(self, wait=0):
+        """Stop multiple GuldenD test nodes"""
+        for node in self.nodes:
+            # Issue RPC to stop nodes
+            node.stop_node(wait=wait)
+
+        for node in self.nodes:
+            # Wait for nodes to stop
+            node.wait_until_stopped()
+
+    def restart_node(self, i, extra_args=None):
+        """Stop and start a test node"""
+        self.stop_node(i)
+        self.start_node(i, extra_args)
+
+    def wait_for_node_exit(self, i, timeout):
+        self.nodes[i].process.wait(timeout)
 
     def split_network(self):
         """
@@ -248,7 +420,7 @@ class GuldenTestFramework(object):
         self.log = logging.getLogger('TestFramework')
         self.log.setLevel(logging.DEBUG)
         # Create file handler to log all messages
-        fh = logging.FileHandler(self.options.tmpdir + '/test_framework.log')
+        fh = logging.FileHandler(self.options.tmpdir + '/test_framework.log', encoding='utf-8')
         fh.setLevel(logging.DEBUG)
         # Create console handler to log messages to stderr. By default this logs only error messages, but can be configured with --loglevel.
         ch = logging.StreamHandler(sys.stdout)
@@ -256,7 +428,7 @@ class GuldenTestFramework(object):
         ll = int(self.options.loglevel) if self.options.loglevel.isdigit() else self.options.loglevel.upper()
         ch.setLevel(ll)
         # Format logs the same as GuldenD's debug.log with microprecision (so log files can be concatenated and sorted)
-        formatter = logging.Formatter(fmt = '%(asctime)s.%(msecs)03d000 %(name)s (%(levelname)s): %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+        formatter = logging.Formatter(fmt='%(asctime)s.%(msecs)03d000Z %(name)s (%(levelname)s): %(message)s', datefmt='%Y-%m-%dT%H:%M:%S')
         formatter.converter = time.gmtime
         fh.setFormatter(formatter)
         ch.setFormatter(formatter)
@@ -271,16 +443,16 @@ class GuldenTestFramework(object):
             rpc_handler.setLevel(logging.DEBUG)
             rpc_logger.addHandler(rpc_handler)
 
-    def _initialize_chain(self, test_dir, num_nodes, cachedir):
+    def _initialize_chain(self):
         """Initialize a pre-mined blockchain for use by the test.
 
-        Create a cache of a 200-block-long chain (with wallet) for MAX_NODES
+        Create a cache of a 199-block-long chain (with wallet) for MAX_NODES
         Afterward, create num_nodes copies from the cache."""
 
-        assert num_nodes <= MAX_NODES
+        assert self.num_nodes <= MAX_NODES
         create_cache = False
         for i in range(MAX_NODES):
-            if not os.path.isdir(os.path.join(cachedir, 'node' + str(i))):
+            if not os.path.isdir(get_datadir_path(self.options.cachedir, i)):
                 create_cache = True
                 break
 
@@ -289,99 +461,113 @@ class GuldenTestFramework(object):
 
             # find and delete old cache directories if any exist
             for i in range(MAX_NODES):
-                if os.path.isdir(os.path.join(cachedir, "node" + str(i))):
-                    shutil.rmtree(os.path.join(cachedir, "node" + str(i)))
+                if os.path.isdir(get_datadir_path(self.options.cachedir, i)):
+                    shutil.rmtree(get_datadir_path(self.options.cachedir, i))
 
             # Create cache directories, run GuldenDs:
             for i in range(MAX_NODES):
-                datadir = initialize_datadir(cachedir, i)
-                args = [os.getenv("GULDEND", "GuldenD"), "-server", "-keypool=1", "-datadir=" + datadir, "-discover=0"]
+                datadir = initialize_datadir(self.options.cachedir, i)
+                args = [self.options.GuldenD, "-datadir=" + datadir, '-disablewallet']
                 if i > 0:
                     args.append("-connect=127.0.0.1:" + str(p2p_port(0)))
-                GuldenD_processes[i] = subprocess.Popen(args)
-                self.log.debug("initialize_chain: GuldenD started, waiting for RPC to come up")
-                wait_for_GuldenD_start(GuldenD_processes[i], rpc_url(i), i)
-                self.log.debug("initialize_chain: RPC successfully started")
+                self.nodes.append(TestNode(
+                    i,
+                    get_datadir_path(self.options.cachedir, i),
+                    extra_conf=["bind=127.0.0.1"],
+                    extra_args=[],
+                    rpchost=None,
+                    timewait=self.rpc_timeout,
+                    GuldenD=self.options.GuldenD,
+                    Gulden_cli=self.options.guldencli,
+                    coverage_dir=None,
+                    cwd=self.options.tmpdir,
+                ))
+                self.nodes[i].args = args
+                self.start_node(i)
 
-            self.nodes = []
-            for i in range(MAX_NODES):
-                try:
-                    self.nodes.append(get_rpc_proxy(rpc_url(i), i))
-                except:
-                    self.log.exception("Error connecting to node %d" % i)
-                    sys.exit(1)
+            # Wait for RPC connections to be ready
+            for node in self.nodes:
+                node.wait_for_rpc_connection()
 
-            # Create a 200-block-long chain; each of the 4 first nodes
+            # Create a 199-block-long chain; each of the 4 first nodes
             # gets 25 mature blocks and 25 immature.
-            # Note: To preserve compatibility with older versions of
-            # initialize_chain, only 4 nodes will generate coins.
-            #
-            # blocks are created with timestamps 10 minutes apart
-            # starting from 2010 minutes in the past
-            enable_mocktime()
-            block_time = get_mocktime() - (201 * 10 * 60)
-            for i in range(2):
-                for peer in range(4):
-                    for j in range(25):
-                        set_node_times(self.nodes, block_time)
-                        self.nodes[peer].generate(1)
-                        block_time += 10 * 60
-                    # Must sync before next peer starts generating blocks
-                    sync_blocks(self.nodes)
+            # The 4th node gets only 24 immature blocks so that the very last
+            # block in the cache does not age too much (have an old tip age).
+            # This is needed so that we are out of IBD when the test starts,
+            # see the tip age check in IsInitialBlockDownload().
+            for i in range(8):
+                self.nodes[0].generatetoaddress(25 if i != 7 else 24, self.nodes[i % 4].get_deterministic_priv_key().address)
+            sync_blocks(self.nodes)
+
+            for n in self.nodes:
+                assert_equal(n.getblockchaininfo()["blocks"], 199)
 
             # Shut them down, and clean up cache directories:
             self.stop_nodes()
             self.nodes = []
-            disable_mocktime()
+
+            def cache_path(n, *paths):
+                return os.path.join(get_datadir_path(self.options.cachedir, n), "regtest", *paths)
+
             for i in range(MAX_NODES):
-                os.remove(log_filename(cachedir, i, "debug.log"))
-                os.remove(log_filename(cachedir, i, "db.log"))
-                os.remove(log_filename(cachedir, i, "peers.dat"))
-                os.remove(log_filename(cachedir, i, "fee_estimates.dat"))
+                os.rmdir(cache_path(i, 'wallets'))  # Remove empty wallets dir
+                for entry in os.listdir(cache_path(i)):
+                    if entry not in ['chainstate', 'blocks']:
+                        os.remove(cache_path(i, entry))
 
-        for i in range(num_nodes):
-            from_dir = os.path.join(cachedir, "node" + str(i))
-            to_dir = os.path.join(test_dir, "node" + str(i))
+        for i in range(self.num_nodes):
+            from_dir = get_datadir_path(self.options.cachedir, i)
+            to_dir = get_datadir_path(self.options.tmpdir, i)
             shutil.copytree(from_dir, to_dir)
-            initialize_datadir(test_dir, i)  # Overwrite port/rpcport in Gulden.conf
+            initialize_datadir(self.options.tmpdir, i)  # Overwrite port/rpcport in Gulden.conf
 
-    def _initialize_chain_clean(self, test_dir, num_nodes):
+    def _initialize_chain_clean(self):
         """Initialize empty blockchain for use by the test.
 
         Create an empty blockchain and num_nodes wallets.
         Useful if a test case wants complete control over initialization."""
-        for i in range(num_nodes):
-            initialize_datadir(test_dir, i)
+        for i in range(self.num_nodes):
+            initialize_datadir(self.options.tmpdir, i)
 
-# Test framework for doing p2p comparison testing, which sets up some GuldenD
-# binaries:
-# 1 binary: test binary
-# 2 binaries: 1 test binary, 1 ref binary
-# n>2 binaries: 1 test binary, n-1 ref binaries
+    def skip_if_no_py3_zmq(self):
+        """Attempt to import the zmq package and skip the test if the import fails."""
+        try:
+            import zmq  # noqa
+        except ImportError:
+            raise SkipTest("python3-zmq module not available.")
 
-class SkipTest(Exception):
-    """This exception is raised to skip a test"""
-    def __init__(self, message):
-        self.message = message
+    def skip_if_no_GuldenD_zmq(self):
+        """Skip the running test if GuldenD has not been compiled with zmq support."""
+        if not self.is_zmq_compiled():
+            raise SkipTest("GuldenD has not been built with zmq enabled.")
 
-class ComparisonTestFramework(GuldenTestFramework):
+    def skip_if_no_wallet(self):
+        """Skip the running test if wallet has not been compiled."""
+        if not self.is_wallet_compiled():
+            raise SkipTest("wallet has not been compiled.")
 
-    def __init__(self):
-        super().__init__()
-        self.num_nodes = 2
-        self.setup_clean_chain = True
+    def skip_if_no_cli(self):
+        """Skip the running test if Gulden-cli has not been compiled."""
+        if not self.is_cli_compiled():
+            raise SkipTest("Gulden-cli has not been compiled.")
 
-    def add_options(self, parser):
-        parser.add_option("--testbinary", dest="testbinary",
-                          default=os.getenv("GULDEND", "GuldenD"),
-                          help="GuldenD binary to test")
-        parser.add_option("--refbinary", dest="refbinary",
-                          default=os.getenv("GULDEND", "GuldenD"),
-                          help="GuldenD binary to use for reference nodes (if any)")
+    def is_cli_compiled(self):
+        """Checks whether Gulden-cli was compiled."""
+        config = configparser.ConfigParser()
+        config.read_file(open(self.options.configfile))
 
-    def setup_network(self):
-        self.nodes = self.start_nodes(
-            self.num_nodes, self.options.tmpdir,
-            extra_args=[['-whitelist=127.0.0.1']] * self.num_nodes,
-            binary=[self.options.testbinary] +
-            [self.options.refbinary]*(self.num_nodes-1))
+        return config["components"].getboolean("ENABLE_CLI")
+
+    def is_wallet_compiled(self):
+        """Checks whether the wallet module was compiled."""
+        config = configparser.ConfigParser()
+        config.read_file(open(self.options.configfile))
+
+        return config["components"].getboolean("ENABLE_WALLET")
+
+    def is_zmq_compiled(self):
+        """Checks whether the zmq module was compiled."""
+        config = configparser.ConfigParser()
+        config.read_file(open(self.options.configfile))
+
+        return config["components"].getboolean("ENABLE_ZMQ")

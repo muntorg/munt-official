@@ -504,7 +504,7 @@ static UniValue dumpfiltercheckpoints(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
 
     LogPrintf("Dumping filter checkpoints:\n");
-    int nStart = 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
+    int nStart = IsArgSet("-testnet") ? 0 : 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
     int nInterval1 = 500;
     int nInterval2 = 100;
     int nCrossOver = 500000;

@@ -1,8 +1,9 @@
 package=djinni
-$(package)_version=d5475448
+$(package)_commit=da0f079711e863542b558aa31690605a8688ab55
+$(package)_version=$($(package)_commit)
 $(package)_download_path=https://github.com/mjmacleod/djinni/archive/
-$(package)_file_name=dadbe52c7064ef37231de48acd76ffd26e54148f.tar.gz
-$(package)_sha256_hash=7cb30b4d1d03a821292784c0384ceb9692c9675d4943ea5838cdbb59ef352702
+$(package)_file_name=$($(package)_commit).tar.gz
+$(package)_sha256_hash=206c5e81695d9863bf07eee6cb5416c923ffe27d7fb83f4f27261bc24ce4937a
 
 define $(package)_build_cmds
   $(MAKE) djinni && \

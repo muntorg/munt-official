@@ -620,6 +620,14 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     return InitUnity();
 }
 
+void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals, const std::string& extraArgs)
+{
+    std::thread([=]
+    {
+        InitUnityLib(dataDir, staticFilterPath, staticFilterOffset, staticFilterLength, testnet, signals, extraArgs);
+    }).detach();
+}
+
 void GuldenUnifiedBackend::TerminateUnityLib()
 {
     GuldenAppManager::gApp->shutdown();

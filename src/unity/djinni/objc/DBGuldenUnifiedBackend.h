@@ -25,6 +25,8 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /**
  * Start the library
  * extraArgs - any additional commandline arguments as passed to GuldenD
+ * NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
+ * If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
  */
 + (int32_t)InitUnityLib:(nonnull NSString *)dataDir
        staticFilterPath:(nonnull NSString *)staticFilterPath
@@ -33,6 +35,15 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
                 testnet:(BOOL)testnet
                 signals:(nullable id<DBGuldenUnifiedFrontend>)signals
               extraArgs:(nonnull NSString *)extraArgs;
+
+/** Threaded implementation of InitUnityLib */
++ (void)InitUnityLibThreaded:(nonnull NSString *)dataDir
+            staticFilterPath:(nonnull NSString *)staticFilterPath
+          staticFilterOffset:(int64_t)staticFilterOffset
+          staticFilterLength:(int64_t)staticFilterLength
+                     testnet:(BOOL)testnet
+                     signals:(nullable id<DBGuldenUnifiedFrontend>)signals
+                   extraArgs:(nonnull NSString *)extraArgs;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
 + (BOOL)InitWalletFromRecoveryPhrase:(nonnull NSString *)phrase

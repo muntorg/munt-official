@@ -7,7 +7,7 @@
 #import <Foundation/Foundation.h>
 
 
-/** This interface will be implemented in Java and ObjC and can be called from C++. */
+/** Interface to receive events from the core */
 @protocol DBGuldenUnifiedFrontend
 
 /**
@@ -16,7 +16,7 @@
  */
 - (void)notifyUnifiedProgress:(float)progress;
 
-- (BOOL)notifyBalanceChange:(nonnull DBBalanceRecord *)newBalance;
+- (void)notifyBalanceChange:(nonnull DBBalanceRecord *)newBalance;
 
 /**
  * Notification of new mutations.
@@ -28,15 +28,15 @@
 - (void)notifyNewMutation:(nonnull DBMutationRecord *)mutation
             selfCommitted:(BOOL)selfCommitted;
 
-- (BOOL)notifyUpdatedTransaction:(nonnull DBTransactionRecord *)transaction;
+- (void)notifyUpdatedTransaction:(nonnull DBTransactionRecord *)transaction;
 
 - (void)notifyInitWithExistingWallet;
 
 - (void)notifyInitWithoutExistingWallet;
 
-- (BOOL)notifyShutdown;
+- (void)notifyShutdown;
 
-- (BOOL)notifyCoreReady;
+- (void)notifyCoreReady;
 
 - (void)logPrint:(nonnull NSString *)str;
 

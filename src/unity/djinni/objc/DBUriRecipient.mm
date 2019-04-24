@@ -25,10 +25,10 @@
                                         label:(nonnull NSString *)label
                                        amount:(int64_t)amount
 {
-    return [[self alloc] initWithValid:valid
-                               address:address
-                                 label:label
-                                amount:amount];
+    return [(DBUriRecipient*)[self alloc] initWithValid:valid
+                                                address:address
+                                                  label:label
+                                                 amount:amount];
 }
 
 - (NSString *)description
