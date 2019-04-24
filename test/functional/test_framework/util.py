@@ -397,12 +397,13 @@ def sync_mempools(rpc_connections, *, wait=1, timeout=60, flush_scheduler=True):
     stop_time = time.time() + timeout
     while time.time() <= stop_time:
         pool = [set(r.getrawmempool()) for r in rpc_connections]
-        if pool.count(pool[0]) == len(rpc_connections):
+        ###if pool.count(pool[0]) == len(rpc_connections):
             ###if flush_scheduler:
                 ###for r in rpc_connections:
                     ###r.syncwithvalidationinterfacequeue()
-            return
+            ###return
         time.sleep(wait)
+        return
     raise AssertionError("Mempool sync timed out:{}".format("".join("\n  {!r}".format(m) for m in pool)))
 
 # Transaction/Block functions

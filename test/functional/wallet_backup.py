@@ -44,6 +44,7 @@ class WalletBackupTest(GuldenTestFramework):
         self.setup_clean_chain = True
         # nodes 1, 2,3 are spenders, let's give them a keypool=100
         self.extra_args = [["-keypool=100"], ["-keypool=100"], ["-keypool=100"], []]
+        self.rpc_timeout = 180
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_wallet()
@@ -95,9 +96,9 @@ class WalletBackupTest(GuldenTestFramework):
         self.stop_node(2)
 
     def erase_three(self):
-        os.remove(os.path.join(self.nodes[0].datadir, 'regtest', 'wallets', 'wallet.dat'))
-        os.remove(os.path.join(self.nodes[1].datadir, 'regtest', 'wallets', 'wallet.dat'))
-        os.remove(os.path.join(self.nodes[2].datadir, 'regtest', 'wallets', 'wallet.dat'))
+        os.remove(os.path.join(self.nodes[0].datadir, 'regtest', 'wallet.dat'))
+        os.remove(os.path.join(self.nodes[1].datadir, 'regtest', 'wallet.dat'))
+        os.remove(os.path.join(self.nodes[2].datadir, 'regtest', 'wallet.dat'))
 
     def run_test(self):
         self.log.info("Generating initial blockchain")
@@ -123,11 +124,11 @@ class WalletBackupTest(GuldenTestFramework):
         self.log.info("Backing up")
 
         self.nodes[0].backupwallet(os.path.join(self.nodes[0].datadir, 'wallet.bak'))
-        self.nodes[0].dumpwallet(os.path.join(self.nodes[0].datadir, 'wallet.dump'))
+        self.nodes[0].dumpwallet(os.path.join(self.nodes[0].datadir, 'wallet.dump'), 'I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY')
         self.nodes[1].backupwallet(os.path.join(self.nodes[1].datadir, 'wallet.bak'))
-        self.nodes[1].dumpwallet(os.path.join(self.nodes[1].datadir, 'wallet.dump'))
+        self.nodes[1].dumpwallet(os.path.join(self.nodes[1].datadir, 'wallet.dump'), 'I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY')
         self.nodes[2].backupwallet(os.path.join(self.nodes[2].datadir, 'wallet.bak'))
-        self.nodes[2].dumpwallet(os.path.join(self.nodes[2].datadir, 'wallet.dump'))
+        self.nodes[2].dumpwallet(os.path.join(self.nodes[2].datadir, 'wallet.dump'), 'I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY')
 
         self.log.info("More transactions")
         for i in range(5):
@@ -161,9 +162,9 @@ class WalletBackupTest(GuldenTestFramework):
         shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'autocheckpoints'))
 
         # Restore wallets from backup
-        shutil.copyfile(os.path.join(self.nodes[0].datadir, 'wallet.bak'), os.path.join(self.nodes[0].datadir, 'regtest', 'wallets', 'wallet.dat'))
-        shutil.copyfile(os.path.join(self.nodes[1].datadir, 'wallet.bak'), os.path.join(self.nodes[1].datadir, 'regtest', 'wallets', 'wallet.dat'))
-        shutil.copyfile(os.path.join(self.nodes[2].datadir, 'wallet.bak'), os.path.join(self.nodes[2].datadir, 'regtest', 'wallets', 'wallet.dat'))
+        shutil.copyfile(os.path.join(self.nodes[0].datadir, 'wallet.bak'), os.path.join(self.nodes[0].datadir, 'regtest', 'wallet.dat'))
+        shutil.copyfile(os.path.join(self.nodes[1].datadir, 'wallet.bak'), os.path.join(self.nodes[1].datadir, 'regtest', 'wallet.dat'))
+        shutil.copyfile(os.path.join(self.nodes[2].datadir, 'wallet.bak'), os.path.join(self.nodes[2].datadir, 'regtest', 'wallet.dat'))
 
         self.log.info("Re-starting nodes")
         self.start_three()
@@ -189,9 +190,15 @@ class WalletBackupTest(GuldenTestFramework):
         assert_equal(self.nodes[1].getbalance(), 0)
         assert_equal(self.nodes[2].getbalance(), 0)
 
-        self.nodes[0].importwallet(os.path.join(self.nodes[0].datadir, 'wallet.dump'))
-        self.nodes[1].importwallet(os.path.join(self.nodes[1].datadir, 'wallet.dump'))
-        self.nodes[2].importwallet(os.path.join(self.nodes[2].datadir, 'wallet.dump'))
+        self.nodes[0].createaccount(name="Legacy", type="Legacy")
+        self.nodes[0].setactiveaccount(account="Legacy")
+        self.nodes[0].importwallet(os.path.join(self.nodes[0].datadir, 'wallet.dump'), 'Legacy')
+        self.nodes[1].createaccount(name="Legacy", type="Legacy")
+        self.nodes[1].setactiveaccount(account="Legacy")
+        self.nodes[1].importwallet(os.path.join(self.nodes[1].datadir, 'wallet.dump'), 'Legacy')
+        self.nodes[2].createaccount(name="Legacy", type="Legacy")
+        self.nodes[2].setactiveaccount(account="Legacy")
+        self.nodes[2].importwallet(os.path.join(self.nodes[2].datadir, 'wallet.dump'), 'Legacy')
 
         sync_blocks(self.nodes)
 
@@ -201,10 +208,8 @@ class WalletBackupTest(GuldenTestFramework):
 
         # Backup to source wallet file must fail
         sourcePaths = [
-            os.path.join(self.nodes[0].datadir, 'regtest', 'wallets', 'wallet.dat'),
-            os.path.join(self.nodes[0].datadir, 'regtest', '.', 'wallets', 'wallet.dat'),
-            os.path.join(self.nodes[0].datadir, 'regtest', 'wallets', ''),
-            os.path.join(self.nodes[0].datadir, 'regtest', 'wallets')]
+            os.path.join(self.nodes[0].datadir, 'regtest', 'wallet.dat')
+            ]
 
         for sourcePath in sourcePaths:
             assert_raises_rpc_error(-4, "backup failed", self.nodes[0].backupwallet, sourcePath)

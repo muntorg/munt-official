@@ -22,6 +22,7 @@ class WalletTest(GuldenTestFramework):
     def set_test_params(self):
         self.num_nodes = 4
         self.setup_clean_chain = True
+        self.rpc_timeout = 180
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_wallet()
