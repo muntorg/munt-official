@@ -697,7 +697,7 @@ void DumpMempool(void)
     }
 }
 
-int ExpireMempoolForPartialSync(const CBlockIndex* tip)
+int ExpireMempoolForPartialSync(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex* tip)
 {
     AssertLockHeld(cs_main);
     assert(tip);
@@ -720,6 +720,9 @@ int ExpireMempoolForPartialSync(const CBlockIndex* tip)
     int64_t expireTime = GetTime() - PARTIALSYNC_MEMPOOL_EXPIRE;
     if (tip->GetBlockTime() < expireTime)
         return 0;
+
+    // Remove tx in new block from mempool (also only when tip recent for efficiency)
+    mempool.removeForBlock(pblock->vtx, tip->nHeight);
 
     // propagation time accounts for the required number of blocks having been mined very close to each
     // other and before the transaction might have been propagated through the network properly

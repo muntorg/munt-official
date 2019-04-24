@@ -282,7 +282,7 @@ void CSPVScanner::ProcessPriorityRequest(const std::shared_ptr<const CBlock> &bl
 
         blocksSincePersist++;
 
-        ExpireMempoolForPartialSync(blockLastProcessed);
+        ExpireMempoolForPartialSync(block, blockLastProcessed);
     }
 }
 
