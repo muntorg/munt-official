@@ -1383,6 +1383,11 @@ static void SendMempool(CNode* pto, unsigned int maxEntries = std::numeric_limit
         filterrate = pto->minFeeFilter;
     }
 
+    // limit to maxEntries by random selection
+    // there is intentionally no prefered treatment for "own" tx, they will be send eventually on another random selection
+    while (vtxinfo.size() > maxEntries)
+        vtxinfo.erase(vtxinfo.begin() + GetRandInt(vtxinfo.size()));
+
     LOCK(pto->cs_filter);
 
     std::vector<CInv> vInv;
@@ -1634,6 +1639,25 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             LOCK(cs_mapAlerts);
             for(PAIRTYPE(const uint256, CAlert)& item : mapAlerts)
                 item.second.RelayTo(pfrom);
+        }
+
+        // Trigger mempool to be send when synced. This way transaction that were created recently but perhaps not reached the network
+        // yet due to connectity issues (which can easily happen on mobile devices) are broadcasted to all new peers.
+        // Under normal circumstances the whole mempool will be sent, however under peak conditions at most MAX_SEND_INIT_MEMPOOL randomly selected
+        // entries are sent.
+        if (IsChainNearPresent())
+            SendMempool(pfrom, MAX_SEND_INIT_MEMPOOL);
+
+#pragma message("Ban 797017 peers. Remove for relase!")
+// it's annoying and slows down getting good peer connections
+// still it is doubltful if we want to keep a thing like this in a release
+// hopefully all those nodes stuck on 797017 are quickly fixed
+        if (pfrom->nStartingHeight == 797017)
+        {
+            LogPrintf("Ban peer stuck @ 797017, peer=%d\n", pfrom->GetId());
+            LOCK(cs_main);
+            Misbehaving(pfrom->GetId(), 100);
+            return false;
         }
 
         return true;
