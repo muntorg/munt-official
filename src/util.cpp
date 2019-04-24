@@ -555,6 +555,12 @@ void ArgsManager::ReadConfigFile(const std::string& confPath)
             // Don't overwrite existing settings so command line settings override Gulden.conf
             std::string strKey = std::string("-") + it->string_key;
             std::string strValue = it->value[0];
+            if (IsArgSet("-regtest"))
+                boost::replace_all(strKey, "regtest.", "");
+            else if (IsArgSet("-testnet"))
+                boost::replace_all(strKey, "testnet.", "");
+            else
+                boost::replace_all(strKey, "mainnet.", "");
             InterpretNegativeSetting(strKey, strValue);
             if (mapArgs.count(strKey) == 0)
                 mapArgs[strKey] = strValue;
