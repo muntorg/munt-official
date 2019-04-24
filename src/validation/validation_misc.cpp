@@ -89,6 +89,10 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
 
 CAmount GetBlockSubsidy(int nHeight)
 {
+    static bool fRegTest = GetBoolArg("-regtest", false);
+    if (fRegTest)
+        return 50 * COIN;
+
     CAmount nSubsidy = 0;
     if(nHeight == 1) //First block premine
     {
