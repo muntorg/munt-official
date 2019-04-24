@@ -40,8 +40,15 @@ namespace Checkpoints {
 
     int LastCheckPointHeight()
     {
-        auto lastCheckpoint = Params().Checkpoints().rbegin();
-        return lastCheckpoint->first;
+        if (Params().Checkpoints().size() > 0)
+        {
+            auto lastCheckpoint = Params().Checkpoints().rbegin();
+            return lastCheckpoint->first;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     int LastCheckpointBeforeBlock(uint64_t blockHeight)
