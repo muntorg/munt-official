@@ -1745,7 +1745,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         // yet due to connectity issues (which can easily happen on mobile devices) are broadcasted to all new peers.
         // Under normal circumstances the whole mempool will be sent, however under peak conditions at most MAX_SEND_INIT_MEMPOOL randomly selected
         // entries are sent.
-        if (IsChainNearPresent())
+        if (IsChainNearPresent() || IsPartialNearPresent())
             SendMempool(pfrom, MAX_SEND_INIT_MEMPOOL);
 
 #pragma message("Ban 797017 peers. Remove for relase!")
