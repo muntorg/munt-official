@@ -70,8 +70,10 @@ declare class NJSGuldenUnifiedBackend
     static declare function DoRescan();
     /** Check if text/address is something we are capable of sending money too */
     static declare function IsValidRecipient(request: UriRecord): UriRecipient;
+    /** Compute the fee required to send amount to given recipient */
+    static declare function feeForRecipient(request: UriRecipient): number;
     /** Attempt to pay a recipient, will throw on failure with description */
-    static declare function performPaymentToRecipient(request: UriRecipient);
+    static declare function performPaymentToRecipient(request: UriRecipient, substract_fee: boolean): PaymentResultStatus;
     /** Get list of all transactions wallet has been involved in */
     static declare function getTransactionHistory(): Array<TransactionRecord>;
     /**

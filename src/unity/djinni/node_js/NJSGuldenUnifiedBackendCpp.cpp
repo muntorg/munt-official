@@ -587,19 +587,19 @@ NAN_METHOD(NJSGuldenUnifiedBackend::IsValidRecipient) {
     Nan::DefineOwnProperty(arg_1, Nan::New<String>("address").ToLocalChecked(), arg_1_2);
     auto arg_1_3 = Nan::New<String>(result.label).ToLocalChecked();
     Nan::DefineOwnProperty(arg_1, Nan::New<String>("label").ToLocalChecked(), arg_1_3);
-    auto arg_1_4 = Nan::New<String>(result.amount).ToLocalChecked();
+    auto arg_1_4 = Nan::New<Number>(result.amount);
     Nan::DefineOwnProperty(arg_1, Nan::New<String>("amount").ToLocalChecked(), arg_1_4);
 
 
     //Return result
     info.GetReturnValue().Set(arg_1);
 }
-NAN_METHOD(NJSGuldenUnifiedBackend::performPaymentToRecipient) {
+NAN_METHOD(NJSGuldenUnifiedBackend::feeForRecipient) {
 
     //Check if method called with right number of arguments
     if(info.Length() != 1)
     {
-        return Nan::ThrowError("NJSGuldenUnifiedBackend::performPaymentToRecipient needs 1 arguments");
+        return Nan::ThrowError("NJSGuldenUnifiedBackend::feeForRecipient needs 1 arguments");
     }
 
     //Check if parameters have correct types
@@ -616,11 +616,52 @@ NAN_METHOD(NJSGuldenUnifiedBackend::performPaymentToRecipient) {
     auto arg_0_3 = std::string(*string_arg_0_3);
 
     auto field_arg_0_4 = Nan::Get(info[0]->ToObject(), Nan::New<String>("amount").ToLocalChecked()).ToLocalChecked();
-    String::Utf8Value string_arg_0_4(field_arg_0_4->ToString());
-    auto arg_0_4 = std::string(*string_arg_0_4);
+    auto arg_0_4 = Nan::To<int64_t>(field_arg_0_4).FromJust();
     UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
 
-     GuldenUnifiedBackend::performPaymentToRecipient(arg_0);
+
+    auto result = GuldenUnifiedBackend::feeForRecipient(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Nan::New<Number>(result);
+
+    //Return result
+    info.GetReturnValue().Set(arg_1);
+}
+NAN_METHOD(NJSGuldenUnifiedBackend::performPaymentToRecipient) {
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 2)
+    {
+        return Nan::ThrowError("NJSGuldenUnifiedBackend::performPaymentToRecipient needs 2 arguments");
+    }
+
+    //Check if parameters have correct types
+
+    auto field_arg_0_1 = Nan::Get(info[0]->ToObject(), Nan::New<String>("valid").ToLocalChecked()).ToLocalChecked();
+    auto arg_0_1 = Nan::To<bool>(field_arg_0_1).FromJust();
+
+    auto field_arg_0_2 = Nan::Get(info[0]->ToObject(), Nan::New<String>("address").ToLocalChecked()).ToLocalChecked();
+    String::Utf8Value string_arg_0_2(field_arg_0_2->ToString());
+    auto arg_0_2 = std::string(*string_arg_0_2);
+
+    auto field_arg_0_3 = Nan::Get(info[0]->ToObject(), Nan::New<String>("label").ToLocalChecked()).ToLocalChecked();
+    String::Utf8Value string_arg_0_3(field_arg_0_3->ToString());
+    auto arg_0_3 = std::string(*string_arg_0_3);
+
+    auto field_arg_0_4 = Nan::Get(info[0]->ToObject(), Nan::New<String>("amount").ToLocalChecked()).ToLocalChecked();
+    auto arg_0_4 = Nan::To<int64_t>(field_arg_0_4).FromJust();
+    UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
+
+    auto arg_1 = Nan::To<bool>(info[1]).FromJust();
+
+    auto result = GuldenUnifiedBackend::performPaymentToRecipient(arg_0,arg_1);
+
+    //Wrap result in node object
+    auto arg_2 = Nan::New<Integer>((int)result);
+
+    //Return result
+    info.GetReturnValue().Set(arg_2);
 }
 NAN_METHOD(NJSGuldenUnifiedBackend::getTransactionHistory) {
 
@@ -1106,6 +1147,7 @@ void NJSGuldenUnifiedBackend::Initialize(Local<Object> target) {
     Nan::SetPrototypeMethod(func_template,"GetBalance", GetBalance);
     Nan::SetPrototypeMethod(func_template,"DoRescan", DoRescan);
     Nan::SetPrototypeMethod(func_template,"IsValidRecipient", IsValidRecipient);
+    Nan::SetPrototypeMethod(func_template,"feeForRecipient", feeForRecipient);
     Nan::SetPrototypeMethod(func_template,"performPaymentToRecipient", performPaymentToRecipient);
     Nan::SetPrototypeMethod(func_template,"getTransactionHistory", getTransactionHistory);
     Nan::SetPrototypeMethod(func_template,"getTransaction", getTransaction);
