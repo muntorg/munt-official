@@ -204,6 +204,45 @@ UniValue getnewaddress(const JSONRPCRequest& request)
     return CGuldenAddress(keyID).ToString();
 }
 
+UniValue getaccountaddress(const JSONRPCRequest& request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    if (request.fHelp || request.params.size() > 1)
+        throw std::runtime_error(
+            "getaccountaddress ( \"account\" )\n"
+            "\nReturns the current Gulden address for receiving payments to this account.\n"
+            "\nArguments:\n"
+            "1. \"account\"       (string, optional) The unique account name or UUID for the address to retrieve. If not provided, the currently active account is used. Account must already exist.\n"
+            "\nResult:\n"
+            "\"address\"          (string) The current Gulden address\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getaccountaddress", "")
+            + HelpExampleCli("getaccountaddress", "\"myaccount\"")
+            + HelpExampleRpc("getaccountaddress", "\"myaccount\"")
+        );
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    // Parse the account first so we don't generate a key if there's an error
+    CAccount* account;
+    if (request.params.size() > 0)
+        account = AccountFromValue(pwallet, request.params[0], true);
+    else
+        account = AccountFromValue(pwallet, UniValue(""), true);
+
+    CReserveKeyOrScript reservekey(pwallet, account, KEYCHAIN_EXTERNAL);
+    CPubKey vchPubKey;
+    if (!reservekey.GetReservedKey(vchPubKey))
+        throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
+
+    CKeyID keyID = vchPubKey.GetID();
+
+    return CGuldenAddress(keyID).ToString();
+}
 
 UniValue getrawchangeaddress(const JSONRPCRequest& request)
 {
@@ -3230,6 +3269,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "getaddressesbyaccount",    &getaddressesbyaccount,    true,   {"account"} },
     { "wallet",             "getbalance",               &getbalance,               false,  {"account","min_conf","include_watchonly"} },
     { "wallet",             "getnewaddress",            &getnewaddress,            true,   {"account"} },
+    { "wallet",             "getaccountaddress",        &getaccountaddress,        true,   {"account"} },
     { "wallet",             "getrawchangeaddress",      &getrawchangeaddress,      true,   {} },
     { "wallet",             "getreceivedbyaddress",     &getreceivedbyaddress,     false,  {"address","min_conf"} },
     { "wallet",             "getrescanprogress",        &getrescanprogress,        false,  {} },

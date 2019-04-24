@@ -113,4 +113,10 @@ bool IsPartialSyncActive();
   */
 bool IsPartialNearPresent(enum BlockStatus nUpTo = BLOCK_PARTIAL_TREE);
 
+/**
+  * Check if the most recent block in the full chainActive is near the present
+  * Requires cs_main
+  */
+bool IsChainNearPresent();
+
 #endif

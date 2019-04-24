@@ -11,6 +11,10 @@ $(package)_config_opts_aarch64_ios=--host aarch64-darwin
 $(package)_config_opts_x86_64_ios=--host x86_64-darwin
 endef
 
+define $(package)_preprocess_cmds
+  cp -f $(BASEDIR)/config.guess $(BASEDIR)/config.sub use
+endef
+
 define $(package)_config_cmds
   $($(package)_autoconf)
 endef

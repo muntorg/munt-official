@@ -652,6 +652,22 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
         // already part of our chain (and therefore don't need it even if pruned).
         for(const CBlockIndex* pindex : vToFetch) {
             if (!pindex->IsValid(BLOCK_VALID_TREE)) {
+                CBlockIndex* lastCheckpoint = Checkpoints::GetLastCheckpointIndex();
+
+                // If we were stuck on the wrong side of a fork (due to not updating)
+                // And have now updated to a nwer version, then this block may be valid on the newer version despite being marked invalid previously by the outdated version
+                // If we don't reconsider the block we will be permanently "stuck"
+                // We can use the checkpoint to find out if this is the case, so we do this here.
+                // If we are the ancestor of a checkpoint then reset the failiure flags and try again
+                if (lastCheckpoint && (pindex->nHeight < lastCheckpoint->nHeight) && (lastCheckpoint->GetAncestor(pindex->nHeight) == pindex))
+                {
+                    auto resetIndex = mapBlockIndex.find(pindex->GetBlockHashPoW2());
+                    if (resetIndex != mapBlockIndex.end())
+                    {
+                        ResetBlockFailureFlags(resetIndex->second);
+                    }
+                }
+
                 // We consider the chain that this peer is on invalid.
                 return false;
             }
@@ -1469,6 +1485,22 @@ static void ProcessPriorityRequests() {
     }
 }
 
+static void SendMempool(CNode* pto, unsigned int maxEntries = std::numeric_limits<int>::max())
+{
+    auto vtxinfo = mempool.infoAll();
+
+    // limit to maxEntries by random selection
+    // there is intentionally no prefered treatment for "own" tx, they will be send eventually on another random selection
+    while (vtxinfo.size() > maxEntries)
+        vtxinfo.erase(vtxinfo.begin() + GetRandInt(vtxinfo.size()));
+
+    for (const auto& txinfo : vtxinfo) {
+        const uint256& hash = txinfo.tx->GetHash();
+        CInv inv(MSG_TX, hash);
+        pto->PushInventory(inv);
+    }
+}
+
 bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, int64_t nTimeReceived, const CChainParams& chainparams, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
 {
     LogPrint(BCLog::NET, "received: %s (%u bytes) peer=%d\n", SanitizeString(strCommand), vRecv.size(), pfrom->GetId());
@@ -1711,7 +1743,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         // Trigger mempool to be send when synced. This way transaction that were created recently but perhaps not reached the network
         // yet due to connectity issues (which can easily happen on mobile devices) are broadcasted to all new peers.
-        pfrom->fSendMempool = IsPartialNearPresent();
+        // Under normal circumstances the whole mempool will be sent, however under peak conditions at most MAX_SEND_INIT_MEMPOOL randomly selected
+        // entries are sent.
+        if (IsChainNearPresent())
+            SendMempool(pfrom, MAX_SEND_INIT_MEMPOOL);
 
 #pragma message("Ban 797017 peers. Remove for relase!")
 // it's annoying and slows down getting good peer connections
@@ -3880,36 +3915,8 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
             // Respond to BIP35 mempool requests
             if (fSendTrickle && pto->fSendMempool) {
-                auto vtxinfo = mempool.infoAll();
                 pto->fSendMempool = false;
-                CAmount filterrate = 0;
-                {
-                    LOCK(pto->cs_feeFilter);
-                    filterrate = pto->minFeeFilter;
-                }
-
-                LOCK(pto->cs_filter);
-
-                for (const auto& txinfo : vtxinfo) {
-                    const uint256& hash = txinfo.tx->GetHash();
-                    CInv inv(MSG_TX, hash);
-                    pto->setInventoryTxToSend.erase(hash);
-                    // the feeperkb != 0 is a hack to ensure that entries going into the mempool
-                    // while in pure partial sync are always send out
-                    if (   (filterrate && txinfo.feeRate.GetFeePerK() < filterrate)
-                        && txinfo.feeRate.GetFeePerK() != 0) {
-                        continue;
-                    }
-                    if (pto->pfilter) {
-                        if (!pto->pfilter->IsRelevantAndUpdate(*txinfo.tx)) continue;
-                    }
-                    pto->filterInventoryKnown.insert(hash);
-                    vInv.push_back(inv);
-                    if (vInv.size() == MAX_INV_SZ) {
-                        connman.PushMessage(pto, msgMaker.Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
-                        vInv.clear();
-                    }
-                }
+                SendMempool(pto);
                 pto->timeLastMempoolReq = GetTime();
             }
 

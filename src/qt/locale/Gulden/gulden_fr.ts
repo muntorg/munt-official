@@ -925,7 +925,7 @@ Poids du Witness : %5</translation>
     </message>
     <message>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation>L’adresse saisie « %1 » est déjà présente dans le carnet d&apos;adresses.</translation>
+        <translation>L’adresse saisie «&#xa0;%1&#xa0;» est déjà présente dans le carnet d&apos;adresses.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -1196,7 +1196,7 @@ Poids du Witness : %5</translation>
     </message>
     <message>
         <source>Amount:</source>
-        <translation>Montant :</translation>
+        <translation>Montant&#xa0;:</translation>
     </message>
     <message>
         <source>Dust:</source>
@@ -1372,7 +1372,7 @@ Poids du Witness : %5</translation>
     </message>
     <message>
         <source>Balance:</source>
-        <translation>Solde :</translation>
+        <translation>Solde&#xa0;:</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -1847,7 +1847,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>Range:</source>
-        <translation>Plage :</translation>
+        <translation>Plage&#xa0;:</translation>
     </message>
     <message>
         <source>to</source>
@@ -1967,7 +1967,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>Amount:</source>
-        <translation>Montant :</translation>
+        <translation>Montant&#xa0;:</translation>
     </message>
     <message>
         <source>Dust:</source>
@@ -2177,7 +2177,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Ce bloc n’a été reçu par aucun autre nœud et ne sera probablement pas accepté !</translation>
+        <translation>Ce bloc n’a été reçu par aucun autre nœud et ne sera probablement pas accepté&#xa0;!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3180,7 +3180,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
-        <translation>&amp;IP du mandataire :</translation>
+        <translation>&amp;IP du mandataire&#xa0;:</translation>
     </message>
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
@@ -3188,7 +3188,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>&amp;Port:</source>
-        <translation>&amp;Port :</translation>
+        <translation>&amp;Port&#xa0;:</translation>
     </message>
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
@@ -3256,7 +3256,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>User Interface &amp;language:</source>
-        <translation>&amp;Langue de l&apos;interface utilisateur :</translation>
+        <translation>&amp;Langue de l&apos;interface utilisateur&#xa0;:</translation>
     </message>
     <message>
         <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
@@ -3264,7 +3264,7 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
-        <translation>&amp;Unité d&apos;affichage des montants :</translation>
+        <translation>&amp;Unité d&apos;affichage des montants&#xa0;:</translation>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
@@ -3610,7 +3610,7 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     </message>
     <message>
         <source>Usage:</source>
-        <translation>Utilisation :</translation>
+        <translation>Utilisation&#xa0;:</translation>
     </message>
     <message>
         <source>command-line options</source>
@@ -3626,7 +3626,7 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     </message>
     <message>
         <source>Set language, for example &quot;de_DE&quot; (default: system locale)</source>
-        <translation>Définir la langue, par exemple « fr_CA » (par défaut : la langue du système)</translation>
+        <translation>Définir la langue, par exemple «&#xa0;fr_CA&#xa0;» (par défaut&#xa0;: la langue du système)</translation>
     </message>
     <message>
         <source>Start minimized</source>
@@ -3933,6 +3933,14 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation>URI résultant trop longue, essayez de réduire le texte pour l&apos;étiquette / message.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Mon compte Witness</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Aucune adresse de witness valide n&apos;a été générée pour ce compte.</translation>
     </message>
 </context>
 <context>
