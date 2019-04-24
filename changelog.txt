@@ -4,6 +4,7 @@ CORE - Extend recovery phrase with (optional) birth number.
 UI - Option to hide status bar when synchronized (default enabled). Disable to always show status indicators.
 RPC - Implement new 'importlinkedaccount' command.
 RPC - Add an optional purge option to 'deleteseed' command.
+RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fields to 'getblockchaininfo' results
 
 
 
