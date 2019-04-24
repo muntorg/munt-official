@@ -1374,6 +1374,43 @@ inline void static SendBlockTransactions(const CBlock& block, const BlockTransac
     connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCKTXN, resp));
 }
 
+static void SendMempool(CNode* pto, unsigned int maxEntries = std::numeric_limits<int>::max())
+{
+    auto vtxinfo = mempool.infoAll();
+    CAmount filterrate = 0;
+    {
+        LOCK(pto->cs_feeFilter);
+        filterrate = pto->minFeeFilter;
+    }
+
+    LOCK(pto->cs_filter);
+
+    std::vector<CInv> vInv;
+    const CNetMsgMaker msgMaker(pto->GetSendVersion());
+    for (const auto& txinfo : vtxinfo) {
+        const uint256& hash = txinfo.tx->GetHash();
+        CInv inv(MSG_TX, hash);
+        pto->setInventoryTxToSend.erase(hash);
+        // the feeperkb != 0 is a hack to ensure that entries going into the mempool
+        // while in pure partial sync are always send out
+        if (   (filterrate && txinfo.feeRate.GetFeePerK() < filterrate)
+            && txinfo.feeRate.GetFeePerK() != 0) {
+            continue;
+        }
+        if (pto->pfilter) {
+            if (!pto->pfilter->IsRelevantAndUpdate(*txinfo.tx)) continue;
+        }
+        pto->filterInventoryKnown.insert(hash);
+        vInv.push_back(inv);
+        if (vInv.size() == MAX_INV_SZ) {
+            g_connman->PushMessage(pto, msgMaker.Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
+            vInv.clear();
+        }
+    }
+    if (vInv.size() > 0)
+        g_connman->PushMessage(pto, msgMaker.Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
+}
+
 bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, int64_t nTimeReceived, const CChainParams& chainparams, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
 {
     LogPrint(BCLog::NET, "received: %s (%u bytes) peer=%d\n", SanitizeString(strCommand), vRecv.size(), pfrom->GetId());
@@ -3667,34 +3704,8 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
             // Respond to BIP35 mempool requests
             if (fSendTrickle && pto->fSendMempool) {
-                auto vtxinfo = mempool.infoAll();
                 pto->fSendMempool = false;
-                CAmount filterrate = 0;
-                {
-                    LOCK(pto->cs_feeFilter);
-                    filterrate = pto->minFeeFilter;
-                }
-
-                LOCK(pto->cs_filter);
-
-                for (const auto& txinfo : vtxinfo) {
-                    const uint256& hash = txinfo.tx->GetHash();
-                    CInv inv(MSG_TX, hash);
-                    pto->setInventoryTxToSend.erase(hash);
-                    if (filterrate) {
-                        if (txinfo.feeRate.GetFeePerK() < filterrate)
-                            continue;
-                    }
-                    if (pto->pfilter) {
-                        if (!pto->pfilter->IsRelevantAndUpdate(*txinfo.tx)) continue;
-                    }
-                    pto->filterInventoryKnown.insert(hash);
-                    vInv.push_back(inv);
-                    if (vInv.size() == MAX_INV_SZ) {
-                        connman.PushMessage(pto, msgMaker.Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
-                        vInv.clear();
-                    }
-                }
+                SendMempool(pto);
                 pto->timeLastMempoolReq = GetTime();
             }
 
