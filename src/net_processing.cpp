@@ -2184,7 +2184,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         vRecv >> locator >> hashStop;
 
         LOCK(cs_main);
-        if (IsInitialBlockDownload() && !pfrom->fWhitelisted) {
+        if (IsInitialBlockDownload() && !pfrom->fWhitelisted && !IsArgSet("-regtest")) {
             LogPrint(BCLog::NET, "Ignoring getheaders from peer=%d because node is in initial block download\n", pfrom->GetId());
             return true;
         }
@@ -2248,7 +2248,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         vRecv >> height >> num;
 
         LOCK(cs_main);
-        if (IsInitialBlockDownload() && !pfrom->fWhitelisted) {
+        if (IsInitialBlockDownload() && !pfrom->fWhitelisted && !IsArgSet("-regtest")) {
             LogPrint(BCLog::NET, "Ignoring getrheaders from peer=%d because node is in initial block download\n", pfrom->GetId());
             return true;
         }
@@ -3629,7 +3629,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
         // Download if this is a nice peer, or we have no nice peers and this one might do.
         // Don't download from peers that are behind a lot and have not even made it to the last checkpoint
-        bool fFetch =    pto->nStartingHeight > Checkpoints::LastCheckPointHeight()
+        bool fFetch =    pto->nStartingHeight >= Checkpoints::LastCheckPointHeight()
                       && (state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->fOneShot));
 
         // Partial header sync
