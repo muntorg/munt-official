@@ -25,6 +25,7 @@ class ZapWalletTXesTest (GuldenTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2
+        self.rpc_timeout = 180
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_wallet()
@@ -62,7 +63,7 @@ class ZapWalletTXesTest (GuldenTestFramework):
         self.start_node(0, ["-persistmempool=1", "-zapwallettxes=2"])
 
         wait_until(lambda: self.nodes[0].getmempoolinfo()['size'] == 1, timeout=3)
-        self.nodes[0].syncwithvalidationinterfacequeue()  # Flush mempool to wallet
+        ###self.nodes[0].syncwithvalidationinterfacequeue()  # Flush mempool to wallet
 
         assert_equal(self.nodes[0].gettransaction(txid1)['txid'], txid1)
         assert_equal(self.nodes[0].gettransaction(txid2)['txid'], txid2)
@@ -70,7 +71,7 @@ class ZapWalletTXesTest (GuldenTestFramework):
         # Stop node0 and restart with zapwallettxes, but not persistmempool.
         # The unconfirmed transaction is zapped and is no longer in the wallet.
         self.stop_node(0)
-        self.start_node(0, ["-zapwallettxes=2"])
+        self.start_node(0, ["-persistmempool=0", "-zapwallettxes=2"])
 
         # tx1 is still be available because it was confirmed
         assert_equal(self.nodes[0].gettransaction(txid1)['txid'], txid1)
