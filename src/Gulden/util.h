@@ -101,4 +101,10 @@ inline bool IsPoW2WitnessLocked(const CTxOut& out, uint64_t nTipHeight)
     return IsPoW2WitnessLocked(witnessDetails, nTipHeight);
 }
 
+/**
+  * Check if the most recent block in the full chainActive is near the present
+  * Requires cs_main
+  */
+bool IsChainNearPresent();
+
 #endif

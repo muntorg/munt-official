@@ -1374,6 +1374,22 @@ inline void static SendBlockTransactions(const CBlock& block, const BlockTransac
     connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCKTXN, resp));
 }
 
+static void SendMempool(CNode* pto, unsigned int maxEntries = std::numeric_limits<int>::max())
+{
+    auto vtxinfo = mempool.infoAll();
+
+    // limit to maxEntries by random selection
+    // there is intentionally no prefered treatment for "own" tx, they will be send eventually on another random selection
+    while (vtxinfo.size() > maxEntries)
+        vtxinfo.erase(vtxinfo.begin() + GetRandInt(vtxinfo.size()));
+
+    for (const auto& txinfo : vtxinfo) {
+        const uint256& hash = txinfo.tx->GetHash();
+        CInv inv(MSG_TX, hash);
+        pto->PushInventory(inv);
+    }
+}
+
 bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, int64_t nTimeReceived, const CChainParams& chainparams, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
 {
     LogPrint(BCLog::NET, "received: %s (%u bytes) peer=%d\n", SanitizeString(strCommand), vRecv.size(), pfrom->GetId());
@@ -1597,6 +1613,25 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             LOCK(cs_mapAlerts);
             for(PAIRTYPE(const uint256, CAlert)& item : mapAlerts)
                 item.second.RelayTo(pfrom);
+        }
+
+        // Trigger mempool to be send when synced. This way transaction that were created recently but perhaps not reached the network
+        // yet due to connectity issues (which can easily happen on mobile devices) are broadcasted to all new peers.
+        // Under normal circumstances the whole mempool will be sent, however under peak conditions at most MAX_SEND_INIT_MEMPOOL randomly selected
+        // entries are sent.
+        if (IsChainNearPresent())
+            SendMempool(pfrom, MAX_SEND_INIT_MEMPOOL);
+
+#pragma message("Ban 797017 peers. Remove for relase!")
+// it's annoying and slows down getting good peer connections
+// still it is doubltful if we want to keep a thing like this in a release
+// hopefully all those nodes stuck on 797017 are quickly fixed
+        if (pfrom->nStartingHeight == 797017)
+        {
+            LogPrintf("Ban peer stuck @ 797017, peer=%d\n", pfrom->GetId());
+            LOCK(cs_main);
+            Misbehaving(pfrom->GetId(), 100);
+            return false;
         }
 
         return true;
@@ -3667,34 +3702,8 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
             // Respond to BIP35 mempool requests
             if (fSendTrickle && pto->fSendMempool) {
-                auto vtxinfo = mempool.infoAll();
                 pto->fSendMempool = false;
-                CAmount filterrate = 0;
-                {
-                    LOCK(pto->cs_feeFilter);
-                    filterrate = pto->minFeeFilter;
-                }
-
-                LOCK(pto->cs_filter);
-
-                for (const auto& txinfo : vtxinfo) {
-                    const uint256& hash = txinfo.tx->GetHash();
-                    CInv inv(MSG_TX, hash);
-                    pto->setInventoryTxToSend.erase(hash);
-                    if (filterrate) {
-                        if (txinfo.feeRate.GetFeePerK() < filterrate)
-                            continue;
-                    }
-                    if (pto->pfilter) {
-                        if (!pto->pfilter->IsRelevantAndUpdate(*txinfo.tx)) continue;
-                    }
-                    pto->filterInventoryKnown.insert(hash);
-                    vInv.push_back(inv);
-                    if (vInv.size() == MAX_INV_SZ) {
-                        connman.PushMessage(pto, msgMaker.Make(NetMsgType::INV, COMPACTSIZEVECTOR(vInv)));
-                        vInv.clear();
-                    }
-                }
+                SendMempool(pto);
                 pto->timeLastMempoolReq = GetTime();
             }
 

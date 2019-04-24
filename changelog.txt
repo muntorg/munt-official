@@ -1,5 +1,6 @@
 2.1.0.5
 
+CORE - Improve transaction propagation speed by pushing mempool to new connections
 CORE - Introduce builds of the UI client for all architectures ("arm" and "aarch64" previously did not have)
 CORE - Introduce "riscv64" to the list of officially supported architectures.
 CORE - Introduce AppImage installers for "arm" and "aarch64"

@@ -13,7 +13,7 @@
 #include "validation/versionbitsvalidation.h"
 #include "validation/witnessvalidation.h"
 #include "versionbits.h"
-
+#include "timedata.h"
 #include "txdb.h"
 
 #include "primitives/transaction.h"
@@ -466,4 +466,15 @@ int GetPow2ValidationCloneHeight(CChain& chain, const CBlockIndex* pIndex, int n
 {
     const CBlockIndex* pprevFork = chainActive.FindFork(pIndex);
     return (pprevFork->nHeight > nMargin ? pprevFork->nHeight - nMargin : 0);
+}
+
+bool IsChainNearPresent()
+{
+    CBlockIndex* index = chainActive.Tip();
+    if (index == nullptr)
+        return false;
+
+    int64_t farBack = GetAdjustedTime() - Params().GetConsensus().nPowTargetSpacing * 20;
+
+    return index->GetBlockTime() > farBack;
 }
