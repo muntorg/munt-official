@@ -85,7 +85,7 @@ class ImportPrunedFundsTest(GuldenTestFramework):
         assert [tx for tx in self.nodes[1].listtransactions(include_watchonly=True) if tx['txid'] == txnid2]
 
         # Import with private key with no rescan
-        self.nodes[1].importprivkey(privkey=address3_privkey, rescan=False)
+        self.nodes[1].importprivkey(guldenprivkey=address3_privkey, rescan=False)
         self.nodes[1].importprunedfunds(rawtxn3, proof3)
         assert [tx for tx in self.nodes[1].listtransactions() if tx['txid'] == txnid3]
         balance3 = self.nodes[1].getbalance()

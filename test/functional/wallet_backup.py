@@ -157,6 +157,8 @@ class WalletBackupTest(GuldenTestFramework):
         # Start node2 with no chain
         shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'blocks'))
         shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'chainstate'))
+        shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'witstate'))
+        shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'autocheckpoints'))
 
         # Restore wallets from backup
         shutil.copyfile(os.path.join(self.nodes[0].datadir, 'wallet.bak'), os.path.join(self.nodes[0].datadir, 'regtest', 'wallets', 'wallet.dat'))
@@ -178,6 +180,8 @@ class WalletBackupTest(GuldenTestFramework):
         #start node2 with no chain
         shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'blocks'))
         shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'chainstate'))
+        shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'witstate'))
+        shutil.rmtree(os.path.join(self.nodes[2].datadir, 'regtest', 'autocheckpoints'))
 
         self.start_three()
 

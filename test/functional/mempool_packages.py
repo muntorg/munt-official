@@ -30,7 +30,7 @@ class MempoolPackagesTest(GuldenTestFramework):
         for i in range(num_outputs):
             outputs[node.getnewaddress()] = send_value
         rawtx = node.createrawtransaction(inputs, outputs)
-        signedtx = node.signrawtransactionwithwallet(rawtx)
+        signedtx = node.signrawtransaction(rawtx)
         txid = node.sendrawtransaction(signedtx['hex'])
         fulltx = node.getrawtransaction(txid, 1)
         assert len(fulltx['vout']) == num_outputs  # make sure we didn't generate a change output
@@ -257,7 +257,7 @@ class MempoolPackagesTest(GuldenTestFramework):
         for i in range(2):
             outputs[self.nodes[0].getnewaddress()] = send_value
         rawtx = self.nodes[0].createrawtransaction(inputs, outputs)
-        signedtx = self.nodes[0].signrawtransactionwithwallet(rawtx)
+        signedtx = self.nodes[0].signrawtransaction(rawtx)
         txid = self.nodes[0].sendrawtransaction(signedtx['hex'])
         tx0_id = txid
         value = send_value
@@ -281,7 +281,7 @@ class MempoolPackagesTest(GuldenTestFramework):
         inputs = [ {'txid' : tx1_id, 'vout': 0}, {'txid' : txid, 'vout': 0} ]
         outputs = { self.nodes[0].getnewaddress() : send_value + value - 4*fee }
         rawtx = self.nodes[0].createrawtransaction(inputs, outputs)
-        signedtx = self.nodes[0].signrawtransactionwithwallet(rawtx)
+        signedtx = self.nodes[0].signrawtransaction(rawtx)
         txid = self.nodes[0].sendrawtransaction(signedtx['hex'])
         sync_mempools(self.nodes)
 

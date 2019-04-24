@@ -221,7 +221,7 @@ class SegWitTest(GuldenTestFramework):
         tx = CTransaction()
         tx.vin.append(CTxIn(COutPoint(int(txid1, 16), 0), b''))
         tx.vout.append(CTxOut(int(49.99 * COIN), CScript([OP_TRUE, OP_DROP] * 15 + [OP_TRUE])))
-        tx2_hex = self.nodes[0].signrawtransactionwithwallet(ToHex(tx))['hex']
+        tx2_hex = self.nodes[0].signrawtransaction(ToHex(tx))['hex']
         txid2 = self.nodes[0].sendrawtransaction(tx2_hex)
         tx = FromHex(CTransaction(), tx2_hex)
         assert not tx.wit.is_null()
@@ -516,7 +516,7 @@ class SegWitTest(GuldenTestFramework):
 
             self.nodes[1].importaddress(scriptPubKey, "", False)
             rawtxfund = self.nodes[1].fundrawtransaction(transaction)['hex']
-            rawtxfund = self.nodes[1].signrawtransactionwithwallet(rawtxfund)["hex"]
+            rawtxfund = self.nodes[1].signrawtransaction(rawtxfund)["hex"]
             txid = self.nodes[1].sendrawtransaction(rawtxfund)
 
             assert_equal(self.nodes[1].gettransaction(txid, True)["txid"], txid)
@@ -535,7 +535,7 @@ class SegWitTest(GuldenTestFramework):
         for i in script_list:
             tx.vout.append(CTxOut(10000000, i))
         tx.rehash()
-        signresults = self.nodes[0].signrawtransactionwithwallet(tx.serialize_without_witness().hex())['hex']
+        signresults = self.nodes[0].signrawtransaction(tx.serialize_without_witness().hex())['hex']
         txid = self.nodes[0].sendrawtransaction(signresults, 0)
         txs_mined[txid] = self.nodes[0].generate(1)[0]
         sync_blocks(self.nodes)
@@ -587,7 +587,7 @@ class SegWitTest(GuldenTestFramework):
                 tx.vin.append(CTxIn(COutPoint(int('0x' + i, 0), j)))
         tx.vout.append(CTxOut(0, CScript()))
         tx.rehash()
-        signresults = self.nodes[0].signrawtransactionwithwallet(tx.serialize_without_witness().hex())['hex']
+        signresults = self.nodes[0].signrawtransaction(tx.serialize_without_witness().hex())['hex']
         self.nodes[0].sendrawtransaction(signresults, 0)
         self.nodes[0].generate(1)
         sync_blocks(self.nodes)

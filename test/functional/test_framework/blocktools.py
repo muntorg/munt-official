@@ -155,7 +155,7 @@ def create_raw_transaction(node, txid, to_address, *, amount):
         multiple wallets.
     """
     rawtx = node.createrawtransaction(inputs=[{"txid": txid, "vout": 0}], outputs={to_address: amount})
-    signresult = node.signrawtransactionwithwallet(rawtx)
+    signresult = node.signrawtransaction(rawtx)
     assert_equal(signresult["complete"], True)
     return signresult['hex']
 
@@ -213,7 +213,7 @@ def send_to_witness(use_p2wsh, node, utxo, pubkey, encode_p2sh, amount, sign=Tru
     insert_redeem_script will be added to the scriptSig, if given."""
     tx_to_witness = create_witness_tx(node, use_p2wsh, utxo, pubkey, encode_p2sh, amount)
     if (sign):
-        signed = node.signrawtransactionwithwallet(tx_to_witness)
+        signed = node.signrawtransaction(tx_to_witness)
         assert "errors" not in signed or len(["errors"]) == 0
         return node.sendrawtransaction(signed["hex"])
     else:

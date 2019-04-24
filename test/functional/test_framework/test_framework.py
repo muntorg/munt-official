@@ -286,7 +286,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
                 n.submitblock(block)
                 chain_info = n.getblockchaininfo()
                 assert_equal(chain_info["blocks"], 200)
-                assert_equal(chain_info["initialblockdownload"], False)
+                ###assert_equal(chain_info["initialblockdownload"], False)
 
     def import_deterministic_coinbase_privkeys(self):
         for n in self.nodes:
@@ -296,7 +296,9 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
                 assert str(e).startswith('Method not found')
                 continue
 
-            n.importprivkey(privkey=n.get_deterministic_priv_key().key, label='coinbase')
+            n.createaccount(name="Legacy", type="Legacy")
+            n.setactiveaccount(account="Legacy")
+            n.importprivkey(guldenprivkey=n.get_deterministic_priv_key().key, account="Legacy", label='coinbase')
 
     def run_test(self):
         """Tests must override this method to define test logic"""
@@ -510,9 +512,8 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
                 return os.path.join(get_datadir_path(self.options.cachedir, n), "regtest", *paths)
 
             for i in range(MAX_NODES):
-                os.rmdir(cache_path(i, 'wallets'))  # Remove empty wallets dir
                 for entry in os.listdir(cache_path(i)):
-                    if entry not in ['chainstate', 'blocks']:
+                    if entry not in ['chainstate', 'blocks', 'witstate', 'autocheckpoints']:
                         os.remove(cache_path(i, entry))
 
         for i in range(self.num_nodes):

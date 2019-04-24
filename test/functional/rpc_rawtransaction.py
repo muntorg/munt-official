@@ -6,7 +6,7 @@
 
 Test the following RPCs:
    - createrawtransaction
-   - signrawtransactionwithwallet
+   - signrawtransaction
    - sendrawtransaction
    - decoderawtransaction
    - getrawtransaction
@@ -144,21 +144,21 @@ class RawTransactionsTest(GuldenTestFramework):
 
             self.log.info('sendrawtransaction with missing prevtx info (%s)' %(type))
 
-            # Test `signrawtransactionwithwallet` invalid `prevtxs`
+            # Test `signrawtransaction` invalid `prevtxs`
             inputs  = [ {'txid' : txid, 'vout' : 3, 'sequence' : 1000}]
             outputs = { self.nodes[0].getnewaddress() : 1 }
             rawtx   = self.nodes[0].createrawtransaction(inputs, outputs)
 
             prevtx = dict(txid=txid, scriptPubKey=pubkey, vout=3, amount=1)
-            succ = self.nodes[0].signrawtransactionwithwallet(rawtx, [prevtx])
+            succ = self.nodes[0].signrawtransaction(rawtx, [prevtx])
             assert succ["complete"]
             if type == "legacy":
                 del prevtx["amount"]
-                succ = self.nodes[0].signrawtransactionwithwallet(rawtx, [prevtx])
+                succ = self.nodes[0].signrawtransaction(rawtx, [prevtx])
                 assert succ["complete"]
 
             if type != "legacy":
-                assert_raises_rpc_error(-3, "Missing amount", self.nodes[0].signrawtransactionwithwallet, rawtx, [
+                assert_raises_rpc_error(-3, "Missing amount", self.nodes[0].signrawtransaction, rawtx, [
                     {
                         "txid": txid,
                         "scriptPubKey": pubkey,
@@ -166,21 +166,21 @@ class RawTransactionsTest(GuldenTestFramework):
                     }
                 ])
 
-            assert_raises_rpc_error(-3, "Missing vout", self.nodes[0].signrawtransactionwithwallet, rawtx, [
+            assert_raises_rpc_error(-3, "Missing vout", self.nodes[0].signrawtransaction, rawtx, [
                 {
                     "txid": txid,
                     "scriptPubKey": pubkey,
                     "amount": 1,
                 }
             ])
-            assert_raises_rpc_error(-3, "Missing txid", self.nodes[0].signrawtransactionwithwallet, rawtx, [
+            assert_raises_rpc_error(-3, "Missing txid", self.nodes[0].signrawtransaction, rawtx, [
                 {
                     "scriptPubKey": pubkey,
                     "vout": 3,
                     "amount": 1,
                 }
             ])
-            assert_raises_rpc_error(-3, "Missing scriptPubKey", self.nodes[0].signrawtransactionwithwallet, rawtx, [
+            assert_raises_rpc_error(-3, "Missing scriptPubKey", self.nodes[0].signrawtransaction, rawtx, [
                 {
                     "txid": txid,
                     "vout": 3,
@@ -196,7 +196,7 @@ class RawTransactionsTest(GuldenTestFramework):
         inputs  = [ {'txid' : "1d1d4e24ed99057e84c3f80fd8fbec79ed9e1acee37da269356ecea000000000", 'vout' : 1}] #won't exists
         outputs = { self.nodes[0].getnewaddress() : 4.998 }
         rawtx   = self.nodes[2].createrawtransaction(inputs, outputs)
-        rawtx   = self.nodes[2].signrawtransactionwithwallet(rawtx)
+        rawtx   = self.nodes[2].signrawtransaction(rawtx)
 
         # This will raise an exception since there are missing inputs
         assert_raises_rpc_error(-25, "Missing inputs", self.nodes[2].sendrawtransaction, rawtx['hex'])
@@ -291,10 +291,10 @@ class RawTransactionsTest(GuldenTestFramework):
         inputs = [{ "txid" : txId, "vout" : vout['n'], "scriptPubKey" : vout['scriptPubKey']['hex'], "amount" : vout['value']}]
         outputs = { self.nodes[0].getnewaddress() : 2.19 }
         rawTx = self.nodes[2].createrawtransaction(inputs, outputs)
-        rawTxPartialSigned = self.nodes[1].signrawtransactionwithwallet(rawTx, inputs)
+        rawTxPartialSigned = self.nodes[1].signrawtransaction(rawTx, inputs)
         assert_equal(rawTxPartialSigned['complete'], False) #node1 only has one key, can't comp. sign the tx
 
-        rawTxSigned = self.nodes[2].signrawtransactionwithwallet(rawTx, inputs)
+        rawTxSigned = self.nodes[2].signrawtransaction(rawTx, inputs)
         assert_equal(rawTxSigned['complete'], True) #node2 can sign the tx compl., own two of three keys
         self.nodes[2].sendrawtransaction(rawTxSigned['hex'])
         rawTx = self.nodes[0].decoderawtransaction(rawTxSigned['hex'])
@@ -332,11 +332,11 @@ class RawTransactionsTest(GuldenTestFramework):
         inputs = [{ "txid" : txId, "vout" : vout['n'], "scriptPubKey" : vout['scriptPubKey']['hex'], "redeemScript" : mSigObjValid['hex'], "amount" : vout['value']}]
         outputs = { self.nodes[0].getnewaddress() : 2.19 }
         rawTx2 = self.nodes[2].createrawtransaction(inputs, outputs)
-        rawTxPartialSigned1 = self.nodes[1].signrawtransactionwithwallet(rawTx2, inputs)
+        rawTxPartialSigned1 = self.nodes[1].signrawtransaction(rawTx2, inputs)
         self.log.debug(rawTxPartialSigned1)
         assert_equal(rawTxPartialSigned1['complete'], False) #node1 only has one key, can't comp. sign the tx
 
-        rawTxPartialSigned2 = self.nodes[2].signrawtransactionwithwallet(rawTx2, inputs)
+        rawTxPartialSigned2 = self.nodes[2].signrawtransaction(rawTx2, inputs)
         self.log.debug(rawTxPartialSigned2)
         assert_equal(rawTxPartialSigned2['complete'], False) #node2 only has one key, can't comp. sign the tx
         rawTxComb = self.nodes[2].combinerawtransaction([rawTxPartialSigned1['hex'], rawTxPartialSigned2['hex']])
@@ -436,7 +436,7 @@ class RawTransactionsTest(GuldenTestFramework):
         inputs = [{ "txid" : txId, "vout" : vout['n'] }]
         outputs = { self.nodes[0].getnewaddress() : Decimal("0.99999000") } # 1000 sat fee
         rawTx = self.nodes[2].createrawtransaction(inputs, outputs)
-        rawTxSigned = self.nodes[2].signrawtransactionwithwallet(rawTx)
+        rawTxSigned = self.nodes[2].signrawtransaction(rawTx)
         assert_equal(rawTxSigned['complete'], True)
         # 1000 sat fee, ~200 b transaction, fee rate should land around 5 sat/b = 0.00005000 BTC/kB
         # Thus, testmempoolaccept should reject
@@ -444,11 +444,11 @@ class RawTransactionsTest(GuldenTestFramework):
         assert_equal(testres['allowed'], False)
         assert_equal(testres['reject-reason'], '256: absurdly-high-fee')
         # and sendrawtransaction should throw
-        assert_raises_rpc_error(-26, "absurdly-high-fee", self.nodes[2].sendrawtransaction, rawTxSigned['hex'], 0.00001000)
+        assert_raises_rpc_error(-26, "absurdly-high-fee", self.nodes[2].sendrawtransaction, rawTxSigned['hex'])
         # And below calls should both succeed
         testres = self.nodes[2].testmempoolaccept(rawtxs=[rawTxSigned['hex']], maxfeerate=0.00007000)[0]
         assert_equal(testres['allowed'], True)
-        self.nodes[2].sendrawtransaction(hexstring=rawTxSigned['hex'], maxfeerate=0.00007000)
+        self.nodes[2].sendrawtransaction(hexstring=rawTxSigned['hex'])
 
 
 if __name__ == '__main__':

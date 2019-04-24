@@ -32,7 +32,7 @@ def create_transactions(node, address, amt, fees):
     for fee in fees:
         outputs = {address: amt, node.getrawchangeaddress(): ins_total - amt - fee}
         raw_tx = node.createrawtransaction(inputs, outputs, 0, True)
-        raw_tx = node.signrawtransactionwithwallet(raw_tx)
+        raw_tx = node.signrawtransaction(raw_tx)
         txs.append(raw_tx)
 
     return txs

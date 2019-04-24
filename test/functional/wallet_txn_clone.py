@@ -34,11 +34,6 @@ class TxnMallTest(GuldenTestFramework):
         disconnect_nodes(self.nodes[2], 1)
 
     def run_test(self):
-        if self.options.segwit:
-            output_type = "p2sh-segwit"
-        else:
-            output_type = "legacy"
-
         # All nodes should start with 1,250 BTC:
         starting_balance = 1250
         for i in range(4):
@@ -47,11 +42,11 @@ class TxnMallTest(GuldenTestFramework):
 
         self.nodes[0].settxfee(.001)
 
-        node0_address1 = self.nodes[0].getnewaddress(address_type=output_type)
+        node0_address1 = self.nodes[0].getnewaddress()
         node0_txid1 = self.nodes[0].sendtoaddress(node0_address1, 1219)
         node0_tx1 = self.nodes[0].gettransaction(node0_txid1)
 
-        node0_address2 = self.nodes[0].getnewaddress(address_type=output_type)
+        node0_address2 = self.nodes[0].getnewaddress()
         node0_txid2 = self.nodes[0].sendtoaddress(node0_address2, 29)
         node0_tx2 = self.nodes[0].gettransaction(node0_txid2)
 
@@ -81,7 +76,7 @@ class TxnMallTest(GuldenTestFramework):
 
         # Use a different signature hash type to sign.  This creates an equivalent but malleated clone.
         # Don't send the clone anywhere yet
-        tx1_clone = self.nodes[0].signrawtransactionwithwallet(clone_tx.serialize().hex(), None, "ALL|ANYONECANPAY")
+        tx1_clone = self.nodes[0].signrawtransaction(clone_tx.serialize().hex(), None, "ALL|ANYONECANPAY")
         assert_equal(tx1_clone["complete"], True)
 
         # Have node0 mine a block, if requested:

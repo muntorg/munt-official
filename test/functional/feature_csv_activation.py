@@ -87,7 +87,7 @@ def all_rlt_txs(txs):
 
 def sign_transaction(node, unsignedtx):
     rawtx = ToHex(unsignedtx)
-    signresult = node.signrawtransactionwithwallet(rawtx)
+    signresult = node.signrawtransaction(rawtx)
     tx = CTransaction()
     f = BytesIO(hex_str_to_bytes(signresult['hex']))
     tx.deserialize(f)

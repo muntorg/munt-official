@@ -295,6 +295,7 @@ def initialize_datadir(dirname, n):
         f.write("port=" + str(p2p_port(n)) + "\n")
         f.write("rpcport=" + str(rpc_port(n)) + "\n")
         f.write("server=1\n")
+        f.write("debug=1\n")
         f.write("keypool=1\n")
         f.write("discover=0\n")
         f.write("listenonion=0\n")
@@ -397,9 +398,9 @@ def sync_mempools(rpc_connections, *, wait=1, timeout=60, flush_scheduler=True):
     while time.time() <= stop_time:
         pool = [set(r.getrawmempool()) for r in rpc_connections]
         if pool.count(pool[0]) == len(rpc_connections):
-            if flush_scheduler:
-                for r in rpc_connections:
-                    r.syncwithvalidationinterfacequeue()
+            ###if flush_scheduler:
+                ###for r in rpc_connections:
+                    ###r.syncwithvalidationinterfacequeue()
             return
         time.sleep(wait)
     raise AssertionError("Mempool sync timed out:{}".format("".join("\n  {!r}".format(m) for m in pool)))
@@ -466,7 +467,7 @@ def random_transaction(nodes, amount, min_fee, fee_increment, fee_variants):
     outputs[to_node.getnewaddress()] = float(amount)
 
     rawtx = from_node.createrawtransaction(inputs, outputs)
-    signresult = from_node.signrawtransactionwithwallet(rawtx)
+    signresult = from_node.signrawtransaction(rawtx)
     txid = from_node.sendrawtransaction(signresult["hex"], 0)
 
     return (txid, signresult["hex"], fee)
@@ -493,7 +494,7 @@ def create_confirmed_utxos(fee, node, count):
         outputs[addr1] = satoshi_round(send_value / 2)
         outputs[addr2] = satoshi_round(send_value / 2)
         raw_tx = node.createrawtransaction(inputs, outputs)
-        signed_tx = node.signrawtransactionwithwallet(raw_tx)["hex"]
+        signed_tx = node.signrawtransaction(raw_tx)["hex"]
         node.sendrawtransaction(signed_tx)
 
     while (node.getmempoolinfo()['size'] > 0):
@@ -538,7 +539,7 @@ def create_lots_of_big_transactions(node, txouts, utxos, num, fee):
         newtx = rawtx[0:92]
         newtx = newtx + txouts
         newtx = newtx + rawtx[94:]
-        signresult = node.signrawtransactionwithwallet(newtx, None, "NONE")
+        signresult = node.signrawtransaction(newtx, None, "NONE")
         txid = node.sendrawtransaction(signresult["hex"], 0)
         txids.append(txid)
     return txids

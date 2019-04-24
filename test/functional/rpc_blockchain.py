@@ -130,7 +130,7 @@ class BlockchainTest(GuldenTestFramework):
         # Test `getchaintxstats` invalid extra parameters
         assert_raises_rpc_error(-1, 'getchaintxstats', self.nodes[0].getchaintxstats, 0, '', 0)
 
-        # Test `getchaintxstats` invalid `nblocks`
+        # Test `getchaintxstats` invalid `num_blocks`
         assert_raises_rpc_error(-1, "JSON value is not an integer as expected", self.nodes[0].getchaintxstats, '')
         assert_raises_rpc_error(-8, "Invalid block count: should be between 0 and the block's height - 1", self.nodes[0].getchaintxstats, -1)
         assert_raises_rpc_error(-8, "Invalid block count: should be between 0 and the block's height - 1", self.nodes[0].getchaintxstats, self.nodes[0].getblockcount())
@@ -145,7 +145,7 @@ class BlockchainTest(GuldenTestFramework):
         assert_raises_rpc_error(-8, "Block is not in main chain", self.nodes[0].getchaintxstats, blockhash=blockhash)
         self.nodes[0].reconsiderblock(blockhash)
 
-        chaintxstats = self.nodes[0].getchaintxstats(nblocks=1)
+        chaintxstats = self.nodes[0].getchaintxstats(num_blocks=1)
         # 200 txs plus genesis tx
         assert_equal(chaintxstats['txcount'], 201)
         # tx rate should be 1 per 10 minutes, or 1/600

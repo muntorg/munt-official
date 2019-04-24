@@ -467,7 +467,7 @@ class RawTransactionsTest(GuldenTestFramework):
         rawtx = self.nodes[2].createrawtransaction(inputs, outputs)
         fundedTx = self.nodes[2].fundrawtransaction(rawtx)
 
-        signedTx = self.nodes[2].signrawtransactionwithwallet(fundedTx['hex'])
+        signedTx = self.nodes[2].signrawtransaction(fundedTx['hex'])
         txId = self.nodes[2].sendrawtransaction(signedTx['hex'])
         self.sync_all()
         self.nodes[1].generate(1)
@@ -522,7 +522,7 @@ class RawTransactionsTest(GuldenTestFramework):
 
         #now we need to unlock
         self.nodes[1].walletpassphrase("test", 600)
-        signedTx = self.nodes[1].signrawtransactionwithwallet(fundedTx['hex'])
+        signedTx = self.nodes[1].signrawtransaction(fundedTx['hex'])
         txId = self.nodes[1].sendrawtransaction(signedTx['hex'])
         self.nodes[1].generate(1)
         self.sync_all()
@@ -583,7 +583,7 @@ class RawTransactionsTest(GuldenTestFramework):
         outputs = {self.nodes[0].getnewaddress():0.15,self.nodes[0].getnewaddress():0.04}
         rawtx = self.nodes[1].createrawtransaction(inputs, outputs)
         fundedTx = self.nodes[1].fundrawtransaction(rawtx)
-        fundedAndSignedTx = self.nodes[1].signrawtransactionwithwallet(fundedTx['hex'])
+        fundedAndSignedTx = self.nodes[1].signrawtransaction(fundedTx['hex'])
         txId = self.nodes[1].sendrawtransaction(fundedAndSignedTx['hex'])
         self.sync_all()
         self.nodes[0].generate(1)
@@ -641,9 +641,9 @@ class RawTransactionsTest(GuldenTestFramework):
         assert_greater_than(result["changepos"], -1)
         assert_equal(result["fee"] + res_dec["vout"][result["changepos"]]["value"], watchonly_amount / 10)
 
-        signedtx = self.nodes[3].signrawtransactionwithwallet(result["hex"])
+        signedtx = self.nodes[3].signrawtransaction(result["hex"])
         assert not signedtx["complete"]
-        signedtx = self.nodes[0].signrawtransactionwithwallet(signedtx["hex"])
+        signedtx = self.nodes[0].signrawtransaction(signedtx["hex"])
         assert signedtx["complete"]
         self.nodes[0].sendrawtransaction(signedtx["hex"])
         self.nodes[0].generate(1)

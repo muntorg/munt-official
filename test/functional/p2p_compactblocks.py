@@ -264,7 +264,7 @@ class CompactBlocksTest(GuldenTestFramework):
         if use_witness_address:
             # Want at least one segwit spend, so move all funds to
             # a witness address.
-            address = node.getnewaddress(address_type='bech32')
+            address = node.getnewaddress()
             value_to_send = node.getbalance()
             node.sendtoaddress(address, satoshi_round(value_to_send - Decimal(0.1)))
             node.generate(1)

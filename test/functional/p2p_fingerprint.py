@@ -31,9 +31,9 @@ class P2PFingerprintTest(GuldenTestFramework):
         self.num_nodes = 1
 
     # Build a chain of blocks on top of given one
-    def build_chain(self, nblocks, prev_hash, prev_height, prev_median_time):
+    def build_chain(self, num_blocks, prev_hash, prev_height, prev_median_time):
         blocks = []
-        for _ in range(nblocks):
+        for _ in range(num_blocks):
             coinbase = create_coinbase(prev_height + 1)
             block_time = prev_median_time + 1
             block = create_block(int(prev_hash, 16), coinbase, block_time)

@@ -163,7 +163,7 @@ class ListSinceBlockTest (GuldenTestFramework):
             'vout': utxo['vout'],
         }]
         txid1 = self.nodes[1].sendrawtransaction(
-            self.nodes[1].signrawtransactionwithwallet(
+            self.nodes[1].signrawtransaction(
                 self.nodes[1].createrawtransaction(utxo_dicts, recipient_dict))['hex'])
 
         # send from nodes[2] using utxo to nodes[3]
@@ -172,7 +172,7 @@ class ListSinceBlockTest (GuldenTestFramework):
             self.nodes[2].getnewaddress(): change,
         }
         self.nodes[2].sendrawtransaction(
-            self.nodes[2].signrawtransactionwithwallet(
+            self.nodes[2].signrawtransaction(
                 self.nodes[2].createrawtransaction(utxo_dicts, recipient_dict2))['hex'])
 
         # generate on both sides
@@ -237,7 +237,7 @@ class ListSinceBlockTest (GuldenTestFramework):
             'txid': utxo['txid'],
             'vout': utxo['vout'],
         }]
-        signedtxres = self.nodes[2].signrawtransactionwithwallet(
+        signedtxres = self.nodes[2].signrawtransaction(
             self.nodes[2].createrawtransaction(utxo_dicts, recipient_dict))
         assert signedtxres['complete']
 

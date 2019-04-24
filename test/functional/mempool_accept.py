@@ -64,11 +64,11 @@ class MempoolAcceptanceTest(GuldenTestFramework):
 
         self.log.info('A transaction already in the blockchain')
         coin = coins.pop()  # Pick a random coin(base) to spend
-        raw_tx_in_block = node.signrawtransactionwithwallet(node.createrawtransaction(
+        raw_tx_in_block = node.signrawtransaction(node.createrawtransaction(
             inputs=[{'txid': coin['txid'], 'vout': coin['vout']}],
             outputs=[{node.getnewaddress(): 0.3}, {node.getnewaddress(): 49}],
         ))['hex']
-        txid_in_block = node.sendrawtransaction(hexstring=raw_tx_in_block, maxfeerate=0)
+        txid_in_block = node.sendrawtransaction(hexstring=raw_tx_in_block)
         node.generate(1)
         self.mempool_size = 0
         self.check_mempool_result(
@@ -78,7 +78,7 @@ class MempoolAcceptanceTest(GuldenTestFramework):
 
         self.log.info('A transaction not in the mempool')
         fee = 0.00000700
-        raw_tx_0 = node.signrawtransactionwithwallet(node.createrawtransaction(
+        raw_tx_0 = node.signrawtransaction(node.createrawtransaction(
             inputs=[{"txid": txid_in_block, "vout": 0, "sequence": BIP125_SEQUENCE_NUMBER}],  # RBF is used later
             outputs=[{node.getnewaddress(): 0.3 - fee}],
         ))['hex']
@@ -92,7 +92,7 @@ class MempoolAcceptanceTest(GuldenTestFramework):
 
         self.log.info('A final transaction not in the mempool')
         coin = coins.pop()  # Pick a random coin(base) to spend
-        raw_tx_final = node.signrawtransactionwithwallet(node.createrawtransaction(
+        raw_tx_final = node.signrawtransaction(node.createrawtransaction(
             inputs=[{'txid': coin['txid'], 'vout': coin['vout'], "sequence": 0xffffffff}],  # SEQUENCE_FINAL
             outputs=[{node.getnewaddress(): 0.025}],
             locktime=node.getblockcount() + 2000,  # Can be anything
@@ -103,7 +103,7 @@ class MempoolAcceptanceTest(GuldenTestFramework):
             rawtxs=[tx.serialize().hex()],
             maxfeerate=0,
         )
-        node.sendrawtransaction(hexstring=raw_tx_final, maxfeerate=0)
+        node.sendrawtransaction(hexstring=raw_tx_final)
         self.mempool_size += 1
 
         self.log.info('A transaction in the mempool')
@@ -118,7 +118,7 @@ class MempoolAcceptanceTest(GuldenTestFramework):
         tx.deserialize(BytesIO(hex_str_to_bytes(raw_tx_0)))
         tx.vout[0].nValue -= int(fee * COIN)  # Double the fee
         tx.vin[0].nSequence = BIP125_SEQUENCE_NUMBER + 1  # Now, opt out of RBF
-        raw_tx_0 = node.signrawtransactionwithwallet(tx.serialize().hex())['hex']
+        raw_tx_0 = node.signrawtransaction(tx.serialize().hex())['hex']
         tx.deserialize(BytesIO(hex_str_to_bytes(raw_tx_0)))
         txid_0 = tx.rehash()
         self.check_mempool_result(
@@ -128,7 +128,7 @@ class MempoolAcceptanceTest(GuldenTestFramework):
 
         self.log.info('A transaction that conflicts with an unconfirmed tx')
         # Send the transaction that replaces the mempool transaction and opts out of replaceability
-        node.sendrawtransaction(hexstring=tx.serialize().hex(), maxfeerate=0)
+        node.sendrawtransaction(hexstring=tx.serialize().hex())
         # take original raw_tx_0
         tx.deserialize(BytesIO(hex_str_to_bytes(raw_tx_0)))
         tx.vout[0].nValue -= int(4 * fee * COIN)  # Set more fee
@@ -151,17 +151,17 @@ class MempoolAcceptanceTest(GuldenTestFramework):
         self.log.info('A transaction with missing inputs, that existed once in the past')
         tx.deserialize(BytesIO(hex_str_to_bytes(raw_tx_0)))
         tx.vin[0].prevout.n = 1  # Set vout to 1, to spend the other outpoint (49 coins) of the in-chain-tx we want to double spend
-        raw_tx_1 = node.signrawtransactionwithwallet(tx.serialize().hex())['hex']
-        txid_1 = node.sendrawtransaction(hexstring=raw_tx_1, maxfeerate=0)
+        raw_tx_1 = node.signrawtransaction(tx.serialize().hex())['hex']
+        txid_1 = node.sendrawtransaction(hexstring=raw_tx_1)
         # Now spend both to "clearly hide" the outputs, ie. remove the coins from the utxo set by spending them
-        raw_tx_spend_both = node.signrawtransactionwithwallet(node.createrawtransaction(
+        raw_tx_spend_both = node.signrawtransaction(node.createrawtransaction(
             inputs=[
                 {'txid': txid_0, 'vout': 0},
                 {'txid': txid_1, 'vout': 0},
             ],
             outputs=[{node.getnewaddress(): 0.1}]
         ))['hex']
-        txid_spend_both = node.sendrawtransaction(hexstring=raw_tx_spend_both, maxfeerate=0)
+        txid_spend_both = node.sendrawtransaction(hexstring=raw_tx_spend_both)
         node.generate(1)
         self.mempool_size = 0
         # Now see if we can add the coins back to the utxo set by sending the exact txs again
@@ -175,7 +175,7 @@ class MempoolAcceptanceTest(GuldenTestFramework):
         )
 
         self.log.info('Create a signed "reference" tx for later use')
-        raw_tx_reference = node.signrawtransactionwithwallet(node.createrawtransaction(
+        raw_tx_reference = node.signrawtransaction(node.createrawtransaction(
             inputs=[{'txid': txid_spend_both, 'vout': 0}],
             outputs=[{node.getnewaddress(): 0.05}],
         ))['hex']
@@ -190,7 +190,7 @@ class MempoolAcceptanceTest(GuldenTestFramework):
         tx.deserialize(BytesIO(hex_str_to_bytes(raw_tx_reference)))
         tx.vout = []
         # Skip re-signing the transaction for context independent checks from now on
-        # tx.deserialize(BytesIO(hex_str_to_bytes(node.signrawtransactionwithwallet(tx.serialize().hex())['hex'])))
+        # tx.deserialize(BytesIO(hex_str_to_bytes(node.signrawtransaction(tx.serialize().hex())['hex'])))
         self.check_mempool_result(
             result_expected=[{'txid': tx.rehash(), 'allowed': False, 'reject-reason': '16: bad-txns-vout-empty'}],
             rawtxs=[tx.serialize().hex()],

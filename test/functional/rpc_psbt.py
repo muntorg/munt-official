@@ -36,11 +36,11 @@ class PSBTTest(GuldenTestFramework):
         disconnect_nodes(mining_node, 0)
 
         # Mine a transaction that credits the offline address
-        offline_addr = offline_node.getnewaddress(address_type="p2sh-segwit")
-        online_addr = online_node.getnewaddress(address_type="p2sh-segwit")
+        offline_addr = offline_node.getnewaddress()
+        online_addr = online_node.getnewaddress()
         online_node.importaddress(offline_addr, "", False)
         mining_node.sendtoaddress(address=offline_addr, amount=1.0)
-        mining_node.generate(nblocks=1)
+        mining_node.generate(num_blocks=1)
         sync_blocks([mining_node, online_node])
 
         # Construct an unsigned PSBT on the online node (who doesn't know the output is Segwit, so will include a non-witness UTXO)
@@ -90,7 +90,7 @@ class PSBTTest(GuldenTestFramework):
         # fund those addresses
         rawtx = self.nodes[0].createrawtransaction([], {p2sh:10, p2wsh:10, p2wpkh:10, p2sh_p2wsh:10, p2sh_p2wpkh:10, p2pkh:10})
         rawtx = self.nodes[0].fundrawtransaction(rawtx, {"changePosition":3})
-        signed_tx = self.nodes[0].signrawtransactionwithwallet(rawtx['hex'])['hex']
+        signed_tx = self.nodes[0].signrawtransaction(rawtx['hex'])['hex']
         txid = self.nodes[0].sendrawtransaction(signed_tx)
         self.nodes[0].generate(6)
         self.sync_all()
@@ -145,7 +145,7 @@ class PSBTTest(GuldenTestFramework):
         self.nodes[0].decodepsbt(new_psbt)
 
         # Make sure that a psbt with signatures cannot be converted
-        signedtx = self.nodes[0].signrawtransactionwithwallet(rawtx['hex'])
+        signedtx = self.nodes[0].signrawtransaction(rawtx['hex'])
         assert_raises_rpc_error(-22, "TX decode failed", self.nodes[0].converttopsbt, signedtx['hex'])
         assert_raises_rpc_error(-22, "TX decode failed", self.nodes[0].converttopsbt, signedtx['hex'], False)
         # Unless we allow it to convert and strip signatures
@@ -288,7 +288,7 @@ class PSBTTest(GuldenTestFramework):
         self.test_utxo_conversion()
 
         # Test that psbts with p2pkh outputs are created properly
-        p2pkh = self.nodes[0].getnewaddress(address_type='legacy')
+        p2pkh = self.nodes[0].getnewaddress()
         psbt = self.nodes[1].walletcreatefundedpsbt([], [{p2pkh : 1}], 0, {"includeWatching" : True}, True)
         self.nodes[0].decodepsbt(psbt['psbt'])
 

@@ -45,7 +45,7 @@ def cltv_validate(node, tx, height):
     tx.nLockTime = height
 
     # Need to re-sign, since nSequence and nLockTime changed
-    signed_result = node.signrawtransactionwithwallet(ToHex(tx))
+    signed_result = node.signrawtransaction(ToHex(tx))
     new_tx = CTransaction()
     new_tx.deserialize(BytesIO(hex_str_to_bytes(signed_result['hex'])))
 

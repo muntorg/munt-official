@@ -81,7 +81,7 @@ class WalletGroupTest(GuldenTestFramework):
             tx.vin = []
             tx.vout = [tx.vout[0]] * 2000
             funded_tx = self.nodes[0].fundrawtransaction(ToHex(tx))
-            signed_tx = self.nodes[0].signrawtransactionwithwallet(funded_tx['hex'])
+            signed_tx = self.nodes[0].signrawtransaction(funded_tx['hex'])
             self.nodes[0].sendrawtransaction(signed_tx['hex'])
             self.nodes[0].generate(1)
 
