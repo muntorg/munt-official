@@ -42,6 +42,7 @@ class ErrorMatch(Enum):
     FULL_TEXT = 1
     FULL_REGEX = 2
     PARTIAL_REGEX = 3
+    PARTIAL_TEXT = 4
 
 
 class TestNode():
@@ -442,15 +443,19 @@ class TestNode():
                     if match == ErrorMatch.PARTIAL_REGEX:
                         if re.search(expected_msg, stderr, flags=re.MULTILINE) is None:
                             self._raise_assertion_error(
-                                'Expected message "{}" does not partially match stderr:\n"{}"'.format(expected_msg, stderr))
+                                'Expected message "{}" does not partially regex match stderr:\n"{}"'.format(expected_msg, stderr))
                     elif match == ErrorMatch.FULL_REGEX:
                         if re.fullmatch(expected_msg, stderr) is None:
                             self._raise_assertion_error(
-                                'Expected message "{}" does not fully match stderr:\n"{}"'.format(expected_msg, stderr))
+                                'Expected message "{}" does not fully regex match stderr:\n"{}"'.format(expected_msg, stderr))
                     elif match == ErrorMatch.FULL_TEXT:
                         if expected_msg != stderr:
                             self._raise_assertion_error(
-                                'Expected message "{}" does not fully match stderr:\n"{}"'.format(expected_msg, stderr))
+                                'Expected message "{}" does not fully text match stderr:\n"{}"'.format(expected_msg, stderr))
+                    elif match == ErrorMatch.PARTIAL_TEXT:
+                        if stderr.find(expected_msg) is not -1:
+                            self._raise_assertion_error(
+                                'Expected message "{}" does not partially text match stderr:\n"{}"'.format(expected_msg, stderr))
             else:
                 if expected_msg is None:
                     assert_msg = "GuldenD should have exited with an error"

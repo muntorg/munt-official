@@ -192,7 +192,7 @@ static void AppInit(int argc, char* argv[])
                 static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
                 if (!lock.try_lock())
                 {
-                    fprintf(stderr, "Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
+                    fprintf(stderr, "ERROR: Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
                     exitStatus = EXIT_FAILURE;
                     GuldenAppManager::gApp->shutdown();
                     return;
@@ -200,7 +200,7 @@ static void AppInit(int argc, char* argv[])
             }
             catch(const boost::interprocess::interprocess_exception& e)
             {
-                fprintf(stderr, "Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
+                fprintf(stderr, "ERROR: Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
                 exitStatus = EXIT_FAILURE;
                 GuldenAppManager::gApp->shutdown();
                 return;

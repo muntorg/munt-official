@@ -1012,13 +1012,13 @@ static bool LockDataDirectory(bool probeOnly)
     try {
         static boost::interprocess::file_lock lock(pathLockFile.string().c_str());
         if (!lock.try_lock()) {
-            return InitError(strprintf(errortr("Cannot obtain a lock on data directory %s. %s is probably already running."), strDataDir, errortr(PACKAGE_NAME)));
+            return InitError(strprintf(errortr("ERROR: Cannot obtain a lock on data directory %s. %s is probably already running."), strDataDir, errortr(PACKAGE_NAME)));
         }
         if (probeOnly) {
             lock.unlock();
         }
     } catch(const boost::interprocess::interprocess_exception& e) {
-        return InitError(strprintf(errortr("Cannot obtain a lock on data directory %s. %s is probably already running.") + " %s.", strDataDir, errortr(PACKAGE_NAME), e.what()));
+        return InitError(strprintf(errortr("ERROR: Cannot obtain a lock on data directory %s. %s is probably already running.") + " %s.", strDataDir, errortr(PACKAGE_NAME), e.what()));
     }*/
     return true;
 }
