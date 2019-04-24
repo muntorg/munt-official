@@ -33,13 +33,15 @@ class HelpRpcTest(GuldenTestFramework):
         # command titles
         titles = [line[3:-3] for line in node.help().splitlines() if line.startswith('==')]
 
-        components = ['Blockchain', 'Control', 'Generating', 'Mining', 'Network', 'Rawtransactions', 'Util']
+        components = ['Accounts', 'Block_generation', 'Blockchain', 'Control', 'Developer', 'Generating', 'Mining', 'Mnemonics', 'Network', 'Rawtransactions', 'Util']
 
         if self.is_wallet_compiled():
             components.append('Wallet')
 
-        if self.is_zmq_compiled():
-            components.append('Zmq')
+        components.append('Witness')
+
+        ###if self.is_zmq_compiled():
+            ###components.append('Zmq')
 
         assert_equal(titles, components)
 
