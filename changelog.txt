@@ -8,9 +8,9 @@ RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fi
 
 
 
-
 2.1.0.5
 
+CORE - Improve transaction propagation speed by pushing mempool to new connections
 CORE - Introduce builds of the UI client for all architectures ("arm" and "aarch64" previously did not have)
 CORE - Introduce "riscv64" to the list of officially supported architectures.
 CORE - Introduce AppImage installers for "arm" and "aarch64"
@@ -21,6 +21,7 @@ MISC - Update to newer version of Qt which should improve various minor UI aspec
 
 2.1.0.4
 
+UI - Fix a small dispaly update issue when switching between witness and normal accounts in some instances.
 MISC - Minor maintenance release, update checkpoints and other minor changes
 CORE - Introduce some code to automatically detect and clear the failed verification status of blocks in certain situations where it is safe to do so. This will make it easier for users who fail to update before a fork to update after the fork without having to issue any manual commands.
 CORE - Add some additional logging of error conditions to the witness loop.

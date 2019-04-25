@@ -382,7 +382,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransa
  * It's for example possible that created transaction pass local spv validation but are
  * rejected by the full validation.
  */
-int ExpireMempoolForPartialSync(const CBlockIndex* tip);
+int ExpireMempoolForPartialSync(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex* tip);
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);

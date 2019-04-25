@@ -14,6 +14,7 @@
 #include "monitor_record.hpp"
 #include "mutation_record.hpp"
 #include "output_record.hpp"
+#include "payment_result_status.hpp"
 #include "peer_record.hpp"
 #include "qr_code_record.hpp"
 #include "transaction_record.hpp"
@@ -134,6 +135,9 @@ private:
 
     /** Check if text/address is something we are capable of sending money too */
     static NAN_METHOD(IsValidRecipient);
+
+    /** Compute the fee required to send amount to given recipient */
+    static NAN_METHOD(feeForRecipient);
 
     /** Attempt to pay a recipient, will throw on failure with description */
     static NAN_METHOD(performPaymentToRecipient);
