@@ -171,7 +171,7 @@ BASE_SCRIPTS = [
     ###'rpc_uptime.py',
     ###'wallet_resendwallettransactions.py',
     ###'wallet_fallbackfee.py',
-    ###'feature_minchainwork.py',
+    'feature_minchainwork.py',
     ###'rpc_getblockstats.py',
     ###'wallet_create_tx.py',
     ###'p2p_fingerprint.py',
