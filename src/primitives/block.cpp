@@ -45,18 +45,31 @@ uint256 CBlock::GetPoWHash() const
 
     uint256 hashRet;
 
+    static bool fRegTest = IsArgSet("-regtest");
     //CBSU - maybe use a static functor or something here instead of having the branch 
-    static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
-    if (hashCity)
+    if (fRegTest)
     {
         arith_uint256 thash;
-        hash_city(BEGIN(nVersion), thash);
-        hashRet = ArithToUint256(thash);
+        arith_uint256 fhash;
+        hash_sha256(BEGIN(nVersion), 80, thash);
+        hash_sha256(BEGIN(thash), 32, fhash);
+        hashRet = ArithToUint256(fhash);
     }
     else
     {
-        char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
-        scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(hashRet), scratchpad);
+        //CBSU - maybe use a static functor or something here instead of having the branch 
+        static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
+        if (hashCity)
+        {
+            arith_uint256 thash;
+            hash_city(BEGIN(nVersion), thash);
+            hashRet = ArithToUint256(thash);
+        }
+        else
+        {
+            char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+            scrypt_1024_1_1_256_sp(BEGIN(nVersion), BEGIN(hashRet), scratchpad);
+        }
     }
     //cachedPOWHash = ArithToUint256(thash);
     //return cachedPOWHash;

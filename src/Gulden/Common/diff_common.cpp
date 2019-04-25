@@ -35,15 +35,12 @@ unsigned int GetNextWorkRequired(const INDEX_TYPE indexLast, const BLOCK_TYPE bl
 #endif	
 )
 {
+    if (Params().GetConsensus().fPowNoRetargeting)
+        return indexLast->nBits;
+
     #ifndef __JAVA__
     static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(10, 250000);
     static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 750000);
-    #endif
-
-    #if !defined(__JAVA__) && !defined(BUILD_IOS)
-    if (Params().NetworkIDString() == CBaseChainParams::REGTEST) {
-        return 545259519;
-    }
     #endif
 
     if (INDEX_HEIGHT(indexLast)+1 >= nOldDiffSwitchoverBlock)

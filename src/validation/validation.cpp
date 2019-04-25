@@ -3042,6 +3042,10 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
         // Ensure that CheckBlock() passes before calling AcceptBlock, as
         // belt-and-suspenders.
         bool ret = CheckBlock(*pblock, state, chainparams.GetConsensus(), true, true, fAssumePOWGood);
+        if (!ret)
+        {
+            return error("%s: CheckBlock FAILED [%s]", __func__, state.GetRejectReason().c_str());
+        }
 
         LOCK(cs_main);
 
@@ -3052,7 +3056,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
         CheckBlockIndex(chainparams.GetConsensus());
         if (!ret) {
             GetMainSignals().BlockChecked(*pblock, state);
-            return error("%s: AcceptBlock FAILED", __func__);
+            return error("%s: AcceptBlock FAILED [%s]", __func__, state.GetRejectReason().c_str());
         }
         fCloseToTip = pindex->nHeight <= chainActive.Height() + int(MIN_BLOCKS_TO_KEEP);
     }
