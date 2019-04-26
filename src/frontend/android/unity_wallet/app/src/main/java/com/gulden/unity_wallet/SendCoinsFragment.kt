@@ -395,7 +395,10 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
         // Let the invisible URI activity know to close itself
         arguments?.getBoolean(EXTRA_FINISH_ACTIVITY_ON_CLOSE)?.let {
-            if (it) { activity?.finish() }
+            if (it) {
+                activity?.moveTaskToBack(true)
+                activity?.finish()
+            }
         }
     }
 
