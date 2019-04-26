@@ -143,7 +143,7 @@ class UnityCore {
             }
         }
 
-        override fun notifyBalanceChange(newBalance: BalanceRecord): Boolean {
+        override fun notifyBalanceChange(newBalance: BalanceRecord) {
             balanceAmount = newBalance.availableIncludingLocked + newBalance.immatureIncludingLocked + newBalance.unconfirmedIncludingLocked
             observersLock.withLock {
                 observers.forEach {
@@ -152,7 +152,6 @@ class UnityCore {
                     }
                 }
             }
-            return true
         }
 
         override fun notifyNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
@@ -163,30 +162,27 @@ class UnityCore {
             }
         }
 
-        override fun notifyUpdatedTransaction(transaction: TransactionRecord): Boolean {
+        override fun notifyUpdatedTransaction(transaction: TransactionRecord) {
             observersLock.withLock {
                 observers.forEach {
                     it.wrapper { it.observer.updatedTransaction(transaction) }
                 }
             }
-            return true
         }
 
-        override fun notifyShutdown(): Boolean {
+        override fun notifyShutdown() {
             observersLock.withLock {
                 observers.forEach {
                     it.wrapper { it.observer.onCoreShutdown() }
                 }
             }
-            return true
         }
 
-        override fun notifyCoreReady(): Boolean {
+        override fun notifyCoreReady() {
             coreReady = true
             observers.forEach {
                 it.wrapper { it.observer.onCoreReady() }
             }
-            return true
         }
 
         override fun notifyInitWithExistingWallet() {
