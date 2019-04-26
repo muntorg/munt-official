@@ -47,6 +47,7 @@
 		E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0D21EF24A900320806 /* DBAddressRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7D0021EF24A800320806 /* DBAddressRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E6EFA49E22735748002484C6 /* staticfiltercptestnet in Resources */ = {isa = PBXBuildFile; fileRef = E6EFA49D227352BB002484C6 /* staticfiltercptestnet */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +93,7 @@
 		E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBPeerRecord.h; path = ../../../djinni/objc/DBPeerRecord.h; sourceTree = "<group>"; };
 		E6EC7D0021EF24A800320806 /* DBAddressRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBAddressRecord.h; path = ../../../djinni/objc/DBAddressRecord.h; sourceTree = "<group>"; };
 		E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBTransactionRecord.h; path = ../../../djinni/objc/DBTransactionRecord.h; sourceTree = "<group>"; };
+		E6EFA49D227352BB002484C6 /* staticfiltercptestnet */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercptestnet; path = ../../../../data/staticfiltercptestnet; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				E6EBCA212254B2BA00B02F24 /* staticfiltercp */,
+				E6EFA49D227352BB002484C6 /* staticfiltercptestnet */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6EFA49E22735748002484C6 /* staticfiltercptestnet in Resources */,
 				E6EBCA222254B2BA00B02F24 /* staticfiltercp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

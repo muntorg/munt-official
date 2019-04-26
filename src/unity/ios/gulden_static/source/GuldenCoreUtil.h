@@ -9,6 +9,6 @@
 #ifndef GuldenCoreUtil_h
 #define GuldenCoreUtil_h
 
-NSString* GuldenCoreStaticFilterPath(void);
+NSString* GuldenCoreStaticFilterPath(BOOL testnet);
 
 #endif /* GuldenCoreUtil_h */
