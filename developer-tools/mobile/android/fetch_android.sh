@@ -12,7 +12,8 @@ case "$OSTYPE" in
       ;;
 esac
 
-export NDK_VERSION=android-ndk-r19
+source `dirname $0`/ndk_definitions.sh
+
 export NDK_FILENAME=${NDK_VERSION}-${PLATFORM}-x86_64.zip
 
 #sha256_file=5dfbbdc2d3ba859fed90d0e978af87c71a91a5be1f6e1c40ba697503d48ccecd
@@ -24,9 +25,3 @@ curl -sSO https://dl.google.com/android/repository/${NDK_FILENAME} &> /dev/null
 unzip -qq ${NDK_FILENAME} &> /dev/null
 rm ${NDK_FILENAME}
 cd -
-
-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}/build/tools/make-standalone-toolchain.sh --use-llvm --stl=libc++ --platform=21 --toolchain=arm-linux-androideabi-clang --install-dir=${PWD}/developer-tools/android-ndk-gulden/arm-linux-androideabi-clang
-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}/build/tools/make-standalone-toolchain.sh --use-llvm --stl=libc++ --platform=21 --toolchain=x86-clang --install-dir=${PWD}/developer-tools/android-ndk-gulden/x86-clang
-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}/build/tools/make-standalone-toolchain.sh --use-llvm --stl=libc++ --platform=21 --toolchain=x86_64-clang --install-dir=${PWD}/developer-tools/android-ndk-gulden/x86_64-clang
-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}/build/tools/make-standalone-toolchain.sh --use-llvm --stl=libc++ --platform=21 --toolchain=aarch64-linux-android-clang --install-dir=${PWD}/developer-tools/android-ndk-gulden/aarch64-linux-android-clang
-

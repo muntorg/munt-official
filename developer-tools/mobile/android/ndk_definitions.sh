@@ -1,0 +1,2 @@
+NDK_VERSION=android-ndk-r19c
+ANDROID_LEVEL=21
