@@ -19,7 +19,7 @@ source $DIR/../thirdparty.licenses.sh > ${ASSETS}/core-packages.licenses
 
 source `dirname $0`/ndk_definitions.sh
 
-NDK_ROOT=${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}
+NDK_ROOT=${NDK_ROOT:-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}}
 
 case "$OSTYPE" in
   darwin*)
