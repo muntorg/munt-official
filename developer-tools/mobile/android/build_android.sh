@@ -17,17 +17,32 @@ cp src/data/staticfiltercptestnet ${ASSETS}Testnet/staticfiltercp
 
 source $DIR/../thirdparty.licenses.sh > ${ASSETS}/core-packages.licenses
 
+source `dirname $0`/ndk_definitions.sh
+
+NDK_ROOT=${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}
+
+case "$OSTYPE" in
+  darwin*)
+      BUILD_PLATFORM=darwin-x86_64
+      ;;
+  *)
+      BUILD_PLATFORM=linux-x86_64
+      ;;
+esac
+
+PREBUILT=${NDK_ROOT}/toolchains/llvm/prebuilt/${BUILD_PLATFORM}
+TOOLS=${PREBUILT}/bin
+LIB_DIR=${PREBUILT}/sysroot/usr/lib
 for i in $( dirname ${BASH_SOURCE[0]} )/build_targets/*
 do
   source ${i}
-  export PATH=${PWD}/developer-tools/android-ndk-gulden/$toolchain/bin:${PATH}
-  export AR=$target_host-ar
-  export AS=$target_host-clang
-  export CC=$target_host-clang
-  export CXX=$target_host-clang++
-  export LD=$target_host-ld
-  export STRIP=$target_host-strip
-  export RANLIB=$target_host-ranlib
+  export AR=${TOOLS}/$target_host-ar
+  export AS=${TOOLS}/$target_host-clang
+  export CC=${TOOLS}/${clang_prefix}${ANDROID_LEVEL}-clang
+  export CXX=${TOOLS}/${clang_prefix}${ANDROID_LEVEL}-clang++
+  export LD=${TOOLS}/$target_host-ld
+  export STRIP=${TOOLS}/$target_host-strip
+  export RANLIB=${TOOLS}/$target_host-ranlib
   export LIBTOOL=libtool
   export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH"
   #visibility=hidden
@@ -48,6 +63,6 @@ do
 
   mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib} | true
   cp build_android_${target_host}/src/.libs/libgulden_unity_jni.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
-  cp ${PWD}/developer-tools/android-ndk-gulden/${toolchain}/${lib_dir}/${target_host}/libc++_shared.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
-  ${PWD}/developer-tools/android-ndk-gulden/${toolchain}/${target_host}/bin/strip --strip-unneeded src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/*.so
+  cp ${LIB_DIR}/${target_host}/libc++_shared.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
+  ${STRIP} --strip-unneeded src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/*.so
 done

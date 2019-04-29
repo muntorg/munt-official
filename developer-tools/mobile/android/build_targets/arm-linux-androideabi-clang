@@ -1,4 +1,4 @@
-toolchain=arm-linux-androideabi-clang
+clang_prefix=armv7a-linux-androideabi
 target_host=arm-linux-androideabi
 target_bits=32
 jni_lib=armeabi-v7a
