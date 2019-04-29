@@ -31,18 +31,19 @@ case "$OSTYPE" in
 esac
 
 PREBUILT=${NDK_ROOT}/toolchains/llvm/prebuilt/${BUILD_PLATFORM}
-TOOLS=${PREBUILT}/bin
 LIB_DIR=${PREBUILT}/sysroot/usr/lib
+PATH=${PREBUILT}/bin:${PATH}
+
 for i in $( dirname ${BASH_SOURCE[0]} )/build_targets/*
 do
   source ${i}
-  export AR=${TOOLS}/$target_host-ar
-  export AS=${TOOLS}/$target_host-clang
-  export CC=${TOOLS}/${clang_prefix}${ANDROID_LEVEL}-clang
-  export CXX=${TOOLS}/${clang_prefix}${ANDROID_LEVEL}-clang++
-  export LD=${TOOLS}/$target_host-ld
-  export STRIP=${TOOLS}/$target_host-strip
-  export RANLIB=${TOOLS}/$target_host-ranlib
+  export AR=$target_host-ar
+  export AS=$target_host-clang
+  export CC=${clang_prefix}${ANDROID_LEVEL}-clang
+  export CXX=${clang_prefix}${ANDROID_LEVEL}-clang++
+  export LD=$target_host-ld
+  export STRIP=$target_host-strip
+  export RANLIB=$target_host-ranlib
   export LIBTOOL=libtool
   export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH"
   #visibility=hidden
