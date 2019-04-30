@@ -14,8 +14,8 @@ ios_SYSTEM=$($(host_arch)_ios_SYSTEM)
 ios_TARGET=$(ios_ARCH)-$(ios_SYSTEM)
 ios_HOST=$(host_arch)-$(ios_SYSTEM)
 
-ios_CC=clang -target $(ios_TARGET) -isysroot $(ios_SDK)
-ios_CXX=clang++ -target $(ios_TARGET) -isysroot $(ios_SDK) -stdlib=libc++
+ios_CC=clang -target $(ios_TARGET) -isysroot $(ios_SDK) -fvisibility=default
+ios_CXX=clang++ -target $(ios_TARGET) -isysroot $(ios_SDK) -stdlib=libc++ -fvisibility=default
 
 ios_CFLAGS=-pipe
 ios_CXXFLAGS=$(ios_CFLAGS)

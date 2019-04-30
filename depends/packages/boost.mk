@@ -23,7 +23,7 @@ $(package)_toolset_ios=darwin
 $(package)_archiver_darwin=$($(package)_libtool)
 $(package)_archiver_ios=$($(package)_libtool)
 $(package)_config_libraries=chrono,filesystem,program_options,system,thread,test
-$(package)_cxxflags=-std=c++17 -fvisibility=hidden
+$(package)_cxxflags=-std=c++17 -fvisibility=default
 $(package)_cxxflags_linux=-fPIC
 endef
 
