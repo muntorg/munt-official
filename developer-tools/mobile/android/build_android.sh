@@ -50,15 +50,25 @@ do
   export CFLAGS=${CXXFLAGS}
   export LDFLAGS="-fPIC -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections"
 
-  cd depends
-  make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode protobufunity' -j ${NUM_PROCS}
-  cd ..
+  if [ -z "$SKIP_DEPENDS" ]
+  then
+    cd depends
+    make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode protobufunity' -j ${NUM_PROCS}
+    cd ..
+  else
+    echo Skipping depends
+  fi
 
   mkdir build_android_${target_host} | true
   cd build_android_${target_host}
-  ../autogen.sh
-  ${RANLIB} ../depends/$target_host/lib/*.a
-  ../configure --prefix=$PWD/../depends/$target_host ac_cv_c_bigendian=no ac_cv_sys_file_offset_bits=$target_bits --host=$target_host --disable-bench --enable-experimental-asm --disable-tests --disable-man --disable-zmq --without-utils --with-libs --without-daemon --with-jni-libs --with-qrencode
+  if [ -z "$SKIP_CONFIG" ]
+  then
+    ../autogen.sh
+    ${RANLIB} ../depends/$target_host/lib/*.a
+    ../configure --prefix=$PWD/../depends/$target_host ac_cv_c_bigendian=no ac_cv_sys_file_offset_bits=$target_bits --host=$target_host --disable-bench --enable-experimental-asm --disable-tests --disable-man --disable-zmq --without-utils --with-libs --without-daemon --with-jni-libs --with-qrencode
+  else
+    echo Skipping autogen and explicit configure
+  fi
   make -j ${NUM_PROCS}
   cd ..
 
