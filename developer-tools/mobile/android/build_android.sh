@@ -76,7 +76,7 @@ do
     cd depends
     make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode protobufunity' -j ${NUM_PROCS}
     cd ..
-    ${RANLIB} ../depends/$target_host/lib/*.a
+    ${RANLIB} depends/$target_host/lib/*.a
   else
     echo Skipping depends
   fi
