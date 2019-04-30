@@ -594,7 +594,7 @@ libgulden_unity_jni_la_SOURCES = \
   $(GULDEN_CORE_H)
 
 
-libgulden_unity_jni_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) -llog
+libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) -llog
 libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode
 libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
