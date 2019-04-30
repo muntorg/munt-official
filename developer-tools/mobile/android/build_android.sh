@@ -2,6 +2,20 @@
 set -e
 set -x
 
+while :; do
+  case $1 in
+    --nodepends)
+      SKIP_DEPENDS=1
+      ;;
+    --noconfig)
+      SKIP_CONFIG=1
+      ;;
+    *) # Default case: No more options, so break out of the loop.
+      break
+  esac
+  shift
+done
+
 mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs | true
 
 NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
