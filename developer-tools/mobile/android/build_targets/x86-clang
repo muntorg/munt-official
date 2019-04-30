@@ -1,4 +1,4 @@
-toolchain=x86-clang
+clang_prefix=i686-linux-android
 target_host=i686-linux-android
 target_bits=32
 jni_lib=x86
