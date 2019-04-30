@@ -48,6 +48,13 @@ PREBUILT=${NDK_ROOT}/toolchains/llvm/prebuilt/${BUILD_PLATFORM}
 LIB_DIR=${PREBUILT}/sysroot/usr/lib
 PATH=${PREBUILT}/bin:${PATH}
 
+if [ -z "$SKIP_CONFIG" ]
+then
+    ./autogen.sh
+else
+    echo Skipping autogen
+fi
+
 for i in $( dirname ${BASH_SOURCE[0]} )/build_targets/*
 do
   source ${i}
@@ -69,6 +76,7 @@ do
     cd depends
     make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode protobufunity' -j ${NUM_PROCS}
     cd ..
+    ${RANLIB} ../depends/$target_host/lib/*.a
   else
     echo Skipping depends
   fi
@@ -77,11 +85,9 @@ do
   cd build_android_${target_host}
   if [ -z "$SKIP_CONFIG" ]
   then
-    ../autogen.sh
-    ${RANLIB} ../depends/$target_host/lib/*.a
     ../configure --prefix=$PWD/../depends/$target_host ac_cv_c_bigendian=no ac_cv_sys_file_offset_bits=$target_bits --host=$target_host --disable-bench --enable-experimental-asm --disable-tests --disable-man --disable-zmq --without-utils --with-libs --without-daemon --with-jni-libs --with-qrencode
   else
-    echo Skipping autogen and explicit configure
+    echo Skipping explicit configure
   fi
   make -j ${NUM_PROCS}
   cd ..
