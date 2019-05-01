@@ -2,6 +2,12 @@
 set -e
 set -x
 
+#Load NDK config
+source `dirname $0`/ndk_definitions.conf
+
+#Load private config
+source developer-tools/private.conf
+
 while :; do
   case $1 in
     --nodepends)
@@ -30,8 +36,6 @@ cp src/data/staticfiltercp ${ASSETS}Mainnet/staticfiltercp
 cp src/data/staticfiltercptestnet ${ASSETS}Testnet/staticfiltercp
 
 source $DIR/../thirdparty.licenses.sh > ${ASSETS}/core-packages.licenses
-
-source `dirname $0`/ndk_definitions.sh
 
 NDK_ROOT=${NDK_ROOT:-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}}
 

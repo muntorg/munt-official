@@ -2,6 +2,11 @@
 set -e
 set -x
 
+#Load NDK config
+source `dirname $0`/ndk_definitions.conf
+
+#Load private config
+source developer-tools/private.conf
 
 case "$OSTYPE" in
   darwin*)
@@ -11,8 +16,6 @@ case "$OSTYPE" in
       PLATFORM=linux
       ;;
 esac
-
-source `dirname $0`/ndk_definitions.sh
 
 export NDK_FILENAME=${NDK_VERSION}-${PLATFORM}-x86_64.zip
 
