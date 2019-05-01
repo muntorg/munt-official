@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Load private config
-source private.conf
+source developer-tools/private.conf
 
 #Generate non-ui translatables
 #fixme: In future there are a few other files that belong here. 
