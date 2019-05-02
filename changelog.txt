@@ -1,3 +1,10 @@
+2.1.0.6
+
+CORE - Fix a rare issue where witnessing devices would fail to witness due to not completing a proper rescan after importing a witness address.
+
+
+
+
 2.1.0.5
 
 CORE - Improve transaction propagation speed by pushing mempool to new connections
