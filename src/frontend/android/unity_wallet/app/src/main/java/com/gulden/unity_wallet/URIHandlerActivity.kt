@@ -30,16 +30,14 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     private var handleURI = true
-    override fun createNewWallet(): Boolean
+    override fun createNewWallet()
     {
         toastAndExit()
-        return true
     }
-    override fun haveExistingWallet(): Boolean {
-        return true
+    override fun haveExistingWallet() {
     }
 
-    override fun onCoreReady(): Boolean {
+    override fun onCoreReady() {
         if (UnityCore.receivedExistingWalletEvent && handleURI)
         {
             handleURI = false
@@ -49,7 +47,6 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
         {
             toastAndExit()
         }
-        return true
     }
 
     private fun handleURIAndClose()

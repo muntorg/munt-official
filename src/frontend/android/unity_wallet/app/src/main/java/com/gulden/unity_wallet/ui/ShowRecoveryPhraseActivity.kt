@@ -77,9 +77,8 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         super.onDestroy()
     }
 
-    override fun onCoreReady(): Boolean {
+    override fun onCoreReady() {
         gotoWalletActivity(this)
-        return true
     }
 
     @Suppress("UNUSED_PARAMETER")

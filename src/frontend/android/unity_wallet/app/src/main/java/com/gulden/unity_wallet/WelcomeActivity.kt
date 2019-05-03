@@ -119,9 +119,8 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
         startActivity(Intent(this, EnterRecoveryPhraseActivity::class.java))
     }
 
-    override fun onCoreReady(): Boolean {
+    override fun onCoreReady() {
         gotoWalletActivity(this)
-        return true
     }
 
     companion object

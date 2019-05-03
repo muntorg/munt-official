@@ -47,14 +47,12 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         setupBackgroundSync(this)
     }
 
-    override fun onCoreReady(): Boolean {
+    override fun onCoreReady() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
-        return true
     }
 
-    override fun onCoreShutdown(): Boolean {
+    override fun onCoreShutdown() {
         ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
-        return true
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -144,9 +142,8 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         }
     }
 
-    override fun updatedTransaction(transaction: TransactionRecord): Boolean {
+    override fun updatedTransaction(transaction: TransactionRecord) {
         Log.i(TAG, "updatedTransaction: $transaction")
-        return true
     }
 
 

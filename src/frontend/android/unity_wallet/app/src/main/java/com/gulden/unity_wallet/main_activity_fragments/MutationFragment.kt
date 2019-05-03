@@ -79,7 +79,7 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
         }
     }
 
-    override fun updatedTransaction(transaction: TransactionRecord): Boolean
+    override fun updatedTransaction(transaction: TransactionRecord)
     {
         //TODO: Update only the single mutation we have received
         val mutations = GuldenUnifiedBackend.getMutationHistory()
@@ -87,6 +87,5 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }
-        return true
     }
 }

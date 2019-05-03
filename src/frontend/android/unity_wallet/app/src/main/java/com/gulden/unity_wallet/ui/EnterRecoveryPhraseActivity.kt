@@ -125,9 +125,8 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         UnityCore.instance.removeObserver(this)
     }
 
-    override fun onCoreReady(): Boolean {
+    override fun onCoreReady() {
         gotoWalletActivity(this)
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean

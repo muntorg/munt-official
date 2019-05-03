@@ -16,14 +16,14 @@ data class UnityConfig(val dataDir: String, val apkPath: String, val staticFilte
 
 class UnityCore {
     interface Observer {
-        fun syncProgressChanged(percent: Float): Boolean { return false }
-        fun walletBalanceChanged(balance: Long): Boolean { return false }
-        fun onCoreReady(): Boolean { return false }
-        fun onCoreShutdown(): Boolean { return false }
-        fun createNewWallet(): Boolean { return false }
-        fun haveExistingWallet(): Boolean { return false }
+        fun syncProgressChanged(percent: Float) {}
+        fun walletBalanceChanged(balance: Long) {}
+        fun onCoreReady() {}
+        fun onCoreShutdown() {}
+        fun createNewWallet() {}
+        fun haveExistingWallet() {}
         fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {}
-        fun updatedTransaction(transaction: TransactionRecord): Boolean { return false }
+        fun updatedTransaction(transaction: TransactionRecord) {}
         fun onAddressBookChanged() {}
     }
 

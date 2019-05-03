@@ -60,9 +60,8 @@ fun AppCompatActivity.replaceFragmentWithBackstack(fragment: Any, frameId: Int, 
 class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         SharedPreferences.OnSharedPreferenceChangeListener
 {
-    override fun syncProgressChanged(percent: Float): Boolean {
+    override fun syncProgressChanged(percent: Float) {
         setSyncProgress(percent)
-        return true
     }
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -327,9 +326,8 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         }
     }
 
-    override fun walletBalanceChanged(balance: Long): Boolean {
+    override fun walletBalanceChanged(balance: Long) {
         setWalletBalance(balance)
-        return true
     }
 
     fun showSettingsTitle(title : String)

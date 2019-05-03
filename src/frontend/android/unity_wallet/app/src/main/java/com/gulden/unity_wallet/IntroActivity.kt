@@ -11,24 +11,21 @@ import androidx.appcompat.app.AppCompatActivity
 
 class IntroActivity : AppCompatActivity(), UnityCore.Observer
 {
-    override fun createNewWallet(): Boolean {
+    override fun createNewWallet() {
         // upgrade old wallet when a protobuf wallet file is present and is not marked as upgraded
         val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
         if (!upgradedMarkerFile.exists() && getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME).exists())
             gotoActivity(UpgradeActivity::class.java)
         else
             gotoActivity(WelcomeActivity::class.java)
-        return true
     }
 
-    override fun haveExistingWallet(): Boolean {
-        return true
+    override fun haveExistingWallet() {
     }
 
-    override fun onCoreReady(): Boolean {
+    override fun onCoreReady() {
         if (UnityCore.receivedExistingWalletEvent)
             gotoActivity(WalletActivity::class.java)
-        return true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

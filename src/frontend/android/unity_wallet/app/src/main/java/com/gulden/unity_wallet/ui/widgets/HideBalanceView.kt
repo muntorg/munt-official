@@ -96,9 +96,8 @@ class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(co
         updateViewState()
     }
 
-    override fun syncProgressChanged(percent: Float): Boolean {
+    override fun syncProgressChanged(percent: Float) {
         updateViewState()
-        return true
     }
 
 }

@@ -106,9 +106,8 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
     }
 
 
-    override fun syncProgressChanged(percent: Float): Boolean {
+    override fun syncProgressChanged(percent: Float) {
         setSyncProgress(percent)
-        return true
     }
 
     private fun setSyncProgress(percent: Float)

@@ -62,7 +62,7 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
         }
     }
 
-    override fun onCoreReady(): Boolean {
+    override fun onCoreReady() {
         // create marker file to indicate upgrade
         // this prevents prompting for an upgrade again later should the user remove his wallet
         // still the data of the old wallet is retained so if (god forbid) should something go wrong with upgrades
@@ -79,7 +79,6 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
         }
 
         gotoActivity(WalletActivity::class.java)
-        return true
     }
 
     private fun onUpgradeWithPassword(view : View, oldPassword : String)
