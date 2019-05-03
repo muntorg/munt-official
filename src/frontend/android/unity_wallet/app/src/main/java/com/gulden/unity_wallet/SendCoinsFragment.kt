@@ -193,7 +193,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
 
         if (recipient.amount != 0L)
-            amountEditStr = formatNative(recipient.amount, false)
+            amountEditStr = formatNativeSimple(recipient.amount)
         updateDisplayAmount()
 
         mSendCoinsReceivingStaticAddress.text = recipient.address

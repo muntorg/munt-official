@@ -116,6 +116,14 @@ val localCurrency: Currency
         return Currencies.knownCurrencies[code]!!
     }
 
+/**
+ * Format native amount using nu thousands separator, no locale (ie. always use "." (dot) for deciaml separator) and PRECISION_SHORT decimals
+ */
+fun formatNativeSimple(nativeAmount: Long): String
+{
+    return String.format(Locale.ROOT,"%.${Config.PRECISION_SHORT}f", nativeAmount.toDouble() / 100000000)
+}
+
 fun formatNative(nativeAmount: Long, useNativePrefix: Boolean = true): String
 {
     return "%s %s".format(if (useNativePrefix) "G" else "",
