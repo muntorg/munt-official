@@ -6,7 +6,6 @@ Active:
 
 |Suspected pool name|Website|Coinbase tag|Addresses|Confirmation URL|Contact details|
 |----|----|----|----|----|-----|
-|Strataspool|www.strataspool.com|Strataspool|GM4U6yt8qN2J9oW73hAPYAWqtV3WCj79Hz, Gd6nHhdJJYQ26Bvj7FgcEqi5z2af6m3oKd, GfoH4AyUdQMWx7VUS2oFPvTdvq1nNarzZx|||
 |coinpool|www.coinpool.nl|coinpool.nl|GaB1GaCuffaJ98UFncxXfGNAzonAfRtibW|||
 |newpool.eu|www.nlgpool.nl|-|GawCYmSbj1p5VWaP7LqKPcdxUtBcKFp96G|www.nlgpool.nl/blocks/428||
 |Zpool.ca|www.zpool.ca|-|GLoGJBsw2DXtLApZo7sG4w44WTocpZGTKQ, GQqCEDHiHbBaYmNPy49XuqWa66VgtrJ3eV|||
@@ -33,6 +32,7 @@ Active:
 |luckypool|https://gulden.luckypool.org|luckypool|GRH1SKLneAzwYn7yXdKBSuuAwwsmAz9JtQ|https://gulden.luckypool.org/index.php?page=statistics&action=round&height=783000||
 |mining-dutch.nl|www.mining-dutch.nl|-|GPfnm7iRfMkbMMDFprUBgPL4pRe92sdqYF, Ga4vnMZj3Drjh7rPknCokmkBrBsELcZF4k|https://www.mining-dutch.nl/pools/gulden.php?page=statistics&action=blocks||
 |powermining|http://powermining.pw/|-|GJDNGcbaszbXn3To1Gh1c8k5Y3QkacpbHJ|||
+|gos.cx|gos.cx|gos.cx|GhB58vSocyKnM84LwCLdmGi5iqFSfZsULv|https://gos.cx/explorer/NLG||
 
 Alive but inactive:
 ----
@@ -63,6 +63,7 @@ Deceased:
 
 |Suspected pool name|Website|Coinbase tag|Addresses|Confirmation URL|Contact details|
 |----|----|----|----|----|-----|
+|Strataspool|www.strataspool.com|Strataspool|GM4U6yt8qN2J9oW73hAPYAWqtV3WCj79Hz, Gd6nHhdJJYQ26Bvj7FgcEqi5z2af6m3oKd, GfoH4AyUdQMWx7VUS2oFPvTdvq1nNarzZx|||
 |Xpool.ca|www.xpool.ca|-|GWKLfUQT4V8rKXVrPxSG3KxJNoTgYx511D|||
 |Clevermining|www.clevermining.com|CMus, CMeu||||
 |Hardcoreminers|nlg.hardcoreminers.com|-|GNDA5MZWcm4AjLtNuEmYpgH8qsxo4vrnY8, GfkimougwyiudBNVrV3ZSqt79yRpXaAMyi, GLfre4jKfLTQx414jwgFsMoMsYU3VAL4ci|||
