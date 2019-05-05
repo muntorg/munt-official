@@ -6,7 +6,7 @@
 package com.gulden.unity_wallet
 
 import com.gulden.jniunifiedbackend.*
-import java.lang.RuntimeException
+import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
@@ -15,6 +15,8 @@ import kotlin.concurrent.withLock
 data class UnityConfig(val dataDir: String, val apkPath: String, val staticFilterOffset: Long, val staticFilterLength: Long, val testnet: Boolean)
 
 class UnityCore {
+    val walletReady = CompletableDeferred<Unit>()
+
     interface Observer {
         fun syncProgressChanged(percent: Float) {}
         fun walletBalanceChanged(balance: Long) {}
@@ -179,6 +181,7 @@ class UnityCore {
         }
 
         override fun notifyCoreReady() {
+            walletReady.complete(Unit)
             coreReady = true
             observers.forEach {
                 it.wrapper { it.observer.onCoreReady() }
