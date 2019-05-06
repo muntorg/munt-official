@@ -15,14 +15,18 @@ import kotlin.concurrent.withLock
 data class UnityConfig(val dataDir: String, val apkPath: String, val staticFilterOffset: Long, val staticFilterLength: Long, val testnet: Boolean)
 
 class UnityCore {
-    val walletReady = CompletableDeferred<Unit>()
+    val walletReady
+        get() = intWalletReady
+    val walletCreate
+        get() = intWalletCreate
+
+    private var intWalletReady = CompletableDeferred<Unit>()
+    private var intWalletCreate = CompletableDeferred<Unit>()
 
     interface Observer {
         fun syncProgressChanged(percent: Float) {}
         fun walletBalanceChanged(balance: Long) {}
         fun onCoreShutdown() {}
-        fun createNewWallet() {}
-        fun haveExistingWallet() {}
         fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {}
         fun updatedTransaction(transaction: TransactionRecord) {}
         fun onAddressBookChanged() {}
@@ -30,12 +34,6 @@ class UnityCore {
 
     companion object {
         val instance: UnityCore = UnityCore()
-        // Have we previously received an "existing wallet" event at any point
-        // Some parts of the codebase need to check this in case it happened before they registered as a listener
-        var receivedExistingWalletEvent = false
-        // Have we previously received a "create new wallet" event at any point
-        // Some parts of the codebase need to check this in case it happened before they registered as a listener
-        var receivedCreateNewWalletEvent = false
         // Have we previously been started
         var started = false
     }
@@ -180,25 +178,27 @@ class UnityCore {
         }
 
         override fun notifyCoreReady() {
+            // We have a functioning wallet, there will never be a notifyInitWithoutExistingWallet event,
+            // so cancel the current walletCreate. Though it might have completed already, so create a new
+            // one and cancel that as well.
+            intWalletCreate.cancel()
+            intWalletCreate = CompletableDeferred<Unit>()
+            intWalletCreate.cancel()
+
             walletReady.complete(Unit)
         }
 
         override fun notifyInitWithExistingWallet() {
-            receivedExistingWalletEvent = true
-            observersLock.withLock {
-                observers.forEach {
-                    it.wrapper { it.observer.haveExistingWallet() }
-                }
-            }
+            // not used
         }
 
         override fun notifyInitWithoutExistingWallet() {
-            receivedCreateNewWalletEvent = true
-            observersLock.withLock {
-                observers.forEach {
-                    it.wrapper { it.observer.createNewWallet() }
-                }
-            }
+            // There is no wallet yet. Cancel anything that is currently waiting for the wallet to get ready
+            // and put a new deferred there that can be waited on after the wallet create is properly handled.
+            intWalletReady.cancel()
+            intWalletReady = CompletableDeferred<Unit>()
+
+            walletCreate.complete(Unit)
         }
 
         /*override*/ fun notifyAddressBookChanged() {

@@ -16,13 +16,17 @@ abstract class AppBaseActivity : AppCompatActivity(), CoroutineScope {
      */
     open fun onWalletReady() {}
 
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        UnityCore.instance.addObserver(coreObserver, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+    /**
+     * Called when a wallet needs to be created. This is linked to the core notifyInitWithoutExistingWallet event.
+     * This is always called after onResume.
+     * The default behaviour will either continue to the welcome or upgrade activity,
+     * when overriding this you should normally NOT CALL the super method.
+     */
+    open fun onWalletCreate() {
+        welcomeOrUpgrade()
     }
+
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
     override fun onResume() {
         super.onResume()
@@ -34,17 +38,23 @@ abstract class AppBaseActivity : AppCompatActivity(), CoroutineScope {
                     onWalletReady()
             }
         }
+
+        // schedule onWalletCreate
+        launch(Dispatchers.Main) {
+            UnityCore.instance.walletCreate.invokeOnCompletion { handler ->
+                if (handler == null)
+                    onWalletCreate()
+            }
+        }
     }
 
-    private val coreObserver = object: UnityCore.Observer {
-        override fun createNewWallet() {
-            // upgrade old wallet when a protobuf wallet file is present and is not marked as upgraded
-            val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
-            if (!upgradedMarkerFile.exists() && getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME).exists())
-                gotoActivity(UpgradeActivity::class.java)
-            else
-                gotoActivity(WelcomeActivity::class.java)
-        }
+    private fun welcomeOrUpgrade() {
+        // upgrade old wallet when a protobuf wallet file is present and is not marked as upgraded
+        val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
+        if (!upgradedMarkerFile.exists() && getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME).exists())
+            gotoActivity(UpgradeActivity::class.java)
+        else
+            gotoActivity(WelcomeActivity::class.java)
     }
 
     private fun gotoActivity(cls: Class<*> )

@@ -23,6 +23,8 @@ import kotlin.concurrent.thread
 
 class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
 {
+    private val erasedWallet = UnityCore.instance.isCoreReady()
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -122,7 +124,12 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
     }
 
     override fun onWalletReady() {
-        gotoWalletActivity(this)
+        if (!erasedWallet)
+            gotoWalletActivity(this)
+    }
+
+    override fun onWalletCreate() {
+        // do nothing, we are supposed to sit here until the wallet was created
     }
 
     companion object

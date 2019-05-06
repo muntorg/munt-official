@@ -25,14 +25,11 @@ class URIHandlerActivity : AppBaseActivity(), UnityCore.Observer
 {
     private fun toastAndExit()
     {
-        handleURI = false
         Toast.makeText(this, getString(R.string.toast_warn_uri_attempt_before_wallet_creation), Toast.LENGTH_SHORT).show()
         finish()
     }
 
-    private var handleURI = true
-    override fun createNewWallet()
-    {
+    override fun onWalletCreate() {
         toastAndExit()
     }
 

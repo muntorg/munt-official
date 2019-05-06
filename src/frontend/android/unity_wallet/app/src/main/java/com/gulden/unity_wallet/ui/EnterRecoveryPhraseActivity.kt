@@ -27,6 +27,8 @@ private const val TAG = "enter-recovery-activity"
 
 class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 {
+    private val erasedWallet = UnityCore.instance.isCoreReady()
+
     private val recoveryPhrase: String
         get() = recover_from_phrase_text_view.text.toString().trim { it <= ' ' }
 
@@ -127,7 +129,12 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
     }
 
     override fun onWalletReady() {
-        gotoWalletActivity(this)
+        if (!erasedWallet)
+            gotoWalletActivity(this)
+    }
+
+    override fun onWalletCreate() {
+        // do nothing, we are supposed to sit here until the wallet was created
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean

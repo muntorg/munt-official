@@ -28,6 +28,8 @@ private const val TAG = "show-recovery-activity"
 
 class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 {
+    private val erasedWallet = UnityCore.instance.isCoreReady()
+
     //fixme: (GULDEN) Change to char[] to we can securely wipe.
     private var recoveryPhrase: String? = null
     internal var recoveryPhraseTrimmed: String? = null
@@ -79,7 +81,12 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
     }
 
     override fun onWalletReady() {
-        gotoWalletActivity(this)
+        if (!erasedWallet)
+            gotoWalletActivity(this)
+    }
+
+    override fun onWalletCreate() {
+        // do nothing, we are supposed to sit here until the wallet was created
     }
 
     @Suppress("UNUSED_PARAMETER")
