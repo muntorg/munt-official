@@ -15,7 +15,6 @@ abstract class AppBaseActivity : AppCompatActivity(), CoroutineScope {
 
         UnityCore.instance.addObserver(coreObserver, fun (callback:() -> Unit) { runOnUiThread { callback() }})
 
-        UnityCore.instance.startCore()
     }
 
     private val coreObserver = object: UnityCore.Observer {

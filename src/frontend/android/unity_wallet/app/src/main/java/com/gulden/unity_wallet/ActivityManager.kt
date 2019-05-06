@@ -14,18 +14,26 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.jniunifiedbackend.TransactionRecord
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.runOnUiThread
+import kotlin.coroutines.CoroutineContext
 
 private const val TAG = "activity-manager"
 
-class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener
-{
+class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, SharedPreferences.OnSharedPreferenceChangeListener, CoroutineScope {
+
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+
     private var lastAudibleNotification = 0L
 
     override fun onCreate()
@@ -45,9 +53,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         preferences.registerOnSharedPreferenceChangeListener(this)
 
         setupBackgroundSync(this)
-    }
 
-    override fun onCoreReady() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
@@ -67,7 +73,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     private var notificationChannel : NotificationChannel? = null
     private fun getNotificationChannelID() : String
     {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             if (notificationChannel == null)
             {
@@ -146,13 +152,21 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
         Log.i(TAG, "updatedTransaction: $transaction")
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun processCreated()
+    {
+        UnityCore.instance.startCore()
+    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun allActivitiesStopped()
     {
-        GuldenUnifiedBackend.PersistAndPruneForSPV()
-        GuldenUnifiedBackend.LockWallet()
-        //TODO: This lock call should be powered via core events and not directly
-        Authentication.instance.lock()
+        val deferred = UnityCore.instance.walletReady
+        if (deferred.isCompleted && !deferred.isCancelled) {
+            GuldenUnifiedBackend.PersistAndPruneForSPV()
+            GuldenUnifiedBackend.LockWallet()
+            //TODO: This lock call should be powered via core events and not directly
+            Authentication.instance.lock()
+        }
     }
 }
