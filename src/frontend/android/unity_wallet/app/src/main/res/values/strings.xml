@@ -177,4 +177,5 @@ file COPYING
     <string name="send_btn">Send</string>
     <string name="send_to_iban_title">Send Gulden to IBAN?</string>
     <string name="iban_order_failed">IBAN order failed</string>
+    <string name="core_not_ready_yet">Unity core not ready yet, please try again in a few seconds</string>
 </resources>

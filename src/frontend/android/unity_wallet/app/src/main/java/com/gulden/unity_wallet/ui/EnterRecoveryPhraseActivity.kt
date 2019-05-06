@@ -126,6 +126,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady() {
+        // TODO use walletReady deferred instead
         gotoWalletActivity(this)
     }
 
@@ -145,6 +146,8 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     private fun chooseAccessCodeAndProceed(mnemonicPhrase : String)
     {
+        // TODO must have core started and createWallet signal
+
         Authentication.instance.chooseAccessCode(this, null) {
             password->
             if (UnityCore.instance.isCoreReady()) {

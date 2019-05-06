@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gulden.jniunifiedbackend.GuldenMonitorListener
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
 import kotlinx.android.synthetic.main.block_list_fragment.*
 import kotlinx.android.synthetic.main.block_list_fragment.view.*
 import kotlinx.coroutines.*
@@ -44,8 +45,14 @@ class BlockListFragment : Fragment(), CoroutineScope {
         })
 
         // update data once
-        this.launch {
-           updateBlocks()
+        launch(Dispatchers.Main) {
+            try {
+                UnityCore.instance.walletReady.await()
+                updateBlocks()
+            }
+            catch (e: Throwable) {
+                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
+            }
         }
 
         val view = inflater.inflate(R.layout.block_list_fragment, container, false)

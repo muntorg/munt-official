@@ -15,25 +15,37 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.unity_wallet.Authentication
-import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.WalletActivity
-import com.gulden.unity_wallet.WelcomeActivity
+import com.gulden.unity_wallet.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.support.v4.alert
+import kotlin.coroutines.CoroutineContext
 
 
-class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat() {
+class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), CoroutineScope {
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.fragment_wallet_settings, rootKey)
 
-        if (GuldenUnifiedBackend.IsMnemonicWallet()) {
-            preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
-            preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
-        } else {
-            preferenceScreen.removePreferenceRecursively("recovery_view_preference")
-            preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
+        launch(Dispatchers.Main) {
+            try {
+                UnityCore.instance.walletReady.await()
+                if (GuldenUnifiedBackend.IsMnemonicWallet()) {
+                    preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
+                    preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
+                } else {
+                    preferenceScreen.removePreferenceRecursively("recovery_view_preference")
+                    preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
+                }
+            }
+            catch (e: Throwable) {
+                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
+            }
         }
     }
 

@@ -30,7 +30,9 @@ import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.gulden.unity_wallet.ui.getDisplayDimensions
 import com.gulden.unity_wallet.util.getAndroidVersion
 import com.gulden.unity_wallet.util.getDeviceName
+import kotlinx.coroutines.async
 import org.jetbrains.anko.contentView
+import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.design.snackbar
 import kotlin.concurrent.thread
 
@@ -75,6 +77,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         syncProgress.max = 1000000
         syncProgressTextual.text = ""
 
+        // TODO fix fragment creation/addition to work with restored activity instance
         if (sendFragment == null)
             sendFragment = SendFragment()
         addFragment(sendFragment!!, R.id.mainLayout)
@@ -103,10 +106,17 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     override fun onStart() {
         super.onStart()
 
-        setSyncProgress(UnityCore.instance.progressPercent)
-        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
-        setWalletBalance(UnityCore.instance.balanceAmount)
-
+        launch(Dispatchers.Main) {
+            try {
+                UnityCore.instance.walletReady.await()
+                UnityCore.instance.addObserver(this@WalletActivity, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+                setSyncProgress(UnityCore.instance.progressPercent)
+                setWalletBalance(UnityCore.instance.balanceAmount)
+            }
+            catch (e: Throwable) {
+                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
+            }
+        }
     }
 
     override fun onStop() {

@@ -16,7 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.LegacyWalletResult
 import com.gulden.unity_wallet.Constants.OLD_WALLET_PROTOBUF_FILENAME
+import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.upgrade_password.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.design.longSnackbar
@@ -24,7 +27,7 @@ import java.io.File
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
-class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
+class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
 {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,34 +39,7 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
 
     override fun onDestroy() {
         super.onDestroy()
-
-        try
-        {
-            UnityCore.instance.removeObserver(this)
-        }
-        catch (e : Exception)
-        {
-
-        }
-    }
-
-    override fun onCoreReady() {
-        // create marker file to indicate upgrade
-        // this prevents prompting for an upgrade again later should the user remove his wallet
-        // still the data of the old wallet is retained so if (god forbid) should something go wrong with upgrades
-        // in the field a fix can be published which could ignore the upgrade marker
-        val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
-        if (!upgradedMarkerFile.exists()) {
-            val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                packageManager.getPackageInfo(packageName, 0).longVersionCode
-            } else {
-                @Suppress("DEPRECATION")
-                packageManager.getPackageInfo(packageName, 0).versionCode.toLong()
-            }
-            upgradedMarkerFile.writeText("%d\n".format(versionCode))
-        }
-
-        gotoActivity(WalletActivity::class.java)
+        UnityCore.instance.removeObserver(this)
     }
 
     private fun onUpgradeWithPassword(view : View, oldPassword : String)
@@ -91,6 +67,8 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
     private var processingUpgrade = false
     fun onUpgrade(view: View)
     {
+        // TODO ensure core is started and create wallet mode is active
+        // TODO fix race here that is not handled properly with the processingUpgrade bool
         if (processingUpgrade)
             return
         processingUpgrade = true
@@ -142,6 +120,33 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
                     val newPassword = accessCode.joinToString("")
                     GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
                 }
+
+                launch(Dispatchers.Main) {
+                    try {
+                        UnityCore.instance.walletReady.await()
+
+                        // create marker file to indicate upgrade
+                        // this prevents prompting for an upgrade again later should the user remove his wallet
+                        // still the data of the old wallet is retained so if (god forbid) should something go wrong with upgrades
+                        // in the field a fix can be published which could ignore the upgrade marker
+                        val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
+                        if (!upgradedMarkerFile.exists()) {
+                            val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                packageManager.getPackageInfo(packageName, 0).longVersionCode
+                            } else {
+                                @Suppress("DEPRECATION")
+                                packageManager.getPackageInfo(packageName, 0).versionCode.toLong()
+                            }
+                            upgradedMarkerFile.writeText("%d\n".format(versionCode))
+                        }
+
+                        gotoActivity(WalletActivity::class.java)
+                    }
+                    catch (e: Throwable) {
+                        // silently ignore walletReady failure (deferred was cancelled or completed with exception)
+                    }
+                }
+
                 this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
             }
         }

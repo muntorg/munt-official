@@ -9,18 +9,19 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.jniunifiedbackend.UriRecord
+import com.gulden.unity_wallet.util.AppBaseActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.apache.commons.validator.routines.IBANValidator
 
 // URI handlers need unity core active to function - however as they may be called when app is closed it is necessary to manually start the core in some cases
 // All URI handlers therefore come via this transparent activity
 // Which takes care of detecting whether core is already active or not and then handles the URI appropriately
 
-//TODO - dedup some of the common code this shares with IntroActivity
-class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
+class URIHandlerActivity : AppBaseActivity(), UnityCore.Observer
 {
     private fun toastAndExit()
     {
@@ -33,20 +34,6 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
     override fun createNewWallet()
     {
         toastAndExit()
-    }
-    override fun haveExistingWallet() {
-    }
-
-    override fun onCoreReady() {
-        if (UnityCore.receivedExistingWalletEvent && handleURI)
-        {
-            handleURI = false
-            handleURIAndClose()
-        }
-        else
-        {
-            toastAndExit()
-        }
     }
 
     private fun handleURIAndClose()
@@ -99,38 +86,38 @@ class URIHandlerActivity : AppCompatActivity(), UnityCore.Observer
 
     private var intentUri : Uri? = null
     private var scheme : String? = null
+
+    private fun isValidGuldenUri(uri: Uri?): Boolean {
+        uri?.run {
+            scheme?.run {
+                toLowerCase().run {
+                    return startsWith("gulden")
+                            || startsWith("guldencoin")
+                            || startsWith("iban")
+                            || startsWith("sepa")
+                }
+            }
+        }
+        return false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         intentUri = intent.data
         scheme = intentUri?.getScheme()
-        if ((Intent.ACTION_VIEW == intent.action)
-                && (intentUri != null)
-                && (scheme != null)
-                && (scheme?.toLowerCase()?.startsWith("gulden")!!
-                        || scheme?.toLowerCase()?.startsWith("guldencoin")!!
-                        || scheme?.toLowerCase()?.startsWith("iban")!!
-                        || scheme?.toLowerCase()?.startsWith("sepa")!!)
-        )
+        if (Intent.ACTION_VIEW == intent.action && isValidGuldenUri(intentUri))
         {
-            val core = UnityCore.instance
-
-            UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
-            core.startCore()
-
-            // if core is already ready we are resuming a session and can go directly to the URI handler
-            // (there will be no further coreReady or haveExistingWallet event)
-            // Otherwise we must wait for the event
-            if (core.isCoreReady())
-            {
-                handleURIAndClose()
-            }
-            // If we have already previously received a create new wallet event and not handled it
-            // Then we are inside some edge case (e.g. someone has opened the app and is sitting on the create new wallet screen - and has now clicked a URI as well...)
-            // So just toast and exit
-            else if(!UnityCore.receivedExistingWalletEvent && UnityCore.receivedCreateNewWalletEvent)
-            {
-                toastAndExit()
+            // TODO: handle error case when URI handler triggered when in create wallet phase ( toastAndExit() )
+            launch(Dispatchers.Main) {
+                try {
+                    UnityCore.instance.walletReady.await()
+                    UnityCore.instance.addObserver(this@URIHandlerActivity, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+                    handleURIAndClose()
+                }
+                catch (e: Throwable) {
+                    // silently ignore walletReady failure (deferred was cancelled or completed with exception)
+                }
             }
         }
         else

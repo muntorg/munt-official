@@ -78,6 +78,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady() {
+        // TODO use walletReady deferred instead
         gotoWalletActivity(this)
     }
 
@@ -90,6 +91,8 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
             Toast.makeText(applicationContext, "Write down your recovery phrase", Toast.LENGTH_LONG).show()
             return
         }
+
+        // TODO must have core started and createWallet signal
 
         Authentication.instance.chooseAccessCode(this, null) {
             password->

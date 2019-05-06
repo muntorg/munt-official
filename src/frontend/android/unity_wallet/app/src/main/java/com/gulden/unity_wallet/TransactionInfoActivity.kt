@@ -34,6 +34,18 @@ class TransactionInfoActivity : AppBaseActivity() {
         setContentView(R.layout.activity_transaction_info)
         setSupportActionBar(toolbar)
 
+        launch(Dispatchers.Main) {
+            try {
+                UnityCore.instance.walletReady.await()
+                fillTxInfo()
+            }
+            catch (e: Throwable) {
+                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
+            }
+        }
+    }
+
+    private fun fillTxInfo() {
         val txHash = intent.getStringExtra(EXTRA_TRANSACTION)
         try {
             val tx = GuldenUnifiedBackend.getTransaction(txHash)

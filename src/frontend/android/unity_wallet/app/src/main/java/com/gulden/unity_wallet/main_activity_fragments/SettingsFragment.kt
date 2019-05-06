@@ -7,13 +7,11 @@ package com.gulden.unity_wallet.main_activity_fragments
 
 import android.os.Bundle
 import androidx.preference.Preference
-import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.localCurrency
-import java.lang.Exception
 
 
 class SettingsFragment : androidx.preference.PreferenceFragmentCompat()

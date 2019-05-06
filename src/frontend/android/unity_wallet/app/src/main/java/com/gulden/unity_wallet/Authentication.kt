@@ -131,7 +131,7 @@ class Authentication {
             this.title = context.getString(R.string.authentication_blocked_title)
             negativeButton(android.R.string.cancel) { }
             positiveButton(android.R.string.ok) {
-                if (GuldenUnifiedBackend.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
+                if (UnityCore.instance.walletReady.isCompleted && GuldenUnifiedBackend.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
                     chooseAccessCode(context, null) {
                         unblock(context)
                     }
@@ -178,7 +178,7 @@ class Authentication {
                                 var chosenCode = CharArray(ACCESS_CODE_LENGTH)
                                 s.getChars(0, s.length, chosenCode, 0)
 
-                                if (GuldenUnifiedBackend.UnlockWallet(chosenCode.joinToString(""))) {
+                                if (UnityCore.instance.walletReady.isCompleted && GuldenUnifiedBackend.UnlockWallet(chosenCode.joinToString(""))) {
                                     Log.i(TAG, "successful authentication")
                                     resetFailedAttempts(context)
                                     it.dismiss()

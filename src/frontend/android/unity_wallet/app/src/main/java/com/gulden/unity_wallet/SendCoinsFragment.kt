@@ -597,6 +597,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun handleSendButton(view : View)
     {
+        if (!UnityCore.instance.walletReady.isCompleted) {
+            errorMessage(getString(R.string.core_not_ready_yet))
+            return
+        }
+
         run {
             if ((amountEditStr.isEmpty()) || (foreignAmount<=0 && amount<=0))
             {
@@ -665,6 +670,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun handleAddToAddressBookClick(view : View)
     {
+        if (!UnityCore.instance.walletReady.isCompleted) {
+            errorMessage(getString(R.string.core_not_ready_yet))
+            return
+        }
+
         val builder = AlertDialog.Builder(fragmentActivity)
         builder.setTitle(getString(R.string.dialog_title_add_address))
         val layoutInflater : LayoutInflater = fragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -694,6 +704,11 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     @Suppress("UNUSED_PARAMETER")
     fun handleRemoveFromAddressBookClick(view : View)
     {
+        if (!UnityCore.instance.walletReady.isCompleted) {
+            errorMessage(getString(R.string.core_not_ready_yet))
+            return
+        }
+
         val record = AddressRecord(mSendCoinsReceivingStaticAddress.text.toString(), "Send", mSendCoinsReceivingStaticLabel.text.toString())
         UnityCore.instance.deleteAddressBookRecord(record)
         setAddressLabel("")

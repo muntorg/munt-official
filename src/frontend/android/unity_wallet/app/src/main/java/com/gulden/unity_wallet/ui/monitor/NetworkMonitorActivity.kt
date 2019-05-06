@@ -5,12 +5,13 @@
 
 package com.gulden.unity_wallet.ui.monitor
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
+import com.gulden.unity_wallet.addFragment
+import com.gulden.unity_wallet.replaceFragment
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
@@ -27,6 +28,7 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
 
         syncProgress.max = 1000000
 
+        // TODO fix fragment creation/addition to work with restored activity instance
         if (peersFragment == null)
             peersFragment = PeerListFragment()
         addFragment(peersFragment!!, R.id.networkMonitorMainLayout)

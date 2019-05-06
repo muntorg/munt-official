@@ -71,6 +71,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
+        // TODO must have core started and createWallet signal
         if (requestCode == REQUEST_CODE_SCAN_FOR_LINK)
         {
             if (resultCode == CommonStatusCodes.SUCCESS && data != null)
@@ -120,6 +121,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
     }
 
     override fun onCoreReady() {
+        // TODO use walletReady deferred instead
         gotoWalletActivity(this)
     }
 
