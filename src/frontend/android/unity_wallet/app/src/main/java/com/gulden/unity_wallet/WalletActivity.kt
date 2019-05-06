@@ -66,23 +66,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
-        // If we are restoring from a saved state, but the core is gone then we cannot continue in a sane way.
-        // Instead go immediately back to the IntroActivity and let it figure out what to do next.
-        if (!UnityCore.started)
-        {
-            Log.e("WalletActivity", "Starting wallet activity without Unity in place - jumping back to intro activity")
-            super.onCreate(null)
-            val intent = Intent(this, IntroActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-
-            finish()
-            return
-        }
-        else
-        {
-            super.onCreate(savedInstanceState)
-        }
+        super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 

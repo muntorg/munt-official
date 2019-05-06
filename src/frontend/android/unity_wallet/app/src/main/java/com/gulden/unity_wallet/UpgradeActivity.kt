@@ -22,27 +22,12 @@ import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.design.longSnackbar
 import java.io.File
 import kotlin.concurrent.thread
+import kotlin.system.exitProcess
 
 class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
 {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // If we are restoring from a saved state, but the core is gone then we cannot continue in a sane way.
-        // Instead go immediately back to the IntroActivity and let it figure out what to do next.
-        if (!UnityCore.started)
-        {
-            Log.e("UpgradeActivity", "Starting upgrade activity without Unity in place - jumping back to intro activity")
-            super.onCreate(null)
-            val intent = Intent(this, IntroActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-
-            finish()
-            return
-        }
-        else
-        {
-            super.onCreate(savedInstanceState)
-        }
+        super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_upgrade)
 
@@ -97,14 +82,8 @@ class UpgradeActivity : AppCompatActivity(), UnityCore.Observer
             }
             catch (e : Exception)
             {
-                //TODO: look into this closer... We receive in some limited cases a BadTokenException here - instead of crashing for now we catch it and restart the app.
-                Log.e("UpgradeActivity", "Starting upgrade activity without Unity in place - jumping back to intro activity")
-                super.onCreate(null)
-                val intent = Intent(this, IntroActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                startActivity(intent)
-
-                finish()
+                Log.e("UpgradeActivity", "Starting upgrade activity without Unity in place, exit to retry on next run")
+                exitProcess(1)
             }
         }
     }
