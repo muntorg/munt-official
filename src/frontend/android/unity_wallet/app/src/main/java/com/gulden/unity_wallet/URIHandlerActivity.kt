@@ -1,5 +1,5 @@
 // Copyright (c) 2019 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -101,27 +101,13 @@ class URIHandlerActivity : AppBaseActivity(), UnityCore.Observer
         return false
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onWalletReady() {
         intentUri = intent.data
-        scheme = intentUri?.getScheme()
-        if (Intent.ACTION_VIEW == intent.action && isValidGuldenUri(intentUri))
-        {
-            // TODO: handle error case when URI handler triggered when in create wallet phase ( toastAndExit() )
-            launch(Dispatchers.Main) {
-                try {
-                    UnityCore.instance.walletReady.await()
-                    UnityCore.instance.addObserver(this@URIHandlerActivity, fun (callback:() -> Unit) { runOnUiThread { callback() }})
-                    handleURIAndClose()
-                }
-                catch (e: Throwable) {
-                    // silently ignore walletReady failure (deferred was cancelled or completed with exception)
-                }
-            }
-        }
-        else
-        {
+        scheme = intentUri?.scheme
+        if (Intent.ACTION_VIEW == intent.action && isValidGuldenUri(intentUri)) {
+            UnityCore.instance.addObserver(this@URIHandlerActivity, fun(callback: () -> Unit) { runOnUiThread { callback() } })
+            handleURIAndClose()
+        } else {
             finish()
         }
     }

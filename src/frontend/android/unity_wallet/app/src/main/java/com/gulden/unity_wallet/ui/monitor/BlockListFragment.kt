@@ -18,13 +18,13 @@ import com.gulden.jniunifiedbackend.GuldenMonitorListener
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
+import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.block_list_fragment.*
 import kotlinx.android.synthetic.main.block_list_fragment.view.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class BlockListFragment : Fragment(), CoroutineScope {
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+class BlockListFragment : AppBaseFragment() {
     private lateinit var viewModel: BlockListViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -44,17 +44,6 @@ class BlockListFragment : Fragment(), CoroutineScope {
             }
         })
 
-        // update data once
-        launch(Dispatchers.Main) {
-            try {
-                UnityCore.instance.walletReady.await()
-                updateBlocks()
-            }
-            catch (e: Throwable) {
-                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
-            }
-        }
-
         val view = inflater.inflate(R.layout.block_list_fragment, container, false)
 
         view.block_list.let { recycler ->
@@ -64,6 +53,13 @@ class BlockListFragment : Fragment(), CoroutineScope {
         }
 
         return view
+    }
+
+    override fun onWalletReady() {
+        launch(Dispatchers.Main) {
+            // update data once
+            updateBlocks()
+        }
     }
 
     private suspend fun updateBlocks() {

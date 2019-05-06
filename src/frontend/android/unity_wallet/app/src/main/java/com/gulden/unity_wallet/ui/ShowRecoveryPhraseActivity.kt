@@ -18,6 +18,7 @@ import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.MenuItemCompat
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import com.gulden.unity_wallet.util.setFauxButtonEnabledState
 import kotlinx.android.synthetic.main.activity_show_recovery_phrase.*
@@ -25,7 +26,7 @@ import org.jetbrains.anko.sdk27.coroutines.onClick
 
 private const val TAG = "show-recovery-activity"
 
-class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
+class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 {
     //fixme: (GULDEN) Change to char[] to we can securely wipe.
     private var recoveryPhrase: String? = null
@@ -77,8 +78,7 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         super.onDestroy()
     }
 
-    override fun onCoreReady() {
-        // TODO use walletReady deferred instead
+    override fun onWalletReady() {
         gotoWalletActivity(this)
     }
 

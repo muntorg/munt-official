@@ -14,6 +14,7 @@ import com.gulden.jniunifiedbackend.GuldenMonitorListener
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
+import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.processing_fragment.*
 import kotlinx.android.synthetic.main.processing_fragment.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -23,32 +24,25 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.support.v4.runOnUiThread
 import kotlin.coroutines.CoroutineContext
 
-class ProcessingFragment : Fragment(), CoroutineScope {
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+class ProcessingFragment : AppBaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.processing_fragment, container, false)
+        return inflater.inflate(R.layout.processing_fragment, container, false)
+    }
 
-        launch(Dispatchers.Main) {
-            try {
-                UnityCore.instance.walletReady.await()
-                val stats = GuldenUnifiedBackend.getMonitoringStats()
-                with (stats) {
-                    view.processing_group_probable.text = probableHeight.toString()
-                    view.processing_group_height.text = partialHeight.toString()
-                    view.processing_group_processed.text = processedSPVHeight.toString()
-                    view.processing_group_offset.text = partialOffset.toString()
-                    view.processing_group_length.text = (partialHeight - partialOffset).toString()
-                    view.processing_group_prune.text = prunedHeight.toString()
-                }
-            }
-            catch (e: Throwable) {
-                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
+    override fun onWalletReady() {
+        val stats = GuldenUnifiedBackend.getMonitoringStats()
+        with (stats) {
+            view?.let { view ->
+                view.processing_group_probable.text = probableHeight.toString()
+                view.processing_group_height.text = partialHeight.toString()
+                view.processing_group_processed.text = processedSPVHeight.toString()
+                view.processing_group_offset.text = partialOffset.toString()
+                view.processing_group_length.text = (partialHeight - partialOffset).toString()
+                view.processing_group_prune.text = prunedHeight.toString()
             }
         }
-
-        return view
     }
 
     override fun onResume() {

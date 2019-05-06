@@ -18,13 +18,14 @@ import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.internalErrorAlert
+import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import com.gulden.unity_wallet.util.setFauxButtonEnabledState
 import kotlinx.android.synthetic.main.activity_enter_recovery_phrase.*
 
 private const val TAG = "enter-recovery-activity"
 
-class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
+class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 {
     private val recoveryPhrase: String
         get() = recover_from_phrase_text_view.text.toString().trim { it <= ' ' }
@@ -125,8 +126,7 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         UnityCore.instance.removeObserver(this)
     }
 
-    override fun onCoreReady() {
-        // TODO use walletReady deferred instead
+    override fun onWalletReady() {
         gotoWalletActivity(this)
     }
 

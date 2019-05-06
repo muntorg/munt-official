@@ -33,16 +33,10 @@ class TransactionInfoActivity : AppBaseActivity() {
 
         setContentView(R.layout.activity_transaction_info)
         setSupportActionBar(toolbar)
+    }
 
-        launch(Dispatchers.Main) {
-            try {
-                UnityCore.instance.walletReady.await()
-                fillTxInfo()
-            }
-            catch (e: Throwable) {
-                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
-            }
-        }
+    override fun onWalletReady() {
+        fillTxInfo()
     }
 
     private fun fillTxInfo() {

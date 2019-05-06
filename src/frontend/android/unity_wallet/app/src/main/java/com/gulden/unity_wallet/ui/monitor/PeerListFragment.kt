@@ -17,12 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
+import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.peer_list_fragment.*
 import kotlinx.android.synthetic.main.peer_list_fragment.view.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class PeerListFragment : Fragment(), CoroutineScope {
+class PeerListFragment : AppBaseFragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -75,4 +76,5 @@ class PeerListFragment : Fragment(), CoroutineScope {
 
         return view
     }
+
 }

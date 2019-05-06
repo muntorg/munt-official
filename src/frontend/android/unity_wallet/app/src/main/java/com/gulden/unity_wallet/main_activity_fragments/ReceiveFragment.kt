@@ -21,6 +21,7 @@ import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.util.AppBaseActivity
+import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.fragment_receive.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,41 +34,29 @@ import kotlin.coroutines.CoroutineContext
 
 
 /* Handle display of current address; as well as copying/sharing of address */
-class ReceiveFragment : androidx.fragment.app.Fragment(), CoroutineScope {
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+class ReceiveFragment : AppBaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         return inflater.inflate(R.layout.fragment_receive, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?)
-    {
-        super.onActivityCreated(savedInstanceState)
+    override fun onWalletReady() {
+        updateAddress()
+        buyButton.setOnClickListener { (activity as WalletActivity).gotoBuyActivity() }
+        shareButton.setOnClickListener {
+            val share = Intent(Intent.ACTION_SEND)
+            share.type = "text/plain"
+            share.putExtra(Intent.EXTRA_TEXT, currentAddressLabel.text)
+            startActivity(Intent.createChooser(share, getString(R.string.receive_fragment_share_title)))
+        }
 
-        launch(Dispatchers.Main) {
-            try {
-                UnityCore.instance.walletReady.await()
-                updateAddress()
-                buyButton.setOnClickListener { (activity as WalletActivity).gotoBuyActivity() }
-                shareButton.setOnClickListener {
-                    val share = Intent(Intent.ACTION_SEND)
-                    share.type = "text/plain"
-                    share.putExtra(Intent.EXTRA_TEXT, currentAddressLabel.text)
-                    startActivity(Intent.createChooser(share, getString(R.string.receive_fragment_share_title)))
-                }
+        currentAddressQrView.onLongClick {
+            copyToClipboard()
+        }
 
-                currentAddressQrView.onLongClick {
-                    copyToClipboard()
-                }
-
-                currentAddressLabel.onLongClick {
-                    copyToClipboard()
-                }
-            }
-            catch (e: Throwable) {
-                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
-            }
+        currentAddressLabel.onLongClick {
+            copyToClipboard()
         }
     }
 

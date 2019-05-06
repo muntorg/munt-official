@@ -15,12 +15,13 @@ import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity
 import com.gulden.unity_wallet.ui.ShowRecoveryPhraseActivity
+import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import kotlin.concurrent.thread
 
-class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
+class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
 {
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -120,8 +121,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
         startActivity(Intent(this, EnterRecoveryPhraseActivity::class.java))
     }
 
-    override fun onCoreReady() {
-        // TODO use walletReady deferred instead
+    override fun onWalletReady() {
         gotoWalletActivity(this)
     }
 

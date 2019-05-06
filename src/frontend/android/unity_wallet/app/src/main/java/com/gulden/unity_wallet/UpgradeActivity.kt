@@ -121,35 +121,28 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
                     GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
                 }
 
-                launch(Dispatchers.Main) {
-                    try {
-                        UnityCore.instance.walletReady.await()
-
-                        // create marker file to indicate upgrade
-                        // this prevents prompting for an upgrade again later should the user remove his wallet
-                        // still the data of the old wallet is retained so if (god forbid) should something go wrong with upgrades
-                        // in the field a fix can be published which could ignore the upgrade marker
-                        val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
-                        if (!upgradedMarkerFile.exists()) {
-                            val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                                packageManager.getPackageInfo(packageName, 0).longVersionCode
-                            } else {
-                                @Suppress("DEPRECATION")
-                                packageManager.getPackageInfo(packageName, 0).versionCode.toLong()
-                            }
-                            upgradedMarkerFile.writeText("%d\n".format(versionCode))
-                        }
-
-                        gotoActivity(WalletActivity::class.java)
-                    }
-                    catch (e: Throwable) {
-                        // silently ignore walletReady failure (deferred was cancelled or completed with exception)
-                    }
-                }
-
                 this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
             }
         }
+    }
+
+    override fun onWalletReady() {
+        // create marker file to indicate upgrade
+        // this prevents prompting for an upgrade again later should the user remove his wallet
+        // still the data of the old wallet is retained so if (god forbid) should something go wrong with upgrades
+        // in the field a fix can be published which could ignore the upgrade marker
+        val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
+        if (!upgradedMarkerFile.exists()) {
+            val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageManager.getPackageInfo(packageName, 0).longVersionCode
+            } else {
+                @Suppress("DEPRECATION")
+                packageManager.getPackageInfo(packageName, 0).versionCode.toLong()
+            }
+            upgradedMarkerFile.writeText("%d\n".format(versionCode))
+        }
+
+        gotoActivity(WalletActivity::class.java)
     }
 
     @Suppress("UNUSED_PARAMETER")

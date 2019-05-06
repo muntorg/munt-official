@@ -105,18 +105,12 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
 
     override fun onStart() {
         super.onStart()
+        UnityCore.instance.addObserver(this@WalletActivity, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+    }
 
-        launch(Dispatchers.Main) {
-            try {
-                UnityCore.instance.walletReady.await()
-                UnityCore.instance.addObserver(this@WalletActivity, fun (callback:() -> Unit) { runOnUiThread { callback() }})
-                setSyncProgress(UnityCore.instance.progressPercent)
-                setWalletBalance(UnityCore.instance.balanceAmount)
-            }
-            catch (e: Throwable) {
-                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
-            }
-        }
+    override fun onWalletReady() {
+        setSyncProgress(UnityCore.instance.progressPercent)
+        setWalletBalance(UnityCore.instance.balanceAmount)
     }
 
     override fun onStop() {

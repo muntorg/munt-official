@@ -20,7 +20,6 @@ class UnityCore {
     interface Observer {
         fun syncProgressChanged(percent: Float) {}
         fun walletBalanceChanged(balance: Long) {}
-        fun onCoreReady() {}
         fun onCoreShutdown() {}
         fun createNewWallet() {}
         fun haveExistingWallet() {}
@@ -81,11 +80,11 @@ class UnityCore {
     }
 
     fun isCoreReady(): Boolean {
-        return coreReady
+        val deferred = walletReady
+        return deferred.isCompleted && !deferred.isCancelled
     }
 
     private var config: UnityConfig? = null
-    private var coreReady: Boolean = false
 
     class ObserverEntry(val observer: Observer, val wrapper: (() ->Unit) -> Unit)
     private var observersLock: Lock = ReentrantLock()
@@ -182,10 +181,6 @@ class UnityCore {
 
         override fun notifyCoreReady() {
             walletReady.complete(Unit)
-            coreReady = true
-            observers.forEach {
-                it.wrapper { it.observer.onCoreReady() }
-            }
         }
 
         override fun notifyInitWithExistingWallet() {
