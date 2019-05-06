@@ -26,6 +26,8 @@ import kotlin.coroutines.CoroutineContext
 class PeerListFragment : AppBaseFragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
+    var peerUpdateJob: Job? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -45,7 +47,7 @@ class PeerListFragment : AppBaseFragment(), CoroutineScope {
         })
 
         // periodically update peers
-        launch(Dispatchers.Main) {
+        peerUpdateJob = launch(Dispatchers.Main) {
             try {
                 UnityCore.instance.walletReady.await()
                 while (isActive) {
@@ -75,6 +77,11 @@ class PeerListFragment : AppBaseFragment(), CoroutineScope {
         }
 
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        peerUpdateJob?.cancel()
     }
 
 }
