@@ -44,6 +44,9 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
         super.onBackPressed()
 
         // finish and kill myself so a next session is properly started
+        // note this is now only because of the weird wiring which happens when a wallet is erased
+        // consider introducing query API in Unity that would allow getting the erased wallet state
+        // or some other construct such that logic on the Unity client side can be clearer
         finish()
         System.exit(0)
     }
