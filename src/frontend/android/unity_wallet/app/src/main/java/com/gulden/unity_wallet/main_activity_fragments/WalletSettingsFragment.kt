@@ -32,20 +32,28 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
     override fun onCreatePreferences(savedInstance: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.fragment_wallet_settings, rootKey)
 
-        launch(Dispatchers.Main) {
-            try {
-                UnityCore.instance.walletReady.await()
-                if (GuldenUnifiedBackend.IsMnemonicWallet()) {
-                    preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
-                    preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
-                } else {
-                    preferenceScreen.removePreferenceRecursively("recovery_view_preference")
-                    preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
+        // if wallet ready, setup preference fields immediately so settings don't get removed in sight of user
+        val deferred = UnityCore.instance.walletReady
+        if (deferred.isCompleted && !deferred.isCancelled) {
+            walletReadySetup()
+        }
+        else {
+            launch(Dispatchers.Main) {
+                deferred.invokeOnCompletion { handler ->
+                    if (handler == null)
+                        walletReadySetup()
                 }
             }
-            catch (e: Throwable) {
-                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
-            }
+        }
+    }
+
+    fun walletReadySetup() {
+        if (GuldenUnifiedBackend.IsMnemonicWallet()) {
+            preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
+            preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
+        } else {
+            preferenceScreen.removePreferenceRecursively("recovery_view_preference")
+            preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
         }
     }
 
