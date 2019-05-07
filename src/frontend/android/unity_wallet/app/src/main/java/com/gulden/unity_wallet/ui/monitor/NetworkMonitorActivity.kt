@@ -25,11 +25,6 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         syncProgress.max = 1000000
-
-        // TODO fix fragment creation/addition to work with restored activity instance
-        if (peersFragment == null)
-            peersFragment = PeerListFragment()
-        addFragment(peersFragment!!, R.id.networkMonitorMainLayout)
     }
 
     override fun onDestroy() {
@@ -43,6 +38,12 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
 
         setSyncProgress(UnityCore.instance.progressPercent)
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+
+        if (supportFragmentManager.fragments.isEmpty()) {
+            if (peersFragment == null)
+                peersFragment = PeerListFragment()
+            addFragment(peersFragment!!, R.id.networkMonitorMainLayout)
+        }
     }
 
     override fun onStop() {

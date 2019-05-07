@@ -54,10 +54,6 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         syncProgress.max = 1000000
         syncProgressTextual.text = ""
 
-        // TODO fix fragment creation/addition to work with restored activity instance
-        if (sendFragment == null)
-            sendFragment = SendFragment()
-        addFragment(sendFragment!!, R.id.mainLayout)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
@@ -83,6 +79,12 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     override fun onStart() {
         super.onStart()
         UnityCore.instance.addObserver(this@WalletActivity, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+
+        if (supportFragmentManager.fragments.isEmpty()) {
+            if (sendFragment == null)
+                sendFragment = SendFragment()
+            addFragment(sendFragment!!, R.id.mainLayout)
+        }
     }
 
     override fun onWalletReady() {
