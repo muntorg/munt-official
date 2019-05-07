@@ -3,9 +3,14 @@ package com.gulden.unity_wallet.util
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import com.gulden.unity_wallet.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+
+inline fun FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
+    beginTransaction().func().commit()
+}
 
 abstract class AppBaseActivity : AppCompatActivity(), CoroutineScope {
 
@@ -65,4 +70,24 @@ abstract class AppBaseActivity : AppCompatActivity(), CoroutineScope {
 
         finish()
     }
+
+
+    fun addFragment(fragment: androidx.fragment.app.Fragment, frameId: Int){
+        supportFragmentManager.inTransaction { add(frameId, fragment) }
+    }
+
+    fun removeFragment(fragment: Any, popFromBackstack : Boolean, name : String) {
+        supportFragmentManager.inTransaction{remove(fragment as androidx.fragment.app.Fragment)}
+        if (popFromBackstack)
+            supportFragmentManager.popBackStackImmediate(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    fun replaceFragment(fragment: Any, frameId: Int) {
+        supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
+    }
+
+    fun replaceFragmentWithBackstack(fragment: Any, frameId: Int, name : String) {
+        supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment).addToBackStack(name)}
+    }
+
 }

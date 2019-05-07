@@ -10,8 +10,6 @@ import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
-import com.gulden.unity_wallet.addFragment
-import com.gulden.unity_wallet.replaceFragment
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job

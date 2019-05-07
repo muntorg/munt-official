@@ -36,29 +36,6 @@ import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.design.snackbar
 import kotlin.concurrent.thread
 
-
-inline fun androidx.fragment.app.FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
-    beginTransaction().func().commit()
-}
-
-fun AppCompatActivity.addFragment(fragment: androidx.fragment.app.Fragment, frameId: Int){
-    supportFragmentManager.inTransaction { add(frameId, fragment) }
-}
-
-fun AppCompatActivity.removeFragment(fragment: Any, popFromBackstack : Boolean, name : String) {
-    supportFragmentManager.inTransaction{remove(fragment as androidx.fragment.app.Fragment)}
-    if (popFromBackstack)
-        supportFragmentManager.popBackStackImmediate(name, POP_BACK_STACK_INCLUSIVE)
-}
-
-fun AppCompatActivity.replaceFragment(fragment: Any, frameId: Int) {
-    supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
-}
-
-fun AppCompatActivity.replaceFragmentWithBackstack(fragment: Any, frameId: Int, name : String) {
-    supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment).addToBackStack(name)}
-}
-
 class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         SharedPreferences.OnSharedPreferenceChangeListener
 {
