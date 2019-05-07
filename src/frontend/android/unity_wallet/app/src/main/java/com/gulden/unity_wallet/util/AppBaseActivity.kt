@@ -1,11 +1,18 @@
+// Copyright (c) 2018-2019 The Gulden developers
+// Authored by: Willem de Jonge (willem@isnapp.nl)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 package com.gulden.unity_wallet.util
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.gulden.unity_wallet.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 inline fun FragmentManager.inTransaction(func: androidx.fragment.app.FragmentTransaction.() -> androidx.fragment.app.FragmentTransaction) {
@@ -71,23 +78,16 @@ abstract class AppBaseActivity : AppCompatActivity(), CoroutineScope {
         finish()
     }
 
+    fun gotoFragment(fragment: androidx.fragment.app.Fragment, frameId: Int) {
+        supportFragmentManager.popBackStackImmediate()
+        supportFragmentManager.inTransaction { replace(frameId, fragment) }
+    }
 
-    fun addFragment(fragment: androidx.fragment.app.Fragment, frameId: Int){
+    fun pushFragment(fragment: androidx.fragment.app.Fragment, frameId: Int) {
+        supportFragmentManager.inTransaction { replace(R.id.mainLayout, fragment).addToBackStack(null) }
+    }
+
+    fun addFragment(fragment: androidx.fragment.app.Fragment, frameId: Int) {
         supportFragmentManager.inTransaction { add(frameId, fragment) }
     }
-
-    fun removeFragment(fragment: Any, popFromBackstack : Boolean, name : String) {
-        supportFragmentManager.inTransaction{remove(fragment as androidx.fragment.app.Fragment)}
-        if (popFromBackstack)
-            supportFragmentManager.popBackStackImmediate(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-    }
-
-    fun replaceFragment(fragment: Any, frameId: Int) {
-        supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment)}
-    }
-
-    fun replaceFragmentWithBackstack(fragment: Any, frameId: Int, name : String) {
-        supportFragmentManager.inTransaction{replace(frameId, fragment as androidx.fragment.app.Fragment).addToBackStack(name)}
-    }
-
 }

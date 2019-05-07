@@ -1,5 +1,5 @@
-// Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2018-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -40,9 +40,7 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
 
         if (supportFragmentManager.fragments.isEmpty()) {
-            if (peersFragment == null)
-                peersFragment = PeerListFragment()
-            addFragment(peersFragment!!, R.id.networkMonitorMainLayout)
+            addFragment(PeerListFragment(), R.id.networkMonitorMainLayout)
         }
     }
 
@@ -55,39 +53,15 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
         finish()
     }
 
-    private fun gotoPeersPage()
-    {
-        if (peersFragment == null)
-            peersFragment = PeerListFragment()
-        replaceFragment(peersFragment!!, R.id.networkMonitorMainLayout)
-    }
-
-    private fun gotoBlocksPage()
-    {
-        if (blocksFragment == null)
-            blocksFragment = BlockListFragment()
-        replaceFragment(blocksFragment!!, R.id.networkMonitorMainLayout)
-    }
-
-    private fun gotoProcessingPage()
-    {
-        if (processingFragment == null)
-            processingFragment = ProcessingFragment()
-        replaceFragment(processingFragment!!, R.id.networkMonitorMainLayout)
-    }
-
-    private var blocksFragment : BlockListFragment ?= null
-    private var peersFragment : PeerListFragment?= null
-    private var processingFragment : ProcessingFragment?= null
-
-
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_peers -> { gotoPeersPage(); return@OnNavigationItemSelectedListener true }
-            R.id.navigation_blocks -> { gotoBlocksPage(); return@OnNavigationItemSelectedListener true }
-            R.id.navigation_processing -> { gotoProcessingPage(); return@OnNavigationItemSelectedListener true }
+        val page = when (item.itemId) {
+            R.id.navigation_peers -> PeerListFragment()
+            R.id.navigation_blocks -> BlockListFragment()
+            R.id.navigation_processing -> ProcessingFragment()
+            else -> return@OnNavigationItemSelectedListener false
         }
-        false
+        gotoFragment(page, R.id.networkMonitorMainLayout)
+        true
     }
 
 

@@ -1,5 +1,5 @@
 // Copyright (c) 2018-2019 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -18,7 +18,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.main_activity_fragments.*
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
-import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,10 +25,10 @@ import kotlinx.coroutines.launch
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.TextViewCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.gulden.unity_wallet.ui.getDisplayDimensions
-import com.gulden.unity_wallet.util.getAndroidVersion
-import com.gulden.unity_wallet.util.getDeviceName
+import com.gulden.unity_wallet.util.*
 import kotlinx.coroutines.async
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.custom.async
@@ -81,9 +80,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         UnityCore.instance.addObserver(this@WalletActivity, fun (callback:() -> Unit) { runOnUiThread { callback() }})
 
         if (supportFragmentManager.fragments.isEmpty()) {
-            if (sendFragment == null)
-                sendFragment = SendFragment()
-            addFragment(sendFragment!!, R.id.mainLayout)
+            addFragment(SendFragment(), R.id.mainLayout)
         }
     }
 
@@ -136,83 +133,31 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         startActivity(Intent(this, LicenseActivity::class.java))
     }
 
-    private fun gotoSendPage()
-    {
-        if (sendFragment == null)
-            sendFragment = SendFragment()
-        replaceFragment(sendFragment!!, R.id.mainLayout)
-        clearSettingsPages()
+    private fun gotoPage(page: Fragment) {
+        gotoFragment(page, R.id.mainLayout)
     }
 
-    private fun gotoReceivePage()
+    fun pushWalletSettingsPage()
     {
-        if (receiveFragment == null)
-            receiveFragment = ReceiveFragment()
-        replaceFragment(receiveFragment!!, R.id.mainLayout)
-        clearSettingsPages()
+        pushFragment(WalletSettingsFragment(), R.id.mainLayout)
     }
 
-    private fun gotoTransactionPage()
+    fun pushCurrencyPage()
     {
-        if (transactionFragment == null)
-            transactionFragment = MutationFragment()
-        replaceFragment(transactionFragment!!, R.id.mainLayout)
-        clearSettingsPages()
+        pushFragment(LocalCurrencyFragment(), R.id.mainLayout)
     }
-
-    private fun clearSettingsPages()
-    {
-        clearNestedSettingsPages()
-        if (settingsFragment != null) { removeFragment(settingsFragment!!, false, ""); settingsFragment = null }
-    }
-
-    private fun clearNestedSettingsPages()
-    {
-        if (walletSettingsFragment != null) { removeFragment(walletSettingsFragment!!,true,  "walletsettings"); walletSettingsFragment = null }
-        if (currencySettingsFragment != null) { removeFragment(currencySettingsFragment!!, true, "currencysettings"); currencySettingsFragment = null }
-    }
-
-    private fun gotoSettingsPage()
-    {
-        clearNestedSettingsPages()
-        if (settingsFragment == null)
-            settingsFragment = SettingsFragment()
-        replaceFragment(settingsFragment!!, R.id.mainLayout)
-    }
-
-    fun gotoWalletSettingsPage()
-    {
-        clearNestedSettingsPages()
-        if (walletSettingsFragment == null)
-            walletSettingsFragment = WalletSettingsFragment()
-
-        replaceFragmentWithBackstack(walletSettingsFragment!!, R.id.mainLayout, "walletsettings")
-    }
-
-    fun gotoCurrencyPage()
-    {
-        clearNestedSettingsPages()
-        if (currencySettingsFragment == null)
-            currencySettingsFragment = LocalCurrencyFragment()
-
-        replaceFragmentWithBackstack(currencySettingsFragment!!, R.id.mainLayout, "currencysettings")
-    }
-
-    private var sendFragment : SendFragment ?= null
-    private var receiveFragment : ReceiveFragment ?= null
-    private var transactionFragment : MutationFragment ?= null
-    private var settingsFragment : SettingsFragment ?= null
-    private var walletSettingsFragment : WalletSettingsFragment ?= null
-    private var currencySettingsFragment : LocalCurrencyFragment ?= null
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        val page =
          when (item.itemId) {
-            R.id.navigation_send -> { gotoSendPage(); return@OnNavigationItemSelectedListener true }
-            R.id.navigation_receive -> { gotoReceivePage(); return@OnNavigationItemSelectedListener true }
-            R.id.navigation_transactions -> { gotoTransactionPage(); return@OnNavigationItemSelectedListener true }
-            R.id.navigation_settings -> { gotoSettingsPage(); return@OnNavigationItemSelectedListener true }
+            R.id.navigation_send -> SendFragment()
+            R.id.navigation_receive -> ReceiveFragment()
+            R.id.navigation_transactions -> MutationFragment()
+            R.id.navigation_settings -> SettingsFragment()
+             else -> return@OnNavigationItemSelectedListener false
         }
-        false
+        gotoPage(page)
+        true
     }
 
     fun performLink(linkURI: String)
@@ -236,7 +181,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                 {
                     runOnUiThread {
                         this.contentView?.snackbar(getString(R.string.rescan_started))
-                        gotoReceivePage()
+                        gotoPage(ReceiveFragment())
                     }
                 }
             }

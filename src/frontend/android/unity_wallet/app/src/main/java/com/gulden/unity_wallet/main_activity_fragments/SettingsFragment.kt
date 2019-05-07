@@ -55,8 +55,8 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
     {
         when (preference?.key){
-            "preference_local_currency" ->  (activity as WalletActivity).gotoCurrencyPage()
-            "preference_show_wallet_settings" ->  (activity as WalletActivity).gotoWalletSettingsPage()
+            "preference_local_currency" ->  (activity as WalletActivity).pushCurrencyPage()
+            "preference_show_wallet_settings" ->  (activity as WalletActivity).pushWalletSettingsPage()
         }
         return super.onPreferenceTreeClick(preference)
     }

@@ -1,3 +1,8 @@
+// Copyright (c) 2018-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 package com.gulden.unity_wallet
 
 import android.preference.PreferenceManager
