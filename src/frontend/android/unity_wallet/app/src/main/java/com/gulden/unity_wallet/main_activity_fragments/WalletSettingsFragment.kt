@@ -16,10 +16,10 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.support.v4.alert
@@ -33,27 +33,14 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
         setPreferencesFromResource(R.xml.fragment_wallet_settings, rootKey)
 
         // if wallet ready, setup preference fields immediately so settings don't get removed in sight of user
-        val deferred = UnityCore.instance.walletReady
-        if (deferred.isCompleted && !deferred.isCancelled) {
-            walletReadySetup()
-        }
-        else {
-            launch(Dispatchers.Main) {
-                deferred.invokeOnCompletion { handler ->
-                    if (handler == null)
-                        walletReadySetup()
-                }
+        UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
+            if (GuldenUnifiedBackend.IsMnemonicWallet()) {
+                preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
+                preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
+            } else {
+                preferenceScreen.removePreferenceRecursively("recovery_view_preference")
+                preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
             }
-        }
-    }
-
-    fun walletReadySetup() {
-        if (GuldenUnifiedBackend.IsMnemonicWallet()) {
-            preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
-            preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
-        } else {
-            preferenceScreen.removePreferenceRecursively("recovery_view_preference")
-            preferenceScreen.removePreferenceRecursively("preference_remove_wallet")
         }
     }
 
