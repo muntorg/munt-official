@@ -4,10 +4,10 @@ import com.gulden.unity_wallet.UnityCore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import org.jetbrains.anko.support.v4.runOnUiThread
 import kotlin.coroutines.CoroutineContext
 
-abstract class AppBaseFragment: androidx.fragment.app.Fragment(), CoroutineScope {
+abstract class AppBaseFragment : androidx.fragment.app.Fragment(), CoroutineScope {
 
     /**
      * Called when walletReady is completed, but always after onResume
@@ -22,10 +22,9 @@ abstract class AppBaseFragment: androidx.fragment.app.Fragment(), CoroutineScope
         super.onResume()
 
         // schedule onWalletReady
-        launch(Dispatchers.Main) {
-            UnityCore.instance.walletReady.invokeOnCompletion { handler ->
-                if (handler == null)
-                    onWalletReady()
+        UnityCore.instance.walletReady.invokeOnCompletion { handler ->
+            if (handler == null) {
+                runOnUiThread { onWalletReady() }
             }
         }
     }

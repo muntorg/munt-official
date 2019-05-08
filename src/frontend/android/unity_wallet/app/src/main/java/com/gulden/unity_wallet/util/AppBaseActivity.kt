@@ -44,18 +44,16 @@ abstract class AppBaseActivity : AppCompatActivity(), CoroutineScope {
         super.onResume()
 
         // schedule onWalletReady
-        launch(Dispatchers.Main) {
-            UnityCore.instance.walletReady.invokeOnCompletion { handler ->
-                if (handler == null)
-                    onWalletReady()
+        UnityCore.instance.walletReady.invokeOnCompletion { handler ->
+            if (handler == null) {
+                runOnUiThread { onWalletReady() }
             }
         }
 
         // schedule onWalletCreate
-        launch(Dispatchers.Main) {
-            UnityCore.instance.walletCreate.invokeOnCompletion { handler ->
-                if (handler == null)
-                    onWalletCreate()
+        UnityCore.instance.walletCreate.invokeOnCompletion { handler ->
+            if (handler == null) {
+                runOnUiThread { onWalletCreate() }
             }
         }
     }

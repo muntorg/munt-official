@@ -5,12 +5,15 @@
 
 package com.gulden.unity_wallet
 
+import android.util.Log
 import com.gulden.jniunifiedbackend.*
 import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
+
+private const val TAG = "unity_core"
 
 data class UnityConfig(val dataDir: String, val apkPath: String, val staticFilterOffset: Long, val staticFilterLength: Long, val testnet: Boolean)
 
@@ -170,14 +173,18 @@ class UnityCore {
         }
 
         override fun notifyCoreReady() {
-            // We have a functioning wallet, there will never be a notifyInitWithoutExistingWallet event,
-            // so cancel the current walletCreate. Though it might have completed already, so create a new
-            // one and cancel that as well.
-            intWalletCreate.cancel()
-            intWalletCreate = CompletableDeferred<Unit>()
-            intWalletCreate.cancel()
-
-            walletReady.complete(Unit)
+            try {
+                // We have a functioning wallet, there will never be a notifyInitWithoutExistingWallet event,
+                // so cancel the current walletCreate. Though it might have completed already, so create a new
+                // one and cancel that as well.
+                intWalletCreate.cancel()
+                intWalletCreate = CompletableDeferred<Unit>()
+                intWalletCreate.cancel()
+                walletReady.complete(Unit)
+            }
+            catch (e: Throwable) {
+                Log.e(TAG, "Exception in Java/Kotlin notification handler notifyCoreReady() $e")
+            }
         }
 
         override fun notifyInitWithExistingWallet() {
@@ -185,12 +192,16 @@ class UnityCore {
         }
 
         override fun notifyInitWithoutExistingWallet() {
-            // There is no wallet yet. Cancel anything that is currently waiting for the wallet to get ready
-            // and put a new deferred there that can be waited on after the wallet create is properly handled.
-            intWalletReady.cancel()
-            intWalletReady = CompletableDeferred<Unit>()
-
-            walletCreate.complete(Unit)
+            try {
+                // There is no wallet yet. Cancel anything that is currently waiting for the wallet to get ready
+                // and put a new deferred there that can be waited on after the wallet create is properly handled.
+                intWalletReady.cancel()
+                intWalletReady = CompletableDeferred<Unit>()
+                walletCreate.complete(Unit)
+            }
+            catch (e: Throwable) {
+                Log.e(TAG, "Exception in Java/Kotlin notification handler notifyInitWithoutExistingWallet() $e")
+            }
         }
 
         /*override*/ fun notifyAddressBookChanged() {
