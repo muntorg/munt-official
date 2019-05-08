@@ -21,7 +21,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
 
         val pref = findPreference<SwitchPreference>("preference_hide_balance")
-        pref.setOnPreferenceChangeListener { preference, newValue ->
+        pref?.setOnPreferenceChangeListener { preference, newValue ->
             val switch = preference as SwitchPreference
             val hide = newValue as Boolean
 
@@ -43,8 +43,8 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
         try
         {
-            val localCurrencyPreference: Preference = findPreference("preference_local_currency")
-            localCurrencyPreference.summary = localCurrency.code
+            val localCurrencyPreference: Preference? = findPreference("preference_local_currency")
+            localCurrencyPreference?.summary = localCurrency.code
         }
         catch(e : Exception)
         {
