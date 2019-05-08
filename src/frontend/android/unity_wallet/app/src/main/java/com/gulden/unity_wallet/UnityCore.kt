@@ -90,16 +90,9 @@ class UnityCore {
 
     private var stateTrackLock:  Lock = ReentrantLock()
 
-    var progressPercent: Float = 0F
-        set(value) {
-            stateTrackLock.withLock {
-                field = value
-            }
-        }
+    val progressPercent: Float
         get() {
-            stateTrackLock.withLock {
-                return field
-            }
+            return GuldenUnifiedBackend.getUnifiedProgress() * 100
         }
 
     var balanceAmount: Long = 0
@@ -133,7 +126,6 @@ class UnityCore {
 
         override fun notifyUnifiedProgress(progress: Float) {
             val percent: Float = 100 * progress
-            progressPercent = percent
 
             observersLock.withLock {
                 observers.forEach {
