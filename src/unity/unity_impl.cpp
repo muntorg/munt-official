@@ -1028,6 +1028,11 @@ void GuldenUnifiedBackend::ResetUnifiedProgress()
     CWallet::ResetUnifiedSPVProgressNotification();
 }
 
+float GuldenUnifiedBackend::getUnifiedProgress()
+{
+    return CSPVScanner::lastProgressReported;
+}
+
 std::vector<PeerRecord> GuldenUnifiedBackend::getPeers()
 {
     std::vector<PeerRecord> ret;

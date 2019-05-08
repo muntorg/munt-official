@@ -242,6 +242,8 @@ gulden_unified_backend = interface +c {
     # Get info of last blocks (at most 32) in SPV chain
     static getLastSPVBlockInfos() : list<block_info_record>;
 
+    static getUnifiedProgress(): f32;
+
     static getMonitoringStats(): monitor_record;
 
     static RegisterMonitorListener(listener : gulden_monitor_listener);

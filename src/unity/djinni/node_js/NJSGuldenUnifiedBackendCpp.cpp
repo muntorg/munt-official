@@ -1017,6 +1017,24 @@ NAN_METHOD(NJSGuldenUnifiedBackend::getLastSPVBlockInfos) {
     //Return result
     info.GetReturnValue().Set(arg_0);
 }
+NAN_METHOD(NJSGuldenUnifiedBackend::getUnifiedProgress) {
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        return Nan::ThrowError("NJSGuldenUnifiedBackend::getUnifiedProgress needs 0 arguments");
+    }
+
+    //Check if parameters have correct types
+
+    auto result = GuldenUnifiedBackend::getUnifiedProgress();
+
+    //Wrap result in node object
+    auto arg_0 = Nan::New<Number>(result);
+
+    //Return result
+    info.GetReturnValue().Set(arg_0);
+}
 NAN_METHOD(NJSGuldenUnifiedBackend::getMonitoringStats) {
 
     //Check if method called with right number of arguments
@@ -1159,6 +1177,7 @@ void NJSGuldenUnifiedBackend::Initialize(Local<Object> target) {
     Nan::SetPrototypeMethod(func_template,"ResetUnifiedProgress", ResetUnifiedProgress);
     Nan::SetPrototypeMethod(func_template,"getPeers", getPeers);
     Nan::SetPrototypeMethod(func_template,"getLastSPVBlockInfos", getLastSPVBlockInfos);
+    Nan::SetPrototypeMethod(func_template,"getUnifiedProgress", getUnifiedProgress);
     Nan::SetPrototypeMethod(func_template,"getMonitoringStats", getMonitoringStats);
     Nan::SetPrototypeMethod(func_template,"RegisterMonitorListener", RegisterMonitorListener);
     Nan::SetPrototypeMethod(func_template,"UnregisterMonitorListener", UnregisterMonitorListener);

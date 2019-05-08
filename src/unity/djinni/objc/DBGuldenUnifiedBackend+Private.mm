@@ -357,6 +357,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (float)getUnifiedProgress {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::getUnifiedProgress();
+        return ::djinni::F32::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (nonnull DBMonitorRecord *)getMonitoringStats {
     try {
         auto objcpp_result_ = ::GuldenUnifiedBackend::getMonitoringStats();

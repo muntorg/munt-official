@@ -36,6 +36,7 @@ const int PERSIST_BLOCK_COUNT = 500;
 const int UI_UPDATE_LIMIT = 50;
 
 std::atomic<int> CSPVScanner::lastProcessedBlockHeight = 0;
+std::atomic<float> CSPVScanner::lastProgressReported = -1.0f;
 
 CSPVScanner::CSPVScanner(CWallet& _wallet) :
     wallet(_wallet),

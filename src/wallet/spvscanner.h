@@ -30,6 +30,8 @@ public:
 
     void ResetUnifiedProgressNotification();
 
+    static std::atomic<float> lastProgressReported;
+
     static int getProcessedHeight();
 
 private:
@@ -62,7 +64,6 @@ private:
     void onKeyPoolToppedUp();
 
     // Calculate unified progress and trigger
-    float lastProgressReported;
     void NotifyUnifiedProgress();
 
     void RequestBlocks();

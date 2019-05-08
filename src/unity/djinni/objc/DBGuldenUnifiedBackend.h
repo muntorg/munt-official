@@ -183,6 +183,8 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Get info of last blocks (at most 32) in SPV chain */
 + (nonnull NSArray<DBBlockInfoRecord *> *)getLastSPVBlockInfos;
 
++ (float)getUnifiedProgress;
+
 + (nonnull DBMonitorRecord *)getMonitoringStats;
 
 + (void)RegisterMonitorListener:(nullable id<DBGuldenMonitorListener>)listener;

@@ -289,6 +289,11 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.getLastSPVBlockInfos();
     }
 
+    public static float getUnifiedProgress()
+    {
+        return CppProxy.getUnifiedProgress();
+    }
+
     public static MonitorRecord getMonitoringStats()
     {
         return CppProxy.getMonitoringStats();
@@ -404,6 +409,8 @@ public abstract class GuldenUnifiedBackend {
         public static native ArrayList<PeerRecord> getPeers();
 
         public static native ArrayList<BlockInfoRecord> getLastSPVBlockInfos();
+
+        public static native float getUnifiedProgress();
 
         public static native MonitorRecord getMonitoringStats();
 
