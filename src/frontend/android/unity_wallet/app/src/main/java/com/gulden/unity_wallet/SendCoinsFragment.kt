@@ -269,13 +269,18 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         try {
             val paymentRequest = UriRecipient(true, recipient.address, recipient.label, amountNative)
             val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
-            if (fee + amountNative > GuldenUnifiedBackend.GetBalance()) {
+            val balance = GuldenUnifiedBackend.GetBalance()
+            if (fee > balance) {
+                errorMessage(getString(R.string.send_insufficient_balance))
+                return
+            }
+            if (fee + amountNative > balance) {
                 // alert dialog for confirmation of payment and reduction of amount since amount + fee exceeds balance
                 fragmentActivity.alert(Appcompat, getString(R.string.send_all_instead_msg), getString(R.string.send_all_instead_title)) {
 
                     // on confirmation compose recipient with reduced amount and execute payment with substract fee from amount
                     positiveButton(getString(R.string.send_all_btn)) {
-                        val sendAllRequest = UriRecipient(true, recipient.address, recipient.label, GuldenUnifiedBackend.GetBalance())
+                        val sendAllRequest = UriRecipient(true, recipient.address, recipient.label, balance)
                         performAuthenticatedPayment(dialog!!, sendAllRequest, null,true)
                     }
 
@@ -314,7 +319,13 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 val amountNative = orderResult.depositAmountNLG.toNative()
                 val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, amountNative)
                 val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
-                if (fee + amountNative > GuldenUnifiedBackend.GetBalance()) {
+                val balance = GuldenUnifiedBackend.GetBalance()
+                if (fee > balance) {
+                    errorMessage(getString(R.string.send_insufficient_balance))
+                    mMainlayout.button_send.isEnabled = true
+                    return@launch
+                }
+                if (fee + amountNative > balance) {
                     // Desirable to cancel the previous transaction order with Nocks, this is however not possible with anonymous transactions (discussed with Patrick Kivits)
 
                     // alert dialog for confirmation of payment and reduction of amount since amount + fee exceeds balance
@@ -325,7 +336,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                         positiveButton(getString(R.string.send_all_btn)) {
                             this@SendCoinsFragment.launch {
                                 try {
-                                    val orderAllResult = nocks!!.nocksOrder(amount = GuldenUnifiedBackend.GetBalance() / 100000000.0, amtCurrency = NocksService.Symbol.NLG, destinationIBAN = recipient.address, name = name, description = description)
+                                    val orderAllResult = nocks!!.nocksOrder(amount = balance / 100000000.0, amtCurrency = NocksService.Symbol.NLG, destinationIBAN = recipient.address, name = name, description = description)
                                     finalConfirmAndCommitIBANPayment(orderAllResult, true)
                                 } catch (e: NocksException) {
                                     errorMessage(e.errorText)
