@@ -145,6 +145,10 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
         gotoActivity(WalletActivity::class.java)
     }
 
+    override fun onWalletCreate() {
+        // do nothing, we are supposed to sit here until the wallet was created
+    }
+
     @Suppress("UNUSED_PARAMETER")
     fun onStartFresh(view: View)
     {
