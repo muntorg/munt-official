@@ -81,7 +81,6 @@
         <activity
             android:name="com.gulden.barcodereader.BarcodeCaptureActivity"
             android:label="@string/title_activity_barcode_capture"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TransactionInfoActivity"

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2018-2019 The Gulden developers
+Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+Distributed under the GULDEN software license, see the accompanying
+file COPYING
+!-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:keepScreenOn="true">
+
+    <ImageView
+        android:id="@+id/scanTargetOverlayImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="24dp"
+        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintDimensionRatio="V,1:1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_scan_target"
+        android:contentDescription="@string/image_content_description_qr_scan_target_rectangle" />
+
+    <com.gulden.barcodereader.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#80141414"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/scanCancelButton"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_cancel" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1000" />
+
+        <ImageButton
+            android:id="@+id/scanToggleFlashButton"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_flash" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
