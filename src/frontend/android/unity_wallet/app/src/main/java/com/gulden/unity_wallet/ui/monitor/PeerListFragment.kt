@@ -16,13 +16,17 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
+import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.peer_list_fragment.*
 import kotlinx.android.synthetic.main.peer_list_fragment.view.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class PeerListFragment : Fragment(), CoroutineScope {
+class PeerListFragment : AppBaseFragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
+
+    var peerUpdateJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -43,13 +47,19 @@ class PeerListFragment : Fragment(), CoroutineScope {
         })
 
         // periodically update peers
-        this.launch {
-            while (isActive) {
-                val peers = withContext(Dispatchers.IO) {
-                    GuldenUnifiedBackend.getPeers()
+        peerUpdateJob = launch(Dispatchers.Main) {
+            try {
+                UnityCore.instance.walletReady.await()
+                while (isActive) {
+                    val peers = withContext(Dispatchers.IO) {
+                        GuldenUnifiedBackend.getPeers()
+                    }
+                    viewModel.setPeers(peers)
+                    delay(3000)
                 }
-                viewModel.setPeers(peers)
-                delay(3000)
+            }
+            catch (e: Throwable) {
+                // silently ignore walletReady failure (deferred was cancelled or completed with exception)
             }
         }
 
@@ -68,4 +78,10 @@ class PeerListFragment : Fragment(), CoroutineScope {
 
         return view
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        peerUpdateJob?.cancel()
+    }
+
 }

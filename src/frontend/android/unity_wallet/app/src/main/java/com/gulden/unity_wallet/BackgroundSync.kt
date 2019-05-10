@@ -64,7 +64,7 @@ class SyncService : Service(), UnityCore.Observer
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun syncProgressChanged(percent: Float): Boolean {
+    override fun syncProgressChanged(percent: Float) {
         Log.i(TAG, "sync progress = $percent")
         if (builder != null) {
             val b: NotificationCompat.Builder = builder!!
@@ -72,7 +72,6 @@ class SyncService : Service(), UnityCore.Observer
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(NOTIFICATION_ID_FOREGROUND_SERVICE, b.build())
         }
-        return true
     }
 
     private var builder: NotificationCompat.Builder? = null
@@ -139,9 +138,8 @@ class BootReceiver : BroadcastReceiver() {
 class SyncWorker(context : Context, params : WorkerParameters)
     : UnityCore.Observer, Worker(context, params) {
 
-    override fun syncProgressChanged(percent: Float): Boolean {
+    override fun syncProgressChanged(percent: Float) {
         Log.i(TAG, "periodic sync progress = $percent")
-        return true
     }
 
     override fun doWork(): ListenableWorker.Result {

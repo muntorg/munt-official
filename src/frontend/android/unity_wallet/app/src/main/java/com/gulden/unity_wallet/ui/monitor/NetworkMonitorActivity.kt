@@ -1,16 +1,15 @@
-// Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2018-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
 package com.gulden.unity_wallet.ui.monitor
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
@@ -19,33 +18,13 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
 {
     override fun onCreate(savedInstanceState: Bundle?)
     {
-        // If we are restoring from a saved state, but the core is gone then we cannot continue in a sane way.
-        // Instead go immediately back to the IntroActivity and let it figure out what to do next.
-        if (!UnityCore.started)
-        {
-            Log.e("NetworkMonitorActivity", "Starting network monitor activity without Unity in place - jumping back to intro activity")
-            super.onCreate(null)
-            val intent = Intent(this, IntroActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-
-            finish()
-            return
-        }
-        else
-        {
-            super.onCreate(savedInstanceState)
-        }
+        super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_network_monitor)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         syncProgress.max = 1000000
-
-        if (peersFragment == null)
-            peersFragment = PeerListFragment()
-        addFragment(peersFragment!!, R.id.networkMonitorMainLayout)
     }
 
     override fun onDestroy() {
@@ -59,6 +38,10 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
 
         setSyncProgress(UnityCore.instance.progressPercent)
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+
+        if (supportFragmentManager.fragments.isEmpty()) {
+            addFragment(PeerListFragment(), R.id.networkMonitorMainLayout)
+        }
     }
 
     override fun onStop() {
@@ -70,45 +53,20 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
         finish()
     }
 
-    private fun gotoPeersPage()
-    {
-        if (peersFragment == null)
-            peersFragment = PeerListFragment()
-        replaceFragment(peersFragment!!, R.id.networkMonitorMainLayout)
-    }
-
-    private fun gotoBlocksPage()
-    {
-        if (blocksFragment == null)
-            blocksFragment = BlockListFragment()
-        replaceFragment(blocksFragment!!, R.id.networkMonitorMainLayout)
-    }
-
-    private fun gotoProcessingPage()
-    {
-        if (processingFragment == null)
-            processingFragment = ProcessingFragment()
-        replaceFragment(processingFragment!!, R.id.networkMonitorMainLayout)
-    }
-
-    private var blocksFragment : BlockListFragment ?= null
-    private var peersFragment : PeerListFragment?= null
-    private var processingFragment : ProcessingFragment?= null
-
-
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_peers -> { gotoPeersPage(); return@OnNavigationItemSelectedListener true }
-            R.id.navigation_blocks -> { gotoBlocksPage(); return@OnNavigationItemSelectedListener true }
-            R.id.navigation_processing -> { gotoProcessingPage(); return@OnNavigationItemSelectedListener true }
+        val page = when (item.itemId) {
+            R.id.navigation_peers -> PeerListFragment()
+            R.id.navigation_blocks -> BlockListFragment()
+            R.id.navigation_processing -> ProcessingFragment()
+            else -> return@OnNavigationItemSelectedListener false
         }
-        false
+        gotoFragment(page, R.id.networkMonitorMainLayout)
+        true
     }
 
 
-    override fun syncProgressChanged(percent: Float): Boolean {
+    override fun syncProgressChanged(percent: Float) {
         setSyncProgress(percent)
-        return true
     }
 
     private fun setSyncProgress(percent: Float)

@@ -7,13 +7,11 @@ package com.gulden.unity_wallet.main_activity_fragments
 
 import android.os.Bundle
 import androidx.preference.Preference
-import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.localCurrency
-import java.lang.Exception
 
 
 class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
@@ -23,7 +21,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
         setPreferencesFromResource(R.xml.fragment_settings, rootKey)
 
         val pref = findPreference<SwitchPreference>("preference_hide_balance")
-        pref.setOnPreferenceChangeListener { preference, newValue ->
+        pref?.setOnPreferenceChangeListener { preference, newValue ->
             val switch = preference as SwitchPreference
             val hide = newValue as Boolean
 
@@ -45,8 +43,8 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
         try
         {
-            val localCurrencyPreference: Preference = findPreference("preference_local_currency")
-            localCurrencyPreference.summary = localCurrency.code
+            val localCurrencyPreference: Preference? = findPreference("preference_local_currency")
+            localCurrencyPreference?.summary = localCurrency.code
         }
         catch(e : Exception)
         {
@@ -57,8 +55,8 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
     override fun onPreferenceTreeClick(preference: Preference?): Boolean
     {
         when (preference?.key){
-            "preference_local_currency" ->  (activity as WalletActivity).gotoCurrencyPage()
-            "preference_show_wallet_settings" ->  (activity as WalletActivity).gotoWalletSettingsPage()
+            "preference_local_currency" ->  (activity as WalletActivity).pushCurrencyPage()
+            "preference_show_wallet_settings" ->  (activity as WalletActivity).pushWalletSettingsPage()
         }
         return super.onPreferenceTreeClick(preference)
     }

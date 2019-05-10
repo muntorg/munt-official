@@ -15,13 +15,16 @@ import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity
 import com.gulden.unity_wallet.ui.ShowRecoveryPhraseActivity
+import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import kotlin.concurrent.thread
 
-class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
+class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
 {
+    private val erasedWallet = UnityCore.instance.isCoreReady()
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -41,6 +44,9 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
         super.onBackPressed()
 
         // finish and kill myself so a next session is properly started
+        // note this is now only because of the weird wiring which happens when a wallet is erased
+        // consider introducing query API in Unity that would allow getting the erased wallet state
+        // or some other construct such that logic on the Unity client side can be clearer
         finish()
         System.exit(0)
     }
@@ -71,6 +77,7 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
+        // TODO must have core started and createWallet signal
         if (requestCode == REQUEST_CODE_SCAN_FOR_LINK)
         {
             if (resultCode == CommonStatusCodes.SUCCESS && data != null)
@@ -119,9 +126,13 @@ class WelcomeActivity : AppCompatActivity(), UnityCore.Observer
         startActivity(Intent(this, EnterRecoveryPhraseActivity::class.java))
     }
 
-    override fun onCoreReady(): Boolean {
-        gotoWalletActivity(this)
-        return true
+    override fun onWalletReady() {
+        if (!erasedWallet)
+            gotoWalletActivity(this)
+    }
+
+    override fun onWalletCreate() {
+        // do nothing, we are supposed to sit here until the wallet was created
     }
 
     companion object

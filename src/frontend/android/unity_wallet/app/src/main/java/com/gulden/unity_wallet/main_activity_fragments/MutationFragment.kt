@@ -16,14 +16,15 @@ import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.MutationAdapter
-import com.gulden.unity_wallet.util.AppBaseActivity
+import com.gulden.unity_wallet.util.AppBaseFragment
+import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
 import kotlinx.android.synthetic.main.fragment_mutation.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.jetbrains.anko.support.v4.runOnUiThread
 
 
-class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
+class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         return inflater.inflate(R.layout.fragment_mutation, container, false)
@@ -33,26 +34,28 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
     {
         super.onActivityCreated(savedInstanceState)
 
-        mutationList?.emptyView = emptyMutationListView
+        // if wallet ready setup list immediately so list does not briefly flash empty content and
+        // scroll position is kept on switching from and to this fragment
+        UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
+            mutationList?.emptyView = emptyMutationListView
+            val mutations = GuldenUnifiedBackend.getMutationHistory()
 
-        val mutations = GuldenUnifiedBackend.getMutationHistory()
+            val adapter = MutationAdapter(this@MutationFragment.context!!, mutations)
+            mutationList.adapter = adapter
 
-        val adapter = MutationAdapter(this.context!!, mutations)
-        mutationList.adapter = adapter
+            mutationList.setOnItemClickListener { parent, _, position, _ ->
+                val mutation = parent.adapter.getItem(position) as MutationRecord
+                val intent = Intent(this@MutationFragment.context, TransactionInfoActivity::class.java)
+                intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.txHash)
+                startActivity(intent)
+            }
 
-        mutationList.setOnItemClickListener { parent, _, position, _ ->
-            val mutation = parent.adapter.getItem(position) as MutationRecord
-            val intent = Intent(this.context, TransactionInfoActivity::class.java)
-            intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.txHash)
-            startActivity(intent)
-        }
-
-        // Update with rate conversion
-        (this.activity as AppBaseActivity).launch(Dispatchers.Main) {
-            try {
-                (mutationList.adapter as MutationAdapter).updateRate(fetchCurrencyRate(localCurrency.code))
-            } catch (e: Throwable) {
-                // silently ignore failure of getting rate here
+            launch {
+                try {
+                    (mutationList.adapter as MutationAdapter).updateRate(fetchCurrencyRate(localCurrency.code))
+                } catch (e: Throwable) {
+                    // silently ignore failure of getting rate here
+                }
             }
         }
     }
@@ -79,7 +82,7 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
         }
     }
 
-    override fun updatedTransaction(transaction: TransactionRecord): Boolean
+    override fun updatedTransaction(transaction: TransactionRecord)
     {
         //TODO: Update only the single mutation we have received
         val mutations = GuldenUnifiedBackend.getMutationHistory()
@@ -87,6 +90,5 @@ class MutationFragment : androidx.fragment.app.Fragment(), UnityCore.Observer {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }
-        return true
     }
 }

@@ -18,26 +18,30 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.R
+import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.WalletActivity
+import com.gulden.unity_wallet.util.AppBaseActivity
+import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.fragment_receive.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.dimen
 import org.jetbrains.anko.sdk27.coroutines.onLongClick
 import java.nio.ByteBuffer
+import kotlin.coroutines.CoroutineContext
 
 
 /* Handle display of current address; as well as copying/sharing of address */
-class ReceiveFragment : androidx.fragment.app.Fragment()
-{
+class ReceiveFragment : AppBaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         return inflater.inflate(R.layout.fragment_receive, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?)
-    {
-        super.onActivityCreated(savedInstanceState)
-
+    override fun onWalletReady() {
         updateAddress()
         buyButton.setOnClickListener { (activity as WalletActivity).gotoBuyActivity() }
         shareButton.setOnClickListener {

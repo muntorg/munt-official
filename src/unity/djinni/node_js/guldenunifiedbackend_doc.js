@@ -102,6 +102,7 @@ declare class NJSGuldenUnifiedBackend
     static declare function getPeers(): Array<PeerRecord>;
     /** Get info of last blocks (at most 32) in SPV chain */
     static declare function getLastSPVBlockInfos(): Array<BlockInfoRecord>;
+    static declare function getUnifiedProgress(): number;
     static declare function getMonitoringStats(): MonitorRecord;
     static declare function RegisterMonitorListener(listener: NJSGuldenMonitorListener);
     static declare function UnregisterMonitorListener(listener: NJSGuldenMonitorListener);

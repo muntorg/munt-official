@@ -18,6 +18,7 @@ import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.MenuItemCompat
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.*
+import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import com.gulden.unity_wallet.util.setFauxButtonEnabledState
 import kotlinx.android.synthetic.main.activity_show_recovery_phrase.*
@@ -25,8 +26,10 @@ import org.jetbrains.anko.sdk27.coroutines.onClick
 
 private const val TAG = "show-recovery-activity"
 
-class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
+class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 {
+    private val erasedWallet = UnityCore.instance.isCoreReady()
+
     //fixme: (GULDEN) Change to char[] to we can securely wipe.
     private var recoveryPhrase: String? = null
     internal var recoveryPhraseTrimmed: String? = null
@@ -77,9 +80,13 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         super.onDestroy()
     }
 
-    override fun onCoreReady(): Boolean {
-        gotoWalletActivity(this)
-        return true
+    override fun onWalletReady() {
+        if (!erasedWallet)
+            gotoWalletActivity(this)
+    }
+
+    override fun onWalletCreate() {
+        // do nothing, we are supposed to sit here until the wallet was created
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -91,6 +98,8 @@ class ShowRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
             Toast.makeText(applicationContext, "Write down your recovery phrase", Toast.LENGTH_LONG).show()
             return
         }
+
+        // TODO must have core started and createWallet signal
 
         Authentication.instance.chooseAccessCode(this, null) {
             password->

@@ -6,7 +6,10 @@ set -x
 source `dirname $0`/ndk_definitions.conf
 
 #Load private config
-source developer-tools/private.conf
+GULDEN_DEVTOOLS_CONF=${GULDEN_DEVTOOLS_CONF:-developer-tools/private.conf}
+if [ -f $GULDEN_DEVTOOLS_CONF ]; then
+  source ${GULDEN_DEVTOOLS_CONF}
+fi
 
 while :; do
   case $1 in

@@ -20,7 +20,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +32,7 @@ import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.jniunifiedbackend.UriRecord
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.AddressBookAdapter
+import com.gulden.unity_wallet.util.AppBaseFragment
 import com.gulden.unity_wallet.util.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.add_address_entry.view.*
 import kotlinx.android.synthetic.main.fragment_send.*
@@ -42,51 +42,11 @@ import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.support.v4.runOnUiThread
 
 
-class SendFragment : Fragment(), UnityCore.Observer
-{
+class SendFragment : AppBaseFragment(), UnityCore.Observer {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         return inflater.inflate(R.layout.fragment_send, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        clipboardButton.setOnClickListener {
-            val text = clipboardText()
-            val recipient = when {
-                IBANValidator.getInstance().isValid(text) ->
-                    UriRecipient(false, text, "", 0)
-                GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid ->
-                    GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>()))
-                uriRecipient(text).valid ->
-                    uriRecipient(text)
-                else ->
-                    null
-            }
-            if (recipient != null) {
-                SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
-            }
-            else {
-                context?.run {
-                    alert(Appcompat, getString(R.string.clipboard_no_valid_address)) {
-                        positiveButton(getString(android.R.string.ok)) {}
-                    }.show()
-                }
-            }
-        }
-
-        imageViewAddToAddressBook.setOnClickListener {
-            handleAddToAddressBookButtonClick(view)
-        }
-
-        qrButton.setOnClickListener {
-            val intent = Intent(context, BarcodeCaptureActivity::class.java)
-            intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
-            startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
-        }
-
-        ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
     }
 
     private fun handleAddToAddressBookButtonClick(view : View)
@@ -144,14 +104,41 @@ class SendFragment : Fragment(), UnityCore.Observer
         dialog.show()
     }
 
-    override fun onResume() {
-        super.onResume()
-        checkClipboardEnable()
-    }
+    override fun onWalletReady() {
+        clipboardButton.setOnClickListener {
+            val text = clipboardText()
+            val recipient = when {
+                IBANValidator.getInstance().isValid(text) ->
+                    UriRecipient(false, text, "", 0)
+                GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String, String>())).valid ->
+                    GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String, String>()))
+                uriRecipient(text).valid ->
+                    uriRecipient(text)
+                else ->
+                    null
+            }
+            if (recipient != null) {
+                SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+            } else {
+                context?.run {
+                    alert(Appcompat, getString(R.string.clipboard_no_valid_address)) {
+                        positiveButton(getString(android.R.string.ok)) {}
+                    }.show()
+                }
+            }
+        }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?)
-    {
-        super.onActivityCreated(savedInstanceState)
+        imageViewAddToAddressBook.setOnClickListener {
+            handleAddToAddressBookButtonClick(view!!)
+        }
+
+        qrButton.setOnClickListener {
+            val intent = Intent(context, BarcodeCaptureActivity::class.java)
+            intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
+            startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
+        }
+
+        ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
 
         val addresses = GuldenUnifiedBackend.getAddressBookRecords()
         val adapter = AddressBookAdapter(addresses) { position, address ->
@@ -171,6 +158,8 @@ class SendFragment : Fragment(), UnityCore.Observer
         itemTouchHelper.attachToRecyclerView(addressBookList)
 
         updateEmptyViewState()
+
+        checkClipboardEnable()
     }
 
     private fun updateEmptyViewState()

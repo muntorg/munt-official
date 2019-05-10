@@ -180,6 +180,8 @@ private:
     /** Get info of last blocks (at most 32) in SPV chain */
     static NAN_METHOD(getLastSPVBlockInfos);
 
+    static NAN_METHOD(getUnifiedProgress);
+
     static NAN_METHOD(getMonitoringStats);
 
     static NAN_METHOD(RegisterMonitorListener);

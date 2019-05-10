@@ -18,14 +18,17 @@ import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.internalErrorAlert
+import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import com.gulden.unity_wallet.util.setFauxButtonEnabledState
 import kotlinx.android.synthetic.main.activity_enter_recovery_phrase.*
 
 private const val TAG = "enter-recovery-activity"
 
-class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
+class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 {
+    private val erasedWallet = UnityCore.instance.isCoreReady()
+
     private val recoveryPhrase: String
         get() = recover_from_phrase_text_view.text.toString().trim { it <= ' ' }
 
@@ -125,9 +128,13 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
         UnityCore.instance.removeObserver(this)
     }
 
-    override fun onCoreReady(): Boolean {
-        gotoWalletActivity(this)
-        return true
+    override fun onWalletReady() {
+        if (!erasedWallet)
+            gotoWalletActivity(this)
+    }
+
+    override fun onWalletCreate() {
+        // do nothing, we are supposed to sit here until the wallet was created
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean
@@ -146,6 +153,8 @@ class EnterRecoveryPhraseActivity : AppCompatActivity(), UnityCore.Observer
 
     private fun chooseAccessCodeAndProceed(mnemonicPhrase : String)
     {
+        // TODO must have core started and createWallet signal
+
         Authentication.instance.chooseAccessCode(this, null) {
             password->
             if (UnityCore.instance.isCoreReady()) {

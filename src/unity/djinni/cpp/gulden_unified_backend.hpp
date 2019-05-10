@@ -167,6 +167,8 @@ public:
     /** Get info of last blocks (at most 32) in SPV chain */
     static std::vector<BlockInfoRecord> getLastSPVBlockInfos();
 
+    static float getUnifiedProgress();
+
     static MonitorRecord getMonitoringStats();
 
     static void RegisterMonitorListener(const std::shared_ptr<GuldenMonitorListener> & listener);
