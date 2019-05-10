@@ -29,6 +29,7 @@ import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
 import com.gulden.unity_wallet.ui.getDisplayDimensions
+import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
 import kotlinx.android.synthetic.main.fragment_send_coins.view.*
 import kotlinx.android.synthetic.main.iban_name_entry.view.*
 import kotlinx.android.synthetic.main.numeric_keypad.view.*
@@ -470,22 +471,36 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     private fun setAddressLabel(label : String)
     {
         mSendCoinsReceivingStaticLabel.text = label
-        setAddressHasLabel(label.isNotEmpty())
-    }
 
-    private fun setAddressHasLabel(hasLabel : Boolean)
-    {
-        if (hasLabel)
-        {
+        if (label.isNotEmpty()) {
             mSendCoinsReceivingStaticLabel.visibility = View.VISIBLE
-            mLabelRemoveFromAddressBook.visibility = View.VISIBLE
+            mLabelRemoveFromAddressBook.visibility = View.INVISIBLE // use for layout already, when wallet is ready will become visible (or will be switched to add to address book)
             mLabelAddToAddressBook.visibility = View.GONE
         }
-        else
-        {
+        else {
             mSendCoinsReceivingStaticLabel.visibility = View.GONE
             mLabelRemoveFromAddressBook.visibility = View.GONE
-            mLabelAddToAddressBook.visibility = View.VISIBLE
+            mLabelAddToAddressBook.visibility = View.INVISIBLE // use for layout already, will become visible when wallet is ready
+        }
+
+        UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
+            if (label.isNotEmpty())
+            {
+                val isInAddressBook = GuldenUnifiedBackend.getAddressBookRecords().count { it.name.equals(other = label, ignoreCase = true) } > 0
+                if (isInAddressBook) {
+                    mLabelRemoveFromAddressBook.visibility = View.VISIBLE
+                    mLabelAddToAddressBook.visibility = View.GONE
+                }
+                else {
+                    mLabelRemoveFromAddressBook.visibility = View.GONE
+                    mLabelAddToAddressBook.visibility = View.VISIBLE
+                }
+            }
+            else
+            {
+                mLabelRemoveFromAddressBook.visibility = View.GONE
+                mLabelAddToAddressBook.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -692,6 +707,9 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         val viewInflated : View = layoutInflater.inflate(text_input_address_label, view.rootView as ViewGroup, false)
         viewInflated.labelAddAddressAddress.text = mSendCoinsReceivingStaticAddress.text
         val input = viewInflated.findViewById(R.id.addAddressInput) as EditText
+        if (recipient.label.isNotEmpty()) {
+            input.setText(recipient.label)
+        }
         builder.setView(viewInflated)
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             dialog.dismiss()
