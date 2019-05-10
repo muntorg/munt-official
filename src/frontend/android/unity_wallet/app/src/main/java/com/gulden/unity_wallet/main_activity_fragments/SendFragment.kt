@@ -37,8 +37,6 @@ import com.gulden.unity_wallet.util.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.add_address_entry.view.*
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.apache.commons.validator.routines.IBANValidator
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.support.v4.runOnUiThread
 
 
@@ -120,11 +118,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
             if (recipient != null) {
                 SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
             } else {
-                context?.run {
-                    alert(Appcompat, getString(R.string.clipboard_no_valid_address)) {
-                        positiveButton(getString(android.R.string.ok)) {}
-                    }.show()
-                }
+                errorMessage(getString(R.string.clipboard_no_valid_address))
             }
         }
 
@@ -237,10 +231,13 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
             {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                    val recipient = uriRecipient(barcode.displayValue)
+                    val qrContent = barcode.displayValue
+                    val recipient = uriRecipient(qrContent)
                     if (recipient.valid) {
                         SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
                     }
+                    else
+                        errorMessage(getString(R.string.not_gulden_qr, qrContent))
                 }
             }
         } else {

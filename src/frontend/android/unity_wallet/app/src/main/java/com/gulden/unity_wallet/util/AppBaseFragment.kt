@@ -4,6 +4,8 @@ import com.gulden.unity_wallet.UnityCore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.support.v4.runOnUiThread
 import kotlin.coroutines.CoroutineContext
 
@@ -28,4 +30,13 @@ abstract class AppBaseFragment : androidx.fragment.app.Fragment(), CoroutineScop
             }
         }
     }
+
+    fun errorMessage(msg: String) {
+        context?.run {
+            alert(Appcompat, msg) {
+                positiveButton(getString(android.R.string.ok)) {}
+            }.show()
+        }
+    }
+
 }
