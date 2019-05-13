@@ -45,7 +45,7 @@ fun Uri.getParameters(): HashMap<String, String> {
 
 class InvalidRecipientException(message: String): RuntimeException(message)
 
-fun uriRecipient(text: String): UriRecipient {
+fun createRecipient(text: String): UriRecipient {
     var uri = Uri.parse(text)
 
     // If Uri has been parsed as non-hierarchical force it to reparse as hierarchical so that we can access any query portions correctly.

@@ -7,15 +7,8 @@ package com.gulden.unity_wallet
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.widget.Toast
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
-import com.gulden.jniunifiedbackend.UriRecipient
-import com.gulden.jniunifiedbackend.UriRecord
 import com.gulden.unity_wallet.util.AppBaseActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.apache.commons.validator.routines.IBANValidator
 
 // URI handlers need unity core active to function - however as they may be called when app is closed it is necessary to manually start the core in some cases
 // All URI handlers therefore come via this transparent activity
@@ -39,7 +32,7 @@ class URIHandlerActivity : AppBaseActivity()
         {
             try
             {
-                val recipient = uriRecipient(intentUri.toString())
+                val recipient = createRecipient(intentUri.toString())
                 SendCoinsFragment.newInstance(recipient, true).show(supportFragmentManager, SendCoinsFragment::class.java.simpleName)
             }
             catch (e : Exception)

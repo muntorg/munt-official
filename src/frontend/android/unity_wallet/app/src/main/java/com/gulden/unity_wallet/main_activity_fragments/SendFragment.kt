@@ -29,14 +29,12 @@ import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
-import com.gulden.jniunifiedbackend.UriRecord
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.AddressBookAdapter
 import com.gulden.unity_wallet.util.AppBaseFragment
 import com.gulden.unity_wallet.util.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.add_address_entry.view.*
 import kotlinx.android.synthetic.main.fragment_send.*
-import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.support.v4.runOnUiThread
 
 
@@ -78,9 +76,12 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                         var enable = false
                         if (address != "" && label != "")
                         {
-                            if (IBANValidator.getInstance().isValid(address) || GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>())).valid)
-                            {
+                            try {
+                                createRecipient(address)
                                 enable = true
+                            }
+                            catch (e: InvalidRecipientException) {
+                                // silently ignore, use can continue typing until a valid recipient is entered
                             }
                         }
                         okBtn.isEnabled = enable
@@ -105,19 +106,10 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
     override fun onWalletReady() {
         clipboardButton.setOnClickListener {
             val text = clipboardText()
-            val recipient = when {
-                IBANValidator.getInstance().isValid(text) ->
-                    UriRecipient(false, text, "", 0)
-                GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String, String>())).valid ->
-                    GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String, String>()))
-                uriRecipient(text).valid ->
-                    uriRecipient(text)
-                else ->
-                    null
+            try {
+                SendCoinsFragment.newInstance(createRecipient(text), false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
             }
-            if (recipient != null) {
-                SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
-            } else {
+            catch (e: InvalidRecipientException) {
                 errorMessage(getString(R.string.clipboard_no_valid_address))
             }
         }
@@ -209,7 +201,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
         // Enable clipboard button if it contains a valid IBAN, Gulden address or Uri
         val text = clipboardText()
         try {
-            setClipButtonText(uriRecipient(text).address)
+            setClipButtonText(createRecipient(text).address)
         }
         catch (e: Throwable) {
             clipboardButton.text = getString(R.string.send_fragment_clipboard_label)
@@ -224,7 +216,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
                     val qrContent = barcode.displayValue
                     val recipient = try {
-                        uriRecipient(qrContent)
+                        createRecipient(qrContent)
                     }
                     catch (e: InvalidRecipientException) {
                         errorMessage(getString(R.string.not_gulden_qr, qrContent))
