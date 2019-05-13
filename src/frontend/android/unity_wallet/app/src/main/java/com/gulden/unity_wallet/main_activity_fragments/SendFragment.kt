@@ -208,20 +208,11 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
     {
         // Enable clipboard button if it contains a valid IBAN, Gulden address or Uri
         val text = clipboardText()
-        when
-        {
-            IBANValidator.getInstance().isValid(text) || GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", text, HashMap<String,String>())).valid ->
-            {
-                setClipButtonText(text)
-            }
-            uriRecipient(text).valid ->
-            {
-                setClipButtonText(uriRecipient(text).address)
-            }
-            else ->
-            {
-                clipboardButton.text = getString(R.string.send_fragment_clipboard_label)
-            }
+        try {
+            setClipButtonText(uriRecipient(text).address)
+        }
+        catch (e: Throwable) {
+            clipboardButton.text = getString(R.string.send_fragment_clipboard_label)
         }
     }
 
@@ -232,12 +223,14 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
                     val qrContent = barcode.displayValue
-                    val recipient = uriRecipient(qrContent)
-                    if (recipient.valid) {
-                        SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                    val recipient = try {
+                        uriRecipient(qrContent)
                     }
-                    else
+                    catch (e: InvalidRecipientException) {
                         errorMessage(getString(R.string.not_gulden_qr, qrContent))
+                        return
+                    }
+                    SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
                 }
             }
         } else {

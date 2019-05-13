@@ -21,7 +21,7 @@ import org.apache.commons.validator.routines.IBANValidator
 // All URI handlers therefore come via this transparent activity
 // Which takes care of detecting whether core is already active or not and then handles the URI appropriately
 
-class URIHandlerActivity : AppBaseActivity(), UnityCore.Observer
+class URIHandlerActivity : AppBaseActivity()
 {
     private fun toastAndExit()
     {
@@ -39,39 +39,8 @@ class URIHandlerActivity : AppBaseActivity(), UnityCore.Observer
         {
             try
             {
-                //TODO: Improve this, and consider moving more of the work into unity core
-                var address = ""
-                var amount = 0L
-                var label = ""
-
-                //If Uri has been parsed as hierarchial force it to reparse as non-hierarchial so that we can access any query portions correctly.
-                if (!intentUri!!.isHierarchical)
-                {
-                    intentUri = Uri.parse(intentUri.toString().replaceFirst(":", "://"))
-                }
-                if (intentUri?.host != null) address = intentUri!!.host
-                if (intentUri?.queryParameterNames?.contains("amount")!!) amount = intentUri!!.getQueryParameter("amount").toDoubleOrZero().toNative()
-                if (intentUri?.queryParameterNames?.contains("label")!!) label = intentUri!!.getQueryParameter("label") else ""
-
-                var recipient: UriRecipient? = null
-                if (IBANValidator.getInstance().isValid(address))
-                {
-                    recipient = UriRecipient(false, address, label, amount)
-                }
-                else if (GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>())).valid)
-                {
-                    recipient = GuldenUnifiedBackend.IsValidRecipient(UriRecord("gulden", address, HashMap<String, String>()))
-                    recipient = UriRecipient(recipient.valid, recipient.address, if (recipient.label != "") recipient.label else label, amount)
-                }
-                else if (uriRecipient(address!!).valid)
-                {
-                    recipient = UriRecipient(true, address, label, amount)
-                }
-
-                if (recipient != null)
-                {
-                    SendCoinsFragment.newInstance(recipient, true).show(supportFragmentManager, SendCoinsFragment::class.java.simpleName)
-                }
+                val recipient = uriRecipient(intentUri.toString())
+                SendCoinsFragment.newInstance(recipient, true).show(supportFragmentManager, SendCoinsFragment::class.java.simpleName)
             }
             catch (e : Exception)
             {
@@ -99,18 +68,14 @@ class URIHandlerActivity : AppBaseActivity(), UnityCore.Observer
     }
 
     override fun onWalletReady() {
+
         intentUri = intent.data
         scheme = intentUri?.scheme
         if (Intent.ACTION_VIEW == intent.action && isValidGuldenUri(intentUri)) {
-            UnityCore.instance.addObserver(this@URIHandlerActivity, fun(callback: () -> Unit) { runOnUiThread { callback() } })
             handleURIAndClose()
         } else {
             finish()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        UnityCore.instance.removeObserver(this)
-    }
 }

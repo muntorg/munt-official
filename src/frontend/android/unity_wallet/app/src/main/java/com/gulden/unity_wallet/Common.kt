@@ -5,6 +5,7 @@ import android.net.Uri
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.jniunifiedbackend.UriRecord
+import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import java.util.HashMap
@@ -42,24 +43,31 @@ fun Uri.getParameters(): HashMap<String, String> {
     return items
 }
 
+class InvalidRecipientException(message: String): RuntimeException(message)
+
 fun uriRecipient(text: String): UriRecipient {
-    var parsedQRCodeURI = Uri.parse(text)
-    var address = ""
+    var uri = Uri.parse(text)
 
-    // Handle all possible scheme variations (foo: foo:// etc.)
-    if (parsedQRCodeURI?.authority == null && parsedQRCodeURI?.path == null) {
-        parsedQRCodeURI = Uri.parse(text.replaceFirst(":", "://"))
-    }
-    if (parsedQRCodeURI?.authority != null) address += parsedQRCodeURI.authority
-    if (parsedQRCodeURI?.path != null) address += parsedQRCodeURI.path
+    // If Uri has been parsed as non-hierarchical force it to reparse as hierarchical so that we can access any query portions correctly.
+    if (!uri.isHierarchical)
+        uri = Uri.parse(text.replaceFirst(":", "://"))
 
-    return GuldenUnifiedBackend.IsValidRecipient(
-            UriRecord(
-                    if (parsedQRCodeURI.scheme != null) parsedQRCodeURI.scheme else "",
-                    address,
-                    parsedQRCodeURI.getParameters()
-            )
-    )
+    if (uri.scheme == null)
+        uri = Uri.parse("gulden://$text")
+
+    val address = uri.host ?: throw InvalidRecipientException("No recipient address")
+    val amount = uri.getQueryParameter("amount")?.toDoubleOrZero()?.toNative() ?: 0
+    val label = uri.getQueryParameter("label") ?: ""
+
+    if (IBANValidator.getInstance().isValid(address))
+        return UriRecipient(false, address, label, amount)
+
+    // if there is a scheme it should equal gulden or guldencoin, but that will be checked insode C++, so just pass it through
+    val coreRecipient = GuldenUnifiedBackend.IsValidRecipient(UriRecord(uri.scheme, address, HashMap<String, String>()))
+    if (!coreRecipient.valid)
+        throw InvalidRecipientException("Core deemed recipient invalid")
+
+    return UriRecipient(true, coreRecipient.address, if (coreRecipient.label != "") coreRecipient.label else label, amount)
 }
 
 fun ellipsizeString(sourceString: String, maxLength: Int): String
