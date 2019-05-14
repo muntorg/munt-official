@@ -11,6 +11,8 @@ if [ -f $GULDEN_DEVTOOLS_CONF ]; then
   source ${GULDEN_DEVTOOLS_CONF}
 fi
 
+TARGETS_PATH=$(dirname ${BASH_SOURCE[0]})/build_targets
+
 while :; do
   case $1 in
     --nodepends)
@@ -19,11 +21,29 @@ while :; do
     --noconfig)
       SKIP_CONFIG=1
       ;;
+    --targets)
+      shift
+      delimiter=","
+      s=$1$delimiter
+      NDK_TARGETS=();
+      while [[ $s ]]; do
+        NDK_TARGETS+=( ${TARGETS_PATH}/"${s%%"$delimiter"*}" );
+        s=${s#*"$delimiter"};
+      done;
+      declare -p NDK_TARGETS
+
+      ;;
     *) # Default case: No more options, so break out of the loop.
       break
   esac
   shift
 done
+
+
+if [ -z "${TARGETS}" ]; then
+  NDK_TARGETS=( ${TARGETS_PATH}/* )
+  declare -p NDK_TARGETS
+fi
 
 mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs | true
 
@@ -62,7 +82,7 @@ else
     echo Skipping autogen
 fi
 
-for i in $( dirname ${BASH_SOURCE[0]} )/build_targets/*
+for i in "${NDK_TARGETS[@]}"
 do
   source ${i}
   export AR=${TOOLS}/$target_host-ar

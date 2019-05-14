@@ -1,4 +1,14 @@
-ONESKY_API_KEY= #Set API key from translate.gulden.com here to be able to run translation scripts
-NDK_ROOT= #Set this to a system or custom NDK path to have android build scripts use this as opposed to the ones fetched by fetch_android.sh
-SKIP_DEPENDS= #Set this to 1 to skip building depends for android
-SKIP_CONFIG= #Set this to 1 to skip running configure for android 
+# Set API key from translate.gulden.com here to be able to run translation scripts
+#ONESKY_API_KEY=
+
+# Set this to a system or custom NDK path to have android build scripts use this as opposed to the ones fetched by fetch_android.sh
+#NDK_ROOT=
+
+# Comma delimited list of Android targets in mobile/android/build_targets/ for which to build the Unity library (if not set all will be build)
+#NDK_TARGETS= aarch64-linux-android-clang,arm-linux-androideabi-clang
+
+# Set this to 1 to skip building depends for android
+#SKIP_DEPENDS=1
+
+# Set this to 1 to skip running configure for android 
+#SKIP_CONFIG=1
