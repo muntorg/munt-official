@@ -40,7 +40,7 @@ while :; do
 done
 
 
-if [ -z "${TARGETS}" ]; then
+if [ -z "${NDK_TARGETS}" ]; then
   NDK_TARGETS=( ${TARGETS_PATH}/* )
   declare -p NDK_TARGETS
 fi
