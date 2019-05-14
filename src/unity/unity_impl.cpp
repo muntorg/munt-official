@@ -319,6 +319,22 @@ void handleInitWithoutExistingWallet()
     signalHandler->notifyInitWithoutExistingWallet();
 }
 
+std::string GuldenUnifiedBackend::BuildInfo()
+{
+    std::string info = FormatFullVersion();
+
+#if defined(__aarch64__)
+    info += " aarch64";
+#elif defined(__arm__)
+    info += " arm (32bit)";
+#elif defined(__x86_64__)
+    info += " x86_64";
+#elif defined(__i386__)
+    info += " x86";
+#endif
+    return info;
+}
+
 bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
 {
     // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement

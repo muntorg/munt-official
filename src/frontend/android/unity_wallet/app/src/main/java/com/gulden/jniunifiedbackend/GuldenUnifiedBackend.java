@@ -11,6 +11,12 @@ public abstract class GuldenUnifiedBackend {
     /** Interface constants */
     public static final int VERSION = 1;
 
+    /** Get the build information (ie. commit id and status) */
+    public static String BuildInfo()
+    {
+        return CppProxy.BuildInfo();
+    }
+
     /**
      * Start the library
      * extraArgs - any additional commandline arguments as passed to GuldenD
@@ -331,6 +337,8 @@ public abstract class GuldenUnifiedBackend {
             _djinni_private_destroy();
             super.finalize();
         }
+
+        public static native String BuildInfo();
 
         public static native int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs);
 

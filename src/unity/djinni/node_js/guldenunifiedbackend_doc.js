@@ -4,6 +4,8 @@
 /** This interface will be implemented in C++ and can be called from any language. */
 declare class NJSGuldenUnifiedBackend
 {
+    /** Get the build information (ie. commit id and status) */
+    static declare function BuildInfo(): string;
     /**
      * Start the library
      * extraArgs - any additional commandline arguments as passed to GuldenD

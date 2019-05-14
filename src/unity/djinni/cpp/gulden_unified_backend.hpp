@@ -30,6 +30,9 @@ public:
     /** Interface constants */
     static constexpr int32_t VERSION = 1;
 
+    /** Get the build information (ie. commit id and status) */
+    static std::string BuildInfo();
+
     /**
      * Start the library
      * extraArgs - any additional commandline arguments as passed to GuldenD

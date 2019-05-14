@@ -8,6 +8,24 @@ using namespace v8;
 using namespace node;
 using namespace std;
 
+NAN_METHOD(NJSGuldenUnifiedBackend::BuildInfo) {
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        return Nan::ThrowError("NJSGuldenUnifiedBackend::BuildInfo needs 0 arguments");
+    }
+
+    //Check if parameters have correct types
+
+    auto result = GuldenUnifiedBackend::BuildInfo();
+
+    //Wrap result in node object
+    auto arg_0 = Nan::New<String>(result).ToLocalChecked();
+
+    //Return result
+    info.GetReturnValue().Set(arg_0);
+}
 NAN_METHOD(NJSGuldenUnifiedBackend::InitUnityLib) {
 
     //Check if method called with right number of arguments
@@ -1138,6 +1156,7 @@ void NJSGuldenUnifiedBackend::Initialize(Local<Object> target) {
     func_template->SetClassName(Nan::New<String>("NJSGuldenUnifiedBackend").ToLocalChecked());
 
     //SetPrototypeMethod all methods
+    Nan::SetPrototypeMethod(func_template,"BuildInfo", BuildInfo);
     Nan::SetPrototypeMethod(func_template,"InitUnityLib", InitUnityLib);
     Nan::SetPrototypeMethod(func_template,"InitUnityLibThreaded", InitUnityLibThreaded);
     Nan::SetPrototypeMethod(func_template,"InitWalletFromRecoveryPhrase", InitWalletFromRecoveryPhrase);

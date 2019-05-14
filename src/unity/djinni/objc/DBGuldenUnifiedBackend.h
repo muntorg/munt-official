@@ -22,6 +22,9 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** This interface will be implemented in C++ and can be called from any language. */
 @interface DBGuldenUnifiedBackend : NSObject
 
+/** Get the build information (ie. commit id and status) */
++ (nonnull NSString *)BuildInfo;
+
 /**
  * Start the library
  * extraArgs - any additional commandline arguments as passed to GuldenD

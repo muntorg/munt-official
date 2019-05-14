@@ -32,6 +32,15 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_BuildInfo(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::BuildInfo();
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jint JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_InitUnityLib(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jobject j_signals, jstring j_extraArgs)
 {
     try {

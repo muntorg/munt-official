@@ -43,6 +43,9 @@ public:
     static Nan::Persistent<ObjectTemplate> GuldenUnifiedBackend_prototype;
 
 private:
+    /** Get the build information (ie. commit id and status) */
+    static NAN_METHOD(BuildInfo);
+
     /**
      * Start the library
      * extraArgs - any additional commandline arguments as passed to GuldenD

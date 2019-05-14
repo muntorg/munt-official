@@ -116,6 +116,9 @@ payment_result_status = enum {
 # This interface will be implemented in C++ and can be called from any language.
 gulden_unified_backend = interface +c {
 
+    # Get the build information (ie. commit id and status)
+    static BuildInfo(): string;
+
     # Start the library
     # extraArgs - any additional commandline arguments as passed to GuldenD
     # NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
