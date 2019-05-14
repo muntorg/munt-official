@@ -73,12 +73,15 @@ class UnityCore {
             thread(true)
             {
                 System.loadLibrary("gulden_unity_jni")
+                buildInfo = GuldenUnifiedBackend.BuildInfo()
                 GuldenUnifiedBackend.InitUnityLib(cfg.dataDir, cfg.apkPath, cfg.staticFilterOffset, cfg.staticFilterLength, cfg.testnet, coreLibrarySignalHandler, "")
             }
 
             started = true
         }
     }
+
+    var buildInfo = "lib not loaded (yet?)"
 
     fun isCoreReady(): Boolean {
         val deferred = walletReady
