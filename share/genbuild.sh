@@ -35,9 +35,7 @@ if [ "${GULDEN_GENBUILD_NO_GIT}" != "1" -a -e "$(which git 2>/dev/null)" -a "$(g
 
     # otherwise generate suffix from git, i.e. string like "59887e8-dirty"
     SUFFIX=$(git rev-parse --short HEAD)
-    #fixme: (2.1) - Look into this again
-    #git diff-index --quiet HEAD -- || SUFFIX="$SUFFIX-dirty"
-    git diff-index --quiet HEAD -- || SUFFIX="$SUFFIX"
+    git diff-index --quiet HEAD -- || SUFFIX="$SUFFIX-dirty"
 fi
 
 if [ -n "$DESC" ]; then
