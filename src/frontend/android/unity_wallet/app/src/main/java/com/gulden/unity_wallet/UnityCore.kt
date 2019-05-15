@@ -72,6 +72,9 @@ class UnityCore {
 
             thread(true)
             {
+                // Use this sleep to delay loading of the library. This will catch most of premature usage of
+                // Unity API calls which will then blow up by an unsatisfied link error.
+                // Thread.sleep(10000)
                 System.loadLibrary("gulden_unity_jni")
                 buildInfo = GuldenUnifiedBackend.BuildInfo()
                 Log.i(TAG, "Unity library loaded: $buildInfo")

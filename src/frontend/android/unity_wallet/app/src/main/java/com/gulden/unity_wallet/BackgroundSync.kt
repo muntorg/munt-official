@@ -17,8 +17,10 @@ import android.os.SystemClock.sleep
 import androidx.preference.PreferenceManager
 import androidx.core.content.ContextCompat
 import androidx.work.*
+import kotlinx.coroutines.*
 import org.jetbrains.anko.runOnUiThread
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.CoroutineContext
 
 private const val TAG = "background_sync"
 const val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
@@ -136,17 +138,29 @@ class BootReceiver : BroadcastReceiver() {
 }
 
 class SyncWorker(context : Context, params : WorkerParameters)
-    : UnityCore.Observer, Worker(context, params) {
+    : UnityCore.Observer, Worker(context, params), CoroutineScope {
+
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
     override fun syncProgressChanged(percent: Float) {
         Log.i(TAG, "periodic sync progress = $percent")
     }
 
-    override fun doWork(): ListenableWorker.Result {
+    override fun doWork(): Result {
         Log.i(TAG, "Periodic sync started")
 
         UnityCore.instance.addObserver(this)
         UnityCore.instance.startCore()
+
+        // wait for wallet ready (or get killed by the OS which ever comes first)
+        try {
+            runBlocking {
+                UnityCore.instance.walletReady.await()
+            }
+        }
+        catch (e: CancellationException) {
+            return Result.retry()
+        }
 
         // wait until sync is complete (or get killed by the OS which ever comes first)
         while (UnityCore.instance.progressPercent < 100.0) {
@@ -156,7 +170,7 @@ class SyncWorker(context : Context, params : WorkerParameters)
         Log.i(TAG, "Periodic sync finished")
 
         // Indicate success or failure with your return value:
-        return ListenableWorker.Result.success()
+        return Result.success()
 
         // (Returning RETRY tells WorkManager to try this task again
         // later; FAILURE says not to try again.)

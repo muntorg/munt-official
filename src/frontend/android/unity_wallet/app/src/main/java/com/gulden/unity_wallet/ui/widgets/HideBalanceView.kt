@@ -16,10 +16,17 @@ import androidx.preference.PreferenceManager
 import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
+import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.jetbrains.anko.dimen
 import org.jetbrains.anko.runOnUiThread
+import kotlin.coroutines.CoroutineContext
 
-class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(context, attrs), Authentication.LockingObserver, UnityCore.Observer, OnSharedPreferenceChangeListener {
+class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(context, attrs), Authentication.LockingObserver, UnityCore.Observer, OnSharedPreferenceChangeListener, CoroutineScope {
+
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
     private var syncToastShowed = false // used to show it just once (unless triggered explicitly by tapping)
     private var syncToastLastShowed = 0L
@@ -60,18 +67,19 @@ class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(co
     }
 
     private fun updateViewState() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val isSynced = UnityCore.instance.progressPercent >= 100.0
-        val isLocked = Authentication.instance.isLocked()
+        UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
+            val isSynced = UnityCore.instance.progressPercent >= 100.0
+            val isLocked = Authentication.instance.isLocked()
 
-        val showBalance = isSynced && !(isLocked && isHideBalanceSet)
-        displayedChild = if (showBalance) 1 else 0
+            val showBalance = isSynced && !(isLocked && isHideBalanceSet)
+            displayedChild = if (showBalance) 1 else 0
 
-        // when balance not shown due to not being synced show toast (just once)
-        if (!isSynced && !(isLocked && isHideBalanceSet) && !syncToastShowed)
-        {
-            showSyncToast()
-            syncToastShowed = true
+            // when balance not shown due to not being synced show toast (just once)
+            if (!isSynced && !(isLocked && isHideBalanceSet) && !syncToastShowed)
+            {
+                showSyncToast()
+                syncToastShowed = true
+            }
         }
     }
 

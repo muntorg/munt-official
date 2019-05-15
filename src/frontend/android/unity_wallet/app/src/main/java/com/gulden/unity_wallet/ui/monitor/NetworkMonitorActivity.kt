@@ -36,7 +36,6 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
     override fun onStart() {
         super.onStart()
 
-        setSyncProgress(UnityCore.instance.progressPercent)
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
 
         if (supportFragmentManager.fragments.isEmpty()) {
@@ -47,6 +46,10 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
     override fun onStop() {
         super.onStop()
         UnityCore.instance.removeObserver(this)
+    }
+
+    override fun onWalletReady() {
+        setSyncProgress(UnityCore.instance.progressPercent)
     }
 
     fun onBackButtonPushed(view : View) {
