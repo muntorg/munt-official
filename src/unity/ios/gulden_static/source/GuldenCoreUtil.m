@@ -18,3 +18,10 @@ NSString* GuldenCoreStaticFilterPath(BOOL testnet)
     NSString* filterPath = [fwBundle pathForResource:filterFile ofType:NULL];
     return filterPath;
 }
+
+NSString* GuldenCoreLicensePath(void)
+{
+    NSBundle* fwBundle = [NSBundle bundleForClass:[DBGuldenUnifiedBackend class]];
+    NSString* filePath = [fwBundle pathForResource:@"core-packages.licenses" ofType:NULL];
+    return filePath;
+}
