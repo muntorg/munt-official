@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,8 +20,9 @@ import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.block_list_fragment.*
 import kotlinx.android.synthetic.main.block_list_fragment.view.*
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BlockListFragment : AppBaseFragment() {
     private lateinit var viewModel: BlockListViewModel
@@ -72,11 +72,11 @@ class BlockListFragment : AppBaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        GuldenUnifiedBackend.RegisterMonitorListener(monitoringListener)
+        UnityCore.instance.addMonitorObserver(monitoringListener)
     }
 
     override fun onPause() {
-        GuldenUnifiedBackend.UnregisterMonitorListener(monitoringListener)
+        UnityCore.instance.removeMonitorObserver(monitoringListener)
 
         super.onPause()
     }

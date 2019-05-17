@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.support.v4.runOnUiThread
 import kotlin.coroutines.CoroutineContext
 
@@ -33,7 +34,7 @@ class ProcessingFragment : AppBaseFragment() {
 
     override fun onWalletReady() {
         val stats = GuldenUnifiedBackend.getMonitoringStats()
-        with (stats) {
+        with(stats) {
             view?.let { view ->
                 view.processing_group_probable.text = probableHeight.toString()
                 view.processing_group_height.text = partialHeight.toString()
@@ -48,35 +49,29 @@ class ProcessingFragment : AppBaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        GuldenUnifiedBackend.RegisterMonitorListener(monitoringListener)
+        UnityCore.instance.addMonitorObserver(monitoringListener, fun(callback: () -> Unit) { runOnUiThread { callback() } })
     }
 
     override fun onPause() {
-        GuldenUnifiedBackend.UnregisterMonitorListener(monitoringListener)
+        UnityCore.instance.removeMonitorObserver(monitoringListener)
 
         super.onPause()
     }
 
-    private val monitoringListener = object: GuldenMonitorListener() {
+    private val monitoringListener = object : GuldenMonitorListener() {
         override fun onPruned(height: Int) {
-            runOnUiThread {
-                this@ProcessingFragment.processing_group_prune?.text = height.toString()
-            }
+            this@ProcessingFragment.processing_group_prune?.text = height.toString()
         }
 
         override fun onProcessedSPVBlocks(height: Int) {
-            runOnUiThread {
-                this@ProcessingFragment.processing_group_processed?.text = height.toString()
-            }
+            this@ProcessingFragment.processing_group_processed?.text = height.toString()
         }
 
         override fun onPartialChain(height: Int, probableHeight: Int, offset: Int) {
-            runOnUiThread {
-                this@ProcessingFragment.processing_group_probable?.text = probableHeight.toString()
-                this@ProcessingFragment.processing_group_height?.text = height.toString()
-                this@ProcessingFragment.processing_group_offset?.text = offset.toString()
-                this@ProcessingFragment.processing_group_length?.text = (height - offset).toString()
-            }
+            this@ProcessingFragment.processing_group_probable?.text = probableHeight.toString()
+            this@ProcessingFragment.processing_group_height?.text = height.toString()
+            this@ProcessingFragment.processing_group_offset?.text = offset.toString()
+            this@ProcessingFragment.processing_group_length?.text = (height - offset).toString()
         }
     }
 }

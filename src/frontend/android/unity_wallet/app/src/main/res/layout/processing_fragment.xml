@@ -25,7 +25,7 @@ file COPYING
             android:id="@+id/processing_group_probable"
             android:gravity="right"
             android:padding="3dip"
-            android:text="123"
+            android:text="-"
             tools:ignore="HardcodedText" />
     </TableRow>
 
@@ -38,7 +38,7 @@ file COPYING
             android:id="@+id/processing_group_height"
             android:gravity="right"
             android:padding="3dip"
-            android:text="123"
+            android:text="-"
             tools:ignore="HardcodedText" />
     </TableRow>
 
@@ -51,7 +51,7 @@ file COPYING
             android:id="@+id/processing_group_processed"
             android:gravity="right"
             android:padding="3dip"
-            android:text="123"
+            android:text="-"
             tools:ignore="HardcodedText" />
     </TableRow>
 
@@ -64,7 +64,7 @@ file COPYING
             android:id="@+id/processing_group_offset"
             android:gravity="right"
             android:padding="3dip"
-            android:text="123"
+            android:text="-"
             tools:ignore="HardcodedText" />
     </TableRow>
 
@@ -77,7 +77,7 @@ file COPYING
         android:id="@+id/processing_group_length"
         android:gravity="right"
         android:padding="3dip"
-        android:text="123"
+        android:text="-"
         tools:ignore="HardcodedText" />
 </TableRow>
 
@@ -90,7 +90,7 @@ file COPYING
             android:id="@+id/processing_group_prune"
             android:gravity="right"
             android:padding="3dip"
-            android:text="123"
+            android:text="-"
             tools:ignore="HardcodedText" />
     </TableRow>
 
