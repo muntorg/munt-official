@@ -1,18 +1,44 @@
 Note
 -----
 
-The easiest least technical way to build a copy of the software on a windows machine is to make use of WSL, the instructions below detail how to do this.
+For development the easiest way to get a working native windows build on a windows host is to use msys2, see instructions below.
 
+If you are not planning to develop but only run the software you may find using WSL slightly easier or faster, the instructions below detail how to do this. However note the result is not a properly native binary but one that runs through the WSL 'emulation' layer.
 
-This is however not the only way, it is possible also to cross compile for windows from a linux machine; this is how the official builds are done, see [regular build instructions](building.md)
+It is also possible to cross compile for windows from a linux machine; this is how the official builds are done, see [regular build instructions](building.md) which can easily be altered to use a cross compiler.
 
-Finally there are various other ways to compile via mingw/cygwin on windows, there are currently no detailed instructions for this, if you attempt this please consider contributing instructions.
+It should also be possible to compile via msys or cygwin on windows, there are currently no detailed instructions for this, if you attempt this please consider contributing instructions so that others may benefit from your experience.
 
 Binaries
 -----
 There are binaries for every release, please reconsider your need to build and unless you have a very good reason to do so rather just download these.
 Latest binaries can always be found here: https://github.com/Gulden/gulden-official/releases
 Download the latest linux*.tar.gz extract it and simply copy GuldenD out of it instead of going through the unnecessary hassle of building.
+
+
+Installation of msys2
+-----
+* Download and run the 32 bit msys installer - www.msys2.org
+* Open the msys2 32 bit console
+* pacman -Syu
+* Close and restart the console
+* pacman -Su
+* pacman -S --noconfirm mingw-w64-i686-toolchain mingw-w64-i686-python2 git make patch tar autoconf automake libtool
+
+
+Building under msys2
+-----
+* cd /
+* git clone https://github.com/Gulden/gulden-official
+* cd gulden-official/depends
+* make EXTRA_PACKAGES='qrencode protobuf protobuf_native'
+* cp -rf C:/go/depends/work/staging/i686-pc-mingw32/qt/5.9.7-b11c9ab8f4b/msys32/go/depends/i686-pc-mingw32/* i686-pc-mingw32/
+* cd ..
+* ./autogen.sh
+* mkdir buildwin
+* cd buildwin
+* CONFIG_SITE="$PWD/../depends/i686-pc-mingw32/share/config.site" CXXFLAGS="-I$PWD/../depends/i686-pc-mingw32/include -DZMQ_STATIC" LDFLAGS="-L$PWD/../depends/i686-pc-mingw32/lib" ../configure --prefix=$PWD/../depends/i686-pc-mingw32 --with-protoc-bindir=$PWD/../depends/i686-pc-mingw32/bin
+* make
 
 
 Installation of WSL
