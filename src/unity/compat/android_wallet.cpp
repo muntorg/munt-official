@@ -19,6 +19,7 @@
 
 #include <boost/scope_exit.hpp>
 
+#include <fcntl.h>
 
 
 using namespace google::protobuf;
