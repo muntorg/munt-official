@@ -1,4 +1,4 @@
-package=openssl
+wpackage=openssl
 $(package)_version=1.0.1k
 $(package)_download_path=https://www.openssl.org/source
 $(package)_file_name=$(package)-$($(package)_version).tar.gz
@@ -55,7 +55,8 @@ $(package)_config_opts_powerpc_linux=linux-generic32
 $(package)_config_opts_riscv32_linux=linux-generic32
 $(package)_config_opts_riscv64_linux=linux-generic64
 $(package)_config_opts_x86_64_darwin=darwin64-x86_64-cc
-$(package)_config_opts_x86_64_mingw32=mingw64
+$(package)_config_opts_x86_64_mingw32=mingw
+$(package)_config_opts_x86_64_mingw64=mingw64
 $(package)_config_opts_i686_mingw32=mingw
 $(package)_config_opts_x86_64_ios=darwin64-x86_64-cc
 $(package)_config_opts_aarch64_ios=iphoneos-cross-arm64
