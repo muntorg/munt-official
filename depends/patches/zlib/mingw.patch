@@ -1,0 +1,14 @@
+--- old/configure     2016-12-31 10:06:40.000000000 -0800
++++ new/configure    2019-05-04 01:42:38.760023600 -0700
+@@ -215,10 +215,6 @@
+   CYGWIN* | Cygwin* | cygwin* | OS/2*)
+         EXE='.exe' ;;
+   MINGW* | mingw*)
+-# temporary bypass
+-        rm -f $test.[co] $test $test$shared_ext
+-        echo "Please use win32/Makefile.gcc instead." | tee -a configure.log
+-        leave 1
+         LDSHARED=${LDSHARED-"$cc -shared"}
+         LDSHAREDLIBC=""
+         EXE='.exe' ;;
+
