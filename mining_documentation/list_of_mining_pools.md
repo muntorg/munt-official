@@ -33,6 +33,7 @@ Active:
 |mining-dutch.nl|www.mining-dutch.nl|-|GPfnm7iRfMkbMMDFprUBgPL4pRe92sdqYF, Ga4vnMZj3Drjh7rPknCokmkBrBsELcZF4k|https://www.mining-dutch.nl/pools/gulden.php?page=statistics&action=blocks||
 |powermining|http://powermining.pw/|-|GJDNGcbaszbXn3To1Gh1c8k5Y3QkacpbHJ|||
 |gos.cx|gos.cx|gos.cx|GhB58vSocyKnM84LwCLdmGi5iqFSfZsULv|https://gos.cx/explorer/NLG||
+|blazepool.com|blazepool.com|blazepool|GKm84pj8kgQ8ecfsKiJEG2jrPsLrAzTX3z|||
 
 Alive but inactive:
 ----
