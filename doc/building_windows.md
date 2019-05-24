@@ -31,13 +31,13 @@ Building under msys2
 * cd /
 * git clone https://github.com/Gulden/gulden-official
 * cd gulden-official/depends
-* make EXTRA_PACKAGES='qrencode protobuf protobuf_native'
+* make EXTRA_PACKAGES='qrencode protobuf native_protobuf'
 * cp -rf C:/go/depends/work/staging/i686-pc-mingw32/qt/5.9.7-b11c9ab8f4b/msys32/go/depends/i686-pc-mingw32/* i686-pc-mingw32/
 * cd ..
 * ./autogen.sh
 * mkdir buildwin
 * cd buildwin
-* CONFIG_SITE="$PWD/../depends/i686-pc-mingw32/share/config.site" CXXFLAGS="-I$PWD/../depends/i686-pc-mingw32/include -DZMQ_STATIC" LDFLAGS="-L$PWD/../depends/i686-pc-mingw32/lib" ../configure --prefix=$PWD/../depends/i686-pc-mingw32 --with-protoc-bindir=$PWD/../depends/i686-pc-mingw32/bin
+* CONFIG_SITE="$PWD/../depends/i686-pc-mingw32/share/config.site" CXXFLAGS="-I$PWD/../depends/i686-pc-mingw32/include -DZMQ_STATIC" LDFLAGS="-L$PWD/../depends/i686-pc-mingw32/lib" ../configure --prefix=$PWD/../depends/i686-pc-mingw32 --with-protoc-bindir=$PWD/../depends/i686-pc-mingw32/native/bin
 * make
 
 
