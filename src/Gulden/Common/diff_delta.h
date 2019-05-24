@@ -14,9 +14,6 @@
 #define GULDEN_DIFF_DELTA_H
 
 #define PERCENT_FACTOR 100
-
-#ifndef __JAVA__
-extern unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK_TYPE block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock);
-#endif
+extern unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBlockHeader* block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock);
 
 #endif
