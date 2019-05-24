@@ -34,6 +34,7 @@ Active:
 |powermining|http://powermining.pw/|-|GJDNGcbaszbXn3To1Gh1c8k5Y3QkacpbHJ|||
 |gos.cx|gos.cx|gos.cx|GhB58vSocyKnM84LwCLdmGi5iqFSfZsULv|https://gos.cx/explorer/NLG||
 |blazepool.com|blazepool.com|blazepool|GKm84pj8kgQ8ecfsKiJEG2jrPsLrAzTX3z|||
+|bsod.pw|bsod.pw|bsod.solo|GREnrdSrTvs7FtahQTDPhFiHAXAJaga1WT|||
 
 Alive but inactive:
 ----
