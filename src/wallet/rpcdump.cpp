@@ -205,7 +205,7 @@ void ImportScript(CWallet* const pwallet, const CScript& script, const std::stri
 
     pwallet->MarkDirty();
 
-    //fixme: (Post-2.1) (MERGE) (Watchonly)
+    //fixme: (FUT) (MERGE) (WATCH_ONLY)
     if (!pwallet->HaveWatchOnly(script) && !pwallet->AddWatchOnly(script, -1)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
     }
@@ -263,7 +263,7 @@ UniValue importaddress(const JSONRPCRequest& request)
 
 
     std::string strLabel = "";
-    //fixme: (Post-2.1)
+    //fixme: (FUT) (WATCH_ONLY)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
 
     if (request.params.size() > 1)
@@ -305,7 +305,7 @@ UniValue importaddress(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
-//fixme: (2.1)
+//fixme: (PHASE5) - We can remove this include after phase4 activation
 #include "Gulden/util.h"
 #include "validation/validation.h"
 
@@ -434,7 +434,7 @@ UniValue importpubkey(const JSONRPCRequest& request)
             + HelpExampleRpc("importpubkey", "\"mypubkey\", \"testing\", false")
         );
 
-    //fixme: (Post-2.1)
+    //fixme: (FUT) (WATCH_ONLY)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
 
     std::string strLabel = "";
@@ -842,8 +842,8 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
             pwallet->MarkDirty();
 
-            //fixme: (WATCHONLY) - timestamp
-            //fixme: (Post-2.1) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
+            //fixme: (FUT) (WATCH_ONLY) - timestamp
+            //fixme: (FUT) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
             //if (!forAccount->AddWatchOnly(redeemScript/*, timestamp*/)) {
                 //throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
             //}
@@ -861,8 +861,8 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
             pwallet->MarkDirty();
 
-            //fixme: (Post-2.1) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
-            //fixme: (WATCHONLY) - timestamp
+            //fixme: (FUT) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
+            //fixme: (FUT) (WATCH_ONLY) - timestamp
             //if (!forAccount->AddWatchOnly(redeemDestination/*, timestamp*/)) {
                 //throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
             //}
@@ -959,8 +959,8 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
                 pwallet->MarkDirty();
 
-                //fixme: (Post-2.1) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
-                //fixme: (WATCHONLY) - timestamp
+                //fixme: (FUT) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
+                //fixme: (FUT) (WATCH_ONLY) - timestamp
                 //if (!forAccount->AddWatchOnly(pubKeyScript/*, timestamp*/)) {
                     //throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
                 //}
@@ -979,8 +979,8 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
                 pwallet->MarkDirty();
 
-                //fixme: (Post-2.1) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
-                //fixme: (WATCHONLY) - timestamp
+                //fixme: (FUT) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
+                //fixme: (FUT) (WATCH_ONLY) - timestamp
                 //if (!forAccount->AddWatchOnly(scriptRawPubKey/*, timestamp*/)) {
                     //throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
                 //}
@@ -1057,8 +1057,8 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
                 pwallet->MarkDirty();
 
-                //fixme: (Post-2.1) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
-                //fixme: (WATCHONLY) - timestamp
+                //fixme: (FUT) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
+                //fixme: (FUT) (WATCH_ONLY) - timestamp
                 //if (!forAccount->AddWatchOnly(script/*, timestamp*/)) {
                     //throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
                 //}

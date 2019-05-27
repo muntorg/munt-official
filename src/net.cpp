@@ -2000,7 +2000,7 @@ void Discover(boost::thread_group& threadGroup)
         freeifaddrs(myaddrs);
     }
 #else
-    //fixme: (ANDROID) - Any point in implementing this?
+    //fixme: (UNITY) (ANDROID) - Any point in implementing this?
 #endif
 }
 

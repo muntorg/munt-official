@@ -160,7 +160,7 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
         }
         else if(tx.nLockTime == 0)
         {
-            //fixme: (2.1) (SEGSIG) - Do we have to set relative lock time on the inputs?
+            //fixme: (PHASE4) (SEGSIG) - Do we have to set relative lock time on the inputs?
             //Whats the relationship between relative and absolute locktime?
             //nFlags |= CTxInFlags::OptInRBF;
         }
@@ -229,7 +229,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
-    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (2.1) (only set this for high fee [per byte] transactions?)
+    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (PHASE5) (only set this for high fee [per byte] transactions?)
         txNew.nLockTime = chainActive.Height();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
@@ -307,7 +307,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 if (nChange > 0)
                 {
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
-                    //fixme: (COINCONTROL)
+                    //fixme: (FUT) (COIN_CONTROL)
                     //We might want to allow coincontrol to produce script transactions even though segsig is enabled.
                     if (!IsOldTransactionVersion(txNew.nVersion))
                     {
@@ -525,7 +525,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
             {
                 SignatureData sigdata;
 
-                //fixme: (2.1) (SEGSIG) (sign type)
+                //fixme: (PHASE4) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
@@ -577,13 +577,13 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
             CKey privWitnessKey;
             if (!recipient.witnessForAccount->GetKey(recipient.witnessDetails.witnessKeyID, privWitnessKey))
             {
-                //fixme: (2.1) Localise
+                //fixme: (FUT) Localise
                 strFailReason = strprintf("Wallet error, failed to retrieve private witness key.");
                 return false;
             }
             if (!AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *recipient.witnessForAccount, KEYCHAIN_WITNESS))
             {
-                //fixme: (2.1) Localise
+                //fixme: (FUT) Localise
                 strFailReason = strprintf("Wallet error, failed to store witness key.");
                 return false;
             }
@@ -632,7 +632,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 const CAmount nChange = nValueSelected - nFeeOut;
                 if (nChange > 0)
                 {
-                    //fixme: (COINCONTROL)
+                    //fixme: (FUT) (COIN_CONTROL)
                     //We might want to allow coincontrol to produce script transactions even though segsig is enabled.
                     std::shared_ptr<CTxOut> newTxOut = nullptr;
                     if (!IsOldTransactionVersion(txNew.nVersion))
@@ -790,7 +790,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
             {
                 SignatureData sigdata;
 
-                //fixme: (2.1) (SEGSIG) (sign type)
+                //fixme: (PHASE4) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
@@ -839,7 +839,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
-    //fixme: (COINCONTORL)
+    //fixme: (FUT) (COIN_CONTROL)
     CCoinControl coinControl;
 
     CGetWitnessInfo witnessInfo;

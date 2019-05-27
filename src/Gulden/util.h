@@ -65,7 +65,7 @@ inline bool GetPow2WitnessOutput(const CTxOut& out, CTxOutPoW2Witness& witnessDe
         witnessDetails = out.output.witnessDetails;
         return true;
     }
-    else if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (2.1) we can remove this
+    else if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (PHASE5) we can remove this
     {
         if (!out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails))
             return false;

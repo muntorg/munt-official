@@ -29,7 +29,7 @@ static const CAmount CENT = 1000000;
  * critical; in unusual circumstances like a(nother) overflow bug that allowed
  * for the creation of coins out of thin air modification could lead to a fork.
  * */
-//fixme: (Post-2.1) Relook at this constant - I don't think the value here is actually right.
+//fixme: (PHASE5) Relook at this constant - I don't think the value here is actually right/ideal.
 static const CAmount MAX_MONEY = 1680000000 * COIN;
 inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 

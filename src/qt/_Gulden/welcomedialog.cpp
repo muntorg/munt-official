@@ -56,7 +56,7 @@ WelcomeDialog::WelcomeDialog(const QStyle* _platformStyle, QWidget* parent)
     uiInterface.InitMessage.connect(boost::bind(InitMessage, this, _1));
     uiInterface.ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
 
-    //fixme: (2.1) Remove from future build - place in unit tests instead; we have had no reports of this assert so it seems to be pretty solid.
+    //fixme: (PHASE4) Remove from future build - place in unit tests instead; we have had no reports of this assert so it seems to be pretty solid.
     if (!testMnemonics())
     {
         assert(0);
@@ -131,7 +131,7 @@ void WelcomeDialog::newWallet()
 
 void WelcomeDialog::recoverWallet()
 {
-    // fixme: (SPV) decide if we want to keep this option
+    //fixme: (UNITY) (SPV) decide if we want to keep this option
     if (IsArgSet("-phrase")) {
         SecureString phrase(GetArg("-phrase", ""));
         GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);

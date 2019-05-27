@@ -77,7 +77,7 @@ void CBloomFilter::insert(const std::vector<unsigned char>& vKey)
 void CBloomFilter::insert(const COutPoint& outpoint)
 {
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
-    //fixme: (2.1) SEGSIG - HIGH
+    //fixme: (PHASE4) SEGSIG - HIGH
     outpoint.WriteToStream(stream, (CTxInType)0, 0, 3);
     std::vector<unsigned char> data(stream.begin(), stream.end());
     insert(data);
@@ -108,7 +108,7 @@ bool CBloomFilter::contains(const std::vector<unsigned char>& vKey) const
 bool CBloomFilter::contains(const COutPoint& outpoint) const
 {
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
-    //fixme: (2.1) SEGSIG HIGH
+    //fixme: (PHASE4) SEGSIG HIGH
     outpoint.WriteToStream(stream, (CTxInType)0, 0, 3);
     std::vector<unsigned char> data(stream.begin(), stream.end());
     return contains(data);

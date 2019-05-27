@@ -360,9 +360,9 @@ std::string LicenseInfo()
 {
     const std::string URL_WEBSITE = "<https://Gulden.com>";
 
-    //fixme: (2.1) Mention additional libraries, boost etc.
-    //fixme: (2.1) Translate
-    //fixme: (2.1) Add code to ensure translations never strip copyrights
+    //fixme: (FUT) Mention additional libraries, boost etc.
+    //fixme: (FUT) Translate
+    //fixme: (FUT) Add code to ensure translations never strip copyrights
     return helptr("Copyright (C) 2014-2019 The Gulden developers")+ "\n"
            + helptr("Licensed under the Gulden license")+ "\n"
            + "\n"
@@ -1003,7 +1003,7 @@ static bool LockDataDirectory(bool probeOnly)
     std::string strDataDir = GetDataDir().string();
 
     // Make sure only a single Gulden process is using the data directory.
-    //fixme: (2.1)
+    //fixme: (POST-PHASE5)
     (unused) probeOnly;
     /* (GULDEN) - we do this elsewhere (MERGE) look into this again.
     FILE* file = fsbridge::fopen(pathLockFile, "a"); // empty lock file; created if it doesn't exist.
@@ -1151,7 +1151,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         }
     }
 
-    //fixme: (2.1) - HIGH - Sanitize this in some way or handle this differently (e.g. allow unity to set this but not desktop users via command line)
+    //fixme: (UNITY) - HIGH - Sanitize this in some way or handle this differently (e.g. allow unity to set this but not desktop users via command line)
     strSubVersion = FormatSubVersion(GetArg("-clientname", CLIENT_NAME), CLIENT_VERSION, uacomments);
     if (strSubVersion.size() > MAX_SUBVERSION_LENGTH) {
         return InitError(strprintf(errortr("Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments."),
@@ -1233,7 +1233,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     fDiscover = GetBoolArg("-discover", true);
     fRelayTxes = !GetBoolArg("-blocksonly", DEFAULT_BLOCKSONLY);
 
-    //fixme: (2.1) Improve exception handling here
+    //fixme: (FUT) Improve exception handling here
     try
     {
         if (fListen)

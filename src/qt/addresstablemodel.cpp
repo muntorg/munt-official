@@ -373,7 +373,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
     std::string strLabel = label.toStdString();
     std::string strAddress = address.toStdString();
 
-    //fixme: (Post-2.1)
+    //fixme: (FUT)
     boost::uuids::uuid accountUUID = boost::uuids::nil_generator()();
     editStatus = OK;
 

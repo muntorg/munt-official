@@ -290,7 +290,7 @@ void GuldenSendCoinsEntry::clear()
     ui->receivingAddress->setText("");
     ui->payAmount->clear();
 
-    //fixme: (2.1) - implement the rest of this.
+    //fixme: (FUT) - implement the rest of this.
     // clear UI elements for normal payment
     /*ui->payTo->clear();
     ui->addAsLabel->clear();
@@ -452,8 +452,8 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     recipient.fSubtractFeeFromAmount = false;
     recipient.amount = ui->payAmount->amount();
 
-    //fixme: (Post-2.1) - give user a choice here.
-    //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
+    //fixme: (FUT) - give user a choice here.
+    //fixme: (FUT) Check if 'spend unconfirmed' is checked or not.
     CAmount balanceToCheck = pactiveWallet->GetBalance(model->getActiveAccount(), true, false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true);
     if (recipient.amount >= balanceToCheck)
     {
@@ -472,7 +472,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     }
 
 
-    //fixme: (Post-2.1) - Handle 'messages'
+    //fixme: (FUT) - Handle 'messages'
     //recipient.message = ui->messageTextLabel->text();
 
     recipient.destinationPoW2Witness.lockFromBlock = 0;
@@ -602,7 +602,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
 QWidget *GuldenSendCoinsEntry::setupTabChain(QWidget *prev)
 {
-    //fixme: (2.1) Implement.
+    //fixme: (FUT) Implement.
 
     return ui->payAmount;
 }
@@ -821,7 +821,7 @@ void GuldenSendCoinsEntry::updateDisplayUnit()
 void GuldenSendCoinsEntry::searchChangedAddressBook(const QString& searchString)
 {
     proxyModelRecipients->setFilterFixedString(searchString);
-    //fixme: (2.1) - Only if currently selected item not still visible
+    //fixme: (FUT) - Only if currently selected item not still visible
     ui->addressBookTabTable->selectionModel()->clear();
     ui->addressBookTabTable->selectionModel()->setCurrentIndex ( proxyModelRecipients->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
@@ -829,7 +829,7 @@ void GuldenSendCoinsEntry::searchChangedAddressBook(const QString& searchString)
 void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
 {
     proxyModelAddresses->setFilterFixedString(searchString);
-    //fixme: (2.1) - Only if currently selected item not still visible
+    //fixme: (FUT) - Only if currently selected item not still visible
     ui->myAccountsTabTable->selectionModel()->clear();
     ui->myAccountsTabTable->selectionModel()->setCurrentIndex ( proxyModelAddresses->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
@@ -839,7 +839,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 {
     setValid(ui->pow2LockFundsInfoLabel, true);
 
-    //fixme: (2.0.1) Improve this dialog.
+    //fixme: (PHASE4) Improve this dialog.
     CAmount nAmount = ui->payAmount->amount();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
 
@@ -1011,7 +1011,7 @@ void GuldenSendCoinsEntry::nocksTimeout()
 
 void GuldenSendCoinsEntry::sendAllClicked()
 {
-    //fixme: (Post-2.1) Check if 'spend unconfirmed' is checked or not.
+    //fixme: (FUT) Check if 'spend unconfirmed' is checked or not.
     ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), true, false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
     payInfoUpdateRequired();
     //Update witness value for amount.

@@ -111,7 +111,7 @@ static UniValue getinfo(const JSONRPCRequest& request)
 #ifdef ENABLE_WALLET
     if (pwallet) {
         obj.push_back(Pair("keypoololdest", pwallet->GetOldestKeyPoolTime()));
-        //fixme: (Post-2.1) (BIP44)
+        //fixme: (FUT) (BIP44)
         {
             LOCK(pwallet->activeAccount->cs_keypool);
             obj.push_back(Pair("keypoolsize",   (int)pwallet->activeAccount->GetKeyPoolSize()));
@@ -142,7 +142,7 @@ public:
         UniValue obj(UniValue::VOBJ);
         CPubKey vchPubKey;
         obj.push_back(Pair("isscript", false));
-        //fixme: (2.1) - turn this back on
+        //fixme: (PHASE4) - turn this back on
         /*
         if (pwallet && pwallet->GetPubKey(dest.spendingKey, vchPubKey)) {
             obj.push_back(Pair("spendingpubkey", HexStr(vchPubKey)));
@@ -225,7 +225,7 @@ UniValue validateaddress(const JSONRPCRequest& request)
     CGuldenAddress address(request.params[0].get_str());
     bool isValid = address.IsValid();
 
-    //fixme: (2.1) Add some segsig specific output here.
+    //fixme: (PHASE4) Add some segsig specific output here.
     UniValue ret(UniValue::VOBJ);
     ret.push_back(Pair("isvalid", isValid));
     if (isValid)
@@ -304,7 +304,7 @@ static UniValue getaddress(const JSONRPCRequest& request)
                 result.push_back(CGuldenAddress(addr).ToString());
             }
         }
-        //fixme: (2.1) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
+        //fixme: (PHASE4) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
     }
 
     return result;
@@ -414,7 +414,7 @@ UniValue createmultisig(const JSONRPCRequest& request)
         throw std::runtime_error(msg);
     }
 
-    //fixme: (Post-2.1)
+    //fixme: (FUT) (MED) (WATCH_ONLY)
     throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
 
     // Construct using pay-to-script-hash:

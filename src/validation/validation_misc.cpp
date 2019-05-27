@@ -171,7 +171,7 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
         }
         else if (state == THRESHOLD_STARTED)
         {
-            //fixme: (2.1) - Re-enable this (temporarily disable phase 4 voting)
+            //fixme: (PHASE4) - Re-enable this (temporarily disable phase 4 voting)
             //if (params.vDeployments[i].protoVersion == 0 || HaveRequiredPeerUpgradePercent(params.vDeployments[i].protoVersion, params.vDeployments[i].requiredProtoUpgradePercent))
             if (params.vDeployments[i].protoVersion == 0)
             {

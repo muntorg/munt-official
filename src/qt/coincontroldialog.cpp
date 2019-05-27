@@ -438,7 +438,7 @@ void CoinControlDialog::updateLabelLocked()
     else ui->labelLocked->setVisible(false);
 }
 
-//fixme: (2.1)
+//fixme: (PHASE5) - we can remove this header once phase 4 is active
 #include "Gulden/util.h"
 #include "validation/validation.h"
 
@@ -496,7 +496,7 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
 
         // Bytes
         CTxDestination address;
-        //fixme: (2.1) SEGSIG - change the size calculations here.
+        //fixme: (PHASE4) SEGSIG - change the size calculations here.
         if(ExtractDestination(out.tx->tx->vout[out.i], address))
         {
             CPubKey pubkey;

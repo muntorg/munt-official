@@ -51,7 +51,7 @@ struct CoinEntry {
     template<typename Stream>
     void Serialize(Stream &s) const {
         s << key;
-        //fixme: (2.1) (SEGSIG) - Implement handling of non-hash outpoints.
+        //fixme: (PHASE4) (SEGSIG) - Implement handling of non-hash outpoints.
         s << outpoint->getHash();
         uint32_t nTemp = outpoint->n;
         s << VARINT(nTemp);
@@ -60,7 +60,7 @@ struct CoinEntry {
     template<typename Stream>
     void Unserialize(Stream& s) {
         s >> key;
-        //fixme: (2.1) (SEGSIG) - Implement handling of non-hash outpoints.
+        //fixme: (PHASE4) (SEGSIG) - Implement handling of non-hash outpoints.
         uint256 hash;
         s >> hash;
         outpoint->setHash(hash);

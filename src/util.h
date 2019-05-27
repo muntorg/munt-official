@@ -375,7 +375,7 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
     }
 }
 
-//fixme: (C++-20) We should be able to take the string desc as a constant compile time paramater as well.
+//fixme: (FUT) (C++-20) We should be able to take the string desc as a constant compile time paramater as well.
 // Little helper class to RAII encapusulate benchmarks at minimal runtime overhead.
 template <uint32_t logCategory=BCLog::BENCH> class BenchMarkHelper
 {
@@ -401,7 +401,7 @@ public:
         {
             if (nTotal * 0.000001 > nLogThreshold)
             {
-                //fixme: (C++-20) We should be able to concat the strDesc at compile time as well.
+                //fixme: (FUT) (C++-20) We should be able to concat the strDesc at compile time as well.
                 LogPrint(logCategory, "%s: %.2fms [%.2fs]\n", strDesc, 0.001 * (nTime1 - nStart), nTotal * 0.000001);
             }
         }

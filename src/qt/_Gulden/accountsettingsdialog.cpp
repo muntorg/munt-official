@@ -107,7 +107,7 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
 
     if (!ui->lineEditChangeAccountName->text().isEmpty())
     {
-        //fixme: (2.1) - prompt user to save changes?
+        //fixme: (FUT) - prompt user to save changes?
     }
 
     ui->lineEditChangeAccountName->setText("");
@@ -140,7 +140,7 @@ void AccountSettingsDialog::showSyncQr()
         }
         else if(activeAccount->IsPoW2Witness() && !activeAccount->IsFixedKeyPool())
         {
-            //fixme: (2.1) HIGH - seperate this and "getwitnessaccountkeys" (RPC) into a seperate helper function instead of duplicating code.
+            //fixme: (PHASE4) HIGH - seperate this and "getwitnessaccountkeys" (RPC) into a seperate helper function instead of duplicating code.
             if (chainActive.Tip())
             {
                 std::map<COutPoint, Coin> allWitnessCoins;
@@ -157,7 +157,7 @@ void AccountSettingsDialog::showSyncQr()
                             CKey witnessPrivKey;
                             if (activeAccount->GetKey(witnessDetails.witnessKeyID, witnessPrivKey))
                             {
-                                //fixme: (2.1) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+                                //fixme: (FUT) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
                                 witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", activeAccount->getEarliestPossibleCreationTime());
                                 witnessAccountKeys += ":";
                             }
@@ -207,7 +207,7 @@ void AccountSettingsDialog::copyQr()
     GUIUtil::setClipboard(copyText);
 }
 
-//fixme: (Post-2.1) - Make this configurable or more intelligent in some way?
+//fixme: (FUT) - Make this configurable or more intelligent in some way?
 #define MINIMUM_VALUABLE_AMOUNT 1000000000 
 void AccountSettingsDialog::deleteAccount()
 {

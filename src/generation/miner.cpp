@@ -82,7 +82,7 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
 
     // Allow pools to control maximum diff drop to suit their hashrate (prevent sudden pool ddos from 100s of blocks)
     // Larger pools should stick to 0, smaller pools should put a higher value.
-    //fixme: (2.1) Speed up once confirmed working.
+    //fixme: (POST-PHASE5) Speed up once confirmed working.
     int64_t nMaxMissedSteps = GetArg("-limitdeltadiffdrop", 0);
     static const int64_t nDrift   = 1;
     static int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
@@ -300,7 +300,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     bool bSegSigIsEnabled = IsSegSigEnabled(pParent);
 
     //Until PoW2 activates mining subsidy remains full, after it activates PoW part of subsidy is reduced.
-    //fixme: (2.1) (CLEANUP) - We can remove this after 2.1 becomes active.
+    //fixme: (PHASE5) (CLEANUP) - We can remove this after phase4 becomes active.
     Consensus::Params consensusParams = chainparams.GetConsensus();
     CAmount nSubsidy = GetBlockSubsidy(nHeight);
     CAmount nSubsidyWitness = 0;
@@ -377,7 +377,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
                 LogPrintf("Error in CreateNewBlock: could not read block from disk.\n");
                 return nullptr;
             }
-            //fixme: (2.1) - Phase 4
+            //fixme: (PHASE4)
             // We don't want to canabalize coinbase transaction or 'witness refresh' transaction as these are 'generated' by miner and not actual transactions.
             for (uint32_t i = (bSegSigIsEnabled?1:2); i < pBlockCannibal.get()->vtx.size(); ++i)
             {
@@ -847,7 +847,7 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("Generated: hash= %s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
 
-    //fixme: (2.1) we should avoid submitting stale blocks here
+    //fixme: (POST-PHASE5) we should avoid submitting stale blocks here
     //but only if they are really stale (there are cases where we want to mine not on the tip (stalled chain)
     //so detecting this is a bit tricky...
 
@@ -1048,7 +1048,7 @@ void static GuldenGenerate(const CChainParams& chainparams)
         // Throw an error if no script was provided.  This can happen
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
-        //fixme: (2.1) - We should allow for an empty reserveScript with only the key as script is technically no longer essential...
+        //fixme: (PHASE4) - We should allow for an empty reserveScript with only the key as script is technically no longer essential...
         if (!coinbaseScript || coinbaseScript->reserveScript.empty())
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
 

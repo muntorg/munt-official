@@ -201,7 +201,7 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter, CAccount* forAccount, b
     return credit;
 }
 
-//fixme: (2.1) As the cache is -after- some of the checks and the calls after the checks are basically the same as for normal getcredit
+//fixme: (FUT) As the cache is -after- some of the checks and the calls after the checks are basically the same as for normal getcredit
 //Is there any point to immatureCreditCached, or can we just share the getcredit cache and always call the tests.
 //NB! We must always call the tests as obviously they change so can't be cached.
 CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount, bool includeChildren) const
@@ -495,7 +495,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool incl
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
-            //fixme: (Post-2.1) - is this okay? Should it be cached or something? (CBSU?)
+            //fixme: (FUT) (ACCOUNT) - is this okay? Should it be cached or something? (CBSU?)
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
                 if (pcoin->IsTrusted() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
@@ -523,7 +523,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool incl
 
 CAmount CWallet::GetLockedBalance(const CAccount* forAccount, bool includeChildren)
 {
-    //fixme: (2.1) This can probably be drastically improved.
+    //fixme: (FUT) (ACCOUNTS) This can probably be drastically improved.
     WalletBalances balances;
     GetBalances(balances, forAccount, includeChildren);
     return balances.totalLocked;;
@@ -551,7 +551,7 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeP
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
-            //fixme: (Post-2.1)- is this okay? Should it be cached or something? (CBSU?)
+            //fixme: (FUT) (ACCOUNTS) - is this okay? Should it be cached or something? (CBSU?)
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
                 if (!pcoin->IsTrusted() && pcoin->GetDepthInMainChain() == 0 && pcoin->InMempool() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)

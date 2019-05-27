@@ -57,7 +57,7 @@ bool CWallet::NewKeyPool()
     return true;
 }
 
-//fixme: (FUT)) GULDEN Note for HD this should actually care more about maintaining a gap above the last used address than it should about the size of the pool.
+//fixme: (FUT) (ACCOUNTS) GULDEN Note for HD this should actually care more about maintaining a gap above the last used address than it should about the size of the pool.
 int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewAllocations, CAccount* forAccount)
 {
     // Return -1 if we fail to allocate any -and- one of the accounts is not HD -and- it is locked.
@@ -175,7 +175,7 @@ void CWallet::KeepKey(int64_t nIndex)
     LogPrintf("keypool keep %d\n", nIndex);
 }
 
-//fixme: (2.1) - We should handle this MarkKeyUsed case better, have it broadcast an event to all reserve keys or something.
+//fixme: (FUT) (ACCOUNTS) - We should handle this MarkKeyUsed case better, have it broadcast an event to all reserve keys or something.
 //And then remove the disk check below
 void CWallet::ReturnKey(int64_t nIndex, CAccount* forAccount, int64_t keyChain)
 {
@@ -251,7 +251,7 @@ int64_t CWallet::GetOldestKeyPoolTime()
 
 void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey, const std::string sAccountName)
 {
-    //fixme: (2.1) Handle error here more appropriately etc.
+    //fixme: (PHASE4) Handle error here more appropriately etc.
     std::vector<std::pair<CKey, uint64_t>> keysAndBirthDates;
     bool urlError = false;
     try
@@ -344,15 +344,15 @@ void CWallet::importPrivKey(const CKey& privKey, std::string sAccountName)
 
     pactiveWallet->addAccount(newAccount, sAccountName);
 
-    //fixme: (2.1) - Optionally take a key bith date here.
+    //fixme: (FUT) (ACCOUNTS) - Optionally take a key bith date here.
     if (!importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1))
     {
         //Error messages aleady handled internally by importPrivKeyIntoAccount.
-        //fixme: (2.1) we should delete the account in this scenario.
+        //fixme: (FUT) (ACCOUNTS) we should delete the account in this scenario.
         return;
     }
 
-    //fixme: (2.1) Delete account on failure.
+    //fixme: (FUT) (ACCOUNTS) Delete account on failure.
 }
 
 bool CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToInsert)
@@ -380,7 +380,7 @@ bool CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToIns
         }
     }
 
-    //fixme: (2.1) Add some key metadata here as well?
+    //fixme: (FUT) (ACCOUNTS) Add some key metadata here as well?
 
     CPubKey pubKeyToInsert = privKeyToInsert.GetPubKey();
     if (!AddKeyPubKey(privKeyToInsert, pubKeyToInsert, *forAccount, KEYCHAIN_EXTERNAL))

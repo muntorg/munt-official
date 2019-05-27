@@ -117,7 +117,7 @@ CAccount* AccountFromValue(CWallet* pwallet, const UniValue& value, bool useDefa
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
-    //fixme: (2.1) Forbid "*" as an account name to prevent clash with this.
+    //fixme: (FUT) (ACCOUNTS) (HIGH) Forbid "*" as an account name to prevent clash with this.
     if (strAccountUUIDOrLabel == "*")
         return nullptr;
 
@@ -324,7 +324,7 @@ UniValue getaccount(const JSONRPCRequest& request)
 
     UniValue jsonGroupings(UniValue::VARR);
 
-    //fixme: (Post-2.1) (WATCHONLY)
+    //fixme: (FUT) (WATCH_ONLY)
     for(const auto& [accountUUID, account] : pwallet->mapAccounts)
     {
         if (::IsMine(*account, address.Get()))
@@ -620,7 +620,7 @@ UniValue listaddressgroupings(const JSONRPCRequest& request)
             UniValue addressInfo(UniValue::VARR);
             addressInfo.push_back(CGuldenAddress(address).ToString());
             addressInfo.push_back(ValueFromAmount(balances[address]));
-            //fixme: (Post-2.1) CBSU - Rather do this inside GetAddressGroupings
+            //fixme: (FUT) CBSU - Rather do this inside GetAddressGroupings
             for(const auto& [accountUUID, account] : pwallet->mapAccounts)
             {
                 (unused)(accountUUID);
@@ -1291,7 +1291,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     throw std::runtime_error("Temporarily disabled for this release as it needs to be reworked to be account safe, will return soon in a future release, apologies for the inconvenience.");
 
-    //fixme: (2.1)
+    //fixme: (PHASE4)
     /*DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     std::string strAccount;
@@ -1553,7 +1553,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
 
     // If rpconlylistsecuredtransactions is present then only include if tx is secured by a checkpoint
     bool securedTransaction = (Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock));
-    //fixme:(2.1) Remove
+    //fixme:(PHASE5) Remove after checkpointing is gone (once phase4 is active)
     if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && ( !securedTransaction && !IsArgSet("-testnet") ))
         return;
 
@@ -1567,7 +1567,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
             {
                 doForAccounts.push_back(account);
             }
-            //fixme: (Post-2.1) - Handle shadow children
+            //fixme: (FUT) (ACCOUNTS) (MED) - Handle shadow children
         }
     }
     else
@@ -2090,7 +2090,7 @@ UniValue keypoolrefill(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
     pwallet->TopUpKeyPool(kpSize);
 
-    //fixme: (Post-2.1)
+    //fixme: (FUT) (ACCOUNTS)
     /*
     if (pwallet->GetKeyPoolSize() < kpSize) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Error refreshing keypool.");
@@ -2105,7 +2105,7 @@ static void LockWallet(CWallet* pWallet)
 {
     //NB!! It is highly important that this runs in a thread
     //RPCRunLater calls this in the -main- http thread which blocks all RPC and can cause to RPC freezing for long periods of ti me in certain instances.
-    //fixme (Post-2.1) (PERFORMANCE) - It would be better if we could feed this directly to an existing worker thread instead of constantly creating new threads, thread creation is expensive.
+    //fixme (FUT) (PERFORMANCE) - It would be better if we could feed this directly to an existing worker thread instead of constantly creating new threads, thread creation is expensive.
     std::thread(
         [=] 
         {
@@ -2594,7 +2594,7 @@ UniValue getwalletinfo(const JSONRPCRequest& request)
     obj.push_back(Pair("immature_balance",    ValueFromAmount(pwallet->GetImmatureBalance())));
     obj.push_back(Pair("txcount",       (int)pwallet->mapWallet.size()));
     obj.push_back(Pair("keypoololdest", pwallet->GetOldestKeyPoolTime()));
-    //fixme: (Post-2.1)
+    //fixme: (FUT) (ACCOUNTS)
     /*
     obj.push_back(Pair("keypoolsize", (int64_t)kpExternalSize));
     CKeyID masterKeyID = pwallet->GetHDChain().masterKeyID;
@@ -2836,7 +2836,7 @@ UniValue listunspent(const JSONRPCRequest& request)
         {
             doForAccounts.push_back(account);
         }
-        //fixme: (Post-2.1) - Handle shadow children
+        //fixme: (FUT) (ACCOUNTS) (MED) - Handle shadow children
     }
 
     return listunspentforaccounts(pWallet, doForAccounts, pMinDepth, pMaxDepth, pFilterAddresses, pIncludeUnsafe, pOptions);

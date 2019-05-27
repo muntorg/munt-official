@@ -49,7 +49,7 @@ ImportWitnessDialog::~ImportWitnessDialog()
 
 void ImportWitnessDialog::accept()
 {
-    //fixme: (2.1) Improve this check.
+    //fixme: (FUT) Improve this check.
     bool fGood = ui->privKeyEdit->text().startsWith("gulden://witnesskeys?keys=");
 
     if (!fGood)

@@ -194,7 +194,7 @@ private:
 protected:
     int64_t BeginTime(const Consensus::Params& params) const
     {
-        //fixme: (2.1) We can remove this after phase 4 activation.
+        //fixme: (PHASE5) We can remove this after phase 4 activation.
         if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
         {
             int64_t nActivationTime = GetPoW2Phase3ActivationTime(chainActive);

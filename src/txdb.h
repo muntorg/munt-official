@@ -85,7 +85,7 @@ public:
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
     CCoinsViewCursor *Cursor() const override;
 
-    //fixme: (2.1) We can remove these for 2.1
+    //fixme: (PHASE4) We can remove these for 2.1
     void SetPhase2ActivationHash(const uint256 &hashPhase2ActivationPoint);
     uint256 GetPhase2ActivationHash();
     void SetPhase3ActivationHash(const uint256 &hashPhase3ActivationPoint);

@@ -56,7 +56,7 @@
 #include <Gulden/mnemonic.h>
 #include <script/ismine.h>
 
-//fixme: (2.1)
+//fixme: (PHASE5) - we can remove these includes after phase4 activation.
 #include "Gulden/util.h"
 #include "validation/validation.h"
 
@@ -197,7 +197,7 @@ bool CWallet::AddCScript(const CScript& redeemScript)
 {
     LOCK(cs_wallet);
 
-    //fixme: (Post-2.1) (WATCHONLY)
+    //fixme: (FUT) (WATCH_ONLY)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
@@ -228,7 +228,7 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
         return true;
     }
 
-    //fixme: (Post-2.1) (WATCHONLY)
+    //fixme: (FUT) (WATCH_ONLY)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
@@ -246,7 +246,7 @@ bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
-        //fixme: (Post-2.1) (WATCHONLY) - nCreateTime should go here as well?
+        //fixme: (FUT) (WATCH_ONLY) - nCreateTime should go here as well?
         if (accountPair.second->AddWatchOnly(dest))
             ret = true;
     }
@@ -263,7 +263,7 @@ bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
 bool CWallet::RemoveWatchOnly(const CScript &dest)
 {
     AssertLockHeld(cs_wallet);
-    //fixme: (Post-2.1) (WATCHONLY)
+    //fixme: (FUT) (WATCH_ONLY)
     bool ret = true;
     for (auto accountPair : mapAccounts)
     {
@@ -287,7 +287,7 @@ bool CWallet::LoadWatchOnly(const CScript &dest)
 {
     AssertLockHeld(cs_wallet);
 
-    //fixme: (Post-2.1) (WATCHONLY)
+    //fixme: (FUT) (WATCH_ONLY)
     bool ret = false;
     for (auto accountPair : mapAccounts)
     {
@@ -727,8 +727,7 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         }
         Unlock(strWalletPassphrase);
 
-        //fixme: (Post-2.1) (HD) (ACCOUNTS)
-        //fixme: (Post-2.1) Gulden HD - What to do here? We can't really throw the entire seed away...
+        //fixme: (FUT) (ACCOUNTS) (HD) Gulden HD - What to do here? We can't really throw the entire seed away...
         /*
         // if we are using HD, replace the HD master key (seed) with a new one
         if (IsHDEnabled()) {
@@ -846,7 +845,7 @@ int64_t CWallet::IncOrderPosNext(CWalletDB *pwalletdb)
 
 bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmount, std::string strComment)
 {
-    //fixme: (Post-2.1) refactor.
+    //fixme: (FUT) (REFACTOR) (ACCOUNTS)
     //This should never be called.
     assert(0);
     return true;
@@ -854,7 +853,7 @@ bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmoun
 
 bool CWallet::GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew)
 {
-    //fixme: (Post-2.1) refactor.
+    //fixme: (FUT) (REFACTOR) (ACCOUNTS)
     //This should never be called.
     assert(0);
     return true;
@@ -1091,7 +1090,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 wtx.SetMerkleBranch(pIndex, posInBlock);
 
             RemoveAddressFromKeypoolIfIsMine(tx, pIndex ? pIndex->nTime : 0);
-            //fixme: (2.1) Is this even needed? Surely only checking the outputs is fine
+            //fixme: (PHASE4) Is this even needed? Surely only checking the outputs is fine
             for(const auto& txin : wtx.tx->vin)
             {
                 RemoveAddressFromKeypoolIfIsMine(txin, pIndex ? pIndex->nTime : 0);
@@ -1100,7 +1099,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             bool ret = AddToWallet(wtx, false);
 
             // Update account state
-            //fixme: (2.1) - More efficient way to do this?
+            //fixme: (PHASE5) - More efficient way to do this?
             // If this is the first unconfirmed witness transaction a witness account is receiving then update the state to "pending" in the UI.
             // If it has a confirm then update to "locked"
             if (pactiveWallet)
@@ -1133,7 +1132,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             }
 
             return ret;
-            //fixme: (2.1) It is not clear if this is 100% necessary or not. See comment below for the original motivation.
+            //fixme: (PHASE4) It is not clear if this is 100% necessary or not. See comment below for the original motivation.
             //Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.
             //Is there maybe a better way to do this?
             //
@@ -2013,7 +2012,7 @@ DBErrors CWallet::ZapSelectTx(CWalletDB& walletdb, std::vector<uint256>& vHashIn
     {
         if (dbw->Rewrite("\x04pool"))
         {
-            //fixme: (Post-2.1)
+            //fixme: (FUT) (ACCOUNTS) (MED)
             for (auto accountPair : mapAccounts)
             {
                 accountPair.second->setKeyPoolInternal.clear();
@@ -2043,7 +2042,7 @@ DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
         if (dbw->Rewrite("\x04pool"))
         {
             LOCK(cs_wallet);
-            //fixme: (Post-2.1)
+            //fixme: (FUT) (ACCOUNTS) (MED)
             for (auto accountPair : mapAccounts)
             {
                 accountPair.second->setKeyPoolInternal.clear();
@@ -2468,7 +2467,7 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
             int nHeight = blit->second->nHeight;
             for(const CTxOut &txout : wtx.tx->vout) {
                 // iterate over all their outputs
-                //fixme: (2.1)
+                //fixme: (PHASE4)
                 CAffectedKeysVisitor(activeAccount->externalKeyStore, vAffected).Process(txout);
                 for(const CKeyID &keyid : vAffected) {
                     // ... and all their affected keys

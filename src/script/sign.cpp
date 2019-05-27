@@ -39,7 +39,7 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
     uint256 hash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion);
     if (sigversion == SIGVERSION_SEGSIG)
     {
-        //fixme: (2.1) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
+        //fixme: (PHASE4) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
         if (!key.SignCompact(hash, vchSig))
             return false;
     }
@@ -232,7 +232,7 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
-//fixme: (2.1) (SEGSIG) (MULTISIG)
+//fixme: (PHASE4) (SEGSIG) (MULTISIG)
 class CSigningKeysVisitor : public boost::static_visitor<void> {
 public:
     std::vector<CKeyID> vKeys;
@@ -251,11 +251,11 @@ public:
 
     void operator()(const CScriptID &scriptId)
     {
-        //fixme: (2.1) (WATCH_ONLY)
+        //fixme: (FUT) (WATCH_ONLY) (MED)
     }
 
     void operator()(const CPoW2WitnessDestination &dest) {
-        //fixme: (FUTURE) (Look into possibility of stacked signing.)
+        //fixme: (FUT) (Look into possibility of stacked signing.)
         if (type == SignType::Witness)
             vKeys.push_back(dest.witnessKey);
         else if (type == SignType::Spend)
@@ -271,21 +271,21 @@ CKeyID ExtractSigningPubkeyFromTxOutput(const CTxOut& txOut, SignType type)
     {
         case ScriptLegacyOutput:
         {
-            //fixme: (2.1) (SEGSIG)
+            //fixme: (PHASE4) (SEGSIG)
             CTxDestination dest;
             if (!ExtractDestination(txOut.output.scriptPubKey, dest))
                 return CKeyID();
 
             CSigningKeysVisitor getSigningKeys(type);
             getSigningKeys.Process(dest);
-            //fixme: (2.1) (SEGSIG) MULTISIG
+            //fixme: (PHASE4) (SEGSIG) MULTISIG
             if (getSigningKeys.vKeys.size() != 1)
                 return CKeyID();
             return getSigningKeys.vKeys[0];
         }
         case PoW2WitnessOutput:
         {
-            //fixme: (FUTURE) (Look into possibility of stacked signing.)
+            //fixme: (FUT) (Look into possibility of stacked signing.)
             if (type == SignType::Spend)
                 return txOut.output.witnessDetails.spendingKeyID;
             else if(type == SignType::Witness)
@@ -311,7 +311,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
 
         if (!IsOldTransactionVersion(nVersion))
         {
-            //fixme: (2.1) (SEGSIG)
+            //fixme: (PHASE4) (SEGSIG)
             if (solved && whichType == TX_SCRIPTHASH)
             {
                  sigdata.segregatedSignatureData.stack = result;
@@ -339,7 +339,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
-        //fixme: (2.0.1) Additional sanity checks here.
+        //fixme: (PHASE4) Additional sanity checks here.
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, SIGVERSION_BASE, type);
         sigdata.segregatedSignatureData.stack = result;
@@ -348,7 +348,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::StandardKeyHashOutput)
     {
-        //fixme: (2.0.1) Additional sanity checks here.
+        //fixme: (PHASE4) Additional sanity checks here.
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, SIGVERSION_BASE, type);
         sigdata.segregatedSignatureData.stack = result;
@@ -383,7 +383,7 @@ bool SignSignature(const CKeyStore &keystore, const CTxOut& fromOutput, CMutable
     assert(nIn < txTo.vin.size());
 
     CTransaction txToConst(txTo);
-    //fixme: (2.1) (SEGSIG) (sign type)
+    //fixme: (PHASE4) (SEGSIG) (sign type)
     CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(fromOutput, SignType::Spend);
     TransactionSignatureCreator creator(signingKeyID, &keystore, &txToConst, nIn, amount, nHashType);
 
@@ -499,7 +499,7 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
             return sigs2;
         return sigs1;
     case TX_PUBKEYHASH_POW2WITNESS:
-        //fixme: (2.0.1) Key renewal
+        //fixme: (PHASE4) Key renewal
         //We need to devise a way to sign with the right key here (both keys if it is a spend, witness key if just witnessing)
         return sigs1;
     case TX_SCRIPTHASH:

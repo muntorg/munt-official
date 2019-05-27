@@ -8,7 +8,7 @@
 
 #include <boost/thread/thread.hpp>
 
-//fixme: (2.1) This is non-ideal; we should rather use a signal or something for this.
+//fixme: (POST-PHASE5) This is non-ideal; we should rather use a signal or something for this.
 //! Indicate to the witness thread that it must erase the witness script cache and recalculate it.
 extern bool witnessScriptsAreDirty;
 

@@ -75,7 +75,7 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
                         address = CNoDestination();
                     }
 
-                    //fixme: (Post-2.1) - There should be a seperate CInputEntry class/array here or something.
+                    //fixme: (FUT) (ACCOUNTS) - There should be a seperate CInputEntry class/array here or something.
                     COutputEntry output = {address, prevOut.nValue, (int)i};
 
                     // We are debited by the transaction, add the output as a "sent" entry

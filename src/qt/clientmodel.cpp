@@ -55,7 +55,7 @@ ClientModel::ClientModel(OptionsModel *_optionsModel, QObject *parent) :
     peerTableModel = new PeerTableModel(this);
     banTableModel = new BanTableModel(this);
 
-    //fixme: (2.1) - Get rid of this timer - core signals should handle this.
+    //fixme: (FUT) - Get rid of this timer - core signals should handle this.
     pollTimer = new QTimer(this);
     connect(pollTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
     pollTimer->start(MODEL_UPDATE_DELAY);
@@ -351,7 +351,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
 
 void ClientModel::updatePoW2Display()
 {
-    //fixme: (2.1) We can remove this for 2.1
+    //fixme: (FUT) We can remove this for 2.1
     cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
 }
 

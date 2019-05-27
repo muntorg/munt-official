@@ -131,7 +131,7 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
     // Delete ourselves on close, application catches this and uses it as a signal to exit.
     setAttribute(Qt::WA_DeleteOnClose, true);
 
-    //fixme: (2.1) ex GuldenGUI code, integrate this better
+    //fixme: (FUT) ex GuldenGUI code, integrate this better
     {
         ticker = new CurrencyTicker( this );
         nocksSettings = new NocksSettings( this );
@@ -152,7 +152,7 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     #endif
     #if QT_VERSION >= 0x050600
-    //fixme: (2.1) We temporarily introduce this in an attempt to fix issues around DPI font-scaling on windows/linux - revisit this in future.
+    //fixme: (FUT) We temporarily introduce this in an attempt to fix issues around DPI font-scaling on windows/linux - revisit this in future.
     QGuiApplication::setAttribute(Qt::AA_Use96Dpi);
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     #endif
@@ -728,7 +728,7 @@ bool GUI::addWallet(const QString& name, WalletModel *walletModel)
     connect(walletModel, SIGNAL(balanceChanged(WalletBalances,CAmount,CAmount,CAmount)), this, SLOT(setBalance(WalletBalances,CAmount,CAmount,CAmount)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
-    //fixme: (2.1) This can be removed
+    //fixme: (PHASE5) This can be removed
     // Force this to run once to ensure correct PoW2 phase displays
     if (clientModel)
         clientModel->updatePoW2Display();
@@ -1367,7 +1367,7 @@ void GUI::resizeEvent(QResizeEvent* event)
 
     QMainWindow::resizeEvent(event);
 
-    //fixme: (2.1) This is a locate setting. For English everything fits in 960 but for Dutch it needs more space...
+    //fixme: (FUT) This is a locale setting. For English everything fits in 960 but for Dutch it needs more space...
     // Other languages may in turn be different.
     // If we are working with limited horizontal spacing then hide some non-essential UI elements to help things fit more comfortably.
     bool restrictedHorizontalSpace = (event->size().width() < 980) ? true : false;
@@ -1469,7 +1469,7 @@ void GUI::incomingTransaction(const QString& date, int unit, const CAmount& amou
     if (!account.isEmpty())
         accountStr = " [" + account + "]";
 
-    //fixme: (Post-2.1) - prevent spurious blank messages from showing - track down why these happen though.
+    //fixme: (FUT) - prevent spurious blank messages from showing - track down why these happen though.
     if (amountSent == CAmount(0) && amountReceived == CAmount(0) && type.isEmpty())
     {
         return;

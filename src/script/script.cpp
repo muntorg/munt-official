@@ -246,7 +246,7 @@ bool CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
     if (this->size() != 74)
     {
-        //fixme: (2.1) Better error handling - this should probably at least log something.
+        //fixme: (PHASE4) Better error handling - this should probably at least log something.
         return false;
     }
 

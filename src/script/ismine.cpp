@@ -145,13 +145,13 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& 
         }
         if (keystore.HaveKey(spendingKeyID))
             return ISMINE_SPENDABLE;
-        //fixme: (2.1) (ISMINE_WITNESS)
+        //fixme: (PHASE4) (ISMINE_WITNESS)
         if (keystore.HaveKey(witnessKeyID))
             return ISMINE_SPENDABLE;
         break;
     }
 
-    //fixme: (Post-2.1) (WATCHONLY)
+    //fixme: (FUT) (WATCH_ONLY) (MED)
     /*if (keystore.HaveWatchOnly(scriptPubKey)) {
         // TODO: This could be optimized some by doing some work after the above solver
         SignatureData sigs;
@@ -170,7 +170,7 @@ isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
         {
             if (keystore.HaveKey(txout.output.witnessDetails.spendingKeyID))
                 return ISMINE_SPENDABLE;
-            //fixme: (2.1) (ISMINE_WITNESS)
+            //fixme: (PHASE4) (ISMINE_WITNESS)
             if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
                 return ISMINE_SPENDABLE;
             break;
@@ -201,7 +201,7 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txo
             if (haveWitnessKey)
                 keystore.MarkKeyUsed(txout.output.witnessDetails.witnessKeyID, time);
 
-            //fixme: (2.1) (ISMINE_WITNESS)
+            //fixme: (PHASE4) (ISMINE_WITNESS)
             if (haveSpendingKey)
                 return ISMINE_SPENDABLE;
             if (haveWitnessKey)
@@ -345,14 +345,14 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
 
         if (haveSpendingKey)
             return ISMINE_SPENDABLE;
-        //fixme: (2.1) (ISMINE_WITNESS)
+        //fixme: (PHASE4) (ISMINE_WITNESS)
         if (haveWitnessKey)
             return ISMINE_SPENDABLE;
         break;
     }
 
     /*
-     //fixme: (Post-2.1) (WATCHONLY)
+     //fixme: (FUT) (WATCH_ONLY) (MED)
       if (keystore.HaveWatchOnly(scriptPubKey)) {
         // TODO: This could be optimized some by doing some work after the above solver
         SignatureData sigs;

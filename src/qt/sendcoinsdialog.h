@@ -82,7 +82,7 @@ private:
 
     NocksRequest* nocksRequest;
 
-    //fixme: (2.1) Make private again
+    //fixme: (FUT) Make private again
 public:
     QList<SendCoinsRecipient> pendingRecipients;
 private:

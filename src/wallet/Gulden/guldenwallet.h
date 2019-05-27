@@ -37,7 +37,7 @@
 
 void StartShadowPoolManagerThread(boost::thread_group& threadGroup);
 
-//fixme: (Post-2.1) Make configurable option
+//fixme: (FUT) (ACCOUNTS) (LOW) Make configurable option
 extern bool fShowChildAccountsSeperately;
 
 std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& dest);

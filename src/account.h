@@ -98,7 +98,7 @@ public:
     CHDSeed(CExtPubKey& pubkey, SeedType type);
     virtual ~CHDSeed()
     {
-        //fixme: (2.1) Check if any cleanup needed here?
+        //fixme: (FUT) (ACCOUNTS) Check if any cleanup needed here?
     }
 
     void Init();
@@ -114,7 +114,7 @@ public:
     {
         int nVersion = 2;
         READWRITE(nVersion);
-        //fixme: (2.1) - Remove the below in future if we need to upgrade versions; but delay as long as possible to purge all ald wallets that may have had a corrupted version.
+        //fixme: (FUT) (ACCOUNTS) - Remove the below in future if we need to upgrade versions; but delay as long as possible to purge all ald wallets that may have had a corrupted version.
         if (nVersion > 3)
             nVersion = 1;
 
@@ -237,7 +237,7 @@ public:
     CAccount();
     void SetNull();
 
-    //fixme: (2.1) (CLEANUP)
+    //fixme: (FUT) (ACCOUNTS) (CLEANUP)
     virtual CPubKey GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain);
 
     //! Account uses hierarchial deterministic key generation and not legacy (random) key generation.

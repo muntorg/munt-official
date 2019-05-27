@@ -491,7 +491,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
 
     LOCK(wallet->cs_wallet);
 
-    //fixme: (2.1) fShowChildAccountsSeperately
+    //fixme: (FUT) fShowChildAccountsSeperately
     if (wtx->credit > wtx->debit)
     {
         if ( wtx->fromAccountUUID != boost::uuids::nil_generator()())
@@ -673,7 +673,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
 QString TransactionTableModel::formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed, GuldenUnits::SeparatorStyle separators) const
 {
     QString str = GuldenUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit , false, separators, 2);
-    //fixme: (2.1) We could maybe strip the trailing .00 here to clean display up a bit?
+    //fixme: (FUT) We could maybe strip the trailing .00 here to clean display up a bit?
     if(showUnconfirmed)
     {
         if(!wtx->status.countsForBalance)

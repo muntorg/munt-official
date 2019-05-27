@@ -66,7 +66,7 @@ WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsM
     transactionTableModel = new TransactionTableModel(platformStyle, wallet, this);
     recentRequestsTableModel = new RecentRequestsTableModel(wallet, this);
 
-    //fixme: (2.1) - Get rid of this timer - core signals should handle this.
+    //fixme: (FUT) - Get rid of this timer - core signals should handle this.
     // This timer will be fired repeatedly to update the balance
     pollTimer = new QTimer(this);
     connect(pollTimer, SIGNAL(timeout()), this, SLOT(pollBalanceChanged()));
@@ -84,7 +84,7 @@ WalletModel::~WalletModel()
 
 CAmount WalletModel::getBalance(CAccount* forAccount, const CCoinControl *coinControl) const
 {
-    //fixme: (Post-2.1) - coin control
+    //fixme: (FUT) - coin control
     /*if (coinControl)
     {
         return wallet->GetAvailableBalance(coinControl);
@@ -296,7 +296,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
                 const payments::Output& out = details.outputs(i);
                 if (out.amount() <= 0) continue;
                 subtotal += out.amount();
-                //fixme: (2.1) (SEGSIG)
+                //fixme: (PHASE4) (SEGSIG)
                 const unsigned char* scriptStr = (const unsigned char*)out.script().data();
                 CScript scriptPubKey(scriptStr, scriptStr+out.script().size());
                 CAmount nAmount = out.amount();
@@ -703,7 +703,7 @@ void WalletModel::subscribeToCoreSignals()
         return;
 
     // Connect signals to wallet
-    //fixme: (2.1) - Find a better way to do this instead of connecting to a specific account
+    //fixme: (FUT) (MED) - Find a better way to do this instead of connecting to a specific account
     if (wallet->mapAccounts.size() > 0)
     {
         wallet->activeAccount->externalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
@@ -732,7 +732,7 @@ void WalletModel::unsubscribeFromCoreSignals()
     if (wallet)
     {
         LogPrintf("WalletModel::~unsubscribeFromCoreSignals - disconnect account signals\n");
-        //fixme: (2.1) - Find a better way to do this instead of connecting to a specific account
+        //fixme: (FUT) (MED) - Find a better way to do this instead of connecting to a specific account
         if (wallet->activeAccount)
         {
             wallet->activeAccount->externalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));

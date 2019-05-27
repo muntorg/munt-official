@@ -88,7 +88,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #include <QTextCodec>
 #endif
 
-//fixme: (BUILD_SYSTEM) - Enable turning this on for special debugging cases
+//fixme: (FUT) (BUILD_SYSTEM) - Enable turning this on for special debugging cases
 //#define LOG_ALL_QT_EVENTS
 
 static void InitMessage(const std::string &message)
@@ -507,7 +507,7 @@ void GuldenApplication::shutdown_InitialUINotification()
 
     translationInterface.Translate.disconnect(Translate);
 
-    //fixme: (2.1) - disconnect transaction table model here as well?
+    //fixme: (FUT) - disconnect transaction table model here as well?
 }
 
 void GuldenApplication::shutdown_CloseModels()
@@ -725,7 +725,7 @@ int main(int argc, char *argv[])
     // Subscribe to global signals from core
     uiInterface.InitMessage.connect(InitMessage);
 
-    //fixme: (2.1) - This is now duplicated, factor this out into a common helper.
+    //fixme: (FUT) - This is now duplicated, factor this out into a common helper.
     // Make sure only a single Gulden process is using the data directory.
     fs::path pathLockFile = GetDataDir() / ".lock";
     FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.

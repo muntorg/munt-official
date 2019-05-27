@@ -208,7 +208,7 @@ static void selectsmix(void)
             smix_func = crypto_scrypt_smix_sse2;
             return;
         }
-        //fixme: Re-enable warning here
+        //fixme: (FUT) Re-enable warning here
         //warn0("Disabling broken SSE2 scrypt support - please report bug!");
     }
 #endif
@@ -218,7 +218,7 @@ static void selectsmix(void)
         smix_func = crypto_scrypt_smix;
         return;
     }
-    //fixme: Re-enable warning here
+    //fixme: (FUT) Re-enable warning here
     //warn0("Generic scrypt code is broken - please report bug!");
 
     // If we get here, something really bad happened.

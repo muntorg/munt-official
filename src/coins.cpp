@@ -279,7 +279,7 @@ bool CCoinsViewCache::HaveInputs(const CTransaction& tx) const
     return true;
 }
 
-//fixme: (2.1) This can potentially be improved.
+//fixme: (PHASE4) This can potentially be improved.
 //22 is the lower bound for a new SegSig output
 static const size_t MAX_OUTPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 22; // TODO: merge with similar definition in undo.h.
 

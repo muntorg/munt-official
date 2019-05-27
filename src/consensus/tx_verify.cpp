@@ -185,7 +185,7 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
 
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
-        //fixme: (2.1) (SEGSIG) - Is this right? - make sure we are counting sigops in segsig scripts correctly
+        //fixme: (PHASE4) (SEGSIG) - Is this right? - make sure we are counting sigops in segsig scripts correctly
         const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
         switch (prevout.GetType())
         {
@@ -242,7 +242,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         {
             if (tx.vin[0].scriptSig.size() != 0)
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-            //fixme: (2.1) (SEGSIG) (HIGH) implement - check the segregatedSignatureData here? (already tested elsewhere I believe but double check)
+            //fixme: (PHASE4) (SEGSIG) (HIGH) implement - check the segregatedSignatureData here? (already tested elsewhere I believe but double check)
         }
     }
     else
@@ -330,7 +330,7 @@ inline bool IsLockFromConsistent(const CTxOutPoW2Witness& inputDetails, const CT
     return true;
 }
 
-//fixme: (2.1) define this with rest of global constants
+//fixme: (PHASE5) define this with rest of global constants (centralise all constants together)
 static const int gMaximumRenewalPenalty = COIN*20;
 static const int gPerFailCountRenewalPenalty = (2*COIN)/100;
 
@@ -359,8 +359,8 @@ void IncrementWitnessFailCount(uint64_t& failCount)
 
 inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 {
-    //fixme: (2.1) - Retest this for phase 4 switchover (that it doesn't cause any issues at switchover)
-    //fixme: (2.1) - Remove this check for phase 4.
+    //fixme: (PHASE4) - Retest this for phase 4 switchover (that it doesn't cause any issues at switchover)
+    //fixme: (PHASE4) - Remove this check for phase 4.
     if (input.segregatedSignatureData.stack.size() == 0)
     {
         // At this point we only need to check here that the scriptSig is push only and that it has 4 items as a result, the rest is checked by later parts of the code.
@@ -398,7 +398,7 @@ inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 */
 inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
-    //fixme: (2.0.1) (SEGSIG) - test coinbase type. - Don't think this is actually necessary anymore.
+    //fixme: (PHASE4) (SEGSIG) - test coinbase type. - Don't think this is actually necessary anymore.
     // Only 1 signature (witness key) - except in phase 3 embedded PoW coinbase where it is 0.
     if (input.segregatedSignatureData.stack.size() != 1 && input.segregatedSignatureData.stack.size() != 0)
         return false;
@@ -439,7 +439,7 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
     if (inputs[0].second.lockUntilBlock >= nCheckHeight)
         return false;
 
-    //fixme: (2.1) - We must remove this in future once it is no longer needed
+    //fixme: (PHASE4) - We must remove this in future once it is no longer needed
     if (inputs[0].second.witnessKeyID == inputs[0].second.spendingKeyID)
     {
         if (tx.vout.size() != 1)
@@ -463,7 +463,7 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
 
 inline bool IsUnSigned(const CTxIn& input)
 {
-    //fixme: (2.2) - Remove this check for phase 4.
+    //fixme: (PHASE4) - Remove this check for phase 4.
     if (input.segregatedSignatureData.stack.size() == 0)
     {
         // At this point we only need to check here that the scriptSig is push only and that it has 0 items as a result, the rest is checked by later parts of the code.
@@ -488,7 +488,7 @@ inline bool IsUnSigned(const CTxIn& input)
 */
 inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
-    //fixme: (2.2) - Remove in future once all problem addresses are cleaned up
+    //fixme: (PHASE4) - Remove in future once all problem addresses are cleaned up
     //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
     if (nSpendHeight > 881000 || (IsArgSet("-testnet") && nSpendHeight > 96400))
     {
@@ -558,7 +558,7 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 */
 inline bool IsIncreaseBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
-    //fixme: (2.0.1) Check unused paramater.
+    //fixme: (PHASE4) Check unused paramater.
     (unused) nInputHeight;
     // Needs 2 signature (spending key)
     if (input.segregatedSignatureData.stack.size() != 2)
@@ -678,7 +678,7 @@ bool CWitnessTxBundle::IsValidMergeBundle()
 */
 inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
-    //fixme: (2.0.1) Check unused paramater.
+    //fixme: (PHASE4) Check unused paramater.
     (unused) nInputHeight;
     // 2 signatures (spending key)
     if (input.segregatedSignatureData.stack.size() != 2)
@@ -702,7 +702,7 @@ inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness
     return true;
 }
 
-//fixme: (2.0.1) (HIGH) Implement unit test code for this function.
+//fixme: (PHASE4) (HIGH) Implement unit test code for this function.
 bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
     if (pWitnessBundles)

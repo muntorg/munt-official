@@ -58,7 +58,7 @@ public:
         return valid ? QValidator::Intermediate : QValidator::Invalid;
     }
 
-    //fixme: (Post-2.1) - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
+    //fixme: (FUT) - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
     int getCurrentDecimalPlaces(const QString& val) const
     {
         int pos = val.indexOf(".");;
@@ -76,7 +76,7 @@ public:
         return currentDecimalPlaces;
     }
 
-    //fixme: (Post-2.1) - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
+    //fixme: (FUT) - hardcoded to point - but so is parse(), we should fix this to be comma for some locales
     void trimTailingZerosToCurrentDecimalPlace(QString& val, int currentDecimalPlaces) const
     {
         if (currentDecimalPlaces != -1)

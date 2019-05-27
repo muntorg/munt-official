@@ -21,7 +21,7 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
 {
     for (const auto& seedIter : pactiveWallet->mapSeeds)
     {
-        //fixme: (Post-2.1) (Support other seed types here)
+        //fixme: (FUT) (ACCOUNTS) (Support other seed types here)
         if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
             continue;
 
@@ -119,7 +119,7 @@ static void ThreadShadowPoolManager()
 
                     // If the user cancels then we don't prompt him for this again in this program run.
                     // If user performs the unlock then we leave prompting enabled in case we reach this situation again.
-                    // fixme: (Post-2.1) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
+                    //fixme: (FUT) (ACCOUNTS) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
                     // Might also want a "don't ask me this again" checkbox on prompt etc.
                     // Discuss with UI team and reconsider how to handle this.
                     std::function<void (void)> successCallback = [&](){promptOnceForAccountGenerationUnlock = true;};
@@ -145,7 +145,7 @@ static void ThreadShadowPoolManager()
             else if (numAllocated >= 0 || depth < targetPoolDepth)
             {
                 // Otherwise we sleep for increasingly longer depending on how deep into the allocation we are, the deeper we are the less urgent it becomes to allocate more. 
-                //fixme: (2.1) Look some more into these times, they are a bit arbitrary.
+                //fixme: (FUT) (ACCOUNTS) Look some more into these times, they are a bit arbitrary.
                 // If the user has set an especially large depth then we want to try again almost immediately and not have a long sleep.
                 if (targetPoolDepth > 40)
                     milliSleep = 1;
@@ -168,7 +168,7 @@ static void ThreadShadowPoolManager()
                     promptOnceForAddressGenerationUnlock = false;
                     // If the user cancels then we don't prompt him for this again in this program run.
                     // If user performs the unlock then we leave prompting enabled in case we reach this situation again.
-                    // fixme: (Post-2.1) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
+                    //fixme: (FUT) (ACCOUNTS) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
                     // Might also want a "don't ask me this again" checkbox on prompt etc.
                     // Discuss with UI team and reconsider how to handle this.
                     std::function<void (void)> successCallback = [&](){promptOnceForAddressGenerationUnlock = true;};
@@ -315,13 +315,13 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                 // We only do this the first time MarkKeyUsed is called - otherwise we have the following problem
                 // 1) User empties account. 2) User deletes account 3) At a later point MarkKeyUsed is called subsequent times (new blocks) 4) The account user just deleted is now recovered.
 
-                //fixme: (Post-2.1) This is still not 100% right, if the user does the following there can still be issues:
+                //fixme: (FUT) (ACCOUNTS) This is still not 100% right, if the user does the following there can still be issues:
                 //1) Send funds from account
                 //2) Immediately close wallet
                 //3) Reopen wallet, as the new blocks are processed this code will be called and the just deleted account will be restored.
                 //We will need a better way to detect this...
 
-                //fixme: (Post-2.1) 
+                //fixme: (FUT) (ACCOUNTS)
                 //Another edge bug here
                 //1) User sends/receives from address
                 //2) User deleted account
@@ -337,7 +337,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         accountIter.second->m_State = AccountState::Normal;
                         std::string name = accountIter.second->getLabel();
 
-                        //fixme: (2.1) remove this in name delete/restore labelling for something less error prone. (translations would break this for instance)
+                        //fixme: (FUT) (ACCOUNTS) remove this in name delete/restore labelling for something less error prone. (translations would break this for instance)
                         //We should just set a restored attribute on the account or something.
                         if (name.find(_("[Deleted]")) != std::string::npos)
                         {
@@ -349,13 +349,13 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         }
                         addAccount(accountIter.second, name);
 
-                        //fixme: (Post-2.1) Shadow accounts during rescan...
+                        //fixme: (FUT) (ACCOUNTS) Shadow accounts during rescan...
                     }
 
                     if (accountIter.second->IsHD() && accountIter.second->IsPoW2Witness())
                     {
                         //This is here for the sake of restoring wallets from recovery phrase only, in the normal case this has already been done by the funding code...
-                        //fixme: (2.0.1) Improve this, there are two things that need improving:
+                        //fixme: (FUT) (ACCOUNTS) Improve this, there are two things that need improving:
                         //1) When restoring from phrase but also encrypting and locking - it won't be able to add the key here.
                         //We try to work around this by using an unlock callback, but if the user refuses to unlock then there might be issues.
                         //2) This will indescriminately add -all- used change keys in a witness account; even if used for normal transactions (which shouldn't be done, but still it would be preferable to avoid this)
@@ -369,14 +369,14 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                                     CKey privWitnessKey;
                                     if (!accountIter.second->GetKey(keyID, privWitnessKey))
                                     {
-                                        //fixme: (2.1) localise
+                                        //fixme: (FUT) localise
                                         std::string strErrorMessage = "Failed to mark witnessing key for encrypted usage";
                                         LogPrintf(strErrorMessage.c_str());
                                         CAlert::Notify(strErrorMessage, true, true);
                                     }
                                     if (!static_cast<CWallet*>(this)->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *accountIter.second, KEYCHAIN_WITNESS))
                                     {
-                                        //fixme: (2.1) localise
+                                        //fixme: (FUT) localise
                                         std::string strErrorMessage = "Failed to mark witnessing key for encrypted usage";
                                         LogPrintf(strErrorMessage.c_str());
                                         CAlert::Notify(strErrorMessage, true, true);
@@ -441,7 +441,7 @@ void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newN
 void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldPurge)
 {
     LogPrintf("CGuldenWallet::deleteAccount");
-    //fixme: (2.1) - If we are trying to delete the last remaining account we should return false
+    //fixme: (FUT) (ACCOUNTS) - If we are trying to delete the last remaining account we should return false
     //As this may leave the wallet in an invalid state.
     //Alternatively we must make sure that the wallet can handle having 0 accounts in it.
     if (shouldPurge)
@@ -546,7 +546,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
             }
         }
 
-        //fixme: (2.1) - this leaks until program exit
+        //fixme: (FUT) (ACCOUNTS) (LOW) - this leaks until program exit
         //We can't easily delete the account as other places may still be referencing it...
         // Let UI handle deletion [hide account etc.] (we can't actually delete the account pointer because of this so we leak)
         NotifyAccountDeleted(static_cast<CWallet*>(this), account);
@@ -642,7 +642,7 @@ void CGuldenWallet::setActiveSeed(CWalletDB& walletdb, CHDSeed* newActiveSeed)
         else
             walletdb.ErasePrimarySeed();
 
-        //fixme: (Post-2.1)
+        //fixme: (FUT) (ACCOUNTS) (LOW)
         //NotifyActiveSeedChanged(this, newActiveAccount);
     }
 }
@@ -682,13 +682,13 @@ void CGuldenWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool sh
         throw std::runtime_error("Deleting seed failed");
     }
 
-    //fixme: (Post-2.1) purge accounts completely if empty?
+    //fixme: (FUT) (ACCOUNTS) purge accounts completely if empty?
     LogPrintf("CGuldenWallet::DeleteSeed - delete accounts");
     for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
         if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
         {
-            //fixme: (Post-2.1) check balance
+            //fixme: (FUT) (ACCOUNTS) check balance
             deleteAccount(walletDB, accountPair.second, shouldPurgeAccounts);
         }
     }
@@ -887,7 +887,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
     }
 
     // Shadow accounts have less keys - so we need to top up the keypool for our new 'non shadow' account at this point.
-    if( activeAccount ) //fixme: (2.1) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
+    if( activeAccount ) //fixme: (FUT) (ACCOUNTS) IsLocked() requires activeAccount - so we avoid calling this if activeAccount not yet set.
         static_cast<CWallet*>(this)->TopUpKeyPool(1, 0, activeAccount);//We only assign the bare minimum addresses here - and let the background thread do the rest
 
     return newAccount;
@@ -896,7 +896,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
 CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
 {
     CAccount* newAccount = new CAccount();
-    //fixme: (2.1) Improve the way encryption of legacy accounts is handled
+    //fixme: (FUT) (ACCOUNTS) Improve the way encryption of legacy accounts is handled
     if (IsCrypted())
     {
         LOCK2(cs_main, cs_wallet);
@@ -1056,7 +1056,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
 
 CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys)
 {
-    //fixme: HIGH add key validation checks here.
+    //fixme: (FUT) (ACCOUNTS) (HIGH) add key validation checks here.
 
     CAccountHD* newAccount = new CAccountHD(accountExtKey.getKeyRaw(), boost::uuids::nil_generator()(), type);
     newAccount->m_State = state;

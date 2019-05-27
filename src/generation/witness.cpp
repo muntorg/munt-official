@@ -108,7 +108,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         witnessKeyID = fittestWitnessOutput.output.witnessDetails.witnessKeyID;
     }
-    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (2.1) We can remove this.
+    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (PHASE4) We can remove this.
     {
         std::vector<unsigned char> hashWitnessBytes = fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash();
         witnessKeyID = CKeyID(uint160(hashWitnessBytes));
@@ -141,7 +141,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
         return false;
 
-    //fixme: (2.0.1) - Enable for testing then delete; this is testing code.
+    //fixme: (PHASE4) - Enable for testing then delete; this is testing code.
     //Note there has not been a single hit here in all the testing so this can definitely go in future.
     #if 0
     if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
@@ -233,7 +233,7 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
             compoundWitnessBlockSubsidy = witnessBlockSubsidy*2;
         }
 
-        //fixme: (DUST)
+        //fixme: (FUT) (DUST)
         //Rudimentary dust prevention - in future possibly improve this.
         if ((noncompoundWitnessBlockSubsidy > 0) && (noncompoundWitnessBlockSubsidy < 1 * COIN / 10))
         {
@@ -352,7 +352,7 @@ struct CBlockIndexCacheComparator
         return false;
     }
 };
-//fixme: (2.1) We should also check for already signed block coming from ourselves (from e.g. a different machine - think witness devices for instance) - Don't sign it if we already have a signed copy of the block lurking around...
+//fixme: (POST-PHASE5) We should also check for already signed block coming from ourselves (from e.g. a different machine - think witness devices for instance) - Don't sign it if we already have a signed copy of the block lurking around...
 std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessCandidates;
 
 bool witnessScriptsAreDirty = false;
@@ -405,7 +405,7 @@ void static GuldenWitness()
             }
             int nPoW2PhasePrev = GetPoW2Phase(pindexTip->pprev, chainparams, chainActive);
 
-            //fixme: (2.1)
+            //fixme: (POST-PHASE5)
             //Ideally instead of just sleeping/busy polling rather wait on a signal that gets triggered only when new blocks come in??
             MilliSleep(100);
 
@@ -518,7 +518,7 @@ void static GuldenWitness()
                         CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight);
                         CAmount witnessFeesSubsidy = 0;
 
-                        //fixme: (2.1) (ISMINE_WITNESS)
+                        //fixme: (PHASE4) (ISMINE_WITNESS)
                         if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_SPENDABLE)
                         {
                             CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(witnessInfo.selectedWitnessTransaction);
@@ -576,11 +576,11 @@ void static GuldenWitness()
 
                                     // Skip the coinbase as we obviously don't want this included again, it is already in the PoW part of the block.
                                     size_t nSkipCoinbase = 1;
-                                    //fixme: (2.1) (CBSU)? pre-allocate for vtx.size().
+                                    //fixme: (FUT) (CBSU)? pre-allocate for vtx.size().
                                     for (size_t i=nSkipCoinbase; i < pblocktemplate->block.vtx.size(); i++)
                                     {
                                         bool bSkip = false;
-                                        // fixme: (2.1) Check why we were getting duplicates - something to do with mempool not being updated for latest block or something?
+                                        //fixme: (PHASE4) Check why we were getting duplicates - something to do with mempool not being updated for latest block or something?
                                         // Exclude any duplicates that somehow creep in.
                                         for(size_t j=0; j < nWitnessCoinbaseIndex; j++)
                                         {
@@ -592,7 +592,7 @@ void static GuldenWitness()
                                         }
                                         if (!bSkip)
                                         {
-                                            //fixme: (2.1) emplace_back for better performace?
+                                            //fixme: (FUT) emplace_back for better performace?
                                             pWitnessBlock->vtx.push_back(pblocktemplate->block.vtx[i]);
                                             witnessFeesSubsidy += (pblocktemplate->vTxFees[i]);
                                         }

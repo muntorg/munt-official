@@ -122,7 +122,7 @@ void NocksSettings::netRequestFinished( QNetworkReply* reply )
 
     if ( reply->error() != QNetworkReply::NetworkError::NoError )
     {
-        //fixme: (Post-2.1) Error handling code here.
+        //fixme: (FUT) Error handling code here.
         //Note - it is possible the ticker has temporary outages etc. and these are not a major issue
         //We update every ~10s but if we miss a few updates it has no ill-effects
         //So if we do anything here, it should only be after multiple failiures...
@@ -136,7 +136,7 @@ void NocksSettings::netRequestFinished( QNetworkReply* reply )
 
         if ( statusCode != 200 )
         {
-            //fixme: (Post-2.1) Error handling code here.
+            //fixme: (FUT) Error handling code here.
             //Note - it is possible the ticker has temporary outages etc. and these are not a major issue
             //We update every ~10s but if we miss a few updates it has no ill-effects
             //So if we do anything here, it should only be after multiple failiures...
@@ -176,7 +176,7 @@ void NocksSettings::netRequestFinished( QNetworkReply* reply )
 
 void NocksSettings::reportSslErrors( QNetworkReply* reply, const QList<QSslError>& errorList )
 {
-    //fixme: (Post-2.1) In future (I guess) we should signal in UI somehow that nocks is unavailable - need to decide how to do this in a user friendly way.
+    //fixme: (FUT) In future (I guess) we should signal in UI somehow that nocks is unavailable - need to decide how to do this in a user friendly way.
     //Note - it is possible that nocks has temporary outages - is switching hosts or whatever other minor thing 
     //We update every ~10s but if we miss a few updates it has no ill-effects
     //So if we do anything here, it should only be after multiple failiures...

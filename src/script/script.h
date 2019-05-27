@@ -211,7 +211,7 @@ public:
     explicit scriptnum_error(const std::string& str) : std::runtime_error(str) {}
 };
 
-//fixme: (2.1) We can remove this class
+//fixme: (PHASE5) We can remove this class
 class CScriptUInt64
 {
     public:
