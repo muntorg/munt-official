@@ -200,13 +200,10 @@ protected:
             int64_t nActivationTime = GetPoW2Phase3ActivationTime(chainActive);
             if (nActivationTime > 0)
             {
+                //fixme: (PHASE4) - hardcode a new activation time for launch (this is the activation time for old non-updated clients)
                 // Mainnet - 1 month from phase 3 activation
-                // Testnet - 1/4 of that
-                if (IsArgSet("-testnet"))
-                {
-                    nActivationTime += (2629746/4);
-                }
-                else
+                // Testnet - immediate
+                if (!IsArgSet("-testnet"))
                 {
                     nActivationTime += 2629746;
                 }

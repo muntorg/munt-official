@@ -2673,15 +2673,28 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     {
         for (const auto& tx : block.vtx)
         {
-            if (!IsOldTransactionVersion(tx->nVersion))
-            {
-                return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "mining segsig version transactions before activation is forbidden");
-            }
             for (const auto& txIn : tx->vin)
             {
+                if (IsOldTransactionVersion(tx->nVersion))
+                {
+                    return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "mining non-segsig version transactions after activation is forbidden");
+                }
                 if (txIn.scriptSig.size() > 0)
                 {
                     return state.DoS(100, false, REJECT_INVALID, "bad-segsig-txin", false, "segsig blocks may not contain scriptSig which has been deprecated");
+                }
+            }
+        }
+    }
+    else
+    {
+        for (const auto& tx : block.vtx)
+        {
+            for (const auto& txIn : tx->vin)
+            {
+                if (!IsOldTransactionVersion(tx->nVersion))
+                {
+                    return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "mining segsig version transactions before activation is forbidden");
                 }
             }
         }
