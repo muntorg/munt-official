@@ -4,4 +4,4 @@ build_mingw32_DOWNLOAD = curl --location --fail --connect-timeout $(DOWNLOAD_CON
 mingw32_CC=gcc.exe
 mingw32_CXX:=g++.exe
 
-mingw32_BINARYEXT=.exe
+build_mingw32_BINARYEXT=.exe

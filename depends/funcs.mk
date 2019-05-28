@@ -12,7 +12,7 @@ $(1)_cflags=$($($(1)_type)_CFLAGS) $($($(1)_type)_$(release_type)_CFLAGS)
 $(1)_cxxflags=$($($(1)_type)_CXXFLAGS) $($($(1)_type)_$(release_type)_CXXFLAGS)
 $(1)_ldflags=$($($(1)_type)_LDFLAGS) $($($(1)_type)_$(release_type)_LDFLAGS) -L$($($(1)_type)_prefix)/lib
 $(1)_cppflags=$($($(1)_type)_CPPFLAGS) $($($(1)_type)_$(release_type)_CPPFLAGS) -I$($($(1)_type)_prefix)/include
-$(1)_binaryext=$($($(1)_type)_BINARYEXT)
+$(1)_binary_ext=$($($(1)_type)_BINARYEXT)
 $(1)_recipe_hash:=
 endef
 

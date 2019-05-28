@@ -13,7 +13,7 @@ define $(package)_config_cmds
 endef
 
 define $(package)_build_cmds
-  $(MAKE) -C src protoc.exe
+  $(MAKE) -C src protoc$($(package)_binary_ext)
 endef
 
 define $(package)_stage_cmds

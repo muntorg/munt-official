@@ -1,4 +1,4 @@
-wpackage=openssl
+package=openssl
 $(package)_version=1.0.1k
 $(package)_download_path=https://www.openssl.org/source
 $(package)_file_name=$(package)-$($(package)_version).tar.gz

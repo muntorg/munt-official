@@ -7,8 +7,13 @@ $(package)_sha256_hash=36dd9574f006eaa1e5af780e4b33d11fe39d09fd7c12f3b9d83294174
 $(package)_dependencies=openssl zlib
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext
 $(package)_build_subdir=qtbase
-$(package)_qt_libs=corelib network widgets gui plugins testlib concurrent xml
-$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_configure_win.patch
+$(package)_qt_libs=corelib network widgets gui plugins testlib concurrent
+$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch
+
+ifeq ($(build_os),mingw32)
+$(package)_qt_libs += xml
+$(package)_patches += fix_configure_win.patch
+endif
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=b36da7d93c3ab6fca56b32053bb73bc619c8b192bb89b74e3bcde2705f1c2a14
@@ -68,7 +73,11 @@ $(package)_config_opts += -nomake tests
 $(package)_config_opts += -opensource
 $(package)_config_opts += -openssl-linked
 $(package)_config_opts += -optimized-qmake
+ifeq ($(build_os),mingw32)
 $(package)_config_opts += -no-pch
+else
+$(package)_config_opts += -pch
+endif
 $(package)_config_opts += -pkg-config
 $(package)_config_opts += -prefix $(host_prefix)
 $(package)_config_opts += -qt-libpng
@@ -92,7 +101,10 @@ $(package)_config_opts += -no-feature-textbrowser
 $(package)_config_opts += -no-feature-textodfwriter
 $(package)_config_opts += -no-feature-udpsocket
 $(package)_config_opts += -no-feature-wizard
-#$(package)_config_opts += -no-feature-xml
+ifneq ($(build_os),mingw32)
+$(package)_config_opts += -no-feature-xml
+endif
+
 
 ifneq ($(build_os),darwin)
 $(package)_config_opts_darwin = -xplatform macx-clang-linux
@@ -115,8 +127,12 @@ $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
 $(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
 $(package)_config_opts_riscv64_linux = -platform linux-g++ -xplatform gulden-linux-g++
-#$(package)_config_opts_mingw32  = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
+
+ifeq ($(build_os),mingw32)
 $(package)_config_opts_mingw32 = -no-opengl -platform win32-g++
+else
+$(package)_config_opts_mingw32 = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
+endif
 
 $(package)_build_env  = QT_RCC_TEST=1
 $(package)_build_env += QT_RCC_SOURCE_DATE_OVERRIDE=1
@@ -183,9 +199,11 @@ define $(package)_preprocess_cmds
   sed -i.old "s|QWT_CONFIG.*QwtDll||" qwt/qwtconfig.pri  && \
   sed -i.old "s|QWT_INSTALL_PREFIX.*=.*|QWT_INSTALL_PREFIX = $(host_prefix)|" qwt/qwtconfig.pri && \
   sed -i.old "s|CONFIG.*=.*debug_and_release|CONFIG+=release|" qwt/qwtbuild.pri && \
-  sed qtbase/include/QtFontDatabaseSupport/5.9.7/QtFontDatabaseSupport/private/qfreetypefontdatabase_p.h -i -re 's/..\/..\/..\/..\/..\/src/..\/..\/..\/..\/src/' && \
-  sed qtbase/src/plugins/platforms/windows/qwindowsmousehandler.cpp -i -re 's/\#if defined\(Q_CC_MINGW\) \|\| \!defined\(TOUCHEVENTF_MOVE\)/#if 0/' && \
-  patch -p1 -i $($(package)_patch_dir)/fix_configure_win.patch &&\
+  if [ "$(build_os)" == "mingw32" ]; then \
+    sed qtbase/include/QtFontDatabaseSupport/5.9.7/QtFontDatabaseSupport/private/qfreetypefontdatabase_p.h -i -re 's/..\/..\/..\/..\/..\/src/..\/..\/..\/..\/src/' && \
+    sed qtbase/src/plugins/platforms/windows/qwindowsmousehandler.cpp -i -re 's/\#if defined\(Q_CC_MINGW\) \|\| \!defined\(TOUCHEVENTF_MOVE\)/#if 0/' && \
+    patch -p1 -i $($(package)_patch_dir)/fix_configure_win.patch ;\
+  fi && \
   sed -i.old "s|CONFIG.*=.*build_all||" qwt/qwtbuild.pri && \
   echo "unix|mingw {QWT_CONFIG     += QwtPkgConfig }" >> qwt/qwtconfig.pri && \
   echo "unix|mingw {QMAKE_PKGCONFIG_VERSION = $($(package)_qwt_version) }" >> qwt/qwtconfig.pri
@@ -218,7 +236,7 @@ define $(package)_build_cmds
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir)  $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
+  $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
   $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
