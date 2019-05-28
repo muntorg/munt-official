@@ -2675,6 +2675,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         {
             for (const auto& txIn : tx->vin)
             {
+                (unused)txIn;
                 if (IsOldTransactionVersion(tx->nVersion))
                 {
                     return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "mining non-segsig version transactions after activation is forbidden");
@@ -2692,6 +2693,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         {
             for (const auto& txIn : tx->vin)
             {
+                (unused)txIn;
                 if (!IsOldTransactionVersion(tx->nVersion))
                 {
                     return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "mining segsig version transactions before activation is forbidden");
