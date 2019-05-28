@@ -57,8 +57,7 @@ mkdir ${ASSETS}Testnet | true
 
 cp src/data/staticfiltercp ${ASSETS}Mainnet/staticfiltercp
 cp src/data/staticfiltercptestnet ${ASSETS}Testnet/staticfiltercp
-
-source $DIR/../thirdparty.licenses.sh > ${ASSETS}/core-packages.licenses
+cp src/data/core-packages.licenses ${ASSETS}/core-packages.licenses
 
 NDK_ROOT=${NDK_ROOT:-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}}
 

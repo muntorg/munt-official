@@ -23,7 +23,7 @@ protected:
     int64_t nKeyChain;
     CPubKey vchPubKey;
 public:
-    //fixme: (2.1): make private again.
+    //fixme: (POST-PHASE5): make private again.
     CAccount* account;
     CReserveKeyOrScript(CWallet* pwalletIn, CAccount* forAccount, int64_t forKeyChain);
     CReserveKeyOrScript(CScript& script);

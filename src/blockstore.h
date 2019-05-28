@@ -13,7 +13,7 @@
 #ifndef BLOCKSTORE_H
 #define BLOCKSTORE_H
 
-//fixme: (2.1) methods to support conversion of 1.6 block storage to 2.0 can be reverted once not needed anymore
+//fixme: (POST-PHASE5) methods to support conversion of 1.6 block storage to 2.0 can be reverted once not needed anymore
 // revert the changes in this commit for blockstore.h + .cpp back to 517362d123ce7c7e83de86a962ad099abbf199b0
 
 #include <stdio.h>

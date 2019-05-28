@@ -61,7 +61,7 @@ DBErrors CWallet::LoadWallet(WalletLoadState& nExtraLoadState)
         if (dbw->Rewrite("\x04pool"))
         {
             LOCK(cs_wallet);
-            //fixme: (Post-2.1)
+            //fixme: (FUT) (ACCOUNTS)
             for (auto accountPair : mapAccounts)
             {
                 accountPair.second->setKeyPoolInternal.clear();
@@ -245,7 +245,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         {
             if (fNoUI)
             {
-                // fixme: (SPV) decide if we want to keep this option
+                //fixme: (UNITY) (SPV) decide if we want to keep this option
                 if (IsArgSet("-phrase")) {
                     SecureString phrase(GetArg("-phrase", ""));
                     GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);
@@ -281,7 +281,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         }
         else
         {
-            //fixme: (FUTURE) - encrypt at creation option here.
+            //fixme: (FUT) (MED) - encrypt at creation option here.
             walletInstance->activeAccount = new CAccount();
             walletInstance->activeAccount->m_State = AccountState::Normal;
             walletInstance->activeAccount->m_Type = AccountType::Desktop;
@@ -519,7 +519,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             else
                 throw std::runtime_error("Wallet contains no accounts, but is marked as upgraded.");
         }
-        //fixme: (FUTURE) - Remove this eventually
+        //fixme: (FUT) (SPV) (LOW) - Remove this eventually
         //Work around issue in early android SPV wallets where if there are multiple accounts we end up with the wrong one active somehow.
         //We should remove this in the future, but only once we are sure it is fully solved.
         else if(firstAccount && (GetBoolArg("-spv", DEFAULT_SPV)) && walletInstance->activeAccount != firstAccount)
@@ -581,7 +581,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     CBlockIndex *pindexRescan = chainActive.Tip();
     if (GetBoolArg("-rescan", false) || GuldenAppManager::gApp->isRecovery || GuldenAppManager::gApp->isLink)
     {
-        // fixme: (SPV) rescan from latest checkpoint before nTimeFirstKey
+        //fixme: (FUT) (SPV) rescan from latest checkpoint before nTimeFirstKey
         pindexRescan = chainActive.Genesis();
     }
     else
@@ -611,7 +611,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         uiInterface.InitMessage(_("Rescanning..."));
         LogPrintf("Rescanning last %i blocks (from block %i)...\n", chainActive.Height() - pindexRescan->nHeight, pindexRescan->nHeight);
         nStart = GetTimeMillis();
-        //fixme: (FUT) We have to set the active wallet early here otherwise we get a crash inside AddToWalletIfInvolvingMe bia ScanForWalletTransactions as pActiveWallet is NULL.
+        //fixme: (FUT) We have to set the active wallet early here otherwise we get a crash inside AddToWalletIfInvolvingMe via ScanForWalletTransactions as pActiveWallet is NULL.
         //Normally active wallet would only be set after this function returns.
         //Look into a re-architecture here.
         pactiveWallet = walletInstance;
@@ -649,7 +649,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
     {
         LOCK(walletInstance->cs_wallet);
-        //fixme: (2.1) - 'key pool size' concept for wallet doesn't really make sense anymore.
+        //fixme: (FUT) (ACCOUNTS) - 'key pool size' concept for wallet doesn't really make sense anymore.
         LogPrintf("setKeyPool.size() = %u\n",      walletInstance->GetKeyPoolSize());
         LogPrintf("mapWallet.size() = %u\n",       walletInstance->mapWallet.size());
         LogPrintf("mapAddressBook.size() = %u\n",  walletInstance->mapAddressBook.size());
@@ -683,7 +683,7 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
     // Only for recovery wallets though, new ones don't need them
     if (GuldenAppManager::gApp->isRecovery)
     {
-        // fixme: (SPV) extract firstkeytime from recovery
+        //fixme: (UNITY) (SPV) extract firstkeytime from recovery
         //Temporary seeds for shadow children
         CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
         CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);

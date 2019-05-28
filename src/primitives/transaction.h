@@ -39,7 +39,7 @@ struct CBlockPosition
     uint64_t transactionIndex; // Position of transaction within the block.
     CBlockPosition(uint64_t blockNumber_, uint64_t transactionIndex_) : blockNumber(blockNumber_), transactionIndex(transactionIndex_) {}
 
-    //fixme: (2.1) (MOBILE) (SPV) (SEGSIG) Look closer at how to handle this in relation to mobile SPV wallets
+    //fixme: (PHASE4) (MOBILE) (SPV) (SEGSIG) Look closer at how to handle this in relation to mobile SPV wallets
     uint256 getHash() const
     {
         std::vector<unsigned char> serData;
@@ -71,7 +71,7 @@ struct CBlockPosition
 };
 
 
-//fixme: (2.1) (SEGSIG) Ensure again that network rules for the other 7 types are consistently handled.
+//fixme: (PHASE4) (SEGSIG) Ensure again that network rules for the other 7 types are consistently handled.
 // Represented in class as 3 bits.
 // Maximum of 8 values
 enum CTxInType : uint8_t
@@ -86,8 +86,8 @@ enum CTxInType : uint8_t
     FUTURE_TX_IN_TYPE8 = 7
 };
 
-//fixme: (2.1) (SEGSIG) we forbid index based outpoint for now.
-//fixme: (2.1) (SEGSIG) Double check all RBF/AbsoluteLock/RelativeLock behaviour
+//fixme: (PHASE4) (SEGSIG) we forbid index based outpoint for now.
+//fixme: (PHASE4) (SEGSIG) Double check all RBF/AbsoluteLock/RelativeLock behaviour
 // Only 5 bits available for TxInFlags.
 // The are used as bit flags so only 5 values possible each with an on/off state.
 // All 5 values are currently in use.
@@ -111,7 +111,7 @@ enum CTxInFlags : uint8_t
 class COutPoint
 {
 private:
-     // fixme: (2.1) (MED) - We can reduce memory consumption here by using something like prevector for hash cases.
+     //fixme: (POST-PHASE5) (MED) - We can reduce memory consumption here by using something like prevector for hash cases.
     // Outpoint either uses hash or 'block position' never both.
     union
     {
@@ -161,7 +161,7 @@ public:
 
     template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion)
     {
-        //fixme: (2.1) Implement usage of nType here.
+        //fixme: (PHASE4) Implement usage of nType here.
         (void) nType;
         CSerActionUnserialize ser_action;
 
@@ -195,7 +195,7 @@ public:
 
     template <typename Stream> inline void WriteToStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion) const
     {
-        //fixme: (2.1) Implement usage of nType here.
+        //fixme: (PHASE4) Implement usage of nType here.
         (void) nType;
         CSerActionSerialize ser_action;
 
@@ -274,7 +274,7 @@ public:
     static const uint8_t CURRENT_TYPE=0;
     // First 3 bits are type, last 5 bits are flags.
     mutable uint8_t nTypeAndFlags;
-    //fixme: (Post-2.1) gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
+    //fixme: (POST-PHASE5) gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
     CTxInType GetType() const
     {
         return (CTxInType) ( (nTypeAndFlags & 0b11100000) >> 5 );
@@ -521,7 +521,7 @@ public:
 class CTxOut
 {
 public:
-    //fixme: (Post-2.1) gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
+    //fixme: (POST-PHASE5) gcc - future - In an ideal world we would just have nType be of type 'CTxOutType' - however GCC spits out unavoidable warnings when using an enum as part of a bitfield, so we use these getter/setter methods to work around it.
     CTxOutType GetType() const
     {
         return (CTxOutType)output.nType;
@@ -768,7 +768,7 @@ public:
             CAmount nValueWrite = nValue;
 
             output.nValueBase = 0; // 8 decimal precision.
-            //fixme: (2.1) Is there some 'trick' to calculate this faster without so much branching?
+            //fixme: (POST-PHASE5) Is there some 'trick' to calculate this faster without so much branching?
             if (nValue % 1000000000000 == 0)    { output.nValueBase = 7; } // 4 significant digit precision
             else if (nValue % 10000000000 == 0) { output.nValueBase = 6; } // 2 significant digit precision
             else if (nValue % 100000000 == 0)   { output.nValueBase = 5; } // 1 significant digit precision
@@ -1126,7 +1126,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 }
 
 
-//fixme: (2.1) Remove
+//fixme: (PHASE4) Remove
 #define CURRENT_TX_VERSION_POW2 (IsSegSigEnabled(chainActive.TipPrev()) ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
 
 /** The basic transaction that is broadcasted on the network and contained in
@@ -1209,7 +1209,7 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull()) || IsPoW2WitnessCoinBase();
     }
 
-    //fixme: (2.0.1) - check second vin is a witness transaction.
+    //fixme: (PHASE4) - check second vin is a witness transaction.
     bool IsPoW2WitnessCoinBase() const
     {
         return (vin.size() == 2 && vin[0].prevout.IsNull());
@@ -1227,7 +1227,7 @@ public:
 
     std::string ToString() const;
 
-    //fixme: (2.1) - We can possibly improve this test by testing transaction version instead.
+    //fixme: (PHASE4) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)
@@ -1278,7 +1278,7 @@ struct CMutableTransaction
         return a.GetHash() == b.GetHash();
     }
 
-    //fixme: (2.1) - We can possibly improve this test by testing transaction version instead.
+    //fixme: (PHASE4) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)

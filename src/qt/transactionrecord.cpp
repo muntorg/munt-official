@@ -31,7 +31,7 @@ bool TransactionRecord::showTransaction(const CWalletTx &wtx)
 {
     AssertLockHeld(pactiveWallet->cs_wallet);
 
-    //fixme: (2.1) - We can potentially remove this for 2.1; depending on how 2.1 handles wallet upgrades.
+    //fixme: (PHASE4) - We can potentially remove this for 2.1; depending on how 2.1 handles wallet upgrades.
     // Hide orphaned phase 3 witness earnings when they were orphaned by a subsequent PoW block that contain the same earnings.
     if (wtx.IsCoinBase() && wtx.mapValue.count("replaced_by_txid") > 0)
     {
@@ -53,7 +53,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     uint256 hash = wtx.GetHash();
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
-    //fixme: (2.1) - This isn't very efficient, we do the same calculations already when verifying the inputs; Ideally we should just cache this information as part of the wtx to avoid recalc.
+    //fixme: (PHASE4) - This isn't very efficient, we do the same calculations already when verifying the inputs; Ideally we should just cache this information as part of the wtx to avoid recalc.
     // Deal with special "complex" witness transaction types first.
     std::vector<CWitnessTxBundle> witnessBundles;
     CValidationState state;
@@ -165,7 +165,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 break;
                 case CWitnessTxBundle::WitnessTxType::WitnessType:
                 {
-                    //fixme: (2.1) - this can change into a break once we apply other fixes described in other fixmes in this function.
+                    //fixme: (PHASE4) - this can change into a break once we apply other fixes described in other fixmes in this function.
                     goto continuedecompose;
                 }
                 break;
@@ -277,13 +277,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 // Remove the witness related outputs so that the remaining decomposition code can ignore it.
                                 const auto& txOutRef = txOut;
                                 outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOutRef;}));
-                                //fixme: (2.1) - Remove the inputs as well.
+                                //fixme: (PHASE4) - Remove the inputs as well.
 
                                 break;
                             }
                         }
                     }
-                    //fixme: match inputs with outputs
+                    //fixme: (FUT) match inputs with outputs
                     /*for (const auto& input : witnessBundle.inputs)
                     {
                         // Remove the witness related inputs so that the remaining decomposition code can ignore it.
@@ -429,7 +429,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         if (subReceive.idx != -1)
                             break;
                     }
-                    //fixme: (2.1) - Add fee transaction to sender account (we should relook an optional "display fee" button though.
+                    //fixme: (FUT) - Add fee transaction to sender account (we should relook an optional "display fee" button though.
                     //It isn't 100% clear if/when we should show fees and when not.
                 }
                 break;
@@ -474,7 +474,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         if (subReceive.idx != -1)
                             break;
                     }
-                    //fixme: (2.1) - Add fee transaction to sender account (we should relook an optional "display fee" button though.
+                    //fixme: (FUT) - Add fee transaction to sender account (we should relook an optional "display fee" button though.
                     //It isn't 100% clear if/when we should show fees and when not.
                 }
                 break;
@@ -519,13 +519,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         if (subReceive.idx != -1)
                             break;
                     }
-                    //fixme: (2.1) - Add fee transaction to sender account (we should relook an optional "display fee" button though.
+                    //fixme: (FUT) - Add fee transaction to sender account (we should relook an optional "display fee" button though.
                     //It isn't 100% clear if/when we should show fees and when not.
                 }
                 break;
             }
         }
-        //fixme: (2.1) - we should try deal with "complex" (mixed) transactions by removing the below return and still trying to match remaining inputs/outputs.
+        //fixme: (FUT) - we should try deal with "complex" (mixed) transactions by removing the below return and still trying to match remaining inputs/outputs.
         return parts;
     }
     continuedecompose:
@@ -555,12 +555,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     std::string addressIn;
                     for (const CTxIn& txin : inputs)
                     {
-                        //fixme: (2.1) rather just have a CAccount::GetDebit function?
+                        //fixme: (FUT) rather just have a CAccount::GetDebit function?
                         isminetype txinMine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
                         if (txinMine == ISMINE_SPENDABLE)
                         {
                             sub.credit -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
-                            //fixme: (2.1) Add a 'payment to self' sub here as well.
+                            //fixme: (FUT) Add a 'payment to self' sub here as well.
                         }
 
                         const CWalletTx* parent = wallet->GetWalletTx(txin.prevout.getHash());
@@ -737,7 +737,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         // Ignore parts sent to self, as this is usually the change
                         // from a transaction sent back to our own address.
-                        //fixme: (2.1) (HIGH) (REFACTOR) - Are there cases when this isn't true?!?!?!? - if not we can clean the code after this up.
+                        //fixme: (FUT) (HIGH) (REFACTOR) - Are there cases when this isn't true?!?!?!? - if not we can clean the code after this up.
                         continue;
                     }
 
@@ -774,7 +774,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             }
             else
             {
-                //fixme: (2.1) (HIGH) - This can be displayed better...
+                //fixme: (FUT) (HIGH) - This can be displayed better...
                 CAmount nNetMixed = 0;
                 std::string outAddresses;
                 for (const CTxOut& txout : outputs)
@@ -796,12 +796,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 }
                 for (const CTxIn& txin : inputs)
                 {
-                    //fixme: (2.1) rather just have a CAccount::GetDebit function?
+                    //fixme: (FUT) rather just have a CAccount::GetDebit function?
                     isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
                     if (mine == ISMINE_SPENDABLE)
                     {
                         nNetMixed -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
-                        //fixme: (2.1) Add a 'payment to self' sub here as well.
+                        //fixme: (FUT) Add a 'payment to self' sub here as well.
                     }
                 }
                 if (nNetMixed != 0)
@@ -853,7 +853,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     }
 
     // A bit hairy/gross, but try to tie up sender/receiver for internal transfer between accounts.
-    //fixme: (2.1) It might be possible to make this try even harder to make a match...
+    //fixme: (FUT) It might be possible to make this try even harder to make a match...
     for (TransactionRecord& record : parts)
     {
         if (record.fromAccountUUID == boost::uuids::nil_generator()())
@@ -974,7 +974,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
             if (wtx.isAbandoned())
                 status.status = TransactionStatus::Abandoned;
         }
-        //fixme: (2.1) (CHECKPOINTS)- Remove this when we remove checkpoints.
+        //fixme: (PHASE5) (CHECKPOINTS)- Remove this when we remove checkpoints.
         else if (   status.depth < RecommendedNumConfirmations
                  || (!IsArgSet("-testnet") && !IsPartialSyncActive() && !Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock)))
         {

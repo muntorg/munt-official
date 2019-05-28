@@ -210,7 +210,7 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     CPubKey pubKey;
     if (!buyReceiveAddress || !buyReceiveAddress->GetReservedKey(pubKey))
     {
-        //fixme: (2.1.x) better error handling
+        //fixme: (FUT) better error handling
         return;
     }
     else
@@ -246,12 +246,12 @@ void ReceiveCoinsDialog::gotoRequestPaymentPage()
 
 void ReceiveCoinsDialog::generateRequest()
 {
-    //fixme: (2.1) (HD) key gaps
+    //fixme: (FUT) (HD) key gaps
     CReserveKeyOrScript reservekey(pactiveWallet, model->getActiveAccount(), KEYCHAIN_EXTERNAL);
     CPubKey vchPubKey;
     if (!reservekey.GetReservedKey(vchPubKey))
     {
-        //fixme: (2.1) Better error handling.
+        //fixme: (FUT) Better error handling.
         return;
     }
     reservekey.KeepKey();

@@ -72,7 +72,7 @@ public:
             txout->fCoinBase = (  (nCode & 0b00000000000000000000000000000001)  > 0 );
         }
 
-        //fixme: (2.1) CBSU - possibly remove this if statement by just duplicating code for the legacy case
+        //fixme: (FUT) CBSU - possibly remove this if statement by just duplicating code for the legacy case
         // (Or eventually just drop the legacy case)
         if (s.GetVersion() & SERIALIZE_TXUNDO_LEGACY_COMPRESSION)
         {
@@ -87,7 +87,7 @@ public:
     TxInUndoDeserializer(Coin* coin) : txout(coin) {}
 };
 
-//fixme: (2.1) This can potentially be improved.
+//fixme: (PHASE4) This can potentially be improved.
 //6 is the lower bound for the size of a SegSign txin
 static const size_t MAX_INPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 6; // TODO: merge with similar definition in undo.h.
 

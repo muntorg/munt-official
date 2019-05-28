@@ -81,8 +81,8 @@ public:
     uint64_t failCount;
     uint64_t actionNonce;
 
-    //fixme: (2.0.1) - Should these comparators consider the lock block or not?
-    //fixme: (2.0.1) - should these return = if the witnessKey is different but spending key is the same? Depends where exactly this is called from...
+    //fixme: (PHASE4) - Should these comparators consider the lock block or not?
+    //fixme: (PHASE4) - should these return = if the witnessKey is different but spending key is the same? Depends where exactly this is called from...
     friend bool operator==(const CPoW2WitnessDestination &a, const CPoW2WitnessDestination &b) { return a.spendingKey == b.spendingKey && a.witnessKey == b.witnessKey; }
     friend bool operator<(const CPoW2WitnessDestination &a, const CPoW2WitnessDestination &b) { return a.spendingKey < b.spendingKey || (a.spendingKey == b.spendingKey && a.witnessKey < b.witnessKey); }
 

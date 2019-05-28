@@ -407,7 +407,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // To provide for future soft-fork extensibility, if the
                     // operand has the disabled lock-time flag set,
                     // CHECKSEQUENCEVERIFY behaves as a NOP.
-                    //fixme: (2.1) SEGSIG
+                    //fixme: (PHASE4) SEGSIG
                     //if ((IsOldTransactionVersion(tx.nVersion) && (txin.nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)) || (!IsOldTransactionVersion(tx.nVersion) && (txin.FlagIsSet(HasSequenceNumberMask)))) {
                         //break;
 
@@ -1103,7 +1103,7 @@ public:
         {
             if (nInput != nIn && (fHashSingle || fHashNone))
             {
-                //fixme: (2.1) (SEGSIG) - CHECK THIS MAKES SENSE? SHOULD WE SERIALISE TYPE FOR 'others'?
+                //fixme: (PHASE4) (SEGSIG) - CHECK THIS MAKES SENSE? SHOULD WE SERIALISE TYPE FOR 'others'?
                 // let the others update at will
                 ::Serialize(s, (int)0);
             }
@@ -1287,7 +1287,7 @@ bool TransactionSignatureChecker::CheckSig(const std::vector<unsigned char>& vch
             return false;
         if (!pubkey.IsValid())
             return false;
-        // fixme: (2.1) (HIGH) (SEGSIG) (MULTISIG!)
+        //fixme: (PHASE4) (HIGH) (SEGSIG) (MULTISIG!)
         // Ensure that the recovered pubkey is the correct one for the address in question
         if (signatureKeyID == CKeyID() || signatureKeyID != pubkey.GetID())
             return false;
@@ -1334,7 +1334,7 @@ bool TransactionSignatureChecker::CheckLockTime(const CScriptNum& nLockTime) con
     // prevent this condition. Alternatively we could test all
     // inputs, but testing just this input minimizes the data
     // required to prove correct CHECKLOCKTIMEVERIFY execution.
-    //fixme: (2.1) (SEGSIG) - CHECK FOR SEQUENCE FLAGS
+    //fixme: (PHASE4) (SEGSIG) - CHECK FOR SEQUENCE FLAGS
     if (CTxIn::SEQUENCE_FINAL == txTo->vin[nIn].GetSequence(txTo->nVersion))
         return false;
 
@@ -1384,7 +1384,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     }
     else
     {
-        //fixme: (2.1) HIGH - (SEGSIG)
+        //fixme: (PHASE4) HIGH - (SEGSIG)
     }
 
     // Now that we know we're comparing apples-to-apples, the
@@ -1416,7 +1416,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     if (witness == NULL) {
         witness = &emptyWitness;
     }
-    //fixme: (2.1) Triple check removal of hadWitness = false here.
+    //fixme: (PHASE4) Triple check removal of hadWitness = false here.
 
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
 
@@ -1439,7 +1439,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
             return false;
     }
 
-    //fixme: (2.1) we can remove this
+    //fixme: (PHASE4) we can remove this
     //Special case spending of witness scripts as this falls outside of normal script behaviour.
     if (scriptPubKey.IsPoW2Witness())
     {

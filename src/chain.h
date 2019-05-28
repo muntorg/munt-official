@@ -326,7 +326,7 @@ public:
     }
 
     //Gulden - phashBlock contains 'legacy' hash for PoW blocks and PoW2 hash for witness blocks.
-    //fixme: (2.1) (HIGH) - We can get rid of all this legacy/pow2 hash nonsense for 2.1 and just use the same hash everywhere...
+    //fixme: (PHASE5) (HIGH) - We can get rid of all this legacy/pow2 hash nonsense for 2.1 and just use the same hash everywhere...
     uint256 GetBlockHashLegacy() const
     {
         if (nVersionPoW2Witness == 0)
@@ -340,7 +340,7 @@ public:
         return *phashBlock;
     }
 
-    //fixme: (2.1) All time related things should be unsigned.
+    //fixme: (PHASE5) All time related things should be unsigned.
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;
@@ -364,7 +364,7 @@ public:
         if (nHeight >  437500 || IsArgSet("-testnet"))
             nMedianTimeSpan = 3;
 
-        //fixme: (2.0.1) - Unit tests
+        //fixme: (PHASE4) - This needs unit tests
         if (this->nTimePoW2Witness != 0)
         {
             nMedianTimeSpan *= 2;
@@ -718,7 +718,7 @@ public:
     }
 
     // Up until latest built in checkpoint height we are only interested in these ranges and not all blocks.
-    //fixme: (2.1) Move this into spvscanner rather.
+    //fixme: (UNITY) (SPV) Move this into spvscanner rather.
     CCriticalSection cs_blockFilterRanges;
     std::vector<std::tuple<uint64_t, uint64_t>> blockFilterRanges;
 private:

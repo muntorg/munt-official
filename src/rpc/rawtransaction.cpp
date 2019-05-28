@@ -40,7 +40,7 @@
 
 #include <univalue.h>
 
-//fixme: (2.1)
+//fixme: (PHASE5) - We can remove this include
 #include "Gulden/util.h"
 #include "validation/validation.h"
 
@@ -390,7 +390,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         {
             if (rbfOptIn)
                 nFlags |= CTxInFlags::OptInRBF;
-            //fixme: (2.1) (SEGSIG) Also handle block based sequence number.
+            //fixme: (PHASE4) (SEGSIG) Also handle block based sequence number.
             if (rawTx.nLockTime)
                 nFlags |= CTxInFlags::HasTimeBasedRelativeLock;
         }
@@ -760,7 +760,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             std::vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
-            //fixme: (2.1) implement
+            //fixme: (PHASE4) implement
             /*{
                 const Coin& coin = view.AccessCoin(out);
                 if (!coin.IsSpent() && coin.out.scriptPubKey != scriptPubKey) {
@@ -800,7 +800,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     }
 
 #ifdef ENABLE_WALLET
-    //fixme: (Post-2.1) (BIP44)
+    //fixme: (FUT) (BIP44) (MED)
     const CKeyStore& keystore = ((fGivenKeys || !pwallet || !pwallet->activeAccount) ? tempKeystore : *pwallet->activeAccount);
 #else
     const CKeyStore& keystore = tempKeystore;
@@ -851,11 +851,11 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, "Input not found or already spent");
             continue;
         }
-        //fixme: (2.1) (SEGSIG) Other transaction types
+        //fixme: (PHASE4) (SEGSIG) Other transaction types
         const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
-        //fixme: (2.1) (SEGSIG) (sign type)
+        //fixme: (PHASE4) (SEGSIG) (sign type)
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
 
         SignatureData sigdata;

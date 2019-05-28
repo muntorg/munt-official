@@ -128,6 +128,51 @@ class UnityCore {
         coreLibrarySignalHandler.notifyAddressBookChanged()
     }
 
+    fun addMonitorObserver(observer: GuldenMonitorListener, wrapper: (() -> Unit)-> Unit = fun (body: () -> Unit) { body() }) {
+        monitorObserversLock.withLock {
+            monitorObservers.add(MonitorObserverEntry(observer, wrapper))
+        }
+    }
+
+    fun removeMonitorObserver(observer: GuldenMonitorListener) {
+        monitorObserversLock.withLock {
+            monitorObservers.removeAll(
+                    monitorObservers.filter { it.observer == observer }
+            )
+        }
+    }
+
+    class MonitorObserverEntry(val observer: GuldenMonitorListener, val wrapper: (() ->Unit) -> Unit)
+    private var monitorObserversLock: Lock = ReentrantLock()
+    private var monitorObservers: MutableSet<MonitorObserverEntry> = mutableSetOf()
+
+    private val monitorHandler = object: GuldenMonitorListener() {
+        override fun onPartialChain(height: Int, probableHeight: Int, offset: Int) {
+            monitorObserversLock.withLock {
+                monitorObservers.forEach {
+                    it.wrapper { it.observer.onPartialChain(height, probableHeight, offset)}
+                }
+            }
+        }
+
+        override fun onPruned(height: Int) {
+            monitorObserversLock.withLock {
+                monitorObservers.forEach {
+                    it.wrapper { it.observer.onPruned(height)}
+                }
+            }
+        }
+
+        override fun onProcessedSPVBlocks(height: Int) {
+            monitorObserversLock.withLock {
+                monitorObservers.forEach {
+                    it.wrapper { it.observer.onProcessedSPVBlocks(height)}
+                }
+            }
+        }
+
+    }
+
     // Handle signals from core library, convert and broadcast to all registered observers
     private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
         override fun logPrint(str: String?) {
@@ -191,6 +236,9 @@ class UnityCore {
             }
             catch (e: Throwable) {
                 Log.e(TAG, "Exception in Java/Kotlin notification handler notifyCoreReady() $e")
+            }
+            monitorObserversLock.withLock {
+                GuldenUnifiedBackend.RegisterMonitorListener(monitorHandler)
             }
         }
 

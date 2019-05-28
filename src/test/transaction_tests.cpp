@@ -351,7 +351,7 @@ BOOST_AUTO_TEST_CASE(test_Get)
 /* unused, why does it need fixing in 2.0.1?
 static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outscript, CTransactionRef& output, CMutableTransaction& input, bool success = true)
 {
-    //fixme: (2.0.1)
+    //fixme: (PHASE4)
     //SignSignature issues
 	#if 0
     CMutableTransaction outputm;
@@ -453,7 +453,7 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
     CAmount nDustThreshold = 182 * dustRelayFee.GetFeePerK()/1000 * 3;
     BOOST_CHECK_EQUAL(nDustThreshold, 546);
 
-    //fixme: (2.1) re-implement these tests if we decide to re-implement dust rules, currently they don't apply for us.
+    //fixme: (PHASE4) re-implement these tests if we decide to re-implement dust rules, currently they don't apply for us.
     #if 0
     // dust:
     t.vout[0].nValue = nDustThreshold - 1;
@@ -463,7 +463,7 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
     t.vout[0].nValue = nDustThreshold;
     BOOST_CHECK(IsStandardTx(t, reason, nPoW2Version));
 
-    //fixme: (2.1) re-implement these tests if we decide to re-implement dust rules, currently they don't apply for us.
+    //fixme: (PHASE4) re-implement these tests if we decide to re-implement dust rules, currently they don't apply for us.
     #if 0
     // Check dust with odd relay fee to verify rounding:
     // nDustThreshold = 182 * 1234 / 1000 * 3

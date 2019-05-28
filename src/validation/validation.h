@@ -189,7 +189,7 @@ static const bool DEFAULT_FEEFILTER = true;
 /** Maximum number of headers to announce when relaying blocks with headers message.*/
 static const unsigned int MAX_BLOCKS_TO_ANNOUNCE = 8;
 
-//fixme: (2.1) Temporary increase from 10 (if lots of absent witnesses a miner could send quite a few unconnecting headers)
+//fixme: (PHASE5) Temporary increase from 10 (if lots of absent witnesses a miner could send quite a few unconnecting headers)
 //re-look at special logic for this.
 /** Maximum number of unconnecting headers announcements before DoS score */
 static const int MAX_UNCONNECTING_HEADERS = 200;
@@ -437,7 +437,7 @@ private:
     PrecomputedTransactionData *txdata;
 
 public:
-    //fixme: (2.1) - We can remove this after phase 4.
+    //fixme: (PHASE5) - We can remove this after phase 4.
     CKeyID spendingKeyID;
 
     CScriptCheck(): signingKeyID(CKeyID()), amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR) {}
@@ -550,7 +550,7 @@ struct CBlockIndexWorkComparator
     }
 };
 
-//fixme: (2.1) (Refactoring) Move DisconnectBlock/ConnectBlock/setBlockIndexCandidates/ContextualCheckBlockHeader/ContextualCheckBlock/CheckInputs/FlushStateToDisk/FindFilesToPruneManual/FindFilesToPrune/UpdateMempoolForReorg out of header files they should be source file only - this will require moving all the chain connect/disconnect/forceactivate stuff into their own shared source file
+//fixme: (FUT) (MED) (REFACTOR) Move DisconnectBlock/ConnectBlock/setBlockIndexCandidates/ContextualCheckBlockHeader/ContextualCheckBlock/CheckInputs/FlushStateToDisk/FindFilesToPruneManual/FindFilesToPrune/UpdateMempoolForReorg out of header files they should be source file only - this will require moving all the chain connect/disconnect/forceactivate stuff into their own shared source file
 //validation.cpp is too large and needs to shrink.
 
 void UpdateMempoolForReorg(DisconnectedBlockTransactions &disconnectpool, bool fAddToMempool);

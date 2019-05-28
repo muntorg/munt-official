@@ -10,5 +10,6 @@
 #define GuldenCoreUtil_h
 
 NSString* GuldenCoreStaticFilterPath(BOOL testnet);
+NSString* GuldenCoreLicensePath(void);
 
 #endif /* GuldenCoreUtil_h */

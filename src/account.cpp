@@ -76,7 +76,7 @@ CHDSeed::CHDSeed()
 CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 : m_type(type)
 {
-    //fixme: (2.1) Encrypt the seeds immediately upon creation so that they are never written to disk unencrypted.
+    //fixme: (FUT) (ACCOUNTS) Encrypt the seeds immediately upon creation so that they are never written to disk unencrypted.
     unencryptedMnemonic = mnemonic;
     Init();
 }
@@ -192,7 +192,7 @@ CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
 
     if (Db)
     {
-        //fixme: (2.1) Can we just set dirty or something and then it gets saved later? That would be cleaner than doing this here.
+        //fixme: (FUT) (ACCOUNTS) Can we just set dirty or something and then it gets saved later? That would be cleaner than doing this here.
         Db->WriteHDSeed(*this);
     }
 
@@ -207,7 +207,7 @@ CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex, AccountType type)
 {
     if ( IsReadOnly() )
     {
-        //fixme: (Post-2.1) (LOW) We should be able to combine this with IsLocked() (BIP44NoHardening) case below to simplify the code here.
+        //fixme: (FUT) (ACCOUNTS) (LOW) We should be able to combine this with IsLocked() (BIP44NoHardening) case below to simplify the code here.
         CExtPubKey accountKeyPub;
         cointypeKeyPub.Derive(accountKeyPub, nAccountIndex);  // m/44/87/n (BIP44)
         return new CAccountHD(accountKeyPub, m_UUID, type);
@@ -295,7 +295,7 @@ bool CHDSeed::Lock()
     purposeKeyPriv = CExtKey();
     cointypeKeyPriv = CExtKey();
 
-    //fixme: (2.1) - Also burn the memory just to be sure?
+    //fixme: (FUT) (ACCOUNTS) - Also burn the memory just to be sure?
     vMasterKey.clear();
 
     return true;
@@ -526,10 +526,10 @@ bool CAccountHD::Lock()
     // However these must -never- be encrypted anyway.
     //CAccount::Lock()
 
-    //fixme: (2.1) - Also burn the memory just to be sure?
+    //fixme: (FUT) (ACCOUNTS) - Also burn the memory just to be sure?
     vMasterKey.clear();
 
-    //fixme: GULDEN (2.1) burn the memory here.
+    //fixme: (FUT) (ACCOUNTS) burn the memory here.
     accountKeyPriv = CExtKey();
     primaryChainKeyPriv = CExtKey();
     changeChainKeyPriv = CExtKey();
@@ -644,7 +644,7 @@ bool CAccountHD::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int key
         if (IsPoW2Witness())
         {
             CKey nullKey;
-            //fixme: (2.1) This is possibly a bit inefficient - see if it can be sped up.
+            //fixme: (FUT) (ACCOUNTS) This is possibly a bit inefficient - see if it can be sped up.
             if(!internalKeyStore.HaveKey(pubkey.GetID()))
             {
                 if(!internalKeyStore.AddKeyPubKey(nullKey, pubkey))
@@ -665,7 +665,7 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int 
     {
         GetPubKey(childKey, keyChain);
     }
-    while( wallet.HaveKey(childKey.pubkey.GetID()) );//fixme: (Post-2.1) (BIP44) No longer need wallet here.
+    while( wallet.HaveKey(childKey.pubkey.GetID()) );//fixme: (FUT) (ACCOUNTS) (BIP44) No longer need wallet here.
 
     //LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CGuldenAddress(childKey.pubkey.GetID()).ToString());
 
@@ -740,7 +740,7 @@ CPubKey CAccount::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int ke
 }
 
 
-//fixme: (Post-2.1) WATCHONLY
+//fixme: (FUT) (ACCOUNTS) (WATCH_ONLY)
 bool CAccount::HaveWalletTx(const CTransaction& tx)
 {
     for(const CTxOut& txout : tx.vout)
@@ -830,7 +830,7 @@ bool CAccount::Lock()
         return true;
     }
 
-    //fixme: (2.1) - Also burn the memory just to be sure?
+    //fixme: (FUT) (ACCOUNTS) - Also burn the memory just to be sure?
     vMasterKey.clear();
 
     return externalKeyStore.Lock() && internalKeyStore.Lock();
@@ -984,20 +984,20 @@ bool CAccount::AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyCh
 
 bool CAccount::AddWatchOnly(const CScript &dest)
 {
-    //fixme: (Post-2.1) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
+    //fixme: (FUT) (ACCOUNTS) (WATCH_ONLY) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
     assert(0);
     return externalKeyStore.AddWatchOnly(dest);
 }
 
 bool CAccount::RemoveWatchOnly(const CScript &dest)
 {
-    //fixme: (Post-2.1) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
+    //fixme: (FUT) (ACCOUNTS) (WATCH_ONLY) (REIMPLEMENT AS SPECIAL WATCH ACCOUNT)
     assert(0);
     return externalKeyStore.RemoveWatchOnly(dest) || internalKeyStore.RemoveWatchOnly(dest);
 }
 
 //checkme: CHILD ACCOUNTS - DOES THIS END UP IN THE RIGHT PLACE?
-//fixme: (Post-2.1)
+//fixme: (FUT) (ACCOUNTS)
 bool CAccount::AddCScript(const CScript& redeemScript)
 {
     return externalKeyStore.AddCScript(redeemScript);
@@ -1005,7 +1005,7 @@ bool CAccount::AddCScript(const CScript& redeemScript)
 
 bool CAccount::AddCryptedKeyWithChain(const CPubKey &vchPubKey, const std::vector<unsigned char> &vchCryptedSecret, int64_t nKeyChain)
 {
-    //fixme: (Post-2.1) This is essentially dead code now - it has been replaced at the bottom of CWallet::AddKeyPubKey
+    //fixme: (FUT) (ACCOUNTS) This is essentially dead code now - it has been replaced at the bottom of CWallet::AddKeyPubKey
     //For technical reasons (wallet upgrade)
 
     //This should never be called on a non-HD wallet
@@ -1050,7 +1050,7 @@ void CAccount::possiblyUpdateEarliestTime(uint64_t creationTime, CWalletDB* Db)
     if (creationTime < earliestPossibleCreationTime)
         earliestPossibleCreationTime = creationTime;
 
-    //fixme: (2.1) Can we just set dirty or something and then it gets saved later? This would be cleaner instead of taking the Db here and writing directly to it...
+    //fixme: (FUT) (ACCOUNTS) Can we just set dirty or something and then it gets saved later? This would be cleaner instead of taking the Db here and writing directly to it...
     if (Db)
     {
         Db->WriteAccount(getUUIDAsString(getUUID()), this);
@@ -1062,7 +1062,7 @@ uint64_t CAccount::getEarliestPossibleCreationTime()
     return earliestPossibleCreationTime;
 }
 
-//fixme: (2.1) (CLEANUP) - relook at how the wallet reports keypool size in an accounts context.
+//fixme: (FUT) (ACCOUNTS) (CLEANUP) - relook at how the wallet reports keypool size in an accounts context.
 unsigned int CAccount::GetKeyPoolSize()
 {
     AssertLockHeld(cs_keypool); // setKeyPool
@@ -1091,7 +1091,7 @@ CAmount CAccount::getCompounding() const
 
 void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
 {
-    //fixme: (2.1) Signal UI to update compound checkbox to reflect changes.
+    //fixme: (PHASE4) Signal UI to update compound checkbox to reflect changes.
     compoundEarnings = compoundAmount_;
     if (Db)
     {

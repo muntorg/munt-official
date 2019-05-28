@@ -24,7 +24,7 @@
 
 namespace
 {
-//fixme: (2.1) - We don't currently have fee bumping enabled in the UI
+//fixme: (FUT) - We don't currently have fee bumping enabled in the UI
 #if 0
 
 //! Press "Ok" button in message box dialog.
@@ -99,7 +99,7 @@ QModelIndex FindTx(const QAbstractItemModel& model, const uint256& txid)
     return {};
 }
 
-//fixme: (2.1) - We don't currently have fee bumping enabled in the UI
+//fixme: (FUT) - We don't currently have fee bumping enabled in the UI
 #if 0
 //! Invoke bumpfee on txid and check results.
 void BumpFee(TransactionView& view, const uint256& txid, bool expectDisabled, std::string expectError, bool cancel)
@@ -181,7 +181,7 @@ void TestSendCoins()
     QVERIFY(FindTx(*transactionTableModel, txid1).isValid());
     QVERIFY(FindTx(*transactionTableModel, txid2).isValid());
 
-    //fixme: (2.1) - We don't currently have fee bumping enabled in the UI
+    //fixme: (FUT) - We don't currently have fee bumping enabled in the UI
     #if 0
     // Call bumpfee. Test disabled, canceled, enabled, then failing cases.
     BumpFee(transactionView, txid1, true /* expect disabled */, "not BIP 125 replaceable" /* expected error */, false /* cancel */);

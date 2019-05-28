@@ -73,7 +73,7 @@ QVariant CurrencyTableModel::data(const QModelIndex& index, int role) const
     {
         CAmount temp;
         ParseMoney(iter->second,temp);
-        //fixme: (2.1) Truncates - we should instead round here...
+        //fixme: (FUT) Truncates - we should instead round here...
         QString rate = GuldenUnits::format(GuldenUnits::NLG, temp, false, GuldenUnits::separatorAlways, 4);
         QString balance = GuldenUnits::format(GuldenUnits::NLG, m_ticker->convertGuldenToForex(m_balanceNLG, iter->first), false, GuldenUnits::separatorAlways, 2);
         return rate + QString("<br/>") + balance;
@@ -91,7 +91,7 @@ void CurrencyTableModel::setBalance(CAmount balanceNLG)
 void CurrencyTableModel::balanceChanged(const WalletBalances& balances, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
     setBalance(balances.availableIncludingLocked + balances.unconfirmedIncludingLocked + balances.immatureIncludingLocked);
-    //fixme: (2.1) Only emit if data actually changes.
+    //fixme: (FUT) Only emit if data actually changes.
     Q_EMIT dataChanged(index(0, 0, QModelIndex()), index(rowCount()-1, columnCount()-1, QModelIndex()));
 }
 
@@ -176,7 +176,7 @@ void CurrencyTicker::netRequestFinished( QNetworkReply* reply )
 
     if ( reply->error() != QNetworkReply::NetworkError::NoError )
     {
-        //fixme: (2.1) Error handling code here.
+        //fixme: (FUT) Error handling code here.
         //Note - it is possible the ticker has temporary outages etc. and these are not a major issue
         //We update every ~10s but if we miss a few updates it has no ill-effects
         //So if we do anything here, it should only be after multiple failiures...
@@ -187,7 +187,7 @@ void CurrencyTicker::netRequestFinished( QNetworkReply* reply )
 
         if ( statusCode != 200 )
         {
-            //fixme: (2.1) Error handling code here.
+            //fixme: (FUT) Error handling code here.
             //Note - it is possible the ticker has temporary outages etc. and these are not a major issue
             //We update every ~10s but if we miss a few updates it has no ill-effects
             //So if we do anything here, it should only be after multiple failiures...
@@ -231,7 +231,7 @@ void CurrencyTicker::netRequestFinished( QNetworkReply* reply )
 
 void CurrencyTicker::reportSslErrors( QNetworkReply* reply, const QList<QSslError>& errorList )
 {
-    //fixme: (2.1) In future (I guess) we should signal in UI somehow that ticker is unavailable - need to decide how to do this in a user friendly way.
+    //fixme: (FUT) In future (I guess) we should signal in UI somehow that ticker is unavailable - need to decide how to do this in a user friendly way.
     //Note - it is possible the ticker has temporary outages - is switching hosts or whatever other minor thing 
     //We update every ~10s but if we miss a few updates it has no ill-effects
     //So if we do anything here, it should only be after multiple failiures...

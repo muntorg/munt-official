@@ -97,7 +97,7 @@ const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
 
 void CCloneChain::FreeMemory()
 {
-    //fixme: (2.1) - We should use shared_ptr for the chain instead of raw pointers
+    //fixme: (POST-PHASE5) - We should use shared_ptr for the chain instead of raw pointers
     //This will remove the need for this messy vFree situation; and also allow us to re-enable the miner test that relied on nHeight++ that we have had to disable due to a crash in this FreeMemory call.
     for (auto index : vFree)
     {
@@ -121,7 +121,7 @@ CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const C
 , origin(_origin)
 , cloneFrom(_cloneFrom)
 {
-    //fixme: (2.0.x) - Temporarily allow nested cloning 'getwitnessinfo' needs this; however we should fix this in the near future.
+    //fixme: (PHASE4) - Temporarily allow nested cloning 'getwitnessinfo' needs this; however we should fix this in the near future.
     // NB! Nested cloning is okay IFF we stick to a fixed clone height, the second we start trying to optimise by using a non-fixed clone height there will be problems.
     // forbid nested cloning
     //assert(dynamic_cast<const CCloneChain*>(&origin) == nullptr);

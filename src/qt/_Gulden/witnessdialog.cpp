@@ -252,7 +252,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
         expectedEarningsCurve->attach( ui->witnessEarningsPlot );
     }
 
-    //fixme: (2.1) Possible leak, or does canvas free it?
+    //fixme: (FUT) Possible leak, or does canvas free it?
     new PlotMouseTracker( ui->witnessEarningsPlot->canvas() );
 
     QAction* unitBlocksAction = new QAction(tr("&Blocks"), this);
@@ -420,7 +420,7 @@ static void AddPointToMapWithAdjustedTimePeriod(std::map<double, CAmount>& point
         fDaysModified = (nX - nOriginBlock)/576.0;
     }
 
-    //fixme: (2.1) These various week/month calculations are all very imprecise; they should probably be based on an actual calendar instead.
+    //fixme: (FUT) These various week/month calculations are all very imprecise; they should probably be based on an actual calendar instead.
     switch (nScale)
     {
         case GraphScale::Blocks:
@@ -450,7 +450,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
 
     CTxOutPoW2Witness witnessDetails;
 
-    // fixme: (2.1) Make this work for multiple 'origin' blocks.
+    //fixme: (PHASE4) Make this work for multiple 'origin' blocks.
     // Iterate the transaction history and extract all 'origin' block details.
     // Also extract details for every witness reward we have received.
     filter->setAccountFilter(forAccount);
@@ -495,7 +495,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
 
                     for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
                     {
-                        //fixme: (2.1) Handle multiple in one tx. Handle regular transactions that may have somehow been sent to the account.
+                        //fixme: (PHASE4) Handle multiple in one tx. Handle regular transactions that may have somehow been sent to the account.
                         if (IsMine(*forAccount, walletTxIter->second.tx->vout[i]))
                         {
                             if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
@@ -569,7 +569,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
         (infoForAccount.generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
     }
 
-    //fixme: (2.1) This is a bit broken - use nOurWeight etc.
+    //fixme: (PHASE4) This is a bit broken - use nOurWeight etc.
     // Fill in the remaining time on the 'actual earnings' curve with a forecast.
     int nXGeneratedForecast = 0;
     if (infoForAccount.generatedPoints.size() > 0)
@@ -656,7 +656,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
         if (witnessInfoForAccount.nTotalNetworkWeightTip > 0)
             networkWeightLabel = QString::number(witnessInfoForAccount.nTotalNetworkWeightTip);
 
-        //fixme: (2.1) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
+        //fixme: (PHASE4) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
         //Ideally this should be improved.
         //Note if we do improve it we may want to keep the "dumb" behaviour for testnet.
         {
@@ -1027,7 +1027,7 @@ void WitnessDialog::updateAccountIndicators()
         return;
 
     //Update account states to the latest block
-    //fixme: (2.1) - Some of this is redundant and can possibly be removed; as we set a lot of therse states now from within ::AddToWalletIfInvolvingMe
+    //fixme: (PHASE4) - Some of this is redundant and can possibly be removed; as we set a lot of therse states now from within ::AddToWalletIfInvolvingMe
     //However - we would have to update account serialization to serialise the warning state and/or test some things before removing this.
     {
         LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
@@ -1085,7 +1085,7 @@ void WitnessDialog::updateAccountIndicators()
                         {
                             newState = AccountStatus::WitnessExpired;
 
-                            //fixme: (2.1) I think this is only needed for (ended) accounts - and not expired ones? Double check
+                            //fixme: (PHASE4) I think this is only needed for (ended) accounts - and not expired ones? Double check
                             // Due to lock changing cached balance for certain transactions will now be invalidated.
                             // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
                             if (prevState != AccountStatus::WitnessExpired)

@@ -286,7 +286,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->autoHideStatusBar, OptionsModel::AutoHideStatusBar);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
 
-    //fixme: (Post-2.1) - look at adding these back
+    //fixme: (FUT) - look at adding these back
     ui->coinControlFeatures->setVisible(false);
     ui->unit->setVisible(false);
     ui->thirdPartyTxUrls->setVisible(false);

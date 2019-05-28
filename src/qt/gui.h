@@ -102,7 +102,7 @@ public:
     // If this is false then we show the RPC console instead of the full UI. (like -disablewallet except with a wallet)
     bool enableFullUI = true;
 
-    //fixme: (2.1) - The below are all ex GuldenGUI members that should be refactored back into the codebase to clean things up.
+    //fixme: (FUT) - The below are all ex GuldenGUI members that should be refactored back into the codebase to clean things up.
     void hideToolBars();
     void hideForClose();
     void showToolBars();
@@ -313,7 +313,7 @@ public Q_SLOTS:
     void incomingTransaction(const QString& date, int unit, const CAmount& amountReceived, const CAmount& amountSent, const QString& type, const QString& address, const QString& account, const QString& label);
 #endif // ENABLE_WALLET
 
-    //fixme: (2.1) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
+    //fixme: (FUT) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
     void NotifyRequestUnlock(void* wallet, QString reason);
     void NotifyRequestUnlockWithCallback(void* wallet, QString reason, std::function<void (void)> successCallback);
     void handlePaymentAccepted();
@@ -378,7 +378,7 @@ private Q_SLOTS:
     */
     void updateCheckResult(bool succes, const QString& msg, bool important, bool noisy);
 
-    //fixme: (2.1) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
+    //fixme: (FUT) The below are all ex GuldenGUI slots that should be factored back in and cleaned up.
     void activeAccountChanged(CAccount* account);
     void accountNameChanged(CAccount* account);
     void accountWarningChanged(CAccount* account);

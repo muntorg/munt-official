@@ -76,7 +76,7 @@ public:
     // Set to true if we are busy starting a new wallet via "link"
     bool isLink = false;
 
-    // fixme: (SPV) move these recovery helpers to a better place
+    //fixme: (UNITY) (SPV) move these recovery helpers to a better place
     int getRecoveryBirth() const;
     int64_t getRecoveryBirthTime() const;
     void setRecoveryBirthNumber(int _recoveryBirth);

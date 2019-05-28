@@ -262,7 +262,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id, bool forceErase)
         }
     }
 
-    //fixme: (Post-2.1) (CBSU)
+    //fixme: (FUT) (ACCOUNTS) (CBSU)
     //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
     for (auto iter : pwallet->mapAccounts)
     {
@@ -1077,7 +1077,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
     {
         if (pwallet->mapSeeds.count(getUUIDFromString(primarySeedString)) == 0)
         {
-            //fixme: (2.1) Treat this more severely?
+            //fixme: (FUT) (ACCOUNTS) Treat this more severely?
             LogPrintf("Error - missing primary seed for UUID [%s]\n", primarySeedString);
             fNoncriticalErrors = true;
         }

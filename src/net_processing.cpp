@@ -481,7 +481,7 @@ void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash)
 }
 
 void MaybeSetPeerAsAnnouncingHeaderAndIDs(NodeId nodeid, CConnman& connman) {
-    //fixme: (2.1)
+    //fixme: (POST-PHASE5)
     return;
     #if 0
     AssertLockHeld(cs_main);
@@ -1614,7 +1614,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return false;
         }
 
-        //fixme: (2.1) We can remove this; we temporarily accept incoming connections from old peers but refuse to establish outgoing ones with them.
+        //fixme: (POST-PHASE5) We can remove this; we temporarily accept incoming connections from old peers but refuse to establish outgoing ones with them.
         if (nVersion < 70016 && !pfrom->fInbound)
         {
             if (!gbMinimalLogging)
@@ -1842,7 +1842,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // nodes)
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::SENDHEADERS));
         }
-        //fixme: (2.1)
+        //fixme: (POST-PHASE5)
         #if 0
         if (pfrom->nVersion >= SHORT_IDS_BLOCKS_VERSION) {
             // Tell our peer we are willing to provide version 1 or 2 cmpctblocks
@@ -1924,7 +1924,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::SENDCMPCT)
     {
-        //fixme: (2.1)
+        //fixme: (POST-PHASE5)
         #if 0
         bool fAnnounceUsingCMPCTBLOCK = false;
         uint64_t nCMPCTBLOCKVersion = 0;
@@ -2180,7 +2180,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         CBlock block;
         bool ret = ReadBlockFromDisk(block, it->second, chainparams);
 
-        //fixme: (2.1) (NETWORK) 
+        //fixme: (POST-PHASE5) (HIGH) (NETWORK) 
         //We were getting an assert here at some point so assert disable and error handling placed instead.
         //We should look into this again.
         //assert(ret);

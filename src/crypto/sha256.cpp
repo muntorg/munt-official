@@ -31,7 +31,7 @@ void inline Round(uint32_t a, uint32_t b, uint32_t c, uint32_t& d, uint32_t e, u
     h = t1 + t2;
 }
 
-//fixme: (2.2) - Look into using ssh3/shani and/or other optimisations for this (see tarsnap implementation for example)
+//fixme: (FUT) - Look into using ssh3/shani and/or other optimisations for this (see tarsnap implementation for example)
 /** Perform one SHA-256 transformation, processing a 64-byte chunk. */
 void Transform(uint32_t* s, const unsigned char* chunk)
 {

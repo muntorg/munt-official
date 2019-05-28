@@ -20,7 +20,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 
-//fixme: (2.1)
+//fixme: (PHASE5) - we can remove these includes
 #include "Gulden/util.h"
 #include "validation/validation.h"
 
@@ -39,7 +39,7 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
 
 bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
 {
-    //fixme: (Post-2.1) (LOW) - reconsider dust policy.
+    //fixme: (POST-PHASE5) (LOW) - reconsider dust policy.
     //return (txout.nValue < GetDustThreshold(txout, dustRelayFeeIn));
     return false;
 }
@@ -80,7 +80,7 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool s
                (!fAcceptDatacarrier || scriptPubKey.size() > nMaxDatacarrierBytes))
           return false;
 
-    //fixme: (2.1) (SEGSIG)
+    //fixme: (PHASE4) (SEGSIG)
     return whichType != TX_NONSTANDARD;
 }
 
@@ -91,7 +91,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
         return false;
     }
 
-    // fixme: (2.1) we can combine this with the rule above once we are locked into phase 5.
+    //fixme: (PHASE5) we can combine this with the rule above once we are locked into phase 5.
     // Refuse to relay new style transactions, or transactions pretending to be new style transactions before phase 4 starts.
     // Refuse to relay old style transactions once phase 4 is active.
     if (nPoW2Version < 4 && !IsOldTransactionVersion(tx.nVersion))
@@ -204,7 +204,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 
 bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 {
-    //fixme: (2.1) (SEGSIG)
+    //fixme: (PHASE4) (SEGSIG)
     return true;
 }
 

@@ -135,7 +135,7 @@ void AccountTableModel::activeAccountChanged(CAccount* account)
     LOCK2(cs_main, m_wallet->cs_wallet);
 
     activeAccount = account;
-    //fixme: (Post-2.1) Technically we can emit for just the two rows here.
+    //fixme: (FUT) Technically we can emit for just the two rows here.
     beginResetModel();
     endResetModel();
 }
@@ -148,7 +148,7 @@ void AccountTableModel::accountAdded(CAccount* account)
 
     beginResetModel();
     endResetModel();
-    //fixme: (Post-2.1) We should instead use something like the below...
+    //fixme: (FUT) We should instead use something like the below...
     //int pos =  std::distance(m_wallet->mapAccountLabels.begin(), m_wallet->mapAccountLabels.find(account->getUUID()));
     //beginInsertRows(index(0, 0, QModelIndex()), pos, pos);
     //endInsertRows();

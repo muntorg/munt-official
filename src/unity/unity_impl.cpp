@@ -343,7 +343,7 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
         return false;
     }
 
-    //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
+    //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     SecureString phraseOnly;
     int phraseBirthNumber = 0;
     GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
@@ -352,7 +352,7 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
         return false;
     }
 
-    //fixme: (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
+    //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
     GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
     GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
@@ -608,7 +608,7 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     SoftSetArg("-maxmempool", "5");
     SoftSetArg("-maxconnections", "8");
 
-    //fixme: (2.1) (UNITY) (iOS) - Temporarily hardcoding for android, set this on a per app basis.
+    //fixme: (UNITY) (iOS) - Temporarily hardcoding for android, set this on a per app basis.
     // Change client name
     SoftSetArg("-clientname", "Gulden android");
 
@@ -619,7 +619,7 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
         SoftSetArg("-addnode", "devbak.net");
     }
 
-    //fixme: (2.1) Reverse headers
+    //fixme: (FUT) (UNITY) Reverse headers
     // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
     SoftSetArg("-reverseheaders", "false");
 
@@ -703,7 +703,7 @@ std::string GuldenUnifiedBackend::GetReceiveAddress()
     }
 }
 
-//fixme: (Unity) - find a way to use char[] here as well as on the java side.
+//fixme: (UNITY) - find a way to use char[] here as well as on the java side.
 std::string GuldenUnifiedBackend::GetRecoveryPhrase()
 {
     if (!pactiveWallet || !pactiveWallet->activeAccount)
@@ -755,7 +755,7 @@ bool GuldenUnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
 }
 
 
-//fixme: (2.1) HIGH - take a timeout value and always lock again after timeout
+//fixme: (UNITY) HIGH - take a timeout value and always lock again after timeout
 bool GuldenUnifiedBackend::UnlockWallet(const std::string& password)
 {
     if (!pactiveWallet)

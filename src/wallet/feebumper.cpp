@@ -72,7 +72,7 @@ bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx
     return true;
 }
 
-//fixme: (2.1)
+//fixme: (PHASE5) We can remove these includes after phase 4 activation
 #include "Gulden/util.h"
 #include "validation/validation.h"
 

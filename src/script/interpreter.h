@@ -113,7 +113,7 @@ struct PrecomputedTransactionData
     PrecomputedTransactionData(const CTransaction& tx);
 };
 
-//fixme: (2.1) SEGSIG
+//fixme: (PHASE4) SEGSIG
 enum SigVersion
 {
     SIGVERSION_BASE = 0,
@@ -125,7 +125,7 @@ uint256 SignatureHash(const CScript &scriptCode, const CTransaction& txTo, unsig
 class BaseSignatureChecker
 {
 public:
-    //fixme: (2.1) Temporary placed here - move back to TransactionSignatureChecker after phase 4 activation.
+    //fixme: (PHASE4) Temporary placed here - move back to TransactionSignatureChecker after phase 4 activation.
     const CKeyID signatureKeyID;
     const CKeyID spendingKeyID;
     BaseSignatureChecker(const CKeyID signatureKeyID_, const CKeyID spendingKeyID_) : signatureKeyID(signatureKeyID_), spendingKeyID(spendingKeyID_) {}

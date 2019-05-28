@@ -78,8 +78,8 @@ void BackupDialog::showBackupPhrase()
         }
     }
 
-    //fixme: (2.1) - Show a warning label for accounts that have no seed attached?
-    //fixme: (2.1) - Show a different (more friendly?) warning label for witness-only accounts?
+    //fixme: (FUT) - Show a warning label for accounts that have no seed attached?
+    //fixme: (POST-PHASE5) - Show a different (more friendly?) warning label for witness-only accounts?
     bool haveNonHDAccounts = false;
     for (const auto& accountIter : pactiveWallet->mapAccounts)
     {
@@ -98,6 +98,6 @@ void BackupDialog::showBackupPhrase()
 
 BackupDialog::~BackupDialog()
 {
-    //fixme: (2.1) - Burn visible phrase.
+    //fixme: (FUT) - Burn visible phrase.
     delete ui;
 }

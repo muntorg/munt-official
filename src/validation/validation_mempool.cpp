@@ -45,7 +45,7 @@ static void LimitMempoolSize(CTxMemPool& pool, size_t limit, unsigned long age) 
         pcoinsTip->Uncache(removed);
 }
 
-//fixme: dedup (LimitMempoolSize)
+//fixme: (FUT) (REFACTOR) (DEDUP) (see: LimitMempoolSize)
 void EmptyMempool(CTxMemPool& pool)
 {
     int expired = pool.Expire(std::numeric_limits<int64_t>::max());
@@ -210,7 +210,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 {
                     for(const CTxIn &_txin : ptxConflicting->vin)
                     {
-                        //fixme: (2.1) (SEGSIG)
+                        //fixme: (PHASE4) (SEGSIG)
                         if (_txin.GetSequence(ptxConflicting->nVersion) < std::numeric_limits<unsigned int>::max()-1)
                         {
                             fReplacementOptOut = false;
@@ -505,7 +505,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         PrecomputedTransactionData txdata(tx);
         if (!CheckInputs(tx, state, view, true, scriptVerifyFlags, true, txdata, &witnessBundles))
         {
-            //fixme: (2.1) (SEGSIG) removed cleanstack/witness check here - double check if it was necessary.
+            //fixme: (PHASE4) (SEGSIG) removed cleanstack/witness check here - double check if it was necessary.
             return false; // state filled in by CheckInputs
         }
 

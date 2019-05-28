@@ -97,7 +97,7 @@ CScript ParseScript(const std::string& s)
 // Check that all of the input and output scripts of a transaction contains valid opcodes
 bool CheckTxScriptsSanity(const CMutableTransaction& tx)
 {
-    //fixme: (2.1) (SegSig)
+    //fixme: (PHASE4) (SegSig)
     // Check input scripts for non-coinbase txs
     if (!CTransaction(tx).IsCoinBase()) {
         for (unsigned int i = 0; i < tx.vin.size(); i++) {
@@ -174,7 +174,7 @@ bool DecodeHexBlk(CBlock& block, const std::string& strHexBlk)
         if (parsedAsSegSig)
             return true;
     }
-    //fixme: (2.1) We can remove this code block after phase 4 activates.
+    //fixme: (PHASE5) We can remove this code block after phase 4 activates.
     {
         std::vector<unsigned char> blockData(ParseHex(strHexBlk));
         CDataStream ssBlock(blockData, SER_NETWORK, PROTOCOL_VERSION);

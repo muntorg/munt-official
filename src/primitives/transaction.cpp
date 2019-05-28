@@ -46,7 +46,7 @@ std::string CTxIn::ToString() const
         str += strprintf(", coinbase %s", HexStr(scriptSig));
     else
         str += strprintf(", scriptSig=%s", HexStr(scriptSig).substr(0, 24));
-    //fixme: (2.1)
+    //fixme: (PHASE4)
     if (nSequence != SEQUENCE_FINAL)
         str += strprintf(", nSequence=%u", nSequence);
     str += ")";
@@ -91,7 +91,7 @@ std::string CTxOut::ToString() const
     return strprintf("CTxOut(nValue=%d.%08d, type=%s, data=%s)", nValue / COIN, nValue % COIN, GetTypeAsString(), output.GetHex().substr(0, 30));
 }
 
-//fixme: (2.1) restore CURRENT_VERSION behaviour here.
+//fixme: (PHASE5) restore CURRENT_VERSION behaviour here.
 //CMutableTransaction::CMutableTransaction() : nVersion(CTransaction::CURRENT_VERSION), nLockTime(0), flags(0), extraFlags(0) {}
 CMutableTransaction::CMutableTransaction(int32_t nVersion_) : nVersion(nVersion_), nLockTime(0), flags(0), extraFlags(0) {}
 CMutableTransaction::CMutableTransaction(const CTransaction& tx) : nVersion(tx.nVersion), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), flags(tx.flags), extraFlags(tx.extraFlags) {}
@@ -124,7 +124,7 @@ uint256 CTransaction::GetWitnessHash() const
 }
 
 /* For backward compatibility, the hash is initialized to 0. TODO: remove the need for this default constructor entirely. */
-//fixme: (2.1) restore CURRENT_VERSION behaviour here.
+//fixme: (PHASE5) restore CURRENT_VERSION behaviour here.
 //CTransaction::CTransaction() : nVersion(CTransaction::CURRENT_VERSION), vin(), vout(), nLockTime(0), flags(0), extraFlags(0), hash() {}
 CTransaction::CTransaction(int32_t nVersion_) : nVersion(nVersion_), vin(), vout(), nLockTime(0), flags(0), extraFlags(0), hash() {}
 CTransaction::CTransaction(const CMutableTransaction &tx) : nVersion(tx.nVersion), vin(tx.vin), vout(tx.vout), nLockTime(tx.nLockTime), flags(tx.flags), extraFlags(tx.extraFlags), hash(ComputeHash()) {}

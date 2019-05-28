@@ -347,7 +347,7 @@ void GUI::requestEmptyWitness()
     CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, false, true);
     if (availableAmount > 0)
     {
-        //fixme: (2.1) - Remove this when ready
+        //fixme: (PHASE4) - Remove this when ready
         {
             CGetWitnessInfo witnessInfo;
             CBlock block;
@@ -1387,7 +1387,7 @@ void GUI::updateAccount(CAccount* account)
         if (!walletFrame->currentWalletView()->walletModel)
             return;
 
-        //fixme: (2.1) - Look into improving performance here, also better way to handle multiple addresses?
+        //fixme: (POST-PHASE5) - Look into improving performance here, also better way to handle multiple addresses?
         std::unique_ptr<TransactionFilterProxy> filter;
         filter.reset(new TransactionFilterProxy);
         filter->setSourceModel(walletFrame->currentWalletView()->walletModel->getTransactionTableModel());
@@ -1877,7 +1877,7 @@ void GUI::acceptNewAccount()
 
     if ( !dialogNewAccount->getAccountName().simplified().isEmpty() )
     {
-        //fixme: (2.1) This can be improved; we don't really need to unlock for every single creation only sometimes
+        //fixme: (POST-PHASE5) This can be improved; we don't really need to unlock for every single creation only sometimes
         //This is here to stop the weird effect of shadow thread requesting password -after- account creation though
         //This should tie in better with the shadow thread..
 
@@ -1925,7 +1925,7 @@ void GUI::acceptNewAccount()
     }
     else
     {
-        //fixme: (2.1) Mark invalid.
+        //fixme: (POST-PHASE5) Mark invalid.
     }
 }
 

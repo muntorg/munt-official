@@ -135,10 +135,10 @@ void AccountSummaryWidget::showForexBalance(bool showForexBalance_)
 
 void AccountSummaryWidget::balanceChanged()
 {
-    //fixme: (2.1) Double check how we want to display this.
+    //fixme: (FUT) Double check how we want to display this.
     if (pactiveWallet && m_account)
     {
-        //fixme: (2.1) rather cache this somewhere central where it can be shared with e.g. the witness dialog?
+        //fixme: (FUT) rather cache this somewhere central where it can be shared with e.g. the witness dialog?
         WalletBalances balances;
         pactiveWallet->GetBalances(balances, m_account, true);
 

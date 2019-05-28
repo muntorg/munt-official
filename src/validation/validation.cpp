@@ -427,7 +427,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txund
 {
     // mark inputs spent
     if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase()) {
-        //fixme: (2.1) See if we can bring back the reserve efficiency here.
+        //fixme: (FUT) (MED) See if we can bring back the reserve efficiency here.
         //txundo.vprevout.reserve(tx.vin.size());
         for(const CTxIn &txin : tx.vin) {
             if (!txin.prevout.IsNull())
@@ -460,8 +460,8 @@ int GetSpendHeight(const CCoinsViewCache& inputs)
     return pindexPrev->nHeight + 1;
 }
 
-//fixme: (2.1) This should rather use move semantics, but CScript doesn't currently seem compatible with this.
-//fixme: (2.0.1) Use this in places that are hardcoded instead.
+//fixme: (PHASE4) This should rather use move semantics, but CScript doesn't currently seem compatible with this.
+//fixme: (PHASE4) Use this in places that are hardcoded instead.
 CScript GetScriptForNonScriptOutput(const CTxOut& out)
 {
     if (out.GetType() <= CTxOutType::PoW2WitnessOutput)
@@ -592,9 +592,9 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                     return true;
                 }
 
-                //fixme: (2.1) (SEGSIG) - also transition to extracted signature.
+                //fixme: (PHASE4) (SEGSIG) - also transition to extracted signature.
                 // Verify signature
-                //fixme: spendingKeyID
+                //fixme: (PHASE4) spendingKeyID
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
                 CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
                 if (scriptPubKey.IsPoW2Witness())
@@ -730,7 +730,7 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
         // restore inputs
         if (i > 0) { // not coinbases
             CTxUndo &txundo = blockUndo.vtxundo[i-1];
-            //fixme: (2.0.1) (HIGH) (force only 1 valid input in checkblock as well.)
+            //fixme: (PHASE4) (HIGH) (force only 1 valid input in checkblock as well.)
             if (tx.IsPoW2WitnessCoinBase())
             {
                 if (txundo.vprevout.size() != 1 || tx.vin.size() < 2)
@@ -973,7 +973,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         nLockTimeFlags |= LOCKTIME_VERIFY_SEQUENCE;
     }
 
-    //fixme: (2.1) (SEGSIG)
+    //fixme: (PHASE4) (SEGSIG)
     // Start enforcing WITNESS rules using versionbits logic.
     if (IsSegSigEnabled(pindex->pprev))
         flags |= SCRIPT_VERIFY_NULLDUMMY;
@@ -983,7 +983,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     CBlockUndo blockundo;
 
-    //fixme: (2.1) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
+    //fixme: (PHASE4) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
     //However GetWitness calls recursively into ConnectBlock and CCheckQueueControl has a non-recursive mutex - so we must call this before creating 
     // Witness block must have valid signature from witness.
     if (block.nVersionPoW2Witness != 0)
@@ -1015,7 +1015,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         }
     }
 
-    //fixme: (2.1) After 2.1 the below re-entrancy from WitnessCoinbaseInfoIsValid is no longer a thing.
+    //fixme: (PHASE5) After phase4 activates the below re-entrancy from WitnessCoinbaseInfoIsValid is no longer a thing.
     //So we can move this down and combine it with the scope where we check:
     //unsigned int nWitnessCoinbasePayoutIndex = nWitnessCoinbaseIndex + 1;
     //NB! This must occur before CCheckQueueControl to prevent CCheckQueueControl re-entrancy.
@@ -1100,7 +1100,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                         return state.DoS(100, error("ConnectBlock(): witness coinbase inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                     }
 
-                    //fixme: (2.1) (SEGSIG) - Find a way to implement the bip68 sequence stuff here as well with minimal code churn...
+                    //fixme: (PHASE4) (SEGSIG) - Find a way to implement the bip68 sequence stuff here as well with minimal code churn...
                 }
             }
         }
@@ -1110,7 +1110,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             {
                 if (!view.HaveInputs(tx))
                 {
-                    //fixme: (2.1) - Low level fix for problem of conflicting transaction entering mempool and causing miners to be unable to mine (due to selecting invalid transactions for block continuously).
+                    //fixme: (PHASE4) - Low level fix for problem of conflicting transaction entering mempool and causing miners to be unable to mine (due to selecting invalid transactions for block continuously).
                     //This fix should remain in place, but a follow up fix is needed to try stop the conflicting transaction entering the mempool to begin with - need to hunt the source of this down.
                     //Seems to have something to do with a double (conflicting) witness renewal transaction.
                     mempool.removeRecursive(tx, MemPoolRemovalReason::UNKNOWN);
@@ -1143,7 +1143,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                              REJECT_INVALID, "bad-blk-sigops");
 
         txdata.emplace_back(tx);
-        //fixme: (2.0.1) (PHASE4) (CODEBASE CLEANUP) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?) - we already test this elsewhere so it would only be a cleanness improvement.
+        //fixme: (PHASE4) (CODEBASE CLEANUP) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?) - we already test this elsewhere so it would only be a cleanness improvement.
         if (!tx.IsCoinBase())
         {
             if (nWitnessCoinbaseIndex != 0 && i > nWitnessCoinbaseIndex)
@@ -1175,7 +1175,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime3 - nTime2), 0.001 * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * 0.000001);
 
-    //fixme: (2.1) (CLEANUP) - We can remove this after 2.1 becomes active.
+    //fixme: (PHASE5) (CLEANUP) - We can remove this after phase4 becomes active.
 
     //Until PoW2 activates mining subsidy remains full.
     //Phase 3 - miner mines 80 reward for himself and 20 reward for previous blocks witness...
@@ -1183,7 +1183,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     CAmount nSubsidy = GetBlockSubsidy(pindex->nHeight);
     CAmount nSubsidyWitness = GetBlockSubsidyWitness(pindex->nHeight);
 
-    //fixme: (2.0.1) Unit tests
+    //fixme: (PHASE4) Unit tests
     // Second block with a phase 3 parent up to and including first block with a phase 4 parent.
     // Coinbase of previous witness block embedded in coinbase of current PoW block.
     if (nPoW2PhaseGrandParent == 3 && nPoW2PhaseParent != 4)
@@ -1241,7 +1241,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             }
             else if (nPoW2PhaseParent >= 4)
             {
-                //fixme: (2.0.1) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
+                //fixme: (PHASE4) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
                 //Phase 4 has no coinbase restrictions
             }
         }
@@ -1252,7 +1252,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     }
 
 
-    //fixme: (2.0.1) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
+    //fixme: (PHASE4) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
 
     CAmount expectedBlockReward = nFees + nSubsidy;
     CAmount actualBlockReward = block.vtx[0]->GetValueOut() ;
@@ -1525,7 +1525,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
         {
             WarningBitsConditionChecker checker(bit);
             ThresholdState state = checker.GetStateFor(pindex, chainParams.GetConsensus(), warningcache[bit]);
-            // fixme: (2.1) We can remove
+            //fixme: (PHASE5) We can remove
             // Bypass invalid warnings for phase 4 activation 
             if (bit == chainParams.GetConsensus().vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].bit)
                 continue;
@@ -2616,7 +2616,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
     }
 
-    //fixme: (2.1) (SEGSIG) Enforce segsig upgrade rules here; this is I think redundany as it is already handled elsewhere, but we should catch it earlier.
+    //fixme: (PHASE4) (SEGSIG) Enforce segsig upgrade rules here; this is I think redundany as it is already handled elsewhere, but we should catch it earlier.
 
     // Reject outdated version blocks when 95% (75% on testnet) of the network has upgraded:
     // check for version 2, 3 and 4 upgrades
@@ -2631,9 +2631,9 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     return true;
 }
 
-//fixme: (2.1) Do away with this doUTXOChecks junk
+//fixme: (PHASE5) Do away with this doUTXOChecks junk
 //Long story short; we need to call this twice, the second time from within ConnectTip as we can't do the 'phase' checks without the utxo
-//After 2.1 we won't need the phase checks so we can code this properly.
+//After phase4 activation we won't need the phase checks so we can code this properly.
 bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CChainParams& chainParams, const CBlockIndex* pindexPrev, CChain& chainOverride, CCoinsViewCache* viewOverride, bool doUTXOChecks)
 {
     const int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
@@ -2713,7 +2713,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     //Enforce embedded witness coinbase data in phase 3.
     //Only the second block with a phase 3 parent onwards has a witness coinbase with embedded data, as only the first block with a phase 3 parent has a witness.
     //Also having the check here prevents miners from broadcasting invalid blocks sooner.
-    //fixme: (2.1) This is now a duplicate of the check in ConnectBlock - reconsider if we need both.
+    //fixme: (PHASE4) This is now a duplicate of the check in ConnectBlock - reconsider if we need both.
     //This was added as invalid blocks were still being accepted (just not connected) and this was combining with other factors to cause network issues.
     if (nHeight > 10 && IsPow2Phase3Active(nHeight-2) && !fHaveSegregatedSignatures && block.nVersionPoW2Witness == 0)
     {
@@ -2783,7 +2783,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     //For segsig this is unnecessary; we hash this data as part of the normal merkle root instead.
 
 
-    //fixme: (2.1) Below checks can be removed/simplified
+    //fixme: (PHASE5) Below checks can be removed/simplified
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
     if (fHaveSegregatedSignatures)
     {
@@ -2819,7 +2819,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 {
     AssertLockHeld(cs_main);
 
-    //fixme: (2.0.1) Double check handling of different header types.
+    //fixme: (PHASE4) Double check handling of different header types.
 
     CBlockIndex* pindexPrev = nullptr;
     bool promoteToFullTree = false;
@@ -2863,7 +2863,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
             pindexPrev = (*mi).second;
         }
 
-        //fixme: (2.2) - Reconsider this when/if we have partial filtered header sync functional.
+        //fixme: (UNITY) (SPV) - Reconsider this when/if we have partial filtered header sync functional.
         //On SPV (Android) for instance these scrypt checks on the headers are really expensive.
         //We bypass this with a small random chance of still checking.
         //NB! Previously this was before the pindexPrev call - it is fine for it to be after, however if we alter this further consider putting it before again.
@@ -3002,7 +3002,7 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
 
     // Header is valid/has work, merkle tree are good...RELAY NOW
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
-    // fixme: (2.0.1) (HIGH) This will probably increase forks slightly - but we need to keep pushing tip contenders out in case of stalled witness
+    //fixme: (PHASE5) (HIGH) This will probably increase forks slightly - but we need to keep pushing tip contenders out in case of stalled witness
     // Maybe we could 'delay' such candidates slightly, store them in a cache and then only relay after some time has passed with tip not advancing.
     if (((!IsInitialBlockDownload())||IsArgSet("-regtest")) && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
         GetMainSignals().NewPoWValidBlock(pindex, pblock);
@@ -4351,7 +4351,7 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
         return;
     }
 
-    //fixme: (2.2) - Look closer into this - unclear what behaviour should be if there is SPV but no wallet (or if it should be allowed at all?)
+    //fixme: (UNITY) (SPV) - Look closer into this - unclear what behaviour should be if there is SPV but no wallet (or if it should be allowed at all?)
     #ifdef ENABLE_WALLET
     if (pactiveWallet)
     {
@@ -4365,7 +4365,7 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
             forAccount->GetKeys(setAddresses);
             for (const auto& key : setAddresses)
             {
-                //fixme: (2.1) Alter the blockfilter to use just the keys instead of the full script
+                //fixme: (PHASE4) Alter the blockfilter to use just the keys instead of the full script
                 //This will be more efficient in terms of space and time and simplify code like this
                 CScript searchScript = CScript() << OP_DUP << OP_HASH160 << ToByteVector(key) << OP_EQUALVERIFY << OP_CHECKSIG;
                 std::vector<unsigned char> searchData(searchScript.begin(), searchScript.end());
@@ -4437,7 +4437,7 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
 
         ComputeNewFilterRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft);
 
-        //fixme: (2.2) We don't always necessarily need to go back an entire checkpoint.
+        //fixme: (UNITY) (SPV) We don't always necessarily need to go back an entire checkpoint.
         // We could instead look at difference in time between original birth date and checkpoint to see if its necessary
         // Or alternatively we could just skip delta checks in the rare case where it isn't etc.
         // However if checkpoint gaps are small enough it doesn't matter, so this is a very minor issue and possibly not worth further effort

@@ -61,7 +61,7 @@ TransactionView::TransactionView(QWidget *parent)
     QHBoxLayout *hlayout = new QHBoxLayout();
     hlayout->setContentsMargins(0,0,0,0);
 
-    //fixme: (WATCHONLY)
+    //fixme: (FUT) (WATCH_ONLY)
     /*watchOnlyWidget = new QComboBox(this);
     watchOnlyWidget->setFixedWidth(24);
     watchOnlyWidget->addItem("", TransactionFilterProxy::WatchOnlyFilter_All);
@@ -418,7 +418,7 @@ void TransactionView::contextualMenu(const QPoint &point)
     if (selection.empty())
         return;
 
-    //fixme: (2.1) relook at all right click items wholistically
+    //fixme: (FUT) relook at all right click items wholistically
     bool canEditLabel = true;
     int transactionType = selection.at(0).data(TransactionTableModel::TypeRole).toInt();
     switch (transactionType)

@@ -161,7 +161,7 @@ void setupGuldenURLEntryWidget(QValidatedLineEdit *widget, QWidget *parent)
 #if QT_VERSION >= 0x040700
     widget->setPlaceholderText(QObject::tr("Enter a Gulden URL"));
 #endif
-    //fixme: (2.1) Implement validators here
+    //fixme: (FUT) Implement validators here
 }
 
 void setupAmountWidget(QLineEdit *widget, QWidget *parent)

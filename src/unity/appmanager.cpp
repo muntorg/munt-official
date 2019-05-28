@@ -425,7 +425,7 @@ SecureString GuldenAppManager::getRecoveryPassword()
 
 void GuldenAppManager::SecureWipeRecoveryDetails()
 {
-    //fixme: (2.1) Burn all seeds/passwords etc. here.
+    //fixme: (UNITY) Burn all seeds/passwords etc. here.
 }
 
 bool ShutdownRequested()

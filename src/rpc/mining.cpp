@@ -174,7 +174,7 @@ void InitRPCMining()
         return;
 
     // getblocktemplate mining rewards paid here:
-    //fixme: (Post-2.1)
+    //fixme: (PHASE5)
     pMiningKey = new CReserveKeyOrScript(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_EXTERNAL);
     #else
 	return;
@@ -592,7 +592,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 CCoinsViewCache viewNew(pcoinsTip);
                 CBlockIndex* pindexPrev_ = nullptr;
                 CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(chainActive, pIndexMiningTip, 1), pIndexMiningTip, pindexPrev_);
-                //fixme: (2.0.1) error handling.
+                //fixme: (FUT) (HIGH) error handling.
                 assert(pindexPrev_);
                 ForceActivateChain(pindexPrev_, nullptr, state, Params(), tempChain, viewNew);
 
@@ -780,7 +780,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         unsigned int index_in_template = i - 1; // i >= 1 guaranteed here
         if (index_in_template >= pblocktemplate->vTxFees.size())
         {
-            //fixme: (2.1) remove
+            //fixme: (PHASE5) remove
             entry.push_back(Pair("fee", 0));
         }
         else
@@ -789,7 +789,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         }
         if (index_in_template >= pblocktemplate->vTxSigOpsCost.size())
         {
-            //fixme: (2.1) remove
+            //fixme: (PHASE5) remove
             entry.push_back(Pair("sigops", 0));
             entry.push_back(Pair("weight", 0));
         }
@@ -887,17 +887,17 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHashPoW2().GetHex() + i64tostr(nTransactionsUpdatedLast)));
     result.push_back(Pair("target", hashTarget.GetHex()));
     result.push_back(Pair("mintime", (int64_t)std::max(pindexPrev->GetMedianTimePastWitness()+1, GetTime())));
-    //fixme: (Post-2.1) - Implement 'maxtime' here?
+    //fixme: (PHASE5) - Implement 'maxtime' here?
     result.push_back(Pair("mutable", aMutable));
     result.push_back(Pair("noncerange", "00000000ffffffff"));
     int64_t nSigOpLimit = MAX_BLOCK_SIGOPS_COST;
     result.push_back(Pair("sigoplimit", nSigOpLimit));
 
-    //fixme: (2.1) Double check this doesn't result in miners mining smaller blocks or anything strange
+    //fixme: (PHASE4) Double check this doesn't result in miners mining smaller blocks or anything strange
     result.push_back(Pair("sizelimit", (int64_t)MAX_BLOCK_SERIALIZED_SIZE));
     result.push_back(Pair("weightlimit", (int64_t)MAX_BLOCK_WEIGHT));
 
-    //fixme: (2.1) remove
+    //fixme: (PHASE4) remove
     result.push_back(Pair("pow2_aux1", HexStr(witnessCoinbaseHex)));
     result.push_back(Pair("pow2_aux2", HexStr(witnessSubsidyHex)));
     result.push_back(Pair("pow2_subsidy", amountPoW2Subsidy));

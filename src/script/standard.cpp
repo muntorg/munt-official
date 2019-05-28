@@ -72,7 +72,7 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
         return true;
     }
 
-    //fixme: (2.1) We can remove this logic after 2.1 release.
+    //fixme: (PHASE5) We can remove this logic after phase 4 activation.
     // Shortcut for PoW2 witness, which is more constrained than other types: 
     //OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
     if (scriptPubKey.IsPoW2Witness())
