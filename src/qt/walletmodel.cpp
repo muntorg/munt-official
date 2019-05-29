@@ -682,6 +682,12 @@ static void NotifyAccountDeleted(WalletModel *walletmodel, CWallet *wallet, CAcc
     }
 }
 
+static void NotifyAccountCompoundingChanged(WalletModel *walletmodel, CWallet *wallet, CAccount* account)
+{
+    (unused)wallet;
+    QMetaObject::invokeMethod(walletmodel, "accountCompoundingChanged",  Qt::QueuedConnection, Q_ARG(CAccount*, account));
+}
+
 
 static void ShowProgress(WalletModel *walletmodel, const std::string &title, int nProgress)
 {
@@ -716,6 +722,7 @@ void WalletModel::subscribeToCoreSignals()
     wallet->NotifyActiveAccountChanged.connect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
     wallet->NotifyAccountAdded.connect(boost::bind(NotifyAccountAdded, this, _1, _2));
     wallet->NotifyAccountDeleted.connect(boost::bind(NotifyAccountDeleted, this, _1, _2));
+    wallet->NotifyAccountCompoundingChanged.connect(boost::bind(NotifyAccountCompoundingChanged, this, _1, _2));
     wallet->ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
     wallet->NotifyWatchonlyChanged.connect(boost::bind(NotifyWatchonlyChanged, this, _1));
 }
@@ -747,6 +754,7 @@ void WalletModel::unsubscribeFromCoreSignals()
         wallet->NotifyActiveAccountChanged.disconnect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
         wallet->NotifyAccountAdded.disconnect(boost::bind(NotifyAccountAdded, this, _1, _2));
         wallet->NotifyAccountDeleted.disconnect(boost::bind(NotifyAccountDeleted, this, _1, _2));
+        wallet->NotifyAccountCompoundingChanged.disconnect(boost::bind(NotifyAccountCompoundingChanged, this, _1, _2));
         wallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
         wallet->NotifyWatchonlyChanged.disconnect(boost::bind(NotifyWatchonlyChanged, this, _1));
         LogPrintf("WalletModel::~unsubscribeFromCoreSignals - done disconnecting signals\n");

@@ -769,6 +769,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
             }
             else
             {
+                //fixme: (PHASE5) - Compounding (via RPC at least) is not a binary setting, so display this as semi checked (or something else) when its in a non binary state.
                 ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
                 uint64_t nTotalNetworkWeight = 0;
@@ -1269,12 +1270,14 @@ void WitnessDialog::setModel(WalletModel* _model)
             ui->renewWitnessAccountTableView->setModel(proxyFilterByBalanceRenewSorted);
 
             connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+            connect( _model, SIGNAL( accountCompoundingChanged(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         }
     }
     else if(model)
     {
         filter.reset(nullptr);
         disconnect( model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( update() ));
+        disconnect( model, SIGNAL( accountCompoundingChanged(CAccount*) ), this , SLOT( update() ));
         model = nullptr;
     }
 }

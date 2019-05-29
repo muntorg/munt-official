@@ -321,5 +321,8 @@ public:
 
     // Currently active account changed
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyActiveAccountChanged;
+
+    // Account compound setting changed
+    boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountCompoundingChanged;
 };
 #endif // GULDEN_WALLET_GULDEN_H

@@ -1091,7 +1091,10 @@ CAmount CAccount::getCompounding() const
 
 void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
 {
-    //fixme: (PHASE4) Signal UI to update compound checkbox to reflect changes.
+    if (pactiveWallet)
+    {
+        dynamic_cast<CGuldenWallet*>(pactiveWallet)->NotifyAccountCompoundingChanged(pactiveWallet, this);
+    }
     compoundEarnings = compoundAmount_;
     if (Db)
     {

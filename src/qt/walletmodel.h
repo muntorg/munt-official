@@ -352,6 +352,7 @@ Q_SIGNALS:
     void accountWarningChanged(CAccount* account);
     void accountAdded(CAccount* account);
     void accountDeleted(CAccount* account);
+    void accountCompoundingChanged(CAccount* account);
 
 public Q_SLOTS:
     /* Wallet status might have changed */
