@@ -87,7 +87,7 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     static const int64_t nDrift   = 1;
     static int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
     static int64_t nLongTimeStep  = nDrift * 60;
-    while (true)
+    while (true && (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1))
     {
         int64_t nNumMissedSteps = 0;
         if ((pblock->nTime - pindexPrev->GetBlockTime()) > nLongTimeLimit)
