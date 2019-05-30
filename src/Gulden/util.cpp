@@ -236,6 +236,8 @@ bool IsPow2Phase4Active(const CBlockIndex* pIndex, const CChainParams& chainpara
 
     // Optimisation - If we have never activated phase 3 then phase 4 can't possibly be active either.
     if (phase3ActivationHash == uint256())
+        phase3ActivationHash = ppow2witdbview->GetPhase3ActivationHash();
+    if (phase3ActivationHash == uint256())
         return false;
 
     // Now we try make use of the activation hash (if phase 3 is already active) to speed up testing.
