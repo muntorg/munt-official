@@ -1,6 +1,10 @@
 2.1.0.6
 
 CORE - Fix a rare issue where witnessing devices would fail to witness due to not completing a proper rescan after importing a witness address.
+CORE - Add riscv to list of supported architectures
+CORE - Update all libraries to latest versions.
+CORE - Improvements to transaction broadcasting.
+RPC - New command "getaccountaddress" to get current receiving address (as would be displayed in UI) for an account.
 
 
 
