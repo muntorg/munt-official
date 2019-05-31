@@ -1,20 +1,11 @@
-2.1.0.6
-
-CORE - Fix a rare issue where witnessing devices would fail to witness due to not completing a proper rescan after importing a witness address.
-CORE - Add riscv to list of supported architectures
-CORE - Update all libraries to latest versions.
-CORE - Improvements to transaction broadcasting.
-RPC - New command "getaccountaddress" to get current receiving address (as would be displayed in UI) for an account.
-
-
-
-
 2.1.0.5
 
+CORE - Fix a rare issue where witnessing devices would fail to witness due to not completing a proper rescan after importing a witness address.
 CORE - Improve transaction propagation speed by pushing mempool to new connections
 CORE - Introduce builds of the UI client for all architectures ("arm" and "aarch64" previously did not have)
 CORE - Introduce "riscv64" to the list of officially supported architectures.
 CORE - Introduce AppImage installers for "arm" and "aarch64"
+RPC - New command "getaccountaddress" to get current receiving address (as would be displayed in UI) for an account.
 MISC - Update to newer version of Qt which should improve various minor UI aspects.
 
 
