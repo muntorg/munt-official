@@ -34,7 +34,7 @@ $(package)_extra_sources += $($(package)_qwt_file_name)
 $(package)_patch_qwt_pc_files = find $($(package)_staging_dir) -name *Qt*Qwt*.pc | xargs sed -ri 's|$($(package)_build_dir)/lib|$$$${libdir}|g' &&
 
 ifneq ($(build_os),mingw32)
-$(package)_install_root_arg INSTALL_ROOT=$($(package)_staging_dir)
+$(package)_install_root_arg = INSTALL_ROOT=$($(package)_staging_dir)
 endif
 
 define $(package)_set_vars
