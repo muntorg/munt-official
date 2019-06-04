@@ -33,14 +33,16 @@ $(package)_extra_sources += $($(package)_qwt_file_name)
 #Work around for a mingw issue where the .pc files contain an incorrect path inside Libs.private
 $(package)_patch_qwt_pc_files = find $($(package)_staging_dir) -name *Qt*Qwt*.pc | xargs sed -ri 's|$($(package)_build_dir)/lib|$$$${libdir}|g' &&
 
+ifneq ($(build_os),mingw32)
+$(package)_install_root_arg INSTALL_ROOT=$($(package)_staging_dir)
+endif
+
 define $(package)_set_vars
 $(package)_config_opts_release = -release
 $(package)_config_opts_debug = -debug
-$(package)_config_opts += -bindir $(build_prefix)/bin
 $(package)_config_opts += -c++std c++11
 $(package)_config_opts += -confirm-license
 $(package)_config_opts += -dbus-runtime
-$(package)_config_opts += -hostprefix $(build_prefix)
 $(package)_config_opts += -no-compile-examples
 $(package)_config_opts += -no-cups
 $(package)_config_opts += -no-egl
@@ -79,7 +81,6 @@ else
 $(package)_config_opts += -pch
 endif
 $(package)_config_opts += -pkg-config
-$(package)_config_opts += -prefix $(host_prefix)
 $(package)_config_opts += -qt-libpng
 $(package)_config_opts += -qt-libjpeg
 $(package)_config_opts += -qt-pcre
@@ -129,8 +130,15 @@ $(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
 $(package)_config_opts_riscv64_linux = -platform linux-g++ -xplatform gulden-linux-g++
 
 ifeq ($(build_os),mingw32)
+$(package)_config_opts += -bindir $($(package)_staging_prefix_dir)/native/bin
+$(package)_config_opts += -hostprefix $($(package)_staging_prefix_dir)/native
+$(package)_config_opts += -prefix $($(package)_staging_prefix_dir)
+$(package)_config_opts += -extprefix $($(package)_staging_prefix_dir)
 $(package)_config_opts_mingw32 = -no-opengl -platform win32-g++
 else
+$(package)_config_opts += -bindir $(build_prefix)/bin
+$(package)_config_opts += -hostprefix $(build_prefix)
+$(package)_config_opts += -prefix $(host_prefix)
 $(package)_config_opts_mingw32 = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
 endif
 
@@ -236,10 +244,10 @@ define $(package)_build_cmds
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
-  $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
+  $(MAKE) -C src $($(package)_install_root_arg) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
+  $(MAKE) -C qttools/src/linguist/lrelease $($(package)_install_root_arg) install_target && \
+  $(MAKE) -C qttools/src/linguist/lupdate $($(package)_install_root_arg) install_target && \
+  $(MAKE) -C qttranslations $($(package)_install_root_arg) install_subtargets && \
   $(MAKE) -C qwt INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $($(package)_patch_qwt_pc_files) \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
