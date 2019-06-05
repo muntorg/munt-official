@@ -13,32 +13,30 @@ Binaries
 -----
 There are binaries for every release, please reconsider your need to build and unless you have a very good reason to do so rather just download these.
 Latest binaries can always be found here: https://github.com/Gulden/gulden-official/releases
-Download the latest linux*.tar.gz extract it and simply copy GuldenD out of it instead of going through the unnecessary hassle of building.
+Download the latest linux\*.tar.gz extract it and simply copy GuldenD out of it instead of going through the unnecessary hassle of building.
 
 
 Installation of msys2
 -----
 * Download and run the 32 bit msys installer - www.msys2.org
-* Open the msys2 32 bit console
-* pacman -Syu
+* Open the *MSYS2 MinGW 32-bit* console (also called *Mingw-w64 32 bit* in the Mintty launcher)
+* `pacman -Syu`
 * Close and restart the console
-* pacman -Su
-* pacman -S --noconfirm mingw-w64-i686-toolchain mingw-w64-i686-python2 git make patch tar autoconf automake libtool
+* `pacman -Su`
+* `pacman -S --noconfirm mingw-w64-i686-toolchain mingw-w64-i686-python2 git make patch tar autoconf automake libtool`
 
 
 Building under msys2
 -----
-* cd /
-* git clone https://github.com/Gulden/gulden-official
-* cd gulden-official/depends
-* make EXTRA_PACKAGES='qrencode protobuf native_protobuf'
-* cp -rf C:/go/depends/work/staging/i686-pc-mingw32/qt/5.9.7-b11c9ab8f4b/msys32/go/depends/i686-pc-mingw32/* i686-pc-mingw32/
-* cd ..
-* ./autogen.sh
-* mkdir buildwin
-* cd buildwin
-* CONFIG_SITE="$PWD/../depends/i686-pc-mingw32/share/config.site" CXXFLAGS="-I$PWD/../depends/i686-pc-mingw32/include -DZMQ_STATIC" LDFLAGS="-L$PWD/../depends/i686-pc-mingw32/lib" ../configure --prefix=$PWD/../depends/i686-pc-mingw32 --with-protoc-bindir=$PWD/../depends/i686-pc-mingw32/native/bin
-* make
+* `git clone https://github.com/Gulden/gulden-official`
+* `cd gulden-official/depends`
+* `make`
+* `cd ..`
+* `./autogen.sh`
+* `mkdir buildwin`
+* `cd buildwin`
+* `CONFIG_SITE="$PWD/../depends/i686-pc-mingw32/share/config.site" CXXFLAGS="-I$PWD/../depends/i686-pc-mingw32/include -DZMQ_STATIC" LDFLAGS="-L$PWD/../depends/i686-pc-mingw32/lib" ../configure --prefix=$PWD/../depends/i686-pc-mingw32 --with-protoc-bindir=$PWD/../depends/i686-pc-mingw32/native/bin`
+* `make`
 
 
 Installation of WSL
