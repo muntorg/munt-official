@@ -33,6 +33,9 @@ $(package)_extra_sources += $($(package)_qwt_file_name)
 #Work around for a mingw issue where the .pc files contain an incorrect path inside Libs.private
 $(package)_patch_qwt_pc_files = find $($(package)_staging_dir) -name *Qt*Qwt*.pc | xargs sed -ri 's|$($(package)_build_dir)/lib|$$$${libdir}|g' &&
 
+# Fix paths in pkgconfig .pc files
+$(package)_fix_pkgconfig_paths = find $($(package)_staging_dir) -name *Qt*.pc | xargs sed -ri 's|$($(package)_staging_prefix_dir)|$(host_prefix)|g'
+
 ifneq ($(build_os),mingw32)
 $(package)_install_root_arg = INSTALL_ROOT=$($(package)_staging_dir)
 endif
@@ -250,6 +253,7 @@ define $(package)_stage_cmds
   $(MAKE) -C qttranslations $($(package)_install_root_arg) install_subtargets && \
   $(MAKE) -C qwt INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $($(package)_patch_qwt_pc_files) \
+  $($(package)_fix_pkgconfig_paths) && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
     cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
   fi
