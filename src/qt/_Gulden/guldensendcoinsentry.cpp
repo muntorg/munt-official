@@ -611,8 +611,9 @@ void GuldenSendCoinsEntry::setValue(const SendCoinsRecipient &value)
 {
     recipient = value;
 
-    /*if (recipient.paymentRequest.IsInitialized()) // payment request
+    if (recipient.paymentRequest.IsInitialized()) // payment request
     {
+        /*
         if (recipient.authenticatedMerchant.isEmpty()) // unauthenticated
         {
             ui->payTo_is->setText(recipient.address);
@@ -629,20 +630,30 @@ void GuldenSendCoinsEntry::setValue(const SendCoinsRecipient &value)
             ui->payAmount_s->setReadOnly(true);
             setCurrentWidget(ui->SendCoins_AuthenticatedPaymentRequest);
         }
+        */
     }
     else // normal payment
     {
-        // message
-        ui->messageTextLabel->setText(recipient.message);
-        ui->messageTextLabel->setVisible(!recipient.message.isEmpty());
-        ui->messageLabel->setVisible(!recipient.message.isEmpty());
+        // address
+        ui->receivingAddress->setText(recipient.address);
 
-        ui->addAsLabel->clear();
-        ui->payTo->setText(recipient.address); // this may set a label from addressbook
-        if (!recipient.label.isEmpty()) // if a label had been set from the addressbook, don't overwrite with an empty label
-            ui->addAsLabel->setText(recipient.label);
-        ui->payAmount->setValue(recipient.amount);
-    }*/
+        // label & message
+        if (recipient.label.isEmpty())
+            ui->receivingAddressLabel->clear();
+        else
+            ui->receivingAddressLabel->setText(recipient.label);
+        if (!recipient.message.isEmpty()) {
+            QString t = ui->receivingAddressLabel->text();
+            ui->receivingAddressLabel->setText((t.isEmpty() ? "" : t + " ") + recipient.message);
+        }
+
+        // amount
+        ui->payAmount->setAmount(5000000);
+        if (recipient.amount > 0)
+            ui->payAmount->setAmount(recipient.amount);
+        else
+            ui->payAmount->clear();
+    }
 }
 
 void GuldenSendCoinsEntry::setAmount(const CAmount amount)
