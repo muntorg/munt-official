@@ -316,6 +316,8 @@ private:
 
     QTimer *pollTimer;
 
+    std::list<boost::signals2::connection> coreSignalConnections;
+
     void subscribeToCoreSignals();
     void checkBalanceChanged();
 

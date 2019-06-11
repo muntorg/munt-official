@@ -705,23 +705,35 @@ void WalletModel::subscribeToCoreSignals()
     if (!wallet)
         return;
 
-    // Connect signals to wallet
+    // Connect signals to wallet, using coreSignalConnections to keep track of all signals2 connections made.
     //fixme: (FUT) (MED) - Find a better way to do this instead of connecting to a specific account
     if (wallet->mapAccounts.size() > 0)
     {
-        wallet->activeAccount->externalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
-        wallet->activeAccount->internalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+        coreSignalConnections.push_back(
+                    wallet->activeAccount->externalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1)));
+        coreSignalConnections.push_back(
+                    wallet->activeAccount->internalKeyStore.NotifyStatusChanged.connect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1)));
     }
-    wallet->NotifyAddressBookChanged.connect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
-    wallet->NotifyTransactionChanged.connect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3, _4));
-    wallet->NotifyAccountNameChanged.connect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
-    wallet->NotifyAccountWarningChanged.connect(boost::bind(NotifyAccountWarningChanged, this, _1, _2));
-    wallet->NotifyActiveAccountChanged.connect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
-    wallet->NotifyAccountAdded.connect(boost::bind(NotifyAccountAdded, this, _1, _2));
-    wallet->NotifyAccountDeleted.connect(boost::bind(NotifyAccountDeleted, this, _1, _2));
-    wallet->NotifyAccountCompoundingChanged.connect(boost::bind(NotifyAccountCompoundingChanged, this, _1, _2));
-    wallet->ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
-    wallet->NotifyWatchonlyChanged.connect(boost::bind(NotifyWatchonlyChanged, this, _1));
+    coreSignalConnections.push_back(
+                wallet->NotifyAddressBookChanged.connect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6)));
+    coreSignalConnections.push_back(
+                wallet->NotifyTransactionChanged.connect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3, _4)));
+    coreSignalConnections.push_back(
+                wallet->NotifyAccountNameChanged.connect(boost::bind(NotifyAccountNameChanged, this, _1, _2)));
+    coreSignalConnections.push_back(
+                wallet->NotifyAccountWarningChanged.connect(boost::bind(NotifyAccountWarningChanged, this, _1, _2)));
+    coreSignalConnections.push_back(
+                wallet->NotifyActiveAccountChanged.connect(boost::bind(NotifyActiveAccountChanged, this, _1, _2)));
+    coreSignalConnections.push_back(
+                wallet->NotifyAccountAdded.connect(boost::bind(NotifyAccountAdded, this, _1, _2)));
+    coreSignalConnections.push_back(
+                wallet->NotifyAccountDeleted.connect(boost::bind(NotifyAccountDeleted, this, _1, _2)));
+    coreSignalConnections.push_back(
+                wallet->NotifyAccountCompoundingChanged.connect(boost::bind(NotifyAccountCompoundingChanged, this, _1, _2)));
+    coreSignalConnections.push_back(
+                wallet->ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2)));
+    coreSignalConnections.push_back(
+                wallet->NotifyWatchonlyChanged.connect(boost::bind(NotifyWatchonlyChanged, this, _1)));
 }
 
 void WalletModel::unsubscribeFromCoreSignals()
@@ -735,25 +747,12 @@ void WalletModel::unsubscribeFromCoreSignals()
         transactionTableModel->unsubscribeFromCoreSignals();
     if (wallet)
     {
-        LogPrintf("WalletModel::~unsubscribeFromCoreSignals - disconnect account signals\n");
-        //fixme: (FUT) (MED) - Find a better way to do this instead of connecting to a specific account
-        if (wallet->activeAccount)
-        {
-            wallet->activeAccount->externalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
-            wallet->activeAccount->internalKeyStore.NotifyStatusChanged.disconnect(boost::bind(&NotifyKeyStoreStatusChanged, this, _1));
+        // Disconnect all signals2 kept in coreSignalConnections
+        for (auto& connection: coreSignalConnections) {
+            connection.disconnect();
         }
+        coreSignalConnections.clear();
 
-        LogPrintf("WalletModel::~unsubscribeFromCoreSignals - disconnect wallet signals\n");
-        wallet->NotifyAddressBookChanged.disconnect(boost::bind(NotifyAddressBookChanged, this, _1, _2, _3, _4, _5, _6));
-        wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3, _4));
-        wallet->NotifyAccountNameChanged.disconnect(boost::bind(NotifyAccountNameChanged, this, _1, _2));
-        wallet->NotifyAccountWarningChanged.disconnect(boost::bind(NotifyAccountWarningChanged, this, _1, _2));
-        wallet->NotifyActiveAccountChanged.disconnect(boost::bind(NotifyActiveAccountChanged, this, _1, _2));
-        wallet->NotifyAccountAdded.disconnect(boost::bind(NotifyAccountAdded, this, _1, _2));
-        wallet->NotifyAccountDeleted.disconnect(boost::bind(NotifyAccountDeleted, this, _1, _2));
-        wallet->NotifyAccountCompoundingChanged.disconnect(boost::bind(NotifyAccountCompoundingChanged, this, _1, _2));
-        wallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
-        wallet->NotifyWatchonlyChanged.disconnect(boost::bind(NotifyWatchonlyChanged, this, _1));
         LogPrintf("WalletModel::~unsubscribeFromCoreSignals - done disconnecting signals\n");
     }
 }
