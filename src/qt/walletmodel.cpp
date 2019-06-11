@@ -55,7 +55,6 @@ WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsM
 , accountTableModel(nullptr)
 , transactionTableModel(nullptr)
 , recentRequestsTableModel(nullptr)
-, cachedEncryptionStatus(Unencrypted)
 , patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$")
 {
     fHaveWatchOnly = wallet->HaveWatchOnly();
@@ -161,9 +160,7 @@ WalletBalances WalletModel::getBalances() const
 void WalletModel::updateStatus()
 {
     EncryptionStatus newEncryptionStatus = getEncryptionStatus();
-
-    if(cachedEncryptionStatus != newEncryptionStatus)
-        Q_EMIT encryptionStatusChanged(newEncryptionStatus);
+    Q_EMIT encryptionStatusChanged(newEncryptionStatus);
 }
 
 void WalletModel::pollBalanceChanged()

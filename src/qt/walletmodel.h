@@ -312,7 +312,6 @@ private:
     CAmount cachedWatchOnlyBalance = -1;
     CAmount cachedWatchUnconfBalance = -1;
     CAmount cachedWatchImmatureBalance = -1;
-    EncryptionStatus cachedEncryptionStatus;
     int cachedNumBlocks;
 
     QTimer *pollTimer;
