@@ -317,15 +317,9 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
         return;
     }
 
-    std::function<void (void)> successCallback = [=](){doRequestRenewWitness(funderAccount, targetWitnessAccount);};
-    if (pactiveWallet->IsLocked())
-    {
-        uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to renew witness"), successCallback);
-    }
-    else
-    {
-        successCallback();
-    }
+    unlockAndRun(_("Wallet unlock required to renew witness"), [=](){
+        doRequestRenewWitness(funderAccount, targetWitnessAccount);
+    });
 }
 
 void GUI::requestFundWitness(CAccount* funderAccount)
@@ -417,6 +411,18 @@ void GUI::requestEmptyWitness()
         QString message = tr("The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.");
         QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
         d->exec();
+    }
+}
+
+void GUI::unlockAndRun(std::string reason, std::function<void (void)> callback)
+{
+    if (pactiveWallet->IsLocked())
+    {
+        uiInterface.RequestUnlockWithCallback(pactiveWallet, reason, callback);
+    }
+    else
+    {
+        callback();
     }
 }
 
@@ -1627,16 +1633,9 @@ void GUI::promptImportPrivKey(const QString accountName)
     {
         // Temporarily unlock for account generation.
         SecureString encodedPrivKey = dlg.getPrivKey();
-        std::function<void (void)> successCallback = [=](){ pactiveWallet->importPrivKey(encodedPrivKey, adjustedAccountName); };
-        if (pactiveWallet->IsLocked())
-        {
-            uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import private key"), successCallback);
-        }
-        else
-        {
-            successCallback();
-        }
-        return;
+        unlockAndRun(_("Wallet unlock required to import private key"), [=](){
+            pactiveWallet->importPrivKey(encodedPrivKey, adjustedAccountName);
+        });
     }
 }
 
@@ -1652,15 +1651,9 @@ void GUI::promptImportWitnessOnlyAccount(QString accountName)
     {
         // Temporarily unlock for account generation.
         SecureString witnessURL = dlg.getWitnessURL();
-        std::function<void (void)> successCallback = [=](){pactiveWallet->importWitnessOnlyAccountFromURL(witnessURL, accountName.toStdString());};
-        if (pactiveWallet->IsLocked())
-        {
-            uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required to import witness-only account"), successCallback);
-        }
-        else
-        {
-            successCallback();
-        }
+        unlockAndRun(_("Wallet unlock required to import witness-only account"), [=](){
+            pactiveWallet->importWitnessOnlyAccountFromURL(witnessURL, accountName.toStdString());
+        });
     }
 }
 
@@ -1882,8 +1875,7 @@ void GUI::acceptNewAccount()
         //This should tie in better with the shadow thread..
 
         // Temporarily unlock for account generation.
-        std::function<void (void)> successCallback = [=]()
-        {
+        unlockAndRun(_("Wallet unlock required for account creation"), [=](){
             CAccount* newAccount = nullptr;
             if (newAccountType == NewAccountType::FixedDeposit)
             {
@@ -1912,16 +1904,7 @@ void GUI::acceptNewAccount()
             {
                 gotoReceiveCoinsPage();
             }
-        };
-        if (pactiveWallet->IsLocked())
-        {
-            uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for account creation"), successCallback);
-        }
-        else
-        {
-            successCallback();
-        }
-        return;
+        });
     }
     else
     {
