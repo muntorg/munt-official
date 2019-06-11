@@ -86,6 +86,13 @@ public:
             if (!seedPair.second->Lock())
                 ret = false;
         }
+
+        // Only notify changed locking state if the locking actually changed, that is:
+        // - actaul locking took place, it is NOT delayed
+        // - locking succeeded
+        if (ret)
+            NotifyLockingChanged(true);
+
         return ret;
     }
 
@@ -118,6 +125,11 @@ public:
                 ret = false;
             }
         }
+
+        // Only notify changed locking state if unlocking succeeded
+        if (ret)
+            NotifyLockingChanged(false);
+
         return ret;
     }
 
@@ -324,5 +336,8 @@ public:
 
     // Account compound setting changed
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountCompoundingChanged;
+
+    /** Locking state changed */
+    boost::signals2::signal<void (bool isLocked)> NotifyLockingChanged;
 };
 #endif // GULDEN_WALLET_GULDEN_H

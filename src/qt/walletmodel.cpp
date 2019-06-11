@@ -734,6 +734,8 @@ void WalletModel::subscribeToCoreSignals()
                 wallet->ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2)));
     coreSignalConnections.push_back(
                 wallet->NotifyWatchonlyChanged.connect(boost::bind(NotifyWatchonlyChanged, this, _1)));
+    coreSignalConnections.push_back(
+                wallet->NotifyLockingChanged.connect([=](bool isLocked) { QMetaObject::invokeMethod(this, "updateStatus", Qt::QueuedConnection); }));
 }
 
 void WalletModel::unsubscribeFromCoreSignals()
