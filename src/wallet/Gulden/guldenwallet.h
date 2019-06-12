@@ -66,35 +66,7 @@ public:
     typedef std::multimap<int64_t, TxPair > TxItems;
     TxItems wtxOrdered;
 
-    virtual bool Lock() const
-    {
-        LOCK(cs_wallet);
-        if (delayLock || wantDelayLock)
-        {
-            didDelayLock = true;
-            return true;
-        }
-
-        bool ret = true;
-        for (auto accountPair : mapAccounts)
-        {
-            if (!accountPair.second->Lock())
-                ret = false;
-        }
-        for (auto seedPair : mapSeeds)
-        {
-            if (!seedPair.second->Lock())
-                ret = false;
-        }
-
-        // Only notify changed locking state if the locking actually changed, that is:
-        // - actaul locking took place, it is NOT delayed
-        // - locking succeeded
-        if (ret)
-            NotifyLockingChanged(true);
-
-        return ret;
-    }
+    bool Lock() const;
 
     bool UnlockWithMasterKey(const CKeyingMaterial& vMasterKeyIn) const
     {

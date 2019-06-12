@@ -1198,6 +1198,37 @@ bool CGuldenWallet::LoadHDKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKe
     return mapAccounts[getUUIDFromString(forAccount)]->AddKeyPubKey(HDKeyIndex, pubkey, keyChain);
 }
 
+
+bool CGuldenWallet::Lock() const
+{
+    LOCK(cs_wallet);
+    if (delayLock || wantDelayLock)
+    {
+        didDelayLock = true;
+        return true;
+    }
+
+    bool ret = true;
+    for (auto accountPair : mapAccounts)
+    {
+        if (!accountPair.second->Lock())
+            ret = false;
+    }
+    for (auto seedPair : mapSeeds)
+    {
+        if (!seedPair.second->Lock())
+            ret = false;
+    }
+
+    // Only notify changed locking state if the locking actually changed, that is:
+    // - actaul locking took place, it is NOT delayed
+    // - locking succeeded
+    if (ret)
+        NotifyLockingChanged(true);
+
+    return ret;
+}
+
 CPubKey CWallet::GenerateNewKey(CAccount& forAccount, int keyChain)
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
