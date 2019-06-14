@@ -317,7 +317,7 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
         return;
     }
 
-    unlockAndRun(_("Wallet unlock required to renew witness"), [=](){
+    pactiveWallet->BeginUnlocked(_("Wallet unlock required to renew witness"), [=](){
         doRequestRenewWitness(funderAccount, targetWitnessAccount);
     });
 }
@@ -412,11 +412,6 @@ void GUI::requestEmptyWitness()
         QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
         d->exec();
     }
-}
-
-void GUI::unlockAndRun(std::string reason, std::function<void (void)> callback)
-{
-    pactiveWallet->BeginUnlocked(reason, callback);
 }
 
 void GUI::setOptionsModel(OptionsModel* optionsModel_)
@@ -1626,7 +1621,7 @@ void GUI::promptImportPrivKey(const QString accountName)
     {
         // Temporarily unlock for account generation.
         SecureString encodedPrivKey = dlg.getPrivKey();
-        unlockAndRun(_("Wallet unlock required to import private key"), [=](){
+        pactiveWallet->BeginUnlocked(_("Wallet unlock required to import private key"), [=](){
             pactiveWallet->importPrivKey(encodedPrivKey, adjustedAccountName);
             // transfer ownership of unlock session to shadow thread
             LOCK(pactiveWallet->cs_wallet);
@@ -1647,7 +1642,7 @@ void GUI::promptImportWitnessOnlyAccount(QString accountName)
     {
         // Temporarily unlock for account generation.
         SecureString witnessURL = dlg.getWitnessURL();
-        unlockAndRun(_("Wallet unlock required to import witness-only account"), [=](){
+        pactiveWallet->BeginUnlocked(_("Wallet unlock required to import witness-only account"), [=](){
             pactiveWallet->importWitnessOnlyAccountFromURL(witnessURL, accountName.toStdString());
             // transfer ownership of unlock session to shadow thread
             LOCK(pactiveWallet->cs_wallet);
@@ -1874,7 +1869,7 @@ void GUI::acceptNewAccount()
         //This should tie in better with the shadow thread..
 
         // Temporarily unlock for account generation.
-        unlockAndRun(_("Wallet unlock required for account creation"), [=](){
+        pactiveWallet->BeginUnlocked(_("Wallet unlock required for account creation"), [=](){
             CAccount* newAccount = nullptr;
             if (newAccountType == NewAccountType::FixedDeposit)
             {

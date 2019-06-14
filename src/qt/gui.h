@@ -406,12 +406,6 @@ private Q_SLOTS:
     void requestRenewWitness(CAccount* funderAccount);
     void requestFundWitness(CAccount* funderAccount);
     void requestEmptyWitness();
-
-    /**
-     * Unlock (if wallet is locked) and run callback(), if not locked run callback() immediatly.
-     * Silently pass if unlocking fails.
-    */
-    void unlockAndRun(std::string reason, std::function<void (void)> callback);
 };
 
 #endif // GULDEN_QT_GUI_H
