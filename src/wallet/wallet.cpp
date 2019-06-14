@@ -314,8 +314,12 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase)
             }
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 continue; // try another master key
-            if (IsLocked())
-                return UnlockWithMasterKey(_vMasterKey);
+            if (IsLocked()) {
+                bool unlocked = UnlockWithMasterKey(_vMasterKey);
+                if (unlocked)
+                    fAutoLock = false;
+                return unlocked;
+            }
             else
                 return true;
         }
@@ -2724,4 +2728,79 @@ int64_t CWallet::birthTime() const
     birthTime = std::min(tipTime, firstTransactionTime);
 
     return birthTime;
+}
+
+void CWallet::BeginUnlocked(std::string reason, std::function<void (void)> callback)
+{
+    // scoped because of cs_wallet
+    {
+        LOCK(cs_wallet);
+
+        bool beganLocked = IsLocked();
+
+        // try to unlock
+        if (beganLocked) {
+            uiInterface.RequestUnlockWithCallback(this, reason, [=]() {
+                // async callback, so the scoped lock above is already destructed, need to lock here again
+                {
+                    LOCK(cs_wallet);
+
+                    // begin session
+                    nUnlockSessions++;
+
+                    // when locked before the session, enable auto lock when all sessions end
+                    if (beganLocked)
+                        fAutoLock = true;
+                }
+
+                // execute callback without cs_wallet
+                callback();
+            });
+            return;
+        }
+
+        // begin session
+        nUnlockSessions++;
+
+        // when locked before the session enable, auto lock when all sessions end
+        if (beganLocked)
+            fAutoLock = true;
+    }
+
+    // execute callback without cs_wallet
+    callback();
+}
+
+bool CWallet::BeginUnlocked(const SecureString& strWalletPassphrase)
+{
+    LOCK(cs_wallet);
+
+    bool beganLocked = IsLocked();
+
+    // try to unlock
+    if (beganLocked) {
+        if (!Unlock(strWalletPassphrase))
+            return false;
+    }
+
+    // begin session
+    nUnlockSessions++;
+
+    // when locked before the session enable auto lock when all sessions end
+    if (beganLocked)
+        fAutoLock = true;
+
+    return true;
+}
+
+void CWallet::EndUnlocked()
+{
+    LOCK(cs_wallet);
+
+    assert(nUnlockSessions > 0);
+
+    nUnlockSessions--;
+    if (nUnlockSessions == 0 && fAutoLock) {
+        LockHard();
+    }
 }

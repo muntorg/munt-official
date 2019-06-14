@@ -416,14 +416,7 @@ void GUI::requestEmptyWitness()
 
 void GUI::unlockAndRun(std::string reason, std::function<void (void)> callback)
 {
-    if (pactiveWallet->IsLocked())
-    {
-        uiInterface.RequestUnlockWithCallback(pactiveWallet, reason, callback);
-    }
-    else
-    {
-        callback();
-    }
+    pactiveWallet->BeginUnlocked(reason, callback);
 }
 
 void GUI::setOptionsModel(OptionsModel* optionsModel_)
@@ -1635,6 +1628,9 @@ void GUI::promptImportPrivKey(const QString accountName)
         SecureString encodedPrivKey = dlg.getPrivKey();
         unlockAndRun(_("Wallet unlock required to import private key"), [=](){
             pactiveWallet->importPrivKey(encodedPrivKey, adjustedAccountName);
+            // transfer ownership of unlock session to shadow thread
+            LOCK(pactiveWallet->cs_wallet);
+            pactiveWallet->nUnlockedSessionsOwnedByShadow++;
         });
     }
 }
@@ -1653,6 +1649,9 @@ void GUI::promptImportWitnessOnlyAccount(QString accountName)
         SecureString witnessURL = dlg.getWitnessURL();
         unlockAndRun(_("Wallet unlock required to import witness-only account"), [=](){
             pactiveWallet->importWitnessOnlyAccountFromURL(witnessURL, accountName.toStdString());
+            // transfer ownership of unlock session to shadow thread
+            LOCK(pactiveWallet->cs_wallet);
+            pactiveWallet->nUnlockedSessionsOwnedByShadow++;
         });
     }
 }
@@ -1884,6 +1883,12 @@ void GUI::acceptNewAccount()
             else
             {
                 newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::Desktop);
+            }
+
+            {
+                // transfer ownership of unlock session to shadow thread
+                LOCK(pactiveWallet->cs_wallet);
+                pactiveWallet->nUnlockedSessionsOwnedByShadow++;
             }
 
             if (!newAccount)

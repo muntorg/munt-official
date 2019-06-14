@@ -66,7 +66,18 @@ public:
     typedef std::multimap<int64_t, TxPair > TxItems;
     TxItems wtxOrdered;
 
+    /**
+     * Lock wallet keys. If any unlock sessions are in progress the lock will be delayed until there are no
+     * open unlock sessions.
+     * @return succesfully locked wallet. This value seems of little use as it will always return true if locking is delayed.
+     */
     bool Lock() const;
+
+    /**
+     * Actual lock operation, unconditionally locking the wallet, ie. not depending on unlock sessions or anything.
+     */
+    bool LockHard() const;
+
 
     bool UnlockWithMasterKey(const CKeyingMaterial& vMasterKeyIn) const
     {
@@ -277,11 +288,8 @@ public:
     //! for wallet upgrade
     void ForceRewriteKeys(CAccount& forAccount);
 
-    // The 'shadow pool thread' sets delay lock true if it had a backlog of work it wants to do on the unlocked wallet
-    bool delayLock;
-    bool wantDelayLock;
-    mutable bool didDelayLock;
-
+    // for transfer of ownership of unlock sessions to the shadowpool thread, protected by cs_wallet
+    unsigned int nUnlockedSessionsOwnedByShadow;
 
     std::map<boost::uuids::uuid, CHDSeed*> mapSeeds;
     std::map<boost::uuids::uuid, CAccount*> mapAccounts;
@@ -311,5 +319,12 @@ public:
 
     /** Locking state changed */
     boost::signals2::signal<void (bool isLocked)> NotifyLockingChanged;
+
+protected:
+    // number of active unlocked sessions protected by cs_wallet
+    unsigned int nUnlockSessions;
+
+    // automatically lock when nUnlockSessions becomes 0
+    mutable bool fAutoLock;
 };
 #endif // GULDEN_WALLET_GULDEN_H

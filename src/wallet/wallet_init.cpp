@@ -25,6 +25,7 @@
 #include "spvscanner.h"
 #include <unity/appmanager.h>
 #include <Gulden/mnemonic.h>
+#include <future>
 
 CWallet::CWallet()
     : CGuldenWallet()
@@ -323,21 +324,18 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         {
             if (!walletInstance->activeAccount->IsHD() && !walletInstance->activeSeed)
             {
-                while (true)
-                {
-                    {
-                        LOCK(walletInstance->cs_wallet);
-                        if (!walletInstance->IsLocked())
-                            break;
-                        walletInstance->wantDelayLock = true;
-                        uiInterface.RequestUnlock(walletInstance, _("Wallet unlock required for wallet upgrade"));
-                    }
-                    MilliSleep(5000);
-                }
+                std::promise<void> promiseToUnlock;
+                walletInstance->BeginUnlocked(_("Wallet unlock required for wallet upgrade"), [&]() {
+                    promiseToUnlock.set_value();
+                });
+                promiseToUnlock.get_future().wait();
 
                 bool walletWasCrypted = walletInstance->activeAccount->externalKeyStore.IsCrypted();
                 {
                     LOCK(walletInstance->cs_wallet);
+
+                    // transfer unlock session ownership
+                    walletInstance->nUnlockedSessionsOwnedByShadow++;
 
                     //Force old legacy account to resave
                     {
@@ -394,21 +392,18 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         }
         else
         {
-            while (true)
-            {
-                {
-                    LOCK(walletInstance->cs_wallet);
-                    if (!walletInstance->IsLocked())
-                        break;
-                    walletInstance->wantDelayLock = true;
-                    uiInterface.RequestUnlock(walletInstance, _("Wallet unlock required for wallet upgrade"));
-                }
-                MilliSleep(5000);
-            }
+            std::promise<void> promiseToUnlock;
+            walletInstance->BeginUnlocked(_("Wallet unlock required for wallet upgrade"), [&]() {
+                promiseToUnlock.set_value();
+            });
+            promiseToUnlock.get_future().wait();
 
             bool walletWasCrypted = walletInstance->activeAccount->externalKeyStore.IsCrypted();
             {
                 LOCK(walletInstance->cs_wallet);
+
+                // transfer unlock session ownership
+                walletInstance->nUnlockedSessionsOwnedByShadow++;
 
                 //Force old legacy account to resave
                 {

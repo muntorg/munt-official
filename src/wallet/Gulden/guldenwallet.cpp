@@ -17,6 +17,9 @@
 
 bool fShowChildAccountsSeperately = false;
 
+// TODO: consider moving shadow thread functionality into wallet class to reduce usage of global pactiveWallet
+// and possibly make some members private.
+
 static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int& nNumNewAccountsAllocated, bool& tryLockWallet)
 {
     for (const auto& seedIter : pactiveWallet->mapSeeds)
@@ -110,8 +113,7 @@ static void ThreadShadowPoolManager()
             else if (!tryLockWallet)
             {
                 // If we reach here we need to unlock to generate more background shadow accounts.
-                // So signal that we would like an unlock.
-                pactiveWallet->wantDelayLock = true;
+                // So try to initiate an unlock session
                 tryLockWallet = false;
                 if (promptOnceForAccountGenerationUnlock)
                 {
@@ -122,8 +124,13 @@ static void ThreadShadowPoolManager()
                     //fixme: (FUT) (ACCOUNTS) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
                     // Might also want a "don't ask me this again" checkbox on prompt etc.
                     // Discuss with UI team and reconsider how to handle this.
-                    std::function<void (void)> successCallback = [&](){promptOnceForAccountGenerationUnlock = true;};
-                    uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for account generation"), successCallback);
+
+                    pactiveWallet->BeginUnlocked(_("Wallet unlock required for account generation"), [&]() {
+                        promptOnceForAccountGenerationUnlock = true;
+                        // transfer ownership of unlock session to shadow thread
+                        LOCK(pactiveWallet->cs_wallet);
+                        pactiveWallet->nUnlockedSessionsOwnedByShadow++;
+                    });
                     milliSleep = 1;
                 }
             }
@@ -159,8 +166,7 @@ static void ThreadShadowPoolManager()
             else
             {
                 // If we reach here we have a non HD account that require wallet unlock to allocate keys.
-                // So signal that we would like an unlock.
-                pactiveWallet->wantDelayLock = true;
+                // So try to initiate an unlock session
                 milliSleep = 500;
                 tryLockWallet = false;
                 if (promptOnceForAddressGenerationUnlock)
@@ -171,24 +177,23 @@ static void ThreadShadowPoolManager()
                     //fixme: (FUT) (ACCOUNTS) - Should this maybe be a timer to only prompt once a day or something for users who keep the program open?
                     // Might also want a "don't ask me this again" checkbox on prompt etc.
                     // Discuss with UI team and reconsider how to handle this.
-                    std::function<void (void)> successCallback = [&](){promptOnceForAddressGenerationUnlock = true;};
-                    uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for address generation"), successCallback);
+
+                    pactiveWallet->BeginUnlocked(_("Wallet unlock required for address generation"), [&]() {
+                        promptOnceForAddressGenerationUnlock = true;
+                        // transfer ownership of unlock session to shadow thread
+                        LOCK(pactiveWallet->cs_wallet);
+                        pactiveWallet->nUnlockedSessionsOwnedByShadow++;
+                    });
                 }
             }
 
-            // If we no longer have a need for an unlocked wallet allow it to lock again.
+            // If we no longer have a need for an unlocked wallet (ie. all work done) end all unlock sessions that we own.
             if (tryLockWallet)
             {
-                // However only do so if we are the ones keeping it open.
-                // i.e. If we interfered and prevented another peice of code from locking it (wantDelayLock)
-                // If didDelayLock is false then somewhere else in the code is busy using it still and will take responsibility for closing it.
-                if(pactiveWallet->didDelayLock)
-                {
-                    pactiveWallet->delayLock = false;
-                    pactiveWallet->wantDelayLock = false;
-                    pactiveWallet->didDelayLock = false;
-                    pactiveWallet->Lock();
+                for (unsigned int i = 0; i < pactiveWallet->nUnlockedSessionsOwnedByShadow; i++) {
+                    pactiveWallet->EndUnlocked();
                 }
+                pactiveWallet->nUnlockedSessionsOwnedByShadow = 0;
             }
         }
 
@@ -1202,11 +1207,19 @@ bool CGuldenWallet::LoadHDKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKe
 bool CGuldenWallet::Lock() const
 {
     LOCK(cs_wallet);
-    if (delayLock || wantDelayLock)
-    {
-        didDelayLock = true;
+
+    if (nUnlockSessions > 0) {
+        fAutoLock = true;
         return true;
     }
+    else {
+        return LockHard();
+    }
+}
+
+bool CGuldenWallet::LockHard() const
+{
+    AssertLockHeld(cs_wallet);
 
     bool ret = true;
     for (auto accountPair : mapAccounts)

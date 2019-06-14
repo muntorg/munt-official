@@ -547,9 +547,6 @@ public:
 
     void SetNull()
     {
-        delayLock=false;
-        wantDelayLock=false;
-        didDelayLock=false;
         nWalletVersion = FEATURE_BASE;
         nWalletMaxVersion = FEATURE_BASE;
         nMasterKeyMaxID = 0;
@@ -565,6 +562,8 @@ public:
         fScanningWallet = false;
         activeAccount = NULL;
         activeSeed = NULL;
+        nUnlockSessions = 0;
+        nUnlockedSessionsOwnedByShadow = 0;
     }
 
     std::map<uint256, CWalletTx> mapWallet;
@@ -668,6 +667,32 @@ public:
     bool Unlock(const SecureString& strWalletPassphrase);
     bool ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase, const SecureString& strNewWalletPassphrase);
     bool EncryptWallet(const SecureString& strWalletPassphrase);
+
+    /**
+     * Begin an unlocked session. While at least one unlocked session is in progress the wallet cannot be locked.
+     * If a lock attempt is done during an unlocked session the wallet will be kept unlocked untill all unlocked sessions are done.
+     * Every BeginUnlocked() session must be closed by a matching EndUnlocked().
+     *
+     * If not already unlocked a passphrase request for unlocking is done using the reason passed.
+     * When unlock is succesfull the callback will be executed.
+     * If locked before the session begins the wallet will be locked again automatically when all sessions are finished.
+     *
+     * Note: while the previous Lock/Unlock still work their usage is discouraged. All new wallet unlocking should use this new API
+     * and over time usage of the old Lock/Unlock API is to be removed.
+     */
+    void BeginUnlocked(std::string reason, std::function<void (void)> callback);
+
+    /**
+     * Synchronous version of BeginUnlocked.
+     * @return Succesfully unlocked
+     */
+    bool BeginUnlocked(const SecureString& strWalletPassphrase);
+
+    /**
+     * End an unlocked session. When all unlocked session are ended automatically lock the wallet if it was locked when
+     * the first active unlock session began or if a lock request was made during a session.
+     */
+    void EndUnlocked();
 
     void GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const;
     unsigned int ComputeTimeSmart(const CWalletTx& wtx) const;
