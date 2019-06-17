@@ -408,7 +408,15 @@ void GUI::requestEmptyWitness()
     }
     else
     {
-        QString message = tr("The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.");
+        QString message;
+
+        CAmount immature = pactiveWallet->GetImmatureBalance(fromWitnessAccount, true, true);
+        if (immature > 0) {
+            message = tr("Withdrawable funds in this account is not yet mature, please wait and try again later.");
+        }
+        else {
+            message = tr("The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.");
+        }
         QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);
         d->exec();
     }
