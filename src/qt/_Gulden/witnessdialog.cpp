@@ -40,7 +40,7 @@
 
 #include "Gulden/util.h"
 #include "GuldenGUI.h"
-
+#include "extendwitnessdialog.h"
 #include "accounttablemodel.h"
 #include "consensus/validation.h"
 
@@ -373,7 +373,35 @@ void WitnessDialog::extendClicked()
 {
     LogPrint(BCLog::QT, "WitnessDialog::extendClicked\n");
 
-    // Q_EMIT or do other stuff, ie. display the extend dialog
+    auto *dialog = new ExtendWitnessDialog(platformStyle, this);
+    pushDialog(dialog);
+    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+}
+
+void WitnessDialog::pushDialog(QWidget *dialog)
+{
+    ui->stack->addWidget(dialog);
+    ui->stack->setCurrentWidget(dialog);
+}
+
+void WitnessDialog::clearDialogStack()
+{
+    QWidget* dialog = ui->stack->widget(1);
+    if (dialog != nullptr)
+        popDialog(dialog);
+}
+
+void WitnessDialog::popDialog(QWidget* dialog)
+{
+    int index = ui->stack->indexOf(dialog);
+    if (index < 1)
+        return;
+    ui->stack->setCurrentIndex(index - 1);
+    for (int i = index; i >= index; i--) {
+        QWidget* widget = ui->stack->widget(i);
+        ui->stack->removeWidget(widget);
+        widget->deleteLater();
+    }
 }
 
 void WitnessDialog::compoundEarningsCheckboxClicked()
@@ -1277,15 +1305,21 @@ void WitnessDialog::setModel(WalletModel* _model)
             ui->fundWitnessAccountTableView->setModel(proxyFilterByBalanceFundSorted);
             ui->renewWitnessAccountTableView->setModel(proxyFilterByBalanceRenewSorted);
 
-            connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
+            connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
             connect( _model, SIGNAL( accountCompoundingChanged(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         }
     }
     else if(model)
     {
         filter.reset(nullptr);
-        disconnect( model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( update() ));
+        disconnect( model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ));
         disconnect( model, SIGNAL( accountCompoundingChanged(CAccount*) ), this , SLOT( update() ));
         model = nullptr;
     }
+}
+
+void WitnessDialog::activeAccountChanged(CAccount*)
+{
+    clearDialogStack();
+    update();
 }

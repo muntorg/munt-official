@@ -1,0 +1,42 @@
+// Copyright (c) 2016-2019 The Gulden developers
+// Authored by: Willem de Jonge (willem@isnapp.nl)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
+#include "extendwitnessdialog.h"
+#include <qt/_Gulden/forms/ui_extendwitnessdialog.h>
+
+#include "wallet/wallet.h"
+#include "GuldenGUI.h"
+
+#define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
+
+ExtendWitnessDialog::ExtendWitnessDialog(const QStyle *_platformStyle, QWidget *parent)
+: QFrame( parent )
+, ui( new Ui::ExtendWitnessDialog )
+, platformStyle( _platformStyle )
+{
+    ui->setupUi(this);
+
+    connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancelClicked()));
+    connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
+}
+
+ExtendWitnessDialog::~ExtendWitnessDialog()
+{
+    delete ui;
+}
+
+void ExtendWitnessDialog::cancelClicked()
+{
+    LOG_QT_METHOD;
+
+    Q_EMIT dismiss(this);
+}
+
+void ExtendWitnessDialog::extendClicked()
+{
+    LOG_QT_METHOD;
+
+    Q_EMIT dismiss(this);
+}

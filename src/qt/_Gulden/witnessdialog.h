@@ -132,7 +132,24 @@ private:
 
     std::unique_ptr<TransactionFilterProxy> filter;
 
+    /** Show dialog widget, hiding current.
+     * Ownership of the dialog is transferred.
+    */
+    void pushDialog(QWidget* dialog);
+
+    /** Pop all dialog widgets pushed if any, showing the root WitnessDialog.
+     * All dialog widgets popped will be deletedLater!
+    */
+    void clearDialogStack();
+
 private Q_SLOTS:
+    /** Pop dialog stack up to and including dialog.
+     * If dialog is not on the stack nothing is popped.
+     * All dialog widgets popped will be deletedLater!
+    */
+    void popDialog(QWidget* dialog);
+
+    void activeAccountChanged(CAccount* account);
 
 Q_SIGNALS:
     // Sent when a message should be reported to the user.
