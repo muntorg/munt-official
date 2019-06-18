@@ -962,6 +962,12 @@ OptionsDialog QSpinBox
     color: #000;
 }
 
+/* witness statistics value labels */
+#labelLockedFromValue, #labelLockedUntilValue, #labelLastEarningsDateValue, #labelWitnessEarningsValue, #labelWeightValue, #labelLockTimeRemainingValue, #labelLockDurationValue, #labelExpectedEarningsDurationValue, #labelEstimatedEarningsDurationValue, #labelNetworkWeightValue
+{
+    color: #000;
+}
+
 #compoundEarningsCheckBox
 {
     margin: 0px;
