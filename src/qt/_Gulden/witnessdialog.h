@@ -111,6 +111,7 @@ public Q_SLOTS:
     void emptyWitnessClicked();
     void fundWitnessClicked();
     void renewWitnessClicked();
+    void extendClicked();
 protected:
 
 private:

@@ -504,7 +504,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
 
 
 /*Normal buttons*/
-#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2, #copyButton
+#editButton, #syncWithMobileButton, #buttonSaveToFile, #resetButton, #accountRequestPaymentButton, #accountSaveQRButton, #generateAnotherRequestButton, #emptyWitnessButton2, #withdrawEarningsButton2, #copyButton, #extendButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;

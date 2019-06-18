@@ -290,6 +290,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(ui->fundWitnessButton, SIGNAL(clicked()), this, SLOT(fundWitnessClicked()));
     connect(ui->renewWitnessButton, SIGNAL(clicked()), this, SLOT(renewWitnessClicked()));
     connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
+    connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
     connect(unitDaysAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Days); } );
     connect(unitWeeksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Weeks); } );
@@ -366,6 +367,13 @@ void WitnessDialog::renewWitnessClicked()
         }
         Q_EMIT requestRenewWitness(funderAccount);
     }
+}
+
+void WitnessDialog::extendClicked()
+{
+    LogPrint(BCLog::QT, "WitnessDialog::extendClicked\n");
+
+    // Q_EMIT or do other stuff, ie. display the extend dialog
 }
 
 void WitnessDialog::compoundEarningsCheckboxClicked()
