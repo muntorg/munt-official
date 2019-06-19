@@ -7,7 +7,7 @@
 #include <qt/_Gulden/forms/ui_extendwitnessdialog.h>
 
 #include "wallet/wallet.h"
-#include "GuldenGUI.h"
+#include "gui.h"
 
 #define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
 
@@ -38,5 +38,9 @@ void ExtendWitnessDialog::extendClicked()
 {
     LOG_QT_METHOD;
 
-    Q_EMIT dismiss(this);
+    if(QDialog::Accepted == GUI::createDialog(this, "Confirm extending", tr("Extend"), tr("Cancel"), 600, 360, "ExtendWitnessConfirmationDialog")->exec())
+    {
+        // TODO: execute extend and dismiss dialog on succes, or alert user on failure
+        Q_EMIT dismiss(this);
+    }
 }
