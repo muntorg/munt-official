@@ -40,7 +40,12 @@ void ExtendWitnessDialog::extendClicked()
 
     if(QDialog::Accepted == GUI::createDialog(this, "Confirm extending", tr("Extend"), tr("Cancel"), 600, 360, "ExtendWitnessConfirmationDialog")->exec())
     {
-        // TODO: execute extend and dismiss dialog on succes, or alert user on failure
-        Q_EMIT dismiss(this);
+        pactiveWallet->BeginUnlocked(_("Wallet unlock required to extend witness"), [=](){
+
+            // TODO: execute extend and dismiss dialog on succes, or alert user on failure
+
+            pactiveWallet->EndUnlocked();
+            Q_EMIT dismiss(this);
+        });
     }
 }
