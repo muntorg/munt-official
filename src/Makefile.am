@@ -211,6 +211,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   wallet/wallettx.h \
   wallet/walletdb.h \
   wallet/walletdberrors.h \
+  wallet/witness_operations.h \
   warnings.h \
   zmq/zmqabstractnotifier.h \
   zmq/zmqconfig.h\
@@ -325,6 +326,7 @@ libgulden_wallet_a_SOURCES = \
   wallet/merkletx.cpp \
   wallet/wallettx.cpp \
   wallet/walletdb.cpp \
+  wallet/witness_operations.cpp \
   $(GULDEN_CORE_H)
 
 # crypto primitives library: Shared between all binaries and unity libraries

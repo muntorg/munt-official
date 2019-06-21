@@ -1371,6 +1371,8 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
 
 static UniValue extendwitnessaccount(const JSONRPCRequest& request)
 {
+    // TODO: refactor to use extendwitnessaccount(...) in witness_operations module
+
     #ifdef ENABLE_WALLET
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
     LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);

@@ -6,8 +6,10 @@
 #include "extendwitnessdialog.h"
 #include <qt/_Gulden/forms/ui_extendwitnessdialog.h>
 
+#include <stdexcept>
 #include "wallet/wallet.h"
 #include "gui.h"
+#include "wallet/witness_operations.h"
 
 #define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
 
@@ -38,14 +40,29 @@ void ExtendWitnessDialog::extendClicked()
 {
     LOG_QT_METHOD;
 
+    // TODO: get required parameters, ie. lock duration, funding account
+
     if(QDialog::Accepted == GUI::createDialog(this, "Confirm extending", tr("Extend"), tr("Cancel"), 600, 360, "ExtendWitnessConfirmationDialog")->exec())
     {
         pactiveWallet->BeginUnlocked(_("Wallet unlock required to extend witness"), [=](){
 
-            // TODO: execute extend and dismiss dialog on succes, or alert user on failure
+            try {
+                // TODO: fill actual parameters
+                extendwitnessaccount(pactiveWallet,
+                                     nullptr, // CAccount* fundingAccount,
+                                     nullptr, // CAccount* witnessAccount,
+                                     0, // CAmount amount,
+                                     0, // uint64_t requestedLockPeriodInBlocks,
+                                     nullptr, nullptr); // ignore result params
+
+                // request dismissal only when succesful
+                Q_EMIT dismiss(this);
+
+            } catch (std::runtime_error& e) {
+                GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
+            }
 
             pactiveWallet->EndUnlocked();
-            Q_EMIT dismiss(this);
         });
     }
 }
