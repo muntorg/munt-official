@@ -13,12 +13,15 @@
 
 #define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
 
-ExtendWitnessDialog::ExtendWitnessDialog(const QStyle *_platformStyle, QWidget *parent)
+ExtendWitnessDialog::ExtendWitnessDialog(WalletModel* walletModel, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::ExtendWitnessDialog )
 , platformStyle( _platformStyle )
 {
     ui->setupUi(this);
+
+    // minumium required is tx fee, 1 should do it
+    ui->fundingSelection->setWalletModel(walletModel, 1 * COIN);
 
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancelClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
@@ -44,13 +47,20 @@ void ExtendWitnessDialog::extendClicked()
 
     if(QDialog::Accepted == GUI::createDialog(this, "Confirm extending", tr("Extend"), tr("Cancel"), 600, 360, "ExtendWitnessConfirmationDialog")->exec())
     {
+        // selected fundingAccount
+        CAccount* fundingAccount = ui->fundingSelection->selectedAccount();
+        if (!fundingAccount)
+            GUI::createDialog(this, tr("No funding account selected"), tr("Okay"), QString(""), 400, 180)->exec();
+
         pactiveWallet->BeginUnlocked(_("Wallet unlock required to extend witness"), [=](){
 
             try {
+                LOCK2(cs_main, pactiveWallet->cs_wallet);
+                CAccount* witnessAccount = pactiveWallet->activeAccount;
                 // TODO: fill actual parameters
                 extendwitnessaccount(pactiveWallet,
-                                     nullptr, // CAccount* fundingAccount,
-                                     nullptr, // CAccount* witnessAccount,
+                                     fundingAccount,
+                                     witnessAccount,
                                      0, // CAmount amount,
                                      0, // uint64_t requestedLockPeriodInBlocks,
                                      nullptr, nullptr); // ignore result params

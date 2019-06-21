@@ -541,7 +541,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
 }
 
 /* The special 'focus' buttons*/
-#accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #withdrawEarningsButton, #fundWitnessButton, #renewWitnessButton
+ExtendWitnessDialog #extendButton, #accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #withdrawEarningsButton, #fundWitnessButton, #renewWitnessButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -1093,7 +1093,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     padding-top: 10px;
 }
 
-#viewAddressLabel, #accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading
+ExtendWitnessDialog #title, #viewAddressLabel, #accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading
 {
     margin: 0px;
     padding: 0px;

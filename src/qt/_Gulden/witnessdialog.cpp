@@ -127,16 +127,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     // Force qwt graph back to normal cursor instead of cross hair.
     ui->witnessEarningsPlot->canvas()->setCursor(Qt::ArrowCursor);
 
-    ui->fundWitnessAccountTableView->horizontalHeader()->setStretchLastSection(true);
-    ui->fundWitnessAccountTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->fundWitnessAccountTableView->horizontalHeader()->hide();
-    ui->renewWitnessAccountTableView->horizontalHeader()->setStretchLastSection(true);
-    ui->renewWitnessAccountTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->renewWitnessAccountTableView->horizontalHeader()->hide();
-
-    ui->fundWitnessAccountTableView->setContentsMargins(0, 0, 0, 0);
-    ui->renewWitnessAccountTableView->setContentsMargins(0, 0, 0, 0);
-
     // Clear all labels by default
     ui->labelWeightValue->setText(tr("n/a"));
     ui->labelNetworkWeightValue->setText(tr("n/a"));
@@ -281,6 +271,8 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->unitButton->setVisible(false);
     ui->viewWitnessGraphButton->setVisible(false);
 
+    // TODO: visibility of extendButton (initial and in update), check rpc for conditions
+
     connect(ui->unitButton, SIGNAL(clicked()), this, SLOT(unitButtonClicked()));
     connect(ui->viewWitnessGraphButton, SIGNAL(clicked()), this, SLOT(viewWitnessInfoClicked()));
     connect(ui->emptyWitnessButton, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
@@ -337,43 +329,25 @@ void WitnessDialog::fundWitnessClicked()
 {
     LogPrint(BCLog::QT, "WitnessDialog::fundWitnessClicked\n");
 
-    QModelIndexList selection = ui->fundWitnessAccountTableView->selectionModel()->selectedRows();
-    if (selection.count() > 0)
-    {
-        QModelIndex index = selection.at(0);
-        boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
-        CAccount* funderAccount;
-        {
-            LOCK(pactiveWallet->cs_wallet);
-            funderAccount = pactiveWallet->mapAccounts[accountUUID];
-        }
+    CAccount* funderAccount = ui->fundWitnessAccountTableView->selectedAccount();
+    if (funderAccount)
         Q_EMIT requestFundWitness(funderAccount);
-    }
 }
 
 void WitnessDialog::renewWitnessClicked()
 {
     LogPrint(BCLog::QT, "WitnessDialog::renewWitnessClicked\n");
 
-    QModelIndexList selection = ui->renewWitnessAccountTableView->selectionModel()->selectedRows();
-    if (selection.count() > 0)
-    {
-        QModelIndex index = selection.at(0);
-        boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
-        CAccount* funderAccount;
-        {
-            LOCK(pactiveWallet->cs_wallet);
-            funderAccount = pactiveWallet->mapAccounts[accountUUID];
-        }
+    CAccount* funderAccount = ui->renewWitnessAccountTableView->selectedAccount();
+    if (funderAccount)
         Q_EMIT requestRenewWitness(funderAccount);
-    }
 }
 
 void WitnessDialog::extendClicked()
 {
     LogPrint(BCLog::QT, "WitnessDialog::extendClicked\n");
 
-    auto *dialog = new ExtendWitnessDialog(platformStyle, this);
+    auto *dialog = new ExtendWitnessDialog(model, platformStyle, this);
     pushDialog(dialog);
     connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
 }
@@ -775,21 +749,6 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     bool stateUnitButton = false;
     bool stateViewWitnessGraphButton = false;
 
-    ui->fundWitnessAccountTableView->update();
-    ui->renewWitnessAccountTableView->update();
-    // Perform a default selection, so that for simple cases (e.g. wallet with only 1 account) user does not need to manually select.
-    if (ui->fundWitnessAccountTableView->selectionModel()->selectedRows().count() == 0)
-    {
-        ui->fundWitnessAccountTableView->setSelectionMode(QAbstractItemView::SingleSelection);
-        ui->fundWitnessAccountTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-        ui->fundWitnessAccountTableView->selectRow(0);
-    }
-    if (ui->renewWitnessAccountTableView->selectionModel()->selectedRows().count() == 0)
-    {
-        ui->renewWitnessAccountTableView->setSelectionMode(QAbstractItemView::SingleSelection);
-        ui->renewWitnessAccountTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-        ui->renewWitnessAccountTableView->selectRow(0);
-    }
 
     if (model)
     {
@@ -1216,46 +1175,6 @@ void WitnessDialog::setClientModel(ClientModel* clientModel_)
     }
 }
 
-
-
-WitnessSortFilterProxyModel::WitnessSortFilterProxyModel(QObject *parent)
-: QSortFilterProxyModel(parent)
-{
-}
-
-WitnessSortFilterProxyModel::~WitnessSortFilterProxyModel()
-{
-}
-
-bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
-{
-    QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
-
-    // Must be a 'normal' type account.
-    std::string sState = sourceModel()->data(index0, AccountTableModel::StateRole).toString().toStdString();
-    if (sState != GetAccountStateString(AccountState::Normal))
-        return false;
-
-    // Must not be the current account.
-    QString sActive = sourceModel()->data(index0, AccountTableModel::ActiveAccountRole).toString();
-    if (sActive != AccountTableModel::Inactive)
-        return false;
-
-    // Must not be a witness account itself.
-    std::string sSubType = sourceModel()->data(index0, AccountTableModel::TypeRole).toString().toStdString();
-    if (sSubType == GetAccountTypeString(AccountType::PoW2Witness))
-        return false;
-    if (sSubType == GetAccountTypeString(AccountType::WitnessOnlyWitnessAccount))
-        return false;
-
-    // Must have sufficient balance to fund the operation.
-    uint64_t nCompare = sourceModel()->data(index0, AccountTableModel::AvailableBalanceRole).toLongLong();
-    if (nCompare < nAmount)
-        return false;
-    return true;
-}
-
-
 void WitnessDialog::setModel(WalletModel* _model)
 {
     LogPrint(BCLog::QT, "WitnessDialog::setModel\n");
@@ -1272,38 +1191,8 @@ void WitnessDialog::setModel(WalletModel* _model)
         filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
 
         {
-            WitnessSortFilterProxyModel* proxyFilterByBalanceFund = new WitnessSortFilterProxyModel(this);
-            proxyFilterByBalanceFund->setSourceModel(model->getAccountTableModel());
-            proxyFilterByBalanceFund->setDynamicSortFilter(true);
-            proxyFilterByBalanceFund->setAmount((gMinimumWitnessAmount*COIN));
-
-            QSortFilterProxyModel* proxyFilterByBalanceFundSorted = new QSortFilterProxyModel(this);
-            proxyFilterByBalanceFundSorted->setSourceModel(proxyFilterByBalanceFund);
-            proxyFilterByBalanceFundSorted->setDynamicSortFilter(true);
-            proxyFilterByBalanceFundSorted->setSortCaseSensitivity(Qt::CaseInsensitive);
-            proxyFilterByBalanceFundSorted->setFilterFixedString("");
-            proxyFilterByBalanceFundSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
-            proxyFilterByBalanceFundSorted->setFilterKeyColumn(AccountTableModel::ColumnIndex::Label);
-            proxyFilterByBalanceFundSorted->setSortRole(Qt::DisplayRole);
-            proxyFilterByBalanceFundSorted->sort(0);
-
-            WitnessSortFilterProxyModel* proxyFilterByBalanceRenew = new WitnessSortFilterProxyModel(this);
-            proxyFilterByBalanceRenew->setSourceModel(model->getAccountTableModel());
-            proxyFilterByBalanceRenew->setDynamicSortFilter(true);
-            proxyFilterByBalanceRenew->setAmount(1 * COIN);
-
-            QSortFilterProxyModel* proxyFilterByBalanceRenewSorted = new QSortFilterProxyModel(this);
-            proxyFilterByBalanceRenewSorted->setSourceModel(proxyFilterByBalanceRenew);
-            proxyFilterByBalanceRenewSorted->setDynamicSortFilter(true);
-            proxyFilterByBalanceRenewSorted->setSortCaseSensitivity(Qt::CaseInsensitive);
-            proxyFilterByBalanceRenewSorted->setFilterFixedString("");
-            proxyFilterByBalanceRenewSorted->setFilterCaseSensitivity(Qt::CaseInsensitive);
-            proxyFilterByBalanceRenewSorted->setFilterKeyColumn(AccountTableModel::ColumnIndex::Label);
-            proxyFilterByBalanceRenewSorted->setSortRole(Qt::DisplayRole);
-            proxyFilterByBalanceRenewSorted->sort(0);
-
-            ui->fundWitnessAccountTableView->setModel(proxyFilterByBalanceFundSorted);
-            ui->renewWitnessAccountTableView->setModel(proxyFilterByBalanceRenewSorted);
+            ui->fundWitnessAccountTableView->setWalletModel(_model, gMinimumWitnessAmount * COIN);
+            ui->renewWitnessAccountTableView->setWalletModel(_model, 1 * COIN);
 
             connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
             connect( _model, SIGNAL( accountCompoundingChanged(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>737</width>
-    <height>422</height>
+    <width>996</width>
+    <height>579</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -71,15 +71,31 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QLabel" name="description">
+         <widget class="QLabel" name="title">
           <property name="text">
-           <string>This is a placeholder for the extend witness functionality</string>
+           <string>Extend witness lock duration</string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
           </property>
           <property name="indent">
            <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="AccountSelectionWidget" name="fundingSelection" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>120</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -163,6 +179,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AccountSelectionWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">qt/_Gulden/accountselectionwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -43,19 +43,6 @@ private:
     QString curveInfoAt(QString legendColor,  QString sHeading, const QwtPlotCurve*, const QPoint & ) const;
 };
 
-class WitnessSortFilterProxyModel : public QSortFilterProxyModel
-{
-Q_OBJECT
-public:
-    explicit WitnessSortFilterProxyModel(QObject *parent = 0);
-    virtual ~WitnessSortFilterProxyModel();
-    void setAmount(uint64_t nAmount_) {nAmount = nAmount_;}
-protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
-private:
-    uint64_t nAmount;
-};
-
 struct WitnessInfoForAccount
 {
     uint64_t nOurWeight = 0;
