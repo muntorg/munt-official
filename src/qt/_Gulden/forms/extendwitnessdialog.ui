@@ -84,6 +84,28 @@
          </widget>
         </item>
         <item>
+         <widget class="WitnessDurationWidget" name="lockDuration" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>120</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="AccountSelectionWidget" name="fundingSelection" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -184,6 +206,12 @@
    <class>AccountSelectionWidget</class>
    <extends>QWidget</extends>
    <header location="global">qt/_Gulden/accountselectionwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>WitnessDurationWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">qt/_Gulden/witnessdurationwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
