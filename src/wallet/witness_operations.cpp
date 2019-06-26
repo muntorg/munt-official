@@ -33,6 +33,8 @@ static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsFor
 
 std::tuple<CAmount, int64_t, int64_t> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount)
 {
+    LOCK2(cs_main, pwallet->cs_wallet);
+
     const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
     if (unspentWitnessOutputs.size() == 0)
         throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].",

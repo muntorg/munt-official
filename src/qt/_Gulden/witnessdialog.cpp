@@ -271,6 +271,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->renewWitnessButton->setVisible(false);
     ui->unitButton->setVisible(false);
     ui->viewWitnessGraphButton->setVisible(false);
+    ui->extendButton->setVisible(false);
 
     // TODO: visibility of extendButton (initial and in update), check rpc for conditions
 
@@ -994,6 +995,16 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
     ui->unitButton->setVisible(stateUnitButton);
     ui->viewWitnessGraphButton->setVisible(stateViewWitnessGraphButton);
+
+    try {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        CAccount* witnessAccount = pactiveWallet->activeAccount;
+        auto [lockedAmount, durationRemaining, oldWeight] = extendWitnessInfo(pactiveWallet, witnessAccount);
+        ui->extendButton->setVisible(durationRemaining > 0);
+    }
+    catch (std::runtime_error& e) {
+        ui->extendButton->setVisible(false);
+    }
 }
 
 void WitnessDialog::updateAccountIndicators()
