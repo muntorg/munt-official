@@ -31,7 +31,7 @@ static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsFor
     return matchedOutputs;
 }
 
-std::tuple<CAmount, int64_t, int64_t> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount)
+std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount)
 {
     LOCK2(cs_main, pwallet->cs_wallet);
 
@@ -41,11 +41,12 @@ std::tuple<CAmount, int64_t, int64_t> extendWitnessInfo(CWallet* pwallet, CAccou
                                                                            boost::uuids::to_string(witnessAccount->getUUID())));
 
     // Check for immaturity
+    bool immatureWitness = false;
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
 
     //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
     if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
-        throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+            immatureWitness = true;
 
     // Calculate existing lock period
     CTxOutPoW2Witness currentWitnessDetails;
@@ -55,7 +56,7 @@ std::tuple<CAmount, int64_t, int64_t> extendWitnessInfo(CWallet* pwallet, CAccou
     uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
     uint64_t notUsed1, notUsed2;
     int64_t weight = GetPoW2RawWeightForAmount(currentWitnessTxOut.nValue, GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, notUsed1, notUsed2));
-    return std::tuple(lockedAmount, remainingLockDurationInBlocks, weight);
+    return std::tuple(lockedAmount, remainingLockDurationInBlocks, weight, immatureWitness);
 }
 
 static void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)

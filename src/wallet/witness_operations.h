@@ -48,7 +48,7 @@ private:
 // throw on failure
 void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
 
-/** Get tuple (locked amount, remaining locking duration, weight) with details for witness extending */
-std::tuple<CAmount, int64_t, int64_t> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount);
+/** Get tuple (locked amount, remaining locking duration, weight, immature witness) with details for witness extending */
+std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount);
 
 #endif // WITNESS_OPERATIONS_H
