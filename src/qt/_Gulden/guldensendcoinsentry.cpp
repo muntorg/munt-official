@@ -481,7 +481,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     {
         uint32_t nLockPeriodInBlocks = ui->pow2LockFundsSlider->value()*DailyBlocksTarget();
         // Add a small buffer to give us time to enter the blockchain
-        if (nLockPeriodInBlocks == 30*DailyBlocksTarget())
+        if (nLockPeriodInBlocks == 30 * uint32_t(DailyBlocksTarget()))
             nLockPeriodInBlocks += 50;
 
         recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
