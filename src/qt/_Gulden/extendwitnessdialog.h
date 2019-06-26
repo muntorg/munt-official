@@ -46,6 +46,7 @@ private:
 private Q_SLOTS:
     void cancelClicked();
     void extendClicked();
+    void amountFieldChanged();
 };
 
 #endif // GULDEN_QT_EXTENDWITNESSDIALOG_H

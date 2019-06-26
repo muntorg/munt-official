@@ -84,6 +84,9 @@
          </widget>
         </item>
         <item>
+         <widget class="GuldenAmountField" name="payAmount"/>
+        </item>
+        <item>
          <widget class="WitnessDurationWidget" name="lockDuration" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -202,6 +205,12 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>GuldenAmountField</class>
+   <extends>QLineEdit</extends>
+   <header>amountfield.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>AccountSelectionWidget</class>
    <extends>QWidget</extends>

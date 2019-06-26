@@ -31,7 +31,11 @@ ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRema
 
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancelClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
+    connect(ui->payAmount, SIGNAL(amountChanged()), this, SLOT(amountFieldChanged()));
 
+    ui->payAmount->setOptionsModel(walletModel->getOptionsModel());
+    ui->payAmount->setDisplayMaxButton(false);
+    ui->payAmount->setAmount(lockedAmount);
     ui->lockDuration->configure(lockedAmount, durationRemaining, minimumWeight);
 }
 
@@ -78,7 +82,7 @@ void ExtendWitnessDialog::extendClicked()
                 extendwitnessaccount(pactiveWallet,
                                      fundingAccount,
                                      witnessAccount,
-                                     lockedAmount, // TODO: add in additional locking amount
+                                     ui->payAmount->amount(),
                                      ui->lockDuration->duration(),
                                      nullptr, nullptr); // ignore result params
 
@@ -92,4 +96,10 @@ void ExtendWitnessDialog::extendClicked()
             pactiveWallet->EndUnlocked();
         });
     }
+}
+
+void ExtendWitnessDialog::amountFieldChanged()
+{
+    CAmount newAmount = ui->payAmount->amount();
+    ui->lockDuration->setAmount(newAmount);
 }
