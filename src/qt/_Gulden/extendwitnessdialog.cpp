@@ -13,10 +13,11 @@
 
 #define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
 
-ExtendWitnessDialog::ExtendWitnessDialog(WalletModel* walletModel, const QStyle *_platformStyle, QWidget *parent)
+ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, WalletModel* walletModel, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::ExtendWitnessDialog )
 , platformStyle( _platformStyle )
+, lockedAmount(lockedAmount_)
 {
     ui->setupUi(this);
 
@@ -25,6 +26,8 @@ ExtendWitnessDialog::ExtendWitnessDialog(WalletModel* walletModel, const QStyle 
 
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancelClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
+
+    ui->lockDuration->configure(lockedAmount, durationRemaining);
 }
 
 ExtendWitnessDialog::~ExtendWitnessDialog()
@@ -43,8 +46,6 @@ void ExtendWitnessDialog::extendClicked()
 {
     LOG_QT_METHOD;
 
-    // TODO: get required parameters, ie. lock duration, funding account
-
     if(QDialog::Accepted == GUI::createDialog(this, "Confirm extending", tr("Extend"), tr("Cancel"), 600, 360, "ExtendWitnessConfirmationDialog")->exec())
     {
         // selected fundingAccount
@@ -61,8 +62,8 @@ void ExtendWitnessDialog::extendClicked()
                 extendwitnessaccount(pactiveWallet,
                                      fundingAccount,
                                      witnessAccount,
-                                     0, // CAmount amount,
-                                     0, // uint64_t requestedLockPeriodInBlocks,
+                                     lockedAmount, // TODO: add in additional locking amount
+                                     ui->lockDuration->duration(),
                                      nullptr, nullptr); // ignore result params
 
                 // request dismissal only when succesful

@@ -15,7 +15,8 @@
 #include "walletmodel.h"
 #include "clientmodel.h"
 #include "wallet/wallet.h"
-
+#include "wallet/witness_operations.h"
+#include "gui.h"
 #include "amount.h"
 
 #include <qwt_plot.h>
@@ -347,9 +348,17 @@ void WitnessDialog::extendClicked()
 {
     LogPrint(BCLog::QT, "WitnessDialog::extendClicked\n");
 
-    auto *dialog = new ExtendWitnessDialog(model, platformStyle, this);
-    pushDialog(dialog);
-    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+    try {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        CAccount* witnessAccount = pactiveWallet->activeAccount;
+        auto amountAndDurationa = witnessAmountAndRemainingDuration(pactiveWallet, witnessAccount);
+        auto *dialog = new ExtendWitnessDialog(amountAndDurationa.first, amountAndDurationa.second, model, platformStyle, this);
+        pushDialog(dialog);
+        connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+    } catch (std::runtime_error& e) {
+        GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
+    }
+
 }
 
 void WitnessDialog::pushDialog(QWidget *dialog)
