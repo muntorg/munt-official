@@ -31,6 +31,30 @@ static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsFor
     return matchedOutputs;
 }
 
+std::pair<CAmount, int64_t> witnessAmountAndRemainingDuration(CWallet* pwallet, CAccount* witnessAccount)
+{
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].",
+                                                                           boost::uuids::to_string(witnessAccount->getUUID())));
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+
+    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    // Calculate existing lock period
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    CAmount lockedAmount = currentWitnessTxOut.nValue;
+    uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
+
+    return std::pair(lockedAmount, remainingLockDurationInBlocks);
+}
+
 static void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
 {
     AssertLockHeld(cs_main);
@@ -42,14 +66,14 @@ static void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std
     if (requestedAmount < (gMinimumWitnessAmount*COIN))
         throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
-    if (requestedLockPeriodInBlocks > gMaximumWitnessLockLength)
+    if (requestedLockPeriodInBlocks > MaximumWitnessLockLength())
         throw witness_error(witness::RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
 
-    if (requestedLockPeriodInBlocks < gMinimumWitnessLockLength)
+    if (requestedLockPeriodInBlocks < MinimumWitnessLockLength())
         throw witness_error(witness::RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
 
     // Add a small buffer to give us time to enter the blockchain
-    if (requestedLockPeriodInBlocks == gMinimumWitnessLockLength)
+    if (requestedLockPeriodInBlocks == MinimumWitnessLockLength())
         requestedLockPeriodInBlocks += 50;
 
     // Check for immaturity

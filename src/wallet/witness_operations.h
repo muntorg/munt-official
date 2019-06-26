@@ -48,4 +48,6 @@ private:
 // throw on failure
 void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
 
+std::pair<CAmount, int64_t> witnessAmountAndRemainingDuration(CWallet* pwallet, CAccount* witnessAccount);
+
 #endif // WITNESS_OPERATIONS_H
