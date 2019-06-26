@@ -7,6 +7,7 @@
 #define WITNESSDURATIONWIDGET_H
 
 #include <QWidget>
+#include "amount.h"
 
 namespace Ui {
 class WitnessDurationWidget;
@@ -20,8 +21,25 @@ public:
     explicit WitnessDurationWidget(QWidget *parent = nullptr);
     ~WitnessDurationWidget();
 
+    void setAmount(CAmount lockingAmount);
+
+    /** Configuration.
+     * @param minDurationInBlocks, extra minimum lock duration to use when extending a witness
+     */
+    void configure(CAmount lockingAmount, int minDurationInBlocks);
+
+    int duration();
+
 private:
     Ui::WitnessDurationWidget *ui;
+    CAmount nAmount;
+    int nMinDurationInBlocks;
+    int nDuration;
+    void setDuration(int newDuration);
+
+private Q_SLOTS:
+    void durationValueChanged(int newValue);
+    void update();
 };
 
 #endif // WITNESSDURATIONWIDGET_H
