@@ -351,8 +351,8 @@ void WitnessDialog::extendClicked()
     try {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
         CAccount* witnessAccount = pactiveWallet->activeAccount;
-        auto amountAndDurationa = witnessAmountAndRemainingDuration(pactiveWallet, witnessAccount);
-        auto *dialog = new ExtendWitnessDialog(amountAndDurationa.first, amountAndDurationa.second, model, platformStyle, this);
+        auto [lockedAmount, durationRemaining, oldWeight] = extendWitnessInfo(pactiveWallet, witnessAccount);
+        auto *dialog = new ExtendWitnessDialog(lockedAmount, durationRemaining, oldWeight, model, platformStyle, this);
         pushDialog(dialog);
         connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
     } catch (std::runtime_error& e) {

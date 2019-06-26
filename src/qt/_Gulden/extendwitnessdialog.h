@@ -29,7 +29,7 @@ class ExtendWitnessDialog : public QFrame
     Q_OBJECT
 
 public:
-    explicit ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
+    explicit ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
     ~ExtendWitnessDialog();
 
 Q_SIGNALS:

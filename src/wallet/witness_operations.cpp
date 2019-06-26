@@ -31,7 +31,7 @@ static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsFor
     return matchedOutputs;
 }
 
-std::pair<CAmount, int64_t> witnessAmountAndRemainingDuration(CWallet* pwallet, CAccount* witnessAccount)
+std::tuple<CAmount, int64_t, int64_t> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount)
 {
     const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
     if (unspentWitnessOutputs.size() == 0)
@@ -51,8 +51,9 @@ std::pair<CAmount, int64_t> witnessAmountAndRemainingDuration(CWallet* pwallet, 
 
     CAmount lockedAmount = currentWitnessTxOut.nValue;
     uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
-
-    return std::pair(lockedAmount, remainingLockDurationInBlocks);
+    uint64_t notUsed1, notUsed2;
+    int64_t weight = GetPoW2RawWeightForAmount(currentWitnessTxOut.nValue, GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, notUsed1, notUsed2));
+    return std::tuple(lockedAmount, remainingLockDurationInBlocks, weight);
 }
 
 static void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)

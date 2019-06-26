@@ -13,7 +13,7 @@
 
 #define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
 
-ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, WalletModel* walletModel, const QStyle *_platformStyle, QWidget *parent)
+ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::ExtendWitnessDialog )
 , platformStyle( _platformStyle )
@@ -27,7 +27,7 @@ ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRema
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancelClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
 
-    ui->lockDuration->configure(lockedAmount, durationRemaining);
+    ui->lockDuration->configure(lockedAmount, durationRemaining, minimumWeight);
 }
 
 ExtendWitnessDialog::~ExtendWitnessDialog()

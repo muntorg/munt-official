@@ -26,7 +26,7 @@ public:
     /** Configuration.
      * @param minDurationInBlocks, extra minimum lock duration to use when extending a witness
      */
-    void configure(CAmount lockingAmount, int minDurationInBlocks);
+    void configure(CAmount lockingAmount, int minDurationInBlocks, int64_t minimumWeight);
 
     int duration();
 
@@ -35,6 +35,7 @@ private:
     CAmount nAmount;
     int nMinDurationInBlocks;
     int nDuration;
+    int64_t nRequiredWeight;
     void setDuration(int newDuration);
 
 private Q_SLOTS:

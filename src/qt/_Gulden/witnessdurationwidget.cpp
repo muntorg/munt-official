@@ -18,7 +18,8 @@ WitnessDurationWidget::WitnessDurationWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::WitnessDurationWidget),
     nAmount(0),
-    nMinDurationInBlocks(0)
+    nMinDurationInBlocks(0),
+    nRequiredWeight(gMinimumWitnessWeight)
 {
     ui->setupUi(this);
 
@@ -35,10 +36,11 @@ WitnessDurationWidget::~WitnessDurationWidget()
     delete ui;
 }
 
-void WitnessDurationWidget::configure(CAmount lockingAmount, int minDurationInBlocks)
+void WitnessDurationWidget::configure(CAmount lockingAmount, int minDurationInBlocks, int64_t minimumWeight)
 {
     nAmount = lockingAmount;
     nMinDurationInBlocks = minDurationInBlocks;
+    nRequiredWeight = std::max(minimumWeight, int64_t(gMinimumWitnessWeight));
     setDuration(nMinDurationInBlocks);
 }
 
@@ -132,9 +134,10 @@ void WitnessDurationWidget::update()
     }
 
 
-    if (nOurWeight < gMinimumWitnessWeight)
+
+    if (nOurWeight < nRequiredWeight)
     {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(gMinimumWitnessWeight).arg(nOurWeight));
+        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(nRequiredWeight).arg(nOurWeight));
         return;
     }
 
