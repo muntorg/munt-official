@@ -40,6 +40,7 @@ protected:
 private:
     Ui::ExtendWitnessDialog *ui;
     const QStyle *platformStyle;
+    WalletModel* walletModel;
     CAmount lockedAmount;
 
 private Q_SLOTS:

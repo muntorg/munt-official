@@ -1157,6 +1157,28 @@ QString limitString(const QString& string, int maxLength)
     return beforeEllipsis + GUIUtil::fontAwesomeLight(ELLIPSIS) + afterEllipsis;
 }
 
+QString daysToHuman(int nDays)
+{
+    float fMonths = nDays/30.0;
+    float fYears = nDays/365.0;
+
+    QString str = "";
+    if (fYears > 1)
+    {
+        str = QObject::tr("1 year");
+        if (fYears > 1.0)
+            str = QObject::tr("%1 years").arg(QString::number(fYears, 'f', 2).replace(".00",""));
+    }
+    else
+    {
+        str = QObject::tr("1 month");
+        if (fMonths > 1.0)
+            str = QObject::tr("%1 months").arg(QString::number(fMonths, 'f', 2).replace(".00",""));
+    }
+
+    return str;
+}
+
 static QString superscriptSpan(const QString& sText)
 {
     return QString("<span style='font-size: 8px;'>%1</span>").arg(sText);

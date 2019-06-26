@@ -94,8 +94,6 @@ void WitnessDurationWidget::update()
     int newValue = ui->pow2LockFundsSlider->value();
 
     int nDays = newValue;
-    float fMonths = newValue/30.0;
-    float fYears = newValue/365.0;
     int nEarnings = 0;
 
     int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays * DailyBlocksTarget());
@@ -156,20 +154,7 @@ void WitnessDurationWidget::update()
 
     float fPercent = (fBlocksPerDay * 30 * WITNESS_SUBSIDY)/((nAmount/100000000))*100;
 
-
-    QString sSecondTimeUnit = "";
-    if (fYears > 1)
-    {
-        sSecondTimeUnit = tr("1 year");
-        if (fYears > 1.0)
-            sSecondTimeUnit = tr("%1 years").arg(QString::number(fYears, 'f', 2).replace(".00",""));
-    }
-    else
-    {
-        sSecondTimeUnit = tr("1 month");
-        if (fMonths > 1.0)
-            sSecondTimeUnit = tr("%1 months").arg(QString::number(fMonths, 'f', 2).replace(".00",""));
-    }
+    QString sSecondTimeUnit = daysToHuman(nDays);
 
     ui->pow2LockFundsInfoLabel->setText(tr("Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.\n\nEstimated earnings: %3 (%4% per month)\n\nWitness weight: %5")
     .arg(nDays)

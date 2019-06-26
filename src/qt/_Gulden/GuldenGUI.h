@@ -64,5 +64,6 @@ void setValid(QWidget* control, bool validity);
 void burnLineEditMemory(QLineEdit* edit);
 void burnTextEditMemory(QTextEdit* edit);
 QString limitString(const QString& string, int maxLength);
+QString daysToHuman(int days);
 
 #endif // GULDEN_QT_GULDENGUI_H

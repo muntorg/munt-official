@@ -10,13 +10,18 @@
 #include "wallet/wallet.h"
 #include "gui.h"
 #include "wallet/witness_operations.h"
+#include "units.h"
+#include "Gulden/util.h"
+#include "walletmodel.h"
+#include "optionsmodel.h"
 
 #define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
 
-ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel, const QStyle *_platformStyle, QWidget *parent)
+ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::ExtendWitnessDialog )
 , platformStyle( _platformStyle )
+, walletModel(walletModel_)
 , lockedAmount(lockedAmount_)
 {
     ui->setupUi(this);
@@ -46,7 +51,18 @@ void ExtendWitnessDialog::extendClicked()
 {
     LOG_QT_METHOD;
 
-    if(QDialog::Accepted == GUI::createDialog(this, "Confirm extending", tr("Extend"), tr("Cancel"), 600, 360, "ExtendWitnessConfirmationDialog")->exec())
+    // Format confirmation message
+    QString questionString = tr("Are you sure you want to extend the witness?");
+    questionString.append("<br /><br />");
+    int days = ui->lockDuration->duration() / DailyBlocksTarget();
+    questionString.append(tr("%1 will be locked for %2 days (%3).")
+                          .arg(GuldenUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), lockedAmount))
+                          .arg(days)
+                          .arg(daysToHuman(days)));
+    questionString.append("<br /><br />");
+    questionString.append(tr("It will not be possible under any circumstances to spend or move these funds for the duration of the lock period."));
+
+    if(QDialog::Accepted == GUI::createDialog(this, questionString, tr("Extend witness"), tr("Cancel"), 600, 360, "ExtendWitnessConfirmationDialog")->exec())
     {
         // selected fundingAccount
         CAccount* fundingAccount = ui->fundingSelection->selectedAccount();
