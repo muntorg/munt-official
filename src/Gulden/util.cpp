@@ -559,3 +559,18 @@ bool IsChainNearPresent()
 
     return index->GetBlockTime() > farBack;
 }
+
+int DailyBlocksTarget()
+{
+    return (24 * 60 * 60) / Params().GetConsensus().nPowTargetSpacing;
+}
+
+uint64_t MinimumWitnessLockLength()
+{
+    return gMinimumWitnessLockDays * DailyBlocksTarget();
+}
+
+uint64_t MaximumWitnessLockLength()
+{
+    return gMaximumWitnessLockDays * DailyBlocksTarget();
+}

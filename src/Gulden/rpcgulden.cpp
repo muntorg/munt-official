@@ -1100,14 +1100,14 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     if (nLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
 
-    if (nLockPeriodInBlocks > gMaximumWitnessLockLength)
+    if (nLockPeriodInBlocks > MaximumWitnessLockLength())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
 
-    if (nLockPeriodInBlocks < gMinimumWitnessLockLength)
+    if (nLockPeriodInBlocks < MinimumWitnessLockLength())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
 
     // Add a small buffer to give us time to enter the blockchain
-    if (nLockPeriodInBlocks == gMinimumWitnessLockLength)
+    if (nLockPeriodInBlocks ==MinimumWitnessLockLength())
         nLockPeriodInBlocks += 50;
 
     // Enforce minimum weight
@@ -1202,14 +1202,14 @@ static UniValue extendwitnessaddresshelper(CAccount* fundingAccount, std::vector
     if (requestedLockPeriodInBlocks == 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
 
-    if (requestedLockPeriodInBlocks > gMaximumWitnessLockLength)
+    if (requestedLockPeriodInBlocks > MaximumWitnessLockLength())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
 
-    if (requestedLockPeriodInBlocks < gMinimumWitnessLockLength)
+    if (requestedLockPeriodInBlocks < MinimumWitnessLockLength())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
 
     // Add a small buffer to give us time to enter the blockchain
-    if (requestedLockPeriodInBlocks == gMinimumWitnessLockLength)
+    if (requestedLockPeriodInBlocks == MinimumWitnessLockLength())
         requestedLockPeriodInBlocks += 50;
 
     // Check for immaturity

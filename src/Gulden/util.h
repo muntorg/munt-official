@@ -119,4 +119,8 @@ bool IsPartialNearPresent(enum BlockStatus nUpTo = BLOCK_PARTIAL_TREE);
   */
 bool IsChainNearPresent();
 
+int DailyBlocksTarget();
+uint64_t MinimumWitnessLockLength();
+uint64_t MaximumWitnessLockLength();
+
 #endif

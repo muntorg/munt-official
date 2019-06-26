@@ -336,7 +336,7 @@ bool GuldenSendCoinsEntry::validate()
     if (isPoW2WitnessCreation())
     {
         int nDays = ui->pow2LockFundsSlider->value();
-        int64_t nOurWeight = GetPoW2RawWeightForAmount(ui->payAmount->amount(), nDays*576);
+        int64_t nOurWeight = GetPoW2RawWeightForAmount(ui->payAmount->amount(), nDays*DailyBlocksTarget());
         if (ui->payAmount->amount() < (gMinimumWitnessAmount*COIN) || nOurWeight <= gMinimumWitnessWeight)
         {
             setValid(ui->pow2LockFundsInfoLabel, false);
@@ -479,9 +479,9 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     recipient.destinationPoW2Witness.lockUntilBlock = 0;
     if (isPoW2WitnessCreation())
     {
-        uint32_t nLockPeriodInBlocks = ui->pow2LockFundsSlider->value()*576;
+        uint32_t nLockPeriodInBlocks = ui->pow2LockFundsSlider->value()*DailyBlocksTarget();
         // Add a small buffer to give us time to enter the blockchain
-        if (nLockPeriodInBlocks == 30*576)
+        if (nLockPeriodInBlocks == 30*DailyBlocksTarget())
             nLockPeriodInBlocks += 50;
 
         recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
@@ -854,7 +854,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
     float fYears = newValue/365.0;
     int nEarnings = 0;
 
-    int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*576);
+    int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*DailyBlocksTarget());
 
     static int64_t nNetworkWeight = gStartingWitnessNetworkWeightEstimate;
     if (chainActive.Tip())
@@ -903,7 +903,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
         fWeightPercent = 0.01;
     }
 
-    double fBlocksPerDay = 576 * fWeightPercent;
+    double fBlocksPerDay = DailyBlocksTarget() * fWeightPercent;
     if (fBlocksPerDay > 5.76)
         fBlocksPerDay = 5.76;
 

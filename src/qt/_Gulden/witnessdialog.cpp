@@ -427,7 +427,7 @@ static void AddPointToMapWithAdjustedTimePeriod(std::map<double, CAmount>& point
     double fDaysModified = nDays;
     if (IsArgSet("-testnet"))
     {
-        fDaysModified = (nX - nOriginBlock)/576.0;
+        fDaysModified = (nX - nOriginBlock)/double(DailyBlocksTarget());
     }
 
     //fixme: (FUT) These various week/month calculations are all very imprecise; they should probably be based on an actual calendar instead.
@@ -682,15 +682,15 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
                     break;
                 case GraphScale::Days:
                     formatStr = tr("%1 days");
-                    divideBy = 576;
+                    divideBy = DailyBlocksTarget();
                     break;
                 case GraphScale::Weeks:
                     formatStr = tr("%1 weeks");
-                    divideBy = 576*7;
+                    divideBy = DailyBlocksTarget()*7;
                     break;
                 case GraphScale::Months:
                     formatStr = tr("%1 months");
-                    divideBy = 576*30;
+                    divideBy = DailyBlocksTarget()*30;
                     break;
             }
             if (witnessInfoForAccount.nWitnessLength > 0)
