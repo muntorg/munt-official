@@ -43,6 +43,7 @@ std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, 
     // Check for immaturity
     bool immatureWitness = false;
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    (unused)currentWitnessOutpoint;
 
     //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
     if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))

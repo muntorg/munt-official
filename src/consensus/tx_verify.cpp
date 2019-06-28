@@ -268,9 +268,9 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
             uint64_t nUnused1, nUnused2;
             int64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, checkHeight, nUnused1, nUnused2);
-            if (nLockLengthInBlocks < MinimumWitnessLockLength())
+            if (nLockLengthInBlocks < int64_t(MinimumWitnessLockLength()))
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
-            if (nLockLengthInBlocks - checkHeight > MaximumWitnessLockLength())
+            if (nLockLengthInBlocks - checkHeight > int64_t(MaximumWitnessLockLength()))
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
 
             int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
