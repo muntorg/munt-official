@@ -1000,7 +1000,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         LOCK2(cs_main, pactiveWallet->cs_wallet);
         CAccount* witnessAccount = pactiveWallet->activeAccount;
         auto [lockedAmount, durationRemaining, oldWeight, immature] = extendWitnessInfo(pactiveWallet, witnessAccount);
-        ui->extendButton->setVisible(durationRemaining > 0);
+        ui->extendButton->setVisible(IsSegSigEnabled(chainActive.TipPrev()) && durationRemaining > 0);
     }
     catch (std::runtime_error& e) {
         ui->extendButton->setVisible(false);
