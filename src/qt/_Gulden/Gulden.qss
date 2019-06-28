@@ -833,12 +833,15 @@ QHeaderView::up-arrow:hover
     margin-top: 18px;
 }
 
-#labelDescribeRecoveryPhrase, #labelPaymentRequestHeading, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation, #labelPrivKey, #pow2LockFundsHeading, #pow2LockFundsSliderMaxLabel, #pow2LockFundsSliderMinLabel, #pow2LockFundsInfoLabel
+#labelExtendDescription, #labelDescribeRecoveryPhrase, #labelPaymentRequestHeading, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation, #labelPrivKey, #pow2LockFundsHeading, #pow2LockFundsSliderMaxLabel, #pow2LockFundsSliderMinLabel, #pow2LockFundsInfoLabel
 {
     color: TEXT_COLOR_1;
 }
 
-
+#labelExtendDescription
+{
+    padding-bottom: 12px;
+}
 
 #pow2LockFundsSliderMinLabel
 {
