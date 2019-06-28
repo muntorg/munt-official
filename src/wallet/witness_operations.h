@@ -9,6 +9,7 @@
 #include "amount.h"
 #include <string>
 #include <cstdint>
+#include "primitives/transaction.h"
 
 class CWallet;
 class CAccount;
@@ -47,6 +48,7 @@ private:
 
 // throw on failure
 void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
+void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
 
 /** Get tuple (locked amount, remaining locking duration, weight, immature witness) with details for witness extending */
 std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount);

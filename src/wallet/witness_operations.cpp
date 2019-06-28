@@ -59,7 +59,7 @@ std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, 
     return std::tuple(lockedAmount, remainingLockDurationInBlocks, weight, immatureWitness);
 }
 
-static void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
+void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
 {
     AssertLockHeld(cs_main);
     AssertLockHeld(pwallet->cs_wallet);
