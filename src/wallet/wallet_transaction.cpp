@@ -917,6 +917,68 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     return false;
 }
 
+void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut)
+{
+    LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
+
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    //fixme: (FUT) (COIN_CONTROL)
+    CCoinControl coinControl;
+
+    CGetWitnessInfo witnessInfo;
+    CBlock block;
+    if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+        throw std::runtime_error("Error reading block from disk.");
+
+    GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight);
+    for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
+    {
+        if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
+        {
+            // Add witness input
+            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
+
+            // Add witness output
+            CTxOut renewedWitnessTxOutput;
+            CTxOutPoW2Witness witnessDestination;
+            if (!GetPow2WitnessOutput(witCoin.coin.out, witnessDestination))
+                throw std::runtime_error("Unable to correctly retrieve data");
+
+            // Increment fail count appropriately
+            // Note that for upgrade there was no real failure, but the fail count needs to be incremented for the upgrade to pass
+            // validation as a renewal
+            IncrementWitnessFailCount(witnessDestination.failCount);
+
+            // Ensure consistent lock from
+            if (witnessDestination.lockFromBlock == 0)
+            {
+                witnessDestination.lockFromBlock = witCoin.coin.nHeight;
+            }
+
+                renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+                renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;
+                renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = witnessDestination.witnessKeyID;
+                renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
+                renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
+                renewedWitnessTxOutput.output.witnessDetails.failCount = witnessDestination.failCount;
+                renewedWitnessTxOutput.output.witnessDetails.actionNonce = witnessDestination.actionNonce+1;
+            renewedWitnessTxOutput.nValue = witCoin.coin.out.nValue;
+            tx.vout.push_back(renewedWitnessTxOutput);
+
+            // Add fee input and change output
+            std::string sFailReason;
+            if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, &coinControl))
+                throw std::runtime_error("Unable to add fee");
+
+            return;
+        }
+    }
+
+    throw std::runtime_error("Could not find suitable witness to upgrade");
+}
+
 bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut)
 {
     if (!SignTransaction(nullptr, tx, SignType::Spend))

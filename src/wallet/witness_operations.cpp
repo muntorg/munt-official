@@ -87,6 +87,10 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
     if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
         throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
+    // Check type (can't extend script type, must witness once or renew after phase 4 activated)
+    if (currentWitnessTxOut.GetType() != CTxOutType::PoW2WitnessOutput)
+        throw witness_error(witness::RPC_TYPE_ERROR, "Witness has to be type POW2WITNESS");
+
     // Calculate existing lock period
     CTxOutPoW2Witness currentWitnessDetails;
     GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
@@ -203,4 +207,42 @@ void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* 
                                                                            boost::uuids::to_string(witnessAccount->getUUID())));
 
     extendwitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, amount, requestedLockPeriodInBlocks, pTxid, pFee);
+}
+
+void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee)
+{
+    if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
+
+    LOCK2(cs_main, pwallet->cs_wallet);
+
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    if (pwallet->IsLocked()) {
+        throw std::runtime_error("Wallet locked");
+    }
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
+    }
+
+    std::string strError;
+    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
+    CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
+    CAmount transactionFee;
+    pwallet->PrepareUpgradeWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee);
+
+    uint256 finalTransactionHash;
+    if (!pwallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash))
+    {
+        throw std::runtime_error(strprintf("Failed to sign transaction [%s]", strError.c_str()));
+    }
+
+    // Set result parameters
+    if (pTxid != nullptr)
+        *pTxid = finalTransactionHash.GetHex();
+    if (pFee != nullptr)
+        *pFee = transactionFee;
 }

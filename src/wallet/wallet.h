@@ -748,6 +748,9 @@ public:
     //! Create a transaction that renews an expired witness account
     bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError);
 
+    //! Create a transaction upgrades an old ScriptLegacyOutput witness to a new PoW2WitnessOutput
+    void PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut);
+
     /**
      * Insert additional inputs into the transaction by
      * calling CreateTransaction();

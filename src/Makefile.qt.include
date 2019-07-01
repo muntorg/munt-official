@@ -64,6 +64,7 @@ qt/_Gulden/moc_backupdialog.cpp \
 qt/_Gulden/moc_welcomedialog.cpp \
 qt/_Gulden/moc_witnessdialog.cpp \
 qt/_Gulden/moc_extendwitnessdialog.cpp \
+qt/_Gulden/moc_upgradewitnessdialog.cpp \
 qt/_Gulden/moc_exchangeratedialog.cpp \
 qt/_Gulden/moc_importprivkeydialog.cpp \
 qt/_Gulden/moc_importwitnessdialog.cpp \
@@ -82,6 +83,7 @@ qt/_Gulden/forms/backupdialog.ui \
 qt/_Gulden/forms/welcomedialog.ui \
 qt/_Gulden/forms/witnessdialog.ui \
 qt/_Gulden/forms/extendwitnessdialog.ui \
+qt/_Gulden/forms/upgradewitnessdialog.ui \
 qt/_Gulden/forms/exchangeratedialog.ui \
 qt/_Gulden/forms/importprivkeydialog.ui \
 qt/_Gulden/forms/importwitnessdialog.ui
@@ -105,6 +107,7 @@ qt/_Gulden/backupdialog.h \
 qt/_Gulden/welcomedialog.h \
 qt/_Gulden/witnessdialog.h \
 qt/_Gulden/extendwitnessdialog.h \
+qt/_Gulden/upgradewitnessdialog.h \
 qt/_Gulden/exchangeratedialog.h \
 qt/_Gulden/importprivkeydialog.h \
 qt/_Gulden/importwitnessdialog.h \
@@ -129,6 +132,7 @@ qt/_Gulden/backupdialog.cpp \
 qt/_Gulden/welcomedialog.cpp \
 qt/_Gulden/witnessdialog.cpp \
 qt/_Gulden/extendwitnessdialog.cpp \
+qt/_Gulden/upgradewitnessdialog.cpp \
 qt/_Gulden/exchangeratedialog.cpp \
 qt/_Gulden/importprivkeydialog.cpp \
 qt/_Gulden/importwitnessdialog.cpp \

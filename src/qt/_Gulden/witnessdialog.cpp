@@ -42,6 +42,7 @@
 #include "Gulden/util.h"
 #include "GuldenGUI.h"
 #include "extendwitnessdialog.h"
+#include "upgradewitnessdialog.h"
 #include "accounttablemodel.h"
 #include "consensus/validation.h"
 
@@ -272,8 +273,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->unitButton->setVisible(false);
     ui->viewWitnessGraphButton->setVisible(false);
     ui->extendButton->setVisible(false);
-
-    // TODO: visibility of extendButton (initial and in update), check rpc for conditions
+    ui->upgradeButton->setVisible(false);
 
     connect(ui->unitButton, SIGNAL(clicked()), this, SLOT(unitButtonClicked()));
     connect(ui->viewWitnessGraphButton, SIGNAL(clicked()), this, SLOT(viewWitnessInfoClicked()));
@@ -284,6 +284,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(ui->fundWitnessButton, SIGNAL(clicked()), this, SLOT(fundWitnessClicked()));
     connect(ui->renewWitnessButton, SIGNAL(clicked()), this, SLOT(renewWitnessClicked()));
     connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
+    connect(ui->upgradeButton, SIGNAL(clicked()), this, SLOT(upgradeWitnessClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
     connect(unitDaysAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Days); } );
@@ -343,6 +344,15 @@ void WitnessDialog::renewWitnessClicked()
     CAccount* funderAccount = ui->renewWitnessAccountTableView->selectedAccount();
     if (funderAccount)
         Q_EMIT requestRenewWitness(funderAccount);
+}
+
+void WitnessDialog::upgradeWitnessClicked()
+{
+    LogPrint(BCLog::QT, "WitnessDialog::upgradeWitnessClicked\n");
+
+    auto *dialog = new UpgradeWitnessDialog(model, platformStyle, this);
+    pushDialog(dialog);
+    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
 }
 
 void WitnessDialog::extendClicked()
@@ -759,7 +769,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     bool stateRenewWitnessButton = false;
     bool stateUnitButton = false;
     bool stateViewWitnessGraphButton = false;
-
+    bool stateUpgradeButton = false;
 
     if (model)
     {
@@ -827,6 +837,10 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                                 if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
                                 {
                                     bAnyExpired = true;
+                                }
+                                else if (witCoin.coin.out.GetType() == CTxOutType::ScriptLegacyOutput)
+                                {
+                                    stateUpgradeButton = true;
                                 }
                                 nOurWeight += witCoin.nWeight;
                             }
@@ -996,17 +1010,23 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
     ui->unitButton->setVisible(stateUnitButton);
     ui->viewWitnessGraphButton->setVisible(stateViewWitnessGraphButton);
+    ui->upgradeButton->setVisible(stateUpgradeButton);
 
-    try {
-        LOCK2(cs_main, pactiveWallet->cs_wallet);
-        CAccount* witnessAccount = pactiveWallet->activeAccount;
-        auto [lockedAmount, durationRemaining, oldWeight, immature] = extendWitnessInfo(pactiveWallet, witnessAccount);
-        (unused)lockedAmount;
-        (unused)oldWeight;
-        (unused)immature;
-        ui->extendButton->setVisible(IsSegSigEnabled(chainActive.TipPrev()) && durationRemaining > 0);
+    if (!stateUpgradeButton) {
+        try {
+            LOCK2(cs_main, pactiveWallet->cs_wallet);
+            CAccount* witnessAccount = pactiveWallet->activeAccount;
+            auto [lockedAmount, durationRemaining, oldWeight, immature] = extendWitnessInfo(pactiveWallet, witnessAccount);
+            (unused)lockedAmount;
+            (unused)oldWeight;
+            (unused)immature;
+            ui->extendButton->setVisible(IsSegSigEnabled(chainActive.TipPrev()) && durationRemaining > 0);
+        }
+        catch (std::runtime_error& e) {
+            ui->extendButton->setVisible(false);
+        }
     }
-    catch (std::runtime_error& e) {
+    else {
         ui->extendButton->setVisible(false);
     }
 }

@@ -740,6 +740,16 @@ In future versions of Gulden it will be possible to re-use this account for furt
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="upgradeButton">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string>Upgrade</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="extendButton">
               <property name="cursor">
                <cursorShape>PointingHandCursor</cursorShape>
