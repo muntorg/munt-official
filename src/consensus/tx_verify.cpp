@@ -486,7 +486,7 @@ inline bool IsUnSigned(const CTxIn& input)
 * Input/Output.
 * Signed by spending key.
 */
-inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight, uint64_t nSpendHeight)
+inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, const CTxOut& prevOut, const CTxOut& output, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
     //fixme: (PHASE4) - Remove in future once all problem addresses are cleaned up
     //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
@@ -502,7 +502,7 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
                     return false;
 
                 // Amount keys and lock unchanged.
-                if (nInputAmount != nOutputAmount)
+                if (prevOut.nValue != output.nValue)
                     return false;
                 // Action nonce always increment
                 if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
@@ -527,10 +527,16 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
 
     // Needs 2 signature (spending key)
     if (!HasSpendKey(input, nSpendHeight))
-        return false;
+    {
+        //fixme: (PHASE5) - This is a temporary check to allow upgrading of phase3 accounts during phase4 - when we reach phase5 this can potentially be removed.
+        if (prevOut.GetType() != CTxOutType::ScriptLegacyOutput || output.GetType() != CTxOutType::PoW2WitnessOutput)
+        {
+            return false;
+        }
+    }
 
     // Amount keys and lock unchanged.
-    if (nInputAmount != nOutputAmount)
+    if (prevOut.nValue != output.nValue)
         return false;
     // Action nonce always increment
     if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
@@ -732,7 +738,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::WitnessType;
                         break;
                     }
-                    else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight, nSpendHeight) )
+                    else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut, bundle.outputs[0].first, nInputHeight, nSpendHeight) )
                     {
                         matchedExistingBundle = true;
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
