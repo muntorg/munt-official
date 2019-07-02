@@ -535,8 +535,9 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         else
                         {
                             // NB! The checks in tx_verify ensure that we have the right number of signatures (2 or 1) based on the type of witness operation.
-                            // So we can assume at this point in the code that a spend will always have 2 signatures and won't try trick the system by providing only 1 signature.
-                            // We therefore just validate here based on number of signatures provided.
+                            // A spend operation with only 1 signature will fail etc.
+                            // So we can safely assume at this point in the code that a spend will always have 2 signatures and can't try trick the system by providing only 1 signature.
+                            // Here we therefore just validate signatures based on number of signatures provided (If there are 2 validate for spending, otherwise for witnessing)
                             if (tx.vin[i].segregatedSignatureData.stack.size() == 2)
                             {
                                 spendSigningKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
