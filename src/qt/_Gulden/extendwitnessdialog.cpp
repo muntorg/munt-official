@@ -70,8 +70,10 @@ void ExtendWitnessDialog::extendClicked()
     {
         // selected fundingAccount
         CAccount* fundingAccount = ui->fundingSelection->selectedAccount();
-        if (!fundingAccount)
+        if (!fundingAccount) {
             GUI::createDialog(this, tr("No funding account selected"), tr("Okay"), QString(""), 400, 180)->exec();
+            return;
+        }
 
         pactiveWallet->BeginUnlocked(_("Wallet unlock required to extend witness"), [=](){
 
