@@ -838,7 +838,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
                                 {
                                     bAnyExpired = true;
                                 }
-                                else if (witCoin.coin.out.GetType() == CTxOutType::ScriptLegacyOutput)
+                                else if (IsSegSigEnabled(chainActive.TipPrev()) && witCoin.coin.out.GetType() == CTxOutType::ScriptLegacyOutput)
                                 {
                                     stateUpgradeButton = true;
                                 }
