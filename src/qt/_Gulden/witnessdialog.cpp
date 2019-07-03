@@ -1255,4 +1255,8 @@ void WitnessDialog::activeAccountChanged(CAccount*)
 {
     clearDialogStack();
     update();
+    if (model) {
+        ui->fundWitnessAccountTableView->setWalletModel(model, gMinimumWitnessAmount * COIN);
+        ui->renewWitnessAccountTableView->setWalletModel(model, 1 * COIN);
+    }
 }
