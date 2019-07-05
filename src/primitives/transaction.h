@@ -54,7 +54,7 @@ struct CBlockPosition
 
     friend bool operator<(const CBlockPosition& a, const CBlockPosition& b)
     {
-        if (a.blockNumber == b.blockNumber)
+        if (a.blockNumber != b.blockNumber)
         {
             return a.blockNumber < b.blockNumber;
         }
