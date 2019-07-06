@@ -339,7 +339,7 @@ void GuldenAppManager::splitRecoveryPhraseAndBirth(const SecureString& input, Se
         try {
             birthNumber = std::stoi(birthString);
         }
-        catch (const std::exception) {
+        catch (const std::exception&) {
             birthNumber = 0;
         }
         if (birthNumber != 0 || birthString == "0") {
