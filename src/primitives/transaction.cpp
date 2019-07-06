@@ -27,6 +27,8 @@ CTxIn::CTxIn(COutPoint prevoutIn, CScript scriptSigIn, uint32_t nSequenceIn, uin
     scriptSig = scriptSigIn;
     nSequence = nSequenceIn;
     nTypeAndFlags = CURRENT_TYPE | nFlagsIn;
+    if (!prevout.isHash)
+        SetFlag(CTxInFlags::IndexBasedOutpoint);
 }
 
 CTxIn::CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn, uint32_t nSequenceIn, uint8_t nFlagsIn)
