@@ -510,7 +510,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                     {
                         COutPoint outpoint;
                         //fixme: (PHASE4) (SEGSIG)
-                        outpoint.WriteToStream(oss, (CTxInType)0, 0, 1);
+                        outpoint.WriteToStream(oss, (CTxInType)0, (CTxInFlags)0, 1);
                         vOutPoints.push_back(outpoint);
                     }
                 }

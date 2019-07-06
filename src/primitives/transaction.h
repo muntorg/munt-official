@@ -159,7 +159,7 @@ public:
         isHash = 1;
     }
 
-    template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion)
+    template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, CTxInFlags nFlags, int nTransactionVersion)
     {
         //fixme: (PHASE4) Implement usage of nType here.
         (void) nType;
@@ -175,8 +175,7 @@ public:
         }
         else
         {
-            std::bitset<3> flags(nFlags);
-            if (!flags[IndexBasedOutpoint])
+            if ((nFlags & CTxInFlags::IndexBasedOutpoint) == 0)
             {
                 isHash = 1;
                 STRREAD(hash);
@@ -193,7 +192,7 @@ public:
         }
     }
 
-    template <typename Stream> inline void WriteToStream(Stream& s, CTxInType nType, uint8_t nFlags, int nTransactionVersion) const
+    template <typename Stream> inline void WriteToStream(Stream& s, CTxInType nType, CTxInFlags nFlags, int nTransactionVersion) const
     {
         //fixme: (PHASE4) Implement usage of nType here.
         (void) nType;
@@ -207,8 +206,7 @@ public:
         }
         else
         {
-            std::bitset<3> flags(nFlags);
-            if (!flags[IndexBasedOutpoint])
+            if ((nFlags & CTxInFlags::IndexBasedOutpoint) == 0)
             {
                 STRWRITE(hash);
             }
@@ -374,8 +372,7 @@ public:
         //2.0 onwards we have versioning for CTxIn
         if (!IsOldTransactionVersion(nTransactionVersion))
         {
-            uint8_t nTypeAndFlags_;
-            STRREAD(nTypeAndFlags_);
+            STRREAD(nTypeAndFlags);
 
             prevout.ReadFromStream(s, GetType(), GetFlags(), nTransactionVersion);
             //scriptSig is no longer used - everything goes in segregatedSignatureData.
