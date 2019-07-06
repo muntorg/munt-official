@@ -18,7 +18,10 @@
 
 std::string COutPoint::ToString() const
 {
-    return strprintf("COutPoint(%s, %u)", hash.ToString().substr(0,10), n);
+    if (isHash)
+        return strprintf("COutPoint(hash=%s, out_index=%u)", hash.ToString().substr(0,10), n);
+    else
+        return strprintf("COutPoint(tx_height=%u, tx_index=%u, out_index=%u)", prevBlock.blockNumber, prevBlock.transactionIndex, n);
 }
 
 CTxIn::CTxIn(COutPoint prevoutIn, CScript scriptSigIn, uint32_t nSequenceIn, uint8_t nFlagsIn)
