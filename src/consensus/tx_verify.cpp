@@ -820,6 +820,16 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                 return state.Invalid(false, 0, "", "Inputs unavailable");
         }
 
+        uint64_t nMaturityDepth;
+        if (IsOldTransactionVersion(tx.nVersion))
+        {
+            nMaturityDepth = COINBASE_MATURITY;
+        }
+        else
+        {
+            nMaturityDepth = COINBASE_MATURITY_PHASE4;
+        }
+        
         CAmount nValueIn = 0;
         CAmount nFees = 0;
         for (unsigned int i = 0; i < tx.vin.size(); i++)
@@ -832,7 +842,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
 
             // If prev is coinbase, check that it's matured
             if (coin.IsCoinBase()) {
-                if (nSpendHeight - coin.nHeight < COINBASE_MATURITY)
+                if (nSpendHeight - coin.nHeight < nMaturityDepth)
                     return state.Invalid(false,
                         REJECT_INVALID, "bad-txns-premature-spend-of-coinbase",
                         strprintf("tried to spend coinbase at depth %d", nSpendHeight - coin.nHeight));

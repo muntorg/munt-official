@@ -523,6 +523,15 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMem
     for (indexed_transaction_set::const_iterator it = mapTx.begin(); it != mapTx.end(); it++) {
         const CTransaction& tx = it->GetTx();
         LockPoints lp = it->GetLockPoints();
+        uint64_t nMaturityDepth;
+        if (IsOldTransactionVersion(tx.nVersion))
+        {
+            nMaturityDepth = COINBASE_MATURITY;
+        }
+        else
+        {
+            nMaturityDepth = COINBASE_MATURITY_PHASE4;
+        }
         bool validLP =  TestLockPointValidity(&lp);
         if (!CheckFinalTx(tx, chainActive, flags) || !CheckSequenceLocks(tx, flags, &lp, validLP)) {
             // Note if CheckSequenceLocks fails the LockPoints may still be invalid
@@ -535,7 +544,7 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMem
                     continue;
                 const Coin &coin = pcoins->AccessCoin(txin.prevout);
                 if (nCheckFrequency != 0) assert(!coin.IsSpent());
-                if (coin.IsSpent() || (coin.IsCoinBase() && ((signed long)nMemPoolHeight) - coin.nHeight < COINBASE_MATURITY)) {
+                if (coin.IsSpent() || (coin.IsCoinBase() && ((signed long)nMemPoolHeight) - coin.nHeight < nMaturityDepth)) {
                     txToRemove.insert(it);
                     break;
                 }

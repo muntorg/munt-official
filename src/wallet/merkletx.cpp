@@ -73,7 +73,16 @@ int CMerkleTx::GetBlocksToMaturity() const
 {
     if (!IsCoinBase())
         return 0;
-    return std::max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain());
+    int nMaturityDepth;
+    if (IsOldTransactionVersion(tx->nVersion))
+    {
+        nMaturityDepth = COINBASE_MATURITY;
+    }
+    else
+    {
+        nMaturityDepth = COINBASE_MATURITY_PHASE4;
+    }
+    return std::max(0, (nMaturityDepth+1) - GetDepthInMainChain());
 }
 
 

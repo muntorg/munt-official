@@ -48,6 +48,7 @@ extern CWalletRef pactiveWallet;
 #include "account.h"
 
 #include <boost/thread.hpp>
+#include <consensus/consensus.h>
 
 /**
  * Settings
