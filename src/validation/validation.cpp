@@ -1084,19 +1084,19 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     blockundo.vtxundo.reserve(block.vtx.size() - 1);
     std::vector<PrecomputedTransactionData> txdata;
     txdata.reserve(block.vtx.size()); // Required so that pointers to individual PrecomputedTransactionData don't get invalidated
-    for (unsigned int i = 0; i < block.vtx.size(); i++)
+    for (unsigned int txIndex = 0; txIndex < block.vtx.size(); txIndex++)
     {
-        const CTransaction &tx = *(block.vtx[i]);
+        const CTransaction &tx = *(block.vtx[txIndex]);
 
         nInputs += tx.vin.size();
 
         if (tx.IsPoW2WitnessCoinBase())
         {
-            for (unsigned int i = 0; i < tx.vin.size(); i++)
+            for (unsigned int inputIndex = 0; inputIndex < tx.vin.size(); inputIndex++)
             {
-                if (!tx.vin[i].prevout.IsNull())
+                if (!tx.vin[inputIndex].prevout.IsNull())
                 {
-                    if (!view.HaveCoin(tx.vin[i].prevout))
+                    if (!view.HaveCoin(tx.vin[inputIndex].prevout))
                     {
                         return state.DoS(100, error("ConnectBlock(): witness coinbase inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                     }
@@ -1147,7 +1147,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         //fixme: (PHASE4) (CODEBASE CLEANUP) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?) - we already test this elsewhere so it would only be a cleanness improvement.
         if (!tx.IsCoinBase())
         {
-            if (nWitnessCoinbaseIndex != 0 && i > nWitnessCoinbaseIndex)
+            if (nWitnessCoinbaseIndex != 0 && txIndex > nWitnessCoinbaseIndex)
             {
                 nFeesPoW2Witness += view.GetValueIn(tx)-tx.GetValueOut();;
             }
@@ -1158,17 +1158,17 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
             std::vector<CScriptCheck> vChecks;
             bool fCacheResults = fJustCheck; /* Don't cache results if we're actually connecting blocks (still consult the cache, though) */
-            if (!CheckInputs(tx, state, view, fScriptChecks, flags, fCacheResults, txdata[i], &witnessBundles[i], nScriptCheckThreads ? &vChecks : NULL))
+            if (!CheckInputs(tx, state, view, fScriptChecks, flags, fCacheResults, txdata[txIndex], &witnessBundles[txIndex], nScriptCheckThreads ? &vChecks : NULL))
                 return error("ConnectBlock(): CheckInputs on %s failed with %s",
                     tx.GetHash().ToString(), FormatStateMessage(state));
             control.Add(vChecks);
         }
 
         CTxUndo undoDummy;
-        if (i > 0) {
+        if (txIndex > 0) {
             blockundo.vtxundo.push_back(CTxUndo());
         }
-        UpdateCoins(tx, view, i == 0 ? undoDummy : blockundo.vtxundo.back(), pindex->nHeight);
+        UpdateCoins(tx, view, txIndex == 0 ? undoDummy : blockundo.vtxundo.back(), pindex->nHeight);
 
         vPos.push_back(std::pair(tx.GetHash(), pos));
         pos.nTxOffset += ::GetSerializeSize(tx, SER_DISK, CLIENT_VERSION);
