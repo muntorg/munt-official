@@ -46,17 +46,10 @@ bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIn
 }
 
 AccountSelectionWidget::AccountSelectionWidget(QWidget *parent) :
-    QTableView(parent),
+    QWidget(parent),
     ui(new Ui::AccountSelectionWidget)
 {
     ui->setupUi(this);
-
-    horizontalHeader()->setStretchLastSection(true);
-    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    horizontalHeader()->hide();
-    setContentsMargins(0, 0, 0, 0);
-    setSelectionMode(QAbstractItemView::SingleSelection);
-    setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
 AccountSelectionWidget::~AccountSelectionWidget()
@@ -82,11 +75,11 @@ void AccountSelectionWidget::setWalletModel(WalletModel *walletModel, CAmount mi
     proxyFilterByBalanceFundSorted->setSortRole(Qt::DisplayRole);
     proxyFilterByBalanceFundSorted->sort(0);
 
-    setModel(proxyFilterByBalanceFundSorted);
+    ui->comboBox->setModel(proxyFilterByBalanceFundSorted);
 
     // default selection
-    if (model()->rowCount()>0) {
-        selectRow(0);
+    if (ui->comboBox->model()->rowCount()>0) {
+        ui->comboBox->setCurrentIndex(0);
     }
 }
 
@@ -94,15 +87,15 @@ CAccount* AccountSelectionWidget::selectedAccount()
 {
     CAccount* account = nullptr;
 
-    QModelIndexList selection = selectionModel()->selectedRows();
-    if (selection.count() > 0)
+    int index = ui->comboBox->currentIndex();
+    if (index >= 0)
     {
-        QModelIndex index = selection.at(0);
-        boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
+        boost::uuids::uuid accountUUID = getUUIDFromString(ui->comboBox->currentData(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
         {
             LOCK(pactiveWallet->cs_wallet);
             account = pactiveWallet->mapAccounts[accountUUID];
         }
+
     }
 
     return account;

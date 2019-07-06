@@ -51,33 +51,29 @@ void UpgradeWitnessDialog::confirmClicked()
     // Format confirmation message
     QString questionString = tr("Are you sure you want to upgrade the witness?");
 
-    if(QDialog::Accepted == GUI::createDialog(this, questionString, tr("Upgrade witness"), tr("Cancel"), 600, 360, "UpgradeWitnessConfirmationDialog")->exec())
-    {
-        // selected fundingAccount
-        CAccount* fundingAccount = ui->fundingSelection->selectedAccount();
-        if (!fundingAccount) {
-            GUI::createDialog(this, tr("No funding account selected"), tr("Okay"), QString(""), 400, 180)->exec();
-            return;
+    CAccount* fundingAccount = ui->fundingSelection->selectedAccount();
+    if (!fundingAccount) {
+        GUI::createDialog(this, tr("No funding account selected"), tr("Okay"), QString(""), 400, 180)->exec();
+        return;
+    }
+
+    pactiveWallet->BeginUnlocked(_("Wallet unlock required to upgrade witness"), [=](){
+
+        try {
+            LOCK2(cs_main, pactiveWallet->cs_wallet);
+            CAccount* witnessAccount = pactiveWallet->activeAccount;
+            upgradewitnessaccount(pactiveWallet,
+                                  fundingAccount,
+                                  witnessAccount,
+                                  nullptr, nullptr); // ignore result params
+
+            // request dismissal only when succesful
+            Q_EMIT dismiss(this);
+
+        } catch (std::runtime_error& e) {
+            GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
         }
 
-        pactiveWallet->BeginUnlocked(_("Wallet unlock required to upgrade witness"), [=](){
-
-            try {
-                LOCK2(cs_main, pactiveWallet->cs_wallet);
-                CAccount* witnessAccount = pactiveWallet->activeAccount;
-                upgradewitnessaccount(pactiveWallet,
-                                     fundingAccount,
-                                     witnessAccount,
-                                     nullptr, nullptr); // ignore result params
-
-                // request dismissal only when succesful
-                Q_EMIT dismiss(this);
-
-            } catch (std::runtime_error& e) {
-                GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
-            }
-
-            pactiveWallet->EndUnlocked();
-        });
-    }
+        pactiveWallet->EndUnlocked();
+    });
 }

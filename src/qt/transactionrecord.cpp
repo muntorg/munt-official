@@ -73,7 +73,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             if (!txPrev || txPrev->tx->vout.size() == 0)
                 break;
 
-            if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nWalletTxBlockHeight, nWalletTxBlockHeight))
+            int nInputHeight = nWalletTxBlockHeight;
+            const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
+            if (findIter != mapBlockIndex.end())
+                nInputHeight = findIter->second->nHeight;
+
+            if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nInputHeight, nWalletTxBlockHeight))
                 break;
         }
     }

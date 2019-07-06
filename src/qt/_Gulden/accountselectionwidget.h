@@ -6,7 +6,7 @@
 #ifndef ACCOUNTSELECTIONWIDGET_H
 #define ACCOUNTSELECTIONWIDGET_H
 
-#include <QTableView>
+#include <QWidget>
 #include <QSortFilterProxyModel>
 #include "amount.h"
 
@@ -30,7 +30,7 @@ private:
     uint64_t nAmount;
 };
 
-class AccountSelectionWidget : public QTableView
+class AccountSelectionWidget : public QWidget
 {
     Q_OBJECT
 

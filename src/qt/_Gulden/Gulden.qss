@@ -684,6 +684,16 @@ QComboBox::down-arrow:hover
     image: url(':/Gulden/angle_down_blue');
 }
 
+AccountSelectionWidget QComboBox
+{
+    color: black;
+    margin: 0px;
+    margin-right: 10px;
+    padding: 0px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
 /* Pull down lists for transaction table*/
 #transactionView QComboBox
 {
@@ -833,9 +843,14 @@ QHeaderView::up-arrow:hover
     margin-top: 18px;
 }
 
-#descriptionLabel, #labelExtendDescription, #labelDescribeRecoveryPhrase, #labelPaymentRequestHeading, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation, #labelPrivKey, #pow2LockFundsHeading, #pow2LockFundsSliderMaxLabel, #pow2LockFundsSliderMinLabel, #pow2LockFundsInfoLabel
+#label, #descriptionLabel, #labelExtendDescription, #labelDescribeRecoveryPhrase, #labelPaymentRequestHeading, #labelEnterRecoveryPhrase, #passLabel1, #passLabel2, #passLabel3, #warningLabel, #labelAddress, #labelAddressAddress, #labelExplanation, #labelPrivKey, #pow2LockFundsHeading, #pow2LockFundsSliderMaxLabel, #pow2LockFundsSliderMinLabel, #pow2LockFundsInfoLabel
 {
     color: TEXT_COLOR_1;
+}
+
+#descriptionLabel
+{
+    margin-top: 12px;
 }
 
 #labelExtendDescription
@@ -1111,7 +1126,7 @@ ExtendWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel
     margin-top: 6px;
 }
 
-#viewAddressLabel
+#viewAddressLabel, #titleLabel, #labelExtendDescription
 {
     margin-top: 16px;
 }
@@ -1201,11 +1216,16 @@ QAbstractSpinBox
 
 GuldenAmountField QLabel
 {
-    color: TEXT_COLOR_1;
+    color: black;
     font-size: BUTTON_FONT_SIZE;
     height:28px;
+    padding-right:8px;
 }
 
+GuldenAmountField ClickableLabel
+{
+    color: TEXT_COLOR_1;
+}
 
 GUI QScrollBar:vertical
 {

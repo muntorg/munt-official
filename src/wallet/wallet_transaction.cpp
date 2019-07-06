@@ -957,13 +957,13 @@ void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, C
                 witnessDestination.lockFromBlock = witCoin.coin.nHeight;
             }
 
-                renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-                renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;
-                renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = witnessDestination.witnessKeyID;
-                renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
-                renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
-                renewedWitnessTxOutput.output.witnessDetails.failCount = witnessDestination.failCount;
-                renewedWitnessTxOutput.output.witnessDetails.actionNonce = witnessDestination.actionNonce+1;
+            renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+            renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;
+            renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = witnessDestination.witnessKeyID;
+            renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = witnessDestination.lockFromBlock;
+            renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = witnessDestination.lockUntilBlock;
+            renewedWitnessTxOutput.output.witnessDetails.failCount = witnessDestination.failCount;
+            renewedWitnessTxOutput.output.witnessDetails.actionNonce = witnessDestination.actionNonce+1;
             renewedWitnessTxOutput.nValue = witCoin.coin.out.nValue;
             tx.vout.push_back(renewedWitnessTxOutput);
 

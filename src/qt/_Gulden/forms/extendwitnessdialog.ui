@@ -24,16 +24,16 @@
     <number>0</number>
    </property>
    <property name="leftMargin">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="topMargin">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>9</number>
+    <number>0</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -102,10 +102,57 @@
           </property>
          </widget>
         </item>
-        <item alignment="Qt::AlignTop">
-         <widget class="GuldenAmountField" name="payAmount"/>
+        <item>
+         <widget class="QFrame" name="amountFrame">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>1</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Amount</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="GuldenAmountField" name="payAmount">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>2</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
-        <item alignment="Qt::AlignTop">
+        <item>
          <widget class="WitnessDurationWidget" name="lockDuration" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -209,15 +256,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GuldenAmountField</class>
-   <extends>QLineEdit</extends>
-   <header>amountfield.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>AccountSelectionWidget</class>
    <extends>QWidget</extends>
    <header location="global">qt/_Gulden/accountselectionwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GuldenAmountField</class>
+   <extends>QLineEdit</extends>
+   <header>amountfield.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
