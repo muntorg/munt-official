@@ -39,7 +39,6 @@ struct CBlockPosition
     uint64_t transactionIndex; // Position of transaction within the block.
     CBlockPosition(uint64_t blockNumber_, uint64_t transactionIndex_) : blockNumber(blockNumber_), transactionIndex(transactionIndex_) {}
 
-    //fixme: (PHASE4) (MOBILE) (SPV) (SEGSIG) Look closer at how to handle this in relation to mobile SPV wallets
     uint256 getHash() const
     {
         std::vector<unsigned char> serData;
@@ -86,7 +85,7 @@ enum CTxInType : uint8_t
     FUTURE_TX_IN_TYPE8 = 7
 };
 
-//fixme: (PHASE4) (SEGSIG) we forbid index based outpoint for now.
+//fixme: (PHASE4) (MOBILE) (SPV) (SEGSIG) Ensure IndexBasedOutpoint working on mobile SPV wallets
 //fixme: (PHASE4) (SEGSIG) Double check all RBF/AbsoluteLock/RelativeLock behaviour
 // Only 5 bits available for TxInFlags.
 // The are used as bit flags so only 5 values possible each with an on/off state.
