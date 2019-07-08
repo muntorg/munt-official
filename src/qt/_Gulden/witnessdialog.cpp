@@ -408,6 +408,8 @@ void WitnessDialog::popDialog(QWidget* dialog)
         ui->stack->removeWidget(widget);
         widget->deleteLater();
     }
+    if (ui->stack->count() <= 1)
+        update();
 }
 
 void WitnessDialog::compoundEarningsCheckboxClicked()
