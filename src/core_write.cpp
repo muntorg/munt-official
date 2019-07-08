@@ -193,20 +193,34 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
         else {
             if ( tx.IsPoW2WitnessCoinBase() )
             {
-                in.pushKV("pow2-coinbase", "");
+                in.pushKV("pow2_coinbase", "");
             }
-            in.pushKV("txid", txin.prevout.getHash().GetHex());
+            if (txin.prevout.isHash)
+            {
+                in.pushKV("prevout_type", "hash");
+                in.pushKV("txid", txin.prevout.getHash().GetHex());
+                in.pushKV("tx_height", "");
+                in.pushKV("tx_index", "");
+            }
+            else
+            {
+                in.pushKV("prevout_type", "index");
+                in.pushKV("txid", "");
+                in.pushKV("tx_height", txin.prevout.prevBlock.blockNumber);
+                in.pushKV("tx_index", txin.prevout.prevBlock.transactionIndex);
+            }
+            
             in.pushKV("vout", (int64_t)txin.prevout.n);
             UniValue o(UniValue::VOBJ);
             o.pushKV("asm", ScriptToAsmStr(txin.scriptSig, true));
             o.pushKV("hex", HexStr(txin.scriptSig.begin(), txin.scriptSig.end()));
             in.pushKV("scriptSig", o);
             if (!tx.vin[i].segregatedSignatureData.IsNull()) {
-                UniValue txinwitness(UniValue::VARR);
+                UniValue txinSigData(UniValue::VARR);
                 for (const auto& item : tx.vin[i].segregatedSignatureData.stack) {
-                    txinwitness.push_back(HexStr(item.begin(), item.end()));
+                    txinSigData.push_back(HexStr(item.begin(), item.end()));
                 }
-                in.pushKV("txinwitness", txinwitness);
+                in.pushKV("txin_sig_data", txinSigData);
             }
         }
         if (IsOldTransactionVersion(tx.nVersion) || txin.FlagIsSet(CTxInFlags::HasRelativeLock))
