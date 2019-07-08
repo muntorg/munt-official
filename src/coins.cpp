@@ -48,7 +48,7 @@ size_t CCoinsViewCache::DynamicMemoryUsage() const
 
 CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn) const
 {
-    if (!outpoint.isHash)
+    if (outpoint.isHash)
     {
         CCoinsMap::iterator coinIter = cacheCoins.find(outpoint);
         if (coinIter != cacheCoins.end())
