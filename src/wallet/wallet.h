@@ -221,7 +221,15 @@ public:
         if (i >= walletTx->tx->vout.size())
             throw std::out_of_range("The output index is out of range");
 
-        outpoint = COutPoint(walletTx->GetHash(), i);
+        if (walletTx->GetDepthInMainChain() > COINBASE_MATURITY_PHASE4 && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
+        {
+            outpoint = COutPoint(walletTx->nHeight, walletTx->nIndex, i);
+        }
+        else
+        {
+            outpoint = COutPoint(walletTx->GetHash(), i);
+        }
+        
         txout = walletTx->tx->vout[i];
     }
 
