@@ -407,7 +407,7 @@ bool RangedCPBlockFilter::BuildParams(GCSFilter::Params& params) const
 }
 
 
-//fixme: (PHASE4) We can potentially further improve this by indexing only the actual key hashes and not the entire script
+//fixme: (POST-PHASE4) We can potentially further improve this by indexing only the actual key hashes and not the entire script
 //This should be slightly smaller and faster
 void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& blockFilterRanges)
 {

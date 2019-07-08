@@ -121,7 +121,7 @@ CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const C
 , origin(_origin)
 , cloneFrom(_cloneFrom)
 {
-    //fixme: (PHASE4) - Temporarily allow nested cloning 'getwitnessinfo' needs this; however we should fix this in the near future.
+    //fixme: (POST-PHASE4) - Temporarily allow nested cloning 'getwitnessinfo' needs this; however we should fix this in the near future.
     // NB! Nested cloning is okay IFF we stick to a fixed clone height, the second we start trying to optimise by using a non-fixed clone height there will be problems.
     // forbid nested cloning
     //assert(dynamic_cast<const CCloneChain*>(&origin) == nullptr);
