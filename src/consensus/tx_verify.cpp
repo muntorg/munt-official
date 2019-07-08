@@ -839,13 +839,24 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                 continue;
             const Coin& coin = inputs.AccessCoin(prevout);
             assert(!coin.IsSpent());
-
-            // If prev is coinbase, check that it's matured
-            if (coin.IsCoinBase()) {
+            
+            // If prev is index based, then ensure it has sufficient maturity. (For the sake of simplicity we keep this the same depth as mining maturity)
+            if (!prevout.isHash)
+            {
+                // NB! If we ever change the maturity depth here to a different one than that of coinbase maturity - then we also need to change the below 'else if' control block into an 'if' control block.
                 if (nSpendHeight - coin.nHeight < nMaturityDepth)
-                    return state.Invalid(false,
-                        REJECT_INVALID, "bad-txns-premature-spend-of-coinbase",
-                        strprintf("tried to spend coinbase at depth %d", nSpendHeight - coin.nHeight));
+                {
+                    return state.Invalid(false, REJECT_INVALID, "bad-txns-insufficient-depth-index-input", strprintf("tried to spend input via index at depth %d; Only allowed at depth %d", nSpendHeight - coin.nHeight, COINBASE_MATURITY_PHASE4));
+                }
+            }
+            // If prev is coinbase, check that it's matured
+            else if (coin.IsCoinBase())
+            {
+                // NB! If we ever change the maturity depth here to a different one than that of prevout-index maturity (control block above this one) - then we also need to change the above 'else if' for this control block into an 'if' instead.
+                if (nSpendHeight - coin.nHeight < nMaturityDepth)
+                {
+                    return state.Invalid(false, REJECT_INVALID, "bad-txns-premature-spend-of-coinbase", strprintf("tried to spend coinbase at depth %d", nSpendHeight - coin.nHeight));
+                }
             }
 
             // Check for negative or overflow input values
