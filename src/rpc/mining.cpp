@@ -421,17 +421,6 @@ static UniValue BIP22ValidationResult(const CValidationState& state)
     return "valid?";
 }
 
-static std::string gbt_vb_name(const Consensus::DeploymentPos pos) {
-    const struct VBDeploymentInfo& vbinfo = VersionBitsDeploymentInfo[pos];
-    std::string s = vbinfo.name;
-    if (!vbinfo.gbt_force) {
-        s.insert(s.begin(), '!');
-    }
-    return s;
-}
-
-
-
 class submitblock_StateCatcher : public CValidationInterface
 {
 public:
