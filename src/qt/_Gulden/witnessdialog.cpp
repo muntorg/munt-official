@@ -274,6 +274,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->viewWitnessGraphButton->setVisible(false);
     ui->extendButton->setVisible(false);
     ui->upgradeButton->setVisible(false);
+    ui->refundWitnessButton->setVisible(false);
 
     connect(ui->unitButton, SIGNAL(clicked()), this, SLOT(unitButtonClicked()));
     connect(ui->viewWitnessGraphButton, SIGNAL(clicked()), this, SLOT(viewWitnessInfoClicked()));
@@ -286,6 +287,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
     connect(ui->upgradeButton, SIGNAL(clicked()), this, SLOT(upgradeWitnessClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
+    connect(ui->refundWitnessButton, SIGNAL(clicked()), this, SLOT(refundClicked()));
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
     connect(unitDaysAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Days); } );
     connect(unitWeeksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Weeks); } );
@@ -371,6 +373,15 @@ void WitnessDialog::extendClicked()
         GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
     }
 
+}
+
+void WitnessDialog::refundClicked()
+{
+    LogPrint(BCLog::QT, "WitnessDialog::refundClicked\n");
+
+    auto *dialog = new ExtendWitnessDialog(model, platformStyle, this);
+    pushDialog(dialog);
+    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
 }
 
 void WitnessDialog::pushDialog(QWidget *dialog)
@@ -1011,6 +1022,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     ui->unitButton->setVisible(stateUnitButton);
     ui->viewWitnessGraphButton->setVisible(stateViewWitnessGraphButton);
     ui->upgradeButton->setVisible(stateUpgradeButton);
+    ui->refundWitnessButton->setVisible(setIndex == WitnessDialogStates::FINAL && IsSegSigEnabled(chainActive.TipPrev()));
 
     if (!stateUpgradeButton) {
         try {

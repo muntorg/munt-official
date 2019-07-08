@@ -607,8 +607,8 @@
              <item>
               <widget class="QLabel" name="labelUsedAccountInfo">
                <property name="text">
-                <string>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
-In future versions of Gulden it will be possible to re-use this account for further witnessing.</string>
+                <string>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view.
+If you would like to witness again please refund this account or create a new account with which to do so.</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -801,6 +801,16 @@ In future versions of Gulden it will be possible to re-use this account for furt
                   </size>
                  </property>
                 </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="refundWitnessButton">
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="text">
+                  <string>Refund account</string>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="fundWitnessButton">

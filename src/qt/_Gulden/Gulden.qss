@@ -541,7 +541,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
 }
 
 /* The special 'focus' buttons*/
-ExtendWitnessDialog #extendButton, #confirmButton, #accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #withdrawEarningsButton, #fundWitnessButton, #renewWitnessButton
+ExtendWitnessDialog #extendButton, ExtendWitnessDialog #fundButton, #confirmButton, #accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #withdrawEarningsButton, #fundWitnessButton, #refundWitnessButton, #renewWitnessButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -554,7 +554,7 @@ ExtendWitnessDialog #extendButton, #confirmButton, #accountBuyGuldenButton, #don
     padding-right: 20px;
     margin-bottom: 10px;
 }
-#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #withdrawEarningsButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed, #maxButton[pressed=true]
+#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #withdrawEarningsButton:pressed, #fundWitnessButton:pressed, #refundWitnessButton:pressed, #renewWitnessButton:pressed, #maxButton[pressed=true]
 {
     background-color: ACCENT_COLOR_2;
 }

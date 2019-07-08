@@ -100,6 +100,7 @@ public Q_SLOTS:
     void renewWitnessClicked();
     void upgradeWitnessClicked();
     void extendClicked();
+    void refundClicked();
 protected:
 
 private:

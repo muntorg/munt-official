@@ -14,10 +14,11 @@
 #include "Gulden/util.h"
 #include "walletmodel.h"
 #include "optionsmodel.h"
+#include "consensus/validation.h"
 
 #define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
 
-ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
+ExtendWitnessDialog::ExtendWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::ExtendWitnessDialog )
 , platformStyle( _platformStyle )
@@ -26,17 +27,33 @@ ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRema
 {
     ui->setupUi(this);
 
-    // minumium required is tx fee, 1 should do it
-    ui->fundingSelection->setWalletModel(walletModel, 1 * COIN);
+    ui->fundingSelection->setWalletModel(walletModel, minimumFunding);
 
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancelClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
+    connect(ui->fundButton, SIGNAL(clicked()), this, SLOT(fundClicked()));
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SLOT(amountFieldChanged()));
 
     ui->payAmount->setOptionsModel(walletModel->getOptionsModel());
     ui->payAmount->setDisplayMaxButton(false);
     ui->payAmount->setAmount(lockedAmount);
     ui->lockDuration->configure(lockedAmount, durationRemaining, minimumWeight);
+}
+
+ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
+    : ExtendWitnessDialog(1 * COIN, lockedAmount_, durationRemaining, minimumWeight, walletModel_, _platformStyle, parent)
+{
+    ui->extendButton->setVisible(true);
+    ui->fundButton->setVisible(false);
+    ui->labelExtendDescription->setText(tr("Extend a witness to increase amount and/or locking duration. A funding account is needed to provide the transaction fee, even if the amount is not increased."));
+}
+
+ExtendWitnessDialog::ExtendWitnessDialog(WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent)
+    : ExtendWitnessDialog(gMinimumWitnessAmount * COIN, 0, 0, 0, walletModel_, platformStyle, parent)
+{
+    ui->extendButton->setVisible(false);
+    ui->fundButton->setVisible(true);
+    ui->labelExtendDescription->setText(tr("Fund your witness to start witnessing and earn rewards."));
 }
 
 ExtendWitnessDialog::~ExtendWitnessDialog()
@@ -60,7 +77,7 @@ void ExtendWitnessDialog::extendClicked()
     questionString.append("<br /><br />");
     int days = ui->lockDuration->duration() / DailyBlocksTarget();
     questionString.append(tr("%1 will be locked for %2 days (%3).")
-                          .arg(GuldenUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), lockedAmount))
+                          .arg(GuldenUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), ui->payAmount->amount()))
                           .arg(days)
                           .arg(daysToHuman(days)));
     questionString.append("<br /><br />");
@@ -80,12 +97,60 @@ void ExtendWitnessDialog::extendClicked()
             try {
                 LOCK2(cs_main, pactiveWallet->cs_wallet);
                 CAccount* witnessAccount = pactiveWallet->activeAccount;
-                // TODO: fill actual parameters
                 extendwitnessaccount(pactiveWallet,
                                      fundingAccount,
                                      witnessAccount,
                                      ui->payAmount->amount(),
                                      ui->lockDuration->duration(),
+                                     nullptr, nullptr); // ignore result params
+
+                // request dismissal only when succesful
+                Q_EMIT dismiss(this);
+
+            } catch (std::runtime_error& e) {
+                GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
+            }
+
+            pactiveWallet->EndUnlocked();
+        });
+    }
+}
+
+void ExtendWitnessDialog::fundClicked()
+{
+    LOG_QT_METHOD;
+
+    // Format confirmation message
+    QString questionString = tr("Are you sure you want to fund the witness?");
+    questionString.append("<br /><br />");
+    int days = ui->lockDuration->duration() / DailyBlocksTarget();
+    questionString.append(tr("%1 will be locked for %2 days (%3).")
+                              .arg(GuldenUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), ui->payAmount->amount()))
+                              .arg(days)
+                              .arg(daysToHuman(days)));
+    questionString.append("<br /><br />");
+    questionString.append(tr("It will not be possible under any circumstances to spend or move these funds for the duration of the lock period."));
+
+    if(QDialog::Accepted == GUI::createDialog(this, questionString, tr("Fund witness"), tr("Cancel"), 600, 360, "FundWitnessConfirmationDialog")->exec())
+    {
+        // selected fundingAccount
+        CAccount* fundingAccount = ui->fundingSelection->selectedAccount();
+        if (!fundingAccount) {
+            GUI::createDialog(this, tr("No funding account selected"), tr("Okay"), QString(""), 400, 180)->exec();
+            return;
+        }
+
+        pactiveWallet->BeginUnlocked(_("Wallet unlock required to fund witness"), [=](){
+
+            try {
+                LOCK2(cs_main, pactiveWallet->cs_wallet);
+                CAccount* witnessAccount = pactiveWallet->activeAccount;
+                fundwitnessaccount(pactiveWallet,
+                                     fundingAccount,
+                                     witnessAccount,
+                                     ui->payAmount->amount(),
+                                     ui->lockDuration->duration(),
+                                     false,
                                      nullptr, nullptr); // ignore result params
 
                 // request dismissal only when succesful
