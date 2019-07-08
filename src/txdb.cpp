@@ -555,5 +555,6 @@ bool CCoinsViewDB::WriteVersion()
         db.Write(DB_VERSION, (uint32_t)nCurrentVersion);
         return true;
     }
+    return true;
 }
 
