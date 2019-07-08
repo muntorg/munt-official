@@ -1,6 +1,7 @@
 2.2.0
 
 CORE - Extend recovery phrase with (optional) birth number.
+CORE - Introduce 'index based outpoints' to new transaction format; allowing for reduction of transaction size in many cases.
 UI - Option to hide status bar when synchronized (default enabled). Disable to always show status indicators.
 RPC - Implement new 'importlinkedaccount' command.
 RPC - Add an optional purge option to 'deleteseed' command.
