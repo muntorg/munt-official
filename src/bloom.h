@@ -88,11 +88,9 @@ public:
     }
 
     void insert(const std::vector<unsigned char>& vKey);
-    void insert(const COutPoint& outpoint);
     void insert(const uint256& hash);
 
     bool contains(const std::vector<unsigned char>& vKey) const;
-    bool contains(const COutPoint& outpoint) const;
     bool contains(const uint256& hash) const;
 
     void clear();
@@ -101,9 +99,6 @@ public:
     //! True if the size is <= MAX_BLOOM_FILTER_SIZE and the number of hash functions is <= MAX_HASH_FUNCS
     //! (catch a filter which was just deserialized which was too big)
     bool IsWithinSizeConstraints() const;
-
-    //! Also adds any outputs which match the filter to the filter (to match their spending txes)
-    bool IsRelevantAndUpdate(const CTransaction& tx);
 
     //! Checks for empty and full filters to avoid wasting cpu
     void UpdateEmptyFull();

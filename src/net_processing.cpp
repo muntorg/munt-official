@@ -1313,29 +1313,8 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
                         connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::BLOCK, *pblock));
                     else if (inv.type == MSG_FILTERED_BLOCK)
                     {
-                        bool sendMerkleBlock = false;
-                        CMerkleBlock merkleBlock;
-                        {
-                            LOCK(pfrom->cs_filter);
-                            if (pfrom->pfilter) {
-                                sendMerkleBlock = true;
-                                merkleBlock = CMerkleBlock(*pblock, *pfrom->pfilter);
-                            }
-                        }
-                        if (sendMerkleBlock) {
-                            connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(NetMsgType::MERKLEBLOCK, merkleBlock));
-                            // CMerkleBlock just contains hashes, so also push any transactions in the block the client did not see
-                            // This avoids hurting performance by pointlessly requiring a round-trip
-                            // Note that there is currently no way for a node to request any single transactions we didn't send here -
-                            // they must either disconnect and retry or request the full block.
-                            // Thus, the protocol spec specified allows for us to provide duplicate txn here,
-                            // however we MUST always provide at least what the remote peer needs
-                            typedef std::pair<unsigned int, uint256> PairType;
-                            for(PairType& pair : merkleBlock.vMatchedTxn)
-                                connman.PushMessage(pfrom, (pfrom->IsPoW2Capable()?msgMaker:msgMakerHeadersCompat).Make(SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES, NetMsgType::TX, *pblock->vtx[pair.first]));
-                        }
-                        // else
-                            // no response
+                        //fixme: (PHASE5) We can remove this mesage.
+                        // no response
                     }
                     else if (inv.type == MSG_CMPCT_BLOCK)
                     {
@@ -1668,8 +1647,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             nMaxStartingHeight = nStartingHeight;
         pfrom->fClient = !(nServices & NODE_NETWORK);
         {
-            LOCK(pfrom->cs_filter);
-            pfrom->fRelayTxes = fRelay; // set to true after we get the first filter* message
+            pfrom->fRelayTxes = fRelay;
         }
 
         // Change version
@@ -3292,59 +3270,22 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::FILTERLOAD)
     {
-        CBloomFilter filter;
-        vRecv >> filter;
-
-        if (!filter.IsWithinSizeConstraints())
-        {
-            // There is no excuse for sending a too-large filter
-            LOCK(cs_main);
-            Misbehaving(pfrom->GetId(), 100);
-        }
-        else
-        {
-            LOCK(pfrom->cs_filter);
-            delete pfrom->pfilter;
-            pfrom->pfilter = new CBloomFilter(filter);
-            pfrom->pfilter->UpdateEmptyFull();
-            pfrom->fRelayTxes = true;
-        }
+        //fixme: (PHASE5) Remove.
+        //Do nothing for now, bloom filters deprecated.
     }
 
 
     else if (strCommand == NetMsgType::FILTERADD)
     {
-        std::vector<unsigned char> vData;
-        vRecv >> COMPACTSIZEVECTOR(vData);
-
-        // Nodes must NEVER send a data item > 520 bytes (the max size for a script data object,
-        // and thus, the maximum size any matched object can have) in a filteradd message
-        bool bad = false;
-        if (vData.size() > MAX_SCRIPT_ELEMENT_SIZE) {
-            bad = true;
-        } else {
-            LOCK(pfrom->cs_filter);
-            if (pfrom->pfilter) {
-                pfrom->pfilter->insert(vData);
-            } else {
-                bad = true;
-            }
-        }
-        if (bad) {
-            LOCK(cs_main);
-            Misbehaving(pfrom->GetId(), 100);
-        }
+        //fixme: (PHASE5) Remove.
+        //Do nothing for now, bloom filters deprecated.
     }
 
 
     else if (strCommand == NetMsgType::FILTERCLEAR)
     {
-        LOCK(pfrom->cs_filter);
-        if (pfrom->GetLocalServices() & NODE_BLOOM) {
-            delete pfrom->pfilter;
-            pfrom->pfilter = new CBloomFilter();
-        }
-        pfrom->fRelayTxes = true;
+        //fixme: (PHASE5) Remove.
+        //Do nothing for now, bloom filters deprecated.
     }
 
     else if (strCommand == NetMsgType::FEEFILTER) {
@@ -3909,7 +3850,6 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
             // Time to send but the peer has requested we not relay transactions.
             if (fSendTrickle) {
-                LOCK(pto->cs_filter);
                 if (!pto->fRelayTxes) pto->setInventoryTxToSend.clear();
             }
 
@@ -3940,7 +3880,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 // No reason to drain out at many times the network's capacity,
                 // especially since we have many peers and some will draw much shorter delays.
                 unsigned int nRelayedTransactions = 0;
-                LOCK2(mempool.cs, pto->cs_filter);
+                LOCK(mempool.cs);
                 while (!vInvTx.empty() && nRelayedTransactions < INVENTORY_BROADCAST_MAX) {
                     // Fetch the top element from the heap
                     std::pop_heap(vInvTx.begin(), vInvTx.end(), compareInvMempoolOrder);
@@ -3964,7 +3904,6 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                         && txinfo.feeRate.GetFeePerK() != 0) {
                         continue;
                     }
-                    if (pto->pfilter && !pto->pfilter->IsRelevantAndUpdate(*txinfo.tx)) continue;
                     // Send
                     vInv.push_back(CInv(MSG_TX, hash));
                     nRelayedTransactions++;

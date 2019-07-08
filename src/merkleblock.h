@@ -140,13 +140,6 @@ public:
     /** Public only for unit testing and relay testing (not relayed) */
     std::vector<std::pair<unsigned int, uint256> > vMatchedTxn;
 
-    /**
-     * Create from a CBlock, filtering transactions according to filter
-     * Note that this will call IsRelevantAndUpdate on the filter for each transaction,
-     * thus the filter will likely be modified.
-     */
-    CMerkleBlock(const CBlock& block, CBloomFilter& filter);
-
     // Create from a CBlock, matching the txids in the set
     CMerkleBlock(const CBlock& block, const std::set<uint256>& txids);
 

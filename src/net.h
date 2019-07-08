@@ -622,15 +622,11 @@ public:
     const bool fInbound;
     std::atomic_bool fSuccessfullyConnected;
     std::atomic_bool fDisconnect;
-    // We use fRelayTxes for two purposes -
-    // a) it allows us to not relay tx invs before receiving the peer's version message
-    // b) the peer may tell us in its version message that we should not relay tx invs
-    //    unless it loads a bloom filter.
-    bool fRelayTxes; //protected by cs_filter
+    // We use fRelayTxes to avoid relaying tx invs before receiving the peer's version message
+    // The peer may tell us in its version message that we should not relay tx invs
+    bool fRelayTxes;
     bool fSentAddr;
     CSemaphoreGrant grantOutbound;
-    CCriticalSection cs_filter;
-    CBloomFilter* pfilter;
     std::atomic<int> nRefCount;
 
     const uint64_t nKeyedNetGroup;

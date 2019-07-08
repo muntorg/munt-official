@@ -74,14 +74,7 @@ void CBloomFilter::insert(const std::vector<unsigned char>& vKey)
     isEmpty = false;
 }
 
-void CBloomFilter::insert(const COutPoint& outpoint)
-{
-    CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
-    //fixme: (PHASE4) SEGSIG - HIGH
-    outpoint.WriteToStream(stream, (CTxInType)0, (CTxInFlags)0, 3);
-    std::vector<unsigned char> data(stream.begin(), stream.end());
-    insert(data);
-}
+
 
 void CBloomFilter::insert(const uint256& hash)
 {
@@ -103,15 +96,6 @@ bool CBloomFilter::contains(const std::vector<unsigned char>& vKey) const
             return false;
     }
     return true;
-}
-
-bool CBloomFilter::contains(const COutPoint& outpoint) const
-{
-    CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
-    //fixme: (PHASE4) SEGSIG HIGH
-    outpoint.WriteToStream(stream, (CTxInType)0, (CTxInFlags)0, 3);
-    std::vector<unsigned char> data(stream.begin(), stream.end());
-    return contains(data);
 }
 
 bool CBloomFilter::contains(const uint256& hash) const
@@ -136,106 +120,6 @@ void CBloomFilter::reset(const unsigned int nNewTweak)
 bool CBloomFilter::IsWithinSizeConstraints() const
 {
     return vData.size() <= MAX_BLOOM_FILTER_SIZE && nHashFuncs <= MAX_HASH_FUNCS;
-}
-
-bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
-{
-    bool fFound = false;
-    // Match if the filter contains the hash of tx
-    //  for finding tx when they appear in a block
-    if (isFull)
-        return true;
-    if (isEmpty)
-        return false;
-    const uint256& hash = tx.GetHash();
-    if (contains(hash))
-        fFound = true;
-
-    for (unsigned int i = 0; i < tx.vout.size(); i++)
-    {
-        const CTxOut& txout = tx.vout[i];
-        // Match if the filter contains any arbitrary script data element in any scriptPubKey in tx
-        // If this matches, also add the specific output that was matched.
-        // This means clients don't have to update the filter themselves when a new relevant tx 
-        // is discovered in order to find spending transactions, which avoids round-tripping and race conditions.
-        switch(CTxOutType(txout.output.nType))
-        {
-            case CTxOutType::ScriptLegacyOutput:
-            {
-                CScript::const_iterator pc = txout.output.scriptPubKey.begin();
-                std::vector<unsigned char> data;
-                while (pc < txout.output.scriptPubKey.end())
-                {
-                    opcodetype opcode;
-                    if (!txout.output.scriptPubKey.GetOp(pc, opcode, data))
-                        break;
-                    if (data.size() != 0 && contains(data))
-                    {
-                        fFound = true;
-                        if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_ALL)
-                            insert(COutPoint(hash, i));
-                        else if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_P2PUBKEY_ONLY)
-                        {
-                            txnouttype type;
-                            std::vector<std::vector<unsigned char> > vSolutions;
-                            if (Solver(txout.output.scriptPubKey, type, vSolutions) &&
-                                    (type == TX_PUBKEY || type == TX_MULTISIG))
-                                insert(COutPoint(hash, i));
-                        }
-                        break;
-                    }
-                }
-                break;
-            }
-            case CTxOutType::PoW2WitnessOutput:
-            {
-                if (contains(std::vector<unsigned char>(txout.output.standardKeyHash.keyID.begin(), txout.output.standardKeyHash.keyID.end())))
-                {
-                    fFound = true;
-                    insert(COutPoint(hash, i));
-                }
-                break;
-            }
-            case CTxOutType::StandardKeyHashOutput:
-            {
-                if (contains(std::vector<unsigned char>(txout.output.witnessDetails.witnessKeyID.begin(), txout.output.witnessDetails.witnessKeyID.end())))
-                {
-                    fFound = true;
-                    insert(COutPoint(hash, i));
-                }
-                else if(contains(std::vector<unsigned char>(txout.output.witnessDetails.spendingKeyID.begin(), txout.output.witnessDetails.spendingKeyID.end())))
-                {
-                    fFound = true;
-                    insert(COutPoint(hash, i));
-                }
-                break;
-            }
-        }
-    }
-
-    if (fFound)
-        return true;
-
-    for(const CTxIn& txin : tx.vin)
-    {
-        // Match if the filter contains an outpoint tx spends
-        if (contains(txin.prevout))
-            return true;
-
-        // Match if the filter contains any arbitrary script data element in any scriptSig in tx
-        CScript::const_iterator pc = txin.scriptSig.begin();
-        std::vector<unsigned char> data;
-        while (pc < txin.scriptSig.end())
-        {
-            opcodetype opcode;
-            if (!txin.scriptSig.GetOp(pc, opcode, data))
-                break;
-            if (data.size() != 0 && contains(data))
-                return true;
-        }
-    }
-
-    return false;
 }
 
 void CBloomFilter::UpdateEmptyFull()

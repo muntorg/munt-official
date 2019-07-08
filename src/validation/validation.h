@@ -48,7 +48,6 @@
 #endif
 class CBlockIndex;
 class CBlockTreeDB;
-class CBloomFilter;
 class CChainParams;
 class CCoinsViewDB;
 class CInv;
