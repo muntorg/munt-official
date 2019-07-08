@@ -80,10 +80,9 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     if (nOldTime < nNewTime)
         pblock->nTime = nNewTime;
 
-    // Allow pools to control maximum diff drop to suit their hashrate (prevent sudden pool ddos from 100s of blocks)
-    // Larger pools should stick to 0, smaller pools should put a higher value.
-    //fixme: (POST-PHASE5) Speed up once confirmed working.
-    int64_t nMaxMissedSteps = GetArg("-limitdeltadiffdrop", 0);
+    //fixme: (PHASE5) - We can likely remove this
+    // Allow miners to control maximum diff drop to suit their hashrate (prevent sudden self-ddos from 100s of blocks being found per second)
+    int64_t nMaxMissedSteps = GetArg("-limitdeltadiffdrop", 5000);
     static const int64_t nDrift   = 1;
     static int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
     static int64_t nLongTimeStep  = nDrift * 60;
@@ -174,7 +173,7 @@ void BlockAssembler::resetBlock()
 }
 
 
-static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const CChainParams& params, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase, std::vector<unsigned char>& witnessCoinbaseHex, std::vector<unsigned char>& witnessSubsidyHex)
+static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const CChainParams& params, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
 {
     assert(pindexPrev->nHeight == pWitnessBlockToEmbed->nHeight);
     assert(pindexPrev->pprev == pWitnessBlockToEmbed->pprev);
@@ -234,13 +233,6 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
         // Serialised PoW2 witness header (witness portion only)
         // Followed by a single transaction for the witness reward (20 NLG witness reward)
         {
-            // For the benefit of GetBlockTemplate
-            CVectorWriter serialisedCoinbase(SER_NETWORK, INIT_PROTO_VERSION,witnessCoinbaseHex, 0);
-            out.WriteToStream(serialisedCoinbase, CTransaction::CURRENT_VERSION);
-            CVectorWriter serialisedWitnessSubsidy(SER_NETWORK, INIT_PROTO_VERSION,witnessSubsidyHex, 0);
-            pWitnessBlock->vtx[nWitnessCoinbasePos]->vout[1].WriteToStream(serialisedWitnessSubsidy, CTransaction::CURRENT_VERSION);
-
-            // For the actual coinbase
             CMutableTransaction coinbaseTx(*block.vtx[0]);
             coinbaseTx.vout.push_back(out);
             coinbaseTx.vout.push_back(pWitnessBlock->vtx[nWitnessCoinbasePos]->vout[1]); // Witness subsidy
@@ -259,7 +251,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     return true;
 }
 
-std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck, std::vector<unsigned char>* pWitnessCoinbaseHex, std::vector<unsigned char>* pWitnessSubsidyHex, CAmount* pAmountPoW2Subsidy)
+std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
 {
     fMineSegSig = true;
 
@@ -307,8 +299,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     if (nParentPoW2Phase >= 3)
     {
         nSubsidyWitness = GetBlockSubsidyWitness(nHeight);
-        if (pAmountPoW2Subsidy)
-            *pAmountPoW2Subsidy = nSubsidyWitness;
         nSubsidy -= nSubsidyWitness;
     }
 
@@ -443,14 +433,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         if (pWitnessBlockToEmbed)
         {
             //NB! Modifies block version so must be called *after* ComputeBlockVersion and not before.
-            std::vector<unsigned char> witnessCoinbaseHex;
-            std::vector<unsigned char> witnessSubsidyHex;
-            if (!InsertPoW2WitnessIntoCoinbase(*pblock, pParent, chainparams, pWitnessBlockToEmbed, nParentPoW2Phase, witnessCoinbaseHex, witnessSubsidyHex))
+            if (!InsertPoW2WitnessIntoCoinbase(*pblock, pParent, chainparams, pWitnessBlockToEmbed, nParentPoW2Phase))
                 return nullptr;
-            if (pWitnessCoinbaseHex)
-                *pWitnessCoinbaseHex = witnessCoinbaseHex;
-            if (pWitnessSubsidyHex)
-                *pWitnessSubsidyHex = witnessSubsidyHex;
         }
     }
 
