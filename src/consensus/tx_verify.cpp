@@ -359,8 +359,7 @@ void IncrementWitnessFailCount(uint64_t& failCount)
 
 inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 {
-    //fixme: (PHASE4) - Retest this for phase 4 switchover (that it doesn't cause any issues at switchover)
-    //fixme: (PHASE4) - Remove this check for phase 4.
+    //fixme: (PHASE5) - We can remove the top code block here once we are in phase5.
     if (input.segregatedSignatureData.stack.size() == 0)
     {
         // At this point we only need to check here that the scriptSig is push only and that it has 4 items as a result, the rest is checked by later parts of the code.
