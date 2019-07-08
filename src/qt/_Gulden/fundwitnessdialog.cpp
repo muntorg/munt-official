@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "extendwitnessdialog.h"
-#include <qt/_Gulden/forms/ui_extendwitnessdialog.h>
+#include "fundwitnessdialog.h"
+#include <qt/_Gulden/forms/ui_fundwitnessdialog.h>
 
 #include <stdexcept>
 #include "wallet/wallet.h"
@@ -18,9 +18,9 @@
 
 #define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
 
-ExtendWitnessDialog::ExtendWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
+FundWitnessDialog::FundWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
-, ui( new Ui::ExtendWitnessDialog )
+, ui( new Ui::FundWitnessDialog )
 , platformStyle( _platformStyle )
 , walletModel(walletModel_)
 , lockedAmount(lockedAmount_)
@@ -40,35 +40,35 @@ ExtendWitnessDialog::ExtendWitnessDialog(CAmount minimumFunding, CAmount lockedA
     ui->lockDuration->configure(lockedAmount, durationRemaining, minimumWeight);
 }
 
-ExtendWitnessDialog::ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
-    : ExtendWitnessDialog(1 * COIN, lockedAmount_, durationRemaining, minimumWeight, walletModel_, _platformStyle, parent)
+FundWitnessDialog::FundWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
+    : FundWitnessDialog(1 * COIN, lockedAmount_, durationRemaining, minimumWeight, walletModel_, _platformStyle, parent)
 {
     ui->extendButton->setVisible(true);
     ui->fundButton->setVisible(false);
     ui->labelExtendDescription->setText(tr("Extend a witness to increase amount and/or locking duration. A funding account is needed to provide the transaction fee, even if the amount is not increased."));
 }
 
-ExtendWitnessDialog::ExtendWitnessDialog(WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent)
-    : ExtendWitnessDialog(gMinimumWitnessAmount * COIN, 0, 0, 0, walletModel_, platformStyle, parent)
+FundWitnessDialog::FundWitnessDialog(WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent)
+    : FundWitnessDialog(gMinimumWitnessAmount * COIN, 0, 0, 0, walletModel_, platformStyle, parent)
 {
     ui->extendButton->setVisible(false);
     ui->fundButton->setVisible(true);
     ui->labelExtendDescription->setText(tr("Fund your witness to start witnessing and earn rewards."));
 }
 
-ExtendWitnessDialog::~ExtendWitnessDialog()
+FundWitnessDialog::~FundWitnessDialog()
 {
     delete ui;
 }
 
-void ExtendWitnessDialog::cancelClicked()
+void FundWitnessDialog::cancelClicked()
 {
     LOG_QT_METHOD;
 
     Q_EMIT dismiss(this);
 }
 
-void ExtendWitnessDialog::extendClicked()
+void FundWitnessDialog::extendClicked()
 {
     LOG_QT_METHOD;
 
@@ -116,7 +116,7 @@ void ExtendWitnessDialog::extendClicked()
     }
 }
 
-void ExtendWitnessDialog::fundClicked()
+void FundWitnessDialog::fundClicked()
 {
     LOG_QT_METHOD;
 
@@ -165,7 +165,7 @@ void ExtendWitnessDialog::fundClicked()
     }
 }
 
-void ExtendWitnessDialog::amountFieldChanged()
+void FundWitnessDialog::amountFieldChanged()
 {
     CAmount newAmount = ui->payAmount->amount();
     ui->lockDuration->setAmount(newAmount);

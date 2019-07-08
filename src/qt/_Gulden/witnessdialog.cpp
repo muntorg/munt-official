@@ -41,7 +41,7 @@
 
 #include "Gulden/util.h"
 #include "GuldenGUI.h"
-#include "extendwitnessdialog.h"
+#include "fundwitnessdialog.h"
 #include "upgradewitnessdialog.h"
 #include "accounttablemodel.h"
 #include "consensus/validation.h"
@@ -366,7 +366,7 @@ void WitnessDialog::extendClicked()
         CAccount* witnessAccount = pactiveWallet->activeAccount;
         auto [lockedAmount, durationRemaining, oldWeight, immature] = extendWitnessInfo(pactiveWallet, witnessAccount);
         (unused)immature;
-        auto *dialog = new ExtendWitnessDialog(lockedAmount, durationRemaining, oldWeight, model, platformStyle, this);
+        auto *dialog = new FundWitnessDialog(lockedAmount, durationRemaining, oldWeight, model, platformStyle, this);
         pushDialog(dialog);
         connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
     } catch (std::runtime_error& e) {
@@ -379,7 +379,7 @@ void WitnessDialog::refundClicked()
 {
     LogPrint(BCLog::QT, "WitnessDialog::refundClicked\n");
 
-    auto *dialog = new ExtendWitnessDialog(model, platformStyle, this);
+    auto *dialog = new FundWitnessDialog(model, platformStyle, this);
     pushDialog(dialog);
     connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
 }
