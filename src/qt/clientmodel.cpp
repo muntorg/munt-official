@@ -351,7 +351,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
 
 void ClientModel::updatePoW2Display()
 {
-    //fixme: (FUT) We can remove this for 2.1
+    //fixme: (PHASE5) We can remove this once phase5 is locked in
     cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
 }
 

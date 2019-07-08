@@ -845,7 +845,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                 // NB! If we ever change the maturity depth here to a different one than that of coinbase maturity - then we also need to change the below 'else if' control block into an 'if' control block.
                 if (nSpendHeight - coin.nHeight < nMaturityDepth)
                 {
-                    return state.Invalid(false, REJECT_INVALID, "bad-txns-insufficient-depth-index-input", strprintf("tried to spend input via index at depth %d; Only allowed at depth %d", nSpendHeight - coin.nHeight, COINBASE_MATURITY_PHASE4));
+                    return state.Invalid(false, REJECT_INVALID, "bad-txns-insufficient-depth-index-input", strprintf("tried to spend input via index at depth %d; Only allowed at depth %d", nSpendHeight - coin.nHeight, nMaturityDepth));
                 }
             }
             // If prev is coinbase, check that it's matured

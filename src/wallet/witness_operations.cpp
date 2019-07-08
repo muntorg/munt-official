@@ -45,8 +45,8 @@ std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, 
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     (unused)currentWitnessOutpoint;
 
-    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+    //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
             immatureWitness = true;
 
     // Calculate existing lock period
@@ -83,8 +83,8 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
 
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
-    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+    //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
         throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     // Check type (can't extend script type, must witness once or renew after phase 4 activated)

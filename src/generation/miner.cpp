@@ -304,7 +304,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
 
     // First 'active' block of phase 4 (first block with a phase 4 parent) contains two witness subsidies so miner loses out on 20 NLG for this block
-    // This block is treated special. (but special casing can dissapear for 2.1 release.
+    // This block is treated special. (but special casing can dissapear for PHASE5 release.
     if (nGrandParentPoW2Phase == 3 && nParentPoW2Phase == 4)
         nSubsidy -= GetBlockSubsidyWitness(nHeight);
 

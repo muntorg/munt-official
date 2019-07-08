@@ -496,7 +496,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
             int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
             if ( (nType >= TransactionRecord::WitnessFundRecv) )
             {
-                //fixme (2.1) - (multiple witnesses in single account etc.)
+                //fixme (PHASE4) - (multiple witnesses in single account etc.)
                 if (infoForAccount.nOriginBlock == 0)
                 {
                     infoForAccount.originDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();

@@ -88,7 +88,7 @@ public:
 };
 
 //fixme: (PHASE4) This can potentially be improved.
-//6 is the lower bound for the size of a SegSign txin
+//6 is the lower bound for the size of a SegSig txin
 static const size_t MAX_INPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 6; // TODO: merge with similar definition in undo.h.
 
 /** Undo information for a CTransaction */

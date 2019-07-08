@@ -375,7 +375,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("lock_period_expired", fLockPeriodExpired));
             rec.push_back(Pair("eligible_to_witness", fEligible));
             rec.push_back(Pair("expired_from_inactivity", fExpired));
-            //fixme: (2.1) Add these two
+            //fixme: (PHASE4) Add these two
             //rec.push_back(Pair("fail_count", fExpired));
             //rec.push_back(Pair("action_nonce", fExpired));
             #ifdef ENABLE_WALLET
@@ -1464,7 +1464,7 @@ static UniValue importreadonlyaccount(const JSONRPCRequest& request)
     if (!account)
         throw std::runtime_error("Unable to create account.");
 
-    //fixme: (2.1) Use a timestamp here
+    //fixme: (PHASE4) Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwallet->nTimeFirstKey = 1;
     ResetSPVStartRescanThread();
@@ -1585,7 +1585,7 @@ static UniValue setactiveaccount(const JSONRPCRequest& request)
     return getUUIDAsString(account->getUUID());
 }
 
-//fixme: (2.1) Improve help for this.
+//fixme: (PHASE4) Improve help for this.
 static UniValue getaccountbalances(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1851,7 +1851,7 @@ static UniValue importseed(const JSONRPCRequest& request)
         newSeed = pwallet->ImportHDSeed(mnemonic, seedType);
     }
 
-    //fixme: (2.1) Use a timestamp here
+    //fixme: (PHASE4) Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwallet->nTimeFirstKey = 1;
     ResetSPVStartRescanThread();
@@ -2057,8 +2057,9 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
 
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
-    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+    //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    //fixme: (PHASE4) - Look into shortening the maturity period here, the full period is too long.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     // Get the current witness details
@@ -2074,7 +2075,7 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot rotate a witness-only account as spend key is required to do this.");
     }
 
-    //fixme: (2.1) factor this all out into a helper.
+    //fixme: (PHASE4) factor this all out into a helper.
     // Finally attempt to create and send the witness transaction.
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
     std::string reasonForFail;
@@ -2117,7 +2118,7 @@ static UniValue rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector
         }
     }
 
-    //fixme: (2.1) Improve this, it should only happen if Sign transaction is a success.
+    //fixme: (PHASE4) Improve this, it should only happen if Sign transaction is a success.
     //Also We must make sure that the UI version of this command does the same
     //Also (low) this shares common code with CreateTransaction() - it should be factored out into a common helper.
     CKey privWitnessKey;
@@ -2432,7 +2433,7 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
     }
 
-    //fixme: (2.1) - Share common code with GUI::requestRenewWitness
+    //fixme: (PHASE5) - Share common code with GUI::requestRenewWitness
     std::string strError;
     CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
     CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
@@ -2525,14 +2526,14 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
     if (unspentWitnessOutputs.size() == 0)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].", request.params[1].get_str()));
 
-    //fixme: (2.1) - Handle address
+    //fixme: (PHASE4) - Handle address
     if (unspentWitnessOutputs.size() > 1)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account has too many witness outputs cannot split [%s].", request.params[1].get_str()));
 
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
-    //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+    //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     CAmount splitTotal=0;
@@ -2551,7 +2552,7 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
     CTxOutPoW2Witness currentWitnessDetails;
     GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
 
-    //fixme: (2.1) factor this all out into a helper.
+    //fixme: (PHASE5) factor this all out into a helper.
     // Finally attempt to create and send the witness transaction.
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
     std::string reasonForFail;
@@ -2665,8 +2666,8 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
     {
         (unused) currentWitnessTxOut;
         (unused) currentWitnessOutpoint;
-        //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
+        //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
             throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
     }
 
@@ -2676,7 +2677,7 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
     CTxOutPoW2Witness currentWitnessDetails;
     GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
 
-    //fixme: (2.1) factor this all out into a helper.
+    //fixme: (PHASE5) factor this all out into a helper.
     // Finally attempt to create and send the witness transaction.
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
     std::string reasonForFail;
@@ -3025,7 +3026,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
             {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness account.");
             }
-            //fixme: (2.1) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+            //fixme: (PHASE4) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
             witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
             witnessAccountKeys += ":";
         }
@@ -3084,7 +3085,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
             {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness address.");
             }
-            //fixme: (2.1) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+            //fixme: (PHASE4) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
             witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
             break;
         }
@@ -3166,7 +3167,7 @@ static const CRPCCommand commands[] =
     { "mining",                  "gethashps",                       &gethashps,                      true,    {} },
     { "mining",                  "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
 
-    //fixme: (2.1) Many of these belong in accounts category as well.
+    //fixme: (PHASE5) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
     { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
     { "witness",                 "extendwitnessaccount",            &extendwitnessaccount,           true,    {"funding_account", "witness_account", "amount", "time" } },

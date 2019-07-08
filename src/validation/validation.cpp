@@ -1062,7 +1062,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                         break;
                     }
                 }
-                //testme: (GULDEN) (2.1) I think this is a duplicate check so can probably be removed.
+                //testme: (GULDEN) (PHASE5) I think this is a duplicate check so can probably be removed.
                 if (nWitnessCoinbaseIndex == 0)
                 {
                     return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
@@ -2760,7 +2760,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
                 break;
             }
         }
-        //checkme: (GULDEN) (2.1) Pretty sure this is a duplicate check - so we should eventually remove it, for now we just leave it in.
+        //fixme: (PHASE5) Pretty sure this is a duplicate check - so we should eventually remove it, for now we just leave it in.
         if (nWitnessCoinbaseIndex == 0)
         {
             return state.DoS(100, error("ContextualCheckBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
