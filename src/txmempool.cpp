@@ -523,7 +523,7 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMem
     for (indexed_transaction_set::const_iterator it = mapTx.begin(); it != mapTx.end(); it++) {
         const CTransaction& tx = it->GetTx();
         LockPoints lp = it->GetLockPoints();
-        uint64_t nMaturityDepth;
+        int64_t nMaturityDepth;
         if (IsOldTransactionVersion(tx.nVersion))
         {
             nMaturityDepth = COINBASE_MATURITY;
