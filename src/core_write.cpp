@@ -206,8 +206,8 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
             {
                 in.pushKV("prevout_type", "index");
                 in.pushKV("txid", "");
-                in.pushKV("tx_height", txin.prevout.prevBlock.blockNumber);
-                in.pushKV("tx_index", txin.prevout.prevBlock.transactionIndex);
+                in.pushKV("tx_height", txin.prevout.getTransactionBlockNumber());
+                in.pushKV("tx_index", txin.prevout.getTransactionIndex());
             }
             
             in.pushKV("vout", (int64_t)txin.prevout.n);
