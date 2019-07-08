@@ -820,7 +820,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                 return state.Invalid(false, 0, "", "Inputs unavailable");
         }
 
-        uint64_t nMaturityDepth;
+        int64_t nMaturityDepth;
         if (IsOldTransactionVersion(tx.nVersion))
         {
             nMaturityDepth = COINBASE_MATURITY;
