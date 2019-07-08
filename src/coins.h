@@ -30,7 +30,8 @@
  * A UTXO entry.
  *
  * Serialized format:
- * - VARINT((coinbase ? 1 : 0) | (height << 1))
+ * - VARINT((height << 2) | (segsig << 1) | (coinbase))
+ * - VARINT(index)
  * - the non-spent CTxOut (via CTxOutCompressor)
  */
 class Coin
@@ -47,20 +48,41 @@ public:
     //NB! This limits us to ~5000 years before we need to update serialisation format - so may eventually have to change but not an issue for now.
     //MEMPOOL_HEIGHT indicates it is not yet in the chain - any adjustments to the size of this type should also adjust the value of MEMPOOL_HEIGHT
     uint32_t nHeight : 30;
+    
+    //! The index of the containing transaction within its parent block
+    uint32_t nTxIndex;
 
     //! construct a Coin from a CTxOut and height/coinbase information.
-    Coin(CTxOut&& outIn, uint32_t nHeightIn, bool fCoinBaseIn, bool fSegSigIn) : out(std::move(outIn)), fCoinBase(fCoinBaseIn), fSegSig(fSegSigIn), nHeight(nHeightIn) {}
-    Coin(const CTxOut& outIn, uint32_t nHeightIn, bool fCoinBaseIn, bool fSegSigIn) : out(outIn), fCoinBase(fCoinBaseIn),fSegSig(fSegSigIn),nHeight(nHeightIn) {}
+    Coin(CTxOut&& outIn, uint32_t nHeightIn, uint32_t nTxIndexIn, bool fCoinBaseIn, bool fSegSigIn)
+    : out(std::move(outIn))
+    , fCoinBase(fCoinBaseIn)
+    , fSegSig(fSegSigIn)
+    , nHeight(nHeightIn)
+    , nTxIndex(nTxIndexIn)
+    {}
+    Coin(const CTxOut& outIn, uint32_t nHeightIn, uint32_t nTxIndexIn, bool fCoinBaseIn, bool fSegSigIn)
+    : out(outIn)
+    , fCoinBase(fCoinBaseIn)
+    , fSegSig(fSegSigIn)
+    , nHeight(nHeightIn)
+    , nTxIndex(nTxIndexIn)
+    {}
 
     void Clear() {
         out.SetNull();
         fCoinBase = false;
         fSegSig = false;
         nHeight = 0;
+        nTxIndex = 0;
     }
 
     //! empty constructor
-    Coin() : fCoinBase(false), fSegSig(false), nHeight(0) { }
+    Coin()
+    : fCoinBase(false)
+    , fSegSig(false)
+    , nHeight(0)
+    , nTxIndex(0)
+    { }
 
     bool IsCoinBase() const {
         return fCoinBase;
@@ -69,8 +91,9 @@ public:
     template<typename Stream>
     void Serialize(Stream &s) const {
         assert(!IsSpent());
-        uint32_t code = (fSegSig << 31) + (nHeight<<1) + fCoinBase;
+        uint32_t code = (nHeight<<2) + (fSegSig << 1) + fCoinBase;
         ::Serialize(s, VARINT(code));
+        ::Serialize(s, VARINT(nTxIndex));
         out.WriteToStream(s, (fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
     }
 
@@ -78,9 +101,10 @@ public:
     void Unserialize(Stream &s) {
         uint32_t code = 0;
         ::Unserialize(s, VARINT(code));
-        nHeight = ( ((code  & 0b01111111111111111111111111111110) >> 1) );
-        fSegSig = ( (code   & 0b10000000000000000000000000000000) > 0 );
+        nHeight = ( ((code  & 0b11111111111111111111111111111100) >> 2) );
+        fSegSig = ( (code   & 0b00000000000000000000000000000010) > 0 );
         fCoinBase = ( (code & 0b00000000000000000000000000000001) > 0 );
+        ::Unserialize(s, VARINT(nTxIndex));
         out.ReadFromStream(s, (fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
     }
 
@@ -132,6 +156,7 @@ struct CCoinsCacheEntry
 };
 
 typedef std::unordered_map<COutPoint, CCoinsCacheEntry, SaltedOutpointHasher> CCoinsMap;
+typedef std::unordered_map<COutPoint, COutPoint, SaltedOutpointHasher> CCoinsRefMap;
 
 /** Cursor for iterating over CoinsView state */
 class CCoinsViewCursor
@@ -158,7 +183,7 @@ class CCoinsView
 {
 public:
     //! Retrieve the Coin (unspent transaction output) for a given outpoint.
-    virtual bool GetCoin(const COutPoint &outpoint, Coin &coin) const;
+    virtual bool GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet=nullptr) const;
 
     //! Just check whether we have data for a given outpoint.
     //! This may (but cannot always) return true for spent outputs.
@@ -196,7 +221,7 @@ protected:
 
 public:
     CCoinsViewBacked(CCoinsView *viewIn);
-    bool GetCoin(const COutPoint &outpoint, Coin &coin) const override;
+    bool GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet=nullptr) const override;
     bool HaveCoin(const COutPoint &outpoint) const override;
     uint256 GetBestBlock() const override;
     void SetBackend(CCoinsView &viewIn);
@@ -224,6 +249,7 @@ protected:
      */
     mutable uint256 hashBlock;
     mutable CCoinsMap cacheCoins;
+    mutable CCoinsRefMap cacheCoinRefs;
 
     /* Cached dynamic memory usage for the inner Coin objects. */
     mutable size_t cachedCoinsUsage;
@@ -233,7 +259,7 @@ public:
     CCoinsViewCache(CCoinsView *baseIn);
 
     // Standard CCoinsView methods
-    bool GetCoin(const COutPoint &outpoint, Coin &coin) const override;
+    bool GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet=nullptr) const override;
     bool HaveCoin(const COutPoint &outpoint) const override;
     uint256 GetBestBlock() const override;
     void SetBestBlock(const uint256 &hashBlock);
@@ -331,7 +357,7 @@ public:
     }
 
 private:
-    CCoinsMap::iterator FetchCoin(const COutPoint &outpoint) const;
+    CCoinsMap::iterator FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn=nullptr) const;
 
     /**
      * By making the copy constructor private, we prevent accidentally using it when one intends to create a cache on top of a base cache.
@@ -343,7 +369,7 @@ private:
 // It assumes that overwrites are only possible for coinbase transactions,
 // TODO: pass in a boolean to limit these possible overwrites to known
 // (pre-BIP34) cases.
-void AddCoins(CCoinsViewCache& cache, const CTransaction& tx, int nHeight);
+void AddCoins(CCoinsViewCache& cache, const CTransaction& tx, int nHeight, int nTxIndex);
 
 //! Utility function to find any unspent output with a given txid.
 const Coin& AccessByTxid(const CCoinsViewCache& cache, const uint256& txid);

@@ -144,10 +144,14 @@ class CCoinsViewErrorCatcher : public CCoinsViewBacked
 {
 public:
     CCoinsViewErrorCatcher(CCoinsView* view) : CCoinsViewBacked(view) {}
-    bool GetCoin(const COutPoint &outpoint, Coin &coin) const override {
-        try {
-            return CCoinsViewBacked::GetCoin(outpoint, coin);
-        } catch(const std::runtime_error& e) {
+    bool GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet=nullptr) const override
+    {
+        try
+        {
+            return CCoinsViewBacked::GetCoin(outpoint, coin, pOutpointRet);
+        }
+        catch(const std::runtime_error& e)
+        {
             uiInterface.ThreadSafeMessageBox(_("Error reading from database, shutting down."), "", CClientUIInterface::MSG_ERROR);
             LogPrintf("Error reading from database: %s\n", e.what());
             // Starting the shutdown sequence and returning false to the caller would be
@@ -1364,18 +1368,32 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 pcoinsTip->SetSiblingView(ppow2witTip);
 
 
-                if (fReindex) {
+                if (fReindex)
+                {
                     pblocktree->WriteReindexing(true);
                     //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
                     if (fPruneMode)
                         CleanupBlockRevFiles();
-                } else {
-                    // If necessary, upgrade from older database format.
-                    if (!pcoinsdbview->Upgrade()) {
-                        strLoadError = errortr("Error upgrading chainstate database");
-                        break;
+                }
+                else
+                {
+                    if (pcoinsdbview->RequiresReindex())
+                    {
+                        fReindex = true;
+                        goto loadblockindex;
+                    }
+                    else
+                    {
+                        // If necessary, upgrade from older database format.
+                        if (!pcoinsdbview->Upgrade())
+                        {
+                            strLoadError = errortr("Error upgrading chainstate database");
+                            break;
+                        }
                     }
                 }
+                pcoinsdbview->WriteVersion();
+                
 
                 //GULDEN - version 2.0 upgrade
                 if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < 1)

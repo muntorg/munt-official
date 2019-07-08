@@ -79,7 +79,7 @@ protected:
 public:
     CCoinsViewDB(size_t nCacheSize, bool fMemory = false, bool fWipe = false, std::string name="chainstate");
 
-    bool GetCoin(const COutPoint &outpoint, Coin &coin) const override;
+    bool GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet=nullptr) const override;
     bool HaveCoin(const COutPoint &outpoint) const override;
     uint256 GetBestBlock() const override;
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
@@ -97,10 +97,18 @@ public:
 
     //! Attempt to update from an older database format. Returns whether an error occurred.
     bool Upgrade();
+    
+    //! In extreme cases an update might require a complete re-index; if this is the case then this function will return true.
+    bool RequiresReindex();
+    
+    //! Write the version number after creating a new database; no-op if its an existing database with an existing version.
+    bool WriteVersion();
+    
+    
     size_t EstimateSize() const override;
     // For handling of upgrades.
-    uint32_t nCurrentVersion;
-    uint32_t nPreviousVersion;
+    uint32_t nCurrentVersion=2;
+    uint32_t nPreviousVersion=1;
 
     /*int GetDepth() const override
     {

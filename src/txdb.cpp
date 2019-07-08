@@ -24,8 +24,12 @@
 
 #include <validation/witnessvalidation.h> //For ppow2witTip (remove in future)
 
-static const char DB_COIN = 'C';
+// Old v0 format, deprecated v1
 static const char DB_COINS = 'c';
+
+// v1 format
+static const char DB_COIN = 'C';
+
 static const char DB_BLOCK_FILES = 'f';
 static const char DB_TXINDEX = 't';
 static const char DB_BLOCK_INDEX = 'b';
@@ -41,6 +45,9 @@ static const char DB_POW2_PHASE3 = '3';
 static const char DB_POW2_PHASE4 = '4';
 static const char DB_POW2_PHASE5 = '5';
 
+// Additional v2 format
+static const char DB_COIN_REF = 'r';
+
 namespace {
 
 struct CoinEntry {
@@ -51,7 +58,6 @@ struct CoinEntry {
     template<typename Stream>
     void Serialize(Stream &s) const {
         s << key;
-        //fixme: (PHASE4) (SEGSIG) - Implement handling of non-hash outpoints.
         s << outpoint->getHash();
         uint32_t nTemp = outpoint->n;
         s << VARINT(nTemp);
@@ -60,13 +66,50 @@ struct CoinEntry {
     template<typename Stream>
     void Unserialize(Stream& s) {
         s >> key;
-        //fixme: (PHASE4) (SEGSIG) - Implement handling of non-hash outpoints.
         uint256 hash;
         s >> hash;
         outpoint->setHash(hash);
         uint32_t n_ = 0;
         s >> VARINT(n_);
         outpoint->n = n_;
+    }
+};
+
+struct CoinEntryRef {
+    char key;
+    uint64_t nHeight;
+    uint64_t nTxIndex;
+    uint32_t n;
+    CoinEntryRef(uint64_t nHeightIn, uint64_t nTxIndexIn, uint64_t nIn)
+    : key(DB_COIN_REF)
+    , nHeight(nHeightIn)
+    , nTxIndex(nTxIndexIn)
+    , n(nIn)
+    {}
+    
+    CoinEntryRef(const COutPoint& outpoint)
+    : key(DB_COIN_REF)
+    {
+        assert(!outpoint.isHash);
+        nHeight = outpoint.getTransactionBlockNumber();
+        nTxIndex = outpoint.getTransactionIndex();
+        n = outpoint.n;
+    }
+
+    template<typename Stream>
+    void Serialize(Stream &s) const {
+        s << key;
+        s << nHeight; //NB! We delibritely don't use varint here, to remove the possibility of collisions.
+        s << nTxIndex;
+        s << VARINT(n);
+    }
+
+    template<typename Stream>
+    void Unserialize(Stream& s) {
+        s >> key;
+        s >> nHeight;
+        s >> nTxIndex;
+        s >> VARINT(n);
     }
 };
 
@@ -80,12 +123,34 @@ CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe, std::str
 {
 }
 
-bool CCoinsViewDB::GetCoin(const COutPoint &outpoint, Coin &coin) const {
-    return db.Read(CoinEntry(&outpoint), coin);
+bool CCoinsViewDB::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const
+{
+    if (!outpoint.isHash)
+    {
+        uint256 hash;
+        if (db.Read(CoinEntryRef(outpoint), hash))
+        {
+            COutPoint dereferencedOutpoint(hash, outpoint.n);
+            if (pOutpointRet)
+                *pOutpointRet = dereferencedOutpoint;
+            return db.Read(CoinEntry(&dereferencedOutpoint), coin);
+        }
+        return false;
+    }
+    else 
+    {
+        if (pOutpointRet)
+            *pOutpointRet = outpoint;
+        return db.Read(CoinEntry(&outpoint), coin);
+    }
 }
 
-bool CCoinsViewDB::HaveCoin(const COutPoint &outpoint) const {
-    return db.Exists(CoinEntry(&outpoint));
+bool CCoinsViewDB::HaveCoin(const COutPoint &outpoint) const
+{
+    if (outpoint.isHash)
+        return db.Exists(CoinEntryRef(outpoint));
+    else 
+        return db.Exists(CoinEntry(&outpoint));
 }
 
 void CCoinsViewDB::SetPhase2ActivationHash(const uint256 &hashPhase2ActivationPoint)
@@ -154,10 +219,17 @@ bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
     for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();) {
         if (it->second.flags & CCoinsCacheEntry::DIRTY) {
             CoinEntry entry(&it->first);
+            CoinEntryRef entryRef(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n);
             if (it->second.coin.IsSpent())
+            {
                 batch.Erase(entry);
+                batch.Erase(entryRef);
+            }
             else
+            {
                 batch.Write(entry, it->second.coin);
+                batch.Write(entryRef, it->first.getHash());
+            }
             changed++;
         }
         count++;
@@ -447,79 +519,41 @@ public:
 
 }
 
-/** Upgrade the database from older formats.
- */
-bool CCoinsViewDB::Upgrade() {
-    std::unique_ptr<CDBIterator> pcursor(db.NewIterator());
-    pcursor->Seek(std::pair(DB_COINS, uint256()));
-    nCurrentVersion = 1;
-    nPreviousVersion = 1;
-    if (!pcursor->Valid()) {
-        db.Write(DB_VERSION, (uint32_t)nCurrentVersion);
-        return true;
-    }
 
+// For non backwards compatible/major upgrades we return true here and force the entire database to be regenerated.
+bool CCoinsViewDB::RequiresReindex()
+{
     if (db.Exists(DB_VERSION))
     {
         db.Read(DB_VERSION, nPreviousVersion);
-        nCurrentVersion = nPreviousVersion;
     }
-    else
+    
+    // PHASE4 related update, store transaction index as part of output database.
+    if (nPreviousVersion < 2)
     {
-        nCurrentVersion = nPreviousVersion = 0;
+        return true;
     }
-
-    // Gulden 2.0 - transaction format changes.
-    // Also simulatenously upgrade from the per-tx utxo model (Gulden 0.8..0.14.x) to per-txout.
-    if (nCurrentVersion == 0)
-    {
-        LogPrintf("Upgrading database to be segsig compatible...\n");
-        CDBBatch batch(db);
-        size_t batch_size = 1 << 24;
-        while (pcursor->Valid())
-        {
-            boost::this_thread::interruption_point();
-            std::pair<unsigned char, uint256> key;
-            if (pcursor->GetKey(key) && key.first == DB_COINS)
-            {
-                CCoins old_coins;
-                if (!pcursor->GetValueLegacy(old_coins))
-                {
-                    return error("%s: cannot parse CCoins record", __func__);
-                }
-                COutPoint outpoint(key.second, 0);
-                for (size_t i = 0; i < old_coins.vout.size(); ++i)
-                {
-                    if (!old_coins.vout[i].IsNull() && !old_coins.vout[i].IsUnspendable())
-                    {
-                        Coin newcoin(std::move(old_coins.vout[i]), old_coins.nHeight, old_coins.fCoinBase, false);
-                        outpoint.n = i;
-                        CoinEntry entry(&outpoint);
-                        batch.Write(entry, newcoin);
-
-                        if ( IsPow2WitnessOutput(newcoin.out) )
-                        {
-                            ppow2witTip->AddCoin(outpoint, Coin(newcoin.out, newcoin.nHeight, newcoin.fCoinBase, newcoin.fSegSig), false);
-                        }
-                    }
-                }
-                batch.Erase(key);
-                if (batch.SizeEstimate() > batch_size)
-                {
-                    db.WriteBatch(batch);
-                    batch.Clear();
-                }
-                pcursor->Next();
-            }
-            else
-            {
-                break;
-            }
-        }
-        nCurrentVersion = 1;
-        batch.Write(DB_VERSION, nCurrentVersion);
-        db.WriteBatch(batch);
-        ppow2witTip->Flush();
-    }
+        
+    return false;
+}
+    
+// Minor upgrades take place inside here, for major upgrades see 'RequiresReindex'
+bool CCoinsViewDB::Upgrade()
+{
+    // Any future upgrade code goes here.
+    // NB! version number should be upgraded at end of upgrade
     return true;
 }
+
+bool CCoinsViewDB::WriteVersion()
+{
+    std::unique_ptr<CDBIterator> pcursor(db.NewIterator());
+    pcursor->Seek(std::pair(DB_COINS, uint256()));
+    
+    if (!pcursor->Valid())
+    {
+        db.Write(DB_VERSION, (uint32_t)nCurrentVersion);
+        return true;
+    }
+}
+

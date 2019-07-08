@@ -142,6 +142,18 @@ public:
     {
     }
 
+    uint64_t getTransactionBlockNumber() const
+    {
+        assert(!isHash);
+        return prevBlock.blockNumber;
+    }
+    
+    uint64_t getTransactionIndex() const
+    {
+        assert(!isHash);
+        return prevBlock.transactionIndex;
+    }
+    
     uint256 getHash() const
     {
         if (isHash)

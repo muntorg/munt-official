@@ -726,7 +726,7 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
             bool fCheckResult = tx.IsCoinBase() ||
                 Consensus::CheckTxInputs(tx, state, mempoolDuplicate, nSpendHeight, nullptr);
             assert(fCheckResult);
-            UpdateCoins(tx, mempoolDuplicate, MEMPOOL_HEIGHT);
+            UpdateCoins(tx, mempoolDuplicate, MEMPOOL_HEIGHT, MEMPOOL_INDEX);
         }
     }
     unsigned int stepsSinceLastRemove = 0;
@@ -742,7 +742,7 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
             bool fCheckResult = entry->GetTx().IsCoinBase() ||
                 Consensus::CheckTxInputs(entry->GetTx(), state, mempoolDuplicate, nSpendHeight, nullptr);
             assert(fCheckResult);
-            UpdateCoins(entry->GetTx(), mempoolDuplicate, MEMPOOL_HEIGHT);
+            UpdateCoins(entry->GetTx(), mempoolDuplicate, MEMPOOL_HEIGHT, MEMPOOL_INDEX);
             stepsSinceLastRemove = 0;
         }
     }
@@ -908,20 +908,22 @@ bool CTxMemPool::HasNoInputsOf(const CTransaction &tx) const
 
 CCoinsViewMemPool::CCoinsViewMemPool(CCoinsView* baseIn, const CTxMemPool& mempoolIn) : CCoinsViewBacked(baseIn), mempool(mempoolIn) { }
 
-bool CCoinsViewMemPool::GetCoin(const COutPoint &outpoint, Coin &coin) const {
+bool CCoinsViewMemPool::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const {
     // If an entry in the mempool exists, always return that one, as it's guaranteed to never
     // conflict with the underlying cache, and it cannot have pruned entries (as it contains full)
     // transactions. First checking the underlying cache risks returning a pruned entry instead.
     CTransactionRef ptx = mempool.get(outpoint.getHash());
+    if (pOutpointRet)
+        *pOutpointRet = outpoint;
     if (ptx) {
         if (outpoint.n < ptx->vout.size()) {
-            coin = Coin(ptx->vout[outpoint.n], MEMPOOL_HEIGHT, false, !IsOldTransactionVersion(ptx->nVersion));
+            coin = Coin(ptx->vout[outpoint.n], MEMPOOL_HEIGHT, MEMPOOL_INDEX, false, !IsOldTransactionVersion(ptx->nVersion));
             return true;
         } else {
             return false;
         }
     }
-    return (base->GetCoin(outpoint, coin) && !coin.IsSpent());
+    return (base->GetCoin(outpoint, coin, pOutpointRet) && !coin.IsSpent());
 }
 
 bool CCoinsViewMemPool::HaveCoin(const COutPoint &outpoint) const {

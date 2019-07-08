@@ -20,7 +20,7 @@
 // Gulden specific includes
 #include "Gulden/util.h"
 
-bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin) const { return false; }
+bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const { return false; }
 bool CCoinsView::HaveCoin(const COutPoint &outpoint) const { return false; }
 uint256 CCoinsView::GetBestBlock() const { return uint256(); }
 bool CCoinsView::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) { return false; }
@@ -28,7 +28,7 @@ CCoinsViewCursor *CCoinsView::Cursor() const { return 0; }
 
 
 CCoinsViewBacked::CCoinsViewBacked(CCoinsView *viewIn) : base(viewIn) { }
-bool CCoinsViewBacked::GetCoin(const COutPoint &outpoint, Coin &coin) const { return base->GetCoin(outpoint, coin); }
+bool CCoinsViewBacked::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const { return base->GetCoin(outpoint, coin, pOutpointRet); }
 bool CCoinsViewBacked::HaveCoin(const COutPoint &outpoint) const { return base->HaveCoin(outpoint); }
 uint256 CCoinsViewBacked::GetBestBlock() const { return base->GetBestBlock(); }
 void CCoinsViewBacked::SetBackend(CCoinsView &viewIn) { base = &viewIn; }
@@ -41,42 +41,76 @@ SaltedOutpointHasher::SaltedOutpointHasher() : k0(GetRand(std::numeric_limits<ui
 CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0), pChainedWitView(nullptr) {}
 CCoinsViewCache::CCoinsViewCache(CCoinsViewCache *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0), pChainedWitView(baseIn->pChainedWitView?std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(baseIn->pChainedWitView.get())):nullptr) {}
 
-size_t CCoinsViewCache::DynamicMemoryUsage() const {
+size_t CCoinsViewCache::DynamicMemoryUsage() const
+{
     return memusage::DynamicUsage(cacheCoins) + cachedCoinsUsage;
 }
 
-CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint) const {
-    CCoinsMap::iterator it = cacheCoins.find(outpoint);
-    if (it != cacheCoins.end())
-        return it;
+CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn) const
+{
+    if (!outpoint.isHash)
+    {
+        CCoinsMap::iterator coinIter = cacheCoins.find(outpoint);
+        if (coinIter != cacheCoins.end())
+        {
+            if (pRefIterReturn)
+            {
+                *pRefIterReturn = cacheCoinRefs.find(COutPoint(coinIter->second.coin.nHeight, coinIter->second.coin.nTxIndex, outpoint.n));
+                assert(*pRefIterReturn != cacheCoinRefs.end());
+            }
+            return coinIter;
+        }
+    }
+    else
+    {
+        CCoinsRefMap::iterator refIter = cacheCoinRefs.find(outpoint);
+        if (refIter != cacheCoinRefs.end())
+        {
+            auto coinIter = cacheCoins.find(refIter->second);
+            assert(coinIter != cacheCoins.end());
+            if (pRefIterReturn)
+                *pRefIterReturn = refIter;
+            return coinIter;
+        }
+    }
     Coin tmp;
-    if (!base->GetCoin(outpoint, tmp))
+    COutPoint insertOutpoint(outpoint);
+    if (!base->GetCoin(outpoint, tmp, &insertOutpoint))
         return cacheCoins.end();
-    CCoinsMap::iterator ret = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(outpoint), std::forward_as_tuple(std::move(tmp))).first;
-    if (ret->second.coin.IsSpent()) {
+
+    auto refRetIter = (cacheCoinRefs.emplace(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n), insertOutpoint)).first;
+    auto retIter = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(insertOutpoint), std::forward_as_tuple(std::move(tmp))).first;
+    if (pRefIterReturn)
+        *pRefIterReturn = refRetIter;
+    
+    if (retIter->second.coin.IsSpent()) {
         // The parent only has an empty entry for this outpoint; we can consider our
         // version as fresh.
-        ret->second.flags = CCoinsCacheEntry::FRESH;
+        retIter->second.flags = CCoinsCacheEntry::FRESH;
     }
-    cachedCoinsUsage += ret->second.coin.DynamicMemoryUsage();
-    return ret;
+    cachedCoinsUsage += retIter->second.coin.DynamicMemoryUsage();
+    return retIter;
 }
 
-bool CCoinsViewCache::GetCoin(const COutPoint &outpoint, Coin &coin) const {
+bool CCoinsViewCache::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const
+{
     CCoinsMap::const_iterator it = FetchCoin(outpoint);
     if (it != cacheCoins.end()) {
+        if (pOutpointRet)
+            *pOutpointRet = it->first;
         coin = it->second.coin;
         return true;
     }
     return false;
 }
 
-void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possible_overwrite) {
+void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possible_overwrite)
+{
     if (pChainedWitView)
     {
         if ( IsPow2WitnessOutput(coin.out) )
         {
-            pChainedWitView->AddCoin(outpoint, Coin(coin.out, coin.nHeight, coin.fCoinBase, coin.fSegSig), possible_overwrite);
+            pChainedWitView->AddCoin(outpoint, Coin(coin.out, coin.nHeight, coin.nTxIndex, coin.fCoinBase, coin.fSegSig), possible_overwrite);
         }
     }
 
@@ -85,35 +119,37 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
 
     CTxOut out = coin.out;
 
-    CCoinsMap::iterator it;
-    bool inserted;
-    std::tie(it, inserted) = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(outpoint), std::tuple<>());
+    cacheCoinRefs.emplace(COutPoint(coin.nHeight, coin.nTxIndex, outpoint.n), outpoint);
+    auto [coinIter, inserted] = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(outpoint), std::tuple<>());
+    
     bool fresh = false;
     if (!inserted) {
-        cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
+        cachedCoinsUsage -= coinIter->second.coin.DynamicMemoryUsage();
     }
     if (!possible_overwrite) {
-        if (!it->second.coin.IsSpent()) {
+        if (!coinIter->second.coin.IsSpent()) {
             throw std::logic_error("Adding new coin that replaces non-pruned entry");
         }
-        fresh = !(it->second.flags & CCoinsCacheEntry::DIRTY);
+        fresh = !(coinIter->second.flags & CCoinsCacheEntry::DIRTY);
     }
-    it->second.coin = std::move(coin);
-    it->second.flags |= CCoinsCacheEntry::DIRTY | (fresh ? CCoinsCacheEntry::FRESH : 0);
-    cachedCoinsUsage += it->second.coin.DynamicMemoryUsage();
+    coinIter->second.coin = std::move(coin);
+    coinIter->second.flags |= CCoinsCacheEntry::DIRTY | (fresh ? CCoinsCacheEntry::FRESH : 0);
+    cachedCoinsUsage += coinIter->second.coin.DynamicMemoryUsage();
 }
 
-void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight) {
+void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight, int nTxIndex)
+{
     bool fCoinbase = tx.IsCoinBase();
     const uint256& txid = tx.GetHash();
     for (size_t i = 0; i < tx.vout.size(); ++i) {
         // Pass fCoinbase as the possible_overwrite flag to AddCoin, in order to correctly
         // deal with the pre-BIP30 occurrences of duplicate coinbase transactions.
-        cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, fCoinbase, !IsOldTransactionVersion(tx.nVersion)), fCoinbase);
+        cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, nTxIndex, fCoinbase, !IsOldTransactionVersion(tx.nVersion)), fCoinbase);
     }
 }
 
-void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool nodeletefresh) {
+void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool nodeletefresh)
+{
     if (pChainedWitView)
     {
         // NB! The below is essential for the operation of GetWitness function, otherwise it returns unpredictable and incorrect results.
@@ -121,23 +157,27 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool n
         pChainedWitView->SpendCoin(outpoint, NULL, true);
     }
 
-    CCoinsMap::iterator it = FetchCoin(outpoint);
-    if (it == cacheCoins.end()) return;
-    cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
+    CCoinsRefMap::iterator coinRefIter;
+    CCoinsMap::iterator coinIter = FetchCoin(outpoint, &coinRefIter);
+    if (coinIter == cacheCoins.end()) return;
+    assert(coinRefIter != cacheCoinRefs.end());
+    cachedCoinsUsage -= coinIter->second.coin.DynamicMemoryUsage();
     if (moveout) {
-        *moveout = std::move(it->second.coin);
+        *moveout = std::move(coinIter->second.coin);
     }
-    if (!nodeletefresh && it->second.flags & CCoinsCacheEntry::FRESH) {
-        cacheCoins.erase(it);
+    cacheCoinRefs.erase(coinRefIter);
+    if (!nodeletefresh && coinIter->second.flags & CCoinsCacheEntry::FRESH) {
+        cacheCoins.erase(coinIter);
     } else {
-        it->second.flags |= CCoinsCacheEntry::DIRTY;
-        it->second.coin.Clear();
+        coinIter->second.flags |= CCoinsCacheEntry::DIRTY;
+        coinIter->second.coin.Clear();
     }
 }
 
 static const Coin coinEmpty;
 
-const Coin& CCoinsViewCache::AccessCoin(const COutPoint &outpoint) const {
+const Coin& CCoinsViewCache::AccessCoin(const COutPoint &outpoint) const
+{
     CCoinsMap::const_iterator it = FetchCoin(outpoint);
     if (it == cacheCoins.end()) {
         return coinEmpty;
@@ -146,27 +186,32 @@ const Coin& CCoinsViewCache::AccessCoin(const COutPoint &outpoint) const {
     }
 }
 
-bool CCoinsViewCache::HaveCoin(const COutPoint &outpoint) const {
+bool CCoinsViewCache::HaveCoin(const COutPoint &outpoint) const
+{
     CCoinsMap::const_iterator it = FetchCoin(outpoint);
     return (it != cacheCoins.end() && !it->second.coin.IsSpent());
 }
 
-bool CCoinsViewCache::HaveCoinInCache(const COutPoint &outpoint) const {
+bool CCoinsViewCache::HaveCoinInCache(const COutPoint &outpoint) const
+{
     CCoinsMap::const_iterator it = cacheCoins.find(outpoint);
     return it != cacheCoins.end();
 }
 
-uint256 CCoinsViewCache::GetBestBlock() const {
+uint256 CCoinsViewCache::GetBestBlock() const
+{
     if (hashBlock.IsNull())
         hashBlock = base->GetBestBlock();
     return hashBlock;
 }
 
-void CCoinsViewCache::SetBestBlock(const uint256 &hashBlockIn) {
+void CCoinsViewCache::SetBestBlock(const uint256 &hashBlockIn)
+{
     hashBlock = hashBlockIn;
 }
 
-bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn) {
+bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn)
+{
     for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();) {
         if (it->second.flags & CCoinsCacheEntry::DIRTY) { // Ignore non-dirty entries (optimization).
             CCoinsMap::iterator itUs = cacheCoins.find(it->first);
@@ -185,6 +230,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     // and already exist in the grandparent
                     if (it->second.flags & CCoinsCacheEntry::FRESH)
                         entry.flags |= CCoinsCacheEntry::FRESH;
+                    cacheCoinRefs[COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, it->first.n)] = it->first;
                 }
             } else {
                 // Assert that the child cache entry was not marked FRESH if the
@@ -201,6 +247,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     // it from the parent.
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
                     cacheCoins.erase(itUs);
+                    cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
                 } else {
                     // A normal modification.
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
@@ -222,12 +269,14 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
     return true;
 }
 
-bool CCoinsViewCache::Flush() {
+bool CCoinsViewCache::Flush()
+{
     if (pChainedWitView)
         pChainedWitView->Flush();
 
     bool fOk = base->BatchWrite(cacheCoins, hashBlock);
     cacheCoins.clear();
+    cacheCoinRefs.clear();
     cachedCoinsUsage = 0;
     return fOk;
 }
@@ -241,10 +290,12 @@ void CCoinsViewCache::Uncache(const COutPoint& hash)
     if (it != cacheCoins.end() && it->second.flags == 0) {
         cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
         cacheCoins.erase(it);
+        cacheCoinRefs.erase(COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n));
     }
 }
 
-unsigned int CCoinsViewCache::GetCacheSize() const {
+unsigned int CCoinsViewCache::GetCacheSize() const
+{
     return cacheCoins.size();
 }
 

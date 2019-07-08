@@ -40,6 +40,8 @@ class CBlockIndex;
 
 /** Fake height value used in Coin to signify they are only in the memory pool (since 0.8) */
 static const uint32_t MEMPOOL_HEIGHT = 1073741823; // 2^30-1 (Coin height is only 30 bits)
+/** Fake index value used in Coin to signify they are only in the memory pool */
+static const uint32_t MEMPOOL_INDEX = 4294967295; // 2^32-1 (Coin height is only 30 bits)
 
 struct LockPoints
 {
@@ -695,7 +697,7 @@ protected:
 
 public:
     CCoinsViewMemPool(CCoinsView* baseIn, const CTxMemPool& mempoolIn);
-    bool GetCoin(const COutPoint &outpoint, Coin &coin) const;
+    bool GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet=nullptr) const;
     bool HaveCoin(const COutPoint &outpoint) const;
 };
 

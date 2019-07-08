@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     txFrom.vout[6].output.scriptPubKey = GetScriptForDestination(CScriptID(twentySigops));
     txFrom.vout[6].nValue = 6000;
 
-    AddCoins(coins, txFrom, 0);
+    AddCoins(coins, txFrom, 0, 0);
 
     CMutableTransaction txTo(TEST_DEFAULT_TX_VERSION);
     txTo.vout.resize(1);
