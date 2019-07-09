@@ -352,9 +352,7 @@ void WitnessDialog::upgradeWitnessClicked()
 {
     LogPrint(BCLog::QT, "WitnessDialog::upgradeWitnessClicked\n");
 
-    auto *dialog = new UpgradeWitnessDialog(model, platformStyle, this);
-    pushDialog(dialog);
-    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+    pushDialog(new UpgradeWitnessDialog(model, platformStyle, this));
 }
 
 void WitnessDialog::extendClicked()
@@ -366,9 +364,7 @@ void WitnessDialog::extendClicked()
         CAccount* witnessAccount = pactiveWallet->activeAccount;
         auto [lockedAmount, durationRemaining, oldWeight, immature] = extendWitnessInfo(pactiveWallet, witnessAccount);
         (unused)immature;
-        auto *dialog = new FundWitnessDialog(lockedAmount, durationRemaining, oldWeight, model, platformStyle, this);
-        pushDialog(dialog);
-        connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+        pushDialog(new FundWitnessDialog(lockedAmount, durationRemaining, oldWeight, model, platformStyle, this));
     } catch (std::runtime_error& e) {
         GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
     }
@@ -379,15 +375,14 @@ void WitnessDialog::refundClicked()
 {
     LogPrint(BCLog::QT, "WitnessDialog::refundClicked\n");
 
-    auto *dialog = new FundWitnessDialog(model, platformStyle, this);
-    pushDialog(dialog);
-    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+    pushDialog(new FundWitnessDialog(model, platformStyle, this));
 }
 
 void WitnessDialog::pushDialog(QWidget *dialog)
 {
     ui->stack->addWidget(dialog);
     ui->stack->setCurrentWidget(dialog);
+    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
 }
 
 void WitnessDialog::clearDialogStack()
