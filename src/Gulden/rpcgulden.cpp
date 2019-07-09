@@ -1467,7 +1467,7 @@ static UniValue importreadonlyaccount(const JSONRPCRequest& request)
     if (!account)
         throw std::runtime_error("Unable to create account.");
 
-    //fixme: (PHASE4) Use a timestamp here
+    //fixme: (PHASE5) Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwallet->nTimeFirstKey = 1;
     ResetSPVStartRescanThread();
@@ -1588,7 +1588,6 @@ static UniValue setactiveaccount(const JSONRPCRequest& request)
     return getUUIDAsString(account->getUUID());
 }
 
-//fixme: (PHASE4) Improve help for this.
 static UniValue getaccountbalances(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -1854,7 +1853,7 @@ static UniValue importseed(const JSONRPCRequest& request)
         newSeed = pwallet->ImportHDSeed(mnemonic, seedType);
     }
 
-    //fixme: (PHASE4) Use a timestamp here
+    //fixme: (POST-PHASE5) Use a timestamp here
     // Whenever a key is imported, we need to scan the whole chain - do so now
     pwallet->nTimeFirstKey = 1;
     ResetSPVStartRescanThread();
@@ -3029,7 +3028,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
             {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness account.");
             }
-            //fixme: (PHASE4) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+            //fixme: (PHASE5) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
             witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
             witnessAccountKeys += ":";
         }
