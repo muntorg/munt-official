@@ -339,10 +339,14 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                     ++poolIter;
                 }
             }
-
+    
             CTxDestination address;
             if (!ExtractDestination(iter.second.out, address))
                 throw std::runtime_error("Could not extract PoW² witness for block.");
+            
+            CTxOutPoW2Witness witnessDetails;
+            if (!GetPow2WitnessOutput(iter.second.out, witnessDetails))
+                throw std::runtime_error("Could not extract PoW² witness details for block.");
 
             uint64_t nLastActiveBlock = iter.second.nHeight;
             uint64_t nLockFromBlock = 0;
@@ -375,9 +379,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("lock_period_expired", fLockPeriodExpired));
             rec.push_back(Pair("eligible_to_witness", fEligible));
             rec.push_back(Pair("expired_from_inactivity", fExpired));
-            //fixme: (PHASE4) Add these two
-            //rec.push_back(Pair("fail_count", fExpired));
-            //rec.push_back(Pair("action_nonce", fExpired));
+            rec.push_back(Pair("fail_count", witnessDetails.failCount));
+            rec.push_back(Pair("action_nonce", witnessDetails.actionNonce));
             #ifdef ENABLE_WALLET
             rec.push_back(Pair("ismine_accountname", accountName));
             #else
