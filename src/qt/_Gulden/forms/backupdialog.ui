@@ -167,6 +167,9 @@
              <property name="text">
               <string>Show backup phrase</string>
              </property>
+             <property name="class" stdset="0">
+              <string notr="true">focus</string>
+             </property>
             </widget>
            </item>
           </layout>
@@ -186,8 +189,6 @@
    <header location="global">qt/_Gulden/clickablelabel.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../gulden.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

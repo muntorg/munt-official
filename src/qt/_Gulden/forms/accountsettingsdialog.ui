@@ -250,8 +250,14 @@
            </item>
            <item>
             <widget class="QPushButton" name="buttonDone">
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
+             </property>
              <property name="text">
               <string>Done</string>
+             </property>
+             <property name="class" stdset="0">
+              <string notr="true">focus</string>
              </property>
             </widget>
            </item>
@@ -272,8 +278,6 @@
    <header location="global">qt/_Gulden/clickableqrimage.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../gulden.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

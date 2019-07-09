@@ -628,6 +628,9 @@
             <property name="text">
              <string>Generate request</string>
             </property>
+            <property name="class" stdset="0">
+             <string notr="true">focus</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -635,12 +638,18 @@
             <property name="text">
              <string>Buy Gulden</string>
             </property>
+            <property name="class" stdset="0">
+             <string notr="true">focus</string>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="accountBuyButton">
             <property name="text">
              <string>Buy</string>
+            </property>
+            <property name="class" stdset="0">
+             <string notr="true">focus</string>
             </property>
            </widget>
           </item>
@@ -673,7 +682,7 @@
   <customwidget>
    <class>ClickableQRImage</class>
    <extends>QLabel</extends>
-   <header>../clickableqrimage.h</header>
+   <header location="global">qt/_Gulden/clickableqrimage.h</header>
   </customwidget>
   <customwidget>
    <class>GuldenAmountField</class>
@@ -682,8 +691,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../gulden.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

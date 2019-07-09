@@ -177,6 +177,9 @@
              <property name="text">
               <string>Upgrade</string>
              </property>
+             <property name="class" stdset="0">
+              <string notr="true">focus</string>
+             </property>
             </widget>
            </item>
           </layout>

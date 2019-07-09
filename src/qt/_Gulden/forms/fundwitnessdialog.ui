@@ -242,6 +242,9 @@
              <property name="text">
               <string>Fund</string>
              </property>
+             <property name="class" stdset="0">
+              <string notr="true">focus</string>
+             </property>
             </widget>
            </item>
            <item>
@@ -251,6 +254,9 @@
              </property>
              <property name="text">
               <string>Extend</string>
+             </property>
+             <property name="class" stdset="0">
+              <string notr="true">focus</string>
              </property>
             </widget>
            </item>

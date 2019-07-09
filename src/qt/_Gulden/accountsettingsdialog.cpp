@@ -28,7 +28,6 @@ AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidg
     ui->setupUi(this);
 
     // Setup object names for styling
-    ui->buttonDone->setObjectName("doneButton");
     ui->buttonCopy->setObjectName("copyButton");
     ui->buttonDeleteAccount->setObjectName("deleteButton");
     ui->frameAccountSettings->setObjectName("frameAccountSettings");
@@ -44,7 +43,6 @@ AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidg
 
     // Hand cursor for clickable elements.
     ui->buttonDeleteAccount->setCursor(Qt::PointingHandCursor);
-    ui->buttonDone->setCursor(Qt::PointingHandCursor);
     ui->buttonCopy->setCursor(Qt::PointingHandCursor);
 
     // Hide sync-with-mobile, we only show it for mobile accounts.

@@ -810,12 +810,18 @@ If you would like to witness again please refund this account or create a new ac
                  <property name="text">
                   <string>Refund account</string>
                  </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
+                 </property>
                 </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="fundWitnessButton">
                  <property name="text">
                   <string>Fund account</string>
+                 </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
                  </property>
                 </widget>
                </item>
@@ -824,12 +830,18 @@ If you would like to witness again please refund this account or create a new ac
                  <property name="text">
                   <string>Empty account</string>
                  </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
+                 </property>
                 </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="withdrawEarningsButton">
                  <property name="text">
                   <string>Withdraw earnings</string>
+                 </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
                  </property>
                 </widget>
                </item>
@@ -847,6 +859,9 @@ If you would like to witness again please refund this account or create a new ac
               <property name="text">
                <string>Renew account</string>
               </property>
+              <property name="class" stdset="0">
+               <string notr="true">focus</string>
+              </property>
              </widget>
             </item>
            </layout>
@@ -862,15 +877,15 @@ If you would like to witness again please refund this account or create a new ac
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QwtPlot</class>
-   <extends>QWidget</extends>
-   <header location="global">qwt_plot.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>AccountSelectionWidget</class>
    <extends>QWidget</extends>
    <header location="global">qt/_Gulden/accountselectionwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QwtPlot</class>
+   <extends>QWidget</extends>
+   <header location="global">qwt_plot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
