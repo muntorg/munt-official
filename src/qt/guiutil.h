@@ -38,6 +38,9 @@ class QUrl;
 class QWidget;
 QT_END_NAMESPACE
 
+// helper to avoid repeating method name in every log that prints the current method
+#define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
+
 /** Utility functions used by the Gulden Qt UI.
  */
 namespace GUIUtil

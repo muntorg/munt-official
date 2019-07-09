@@ -309,14 +309,14 @@ void WitnessDialog::clearLabels()
 }
 WitnessDialog::~WitnessDialog()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::~WitnessDialog\n");
+    LOG_QT_METHOD;
 
     delete ui;
 }
 
 void WitnessDialog::viewWitnessInfoClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::viewWitnessInfoClicked\n");
+    LOG_QT_METHOD;
 
     ui->unitButton->setVisible(true);
     ui->viewWitnessGraphButton->setVisible(false);
@@ -325,14 +325,14 @@ void WitnessDialog::viewWitnessInfoClicked()
 
 void WitnessDialog::emptyWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::emptyWitnessClicked\n");
+    LOG_QT_METHOD;
 
     Q_EMIT requestEmptyWitness();
 }
 
 void WitnessDialog::fundWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::fundWitnessClicked\n");
+    LOG_QT_METHOD;
 
     CAccount* funderAccount = ui->fundWitnessAccountTableView->selectedAccount();
     if (funderAccount)
@@ -341,7 +341,7 @@ void WitnessDialog::fundWitnessClicked()
 
 void WitnessDialog::renewWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::renewWitnessClicked\n");
+    LOG_QT_METHOD;
 
     CAccount* funderAccount = ui->renewWitnessAccountTableView->selectedAccount();
     if (funderAccount)
@@ -350,14 +350,14 @@ void WitnessDialog::renewWitnessClicked()
 
 void WitnessDialog::upgradeWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::upgradeWitnessClicked\n");
+    LOG_QT_METHOD;
 
     pushDialog(new UpgradeWitnessDialog(model, platformStyle, this));
 }
 
 void WitnessDialog::extendClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::extendClicked\n");
+    LOG_QT_METHOD;
 
     try {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
@@ -373,7 +373,7 @@ void WitnessDialog::extendClicked()
 
 void WitnessDialog::refundClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::refundClicked\n");
+    LOG_QT_METHOD;
 
     pushDialog(new FundWitnessDialog(model, platformStyle, this));
 }
@@ -409,7 +409,7 @@ void WitnessDialog::popDialog(QWidget* dialog)
 
 void WitnessDialog::compoundEarningsCheckboxClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::compundEarningsCheckboxClicked\n");
+    LOG_QT_METHOD;
 
     CAccount* forAccount = model->getActiveAccount();
     if (forAccount)
@@ -430,14 +430,14 @@ void WitnessDialog::compoundEarningsCheckboxClicked()
 
 void WitnessDialog::unitButtonClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::unitButtonClicked\n");
+    LOG_QT_METHOD;
 
     unitSelectionMenu->exec(ui->unitButton->mapToGlobal(QPoint(0,0)));
 }
 
 void WitnessDialog::updateUnit(int nNewUnit_)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::updateUnit\n");
+    LOG_QT_METHOD;
 
     if (!model)
         return;
@@ -634,7 +634,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
 
 void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::plotGraphForAccount\n");
+    LOG_QT_METHOD;
 
     DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
 
@@ -747,7 +747,7 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
 
 void WitnessDialog::update()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::update\n");
+    LOG_QT_METHOD;
     doUpdate(false);
 }
 
@@ -758,7 +758,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     if (!forceUpdate && heightRemaining > 10 && heightRemaining % 100 != 0)
         return;
 
-    LogPrint(BCLog::QT, "WitnessDialog::doUpdate\n");
+    LOG_QT_METHOD;
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
 
@@ -1042,7 +1042,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
 void WitnessDialog::updateAccountIndicators()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::updateAccountIndicators\n");
+    LOG_QT_METHOD;
 
     if(!filter || !model)
         return;
@@ -1208,7 +1208,7 @@ void WitnessDialog::updateAccountIndicators()
 
 void WitnessDialog::numBlocksChanged(int,QDateTime,double)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::numBlocksChanged\n");
+    LOG_QT_METHOD;
 
     //Update account state indicators for the latest block
     updateAccountIndicators();
@@ -1219,7 +1219,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double)
 
 void WitnessDialog::setClientModel(ClientModel* clientModel_)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::setClientModel\n");
+    LOG_QT_METHOD;
 
     clientModel = clientModel_;
     if (clientModel)
@@ -1230,7 +1230,7 @@ void WitnessDialog::setClientModel(ClientModel* clientModel_)
 
 void WitnessDialog::setModel(WalletModel* _model)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::setModel\n");
+    LOG_QT_METHOD;
 
     this->model = _model;
 

@@ -15,8 +15,6 @@
 #include "walletmodel.h"
 #include "optionsmodel.h"
 
-#define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
-
 UpgradeWitnessDialog::UpgradeWitnessDialog(WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::UpgradeWitnessDialog )

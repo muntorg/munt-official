@@ -16,8 +16,6 @@
 #include "optionsmodel.h"
 #include "consensus/validation.h"
 
-#define LOG_QT_METHOD LogPrint(BCLog::QT, "%s\n", __PRETTY_FUNCTION__)
-
 FundWitnessDialog::FundWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::FundWitnessDialog )
