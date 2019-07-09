@@ -1079,7 +1079,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     bool fAllowMultiple = false;
     if (request.params.size() >= 5)
-        fAllowMultiple = request.params[5].get_bool();
+        fAllowMultiple = request.params[4].get_bool();
 
     // arg3 - amount
     CAmount nAmount =  AmountFromValue(request.params[2]);
