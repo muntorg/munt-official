@@ -334,9 +334,10 @@ void WitnessDialog::fundWitnessClicked()
 {
     LOG_QT_METHOD;
 
-    CAccount* funderAccount = ui->fundWitnessAccountTableView->selectedAccount();
-    if (funderAccount)
-        Q_EMIT requestFundWitness(funderAccount);
+    pushDialog(new FundWitnessDialog(model, platformStyle, this));
+//    CAccount* funderAccount = ui->fundWitnessAccountTableView->selectedAccount();
+//    if (funderAccount)
+//        Q_EMIT requestFundWitness(funderAccount);
 }
 
 void WitnessDialog::renewWitnessClicked()
@@ -1244,7 +1245,6 @@ void WitnessDialog::setModel(WalletModel* _model)
         filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
 
         {
-            ui->fundWitnessAccountTableView->setWalletModel(_model, gMinimumWitnessAmount * COIN);
             ui->renewWitnessAccountTableView->setWalletModel(_model, 1 * COIN);
 
             connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
@@ -1265,7 +1265,6 @@ void WitnessDialog::activeAccountChanged(CAccount*)
     clearDialogStack();
     update();
     if (model) {
-        ui->fundWitnessAccountTableView->setWalletModel(model, gMinimumWitnessAmount * COIN);
         ui->renewWitnessAccountTableView->setWalletModel(model, 1 * COIN);
     }
 }

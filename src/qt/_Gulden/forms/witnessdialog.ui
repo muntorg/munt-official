@@ -50,7 +50,7 @@
          <item>
           <widget class="QStackedWidget" name="witnessDialogStackedWidget">
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="emptyAccountPage">
             <layout class="QVBoxLayout" name="verticalLayout">
@@ -72,7 +72,7 @@
              <item>
               <widget class="QLabel" name="labelEmptyWitnessAccount">
                <property name="text">
-                <string>To begin witnessing, select an account from which to lock funds:</string>
+                <string>To begin witnessing, you have to fund the witness account.</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -84,9 +84,6 @@
                 <number>0</number>
                </property>
               </widget>
-             </item>
-             <item>
-              <widget class="AccountSelectionWidget" name="fundWitnessAccountTableView" native="true"/>
              </item>
              <item>
               <spacer name="verticalSpacer">
