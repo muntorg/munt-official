@@ -15,7 +15,7 @@
 #include <QPushButton>
 #include "gui.h"
 #include "walletmodel.h"
-
+#include "rotatewitnessdialog.h"
 #include <Gulden/util.h>
 
 AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)
@@ -31,11 +31,13 @@ AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidg
     ui->frameSyncWithMobile->setVisible(false);
 
     ui->buttonCopy->setVisible(false);
+    ui->rotateButton->setVisible(false);
 
     // Connect signals
     connect(ui->buttonDeleteAccount, SIGNAL(clicked()), this, SLOT(deleteAccount()));
     connect(ui->buttonDone, SIGNAL(clicked()), this, SLOT(applyChanges()));
     connect(ui->buttonCopy, SIGNAL(clicked()), this, SLOT(copyQr()));
+    connect(ui->rotateButton, SIGNAL(clicked()), this, SLOT(rotateClicked()));
 
     // Set initial state.
     activeAccountChanged(_activeAccount);
@@ -79,6 +81,8 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
 
         ui->addressQRImage->setText(tr("Click here to make QR code visible.\nWARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings."));
         connect(ui->addressQRImage, SIGNAL( clicked() ), this, SLOT( showSyncQr() ), Qt::UniqueConnection);
+
+        ui->rotateButton->setVisible(IsSegSigEnabled(chainActive.TipPrev()));
     }
     else
     {
@@ -187,6 +191,13 @@ void AccountSettingsDialog::copyQr()
     GUIUtil::setClipboard(copyText);
 }
 
+void AccountSettingsDialog::rotateClicked()
+{
+    LOG_QT_METHOD;
+
+    pushDialog(new RotateWitnessDialog(walletModel, platformStyle, this));
+}
+
 //fixme: (FUT) - Make this configurable or more intelligent in some way?
 #define MINIMUM_VALUABLE_AMOUNT 1000000000 
 void AccountSettingsDialog::deleteAccount()
@@ -234,3 +245,24 @@ AccountSettingsDialog::~AccountSettingsDialog()
 {
     delete ui;
 }
+
+void AccountSettingsDialog::pushDialog(QWidget *dialog)
+{
+    addWidget(dialog);
+    setCurrentWidget(dialog);
+    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+}
+
+void AccountSettingsDialog::popDialog(QWidget* dialog)
+{
+    int index = indexOf(dialog);
+    if (index < 1)
+        return;
+    setCurrentIndex(index - 1);
+    for (int i = count() - 1; i >= index; i--) {
+        QWidget* w = widget(i);
+        removeWidget(w);
+        w->deleteLater();
+    }
+}
+

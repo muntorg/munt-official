@@ -233,6 +233,19 @@
              </spacer>
             </item>
             <item>
+             <widget class="QPushButton" name="rotateButton">
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string>Rotate key</string>
+              </property>
+              <property name="class" stdset="0">
+               <string notr="true">normal</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="buttonCopy">
               <property name="cursor">
                <cursorShape>PointingHandCursor</cursorShape>
