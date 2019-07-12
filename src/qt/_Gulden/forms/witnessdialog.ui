@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>996</width>
+    <width>1092</width>
     <height>579</height>
    </rect>
   </property>
@@ -756,6 +756,9 @@ If you would like to witness again please refund this account or create a new ac
               </property>
               <property name="text">
                <string>Extend</string>
+              </property>
+              <property name="class" stdset="0">
+               <string notr="true">normal</string>
               </property>
              </widget>
             </item>
