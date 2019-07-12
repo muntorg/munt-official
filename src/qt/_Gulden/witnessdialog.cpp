@@ -389,13 +389,15 @@ void WitnessDialog::popDialog(QWidget* dialog)
     if (index < 1)
         return;
     ui->stack->setCurrentIndex(index - 1);
-    for (int i = index; i >= index; i--) {
+    for (int i = ui->stack->count() - 1; i >= index; i--) {
         QWidget* widget = ui->stack->widget(i);
         ui->stack->removeWidget(widget);
         widget->deleteLater();
     }
-    if (ui->stack->count() <= 1)
-        update();
+    if (ui->stack->count() <= 1) {
+        setModel(model);
+        doUpdate(true);
+    }
 }
 
 void WitnessDialog::compoundEarningsCheckboxClicked()
