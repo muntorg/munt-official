@@ -19,31 +19,13 @@
 #include <Gulden/util.h>
 
 AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)
-: QFrame(parent)
+: QStackedWidget(parent)
 , walletModel(model)
 , ui(new Ui::AccountSettingsDialog)
 , platformStyle(_platformStyle)
 , activeAccount( NULL )
 {
     ui->setupUi(this);
-
-    // Setup object names for styling
-    ui->buttonCopy->setObjectName("copyButton");
-    ui->buttonDeleteAccount->setObjectName("deleteButton");
-    ui->frameAccountSettings->setObjectName("frameAccountSettings");
-    ui->addressQRContents->setObjectName("addressQRContents");
-    setObjectName("dialogAccountSettings");
-
-    // Zero out all margins so that we can handle whitespace in stylesheet instead.
-    ui->labelChangeAccountName->setContentsMargins( 0, 0, 0, 0 );
-    ui->lineEditChangeAccountName->setContentsMargins( 0, 0, 0, 0 );
-    ui->labelChangeAccountName->setContentsMargins( 0, 0, 0, 0 );
-    ui->addressQRImage->setContentsMargins( 0, 0, 0, 0 );
-
-
-    // Hand cursor for clickable elements.
-    ui->buttonDeleteAccount->setCursor(Qt::PointingHandCursor);
-    ui->buttonCopy->setCursor(Qt::PointingHandCursor);
 
     // Hide sync-with-mobile, we only show it for mobile accounts.
     ui->frameSyncWithMobile->setVisible(false);

@@ -8,7 +8,7 @@
 
 #include "guiutil.h"
 
-#include <QFrame>
+#include <QStackedWidget>
 #include <QHeaderView>
 #include <QItemSelection>
 #include <QKeyEvent>
@@ -25,7 +25,7 @@ namespace Ui {
     class AccountSettingsDialog;
 }
 
-class AccountSettingsDialog : public QFrame
+class AccountSettingsDialog : public QStackedWidget
 {
     Q_OBJECT
 

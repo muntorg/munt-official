@@ -564,6 +564,35 @@ QPushButton:pressed[class=focus], GUI QPushButton:pressed[class=focus], GUI QDia
     background-color: ACCENT_COLOR_2;
 }
 
+/* Cancel style buttons */
+QPushButton[class=cancel], GUI QPushButton[class="cancel"], GUI QDialog:window QPushButton[class="cancel"]
+{
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    height: 34px;
+    color: #e02121;
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 10px;
+}
+QPushButton:pressed[class=cancel], GUI QPushButton:pressed[class=cancel], GUI QDialog:window QPushButton:pressed[class="cancel"]
+{
+    color: #bf1b3a;
+}
+
+/* Normal style buttons */
+QPushButton[class=normal], GUI QPushButton[class="normal"], GUI QDialog:window QPushButton[class="normal"]
+{
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    height: 34px;
+    color: ACCENT_COLOR_1;
+    border-radius: 2px;
+    margin: 0px;
+    padding: 0px;
+    margin-right: 30px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
 #sendButton
 {
     margin-top: 4px;
