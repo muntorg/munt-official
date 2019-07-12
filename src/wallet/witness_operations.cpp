@@ -357,3 +357,129 @@ void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount*
     if (pFee != nullptr)
         *pFee = transactionFee;
 }
+
+void rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, std::string* pTxid, CAmount* pFee)
+{
+    if (unspentWitnessOutputs.size() > 1)
+        throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Too many witness outputs cannot rotate."));
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    //fixme: (PHASE4) - Look into shortening the maturity period here, the full period is too long.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    // Find the account for this address
+    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    if (!witnessAccount)
+        throw witness_error(witness::RPC_MISC_ERROR, "Could not locate account for address");
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot rotate a witness-only account as spend key is required to do this.");
+    }
+
+    //fixme: (PHASE4) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction rotateWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    CTxOut rotatedWitnessTxOutput;
+    {
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(rotateWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness output
+        rotatedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+        // As we are rotating the witness key we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
+        rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        rotatedWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+        rotatedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+        {
+            CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+            CPubKey pubWitnessKey;
+            if (!keyWitness.GetReservedKey(pubWitnessKey))
+                throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
+
+            //We delibritely return the key here, so that if we fail we won't leak the key.
+            //The key will be marked as used when the transaction is accepted anyway.
+            keyWitness.ReturnKey();
+            rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubWitnessKey.GetID();
+        }
+        rotatedWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+        rotatedWitnessTxOutput.output.witnessDetails.actionNonce = currentWitnessDetails.actionNonce+1;
+        rotatedWitnessTxOutput.nValue = currentWitnessTxOut.nValue;
+        rotateWitnessTransaction.vout.push_back(rotatedWitnessTxOutput);
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition = 1;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, rotateWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    //fixme: (PHASE4) Improve this, it should only happen if Sign transaction is a success.
+    //Also We must make sure that the UI version of this command does the same
+    //Also (low) this shares common code with CreateTransaction() - it should be factored out into a common helper.
+    CKey privWitnessKey;
+    if (!witnessAccount->GetKey(rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID, privWitnessKey))
+    {
+        reasonForFail = strprintf("Wallet error, failed to retrieve private witness key.");
+        throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+    }
+    if (!pwallet->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *witnessAccount, KEYCHAIN_WITNESS))
+    {
+        reasonForFail = strprintf("Wallet error, failed to store witness key.");
+        throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, rotateWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    // Set result parameters
+    if (pTxid != nullptr)
+        *pTxid = finalTransactionHash.GetHex();
+    if (pFee != nullptr)
+        *pFee = transactionFee;
+}
+
+void rotatewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee)
+{
+    if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
+
+    LOCK2(cs_main, pwallet->cs_wallet);
+
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    if (pwallet->IsLocked()) {
+        throw std::runtime_error("Wallet locked");
+    }
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot rotate a witness-only account as spend key is required to do this.");
+    }
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].",
+                                                                           boost::uuids::to_string(witnessAccount->getUUID())));
+
+    rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, pTxid, pFee);
+}
