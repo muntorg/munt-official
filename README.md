@@ -17,20 +17,20 @@
   <tr border=0>
     <td>
       <a href="https://github.com/Gulden/gulden-official/issues">
-        <img  height="20px" src="https://img.shields.io/github/issues/gulden/gulden-official.svg" alt="open issues"/>
+        <img  height="20px" src="https://img.shields.io/github/issues/gulden/gulden-official.svg?color=blue" alt="open issues"/>
     </td>
   </tr>
   <tr border=0>
     <td>
       <a href="https://github.com/Gulden/gulden-official/issues?q=is%3Aissue+is%3Aclosed">
-        <img  height="20px" src="https://img.shields.io/github/issues-closed/gulden/gulden-official.svg" alt="closed issues"/>
+        <img  height="20px" src="https://img.shields.io/github/issues-closed/gulden/gulden-official.svg?color=blue" alt="closed issues"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td border=0>
       <a href="https://github.com/Gulden/gulden-official/releases">
-        <img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg" alt="total downloads"/>
+        <img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg?color=blue" alt="total downloads"/>
       </a>
     </td>
   </tr>
