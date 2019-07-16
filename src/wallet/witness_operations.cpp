@@ -483,3 +483,63 @@ void rotatewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* 
 
     rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, pTxid, pFee);
 }
+
+WitnessStatus AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+{
+    WitnessStatus status;
+
+    LOCK2(cs_main, pWallet->cs_wallet);
+
+    // Collect uspent witnesses coins on for the account
+    // TODO: maybe optimize with ptr colection instead
+    std::vector<RouletteItem> accountItems;
+    for (const auto& item : witnessInfo.witnessSelectionPoolUnfiltered)
+    {
+        if (IsMine(*account, item.coin.out))
+            accountItems.push_back(item);
+    }
+
+    bool haveUnspentWitnessUtxo = accountItems.size() > 0;
+
+    CTxOutPoW2Witness witnessDetails0;
+    if (haveUnspentWitnessUtxo && !GetPow2WitnessOutput(accountItems[0].coin.out, witnessDetails0))
+        throw std::runtime_error("Failure extracting witness details.");
+
+    // test that all witness addresses have the same characteristics
+    if (accountItems.size() > 1) {
+        for (unsigned int i = 1; i < accountItems.size(); i++) {
+            CTxOutPoW2Witness witnessCompare;
+            if (!GetPow2WitnessOutput(accountItems[i].coin.out, witnessCompare))
+                throw std::runtime_error("Failure extracting witness details.");
+            if (witnessCompare.lockFromBlock != witnessDetails0.lockFromBlock ||
+                witnessCompare.lockUntilBlock != witnessDetails0.lockUntilBlock ||
+                witnessCompare.spendingKeyID != witnessDetails0.spendingKeyID ||
+                witnessCompare.witnessKeyID != witnessDetails0.witnessKeyID)
+            {
+                throw std::runtime_error("Multiple addresses with different witness characteristics in account. Use RPC to furter handle this account.");
+            }
+        }
+    }
+
+    bool hasBalance = pactiveWallet->GetBalance(account, true, true, true) +
+                          pactiveWallet->GetImmatureBalance(account, true, true) +
+                          pactiveWallet->GetUnconfirmedBalance(account, true, true) > 0;
+
+    bool isLocked = haveUnspentWitnessUtxo && IsPoW2WitnessLocked(witnessDetails0, chainActive.Tip()->nHeight);
+
+    bool isExpired = haveUnspentWitnessUtxo && witnessHasExpired(accountItems[0].nAge, accountItems[0].nWeight, witnessInfo.nTotalWeightRaw);
+
+    if (!haveUnspentWitnessUtxo && hasBalance) status = WitnessStatus::Pending;
+    else if (!haveUnspentWitnessUtxo && !hasBalance) status = WitnessStatus::Empty;
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired) status = WitnessStatus::Expired;
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && !isExpired) status = WitnessStatus::Witnessing;
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired) status = WitnessStatus::Expired;
+    else if (haveUnspentWitnessUtxo && hasBalance && !isLocked) status = WitnessStatus::Ended;
+    else if (haveUnspentWitnessUtxo && !hasBalance && !isLocked) status = WitnessStatus::Emptying;
+    else throw std::runtime_error("Unable to determine witness state.");
+
+    /* TODO: if WitnessStatus::Pending, ie. !haveUnspentWitnessUtxo && hasBalance verify that the balance is indeed
+     * from unconfirmed funds going into the account.
+     */
+    return status;
+}

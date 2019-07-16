@@ -68,4 +68,17 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
 /** Get tuple (locked amount, remaining locking duration, weight, immature witness) with details for witness extending */
 std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount);
 
+struct CGetWitnessInfo;
+
+enum class WitnessStatus {
+    Empty,
+    Pending,
+    Witnessing,
+    Ended,
+    Expired,
+    Emptying
+};
+
+WitnessStatus AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
+
 #endif // WITNESS_OPERATIONS_H
