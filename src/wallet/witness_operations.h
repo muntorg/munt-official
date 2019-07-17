@@ -79,6 +79,9 @@ enum class WitnessStatus {
     Emptying
 };
 
-WitnessStatus AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
+/** Get account (status, total weight, account weight, hasScriptLegacyOutput)
+ * hasScriptLegacyOutput iff any of the outputs is CTxOutType::ScriptLegacyOutput
+*/
+std::tuple<WitnessStatus, uint64_t, uint64_t, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account);
 
 #endif // WITNESS_OPERATIONS_H

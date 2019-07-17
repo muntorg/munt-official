@@ -6,6 +6,8 @@
 #include "witness_operations.h"
 
 #include <stdexcept>
+#include <numeric>
+#include <algorithm>
 #include <boost/uuid/uuid_io.hpp>
 #include "wallet.h"
 #include "validation/witnessvalidation.h"
@@ -14,6 +16,7 @@
 #include "Gulden/util.h"
 #include "coincontrol.h"
 #include "net.h"
+#include "alert.h"
 
 static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAccount(CAccount* forAccount)
 {
@@ -484,14 +487,33 @@ void rotatewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* 
     rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, pTxid, pFee);
 }
 
-WitnessStatus AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+std::tuple<WitnessStatus, uint64_t, uint64_t, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account)
 {
     WitnessStatus status;
+
+    CGetWitnessInfo witnessInfo;
+    CBlock block;
+    {
+        LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
+        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+        {
+            std::string strErrorMessage = "Error in AccountWitnessStatus, failed to read block from disk";
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf("%s", strErrorMessage.c_str());
+            throw std::runtime_error(strErrorMessage);
+        }
+        if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+        {
+            std::string strErrorMessage = "Error in AccountWitnessStatus, failed to retrieve witness info";
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf("%s", strErrorMessage.c_str());
+            throw std::runtime_error(strErrorMessage);
+        }
+    }
 
     LOCK2(cs_main, pWallet->cs_wallet);
 
     // Collect uspent witnesses coins on for the account
-    // TODO: maybe optimize with ptr colection instead
     std::vector<RouletteItem> accountItems;
     for (const auto& item : witnessInfo.witnessSelectionPoolUnfiltered)
     {
@@ -504,6 +526,7 @@ WitnessStatus AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CG
     CTxOutPoW2Witness witnessDetails0;
     if (haveUnspentWitnessUtxo && !GetPow2WitnessOutput(accountItems[0].coin.out, witnessDetails0))
         throw std::runtime_error("Failure extracting witness details.");
+
 
     // test that all witness addresses have the same characteristics
     if (accountItems.size() > 1) {
@@ -529,6 +552,8 @@ WitnessStatus AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CG
 
     bool isExpired = haveUnspentWitnessUtxo && witnessHasExpired(accountItems[0].nAge, accountItems[0].nWeight, witnessInfo.nTotalWeightRaw);
 
+    // TODO: check for any unconfirmed tx and handle their effect on status
+
     if (!haveUnspentWitnessUtxo && hasBalance) status = WitnessStatus::Pending;
     else if (!haveUnspentWitnessUtxo && !hasBalance) status = WitnessStatus::Empty;
     else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired) status = WitnessStatus::Expired;
@@ -538,8 +563,10 @@ WitnessStatus AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CG
     else if (haveUnspentWitnessUtxo && !hasBalance && !isLocked) status = WitnessStatus::Emptying;
     else throw std::runtime_error("Unable to determine witness state.");
 
-    /* TODO: if WitnessStatus::Pending, ie. !haveUnspentWitnessUtxo && hasBalance verify that the balance is indeed
-     * from unconfirmed funds going into the account.
-     */
-    return status;
+    bool hasScriptLegacyOutput = std::any_of(accountItems.begin(), accountItems.end(), [](const RouletteItem& ri){ return ri.coin.out.GetType() == CTxOutType::ScriptLegacyOutput; });
+
+    return std::tuple(status,
+                      witnessInfo.nTotalWeightRaw,
+                      isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), 0, [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : 0,
+                      hasScriptLegacyOutput);
 }
