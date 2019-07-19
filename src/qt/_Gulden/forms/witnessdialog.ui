@@ -685,7 +685,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
               </widget>
              </item>
              <item>
-              <spacer name="verticalSpacer_7">
+              <spacer name="verticalSpacer_8">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
