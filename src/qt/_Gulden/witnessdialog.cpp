@@ -274,7 +274,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->viewWitnessGraphButton->setVisible(false);
     ui->extendButton->setVisible(false);
     ui->upgradeButton->setVisible(false);
-    ui->refundWitnessButton->setVisible(false);
 
     connect(ui->unitButton, SIGNAL(clicked()), this, SLOT(unitButtonClicked()));
     connect(ui->viewWitnessGraphButton, SIGNAL(clicked()), this, SLOT(viewWitnessInfoClicked()));
@@ -287,7 +286,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
     connect(ui->upgradeButton, SIGNAL(clicked()), this, SLOT(upgradeWitnessClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
-    connect(ui->refundWitnessButton, SIGNAL(clicked()), this, SLOT(refundClicked()));
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
     connect(unitDaysAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Days); } );
     connect(unitWeeksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Weeks); } );
@@ -369,13 +367,6 @@ void WitnessDialog::extendClicked()
         GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
     }
 
-}
-
-void WitnessDialog::refundClicked()
-{
-    LOG_QT_METHOD;
-
-    pushDialog(new FundWitnessDialog(model, platformStyle, this));
 }
 
 void WitnessDialog::pushDialog(QWidget *dialog)
@@ -774,7 +765,6 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     bool stateWithdrawEarningsButton2 = false;
     bool stateFundWitnessButton = false;
     bool stateRenewWitnessButton = false;
-    bool stateUnitButton = false;
     bool stateUpgradeButton = false;
     bool stateExtendButton = false;
 
@@ -830,9 +820,6 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
             if (computedWidgetIndex == WitnessDialogStates::STATISTICS)
                 plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
-
-            // TODO: show empty account button if account status is empty but there is balance (accidentally transferred in, how?)
-            // TODO: extend should be focus button if it is the only one (which happens rigth after funding when the account has not witnessed yet, which can take a while)
         }
 
     }
@@ -855,16 +842,21 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         ui->viewWitnessGraphButton->setVisible(false);
     }
 
-    ui->unitButton->setVisible(computedWidgetIndex == WitnessDialogStates::STATISTICS);
+    ui->unitButton->setVisible(setWidgetIndex == WitnessDialogStates::STATISTICS);
 
     ui->emptyWitnessButton->setVisible(stateEmptyWitnessButton);
     ui->withdrawEarningsButton->setVisible(stateWithdrawEarningsButton);
     ui->withdrawEarningsButton2->setVisible(stateWithdrawEarningsButton2);
     ui->fundWitnessButton->setVisible(stateFundWitnessButton);
     ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
-    ui->unitButton->setVisible(stateUnitButton);
     ui->upgradeButton->setVisible(stateUpgradeButton);
     ui->extendButton->setVisible(stateExtendButton);
+
+    // put normal buttons to the right if there are no confirming buttons visible
+    bool anyConfirmVisible = stateFundWitnessButton || stateEmptyWitnessButton || stateWithdrawEarningsButton || stateRenewWitnessButton;
+    auto rect = ui->horizontalSpacer->geometry();
+    rect.setWidth(anyConfirmVisible ? 40 : 0);
+    ui->horizontalSpacer->setGeometry(rect);
 }
 
 void WitnessDialog::updateAccountIndicators()
