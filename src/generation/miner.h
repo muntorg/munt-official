@@ -30,6 +30,7 @@ class CBlockIndex;
 class CChainParams;
 class CScript;
 class CWallet;
+class CAccount;
 
 extern double dBestHashesPerSec;
 extern double dHashesPerSec;
