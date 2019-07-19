@@ -565,7 +565,7 @@ std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(C
     // correct. Any edge cases where this fails will automatically resolve once the tx confirms.
     bool hasUnconfirmedWittnessTx = std::any_of(pWallet->mapWallet.begin(), pWallet->mapWallet.end(), [=](const auto& it){
         const auto& wtx = it.second;
-        return account->HaveWalletTx(wtx) && wtx.GetDepthInMainChain() == 0;
+        return account->HaveWalletTx(wtx) && wtx.InMempool();
     });
 
     // hasUnconfirmedWittnessTx -> renewed, extended ...
