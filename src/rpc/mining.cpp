@@ -41,7 +41,9 @@
 
 #include <univalue.h>
 #ifdef ENABLE_WALLET
+#include "account.h"
 #include "wallet/wallet.h"
+#include "wallet/rpcwallet.h"
 #endif
 #include "generation/generation.h"
 #include "script/script.h"
@@ -211,6 +213,8 @@ static UniValue generate(const JSONRPCRequest& request)
     }
 
     CAccount* forAccount = nullptr;
+
+#ifdef ENABLE_WALLET
     if (request.params.size() > 2)
         forAccount = AccountFromValue(pactiveWallet, request.params[2], false);
     else {
@@ -221,6 +225,7 @@ static UniValue generate(const JSONRPCRequest& request)
 
     if (forAccount->IsPoW2Witness())
         throw std::runtime_error("Witness account selected, first select a regular account as the active account or specifiy a regular account.");
+#endif
 
     std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
     GetMainSignals().ScriptForMining(coinbaseScript, forAccount);
