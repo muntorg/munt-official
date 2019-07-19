@@ -189,13 +189,14 @@ static UniValue getgenerate(const JSONRPCRequest& request)
 
 static UniValue generate(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
             "generate num_blocks ( max_tries )\n"
             "\ngenerate up to n blocks immediately (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
             "2. maxtries     (numeric, optional) How many iterations to try (default = 1000000).\n"
+            "3. account      (string, optional) The UUID or unique label of the account.\n"
             "\nResult:\n"
             "[ blockhashes ]     (array) hashes of blocks generated\n"
             "\nExamples:\n"
@@ -209,8 +210,20 @@ static UniValue generate(const JSONRPCRequest& request)
         nMaxTries = request.params[1].get_int();
     }
 
+    CAccount* forAccount = nullptr;
+    if (request.params.size() > 2)
+        forAccount = AccountFromValue(pactiveWallet, request.params[2], false);
+    else {
+        if (!pactiveWallet->activeAccount)
+            throw std::runtime_error("No active account selected, first select an active account.");
+        forAccount = pactiveWallet->activeAccount;
+    }
+
+    if (forAccount->IsPoW2Witness())
+        throw std::runtime_error("Witness account selected, first select a regular account as the active account or specifiy a regular account.");
+
     std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
-    GetMainSignals().ScriptForMining(coinbaseScript, NULL);
+    GetMainSignals().ScriptForMining(coinbaseScript, forAccount);
 
     // If the keypool is exhausted, no script is returned at all.  Catch this.
     if (!coinbaseScript)
@@ -225,7 +238,7 @@ static UniValue generate(const JSONRPCRequest& request)
 
 static UniValue setgenerate(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
             "setgenerate generate ( gen_proc_limit )\n"
             "\nSet 'generate' true or false to turn generation on or off.\n"
@@ -234,6 +247,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. generate         (boolean, required) Set to true to turn on generation, off to turn off.\n"
             "2. gen_proc_limit   (numeric, optional) Set the processor limit for when generation is on. Can be -1 for unlimited.\n"
+            "3. account          (string, optional) The UUID or unique label of the account.\n"
             "\nExamples:\n"
             "\nSet the generation on with a limit of one processor\n"
             + HelpExampleCli("setgenerate", "true 1") +
@@ -253,15 +267,21 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
-    if (!pactiveWallet->activeAccount)
-        throw std::runtime_error("No active account selected, first select an active account.");
-
     bool fGenerate = true;
     if (request.params.size() > 0)
         fGenerate = request.params[0].get_bool();
 
-    if (fGenerate && pactiveWallet->activeAccount->IsPoW2Witness())
-        throw std::runtime_error("Witness account selected, first select a regular account as the active account.");
+    CAccount* forAccount = nullptr;
+    if (request.params.size() > 2)
+        forAccount = AccountFromValue(pactiveWallet, request.params[2], false);
+    else {
+        if (!pactiveWallet->activeAccount)
+            throw std::runtime_error("No active account selected, first select an active account.");
+        forAccount = pactiveWallet->activeAccount;
+    }
+
+    if (fGenerate && forAccount->IsPoW2Witness())
+        throw std::runtime_error("Witness account selected, first select a regular account as the active account or specifiy a regular account.");
 
     int nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
     if (request.params.size() > 1)
@@ -273,7 +293,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
 
     SoftSetBoolArg("-gen", fGenerate);
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
-    PoWMineGulden(fGenerate, nGenProcLimit, Params());
+    PoWMineGulden(fGenerate, nGenProcLimit, Params(), forAccount);
 
     if (!fGenerate)
     {
@@ -281,7 +301,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     }
     else
     {
-        return strprintf("Block generation enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[pwallet->activeAccount->getUUID()] ,nGenProcLimit);
+        return strprintf("Block generation enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[forAccount->getUUID()] ,nGenProcLimit);
     }
     #else
     throw std::runtime_error("Cannot use command without an active wallet");
