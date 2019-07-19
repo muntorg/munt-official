@@ -1146,7 +1146,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     padding-top: 10px;
 }
 
-FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading
+FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelErrorHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading
 {
     margin: 0px;
     padding: 0px;
@@ -1156,7 +1156,7 @@ FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, 
     text-transform: uppercase;
 }
 
-#labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelSaveToDiskDescription
+#labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelErrorHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelSaveToDiskDescription
 {
     margin-top: 6px;
 }
@@ -1166,7 +1166,7 @@ FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, 
     margin-top: 16px;
 }
 
-#labelInactiveWitnessAccountInfo, #labelPendingWitnessAccountInfo, #labelUsedAccountInfo
+#labelInactiveWitnessAccountInfo, #labelPendingWitnessAccountInfo, #labelUsedAccountInfo, #labelErrorInfo, #labelNote
 {
     margin-top: 6px;
     margin: 0px;
@@ -1176,7 +1176,12 @@ FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, 
     color: TEXT_COLOR_1;
 }
 
-#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountTypeHeading
+#labelErrorInfo
+{
+    color: red;
+}
+
+#labelChangePassword, #labelBackupPhraseHeading, #labelChangeAccountName, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountTypeHeading, #labelErrorHeader
 {
     margin-top: 35px;
     margin-bottom: 10px;

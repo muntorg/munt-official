@@ -104,7 +104,7 @@ QString PlotMouseTracker::curveInfoAt(QString legendColour, QString sHeading, co
     return QString( "<font color=\"%1\">%2 </font><font color=\"%3\">%4 %5 Gulden</font>" ).arg(legendColour).arg(GUIUtil::fontAwesomeRegular("\uf201")).arg( TEXT_COLOR_1 ).arg(sHeading).arg( y );
 }
 
-enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING, FINAL};
+enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING, FINAL, ERROR};
 
 WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
 : QFrame( parent )
@@ -834,7 +834,8 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         }
     }
     catch (const std::runtime_error& e) {
-        // TODO: set all buttons remain false, display error page using exception msg
+        setIndex = WitnessDialogStates::ERROR;
+        ui->labelErrorInfo->setText(e.what());
     }
 
     ui->witnessDialogStackedWidget->setCurrentIndex(setIndex);
