@@ -111,6 +111,8 @@ private:
     ClientModel *clientModel;
     WalletModel *model;
 
+    int userWidgetIndex = -1;
+
     QwtPlotCurve* expectedEarningsCurve = nullptr;
     QwtPlotCurve* currentEarningsCurveShadow = nullptr;
     QwtPlotCurve* currentEarningsCurveForecastShadow = nullptr;

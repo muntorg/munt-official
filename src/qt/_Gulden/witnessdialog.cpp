@@ -318,9 +318,8 @@ void WitnessDialog::viewWitnessInfoClicked()
 {
     LOG_QT_METHOD;
 
-    ui->unitButton->setVisible(true);
-    ui->viewWitnessGraphButton->setVisible(false);
-    ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
+    userWidgetIndex = userWidgetIndex < 0 ? WitnessDialogStates::STATISTICS : -1;
+    doUpdate(true);
 }
 
 void WitnessDialog::emptyWitnessClicked()
@@ -767,7 +766,9 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     // If SegSig is enabled then allow possibility of witness compounding.
     ui->compoundEarningsCheckBox->setVisible(IsSegSigEnabled(chainActive.TipPrev()));
 
-    WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
+    WitnessDialogStates setWidgetIndex = WitnessDialogStates::EMPTY;
+    int computedWidgetIndex = -1;
+
     bool stateEmptyWitnessButton = false;
     bool stateWithdrawEarningsButton = false;
     bool stateWithdrawEarningsButton2 = false;
@@ -790,56 +791,71 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         //Witness only witness account skips all the fancy states for now and just always shows the statistics page
         if (forAccount->m_Type == WitnessOnlyWitnessAccount)
         {
-            setIndex = WitnessDialogStates::STATISTICS;
+            computedWidgetIndex = WitnessDialogStates::STATISTICS;
             stateWithdrawEarningsButton = true;
         }
         else {
             switch (witnessStatus) {
             case WitnessStatus::Empty:
-                setIndex = WitnessDialogStates::EMPTY;
+                computedWidgetIndex = WitnessDialogStates::EMPTY;
                 break;
             case WitnessStatus::Pending:
-                setIndex = WitnessDialogStates::PENDING;
+                computedWidgetIndex = WitnessDialogStates::PENDING;
                 break;
             case WitnessStatus::Witnessing:
-                setIndex = WitnessDialogStates::STATISTICS;
+                computedWidgetIndex = WitnessDialogStates::STATISTICS;
                 break;
             case WitnessStatus::Ended:
-                setIndex = WitnessDialogStates::FINAL;
+                computedWidgetIndex = WitnessDialogStates::FINAL;
                 break;
             case WitnessStatus::Expired:
-                setIndex = WitnessDialogStates::EXPIRED;
+                computedWidgetIndex = WitnessDialogStates::EXPIRED;
                 break;
             case WitnessStatus::Emptying:
-                setIndex = WitnessDialogStates::FINAL;
+                computedWidgetIndex = WitnessDialogStates::FINAL;
                 break;
             }
 
             bool hasSpendableBalance = pactiveWallet->GetBalance(forAccount, false, false, true) > 0;
 
-            stateEmptyWitnessButton = witnessStatus == WitnessStatus::Ended;
+            stateEmptyWitnessButton = witnessStatus == WitnessStatus::Ended && !hasUnconfirmedWittnessTx;
             stateWithdrawEarningsButton = hasSpendableBalance && witnessStatus == WitnessStatus::Witnessing;
             stateWithdrawEarningsButton2 = hasSpendableBalance && witnessStatus == WitnessStatus::Expired;
             stateFundWitnessButton = witnessStatus == WitnessStatus::Empty;
             stateRenewWitnessButton = witnessStatus == WitnessStatus::Expired && !hasUnconfirmedWittnessTx;
             stateUpgradeButton = witnessStatus == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && hasScriptLegacyOutput && !hasUnconfirmedWittnessTx;
             stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (witnessStatus == WitnessStatus::Witnessing || witnessStatus == WitnessStatus::Expired) && !hasUnconfirmedWittnessTx;
-            if (setIndex == WitnessDialogStates::STATISTICS || setIndex == WitnessDialogStates::EXPIRED  || setIndex == WitnessDialogStates::FINAL)
+
+            setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
+
+            if (computedWidgetIndex == WitnessDialogStates::STATISTICS)
                 plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
 
-            // TODO: handle manual override for showing statistics
             // TODO: show empty account button if account status is empty but there is balance (accidentally transferred in, how?)
             // TODO: extend should be focus button if it is the only one (which happens rigth after funding when the account has not witnessed yet, which can take a while)
         }
+
     }
     catch (const std::runtime_error& e) {
-        setIndex = WitnessDialogStates::ERROR;
+        computedWidgetIndex = WitnessDialogStates::ERROR;
         ui->labelErrorInfo->setText(e.what());
     }
 
-    ui->witnessDialogStackedWidget->setCurrentIndex(setIndex);
-    ui->viewWitnessGraphButton->setVisible(setIndex == WitnessDialogStates::EXPIRED || setIndex == WitnessDialogStates::FINAL);
-    ui->unitButton->setVisible(setIndex == WitnessDialogStates::STATISTICS);
+    ui->witnessDialogStackedWidget->setCurrentIndex(setWidgetIndex);
+
+    if (setWidgetIndex == WitnessDialogStates::STATISTICS && computedWidgetIndex != WitnessDialogStates::STATISTICS) {
+        ui->viewWitnessGraphButton->setText(tr("Close graph"));
+        ui->viewWitnessGraphButton->setVisible(true);
+    }
+    else if (setWidgetIndex != WitnessDialogStates::STATISTICS && (computedWidgetIndex == WitnessDialogStates::EXPIRED || computedWidgetIndex == WitnessDialogStates::FINAL)) {
+        ui->viewWitnessGraphButton->setText(tr("Show graph"));
+        ui->viewWitnessGraphButton->setVisible(true);
+    }
+    else {
+        ui->viewWitnessGraphButton->setVisible(false);
+    }
+
+    ui->unitButton->setVisible(computedWidgetIndex == WitnessDialogStates::STATISTICS);
 
     ui->emptyWitnessButton->setVisible(stateEmptyWitnessButton);
     ui->withdrawEarningsButton->setVisible(stateWithdrawEarningsButton);
@@ -1072,8 +1088,9 @@ void WitnessDialog::setModel(WalletModel* _model)
 
 void WitnessDialog::activeAccountChanged(CAccount*)
 {
+    userWidgetIndex = -1;
     clearDialogStack();
-    update();
+    doUpdate(true);
     if (model) {
         ui->renewWitnessAccountTableView->setWalletModel(model, 1 * COIN);
     }
