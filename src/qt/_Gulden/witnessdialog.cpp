@@ -771,7 +771,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     bool stateEmptyWitnessButton = false;
     bool stateWithdrawEarningsButton = false;
     bool stateWithdrawEarningsButton2 = false;
-    bool stateFundWitnessButton = true;
+    bool stateFundWitnessButton = false;
     bool stateRenewWitnessButton = false;
     bool stateUnitButton = false;
     bool stateUpgradeButton = false;
@@ -785,7 +785,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         //fixme: (PHASE5) - Compounding (via RPC at least) is not a binary setting, so display this as semi checked (or something else) when its in a non binary state.
         ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
-        auto [witnessStatus, nTotalNetworkWeight, nOurWeight, hasScriptLegacyOutput] = AccountWitnessStatus(pactiveWallet, forAccount);
+        auto [witnessStatus, nTotalNetworkWeight, nOurWeight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx] = AccountWitnessStatus(pactiveWallet, forAccount);
 
         //Witness only witness account skips all the fancy states for now and just always shows the statistics page
         if (forAccount->m_Type == WitnessOnlyWitnessAccount)
@@ -821,15 +821,14 @@ void WitnessDialog::doUpdate(bool forceUpdate)
             stateWithdrawEarningsButton = hasSpendableBalance && witnessStatus == WitnessStatus::Witnessing;
             stateWithdrawEarningsButton2 = hasSpendableBalance && witnessStatus == WitnessStatus::Expired;
             stateFundWitnessButton = witnessStatus == WitnessStatus::Empty;
-            stateRenewWitnessButton = witnessStatus == WitnessStatus::Expired;
-            stateUpgradeButton = witnessStatus == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && hasScriptLegacyOutput;
-            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (witnessStatus == WitnessStatus::Witnessing || witnessStatus == WitnessStatus::Expired);
+            stateRenewWitnessButton = witnessStatus == WitnessStatus::Expired && !hasUnconfirmedWittnessTx;
+            stateUpgradeButton = witnessStatus == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && hasScriptLegacyOutput && !hasUnconfirmedWittnessTx;
+            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (witnessStatus == WitnessStatus::Witnessing || witnessStatus == WitnessStatus::Expired) && !hasUnconfirmedWittnessTx;
             if (setIndex == WitnessDialogStates::STATISTICS || setIndex == WitnessDialogStates::EXPIRED  || setIndex == WitnessDialogStates::FINAL)
                 plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
 
             // TODO: handle manual override for showing statistics
             // TODO: show empty account button if account status is empty but there is balance (accidentally transferred in, how?)
-            // TODO: test for unconfirmed tx in wallet tx for the account, which would affect the upgrade, renew and extend buttons
             // TODO: extend should be focus button if it is the only one (which happens rigth after funding when the account has not witnessed yet, which can take a while)
         }
     }

@@ -79,9 +79,10 @@ enum class WitnessStatus {
     Emptying
 };
 
-/** Get account (status, total weight, account weight, hasScriptLegacyOutput)
+/** Get account (status, total weight, account weight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx)
  * hasScriptLegacyOutput iff any of the outputs is CTxOutType::ScriptLegacyOutput
+ * hasUnconfirmedWittnessTx iff unconfirmed witness tx for the account (not actually checked for witness type, see implementation note)
 */
-std::tuple<WitnessStatus, uint64_t, uint64_t, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account);
+std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account);
 
 #endif // WITNESS_OPERATIONS_H

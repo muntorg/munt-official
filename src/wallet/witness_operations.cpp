@@ -487,7 +487,7 @@ void rotatewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* 
     rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, pTxid, pFee);
 }
 
-std::tuple<WitnessStatus, uint64_t, uint64_t, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account)
+std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account)
 {
     WitnessStatus status;
 
@@ -552,8 +552,6 @@ std::tuple<WitnessStatus, uint64_t, uint64_t, bool> AccountWitnessStatus(CWallet
 
     bool isExpired = haveUnspentWitnessUtxo && witnessHasExpired(accountItems[0].nAge, accountItems[0].nWeight, witnessInfo.nTotalWeightRaw);
 
-    // TODO: check for any unconfirmed tx and handle their effect on status
-
     if (!haveUnspentWitnessUtxo && hasBalance) status = WitnessStatus::Pending;
     else if (!haveUnspentWitnessUtxo && !hasBalance) status = WitnessStatus::Empty;
     else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired) status = WitnessStatus::Expired;
@@ -563,10 +561,22 @@ std::tuple<WitnessStatus, uint64_t, uint64_t, bool> AccountWitnessStatus(CWallet
     else if (haveUnspentWitnessUtxo && !hasBalance && !isLocked) status = WitnessStatus::Emptying;
     else throw std::runtime_error("Unable to determine witness state.");
 
+    // NOTE: assuming any unconfirmed tx here is a witness one to avoid getting the witness bundles and testing those, this will almost always be
+    // correct. Any edge cases where this fails will automatically resolve once the tx confirms.
+    bool hasUnconfirmedWittnessTx = std::any_of(pWallet->mapWallet.begin(), pWallet->mapWallet.end(), [=](const auto& it){
+        const auto& wtx = it.second;
+        return account->HaveWalletTx(wtx) && wtx.GetDepthInMainChain() == 0;
+    });
+
+    // hasUnconfirmedWittnessTx -> renewed, extended ...
+    if (status == WitnessStatus::Expired && hasUnconfirmedWittnessTx)
+        status = WitnessStatus::Witnessing;
+
     bool hasScriptLegacyOutput = std::any_of(accountItems.begin(), accountItems.end(), [](const RouletteItem& ri){ return ri.coin.out.GetType() == CTxOutType::ScriptLegacyOutput; });
 
     return std::tuple(status,
                       witnessInfo.nTotalWeightRaw,
                       isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), 0, [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : 0,
-                      hasScriptLegacyOutput);
+                      hasScriptLegacyOutput,
+                      hasUnconfirmedWittnessTx);
 }
