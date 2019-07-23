@@ -778,7 +778,8 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         //fixme: (PHASE5) - Compounding (via RPC at least) is not a binary setting, so display this as semi checked (or something else) when its in a non binary state.
         ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
-        auto [witnessStatus, nTotalNetworkWeight, nOurWeight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx] = AccountWitnessStatus(pactiveWallet, forAccount);
+        const auto witnessInfo = GetWitnessInfoWrapper();
+        auto [witnessStatus, nTotalNetworkWeight, nOurWeight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx] = AccountWitnessStatus(pactiveWallet, forAccount, witnessInfo);
 
         //Witness only witness account skips all the fancy states for now and just always shows the statistics page
         if (forAccount->m_Type == WitnessOnlyWitnessAccount)
