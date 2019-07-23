@@ -88,4 +88,5 @@ CGetWitnessInfo GetWitnessInfoWrapper();
 */
 std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
 
+std::vector<CAmount> OptimalWitnessDistribution(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
 #endif // WITNESS_OPERATIONS_H

@@ -700,3 +700,28 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
     if (pFee != nullptr)
         *pFee = transactionFee;
 }
+
+CAmount WitnessAmountForAccount(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+{
+    LOCK2(cs_main, pWallet->cs_wallet);
+
+    CAmount total = 0;
+    for (const auto& item : witnessInfo.witnessSelectionPoolFiltered)
+    {
+        if (IsMine(*account, item.coin.out)) {
+            total += item.coin.out.nValue;
+        }
+    }
+
+    return total;
+}
+
+std::vector<CAmount> OptimalWitnessDistribution(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+{
+    CAmount amount = WitnessAmountForAccount(pWallet, account, witnessInfo);
+
+    // TODO: real optimization algorithm
+    CAmount a = amount / 2;
+    CAmount b = amount - a;
+    return std::vector<CAmount>({a, b});
+}

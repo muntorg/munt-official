@@ -43,6 +43,7 @@
 #include "GuldenGUI.h"
 #include "fundwitnessdialog.h"
 #include "upgradewitnessdialog.h"
+#include "optimizewitnessdialog.h"
 #include "accounttablemodel.h"
 #include "consensus/validation.h"
 
@@ -286,6 +287,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
     connect(ui->upgradeButton, SIGNAL(clicked()), this, SLOT(upgradeWitnessClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
+    connect(ui->optimizeButton, SIGNAL(clicked()), this, SLOT(optimizeClicked()));
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
     connect(unitDaysAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Days); } );
     connect(unitWeeksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Weeks); } );
@@ -367,6 +369,13 @@ void WitnessDialog::extendClicked()
         GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
     }
 
+}
+
+void WitnessDialog::optimizeClicked()
+{
+    LOG_QT_METHOD;
+
+    pushDialog(new OptimizeWitnessDialog(model, platformStyle, this));
 }
 
 void WitnessDialog::pushDialog(QWidget *dialog)
@@ -823,6 +832,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
             if (computedWidgetIndex == WitnessDialogStates::STATISTICS)
                 plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
+            // TODO: determine optimize button visibility
         }
 
     }
