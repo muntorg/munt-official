@@ -144,12 +144,18 @@
                  <property name="text">
                   <string>New wallet</string>
                  </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
+                 </property>
                 </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="buttonRestoreWallet">
                  <property name="text">
                   <string>Restore wallet</string>
+                 </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
                  </property>
                 </widget>
                </item>
@@ -573,6 +579,9 @@
                <widget class="QPushButton" name="buttonRecoverWallet">
                 <property name="text">
                  <string>Recover wallet</string>
+                </property>
+                <property name="class" stdset="0">
+                 <string notr="true">focus</string>
                 </property>
                </widget>
               </item>

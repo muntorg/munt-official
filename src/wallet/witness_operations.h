@@ -32,6 +32,17 @@ namespace witness {
         RPC_VERIFY_REJECTED             = -26, //!< Transaction or block was rejected by network rules
         RPC_VERIFY_ALREADY_IN_CHAIN     = -27, //!< Transaction already in chain
         RPC_IN_WARMUP                   = -28, //!< Client still warming up
+
+        //! Wallet errors
+        RPC_WALLET_ERROR                = -4,  //!< Unspecified problem with wallet (key not found etc.)
+        RPC_WALLET_INSUFFICIENT_FUNDS   = -6,  //!< Not enough funds in wallet or account
+        RPC_WALLET_INVALID_ACCOUNT_NAME = -11, //!< Invalid account name
+        RPC_WALLET_KEYPOOL_RAN_OUT      = -12, //!< Keypool ran out, call keypoolrefill first
+        RPC_WALLET_UNLOCK_NEEDED        = -13, //!< Enter the wallet passphrase with walletpassphrase first
+        RPC_WALLET_PASSPHRASE_INCORRECT = -14, //!< The wallet passphrase entered was incorrect
+        RPC_WALLET_WRONG_ENC_STATE      = -15, //!< Command given in wrong wallet encryption state (encrypting an encrypted wallet etc.)
+        RPC_WALLET_ENCRYPTION_FAILED    = -16, //!< Failed to encrypt the wallet
+        RPC_WALLET_ALREADY_UNLOCKED     = -17, //!< Wallet is already unlocked
     };
 }
 
@@ -50,8 +61,28 @@ private:
 void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
 void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
 void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee);
+void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pAddress, std::string* pTxid);
+void rotatewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee);
+void rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, std::string* pTxid, CAmount* pFee);
 
 /** Get tuple (locked amount, remaining locking duration, weight, immature witness) with details for witness extending */
 std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount);
+
+struct CGetWitnessInfo;
+
+enum class WitnessStatus {
+    Empty,
+    Pending,
+    Witnessing,
+    Ended,
+    Expired,
+    Emptying
+};
+
+/** Get account (status, total weight, account weight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx)
+ * hasScriptLegacyOutput iff any of the outputs is CTxOutType::ScriptLegacyOutput
+ * hasUnconfirmedWittnessTx iff unconfirmed witness tx for the account (not actually checked for witness type, see implementation note)
+*/
+std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account);
 
 #endif // WITNESS_OPERATIONS_H

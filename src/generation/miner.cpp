@@ -1002,7 +1002,7 @@ std::atomic<int64_t> nHashThrottle(-1);
 static CCriticalSection timerCS;
 
 static const unsigned int hashPSTimerInterval = 200;
-void static GuldenGenerate(const CChainParams& chainparams)
+void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount)
 {
     LogPrintf("GuldenGenerate started\n");
     RenameThread("gulden-generate");
@@ -1014,7 +1014,7 @@ void static GuldenGenerate(const CChainParams& chainparams)
 
     unsigned int nExtraNonce = 0;
     std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
-    GetMainSignals().ScriptForMining(coinbaseScript, NULL);
+    GetMainSignals().ScriptForMining(coinbaseScript, forAccount);
 
      // Meter hashes/sec
     if (nHPSTimerStart == 0)
@@ -1187,7 +1187,7 @@ void static GuldenGenerate(const CChainParams& chainparams)
     }
 }
 
-void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams)
+void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams, CAccount* forAccount)
 {
     static boost::thread_group* minerThreads = NULL;
 
@@ -1206,6 +1206,6 @@ void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&GuldenGenerate, boost::cref(chainparams)));
+        minerThreads->create_thread(boost::bind(&GuldenGenerate, boost::cref(chainparams), forAccount));
 }
 

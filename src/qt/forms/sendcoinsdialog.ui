@@ -1171,6 +1171,9 @@
        <property name="default">
         <bool>false</bool>
        </property>
+       <property name="class" stdset="0">
+        <string notr="true">focus</string>
+       </property>
       </widget>
      </item>
      <item>
@@ -1274,9 +1277,7 @@
    <header>qvalidatedlineedit.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../gulden.qrc"/>
- </resources>
+ <resources/>
  <connections/>
  <buttongroups>
   <buttongroup name="groupCustomFee"/>

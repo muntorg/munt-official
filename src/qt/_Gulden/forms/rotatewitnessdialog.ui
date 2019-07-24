@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ExtendWitnessDialog</class>
- <widget class="QFrame" name="ExtendWitnessDialog">
+ <class>RotateWitnessDialog</class>
+ <widget class="QFrame" name="RotateWitnessDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -71,7 +71,14 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QLabel" name="labelExtendDescription">
+         <widget class="QLabel" name="titleLabel">
+          <property name="text">
+           <string>Rotate witness key</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="descriptionLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -79,7 +86,8 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Extend a witness to increase amount and/or locking duration. A funding account is needed to provide the transaction fee, even if the amount is not increased.</string>
+           <string>Replace your witness key with a new one. To be used for example when your witness key is compromised to prevent others from reaping your witness rewards. A funding account is needed for the fee of the transaction.
+Remember to install the new key on any witness device (pi) or service you are using.</string>
           </property>
           <property name="wordWrap">
            <bool>true</bool>
@@ -98,78 +106,6 @@
            <size>
             <width>0</width>
             <height>60</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="amountFrame">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="label">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-               <horstretch>1</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Amount</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="GuldenAmountField" name="payAmount">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>2</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="WitnessDurationWidget" name="lockDuration" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="baseSize">
-           <size>
-            <width>0</width>
-            <height>120</height>
            </size>
           </property>
          </widget>
@@ -235,12 +171,15 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="extendButton">
+            <widget class="QPushButton" name="confirmButton">
              <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="text">
-              <string>Extend</string>
+              <string>Rotate</string>
+             </property>
+             <property name="class" stdset="0">
+              <string notr="true">focus</string>
              </property>
             </widget>
            </item>
@@ -259,18 +198,6 @@
    <class>AccountSelectionWidget</class>
    <extends>QWidget</extends>
    <header location="global">qt/_Gulden/accountselectionwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>GuldenAmountField</class>
-   <extends>QLineEdit</extends>
-   <header>amountfield.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>WitnessDurationWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">qt/_Gulden/witnessdurationwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

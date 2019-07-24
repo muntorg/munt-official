@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>996</width>
+    <width>1092</width>
     <height>579</height>
    </rect>
   </property>
@@ -50,7 +50,7 @@
          <item>
           <widget class="QStackedWidget" name="witnessDialogStackedWidget">
            <property name="currentIndex">
-            <number>1</number>
+            <number>4</number>
            </property>
            <widget class="QWidget" name="emptyAccountPage">
             <layout class="QVBoxLayout" name="verticalLayout">
@@ -72,7 +72,7 @@
              <item>
               <widget class="QLabel" name="labelEmptyWitnessAccount">
                <property name="text">
-                <string>To begin witnessing, select an account from which to lock funds:</string>
+                <string>To begin witnessing, you have to fund the witness account.</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -84,9 +84,6 @@
                 <number>0</number>
                </property>
               </widget>
-             </item>
-             <item>
-              <widget class="AccountSelectionWidget" name="fundWitnessAccountTableView" native="true"/>
              </item>
              <item>
               <spacer name="verticalSpacer">
@@ -597,7 +594,7 @@
              <item>
               <widget class="QLabel" name="labelUsedAccountHeader">
                <property name="text">
-                <string>Account emptied</string>
+                <string>Witness finished</string>
                </property>
                <property name="indent">
                 <number>0</number>
@@ -607,8 +604,8 @@
              <item>
               <widget class="QLabel" name="labelUsedAccountInfo">
                <property name="text">
-                <string>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
-In future versions of Gulden it will be possible to re-use this account for further witnessing.</string>
+                <string>Your witness account has finished witnessing. Your earnings and transactions remain here for you to view.
+You can empty the account to make your witness funds available. When the emptying transaction is confirmed in the blockchain you can fund this account to witness again.</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -623,6 +620,72 @@ In future versions of Gulden it will be possible to re-use this account for furt
              </item>
              <item>
               <spacer name="verticalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>433</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="errorPage">
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="labelErrorHeader">
+               <property name="text">
+                <string>Witness interface error</string>
+               </property>
+               <property name="indent">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelErrorInfo">
+               <property name="text">
+                <string>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view.
+When the emptying transaction is confirmed in the blockchain you can fund this account to witness again.</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+               <property name="indent">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelNote">
+               <property name="text">
+                <string>Note: this problem is only within the user interface and your funds are secure.</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_8">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
@@ -757,6 +820,9 @@ In future versions of Gulden it will be possible to re-use this account for furt
               <property name="text">
                <string>Extend</string>
               </property>
+              <property name="class" stdset="0">
+               <string notr="true">normal</string>
+              </property>
              </widget>
             </item>
             <item>
@@ -807,6 +873,9 @@ In future versions of Gulden it will be possible to re-use this account for furt
                  <property name="text">
                   <string>Fund account</string>
                  </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -814,12 +883,18 @@ In future versions of Gulden it will be possible to re-use this account for furt
                  <property name="text">
                   <string>Empty account</string>
                  </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
+                 </property>
                 </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="withdrawEarningsButton">
                  <property name="text">
                   <string>Withdraw earnings</string>
+                 </property>
+                 <property name="class" stdset="0">
+                  <string notr="true">focus</string>
                  </property>
                 </widget>
                </item>
@@ -837,6 +912,9 @@ In future versions of Gulden it will be possible to re-use this account for furt
               <property name="text">
                <string>Renew account</string>
               </property>
+              <property name="class" stdset="0">
+               <string notr="true">focus</string>
+              </property>
              </widget>
             </item>
            </layout>
@@ -852,15 +930,15 @@ In future versions of Gulden it will be possible to re-use this account for furt
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QwtPlot</class>
-   <extends>QWidget</extends>
-   <header location="global">qwt_plot.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>AccountSelectionWidget</class>
    <extends>QWidget</extends>
    <header location="global">qt/_Gulden/accountselectionwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QwtPlot</class>
+   <extends>QWidget</extends>
+   <header location="global">qwt_plot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "upgradewitnessdialog.h"
-#include <qt/_Gulden/forms/ui_upgradewitnessdialog.h>
+#include "rotatewitnessdialog.h"
+#include <qt/_Gulden/forms/ui_rotatewitnessdialog.h>
 
 #include <stdexcept>
 #include "wallet/wallet.h"
@@ -15,9 +15,9 @@
 #include "walletmodel.h"
 #include "optionsmodel.h"
 
-UpgradeWitnessDialog::UpgradeWitnessDialog(WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
+RotateWitnessDialog::RotateWitnessDialog(WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
-, ui( new Ui::UpgradeWitnessDialog )
+, ui( new Ui::RotateWitnessDialog )
 , platformStyle( _platformStyle )
 , walletModel(walletModel_)
 {
@@ -30,24 +30,24 @@ UpgradeWitnessDialog::UpgradeWitnessDialog(WalletModel* walletModel_, const QSty
     connect(ui->confirmButton, SIGNAL(clicked()), this, SLOT(confirmClicked()));
 }
 
-UpgradeWitnessDialog::~UpgradeWitnessDialog()
+RotateWitnessDialog::~RotateWitnessDialog()
 {
     delete ui;
 }
 
-void UpgradeWitnessDialog::cancelClicked()
+void RotateWitnessDialog::cancelClicked()
 {
     LOG_QT_METHOD;
 
     Q_EMIT dismiss(this);
 }
 
-void UpgradeWitnessDialog::confirmClicked()
+void RotateWitnessDialog::confirmClicked()
 {
     LOG_QT_METHOD;
 
     // Format confirmation message
-    QString questionString = tr("Are you sure you want to upgrade the witness?");
+    QString questionString = tr("Are you sure you want to rotate the witness key?");
 
     CAccount* fundingAccount = ui->fundingSelection->selectedAccount();
     if (!fundingAccount) {
@@ -55,15 +55,15 @@ void UpgradeWitnessDialog::confirmClicked()
         return;
     }
 
-    pactiveWallet->BeginUnlocked(_("Wallet unlock required to upgrade witness"), [=](){
+    pactiveWallet->BeginUnlocked(_("Wallet unlock required to rotate witness key"), [=](){
 
         try {
             LOCK2(cs_main, pactiveWallet->cs_wallet);
             CAccount* witnessAccount = pactiveWallet->activeAccount;
-            upgradewitnessaccount(pactiveWallet,
-                                  fundingAccount,
-                                  witnessAccount,
-                                  nullptr, nullptr); // ignore result params
+            rotatewitnessaccount(pactiveWallet,
+                                 fundingAccount,
+                                 witnessAccount,
+                                 nullptr, nullptr); // ignore result params
 
             // request dismissal only when succesful
             Q_EMIT dismiss(this);

@@ -30,6 +30,7 @@ class CBlockIndex;
 class CChainParams;
 class CScript;
 class CWallet;
+class CAccount;
 
 extern double dBestHashesPerSec;
 extern double dHashesPerSec;
@@ -155,7 +156,7 @@ struct update_for_parent_inclusion
 CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainparams, std::string& strError, CBlockIndex*& pWitnessBlockToEmbed);
 
 /** Run the miner threads */
-void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams);
+void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams, CAccount* forAccount = nullptr);
 
 /** Generate a new block, without valid proof-of-work */
 class BlockAssembler

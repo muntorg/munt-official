@@ -1,5 +1,5 @@
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge(willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -41,7 +41,7 @@
 
 #include "Gulden/util.h"
 #include "GuldenGUI.h"
-#include "extendwitnessdialog.h"
+#include "fundwitnessdialog.h"
 #include "upgradewitnessdialog.h"
 #include "accounttablemodel.h"
 #include "consensus/validation.h"
@@ -104,7 +104,7 @@ QString PlotMouseTracker::curveInfoAt(QString legendColour, QString sHeading, co
     return QString( "<font color=\"%1\">%2 </font><font color=\"%3\">%4 %5 Gulden</font>" ).arg(legendColour).arg(GUIUtil::fontAwesomeRegular("\uf201")).arg( TEXT_COLOR_1 ).arg(sHeading).arg( y );
 }
 
-enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING, FINAL};
+enum WitnessDialogStates {EMPTY, STATISTICS, EXPIRED, PENDING, FINAL, ERROR};
 
 WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
 : QFrame( parent )
@@ -307,39 +307,39 @@ void WitnessDialog::clearLabels()
 }
 WitnessDialog::~WitnessDialog()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::~WitnessDialog\n");
+    LOG_QT_METHOD;
 
     delete ui;
 }
 
 void WitnessDialog::viewWitnessInfoClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::viewWitnessInfoClicked\n");
+    LOG_QT_METHOD;
 
-    ui->unitButton->setVisible(true);
-    ui->viewWitnessGraphButton->setVisible(false);
-    ui->witnessDialogStackedWidget->setCurrentIndex(WitnessDialogStates::STATISTICS);
+    userWidgetIndex = userWidgetIndex < 0 ? WitnessDialogStates::STATISTICS : -1;
+    doUpdate(true);
 }
 
 void WitnessDialog::emptyWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::emptyWitnessClicked\n");
+    LOG_QT_METHOD;
 
     Q_EMIT requestEmptyWitness();
 }
 
 void WitnessDialog::fundWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::fundWitnessClicked\n");
+    LOG_QT_METHOD;
 
-    CAccount* funderAccount = ui->fundWitnessAccountTableView->selectedAccount();
-    if (funderAccount)
-        Q_EMIT requestFundWitness(funderAccount);
+    pushDialog(new FundWitnessDialog(model, platformStyle, this));
+//    CAccount* funderAccount = ui->fundWitnessAccountTableView->selectedAccount();
+//    if (funderAccount)
+//        Q_EMIT requestFundWitness(funderAccount);
 }
 
 void WitnessDialog::renewWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::renewWitnessClicked\n");
+    LOG_QT_METHOD;
 
     CAccount* funderAccount = ui->renewWitnessAccountTableView->selectedAccount();
     if (funderAccount)
@@ -348,25 +348,21 @@ void WitnessDialog::renewWitnessClicked()
 
 void WitnessDialog::upgradeWitnessClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::upgradeWitnessClicked\n");
+    LOG_QT_METHOD;
 
-    auto *dialog = new UpgradeWitnessDialog(model, platformStyle, this);
-    pushDialog(dialog);
-    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+    pushDialog(new UpgradeWitnessDialog(model, platformStyle, this));
 }
 
 void WitnessDialog::extendClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::extendClicked\n");
+    LOG_QT_METHOD;
 
     try {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
         CAccount* witnessAccount = pactiveWallet->activeAccount;
         auto [lockedAmount, durationRemaining, oldWeight, immature] = extendWitnessInfo(pactiveWallet, witnessAccount);
         (unused)immature;
-        auto *dialog = new ExtendWitnessDialog(lockedAmount, durationRemaining, oldWeight, model, platformStyle, this);
-        pushDialog(dialog);
-        connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
+        pushDialog(new FundWitnessDialog(lockedAmount, durationRemaining, oldWeight, model, platformStyle, this));
     } catch (std::runtime_error& e) {
         GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
     }
@@ -377,6 +373,7 @@ void WitnessDialog::pushDialog(QWidget *dialog)
 {
     ui->stack->addWidget(dialog);
     ui->stack->setCurrentWidget(dialog);
+    connect( dialog, SIGNAL( dismiss(QWidget*) ), this, SLOT( popDialog(QWidget*)) );
 }
 
 void WitnessDialog::clearDialogStack()
@@ -392,16 +389,20 @@ void WitnessDialog::popDialog(QWidget* dialog)
     if (index < 1)
         return;
     ui->stack->setCurrentIndex(index - 1);
-    for (int i = index; i >= index; i--) {
+    for (int i = ui->stack->count() - 1; i >= index; i--) {
         QWidget* widget = ui->stack->widget(i);
         ui->stack->removeWidget(widget);
         widget->deleteLater();
+    }
+    if (ui->stack->count() <= 1) {
+        setModel(model);
+        doUpdate(true);
     }
 }
 
 void WitnessDialog::compoundEarningsCheckboxClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::compundEarningsCheckboxClicked\n");
+    LOG_QT_METHOD;
 
     CAccount* forAccount = model->getActiveAccount();
     if (forAccount)
@@ -422,14 +423,14 @@ void WitnessDialog::compoundEarningsCheckboxClicked()
 
 void WitnessDialog::unitButtonClicked()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::unitButtonClicked\n");
+    LOG_QT_METHOD;
 
     unitSelectionMenu->exec(ui->unitButton->mapToGlobal(QPoint(0,0)));
 }
 
 void WitnessDialog::updateUnit(int nNewUnit_)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::updateUnit\n");
+    LOG_QT_METHOD;
 
     if (!model)
         return;
@@ -626,7 +627,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
 
 void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::plotGraphForAccount\n");
+    LOG_QT_METHOD;
 
     DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
 
@@ -739,9 +740,10 @@ void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeigh
 
 void WitnessDialog::update()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::update\n");
+    LOG_QT_METHOD;
     doUpdate(false);
 }
+
 
 void WitnessDialog::doUpdate(bool forceUpdate)
 {
@@ -750,290 +752,118 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     if (!forceUpdate && heightRemaining > 10 && heightRemaining % 100 != 0)
         return;
 
-    LogPrint(BCLog::QT, "WitnessDialog::doUpdate\n");
+    LOG_QT_METHOD;
 
     DO_BENCHMARK("WIT: WitnessDialog::update", BCLog::BENCH|BCLog::WITNESS);
 
     // If SegSig is enabled then allow possibility of witness compounding.
     ui->compoundEarningsCheckBox->setVisible(IsSegSigEnabled(chainActive.TipPrev()));
 
-    static WitnessDialogStates cachedIndex = WitnessDialogStates::EMPTY;
-    static CAccount* cachedIndexForAccount = nullptr;
+    WitnessDialogStates setWidgetIndex = WitnessDialogStates::EMPTY;
+    int computedWidgetIndex = -1;
 
-    WitnessDialogStates setIndex = WitnessDialogStates::EMPTY;
     bool stateEmptyWitnessButton = false;
-    bool stateEmptyWitnessButton2 = false;
     bool stateWithdrawEarningsButton = false;
     bool stateWithdrawEarningsButton2 = false;
-    bool stateFundWitnessButton = true;
+    bool stateFundWitnessButton = false;
     bool stateRenewWitnessButton = false;
-    bool stateUnitButton = false;
-    bool stateViewWitnessGraphButton = false;
     bool stateUpgradeButton = false;
+    bool stateExtendButton = false;
 
-    if (model)
-    {
-        CAccount* forAccount = model->getActiveAccount();
-        if (forAccount)
+    try {
+        CAccount* forAccount;
+        if (!model || !(forAccount = model->getActiveAccount()) || !forAccount->IsPoW2Witness())
+            throw std::runtime_error("Witness account not accessible");
+
+        //fixme: (PHASE5) - Compounding (via RPC at least) is not a binary setting, so display this as semi checked (or something else) when its in a non binary state.
+        ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
+
+        auto [witnessStatus, nTotalNetworkWeight, nOurWeight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx] = AccountWitnessStatus(pactiveWallet, forAccount);
+
+        //Witness only witness account skips all the fancy states for now and just always shows the statistics page
+        if (forAccount->m_Type == WitnessOnlyWitnessAccount)
         {
-            static CAccount* cachedForAccount = nullptr;
-            static uint256 cachedHashTip;
-            static AccountStatus cachedWarningState = AccountStatus::Default;
-            if ( !forAccount->IsPoW2Witness() )
-            {
-                cachedForAccount = forAccount;
+            computedWidgetIndex = WitnessDialogStates::STATISTICS;
+            stateWithdrawEarningsButton = true;
+        }
+        else {
+            switch (witnessStatus) {
+            case WitnessStatus::Empty:
+                computedWidgetIndex = WitnessDialogStates::EMPTY;
+                break;
+            case WitnessStatus::Pending:
+                computedWidgetIndex = WitnessDialogStates::PENDING;
+                break;
+            case WitnessStatus::Witnessing:
+                computedWidgetIndex = WitnessDialogStates::STATISTICS;
+                break;
+            case WitnessStatus::Ended:
+                computedWidgetIndex = WitnessDialogStates::FINAL;
+                break;
+            case WitnessStatus::Expired:
+                computedWidgetIndex = WitnessDialogStates::EXPIRED;
+                break;
+            case WitnessStatus::Emptying:
+                computedWidgetIndex = WitnessDialogStates::FINAL;
+                break;
             }
-            else
-            {
-                //fixme: (PHASE5) - Compounding (via RPC at least) is not a binary setting, so display this as semi checked (or something else) when its in a non binary state.
-                ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
-                uint64_t nTotalNetworkWeight = 0;
-                uint64_t nOurWeight = 0;
-                bool bAnyExpired = false;
-                bool bAnyFinished = false;
-                bool bAnyAreMine = false;
-                if (chainActive.Tip() && chainActive.Tip()->pprev)
-                {
-                    // Prevent same update being called repeatedly for same account/tip (can happen in some event sequences)
-                    if (!forceUpdate && cachedForAccount == forAccount && cachedHashTip == chainActive.Tip()->GetBlockHashPoW2() && cachedWarningState == forAccount->GetWarningState())
-                        return;
-                    cachedForAccount = forAccount;
-                    cachedHashTip = chainActive.Tip()->GetBlockHashPoW2();
-                    cachedWarningState = forAccount->GetWarningState();
+            bool hasSpendableBalance = pactiveWallet->GetBalance(forAccount, false, false, true) > 0;
 
-                    CGetWitnessInfo witnessInfo;
-                    CBlock block;
-                    {
-                        LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
-                        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
-                        {
-                            std::string strErrorMessage = "Error in witness dialog, failed to read block from disk";
-                            CAlert::Notify(strErrorMessage, true, true);
-                            LogPrintf("%s", strErrorMessage.c_str());
-                            return;
-                        }
-                        if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
-                        {
-                            std::string strErrorMessage = "Error in witness dialog, failed to retrieve witness info";
-                            CAlert::Notify(strErrorMessage, true, true);
-                            LogPrintf("%s", strErrorMessage.c_str());
-                            return;
-                        }
-                        nTotalNetworkWeight = witnessInfo.nTotalWeightRaw;
-                    }
-                    for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
-                    {
-                        if (IsMine(*forAccount, witCoin.coin.out))
-                        {
-                            bAnyAreMine = true;
-                            CTxOutPoW2Witness witnessDetails;
-                            if ( (GetPow2WitnessOutput(witCoin.coin.out, witnessDetails)) && !IsPoW2WitnessLocked(witnessDetails, chainActive.Tip()->nHeight) )
-                            {
-                                bAnyFinished = true;
-                            }
-                            else
-                            {
-                                if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
-                                {
-                                    bAnyExpired = true;
-                                }
-                                else if (IsSegSigEnabled(chainActive.TipPrev()) && witCoin.coin.out.GetType() == CTxOutType::ScriptLegacyOutput)
-                                {
-                                    stateUpgradeButton = true;
-                                }
-                                nOurWeight += witCoin.nWeight;
-                            }
-                        }
-                    }
+            stateEmptyWitnessButton = witnessStatus == WitnessStatus::Ended && !hasUnconfirmedWittnessTx;
+            stateWithdrawEarningsButton = hasSpendableBalance && witnessStatus == WitnessStatus::Witnessing;
+            stateWithdrawEarningsButton2 = hasSpendableBalance && witnessStatus == WitnessStatus::Expired;
+            stateFundWitnessButton = witnessStatus == WitnessStatus::Empty;
+            stateRenewWitnessButton = witnessStatus == WitnessStatus::Expired && !hasUnconfirmedWittnessTx;
+            stateUpgradeButton = witnessStatus == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && hasScriptLegacyOutput && !hasUnconfirmedWittnessTx;
+            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (witnessStatus == WitnessStatus::Witnessing || witnessStatus == WitnessStatus::Expired) && !hasUnconfirmedWittnessTx;
 
-                    //Witness only witness account skips all the fancy states for now and just always shows the statistics page
-                    if (forAccount->m_Type == WitnessOnlyWitnessAccount)
-                    {
-                        setIndex = WitnessDialogStates::STATISTICS;
-                        stateWithdrawEarningsButton = stateUnitButton = true;
-                        stateEmptyWitnessButton = stateEmptyWitnessButton2 = false;
-                        stateWithdrawEarningsButton2 = stateFundWitnessButton = false;
-                        stateRenewWitnessButton = stateViewWitnessGraphButton = false;
-                        plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
-                    }
-                    else
-                    {
-                        // We have to check for immature balance as well - otherwise accounts that have just witnessed get incorrectly marked as "empty".
-                        if ((pactiveWallet->GetBalance(forAccount, true, true, true) > 0) || (pactiveWallet->GetImmatureBalance(forAccount, true, true) > 0) || (pactiveWallet->GetUnconfirmedBalance(forAccount, true, true) > 0))
-                        {
-                            stateFundWitnessButton = false;
-                            if (bAnyFinished)
-                            {
-                                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
-                                stateRenewWitnessButton = false;
-                                stateEmptyWitnessButton = true;
-                                stateEmptyWitnessButton2 = false;
-                                stateWithdrawEarningsButton = stateWithdrawEarningsButton2 = false;
-                                setIndex = WitnessDialogStates::STATISTICS;
-                            }
-                            else if (bAnyExpired || !bAnyAreMine)
-                            {
-                                filter->setAccountFilter(model->getActiveAccount());
-                                int rows = filter->rowCount();
-                                for (int row = 0; row < rows; ++row)
-                                {
-                                    QModelIndex index = filter->index(row, 0);
+            setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
 
-                                    int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
-                                    if (nStatus == TransactionStatus::Status::Unconfirmed)
-                                    {
-                                        setIndex = WitnessDialogStates::PENDING;
-                                        break;
-                                    }
-                                }
-                                if (bAnyExpired)
-                                {
-                                    // If the full account balance is spendable than show an "empty account" button otherwise an "empty earnings" button.
-                                    if ((pactiveWallet->GetLockedBalance(forAccount, true) == 0) && (pactiveWallet->GetUnconfirmedBalance(forAccount, false, true) == 0) && (pactiveWallet->GetImmatureBalance(forAccount, false, true) == 0))
-                                        stateEmptyWitnessButton2 = true;
-                                    else
-                                        stateWithdrawEarningsButton2 = true;
-
-                                    // If the account is not flagged as expired then we might have already renewed, or we might have ended our lock period.
-                                    // We could also just be waiting for the next block to come in for the flag to update.
-                                    // Keep the button visible, so the user is at least aware that it exists, but disable it so that it can't be used until we are sure.
-                                    if (cachedWarningState == AccountStatus::WitnessExpired)
-                                        stateRenewWitnessButton = true;
-                                    else
-                                    {
-                                        stateRenewWitnessButton = false;
-                                        stateEmptyWitnessButton = stateEmptyWitnessButton2;
-                                        stateWithdrawEarningsButton = stateWithdrawEarningsButton2;
-                                        stateEmptyWitnessButton2 = stateWithdrawEarningsButton2 = false;
-                                    }
-                                    stateViewWitnessGraphButton = true;
-                                    setIndex = WitnessDialogStates::EXPIRED;
-                                    plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
-                                }
-                                // Second check for pending is required because first check might fail (when calling update during funding an account for first time) - while second check might not be right in some cases either so we rather have both.
-                                else if(cachedWarningState == AccountStatus::WitnessPending)
-                                {
-                                    setIndex = WitnessDialogStates::PENDING;
-                                }
-                            }
-                            else
-                            {
-                                if ((pactiveWallet->GetLockedBalance(forAccount, true) == 0) && (pactiveWallet->GetUnconfirmedBalance(forAccount, false, true) == 0) && (pactiveWallet->GetImmatureBalance(forAccount, false, true) == 0))
-                                    stateEmptyWitnessButton = true;
-                                else
-                                    stateWithdrawEarningsButton = true;
-                                stateUnitButton = true;
-                                setIndex = WitnessDialogStates::STATISTICS;
-                                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
-                            }
-                        }
-                        else
-                        {
-                            if (bAnyFinished)
-                            {
-                                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
-                                stateRenewWitnessButton = false;
-                                stateEmptyWitnessButton = false;
-                                stateEmptyWitnessButton2 = false;
-                                stateWithdrawEarningsButton = stateWithdrawEarningsButton2 = false;
-                                setIndex = WitnessDialogStates::STATISTICS;
-                            }
-                            else
-                            {
-                                filter->setAccountFilter(model->getActiveAccount());
-                                int rows = filter->rowCount();
-                                bool bAnyConfirmed = false;
-                                for (int row = 0; row < rows; ++row)
-                                {
-                                    QModelIndex index = filter->index(row, 0);
-
-                                    int nStatus = filter->data(index, TransactionTableModel::StatusRole).toInt();
-                                    if (nStatus == TransactionStatus::Status::Confirmed)
-                                    {
-                                        bAnyConfirmed = true;
-                                        break;
-                                    }
-                                }
-                                if (bAnyConfirmed)
-                                {
-                                    setIndex = WitnessDialogStates::FINAL;
-                                    plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
-                                    stateFundWitnessButton = false;
-                                    stateRenewWitnessButton = false;
-                                    stateRenewWitnessButton = false;
-                                    stateEmptyWitnessButton = stateEmptyWitnessButton2 = false;
-                                    stateWithdrawEarningsButton = stateWithdrawEarningsButton2 = false;
-                                    stateEmptyWitnessButton2 = stateWithdrawEarningsButton2 = false;
-                                    stateViewWitnessGraphButton = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            if (computedWidgetIndex == WitnessDialogStates::STATISTICS)
+                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
         }
 
-        // Stop view jumping back and forth if user has pushed "view statistics" and a new block comes in.
-        if (cachedIndexForAccount && cachedIndexForAccount == forAccount && cachedIndex == setIndex)
-        {
-            setIndex = (WitnessDialogStates)ui->witnessDialogStackedWidget->currentIndex();
-            if (setIndex == WitnessDialogStates::STATISTICS)
-            {
-                // Prevent these two buttons from flipping as well.
-                stateUnitButton = true;
-                stateViewWitnessGraphButton = false;
-            }
-        }
-        else
-        {
-            cachedIndex = setIndex;
-            cachedIndexForAccount = forAccount;
-        }
-
-        //If we accidentally transfer non-witness funds into a witness account, show empty button to allow emptying it.
-        if (setIndex == WitnessDialogStates::EMPTY)
-        {
-            if (pactiveWallet->GetBalance(forAccount, true, true, true) > 0)
-            {
-                stateEmptyWitnessButton = true;
-            }
-        }
+    }
+    catch (const std::runtime_error& e) {
+        computedWidgetIndex = WitnessDialogStates::ERROR;
+        ui->labelErrorInfo->setText(e.what());
     }
 
-    ui->witnessDialogStackedWidget->setCurrentIndex(setIndex);
+    ui->witnessDialogStackedWidget->setCurrentIndex(setWidgetIndex);
+
+    if (setWidgetIndex == WitnessDialogStates::STATISTICS && computedWidgetIndex != WitnessDialogStates::STATISTICS) {
+        ui->viewWitnessGraphButton->setText(tr("Close graph"));
+        ui->viewWitnessGraphButton->setVisible(true);
+    }
+    else if (setWidgetIndex != WitnessDialogStates::STATISTICS && (computedWidgetIndex == WitnessDialogStates::EXPIRED || computedWidgetIndex == WitnessDialogStates::FINAL)) {
+        ui->viewWitnessGraphButton->setText(tr("Show graph"));
+        ui->viewWitnessGraphButton->setVisible(true);
+    }
+    else {
+        ui->viewWitnessGraphButton->setVisible(false);
+    }
+
+    ui->unitButton->setVisible(setWidgetIndex == WitnessDialogStates::STATISTICS);
+
     ui->emptyWitnessButton->setVisible(stateEmptyWitnessButton);
-    ui->emptyWitnessButton2->setVisible(stateEmptyWitnessButton2);
     ui->withdrawEarningsButton->setVisible(stateWithdrawEarningsButton);
     ui->withdrawEarningsButton2->setVisible(stateWithdrawEarningsButton2);
     ui->fundWitnessButton->setVisible(stateFundWitnessButton);
     ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
-    ui->unitButton->setVisible(stateUnitButton);
-    ui->viewWitnessGraphButton->setVisible(stateViewWitnessGraphButton);
     ui->upgradeButton->setVisible(stateUpgradeButton);
+    ui->extendButton->setVisible(stateExtendButton);
 
-    if (!stateUpgradeButton) {
-        try {
-            LOCK2(cs_main, pactiveWallet->cs_wallet);
-            CAccount* witnessAccount = pactiveWallet->activeAccount;
-            auto [lockedAmount, durationRemaining, oldWeight, immature] = extendWitnessInfo(pactiveWallet, witnessAccount);
-            (unused)lockedAmount;
-            (unused)oldWeight;
-            (unused)immature;
-            ui->extendButton->setVisible(IsSegSigEnabled(chainActive.TipPrev()) && durationRemaining > 0);
-        }
-        catch (std::runtime_error& e) {
-            ui->extendButton->setVisible(false);
-        }
-    }
-    else {
-        ui->extendButton->setVisible(false);
-    }
+    // put normal buttons to the right if there are no confirming buttons visible
+    bool anyConfirmVisible = stateFundWitnessButton || stateEmptyWitnessButton || stateWithdrawEarningsButton || stateRenewWitnessButton;
+    auto rect = ui->horizontalSpacer->geometry();
+    rect.setWidth(anyConfirmVisible ? 40 : 0);
+    ui->horizontalSpacer->setGeometry(rect);
 }
 
 void WitnessDialog::updateAccountIndicators()
 {
-    LogPrint(BCLog::QT, "WitnessDialog::updateAccountIndicators\n");
+    LOG_QT_METHOD;
 
     if(!filter || !model)
         return;
@@ -1199,7 +1029,7 @@ void WitnessDialog::updateAccountIndicators()
 
 void WitnessDialog::numBlocksChanged(int,QDateTime,double)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::numBlocksChanged\n");
+    LOG_QT_METHOD;
 
     //Update account state indicators for the latest block
     updateAccountIndicators();
@@ -1210,7 +1040,7 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double)
 
 void WitnessDialog::setClientModel(ClientModel* clientModel_)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::setClientModel\n");
+    LOG_QT_METHOD;
 
     clientModel = clientModel_;
     if (clientModel)
@@ -1221,7 +1051,7 @@ void WitnessDialog::setClientModel(ClientModel* clientModel_)
 
 void WitnessDialog::setModel(WalletModel* _model)
 {
-    LogPrint(BCLog::QT, "WitnessDialog::setModel\n");
+    LOG_QT_METHOD;
 
     this->model = _model;
 
@@ -1235,7 +1065,6 @@ void WitnessDialog::setModel(WalletModel* _model)
         filter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
 
         {
-            ui->fundWitnessAccountTableView->setWalletModel(_model, gMinimumWitnessAmount * COIN);
             ui->renewWitnessAccountTableView->setWalletModel(_model, 1 * COIN);
 
             connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
@@ -1253,10 +1082,10 @@ void WitnessDialog::setModel(WalletModel* _model)
 
 void WitnessDialog::activeAccountChanged(CAccount*)
 {
+    userWidgetIndex = -1;
     clearDialogStack();
-    update();
+    doUpdate(true);
     if (model) {
-        ui->fundWitnessAccountTableView->setWalletModel(model, gMinimumWitnessAmount * COIN);
         ui->renewWitnessAccountTableView->setWalletModel(model, 1 * COIN);
     }
 }

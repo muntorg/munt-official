@@ -899,7 +899,8 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
     double fWeightPercent = nOurWeight/(double)nNetworkWeight;
     if (fWeightPercent > 0.01)
     {
-        ui->pow2WeightExceedsMaxPercentWarning->setVisible(true);
+        if (!IsSegSigEnabled(chainActive.TipPrev()))
+            ui->pow2WeightExceedsMaxPercentWarning->setVisible(true);
         fWeightPercent = 0.01;
     }
 

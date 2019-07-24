@@ -100,6 +100,7 @@ public Q_SLOTS:
     void renewWitnessClicked();
     void upgradeWitnessClicked();
     void extendClicked();
+
 protected:
 
 private:
@@ -109,6 +110,8 @@ private:
     const QStyle *platformStyle;
     ClientModel *clientModel;
     WalletModel *model;
+
+    int userWidgetIndex = -1;
 
     QwtPlotCurve* expectedEarningsCurve = nullptr;
     QwtPlotCurve* currentEarningsCurveShadow = nullptr;

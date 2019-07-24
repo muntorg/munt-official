@@ -8,7 +8,7 @@
 
 #include "guiutil.h"
 
-#include <QFrame>
+#include <QStackedWidget>
 #include <QHeaderView>
 #include <QItemSelection>
 #include <QKeyEvent>
@@ -25,7 +25,7 @@ namespace Ui {
     class AccountSettingsDialog;
 }
 
-class AccountSettingsDialog : public QFrame
+class AccountSettingsDialog : public QStackedWidget
 {
     Q_OBJECT
 
@@ -43,6 +43,7 @@ public Q_SLOTS:
     void deleteAccount();
     void showSyncQr();
     void copyQr();
+    void rotateClicked();
 
 protected:
 
@@ -52,7 +53,10 @@ private:
     const QStyle* platformStyle;
     CAccount* activeAccount;
 
+    void pushDialog(QWidget *dialog);
+
 private Q_SLOTS:
+    void popDialog(QWidget* dialog);
 };
 
 #endif // GULDEN_QT_GULDENNEWACCOUNTDIALOG_H

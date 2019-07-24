@@ -21,16 +21,21 @@ class QStyle;
 class WalletModel;
 
 namespace Ui {
-    class ExtendWitnessDialog;
+    class FundWitnessDialog;
 }
 
-class ExtendWitnessDialog : public QFrame
+class FundWitnessDialog : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit ExtendWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
-    ~ExtendWitnessDialog();
+    /** Extend constructor */
+    explicit FundWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
+
+    /** (Re)fund constructor */
+    explicit FundWitnessDialog(WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
+
+    ~FundWitnessDialog();
 
 Q_SIGNALS:
     void dismiss(QWidget*);
@@ -38,7 +43,9 @@ Q_SIGNALS:
 protected:
 
 private:
-    Ui::ExtendWitnessDialog *ui;
+    FundWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
+
+    Ui::FundWitnessDialog *ui;
     const QStyle *platformStyle;
     WalletModel* walletModel;
     CAmount lockedAmount;
@@ -46,6 +53,7 @@ private:
 private Q_SLOTS:
     void cancelClicked();
     void extendClicked();
+    void fundClicked();
     void amountFieldChanged();
 };
 

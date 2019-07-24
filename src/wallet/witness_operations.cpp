@@ -6,6 +6,8 @@
 #include "witness_operations.h"
 
 #include <stdexcept>
+#include <numeric>
+#include <algorithm>
 #include <boost/uuid/uuid_io.hpp>
 #include "wallet.h"
 #include "validation/witnessvalidation.h"
@@ -13,6 +15,8 @@
 #include "consensus/validation.h"
 #include "Gulden/util.h"
 #include "coincontrol.h"
+#include "net.h"
+#include "alert.h"
 
 static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAccount(CAccount* forAccount)
 {
@@ -209,6 +213,116 @@ void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* 
     extendwitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, amount, requestedLockPeriodInBlocks, pTxid, pFee);
 }
 
+void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pAddress, std::string* pTxid)
+{
+    if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
+
+    LOCK2(cs_main, pwallet->cs_wallet);
+
+    if (!witnessAccount->IsPoW2Witness())
+        throw witness_error(witness::RPC_MISC_ERROR, strprintf("Specified account is not a witness account [%s].", boost::uuids::to_string(witnessAccount->getUUID())));
+    if (witnessAccount->m_Type == WitnessOnlyWitnessAccount || !witnessAccount->IsHD())
+        throw witness_error(witness::RPC_MISC_ERROR, strprintf("Cannot fund a witness only witness account [%s].", boost::uuids::to_string(witnessAccount->getUUID())));
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() > 0)
+    {
+        if (!fAllowMultiple)
+            throw std::runtime_error("Account already has an active funded witness address. Perhaps you intended to 'extend' it? See: 'help extendwitnessaccount'");
+    }
+
+    if (amount < (gMinimumWitnessAmount*COIN))
+        throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+
+    if (requestedPeriodInBlocks == 0)
+        throw witness_error(witness::RPC_TYPE_ERROR, "Invalid number passed for lock period.");
+
+    if (requestedPeriodInBlocks > MaximumWitnessLockLength())
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
+
+    if (requestedPeriodInBlocks < MinimumWitnessLockLength())
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
+
+    // Add a small buffer to give us time to enter the blockchain
+    if (requestedPeriodInBlocks == MinimumWitnessLockLength())
+        requestedPeriodInBlocks += 50;
+
+    // Enforce minimum weight
+    int64_t nWeight = GetPoW2RawWeightForAmount(amount, requestedPeriodInBlocks);
+    if (nWeight < gMinimumWitnessWeight)
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
+
+    // Finally attempt to create and send the witness transaction.
+    CPoW2WitnessDestination destinationPoW2Witness;
+    destinationPoW2Witness.lockFromBlock = 0;
+    destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + requestedPeriodInBlocks;
+    destinationPoW2Witness.failCount = 0;
+    destinationPoW2Witness.actionNonce = 0;
+    {
+        CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+        CPubKey pubWitnessKey;
+        if (!keyWitness.GetReservedKey(pubWitnessKey))
+            throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
+
+        //We delibritely return the key here, so that if we fail we won't leak the key.
+        //The key will be marked as used when the transaction is accepted anyway.
+        keyWitness.ReturnKey();
+        destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
+    }
+    {
+        //Code should be refactored to only call 'KeepKey' -after- success, a bit tricky to get there though.
+        CReserveKeyOrScript keySpending(pactiveWallet, witnessAccount, KEYCHAIN_SPENDING);
+        CPubKey pubSpendingKey;
+        if (!keySpending.GetReservedKey(pubSpendingKey))
+            throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, "Error allocating spending key for witness account.");
+
+        //We delibritely return the key here, so that if we fail we won't leak the key.
+        //The key will be marked as used when the transaction is accepted anyway.
+        keySpending.ReturnKey();
+        destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
+    }
+
+    CAmount nFeeRequired;
+    std::string strError;
+    std::vector<CRecipient> vecSend;
+    int nChangePosRet = -1;
+
+    CRecipient recipient = ( IsSegSigEnabled(chainActive.TipPrev()) ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), amount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), amount, false) ) ) ;
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+    {
+        // We have to copy this anyway even though we are using a CSCript as later code depends on it to grab the witness key id.
+        recipient.witnessDetails.witnessKeyID = destinationPoW2Witness.witnessKey;
+    }
+
+    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+    recipient.witnessForAccount = witnessAccount;
+    vecSend.push_back(recipient);
+
+    CWalletTx wtx;
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    if (!pwallet->CreateTransaction(fundingAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+    {
+        throw witness_error(witness::RPC_WALLET_ERROR, strError);
+    }
+
+    CValidationState state;
+    if (!pwallet->CommitTransaction(wtx, reservekey, g_connman.get(), state))
+    {
+        strError = strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason());
+        throw witness_error(witness::RPC_WALLET_ERROR, strError);
+    }
+
+    // Set result parameters
+    if (pAddress != nullptr) {
+        CTxDestination dest;
+        ExtractDestination(wtx.tx->vout[0], dest);
+        *pAddress = CGuldenAddress(dest).ToString();
+    }
+    if (pTxid != nullptr)
+        *pTxid = wtx.GetHash().GetHex();
+}
+
 void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee)
 {
     if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
@@ -245,4 +359,224 @@ void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount*
         *pTxid = finalTransactionHash.GetHex();
     if (pFee != nullptr)
         *pFee = transactionFee;
+}
+
+void rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, std::string* pTxid, CAmount* pFee)
+{
+    if (unspentWitnessOutputs.size() > 1)
+        throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Too many witness outputs cannot rotate."));
+
+    // Check for immaturity
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    //fixme: (PHASE4) - Look into shortening the maturity period here, the full period is too long.
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    // Find the account for this address
+    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    if (!witnessAccount)
+        throw witness_error(witness::RPC_MISC_ERROR, "Could not locate account for address");
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot rotate a witness-only account as spend key is required to do this.");
+    }
+
+    //fixme: (PHASE4) factor this all out into a helper.
+    // Finally attempt to create and send the witness transaction.
+    CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
+    std::string reasonForFail;
+    CAmount transactionFee;
+    CMutableTransaction rotateWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
+    CTxOut rotatedWitnessTxOutput;
+    {
+        // Add the existing witness output as an input
+        pwallet->AddTxInput(rotateWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+
+        // Add new witness output
+        rotatedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+        // As we are rotating the witness key we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
+        rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        rotatedWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+        rotatedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
+        {
+            CReserveKeyOrScript keyWitness(pactiveWallet, witnessAccount, KEYCHAIN_WITNESS);
+            CPubKey pubWitnessKey;
+            if (!keyWitness.GetReservedKey(pubWitnessKey))
+                throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, "Error allocating witness key for witness account.");
+
+            //We delibritely return the key here, so that if we fail we won't leak the key.
+            //The key will be marked as used when the transaction is accepted anyway.
+            keyWitness.ReturnKey();
+            rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubWitnessKey.GetID();
+        }
+        rotatedWitnessTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
+        rotatedWitnessTxOutput.output.witnessDetails.actionNonce = currentWitnessDetails.actionNonce+1;
+        rotatedWitnessTxOutput.nValue = currentWitnessTxOut.nValue;
+        rotateWitnessTransaction.vout.push_back(rotatedWitnessTxOutput);
+
+        // Fund the additional amount in the transaction (including fees)
+        int changeOutputPosition = 1;
+        std::set<int> subtractFeeFromOutputs; // Empty - we don't subtract fee from outputs
+        CCoinControl coincontrol;
+        if (!pwallet->FundTransaction(fundingAccount, rotateWitnessTransaction, transactionFee, changeOutputPosition, reasonForFail, false, subtractFeeFromOutputs, coincontrol, reservekey))
+        {
+            throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    //fixme: (PHASE4) Improve this, it should only happen if Sign transaction is a success.
+    //Also We must make sure that the UI version of this command does the same
+    //Also (low) this shares common code with CreateTransaction() - it should be factored out into a common helper.
+    CKey privWitnessKey;
+    if (!witnessAccount->GetKey(rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID, privWitnessKey))
+    {
+        reasonForFail = strprintf("Wallet error, failed to retrieve private witness key.");
+        throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+    }
+    if (!pwallet->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *witnessAccount, KEYCHAIN_WITNESS))
+    {
+        reasonForFail = strprintf("Wallet error, failed to store witness key.");
+        throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
+    }
+
+    uint256 finalTransactionHash;
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (!pwallet->SignAndSubmitTransaction(reservekey, rotateWitnessTransaction, reasonForFail, &finalTransactionHash))
+        {
+            throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
+        }
+    }
+
+    // Set result parameters
+    if (pTxid != nullptr)
+        *pTxid = finalTransactionHash.GetHex();
+    if (pFee != nullptr)
+        *pFee = transactionFee;
+}
+
+void rotatewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee)
+{
+    if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
+
+    LOCK2(cs_main, pwallet->cs_wallet);
+
+    if (!IsSegSigEnabled(chainActive.TipPrev()))
+        throw std::runtime_error("Cannot use this command before segsig activates");
+
+    if (pwallet->IsLocked()) {
+        throw std::runtime_error("Wallet locked");
+    }
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot rotate a witness-only account as spend key is required to do this.");
+    }
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
+    if (unspentWitnessOutputs.size() == 0)
+        throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].",
+                                                                           boost::uuids::to_string(witnessAccount->getUUID())));
+
+    rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, pTxid, pFee);
+}
+
+std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account)
+{
+    WitnessStatus status;
+
+    CGetWitnessInfo witnessInfo;
+    CBlock block;
+    {
+        LOCK(cs_main); // Required for ReadBlockFromDisk as well as GetWitnessInfo.
+        if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+        {
+            std::string strErrorMessage = "Error in AccountWitnessStatus, failed to read block from disk";
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf("%s", strErrorMessage.c_str());
+            throw std::runtime_error(strErrorMessage);
+        }
+        if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+        {
+            std::string strErrorMessage = "Error in AccountWitnessStatus, failed to retrieve witness info";
+            CAlert::Notify(strErrorMessage, true, true);
+            LogPrintf("%s", strErrorMessage.c_str());
+            throw std::runtime_error(strErrorMessage);
+        }
+    }
+
+    LOCK2(cs_main, pWallet->cs_wallet);
+
+    // Collect uspent witnesses coins on for the account
+    std::vector<RouletteItem> accountItems;
+    for (const auto& item : witnessInfo.witnessSelectionPoolUnfiltered)
+    {
+        if (IsMine(*account, item.coin.out))
+            accountItems.push_back(item);
+    }
+
+    bool haveUnspentWitnessUtxo = accountItems.size() > 0;
+
+    CTxOutPoW2Witness witnessDetails0;
+    if (haveUnspentWitnessUtxo && !GetPow2WitnessOutput(accountItems[0].coin.out, witnessDetails0))
+        throw std::runtime_error("Failure extracting witness details.");
+
+
+    // test that all witness addresses have the same characteristics
+    if (accountItems.size() > 1) {
+        for (unsigned int i = 1; i < accountItems.size(); i++) {
+            CTxOutPoW2Witness witnessCompare;
+            if (!GetPow2WitnessOutput(accountItems[i].coin.out, witnessCompare))
+                throw std::runtime_error("Failure extracting witness details.");
+            if (witnessCompare.lockFromBlock != witnessDetails0.lockFromBlock ||
+                witnessCompare.lockUntilBlock != witnessDetails0.lockUntilBlock ||
+                witnessCompare.spendingKeyID != witnessDetails0.spendingKeyID ||
+                witnessCompare.witnessKeyID != witnessDetails0.witnessKeyID)
+            {
+                throw std::runtime_error("Multiple addresses with different witness characteristics in account. Use RPC to furter handle this account.");
+            }
+        }
+    }
+
+    bool hasBalance = pactiveWallet->GetBalance(account, true, true, true) +
+                          pactiveWallet->GetImmatureBalance(account, true, true) +
+                          pactiveWallet->GetUnconfirmedBalance(account, true, true) > 0;
+
+    bool isLocked = haveUnspentWitnessUtxo && IsPoW2WitnessLocked(witnessDetails0, chainActive.Tip()->nHeight);
+
+    bool isExpired = haveUnspentWitnessUtxo && witnessHasExpired(accountItems[0].nAge, accountItems[0].nWeight, witnessInfo.nTotalWeightRaw);
+
+    if (!haveUnspentWitnessUtxo && hasBalance) status = WitnessStatus::Pending;
+    else if (!haveUnspentWitnessUtxo && !hasBalance) status = WitnessStatus::Empty;
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired) status = WitnessStatus::Expired;
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && !isExpired) status = WitnessStatus::Witnessing;
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired) status = WitnessStatus::Expired;
+    else if (haveUnspentWitnessUtxo && hasBalance && !isLocked) status = WitnessStatus::Ended;
+    else if (haveUnspentWitnessUtxo && !hasBalance && !isLocked) status = WitnessStatus::Emptying;
+    else throw std::runtime_error("Unable to determine witness state.");
+
+    // NOTE: assuming any unconfirmed tx here is a witness one to avoid getting the witness bundles and testing those, this will almost always be
+    // correct. Any edge cases where this fails will automatically resolve once the tx confirms.
+    bool hasUnconfirmedWittnessTx = std::any_of(pWallet->mapWallet.begin(), pWallet->mapWallet.end(), [=](const auto& it){
+        const auto& wtx = it.second;
+        return account->HaveWalletTx(wtx) && wtx.InMempool();
+    });
+
+    // hasUnconfirmedWittnessTx -> renewed, extended ...
+    if (status == WitnessStatus::Expired && hasUnconfirmedWittnessTx)
+        status = WitnessStatus::Witnessing;
+
+    bool hasScriptLegacyOutput = std::any_of(accountItems.begin(), accountItems.end(), [](const RouletteItem& ri){ return ri.coin.out.GetType() == CTxOutType::ScriptLegacyOutput; });
+
+    return std::tuple(status,
+                      witnessInfo.nTotalWeightRaw,
+                      isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), 0, [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : 0,
+                      hasScriptLegacyOutput,
+                      hasUnconfirmedWittnessTx);
 }
