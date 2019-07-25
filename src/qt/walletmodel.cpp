@@ -828,7 +828,7 @@ void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vect
 bool WalletModel::isSpent(const COutPoint& outpoint) const
 {
     LOCK2(cs_main, wallet->cs_wallet);
-    return wallet->IsSpent(outpoint.getHash(), outpoint.n);
+    return wallet->IsSpent(outpoint);
 }
 
 QString WalletModel::getAccountLabel(const boost::uuids::uuid& uuid)

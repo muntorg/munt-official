@@ -558,9 +558,8 @@ void CWallet::SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator> ran
  * Outpoint is spent if any non-conflicted transaction
  * spends it:
  */
-bool CWallet::IsSpent(const uint256& hash, unsigned int n) const
+bool CWallet::IsSpent(const COutPoint& outpoint) const
 {
-    const COutPoint outpoint(hash, n);
     std::pair<TxSpends::const_iterator, TxSpends::const_iterator> range;
     range = mapTxSpends.equal_range(outpoint);
 
@@ -1636,7 +1635,7 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins,
                 if (IsLockedCoin((*it).first, i))
                     continue;
 
-                if (IsSpent(wtxid, i))
+                if (IsSpent(COutPoint(wtxid, i)) || IsSpent(COutPoint(pcoin->nHeight, pcoin->nIndex, i)))
                     continue;
 
                 isminetype mine = ::IsMine(*forAccount, pcoin->tx->vout[i]);

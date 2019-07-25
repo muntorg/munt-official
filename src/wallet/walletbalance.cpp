@@ -220,10 +220,9 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount,
     }
     else
     {
-        uint256 hashTx = GetHash();
         for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            if (!pwallet->IsSpent(hashTx, i))
+            if (!pwallet->IsSpent(COutPoint(GetHash(), i)) && !pwallet->IsSpent(COutPoint(nHeight, nIndex, i)))
             {
                 const CTxOut &txout = tx->vout[i];
                 if (!forAccount || IsMine(*forAccount, txout))
@@ -271,10 +270,9 @@ CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, con
     }
     else
     {
-        uint256 hashTx = GetHash();
         for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            if (!pwallet->IsSpent(hashTx, i))
+            if (!pwallet->IsSpent(COutPoint(GetHash(), i)) && !pwallet->IsSpent(COutPoint(nHeight, nIndex, i)))
             {
                 const CTxOut &txout = tx->vout[i];
                 if (!forAccount || IsMine(*forAccount, txout))
@@ -319,10 +317,9 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
     }
     else
     {
-        uint256 hashTx = GetHash();
         for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            if (!pwallet->IsSpent(hashTx, i))
+            if (!pwallet->IsSpent(COutPoint(GetHash(), i)) && !pwallet->IsSpent(COutPoint(nHeight, nIndex, i)))
             {
                 const CTxOut &txout = tx->vout[i];
                 if (!forAccount || IsMine(*forAccount, txout))
@@ -369,10 +366,9 @@ CAmount CWalletTx::GetAvailableCreditIncludingLockedWitnesses(bool fUseCache, co
     }
     else
     {
-        uint256 hashTx = GetHash();
         for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            if (!pwallet->IsSpent(hashTx, i))
+            if (!pwallet->IsSpent(COutPoint(GetHash(), i)) && !pwallet->IsSpent(COutPoint(nHeight, nIndex, i)))
             {
                 const CTxOut &txout = tx->vout[i];
                 if (!forAccount || IsMine(*forAccount, txout))
@@ -451,7 +447,7 @@ CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache, const CAcc
     {
         for (unsigned int i = 0; i < tx->vout.size(); i++)
         {
-            if (!pwallet->IsSpent(GetHash(), i))
+            if (!pwallet->IsSpent(COutPoint(GetHash(), i)) && !pwallet->IsSpent(COutPoint(nHeight, nIndex, i)))
             {
                 const CTxOut &txout = tx->vout[i];
                 nCredit += pwallet->GetCredit(txout, ISMINE_WATCH_ONLY);
@@ -730,7 +726,7 @@ std::map<CTxDestination, CAmount> CWallet::GetAddressBalances()
                 if(!ExtractDestination(pcoin->tx->vout[i], addr))
                     continue;
 
-                CAmount n = IsSpent(walletEntry.first, i) ? 0 : pcoin->tx->vout[i].nValue;
+                CAmount n = (IsSpent(COutPoint(walletEntry.first, i))||IsSpent(COutPoint(walletEntry.second.nHeight, walletEntry.second.nIndex, i))) ? 0 : pcoin->tx->vout[i].nValue;
 
                 if (!balances.count(addr))
                     balances[addr] = 0;
