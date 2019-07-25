@@ -3609,7 +3609,6 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
             pblock->SetNull();
 
             CDiskBlockPos blockpos = pindex->GetBlockPos();
-            CDiskBlockPos undoPos = pindex->GetUndoPos();
 
             if (blockpos.nFile >= 0)
             {
