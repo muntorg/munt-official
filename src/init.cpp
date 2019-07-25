@@ -1342,6 +1342,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         uiInterface.InitMessage(_("Loading block index..."));
 
         nStart = GetTimeMillis();
+        bool fullResyncForUpgrade = IsArgSet("-resyncforblockindexupgrade");
         do {
             try {
                 static bool upgradeOnceOnly=true;
@@ -1380,6 +1381,11 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     if (pcoinsdbview->RequiresReindex())
                     {
                         fReindex = true;
+                        if (pcoinsdbview->nPreviousVersion < 2)
+                        {
+                            fullResyncForUpgrade = true;
+                            goto fullresyncforupgrade;
+                        }
                         goto loadblockindex;
                     }
                     else
@@ -1398,9 +1404,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 //GULDEN - version 2.0 upgrade
                 if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < 1)
                 {
-                    bool fullResyncForUpgrade = IsArgSet("-resyncforblockindexupgrade");
                     if (fullResyncForUpgrade)
                     {
+                        fullresyncforupgrade:
                         upgradeOnceOnly = false;
                         uiInterface.InitMessage(_("Erasing block index..."));
                         UnloadBlockIndex();
@@ -1418,7 +1424,6 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 //GULDEN - version 2.0 upgrade
                 if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < 1)
                 {
-                    bool fullResyncForUpgrade = IsArgSet("-resyncforblockindexupgrade");
                     upgradeOnceOnly = false;
                     if (!fullResyncForUpgrade)
                     {
