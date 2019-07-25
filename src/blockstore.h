@@ -25,7 +25,7 @@
 class CBlockStore
 {
 public:
-    CBlockStore(bool legacy=false) : isLegacy(legacy) {}
+    CBlockStore() {}
 
     bool BlockFileExists(const CDiskBlockPos &pos);
 
@@ -100,7 +100,6 @@ private:
 
     // more block store format conversion support:
     fs::path GetBlockPosNewFilename(const CDiskBlockPos &pos, BlockFileType fileType, const std::string& newPrefix);
-    bool isLegacy;
     std::string mainPrefix;
 };
 

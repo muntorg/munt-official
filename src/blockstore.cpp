@@ -115,7 +115,7 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
     block.SetNull();
 
     // Open history file to read
-    CFile filein(GetBlockFile(pos, true), SER_DISK, CLIENT_VERSION | (isLegacy ? SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS : 0));
+    CFile filein(GetBlockFile(pos, true), SER_DISK, CLIENT_VERSION);
     if (filein.IsNull())
         return error("ReadBlockFromDisk: OpenBlockFile failed for %s", pos.ToString());
 
@@ -185,7 +185,7 @@ bool CBlockStore::UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& p
     DO_BENCHMARK("CBlockStore: UndoReadFromDisk", BCLog::BENCH|BCLog::IO);
 
     // Open history file to read
-    CFile filein(GetUndoFile(pos, true), SER_DISK, CLIENT_VERSION | (isLegacy ? SERIALIZE_TXUNDO_LEGACY_COMPRESSION : 0) );
+    CFile filein(GetUndoFile(pos, true), SER_DISK, CLIENT_VERSION);
     if (filein.IsNull())
         return error("%s: OpenUndoFile failed", __func__);
 

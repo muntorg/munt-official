@@ -3579,7 +3579,7 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
     {
         blockStore.CloseBlockFiles();
 
-        CBlockStore oldStore(true);
+        CBlockStore oldStore;
 
         oldStore.Rename("16_");
 
@@ -3633,25 +3633,8 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
 
                 if (pindex->nStatus & BLOCK_HAVE_UNDO)
                 {
-                    // Read undo information
-                    CBlockUndo blockundo;
-                    {
-                        if (!oldStore.UndoReadFromDisk(blockundo, undoPos, pindex->pprev->GetBlockHashPoW2()))
-                            return error("UpgradeBlockIndex: UndoReadFromDisk failed");
-                    }
-
-                    // Write undo information back to disk with modified hash
-                    {
-                        CValidationState state;
-                        CDiskBlockPos undoDiskPos;
-                        if (!FindUndoPos(state, pindex->nFile, undoDiskPos, ::GetSerializeSize(blockundo, SER_DISK, CLIENT_VERSION) + 40))
-                            return error("UpgradeBlockIndex: FindUndoPos failed");
-                        if (!blockStore.UndoWriteToDisk(blockundo, undoDiskPos, pindex->pprev->GetBlockHashPoW2(), chainparams.MessageStart()))
-                            return AbortNode(state, "UpgradeBlockIndex: Failed to write undo data");
-
-                        // update nUndoPos in block index
-                        pindex->nUndoPos = undoDiskPos.nPos;
-                    }
+                    //fixme: (PHASE4) - See if we can recover the undo in some sane way here otherwise everyone has to do a resync
+                    return error("UpgradeBlockIndex: FindUndoPos failed");
                 }
 
                 // Update the block index as the position of the block on disk has changed.

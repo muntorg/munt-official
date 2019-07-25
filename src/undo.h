@@ -19,75 +19,7 @@
 #include "primitives/transaction.h"
 #include "serialize.h"
 
-static const int SERIALIZE_TXUNDO_LEGACY_COMPRESSION = 0x40000000;
-
-/** Undo information for a CTxIn
- *
- *  Contains the prevout's CTxOut being spent, and its metadata as well
- *  (coinbase or not, height). The serialization contains a dummy value of
- *  zero. This is be compatible with older versions which expect to see
- *  the transaction version there.
- */
-class TxInUndoSerializer
-{
-    const Coin* txout;
-
-public:
-    template<typename Stream>
-    void Serialize(Stream &s) const {
-        uint32_t code = (txout->nHeight<<2) | (txout->fSegSig << 1) | txout->fCoinBase;
-        ::Serialize(s, VARINT(code));
-        txout->out.WriteToStream(s, (txout->fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
-    }
-    TxInUndoSerializer(const Coin* coin) : txout(coin) {}
-};
-
-class TxInUndoDeserializer
-{
-    Coin* txout;
-
-public:
-    template<typename Stream>
-    void Unserialize(Stream &s) {
-        uint32_t nCode = 0;
-        if (s.GetVersion() & SERIALIZE_TXUNDO_LEGACY_COMPRESSION)
-        {
-            ::Unserialize(s, VARINT(nCode));
-            txout->nHeight = nCode / 2;
-            txout->fCoinBase = nCode & 1;
-            txout->fSegSig = 0;
-            if (txout->nHeight > 0) {
-                // Old versions stored the version number for the last spend of
-                // a transaction's outputs. Non-final spends were indicated with
-                // height = 0.
-                int nVersionDummy;
-                ::Unserialize(s, VARINT(nVersionDummy));
-            }
-        }
-        else
-        {
-            ::Unserialize(s, VARINT(nCode));
-            txout->nHeight   = ( ((nCode & 0b11111111111111111111111111111100) >> 2));
-            txout->fSegSig   = (  (nCode & 0b00000000000000000000000000000010)  > 0 );
-            txout->fCoinBase = (  (nCode & 0b00000000000000000000000000000001)  > 0 );
-        }
-
-        //fixme: (FUT) CBSU - possibly remove this if statement by just duplicating code for the legacy case
-        // (Or eventually just drop the legacy case)
-        if (s.GetVersion() & SERIALIZE_TXUNDO_LEGACY_COMPRESSION)
-        {
-            ::Unserialize(s, REF(CTxOutCompressorLegacy(REF(txout->out))));
-        }
-        else
-        {
-            txout->out.ReadFromStream(s, (txout->fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
-        }
-    }
-
-    TxInUndoDeserializer(Coin* coin) : txout(coin) {}
-};
-
-//fixme: (PHASE4) This can potentially be improved.
+//fixme: (PHASE5) This can potentially be improved.
 //6 is the lower bound for the size of a SegSig txin
 static const size_t MAX_INPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 6; // TODO: merge with similar definition in undo.h.
 
@@ -104,7 +36,7 @@ public:
         uint64_t count = vprevout.size();
         ::Serialize(s, COMPACTSIZE(REF(count)));
         for (const auto& prevout : vprevout) {
-            ::Serialize(s, REF(TxInUndoSerializer(&prevout)));
+            ::Serialize(s, prevout);
         }
     }
 
@@ -118,7 +50,7 @@ public:
         }
         vprevout.resize(count);
         for (auto& prevout : vprevout) {
-            ::Unserialize(s, REF(TxInUndoDeserializer(&prevout)));
+            ::Unserialize(s, prevout);
         }
     }
 };
