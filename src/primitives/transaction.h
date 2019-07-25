@@ -251,7 +251,14 @@ public:
             }
             else
             {
-                return a.prevBlock < b.prevBlock;
+                if (a.prevBlock == b.prevBlock)
+                {
+                    return a.n < b.n;
+                }
+                else
+                {
+                    return a.prevBlock < b.prevBlock;
+                }
             }
         }
         else
