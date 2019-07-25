@@ -2661,7 +2661,8 @@ UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForA
     {
         RPCTypeCheckArgument(*pFilterAddresses, UniValue::VARR);
         UniValue inputs = pFilterAddresses->get_array();
-        for (unsigned int idx = 0; idx < inputs.size(); idx++) {
+        for (unsigned int idx = 0; idx < inputs.size(); idx++)
+        {
             const UniValue& input = inputs[idx];
             CGuldenAddress address(input.get_str());
             if (!address.IsValid())
@@ -2706,7 +2707,8 @@ UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForA
     {
         std::vector<COutput> vecOutputs;
         pWallet->AvailableCoins(account, vecOutputs, !include_unsafe, NULL, nMinimumAmount, nMaximumAmount, nMinimumSumAmount, nMaximumCount, nMinDepth, nMaxDepth);
-        for(const COutput& out : vecOutputs) {
+        for(const COutput& out : vecOutputs)
+        {
             CTxDestination address;
             bool fValidAddress = ExtractDestination(out.tx->tx->vout[out.i], address);
 
@@ -2717,7 +2719,8 @@ UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForA
             entry.push_back(Pair("txid", out.tx->GetHash().GetHex()));
             entry.push_back(Pair("vout", out.i));
 
-            if (fValidAddress) {
+            if (fValidAddress)
+            {
                 entry.push_back(Pair("address", CGuldenAddress(address).ToString()));
 
                 entry.push_back(Pair("account", getUUIDAsString(account->getUUID())));
@@ -2727,7 +2730,8 @@ UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForA
             if (out.tx->tx->vout[out.i].GetType() <= CTxOutType::ScriptLegacyOutput)
             {
                 const CScript& scriptPubKey = out.tx->tx->vout[out.i].output.scriptPubKey;
-                if (scriptPubKey.IsPayToScriptHash()) {
+                if (scriptPubKey.IsPayToScriptHash())
+                {
                     const CScriptID& hash = boost::get<CScriptID>(address);
                     CScript redeemScript;
                     if (pWallet->GetCScript(hash, redeemScript))

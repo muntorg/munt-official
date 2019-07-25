@@ -1852,28 +1852,35 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
 
     ApproximateBestSubset(vValue, nTotalLower, nTargetValue, vfBest, nBest);
     if (nBest != nTargetValue && nTotalLower >= nTargetValue + MIN_CHANGE)
+    {
         ApproximateBestSubset(vValue, nTotalLower, nTargetValue + MIN_CHANGE, vfBest, nBest);
+    }
 
     // If we have a bigger coin and (either the stochastic approximation didn't find a good solution,
     //                                   or the next bigger coin is closer), return the bigger coin
-    if (coinLowestLarger &&
-        ((nBest != nTargetValue && nBest < nTargetValue + MIN_CHANGE) || coinLowestLarger->txout.nValue <= nBest))
+    if (coinLowestLarger &&((nBest != nTargetValue && nBest < nTargetValue + MIN_CHANGE) || coinLowestLarger->txout.nValue <= nBest))
     {
         setCoinsRet.insert(coinLowestLarger.get());
         nValueRet += coinLowestLarger->txout.nValue;
     }
-    else {
+    else
+    {
         for (unsigned int i = 0; i < vValue.size(); i++)
+        {
             if (vfBest[i])
             {
                 setCoinsRet.insert(vValue[i]);
                 nValueRet += vValue[i].txout.nValue;
             }
+        }
 
-        if (LogAcceptCategory(BCLog::SELECTCOINS)) {
+        if (LogAcceptCategory(BCLog::SELECTCOINS))
+        {
             LogPrint(BCLog::SELECTCOINS, "SelectCoins() best subset: ");
-            for (unsigned int i = 0; i < vValue.size(); i++) {
-                if (vfBest[i]) {
+            for (unsigned int i = 0; i < vValue.size(); i++)
+            {
+                if (vfBest[i])
+                {
                     LogPrint(BCLog::SELECTCOINS, "%s ", FormatMoney(vValue[i].txout.nValue));
                 }
             }
