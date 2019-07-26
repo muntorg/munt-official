@@ -9,6 +9,7 @@
 #include <numeric>
 #include <algorithm>
 #include <boost/uuid/uuid_io.hpp>
+#include <cmath>
 #include "wallet.h"
 #include "validation/witnessvalidation.h"
 #include "consensus/consensus.h"
@@ -502,7 +503,7 @@ CGetWitnessInfo GetWitnessInfoWrapper()
             LogPrintf("%s", strErrorMessage.c_str());
             throw std::runtime_error(strErrorMessage);
         }
-        if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+        if (!GetWitness(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo))
         {
             std::string strErrorMessage = "Error in GetWitnessInfoWrapper, failed to retrieve witness info";
             CAlert::Notify(strErrorMessage, true, true);
@@ -632,8 +633,8 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
     EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);
 
     // Check that new distribution value matches old
-    CAmount redistributionTotal = std::accumulate(redistributionAmounts.begin(), redistributionAmounts.end(), 0, [](const CAmount acc, const CAmount amount){ return acc + amount; });
-    CAmount oldTotal = std::accumulate(unspentWitnessOutputs.begin(), unspentWitnessOutputs.end(), 0, [](const CAmount acc, const auto& it){
+    CAmount redistributionTotal = std::accumulate(redistributionAmounts.begin(), redistributionAmounts.end(), CAmount(0), [](const CAmount acc, const CAmount amount){ return acc + amount; });
+    CAmount oldTotal = std::accumulate(unspentWitnessOutputs.begin(), unspentWitnessOutputs.end(), CAmount(0), [](const CAmount acc, const auto& it){
         const CTxOut& txOut = std::get<0>(it);
         return acc + txOut.nValue;
     });
@@ -656,7 +657,6 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
             const CTxOut& txOut = std::get<0>(it);
             const COutPoint outPoint = std::get<2>(it);
             pwallet->AddTxInput(witnessTransaction, CInputCoin(outPoint, txOut), false);
-
         }
 
         // Add new witness outputs
@@ -701,27 +701,111 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
         *pFee = transactionFee;
 }
 
-CAmount WitnessAmountForAccount(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+/** Estimated witnessing count expressed as a fraction per block for a single amount */
+double witnessFraction(const CAmount amount, const uint64_t duration, const uint64_t totalWeight)
 {
+    uint64_t maxWeight = totalWeight / 100;
+    uint64_t rawWeight = GetPoW2RawWeightForAmount(amount, duration);
+    uint64_t weight = std::min(rawWeight, maxWeight);
+
+    // election probability
+    const double p = double(weight) / totalWeight;
+
+    // adjust for cooldown
+    double fraction = 1.0 / (gMinimumParticipationAge + 1.0/p);
+
+    return fraction;
+}
+
+/** Estimated witnessing count expressed as a fraction per block for an amount distribution */
+double witnessFraction(const std::vector<CAmount>& amounts, const uint64_t duration, const uint64_t totalWeight)
+{
+    double fraction = std::accumulate(amounts.begin(), amounts.end(), 0.0, [=](double acc, CAmount amount) {
+        return acc + witnessFraction(amount, duration, totalWeight);
+    });
+    return fraction;
+}
+
+/** Amount where maximum weight is reached and so any extra on top of that will not produce any gains */
+CAmount maxWorkableWitnessAmount(uint64_t lockDuration, uint64_t totalWeight)
+{
+    uint64_t weight = totalWeight / 100;
+
+    // note that yearly_blocks is only correct for mainnet and should be parametrized for testnet, however it is consistent with
+    // with other parts of the code that also use mainnet characteristics for weight determination when on testnet
+    const double yearly_blocks = 365 * 576;
+    const double K = 100000.0;
+    const double T = (1.0 + lockDuration / (yearly_blocks));
+
+    // solve quadratic to find amount that will match weight
+    const double A = T / K;
+    const double B = T;
+    const double C = - (double)(weight);
+
+    double amount = (-B + sqrt(B*B - 4.0 * A * C)) / (2.0 * A);
+
+    return CAmount (amount * COIN);
+}
+
+std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+{
+    // assumes all account witness outputs have identical characteristics
+
     LOCK2(cs_main, pWallet->cs_wallet);
 
+    std::vector<CAmount> distribution;
     CAmount total = 0;
+    int64_t duration = 0;
+
     for (const auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
         if (IsMine(*account, item.coin.out)) {
+            distribution.push_back(item.coin.out.nValue);
             total += item.coin.out.nValue;
+            if (duration == 0) {
+            uint64_t nUnused1, nUnused2;
+            duration = GetPoW2LockLengthInBlocksFromOutput(item.coin.out, item.coin.nHeight, nUnused1, nUnused2);
+            }
         }
     }
 
-    return total;
+    return std::tuple(distribution, duration, total);
 }
 
-std::vector<CAmount> OptimalWitnessDistribution(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t duration, uint64_t totalWeight)
 {
-    CAmount amount = WitnessAmountForAccount(pWallet, account, witnessInfo);
+    std::vector<CAmount> distribution;
 
-    // TODO: real optimization algorithm
-    CAmount a = amount / 2;
-    CAmount b = amount - a;
-    return std::vector<CAmount>({a, b});
+    CAmount partMax = maxWorkableWitnessAmount(duration, totalWeight);
+
+    CAmount partTarget = (100 * partMax) / 90; // target part into 90% of maximum workable amount
+
+    int wholeParts = totalAmount / partTarget;
+
+    for (int i=0; i< wholeParts; i++)
+        distribution.push_back(partTarget);
+
+    CAmount remainder = totalAmount - wholeParts * partTarget;
+
+    if (distribution.size() > 0 && distribution[0] + remainder <= partMax)
+        distribution[0] += remainder;
+    else
+        distribution.push_back(remainder);
+
+    return distribution;
+}
+
+bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+{
+    uint64_t totalWeight = witnessInfo.nTotalWeightEligibleAdjusted;
+
+    auto [currentDistribution, duration, totalAmount] = witnessDistribution(pWallet, account, witnessInfo);
+    double currentFraction = witnessFraction(currentDistribution, duration, totalWeight);
+
+    auto optimalDistribution = optimalWitnessDistribution(totalAmount, duration, totalWeight);
+    double optimalFraction = witnessFraction(optimalDistribution, duration, totalWeight);
+
+    const double OPTIMAL_DISTRIBUTION_THRESHOLD = 0.95;
+    bool nearOptimal = currentFraction / optimalFraction >= OPTIMAL_DISTRIBUTION_THRESHOLD;
+    return nearOptimal;
 }
