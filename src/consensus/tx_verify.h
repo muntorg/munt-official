@@ -50,6 +50,7 @@ struct CWitnessTxBundle
         IncreaseType,
         SplitType,
         MergeType,
+        // fixme: (PHASE4) introduce and handle new type RedistributeType making, generalized form of split and merge take n inputs and m outputs all sharing the same characteristics
         ChangeWitnessKeyType
     };
     CWitnessTxBundle(WitnessTxType bundleType_, std::pair<const CTxOut, CTxOutPoW2Witness> output)
