@@ -778,6 +778,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     bool stateRenewWitnessButton = false;
     bool stateUpgradeButton = false;
     bool stateExtendButton = false;
+    bool stateOptimizeButton = false;
 
     try {
         CAccount* forAccount;
@@ -827,12 +828,12 @@ void WitnessDialog::doUpdate(bool forceUpdate)
             stateRenewWitnessButton = witnessStatus == WitnessStatus::Expired && !hasUnconfirmedWittnessTx;
             stateUpgradeButton = witnessStatus == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && hasScriptLegacyOutput && !hasUnconfirmedWittnessTx;
             stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (witnessStatus == WitnessStatus::Witnessing || witnessStatus == WitnessStatus::Expired) && !hasUnconfirmedWittnessTx;
+            stateOptimizeButton = witnessStatus == WitnessStatus::Witnessing && !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
 
             setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
 
             if (computedWidgetIndex == WitnessDialogStates::STATISTICS)
                 plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
-            // TODO: determine optimize button visibility
         }
 
     }
@@ -864,6 +865,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
     ui->upgradeButton->setVisible(stateUpgradeButton);
     ui->extendButton->setVisible(stateExtendButton);
+    ui->optimizeButton->setVisible(stateOptimizeButton);
 
     // put normal buttons to the right if there are no confirming buttons visible
     bool anyConfirmVisible = stateFundWitnessButton || stateEmptyWitnessButton || stateWithdrawEarningsButton || stateRenewWitnessButton;
