@@ -625,6 +625,7 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
 
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    (unused)currentWitnessOutpoint;
     //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
     //fixme: (PHASE4) - Look into shortening the maturity period here, the full period is too long.
     if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
