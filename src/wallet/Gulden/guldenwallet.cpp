@@ -11,6 +11,7 @@
 #include <boost/uuid/nil_generator.hpp>
 #include <boost/algorithm/string/predicate.hpp> // for starts_with() and end_swith()
 #include <boost/algorithm/string.hpp> // for split()
+#include <boost/range/adaptor/reversed.hpp>
 #include <Gulden/mnemonic.h>
 #include "util.h"
 #include <validation/validation.h>
@@ -538,7 +539,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
         mapAccounts.erase(mapAccounts.find(account->getUUID()));
 
         // Make sure we are no longer the active account
-        if(getActiveAccount()->getUUID() == account->getUUID())
+        if(!getActiveAccount() || (getActiveAccount()->getUUID() == account->getUUID()))
         {
             if (mapAccounts.size() > 0)
             {
@@ -683,8 +684,8 @@ void CGuldenWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool sh
     }
 
     //fixme: (FUT) (ACCOUNTS) purge accounts completely if empty?
-    LogPrintf("CGuldenWallet::DeleteSeed - delete accounts");
-    for (const auto& accountPair : pactiveWallet->mapAccounts)
+    LogPrintf("CGuldenWallet::DeleteSeed - delete accounts [%d]", pactiveWallet->mapAccounts.size());
+    for (const auto& accountPair : boost::adaptors::reverse(pactiveWallet->mapAccounts))
     {
         if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
         {

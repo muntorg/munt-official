@@ -785,7 +785,7 @@ void CWallet::EraseWalletSeedsAndAccounts()
     CWalletDB walletdb(*dbw);
 
     // Purge all current accounts/seeds from the system
-    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge seeds");
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge seeds [%d]", mapSeeds.size());
     while (!mapSeeds.empty())
     {
         LogPrintf("EraseWalletSeedsAndAccounts: purge seed");
@@ -793,7 +793,7 @@ void CWallet::EraseWalletSeedsAndAccounts()
     }
     LogPrintf("EraseWalletSeedsAndAccounts: End purge seeds");
 
-    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge standalone accounts");
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge standalone accounts [%d]", mapAccounts.size());
     while (!mapAccounts.empty())
     {
         LogPrintf("EraseWalletSeedsAndAccounts: purge account");
@@ -801,7 +801,7 @@ void CWallet::EraseWalletSeedsAndAccounts()
     }
     LogPrintf("EraseWalletSeedsAndAccounts: End purge standalone accounts");
 
-    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge masterkeys");
+    LogPrintf("EraseWalletSeedsAndAccounts: Begin purge masterkeys [%d]", mapMasterKeys.size());
     while (!mapMasterKeys.empty())
     {
         LogPrintf("EraseWalletSeedsAndAccounts: purge masterkey");
