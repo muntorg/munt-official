@@ -16,14 +16,14 @@ __author__    = 'Willem de Jonge'
 __email__     = 'willem@isnapp.nl'
 
 # ===== BEGIN USER SETTINGS =====
-rpcuser='<your-rpc-user>'
-rpcpass='<your-rpc-password>'
+rpcuser='gdgdsgdshdhs'
+rpcpass='ghdshdsfhsdsd'
 # ====== END USER SETTINGS ======
 
 # code format example:
 # {  50000, { uint256S("0x5baeb5a5c3d5fefbb094623e85e3e16a1ea47875b5ffd1ff5a200e639908a059"), 1400560264 } },
 
-access = AuthServiceProxy("http://"+rpcuser+":"+rpcpass+"@127.0.0.1:"+9232)
+access = AuthServiceProxy("http://"+rpcuser+":"+rpcpass+"@192.168.88.5:9232")
 
 def print_checkpoint(height):
     hash = access.getblockhash(height)
@@ -36,7 +36,7 @@ def print_checkpoint(height):
 chain_height = access.getblockcount()
 last_checkpoint = chain_height - 2 * 576
 extra_before_last = last_checkpoint - 2 * 576
-checkpoint_period = 25000
+checkpoint_period = 5000
 
 h = 0
 while  h < extra_before_last:
