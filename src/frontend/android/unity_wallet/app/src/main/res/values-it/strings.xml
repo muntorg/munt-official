@@ -8,6 +8,12 @@ file COPYING
     <!-- If a resource should not be translated, or should be dealt with specially place it in values.xml instead !-->
     <!-- Never place string-array items here, those should always go in values.xml !-->
 <resources>
+    <string name="title_send">Invia</string>
+    <string name="title_receive">Ricevi</string>
+    <string name="title_transactions">Transazione</string>
+    <string name="title_settings">Configurazione</string>
+    <string name="title_activity_barcode_capture">Scansiona il codice QR</string>
+    <string name="title_activity_transaction_info">Informazioni sulla transazione</string>
     <string name="action_bar_copy">Copia</string>
     <string name="action_bar_share">Condividi</string>
     <string name="action_bar_buy">Compra</string>
@@ -15,7 +21,8 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Recupera portafoglio</string>
     <string name="welcome_activity_sync_with_desktop">Collega con il desktop</string>
     <string name="recover_from_phrase_intro">Inserisci la frase di recupero da usare</string>
-    <string name="show_recovery_phrase_EULA">Usando l\'app Gulden acconsenti in maniera esplicita e incondizionata di essere responsabile della gestione e del deposito dei tuoi Gulden.</string>
+    <string name="show_recovery_phrase_EULA">"
+Usando l'app Gulden accetti in maniera esplicita ed incondizionata di essere responsabile della gestione e del deposito dei tuoi Gulden."</string>
     <string name="recovery_phrase_continue">Continua</string>
     <string name="show_recovery_phrase_introtext">Di seguito trovi la tua frase segreta di recupero, ricopiala e conservala per futuro riferimento. Se perdi la frase, perderai Gulden. Se qualcun altro ha accesso alla frase, perderai Gulden.</string>
     <string name="recovery_phrase_acknowledge_writing_down">L\'ho ricopiata</string>
