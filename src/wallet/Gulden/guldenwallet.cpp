@@ -11,7 +11,6 @@
 #include <boost/uuid/nil_generator.hpp>
 #include <boost/algorithm/string/predicate.hpp> // for starts_with() and end_swith()
 #include <boost/algorithm/string.hpp> // for split()
-#include <boost/range/adaptor/reversed.hpp>
 #include <Gulden/mnemonic.h>
 #include "util.h"
 #include <validation/validation.h>
@@ -684,14 +683,20 @@ void CGuldenWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool sh
     }
 
     //fixme: (FUT) (ACCOUNTS) purge accounts completely if empty?
-    LogPrintf("CGuldenWallet::DeleteSeed - delete accounts [%d]", pactiveWallet->mapAccounts.size());
-    for (const auto& accountPair : boost::adaptors::reverse(pactiveWallet->mapAccounts))
+    LogPrintf("CGuldenWallet::DeleteSeed - testing which accounts to delete [%d]", pactiveWallet->mapAccounts.size());
+    std::vector<CAccount*> deleteAccounts;
+    for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
         if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
         {
-            //fixme: (FUT) (ACCOUNTS) check balance
-            deleteAccount(walletDB, accountPair.second, shouldPurgeAccounts);
+            deleteAccounts.push_back(accountPair.second);
         }
+    }
+    LogPrintf("CGuldenWallet::DeleteSeed - Deleting  accounts [%d]", deleteAccounts.size());
+    for (const auto& accountForDeletion : deleteAccounts)
+    {
+        //fixme: (FUT) (ACCOUNTS) check balance
+        deleteAccount(walletDB, accountForDeletion, shouldPurgeAccounts);
     }
     LogPrintf("CGuldenWallet::DeleteSeed - done deleting accounts");
 
