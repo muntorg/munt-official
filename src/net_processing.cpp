@@ -1685,6 +1685,21 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             }
         }
     }
+    
+    else if (strCommand == NetMsgType::CHECKPOINT_INVALIDATE)
+    {
+        CSyncCheckpointInvalidate invalidate;
+        vRecv >> invalidate;
+
+        if (invalidate.Process(pfrom, chainparams))
+        {
+            // Relay
+            pfrom->hashInvalidateKnown = invalidate.hashInvalidate;
+            g_connman->ForEachNode([invalidate](CNode* pnode) {
+                invalidate.RelayTo(pnode);
+            }); 
+        }
+    }
 
 
     else if (pfrom->nVersion == 0)

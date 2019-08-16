@@ -1,3 +1,11 @@
+2.1.0.6
+
+MISC - Update checkpoints.
+CORE - Introduce an improvement to checkpoint server mechanism to temporarily help stabalise chain against mining instability. Mechanism will be removed once phase4 and/or SIGMA are active and is just a temporary measure.
+
+
+
+
 2.1.0.5
 
 CORE - Fix a rare issue where witnessing devices would fail to witness due to not completing a proper rescan after importing a witness address.
