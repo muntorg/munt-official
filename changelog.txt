@@ -1,3 +1,11 @@
+2.1.0.7
+
+RPC - Fix a bug in InvalidateBlock behaviour when called on a block that isn't currently in the main chain.
+CORE - Minor improvement to mining behaviour when an absent witness is present.
+
+
+
+
 2.1.0.6
 
 MISC - Update checkpoints.
