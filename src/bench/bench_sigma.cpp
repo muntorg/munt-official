@@ -7,6 +7,7 @@
 #include <crypto/hash/sigma/sigma.h>
 #include <iostream>
 #include <boost/program_options.hpp>
+#include <thread>
 
 using namespace boost::program_options;
 int LogPrintStr(const std::string &str)
@@ -28,9 +29,9 @@ int main(int argc, char** argv)
     bool defaultSigma = true;
     
     // User paramaters (adjustable on individual machines)
-    uint64_t numThreads = 64;
-    uint64_t memAllowGb = 4;
-    uint64_t numUserVerifyThreads = numSigmaVerifyThreads;
+    uint64_t numThreads = std::thread::hardware_concurrency();
+    uint64_t memAllowGb = memCostGb;
+    uint64_t numUserVerifyThreads = std::min(numSigmaVerifyThreads, (uint64_t)std::thread::hardware_concurrency());
     uint64_t numFullHashesTarget = 50000;
     bool mineOnly=false;
     
