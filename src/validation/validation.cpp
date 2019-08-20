@@ -4389,6 +4389,7 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
 void StopPartialHeaders(const std::function<void(const CBlockIndex*)>& notifyCallback)
 {
     headerTipSignal.disconnect_all_slots();
+    ResetPartialSync();
 }
 
 bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)
