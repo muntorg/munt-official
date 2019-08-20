@@ -468,7 +468,7 @@ void static GuldenWitness()
                 if (cacheAlreadySeenWitnessCandidates.size() > 100000)
                 {
                     auto eraseEnd = cacheAlreadySeenWitnessCandidates.begin();
-                    std::advance(eraseEnd, cacheAlreadySeenWitnessCandidates.size() - 100000);
+                    std::advance(eraseEnd, cacheAlreadySeenWitnessCandidates.size() - 10);
                     cacheAlreadySeenWitnessCandidates.erase(cacheAlreadySeenWitnessCandidates.begin(), eraseEnd);
                 }
             }
