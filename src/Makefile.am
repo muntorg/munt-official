@@ -26,7 +26,7 @@ LIBUNIVALUE = $(UNIVALUE_LIBS)
 endif
 
 GULDEN_CONFIG_INCLUDES=-I$(builddir)/config
-GULDEN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
+GULDEN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS) $(CRYPTOPP_CFLAGS)
 
 GULDEN_INCLUDES += -I$(srcdir)/secp256k1/include
 GULDEN_INCLUDES += $(UNIVALUE_CFLAGS)
@@ -333,8 +333,6 @@ libgulden_wallet_a_SOURCES = \
 crypto_libgulden_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES)
 crypto_libgulden_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libgulden_crypto_a_SOURCES = \
-  crypto/aes.cpp \
-  crypto/aes.h \
   crypto/bytevectorhash.h \
   crypto/bytevectorhash.cpp \
   crypto/chacha20.h \
@@ -597,7 +595,7 @@ libgulden_unity_jni_la_SOURCES = \
 
 
 libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) -llog
-libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode
+libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode
 libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 endif
@@ -747,7 +745,7 @@ GuldenD_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-GuldenD_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
+GuldenD_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
 
 # Gulden-cli binary #
 Gulden_cli_SOURCES = Gulden-cli.cpp
@@ -766,7 +764,7 @@ Gulden_cli_LDADD = \
   $(LIBGULDEN_GENERIC) \
   $(LIBGULDEN_CRYPTO)
 
-Gulden_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+Gulden_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # Gulden-tx binary #
@@ -795,14 +793,9 @@ Gulden_tx_LDADD = \
   $(LIBGULDEN_COMMON) \
   $(LIBSECP256K1)
 
-Gulden_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+Gulden_tx_LDADD += $(BOOST_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS)
 #
 
-CTAES_DIST =  crypto/ctaes/bench.c
-CTAES_DIST += crypto/ctaes/ctaes.c
-CTAES_DIST += crypto/ctaes/ctaes.h
-CTAES_DIST += crypto/ctaes/README.md
-CTAES_DIST += crypto/ctaes/test.c
 
 CLEANFILES = $(EXTRA_LIBRARIES)
 
@@ -820,8 +813,6 @@ CLEANFILES += wallet/test/*.gcda wallet/test/*.gcno
 CLEANFILES += zmq/*.gcda zmq/*.gcno
 
 DISTCLEANFILES = obj/build.h
-
-EXTRA_DIST = $(CTAES_DIST)
 
 
 config/gulden-config.h: config/stamp-h1

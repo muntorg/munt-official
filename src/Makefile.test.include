@@ -1,11 +1,11 @@
-# Copyright (c) 2013-2016 The Gulden developers
+# Copyright (c) 2013-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #
 # File contains modifications by: The Gulden developers
 # All modifications:
 # Copyright (c) 2016-2018 The Gulden developers
-# Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+# Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 # Distributed under the GULDEN software license, see the accompanying
 # file COPYING
 
@@ -123,7 +123,7 @@ test_test_gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_GENER
   $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS) $(PROTOBUF_LIBS)
 test_test_gulden_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
-test_test_gulden_LDADD += $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
+test_test_gulden_LDADD += $(BDB_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
 test_test_gulden_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
 
 
@@ -166,6 +166,7 @@ test_test_gulden_fuzzy_LDADD += \
   $(EVENT_LIBS) \
   $(EVENT_PTHREADS_LIBS) \
   $(BOOST_LIBS) \
+  $(CRYPTOPP_LIBS) \
   $(CRYPTO_LIBS)
 
 nodist_test_test_gulden_SOURCES = $(GENERATED_TEST_FILES)
