@@ -1,0 +1,370 @@
+// Copyright (c) 2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
+#include "util.h"
+#include <crypto/hash/sigma/sigma.h>
+#include <iostream>
+#include <boost/program_options.hpp>
+
+using namespace boost::program_options;
+int LogPrintStr(const std::string &str)
+{
+    std::cout << str;
+    return 1;
+}
+
+int main(int argc, char** argv)
+{
+    // SIGMA paramaters (centrally set by network)
+    uint64_t cpuCostRounds = 10;
+    uint64_t memCostGb = 4;   
+    uint64_t slowHashMemCostMb = 16;
+    uint64_t fastHashMemCostBytes = 300;
+    uint64_t maxHashesPre = 65536;
+    uint64_t maxHashesPost = 65536;
+    uint64_t numSigmaVerifyThreads = 4;
+    bool defaultSigma = true;
+    
+    // User paramaters (adjustable on individual machines)
+    uint64_t numThreads = 64;
+    uint64_t memAllowGb = 4;
+    uint64_t numUserVerifyThreads = numSigmaVerifyThreads;
+    uint64_t numFullHashesTarget = 50000;
+    bool mineOnly=false;
+    
+    // Declare the supported options.
+    options_description desc("Allowed options");
+    desc.add_options()
+    ("help", "produce help message")
+    ("mine_threads", value<int64_t>(), "Set number of threads to use for mining")
+    ("mine_memory", value<int64_t>(), "Set how much memory in gb to mine with")
+    ("mine_num_hashes", value<int64_t>(), "How many full hash attempts to run mining for (default 50000)")
+    ("mine_only", value<bool>(), "Only benchmark actual mining, skip other benchmarks")
+    ("verify_threads", value<int64_t>(), "How many threads to use for verification, may not exceed sigma_verify_threads (defaults to same as sigma_verify_threads)")
+    ("sigma_global_mem", value<int64_t>(), "How much global memory optimal mining should require (in gigabytes)")
+    ("sigma_num_slow", value<int64_t>(), "How many slow hash attempts to allow for each global memory allocation  (maximum 65536)")
+    ("sigma_slowhash_mem", value<int64_t>(), "How much memory each slow hash should consume (in megabytes)")
+    ("sigma_slowhash_cpucost", value<int64_t>(), "Set how much memory in gb to mine with (in bytes)")
+    ("sigma_num_fast", value<int64_t>(), "How many fast hash attempts to allow for each slow hash (maximum 65536)")
+    ("sigma_fasthash_mem", value<int64_t>(), "How much of the global memory to digest for each slow hash (bytes - should not exceed the size of a single slow hash)")
+    ("sigma_verify_threads", value<int64_t>(), "How many threads to allow for slow hashes and therefore verification. (Default 4)");
+    
+    
+    variables_map vm;
+    store(parse_command_line(argc, argv, desc), vm);
+    notify(vm);    
+
+    if (vm.size() == 0)
+    {
+        LogPrintf("Using default options use '--help' to see a list of possible options.\n\n");
+    }
+    else
+    {
+        LogPrintf("Using non default options use '--help' to see a list of possible options.\n\n");
+    }
+    
+    if (vm.count("help"))
+    {
+        LogPrintf("%s", desc);
+        return 1;
+    }
+
+    if (vm.count("mine_threads"))
+    {
+        numThreads = vm["mine_threads"].as<int64_t>();
+    }
+    if (vm.count("mine_memory"))
+    {
+        memAllowGb = vm["mine_memory"].as<int64_t>();
+    }
+    if (vm.count("mine_num_hashes"))
+    {
+        numFullHashesTarget = vm["mine_num_hashes"].as<int64_t>();
+    }
+    if (vm.count("mine_only"))
+    {
+        mineOnly = vm["mine_only"].as<bool>();
+        defaultSigma = false;
+    }
+    if (vm.count("verify_threads"))
+    {
+        numUserVerifyThreads = vm["verify_threads"].as<int64_t>();
+    }
+    if (vm.count("sigma_global_mem"))
+    {
+        memCostGb = vm["sigma_global_mem"].as<int64_t>();
+        defaultSigma = false;
+    }
+    if (vm.count("sigma_num_slow"))
+    {
+        defaultSigma = false;
+        maxHashesPre = vm["sigma_num_slow"].as<int64_t>();
+    }
+    if (vm.count("sigma_slowhash_mem"))
+    {
+        slowHashMemCostMb = vm["sigma_slowhash_mem"].as<int64_t>();
+        defaultSigma = false;
+    }
+    if (vm.count("sigma_slowhash_cpucost"))
+    {
+        cpuCostRounds = vm["sigma_slowhash_cpucost"].as<int64_t>();
+        defaultSigma = false;
+    }
+    if (vm.count("sigma_num_fast"))
+    {
+        maxHashesPost = vm["sigma_num_fast"].as<int64_t>();
+        defaultSigma = false;
+    }
+    if (vm.count("sigma_fasthash_mem"))
+    {
+        fastHashMemCostBytes = vm["sigma_fasthash_mem"].as<int64_t>();
+        defaultSigma = false;
+    }
+    if (vm.count("sigma_verify_threads"))
+    {
+        numSigmaVerifyThreads = vm["sigma_verify_threads"].as<int64_t>();
+        defaultSigma = false;
+    }
+    
+    
+    if (numUserVerifyThreads > numSigmaVerifyThreads)
+    {
+        LogPrintf("Number of user verify threads may not exceed number of sigma verify threads");
+        return 1;
+    }
+    
+    LogPrintf("Configuration=====================================================\n\n");
+    LogPrintf("NETWORK:\nGlobal memory cost [%dgb]\nArgon_echo cpu cost [%d rounds]\nArgon_echo mem cost [%dMb]\nEcho/Shavite digest size [%d bytes]\nNumber of fast hashes per slow hash [%d]\nNumber of slow hashes per global arena [%d]\nNumber of verify threads [%d]\n\n", memCostGb, cpuCostRounds, slowHashMemCostMb, fastHashMemCostBytes, maxHashesPost, maxHashesPre, numSigmaVerifyThreads);
+    LogPrintf("USER:\nMining with [%d] threads\nMining with [%d gb] memory.\nVerifying with [%s] threads.\n\n", numThreads, memAllowGb, numUserVerifyThreads);
+    
+    // If we are using the default params then perform some tests to ensure everything runs the same across different machines
+    if (defaultSigma)
+    {
+        LogPrintf("Tests=============================================================\n\n");
+        
+        CBlockHeader header;
+        LogPrintf("Attempt to validate valid header 1\n");
+        {
+            std::vector<unsigned char> data = ParseHex("e3a9e279000000001e518f7f23b526c1eebcd14731253c4bcff35a0000000000000000000000000070b25754c4650ea64b3965ed65035c78a9be260000000000000000004f465c5dffff3f1f0700ab8b");
+            memcpy(&header.nVersion, &data[0], 80);
+            sigma_context sigmaContext(cpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            if (!sigmaContext.verifyHeader(header, 1967513926))
+            {
+                LogPrintf("✘\n");
+                return 1;
+            }
+            LogPrintf("✔\n");
+        }
+        LogPrintf("Attempt to validate valid header 2\n");
+        {
+            std::vector<unsigned char> data = ParseHex("e3a9e279000000001e518f7f23b526c1eebcd14731253c4bcff35a0000000000000000000000000070b25754c4650ea64b3965ed65035c78a9be260000000000000000006e465c5dffff3f1f0600ea69");
+            memcpy(&header.nVersion, &data[0], 80);
+            sigma_context sigmaContext(cpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            if (!sigmaContext.verifyHeader(header, 1967513926))
+            {
+                LogPrintf("✘\n");
+                return 1;
+            }
+            LogPrintf("✔\n");
+        }
+        LogPrintf("Attempt to validate valid header 3\n");
+        {
+            std::vector<unsigned char> data = ParseHex("e3a9e279000000001e518f7f23b526c1eebcd14731253c4bcff35a0000000000000000000000000070b25754c4650ea64b3965ed65035c78a9be260000000000000000006b435c5dffff3f1f0a005943");
+            memcpy(&header.nVersion, &data[0], 80);
+            sigma_context sigmaContext(cpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            if (!sigmaContext.verifyHeader(header, 1967513926))
+            {
+                LogPrintf("✘\n");
+                return 1;
+            }
+            LogPrintf("✔\n");
+        }
+        LogPrintf("Attempt to validate invalid header 1\n");
+        {
+            std::vector<unsigned char> data = ParseHex("e3a9e279001100001e518f7f23b526c1eebcd14731253c4bcff35a0000000000000000000000000070b25754c4650ea64b3965ed65035c78a9be260000000000000000006b435c5dffff3f1f0a005943");
+            memcpy(&header.nVersion, &data[0], 80);
+            sigma_context sigmaContext(cpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            if (sigmaContext.verifyHeader(header, 1967513924))
+            {
+                LogPrintf("✘\n");
+                return 1;
+            }
+            LogPrintf("✔\n");
+        }
+        LogPrintf("\n");
+    }
+    
+    //Random header to benchmark with, we will randomly change it more throughout the tests.
+    CBlockHeader header;
+    header.nVersion = rand();
+    header.hashPrevBlock = ArithToUint256(((((((((arith_uint256(rand()) << 8) * rand()) << 8) * rand()) << 8) * rand()) << 8) * rand()));
+    header.hashMerkleRoot = ArithToUint256(((((((((arith_uint256(rand()) << 8) * rand()) << 8) * rand()) << 8) * rand()) << 8) * rand()));
+    header.nTime = rand();
+    header.nBits = rand();
+    header.nNonce = rand();
+    
+    if (!mineOnly)
+    {
+        LogPrintf("Scrypt============================================================\n\n");
+        uint256 hash;    
+        {
+            LogPrintf("Bench cost [single thread]:\n");
+            uint64_t nStart = GetTimeMicros(); 
+            uint64_t numHashes = 20;
+            char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+            for (uint64_t i=0; i< numHashes; ++i)
+            {
+                header.nNonce = i;
+                scrypt_1024_1_1_256_sp(BEGIN(header.nVersion), BEGIN(hash), scratchpad);
+            }
+            LogPrintf("total [%.2f micros] per hash: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numHashes);
+        }
+        
+        {
+            LogPrintf("Bench cost [%d threads]:\n", numThreads);
+            uint64_t nStart = GetTimeMicros();
+            uint64_t numHashes = 100;
+            auto workerThreads = new boost::asio::thread_pool(numThreads);
+            for (uint64_t i = 0; i <= numHashes;++i)
+            {
+                boost::asio::post(*workerThreads, [=]() mutable
+                {
+                    char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
+                    header.nNonce = i;
+                    scrypt_1024_1_1_256_sp(BEGIN(header.nVersion), BEGIN(hash), scratchpad);    
+                });
+            }
+            workerThreads->join();
+            LogPrintf("total [%.2f micros] per hash [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numHashes);
+        }
+        
+        LogPrintf("SIGMA=============================================================\n\n");
+        {
+            LogPrintf("Bench slow hashes [single thread]:\n");
+            sigma_context sigmaContext(cpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            
+            {
+                uint8_t hashData[80];
+                for (int i=0;i<80;++i)
+                {
+                    hashData[i] = rand();
+                }
+                    
+                uint64_t nStart = GetTimeMicros();
+                uint64_t numSlowHashes = 100;
+                sigmaContext.benchmarkSlowHashes(hashData, numSlowHashes);
+                LogPrintf("total [%.2f micros] per hash [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numSlowHashes);
+            }
+            
+            {
+                LogPrintf("Bench fast hashes [single thread]:\n");
+                uint8_t hashData1[80];
+                for (int i=0;i<80;++i)
+                {
+                    hashData1[i] = rand();
+                }
+                uint8_t hashData2[32];
+                for (int i=0;i<32;++i)
+                {
+                    hashData2[i] = rand();
+                }
+                std::vector<unsigned char> hashData3(sigmaContext.fastHashSizeBytes);
+                for (uint64_t i=0;i<sigmaContext.fastHashSizeBytes;++i)
+                {
+                    hashData3[i] = rand();
+                }
+                uint64_t nStart = GetTimeMicros();
+                uint64_t numFastHashes = 100000;
+                sigmaContext.benchmarkFastHashes(hashData1, hashData2, &hashData3[0], numFastHashes);
+                LogPrintf("total [%.2f micros] per hash [%.4f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numFastHashes);
+            }
+            
+            {
+                LogPrintf("Bench global arena priming [cpu_cost %drounds] [mem_cost %dgb]:\n", cpuCostRounds, memCostGb );
+                uint64_t nStart = GetTimeMicros(); 
+                uint64_t numArenas=4;
+                for (uint64_t i=0; i<numArenas; ++i)
+                {
+                    sigmaContext.prepareArenas(header, rand());
+                }
+                LogPrintf("total [%.2f micros] per round: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numArenas);
+            }
+            
+            {
+                LogPrintf("Bench verify [single thread]\n");
+                uint64_t nVerifyNumber=100;
+                uint64_t nCountValid=0;
+                uint64_t nStart = GetTimeMicros();
+                for (uint64_t i =0; i< nVerifyNumber; ++i)
+                {
+                    header.nNonce = rand();
+                    nStart = GetTimeMicros();
+                    // Count and log number of successes to avoid possibility of compiler optimising the call out.
+                    if (sigmaContext.verifyHeader(header, rand()))
+                    {
+                        ++nCountValid;
+                    }
+                }
+                LogPrintf("total [%.2f micros] per verification [%.2f micros] found [%d] valid random hashes\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)nVerifyNumber, nCountValid);
+            }
+        }
+    }
+    
+    {
+        header.nTime = GetTime();
+        header.nVersion = rand();
+        header.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+        
+        std::vector<sigma_context*> sigmaContexts;
+        std::vector<uint64_t> sigmaMemorySizes;
+        uint64_t nMemoryAllocated=0;
+        
+        while (nMemoryAllocated < memAllowGb)
+        {
+            uint64_t nMemoryChunk = std::min((memAllowGb-nMemoryAllocated), memCostGb);
+            nMemoryAllocated += nMemoryChunk;
+            sigmaMemorySizes.emplace_back(nMemoryChunk);
+        }
+        for (auto instanceMemorySize : sigmaMemorySizes)
+        {
+            sigmaContexts.push_back(new sigma_context(cpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*instanceMemorySize, maxHashesPre, maxHashesPost, numThreads/sigmaMemorySizes.size(), numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes));
+        }
+        
+        LogPrintf("SIGMA - Bench mining for low difficulty target\n");
+        uint64_t nStart = GetTimeMicros();
+        std::atomic<uint64_t> slowHashCounter = 0;
+        std::atomic<uint64_t> halfHashCounter = 0;
+        std::atomic<uint64_t> skippedHashCounter = 0;
+        std::atomic<uint64_t> hashCounter = 0;
+        std::atomic<uint64_t> blockCounter = 0;
+        {
+            auto workerThreads = new boost::asio::thread_pool(numThreads);
+            for (auto sigmaContext : sigmaContexts)
+            {
+                boost::asio::post(*workerThreads, [&, header, sigmaContext]() mutable
+                {
+                    sigmaContext->prepareArenas(header, rand());
+                });
+            }
+            workerThreads->join();
+        }
+        LogPrintf("arena setup time [%.2f micros]\n", (GetTimeMicros() - nStart));
+        nStart = GetTimeMicros();
+        {
+            auto workerThreads = new boost::asio::thread_pool(numThreads);
+            for (auto sigmaContext : sigmaContexts)
+            {
+                boost::asio::post(*workerThreads, [&, header, sigmaContext]() mutable
+                {
+                    sigmaContext->benchmarkMining(header, slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, numFullHashesTarget);
+                });
+            }
+            workerThreads->join();
+        }
+        LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)hashCounter);
+    }
+    LogPrintf("\nBenchmarks finished.\n");
+    //NB! We leak sigmaContexts here, we don't really care because this is a trivial benchmark program its faster for the user to just exit than to actually free them.
+}
