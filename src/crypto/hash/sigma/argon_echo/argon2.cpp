@@ -26,7 +26,6 @@
 #include <stdio.h>
 
 #include "argon_echo.h"
-#include "encoding.h"
 #include "core.h"
 
 int argon2_echo_ctx(argon2_echo_context *context, bool doHash)
