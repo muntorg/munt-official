@@ -347,6 +347,38 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/scrypt/crypto_scrypt_smix.cpp \
   crypto/scrypt/crypto_scrypt_smix_sse2.h \
   crypto/scrypt/crypto_scrypt_smix_sse2.cpp \
+  crypto/hash/sphlib/shavite.cpp \
+  crypto/hash/sphlib/echo.cpp \
+  crypto/hash/sphlib/sph_types.h \
+  crypto/hash/sphlib/sph_shavite.h \
+  crypto/hash/sphlib/sph_echo.h \
+  crypto/hash/sphlib/aes_helper.c \
+  crypto/hash/echo256/echo256.cpp \
+  crypto/hash/echo256/echo256.h \
+  crypto/hash/echo256/echo256_aesni.cpp \
+  crypto/hash/echo256/echo256_aesni.h \
+  crypto/hash/shavite3_256/shavite3_256_aesni.cpp \
+  crypto/hash/shavite3_256/shavite3_256_aesni.h \
+  crypto/hash/shavite3_256/shavite3_256_aesni_compress.h \
+  crypto/hash/sigma/argon_echo/argon2.cpp \
+  crypto/hash/sigma/argon_echo/core.cpp \
+  crypto/hash/sigma/argon_echo/core.h \
+  crypto/hash/sigma/argon_echo/argon2_echo.h \
+  crypto/hash/sigma/argon_echo/ref.cpp \
+  crypto/hash/sigma/argon_echo/opt_sse2.cpp \
+  crypto/hash/sigma/argon_echo/opt_sse3.cpp \
+  crypto/hash/sigma/argon_echo/opt_avx2.cpp \
+  crypto/hash/sigma/argon_echo/opt_avx512f.cpp \
+  crypto/hash/sigma/argon_echo/blake2/blake2.h \
+  crypto/hash/sigma/argon_echo/blake2/blake2b.cpp \
+  crypto/hash/sigma/argon_echo/blake2/blake2-impl.h \
+  crypto/hash/sigma/argon_echo/blake2/blamka-round-ref.h \
+  crypto/hash/sigma/argon_echo/blake2/blamka-round-opt_sse2.h \
+  crypto/hash/sigma/argon_echo/blake2/blamka-round-opt_sse3.h \
+  crypto/hash/sigma/argon_echo/blake2/blamka-round-opt_avx2.h \
+  crypto/hash/sigma/argon_echo/blake2/blamka-round-opt_avx512f.h \
+  crypto/hash/sigma/sigma.h \
+  crypto/hash/sigma/sigma.cpp \
   crypto/common.h \
   crypto/hmac_sha256.cpp \
   crypto/hmac_sha256.h \
@@ -853,6 +885,8 @@ endif
 if ENABLE_BENCH
 #include Makefile.bench.include
 endif
+
+include Makefile.sigmabench.include
 
 if ENABLE_QT
 include Makefile.qt.include
