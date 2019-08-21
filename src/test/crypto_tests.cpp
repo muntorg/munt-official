@@ -17,6 +17,7 @@
 #include <cryptopp/config.h>
 #include <cryptopp/aes.h>
 #include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
 
 #include <vector>
 
@@ -122,46 +123,51 @@ static void TestAES128CBC(const std::string &hexkey, const std::string &hexiv, b
     std::vector<unsigned char> iv = ParseHex(hexiv);
     std::vector<unsigned char> in = ParseHex(hexin);
     std::vector<unsigned char> correctout = ParseHex(hexout);
-    std::vector<unsigned char> realout(in.size() + CryptoPP::AES::BLOCKSIZE);
+    std::vector<unsigned char> realout;
 
     // Encrypt the plaintext and verify that it equals the cipher
-    //fixme: (SIGMA) pad
     CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enc;
     enc.SetKeyWithIV(&key[0], key.size(), &iv[0]);
-    //int size = 
-    enc.ProcessData(&realout[0], &in[0], in.size());
-    //realout.resize(size);
+    if (pad)
+    {
+        CryptoPP::VectorSource s(in, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(realout)));
+    }
+    else
+    {
+        realout.resize(in.size());
+        enc.ProcessData(&realout[0], &in[0], in.size());
+    }
     BOOST_CHECK(realout.size() == correctout.size());
     BOOST_CHECK_MESSAGE(realout == correctout, HexStr(realout) + std::string(" != ") + hexout);
 
     // Decrypt the cipher and verify that it equals the plaintext
-    std::vector<unsigned char> decrypted(correctout.size());
-    CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption d;
-    d.SetKeyWithIV(&key[0], key.size(), &iv[0]);
-    d.ProcessData(&correctout[0], &decrypted[0], correctout.size());
-    //fix: pad...
-    //size = dec.Decrypt();
-    //decrypted.resize(size);
+    std::vector<unsigned char> decrypted;
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
+    dec.SetKeyWithIV(&key[0], key.size(), &iv[0]);
+    if (pad)
+    {
+        CryptoPP::VectorSource s(correctout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(decrypted)));
+    }
+    else
+    {
+        decrypted.resize(correctout.size());
+        dec.ProcessData(&decrypted[0], &correctout[0], correctout.size());
+    }
     BOOST_CHECK(decrypted.size() == in.size());
     BOOST_CHECK_MESSAGE(decrypted == in, HexStr(decrypted) + std::string(" != ") + hexin);
 
     // Encrypt and re-decrypt substrings of the plaintext and verify that they equal each-other
-    //fixme: (SIGMA)
-    /*for(std::vector<unsigned char>::iterator i(in.begin()); i != in.end(); ++i)
+    for(std::vector<unsigned char>::iterator i(in.begin()); i != in.end(); ++i)
     {
         std::vector<unsigned char> sub(i, in.end());
-        std::vector<unsigned char> subout(sub.size() + AES_BLOCKSIZE);
-        int _size = enc.Encrypt(&sub[0], sub.size(), &subout[0]);
-        if (_size != 0)
-        {
-            subout.resize(_size);
-            std::vector<unsigned char> subdecrypted(subout.size());
-            _size = dec.Decrypt(&subout[0], subout.size(), &subdecrypted[0]);
-            subdecrypted.resize(_size);
-            BOOST_CHECK(decrypted.size() == in.size());
-            BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
-        }
-    }*/
+        std::vector<unsigned char> subout;
+        CryptoPP::VectorSource encryptSource(sub, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(subout)));
+        
+        std::vector<unsigned char> subdecrypted;
+        CryptoPP::VectorSource decryptSource(subout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(subdecrypted)));
+        BOOST_CHECK(decrypted.size() == in.size());
+        BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
+    }
 }
 
 static void TestAES256CBC(const std::string &hexkey, const std::string &hexiv, bool pad, const std::string &hexin, const std::string &hexout)
@@ -170,47 +176,52 @@ static void TestAES256CBC(const std::string &hexkey, const std::string &hexiv, b
     std::vector<unsigned char> iv = ParseHex(hexiv);
     std::vector<unsigned char> in = ParseHex(hexin);
     std::vector<unsigned char> correctout = ParseHex(hexout);
-    std::vector<unsigned char> realout(in.size() + CryptoPP::AES::BLOCKSIZE);
+    std::vector<unsigned char> realout;
 
     // Encrypt the plaintext and verify that it equals the cipher
-    //fixme: (SIGMA) pad
     CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enc;
     enc.SetKeyWithIV(&key[0], key.size(), &iv[0]);
-    //int size = enc.Encrypt(&in[0], in.size(), &realout[0]);
-    enc.ProcessData(&realout[0], &in[0], in.size());
-    
-    //realout.resize(size);
+
+    if (pad)
+    {
+        CryptoPP::VectorSource s(in, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(realout)));
+    }
+    else
+    {
+        realout.resize(in.size());
+        enc.ProcessData(&realout[0], &in[0], in.size());
+    }    
     BOOST_CHECK(realout.size() == correctout.size());
     BOOST_CHECK_MESSAGE(realout == correctout, HexStr(realout) + std::string(" != ") + hexout);
 
     // Decrypt the cipher and verify that it equals the plaintext
-    std::vector<unsigned char> decrypted(correctout.size());
+    std::vector<unsigned char> decrypted;
     CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
-    //fixme: (SIGMA) pad
     dec.SetKeyWithIV(&key[0], key.size(), &iv[0]);
-    //size = dec.Decrypt(&correctout[0], correctout.size(), &decrypted[0]);
-    dec.ProcessData(&decrypted[0], &correctout[0], correctout.size());
-    //decrypted.resize(size);
+    if (pad)
+    {
+        CryptoPP::VectorSource s(correctout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(decrypted)));
+    }
+    else
+    {
+        decrypted.resize(correctout.size());
+        dec.ProcessData(&decrypted[0], &correctout[0], correctout.size());
+    }
     BOOST_CHECK(decrypted.size() == in.size());
     BOOST_CHECK_MESSAGE(decrypted == in, HexStr(decrypted) + std::string(" != ") + hexin);
 
     // Encrypt and re-decrypt substrings of the plaintext and verify that they equal each-other
-    //fixme: (SIGMA)
-    /*for(std::vector<unsigned char>::iterator i(in.begin()); i != in.end(); ++i)
+    for(std::vector<unsigned char>::iterator i(in.begin()); i != in.end(); ++i)
     {
         std::vector<unsigned char> sub(i, in.end());
-        std::vector<unsigned char> subout(sub.size() + AES_BLOCKSIZE);
-        int _size = enc.Encrypt(&sub[0], sub.size(), &subout[0]);
-        if (_size != 0)
-        {
-            subout.resize(_size);
-            std::vector<unsigned char> subdecrypted(subout.size());
-            _size = dec.Decrypt(&subout[0], subout.size(), &subdecrypted[0]);
-            subdecrypted.resize(_size);
-            BOOST_CHECK(decrypted.size() == in.size());
-            BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
-        }
-    }*/
+        std::vector<unsigned char> subout;
+        CryptoPP::VectorSource encryptSource(sub, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(subout)));
+        
+        std::vector<unsigned char> subdecrypted;
+        CryptoPP::VectorSource decryptSource(subout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(subdecrypted)));
+        BOOST_CHECK(decrypted.size() == in.size());
+        BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
+    }
 }
 
 static void TestChaCha20(const std::string &hexkey, uint64_t nonce, uint64_t seek, const std::string& hexout)
