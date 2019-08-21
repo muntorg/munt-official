@@ -292,7 +292,7 @@ void Compress(hashState *state)
     WL4, WH4, WL5, WH5, WL6, WH6, WL7, WH7,
     WL8, WH8, WL9, WH9, WL10,WH10,WL11,WH11,
     WL12,WH12,WL13,WH13,WL14,WH14,WL15,WH15,
-    WT0, WT1, WT2, WT3, WT4, WT5;
+    WT0, WT1, WT2, WT3, WT4;
   unsigned long long CNT = 0;
   int r; 
 
