@@ -434,7 +434,6 @@ HashReturn Final(hashState *state, BitSequence *hashval)
   int filled_space, block_length;
   unsigned char *message;
   unsigned long long cnt;
-  unsigned int i;
 
   /* perform padding */
   block_length = 128*(16-state->cv_blocks);
@@ -488,7 +487,6 @@ HashReturn Final(hashState *state, BitSequence *hashval)
 	
   return SUCCESS;
 }
-
 
 HashReturn EchoHash(int hashbitlen, BitSequence *data, DataLength databitlen, BitSequence *hashval) 
 { 
