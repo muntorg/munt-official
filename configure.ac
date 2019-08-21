@@ -52,6 +52,9 @@ else
 fi
 AC_PROG_CXX
 
+dnl Check for CPU features
+AX_CHECK_X86_FEATURES([],[])
+
 dnl By default, libtool for mingw refuses to link static libs into a dll for
 dnl fear of mixing pic/non-pic objects, and import/export complications. Since
 dnl we have those under control, re-enable that functionality.
@@ -916,7 +919,7 @@ if test x$use_pkgconfig = xyes; then
   m4_ifdef(
     [PKG_CHECK_MODULES],
     [
-      PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, [AC_MSG_ERROR(libcryptopp not found.)])
+      PKG_CHECK_MODULES([CRYPTOPP], [libcrypto++],, PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, [AC_MSG_ERROR(libcryptopp not found.)]))
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
       PKG_CHECK_MODULES([PROTOBUF], [protobuf],[have_protobuf=yes],[have_protobuf=no])
