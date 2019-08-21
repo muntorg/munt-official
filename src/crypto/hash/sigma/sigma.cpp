@@ -170,13 +170,13 @@ void sigma_context::benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, 
     CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
     prng.SetKey((const unsigned char*)&hashData2[0], 32);
     unsigned char ciphered[32];
-    prng.ProcessData((CryptoPP::byte*)&ciphered[0], (const CryptoPP::byte*)&hashData2[0], 32);
+    prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&hashData2[0], 32);
     memcpy(&hashData2[0], &ciphered[0], (size_t)32);
 
     uint256 outHash;
     for (uint64_t i=0;i<numFastHashes;++i)
     {
-        prng.ProcessData((CryptoPP::byte*)&ciphered[0], (const CryptoPP::byte*)&hashData2[0], 32);
+        prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&hashData2[0], 32);
         memcpy(&hashData2[0], &ciphered[0], (size_t)32);
                 
         hashData1[rand()%80] = rand();
@@ -237,7 +237,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
             CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
             prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
             unsigned char ciphered[32];
-            prng.ProcessData((CryptoPP::byte*)&ciphered[0], (const CryptoPP::byte*)&argonContext.outHash[0], 32);
+            prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
             memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
                             
             //3. Iterate through all 'post' nonce combinations, calculating 2 hashes from the global memory.
@@ -248,7 +248,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                     break;
                 
                 //3.1. For each iteration advance the state of the pseudo random nonce
-                prng.ProcessData((CryptoPP::byte*)&ciphered[0], (const CryptoPP::byte*)&argonContext.outHash[0], 32);
+                prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
                 memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
                 uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % numHashesPost;
                 uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % numHashesPost;
@@ -337,7 +337,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
     //3. Advance PRNG to 'post' nonce (Mining calls PRNG once to prime - i.e. at index 0 we already call the PRNG twice - so add an extra call as well)
     for (uint64_t i=0; i<nPostNonce+2; ++i)
     {               
-        prng.ProcessData((CryptoPP::byte*)&ciphered[0], (const CryptoPP::byte*)&argonContext.outHash[0], 32);
+        prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
         memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
     }
     
