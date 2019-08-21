@@ -124,7 +124,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->emptyWitnessButton2->setCursor(Qt::PointingHandCursor);
     ui->withdrawEarningsButton->setCursor(Qt::PointingHandCursor);
     ui->withdrawEarningsButton2->setCursor(Qt::PointingHandCursor);
-    ui->fundWitnessButton->setCursor(Qt::PointingHandCursor);
     ui->compoundEarningsCheckBox->setCursor(Qt::PointingHandCursor);
 
     // Force qwt graph back to normal cursor instead of cross hair.
@@ -269,7 +268,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->emptyWitnessButton2->setVisible(false);
     ui->withdrawEarningsButton->setVisible(false);
     ui->withdrawEarningsButton2->setVisible(false);
-    ui->fundWitnessButton->setVisible(false);
     ui->renewWitnessButton->setVisible(false);
     ui->unitButton->setVisible(false);
     ui->viewWitnessGraphButton->setVisible(false);
@@ -282,7 +280,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(ui->emptyWitnessButton2, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
     connect(ui->withdrawEarningsButton, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
     connect(ui->withdrawEarningsButton2, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
-    connect(ui->fundWitnessButton, SIGNAL(clicked()), this, SLOT(fundWitnessClicked()));
     connect(ui->renewWitnessButton, SIGNAL(clicked()), this, SLOT(renewWitnessClicked()));
     connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
     connect(ui->upgradeButton, SIGNAL(clicked()), this, SLOT(upgradeWitnessClicked()));
@@ -771,7 +768,6 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     bool stateEmptyWitnessButton = false;
     bool stateWithdrawEarningsButton = false;
     bool stateWithdrawEarningsButton2 = false;
-    bool stateFundWitnessButton = false;
     bool stateRenewWitnessButton = false;
     bool stateUpgradeButton = false;
     bool stateExtendButton = false;
@@ -823,7 +819,6 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
             stateEmptyWitnessButton = witnessStatus == WitnessStatus::Ended && !hasUnconfirmedWittnessTx;
             stateWithdrawEarningsButton = hasSpendableBalance && witnessStatus == WitnessStatus::Witnessing;
             stateWithdrawEarningsButton2 = hasSpendableBalance && witnessStatus == WitnessStatus::Expired;
-            stateFundWitnessButton = witnessStatus == WitnessStatus::Empty;
             stateRenewWitnessButton = witnessStatus == WitnessStatus::Expired && !hasUnconfirmedWittnessTx;
             stateUpgradeButton = witnessStatus == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && hasScriptLegacyOutput && !hasUnconfirmedWittnessTx;
             stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (witnessStatus == WitnessStatus::Witnessing || witnessStatus == WitnessStatus::Expired) && !hasUnconfirmedWittnessTx;
@@ -860,14 +855,13 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     ui->emptyWitnessButton->setVisible(stateEmptyWitnessButton);
     ui->withdrawEarningsButton->setVisible(stateWithdrawEarningsButton);
     ui->withdrawEarningsButton2->setVisible(stateWithdrawEarningsButton2);
-    ui->fundWitnessButton->setVisible(stateFundWitnessButton);
     ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
     ui->upgradeButton->setVisible(stateUpgradeButton);
     ui->extendButton->setVisible(stateExtendButton);
     ui->optimizeButton->setVisible(stateOptimizeButton);
 
     // put normal buttons to the right if there are no confirming buttons visible
-    bool anyConfirmVisible = stateFundWitnessButton || stateEmptyWitnessButton || stateWithdrawEarningsButton || stateRenewWitnessButton;
+    bool anyConfirmVisible = stateEmptyWitnessButton || stateWithdrawEarningsButton || stateRenewWitnessButton;
     auto rect = ui->horizontalSpacer->geometry();
     rect.setWidth(anyConfirmVisible ? 40 : 0);
     ui->horizontalSpacer->setGeometry(rect);

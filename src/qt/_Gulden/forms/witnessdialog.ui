@@ -882,16 +882,6 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
                 </spacer>
                </item>
                <item>
-                <widget class="QPushButton" name="fundWitnessButton">
-                 <property name="text">
-                  <string>Fund account</string>
-                 </property>
-                 <property name="class" stdset="0">
-                  <string notr="true">focus</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
                 <widget class="QPushButton" name="emptyWitnessButton">
                  <property name="text">
                   <string>Empty account</string>
