@@ -334,9 +334,6 @@ void WitnessDialog::fundWitnessClicked()
     LOG_QT_METHOD;
 
     pushDialog(new FundWitnessDialog(model, platformStyle, this));
-//    CAccount* funderAccount = ui->fundWitnessAccountTableView->selectedAccount();
-//    if (funderAccount)
-//        Q_EMIT requestFundWitness(funderAccount);
 }
 
 void WitnessDialog::renewWitnessClicked()
@@ -754,7 +751,7 @@ void WitnessDialog::update()
 }
 
 
-void WitnessDialog::doUpdate(bool forceUpdate)
+void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
 {
     // rate limit this expensive UI update when chain tip is still far from known height
     int heightRemaining = clientModel->cachedProbableHeight - chainActive.Height();
@@ -790,6 +787,8 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
         const auto witnessInfo = GetWitnessInfoWrapper();
         auto [witnessStatus, nTotalNetworkWeight, nOurWeight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx] = AccountWitnessStatus(pactiveWallet, forAccount, witnessInfo);
+        if (pWitnessStatus != nullptr)
+            *pWitnessStatus = witnessStatus;
 
         //Witness only witness account skips all the fancy states for now and just always shows the statistics page
         if (forAccount->m_Type == WitnessOnlyWitnessAccount)
@@ -1097,7 +1096,11 @@ void WitnessDialog::activeAccountChanged(CAccount*)
 {
     userWidgetIndex = -1;
     clearDialogStack();
-    doUpdate(true);
+    WitnessStatus witnessStatus;
+    doUpdate(true, &witnessStatus);
+    if (witnessStatus == WitnessStatus::Empty)
+        pushDialog(new FundWitnessDialog(model, platformStyle, this));
+
     if (model) {
         ui->renewWitnessAccountTableView->setWalletModel(model, 1 * COIN);
     }

@@ -986,7 +986,7 @@ void GUI::showWitnessDialog()
     witnessDialogAction->setChecked(true);
     if (walletFrame)
     {
-        walletFrame->currentWalletView()->witnessDialogPage->update();
+        walletFrame->currentWalletView()->witnessDialogPage->activeAccountChanged(nullptr);
         walletFrame->currentWalletView()->setCurrentWidget(walletFrame->currentWalletView()->witnessDialogPage);
     }
 }

@@ -52,6 +52,9 @@ FundWitnessDialog::FundWitnessDialog(WalletModel* walletModel_, const QStyle *pl
     ui->extendButton->setVisible(false);
     ui->fundButton->setVisible(true);
     ui->labelExtendDescription->setText(tr("Fund your witness to start witnessing and earn rewards."));
+
+    // Initial funding dialog is shown automatically when an empty witness account is selected and does not need the cancel button
+    ui->cancelButton->setVisible(false);
 }
 
 FundWitnessDialog::~FundWitnessDialog()

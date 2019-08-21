@@ -23,6 +23,7 @@ class ClientModel;
 class OptionsModel;
 class WalletModel;
 class CAccount;
+enum class WitnessStatus;
 
 namespace Ui {
     class WitnessDialog;
@@ -101,12 +102,13 @@ public Q_SLOTS:
     void upgradeWitnessClicked();
     void extendClicked();
     void optimizeClicked();
+    void activeAccountChanged(CAccount* account);
 
 protected:
 
 private:
     void clearLabels();
-    void doUpdate(bool forceUpdate=false);
+    void doUpdate(bool forceUpdate = false, WitnessStatus* pWitnessStatus = nullptr);
     Ui::WitnessDialog *ui;
     const QStyle *platformStyle;
     ClientModel *clientModel;
@@ -141,7 +143,6 @@ private Q_SLOTS:
     */
     void popDialog(QWidget* dialog);
 
-    void activeAccountChanged(CAccount* account);
 
 Q_SIGNALS:
     // Sent when a message should be reported to the user.
