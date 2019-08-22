@@ -364,7 +364,7 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/argon_echo/argon2.cpp \
   crypto/hash/sigma/argon_echo/core.cpp \
   crypto/hash/sigma/argon_echo/core.h \
-  crypto/hash/sigma/argon_echo/argon2_echo.h \
+  crypto/hash/sigma/argon_echo/argon_echo.h \
   crypto/hash/sigma/argon_echo/ref.cpp \
   crypto/hash/sigma/argon_echo/opt_sse2.cpp \
   crypto/hash/sigma/argon_echo/opt_sse3.cpp \
