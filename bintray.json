@@ -21,12 +21,12 @@
         "gpgSign": false
     },
 
-    "files":
-        [
-        {"includePattern": "build/bench/bench_sigma", "uploadPattern": "$2"}", 
-           matrixParams": {
-            "override": 1 }
-	}
-        ],
+    "files": [
+        {
+            "includePattern": "build/bench/bench_sigma",
+            "uploadPattern": "$2"
+        }
+    ],
+    
     "publish": true
 }
