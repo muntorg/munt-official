@@ -314,6 +314,10 @@ int main(int argc, char** argv)
     }
     
     {
+        if (mineOnly)
+        {
+            LogPrintf("SIGMA=============================================================\n\n");
+        }
         header.nTime = GetTime();
         header.nVersion = rand();
         header.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
@@ -333,7 +337,7 @@ int main(int argc, char** argv)
             sigmaContexts.push_back(new sigma_context(cpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*instanceMemorySize, maxHashesPre, maxHashesPost, numThreads/sigmaMemorySizes.size(), numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes));
         }
         
-        LogPrintf("SIGMA - Bench mining for low difficulty target\n");
+        LogPrintf("Bench mining for low difficulty target\n");
         uint64_t nStart = GetTimeMicros();
         std::atomic<uint64_t> slowHashCounter = 0;
         std::atomic<uint64_t> halfHashCounter = 0;
@@ -351,7 +355,7 @@ int main(int argc, char** argv)
             }
             workerThreads->join();
         }
-        LogPrintf("arena setup time [%.2f micros]\n", (GetTimeMicros() - nStart));
+        LogPrintf("Arena setup time [%.2f micros]\n", (GetTimeMicros() - nStart));
         nStart = GetTimeMicros();
         {
             auto workerThreads = new boost::asio::thread_pool(numThreads);
@@ -364,7 +368,7 @@ int main(int argc, char** argv)
             }
             workerThreads->join();
         }
-        LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)hashCounter);
+        LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per half-hash[%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)halfHashCounter, ((GetTimeMicros() - nStart)) / (double)hashCounter);
     }
     LogPrintf("\nBenchmarks finished.\n");
     //NB! We leak sigmaContexts here, we don't really care because this is a trivial benchmark program its faster for the user to just exit than to actually free them.
