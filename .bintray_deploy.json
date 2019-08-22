@@ -1,0 +1,32 @@
+{
+    "package": {
+        "name": "auto-upload",
+        "repo": "sigma",
+        "subject": "sigma",
+        "desc": "I was pushed completely automatically",
+        "website_url": "https://github.com/gulden/gulden-official",
+        "issue_tracker_url": "https://github.com/gulden/gulden-official/issues",
+        "vcs_url": "https://github.com/gulden/gulden-official.git",
+        "github_use_tag_release_notes": true,
+        "github_release_notes_file": "changelog.txt",
+        "licenses": ["Gulden"],
+        "labels": ["Gulden", "blockchain", "currency"],
+        "public_download_numbers": false,
+        "public_stats": false,
+    },
+
+    "version": {
+        "name": "1,0",
+        "desc": "This is a version",
+        "gpgSign": false
+    },
+
+    "files":
+        [
+        {"includePattern": "bench/bench_sigma", "uploadPattern": "$2"}", 
+           matrixParams": {
+            "override": 1 }
+	}
+        ],
+    "publish": true
+}
