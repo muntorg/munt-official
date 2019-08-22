@@ -4,3 +4,4 @@ target_bits=32
 jni_lib=armeabi-v7a
 lib_dir=sysroot/usr/lib
 march_flags="-mthumb"
+target_opt_cflags=-DCRYPTOPP_ARM_ACLE_AVAILABLE
