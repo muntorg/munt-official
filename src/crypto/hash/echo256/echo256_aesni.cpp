@@ -22,11 +22,18 @@
 // file COPYING
 
 #include "compat.h"
+#include <compat/arch.h>
+
+// Only x86 family CPUs have AES-NI
+#ifdef ARCH_CPU_X86_FAMILY
 #include <memory.h>
 
+#ifndef __clang__
 #pragma GCC push_options
-#pragma GCC target("aes")
-#pragma GCC target("ssse3")
+#pragma GCC target("aes,ssse3")
+#else
+#pragma clang attribute push (__attribute__((target("aes,ssse3"))), apply_to=any(function))
+#endif
 
 #include "echo256_aesni.h"
 
@@ -483,5 +490,9 @@ HashReturn update_final_echo( echo256_aesni_hashState *state, unsigned char *has
    return SUCCESS;
 }
 
-
+#ifdef __clang__
+#pragma clang attribute pop
+#else
 #pragma GCC pop_options
+#endif
+#endif

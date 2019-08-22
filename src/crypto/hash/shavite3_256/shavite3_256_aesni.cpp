@@ -19,6 +19,10 @@ SHAvite-3 tweak) from:                                       */
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include <compat/arch.h>
+// Only x86 family CPUs have AES-NI
+#ifdef ARCH_CPU_X86_FAMILY
+
 #include "compat.h"
 #include "assert.h"
 #include <memory.h>
@@ -287,4 +291,4 @@ bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char
    return true;
 }
 
-
+#endif

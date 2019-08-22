@@ -22,6 +22,10 @@
 #ifndef SHAVITE_3_256_AESNI_COMPRESS_H
 #define SHAVITE_3_256_AESNI_COMPRESS_H
 
+#include <compat/arch.h>
+// Only x86 family CPUs have AES-NI
+#ifdef ARCH_CPU_X86_FAMILY
+
 #define tos(a)    #a
 #define tostr(a)  tos(a)
 
@@ -369,4 +373,5 @@ void shavite3_256_aesni_Compress256(const unsigned char *message_block, unsigned
    return;
 }
 
+#endif
 #endif

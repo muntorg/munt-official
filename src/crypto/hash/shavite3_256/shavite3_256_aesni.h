@@ -22,6 +22,10 @@ SHAvite-3 tweak) from:                                       */
 #ifndef SHAVITE_3_256_AESNI_H
 #define SHAVITE_3_256_AESNI_H
 
+#include <compat/arch.h>
+// Only x86 family CPUs have AES-NI
+#ifdef ARCH_CPU_X86_FAMILY
+
 typedef struct {
    uint64_t bitcount;                // The number of bits compressed so far
    unsigned char chaining_value[64]; // An array containing the chaining value
@@ -41,4 +45,5 @@ bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState *state, const unsign
 // Performing the padding scheme, and dealing with any remaining bits
 bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char *hashval);
 
+#endif
 #endif

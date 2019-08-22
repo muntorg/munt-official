@@ -24,12 +24,19 @@
 #ifndef BLAKE_ROUND_MKA_OPT_H
 #define BLAKE_ROUND_MKA_OPT_H
 
+#include <compat/arch.h>
+#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AVX512F
+
 #include "blake2-impl.h"
 
 #include "compat.h"
 
+#ifndef __clang__
 #pragma GCC push_options
 #pragma GCC target("avx512f")
+#else
+#pragma clang attribute push (__attribute__((target("avx512f"))), apply_to=any(function))
+#endif
 #include <immintrin.h>
 
 #define ror64(x, n) _mm512_ror_epi64((x), (n))
@@ -151,6 +158,10 @@ do { \
     UNSWAP_QUARTERS(D0, D1); \
 } while ((void)0, 0)
 
+#ifdef __clang__
+#pragma clang attribute pop
+#else
 #pragma GCC pop_options
-
-#endif /* BLAKE_ROUND_MKA_OPT_H */
+#endif
+#endif
+#endif

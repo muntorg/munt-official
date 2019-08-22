@@ -24,11 +24,18 @@
 #ifndef BLAKE_ROUND_MKA_OPT_H
 #define BLAKE_ROUND_MKA_OPT_H
 
+#include <compat/arch.h>
+#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have SSE2
+
 #include "blake2-impl.h"
 #include "compat.h"
 
+#ifndef __clang__
 #pragma GCC push_options
 #pragma GCC target("sse2")
+#else
+#pragma clang attribute push (__attribute__((target("sse2"))), apply_to=any(function))
+#endif
 #include <emmintrin.h>
 
 #define _mm_roti_epi64(r, c) _mm_xor_si128(_mm_srli_epi64((r), -(c)), _mm_slli_epi64((r), 64 - (-(c))))
@@ -108,5 +115,10 @@ do {                                                                       \
     UNDIAGONALIZE(A0, B0, C0, D0, A1, B1, C1, D1);                         \
 } while ((void)0, 0)
 
+#ifdef __clang__
+#pragma clang attribute pop
+#else
 #pragma GCC pop_options
+#endif
+#endif
 #endif

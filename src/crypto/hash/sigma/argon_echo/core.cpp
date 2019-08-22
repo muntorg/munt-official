@@ -21,6 +21,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include <compat/arch.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,45 +33,57 @@
  
 #include <crypto/hash/echo256/echo256_aesni.h>
 #include <crypto/hash/sphlib/sph_echo.h>
-    
 
-#define FILL_SEGMENT_OPTIMISED(I, P)                                            \
-if (__builtin_cpu_supports("avx512f"))                                          \
-{                                                                               \
-    fill_segment_avx512f(I, P);                                                 \
-}                                                                               \
-else if (__builtin_cpu_supports("avx2"))                                        \
-{                                                                               \
-    fill_segment_avx2(I, P);                                                    \
-}                                                                               \
-else if (__builtin_cpu_supports("sse3"))                                        \
-{                                                                               \
-    fill_segment_sse3(I, P);                                                    \
-}                                                                               \
-else if (__builtin_cpu_supports("sse2"))                                        \
-{                                                                               \
-    fill_segment_sse2(I, P);                                                    \
-}                                                                               \
-else                                                                            \
-{                                                                               \
-    fill_segment_ref(I, P);                                                     \
-}                                                                               \
+#ifdef ARCH_CPU_X86_FAMILY
+    #define FILL_SEGMENT_OPTIMISED(I, P)                                            \
+    if (__builtin_cpu_supports("avx512f"))                                          \
+    {                                                                               \
+        fill_segment_avx512f(I, P);                                                 \
+    }                                                                               \
+    else if (__builtin_cpu_supports("avx2"))                                        \
+    {                                                                               \
+        fill_segment_avx2(I, P);                                                    \
+    }                                                                               \
+    else if (__builtin_cpu_supports("sse3"))                                        \
+    {                                                                               \
+        fill_segment_sse3(I, P);                                                    \
+    }                                                                               \
+    else if (__builtin_cpu_supports("sse2"))                                        \
+    {                                                                               \
+        fill_segment_sse2(I, P);                                                    \
+    }                                                                               \
+    else                                                                            \
+    {                                                                               \
+        fill_segment_ref(I, P);                                                     \
+    }                                                                               \
 
-#define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
-if (__builtin_cpu_supports("aes"))                                              \
-{                                                                               \
-    echo256_aesni_hashState ctx_echo;                                           \
-    echo256_aesni_Init(&ctx_echo);                                              \
-    echo256_aesni_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
-    echo256_aesni_Final(&ctx_echo, HASH);                                       \
-}                                                                               \
-else                                                                            \
-{                                                                               \
-    sph_echo256_context ctx_echo;                                               \
-    sph_echo256_init(&ctx_echo);                                                \
-    sph_echo256(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN);          \
-    sph_echo256_close(&ctx_echo, HASH);                                         \
-}                                                                               \
+    #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
+    if (__builtin_cpu_supports("aes"))                                              \
+    {                                                                               \
+        echo256_aesni_hashState ctx_echo;                                           \
+        echo256_aesni_Init(&ctx_echo);                                              \
+        echo256_aesni_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
+        echo256_aesni_Final(&ctx_echo, HASH);                                       \
+    }                                                                               \
+    else                                                                            \
+    {                                                                               \
+        sph_echo256_context ctx_echo;                                               \
+        sph_echo256_init(&ctx_echo);                                                \
+        sph_echo256(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN);          \
+        sph_echo256_close(&ctx_echo, HASH);                                         \
+    }                                                                               
+#else
+    #define FILL_SEGMENT_OPTIMISED(I, P)                                            \
+    {fill_segment_ref(I, P);}                                                       \
+
+    #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
+    {                                                                               \
+        sph_echo256_context ctx_echo;                                               \
+        sph_echo256_init(&ctx_echo);                                                \
+        sph_echo256(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN);          \
+        sph_echo256_close(&ctx_echo, HASH);                                         \
+    }  
+#endif
 
 /***************Instance and Position constructors**********/
 void init_block_value(argon2_echo_block* b, uint8_t in)

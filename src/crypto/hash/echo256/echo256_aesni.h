@@ -17,8 +17,12 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef HASH_API_H
-#define HASH_API_H
+#ifndef HASH_ECHO_256_AESNI_H
+#define HASH_ECHO_256_AESNI_H
+
+#include <compat/arch.h>
+// Only x86 family CPUs have AES-NI
+#ifdef ARCH_CPU_X86_FAMILY
 
 #include <emmintrin.h>
 
@@ -46,5 +50,6 @@ HashReturn echo256_aesni_Final(echo256_aesni_hashState *state, unsigned char* ha
 
 HashReturn echo256_aesni_UpdateFinal( echo256_aesni_hashState *state, unsigned char* hashval, const unsigned char* data, uint64_t databitlen );
 
-#endif // HASH_API_H
+#endif
+#endif
 

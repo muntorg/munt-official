@@ -21,6 +21,9 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include <compat/arch.h>
+#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AVX512F
+
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
@@ -33,6 +36,12 @@
 
 #include "compat.h"
 
+#ifndef __clang__
+#pragma GCC push_options
+#pragma GCC target("avx512f")
+#else
+#pragma clang attribute push (__attribute__((target("avx512f"))), apply_to=any(function))
+#endif
 /*
  * Function fills a new memory block and optionally XORs the old block over the new one.
  * Memory must be initialized.
@@ -42,8 +51,6 @@
  * @param with_xor Whether to XOR into the new block (1) or just overwrite (0)
  * @pre all block pointers must be valid
  */
-#pragma GCC push_options
-#pragma GCC target("avx512f")
 static void fill_block_avx512f(__m512i *state, const argon2_echo_block *ref_block, argon2_echo_block *next_block, int with_xor)
 {
     __m512i block_XY[ARGON2_512BIT_WORDS_IN_BLOCK];
@@ -216,4 +223,9 @@ void fill_segment_avx512f(const argon2_echo_instance_t *instance, argon2_echo_po
     }
 }
 
+#ifdef __clang__
+#pragma clang attribute pop
+#else
 #pragma GCC pop_options
+#endif
+#endif

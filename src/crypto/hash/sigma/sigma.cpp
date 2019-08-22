@@ -5,6 +5,8 @@
 
 #include "sigma.h"
 
+#include <compat/arch.h>
+
 #include <cryptopp/config.h>
 #include <cryptopp/aes.h>
 #include <cryptopp/modes.h>
@@ -23,7 +25,8 @@
 #include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
 
 inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
-{   
+{
+    #ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
     if (__builtin_cpu_supports("aes"))
     {
         shavite3_256_aesni_hashState ctx_shavite;
@@ -53,6 +56,7 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
         }
     }
     else
+    #endif
     {
         sph_shavite256_context ctx_shavite;
         sph_echo256_context ctx_echo;
