@@ -23,7 +23,7 @@
 
     "files":
         [
-        {"includePattern": "bench/bench_sigma", "uploadPattern": "$2"}", 
+        {"includePattern": "build/bench/bench_sigma", "uploadPattern": "$2"}", 
            matrixParams": {
             "override": 1 }
 	}
