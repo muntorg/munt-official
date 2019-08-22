@@ -9,6 +9,10 @@ $(package)_sha256_hash=e3bcd48a62739ad179ad8064b523346abb53767bcbefc01fe37303412
 $(package)_makefile_arm_linux=GNUmakefile-cross
 $(package)_makefile=GNUmakefile
 
+$(package)_cxxflags_debug += -DDEBUG -DDEBUG_LOCKORDER
+$(package)_cxxflags_release += -DNDEBUG -O3 -fPIC
+$(package)_cxxflags += -std=c++17
+
 define $(package)_preprocess_cmds
 endef
 
@@ -20,7 +24,7 @@ endef
 
 define $(package)_build_cmds
   PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f GNUmakefile libcryptopp.pc && \
-  PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f $($(package)_makefile) static
+  CXXFLAGS="$($(package)_cxxflags)" LDFLAGS="$($(package)_ldflags)" PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f $($(package)_makefile) static
 endef
 
 define $(package)_stage_cmds
