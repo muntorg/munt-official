@@ -916,7 +916,7 @@ if test x$use_pkgconfig = xyes; then
   m4_ifdef(
     [PKG_CHECK_MODULES],
     [
-      PKG_CHECK_MODULES([CRYPTOPP], [libcrypto++],, PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, [AC_MSG_ERROR(libcryptopp not found.)]))
+      PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, PKG_CHECK_MODULES([CRYPTOPP], [libcrypto++],, [AC_MSG_ERROR(libcryptopp not found.)]))
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
       PKG_CHECK_MODULES([PROTOBUF], [protobuf],[have_protobuf=yes],[have_protobuf=no])
