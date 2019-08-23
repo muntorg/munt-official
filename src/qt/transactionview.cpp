@@ -439,8 +439,7 @@ void TransactionView::contextualMenu(const QPoint &point)
         case TransactionRecord::WitnessIncreaseRecv:
         case TransactionRecord::WitnessChangeKeyRecv:
         case TransactionRecord::WitnessEmptyRecv:
-        case TransactionRecord::WitnessSplitRecv:
-        case TransactionRecord::WitnessMergeRecv:
+        case TransactionRecord::WitnessRearrangeRecv:
         case TransactionRecord::Generated:
         case TransactionRecord::GeneratedWitness:
             canEditLabel = false;
