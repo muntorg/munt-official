@@ -16,6 +16,50 @@ int LogPrintStr(const std::string &str)
     return 1;
 }
 
+void selectLargesHashUnit(double& nSustainedHashesPerSecond, std::string& label)
+{
+    if (nSustainedHashesPerSecond > 1000)
+    {
+        label = "kh";
+        nSustainedHashesPerSecond /= 1000.0;
+    }
+    if (nSustainedHashesPerSecond > 1000)
+    {
+        label = "mh";
+        nSustainedHashesPerSecond /= 1000.0;
+    }
+    if (nSustainedHashesPerSecond > 1000)
+    {
+        label = "gh";
+        nSustainedHashesPerSecond /= 1000.0;
+    }
+    if (nSustainedHashesPerSecond > 1000)
+    {
+        label = "th";
+        nSustainedHashesPerSecond /= 1000.0;
+    }
+    if (nSustainedHashesPerSecond > 1000)
+    {
+        label = "ph";
+        nSustainedHashesPerSecond /= 1000.0;
+    }
+    if (nSustainedHashesPerSecond > 1000)
+    {
+        label = "eh";
+        nSustainedHashesPerSecond /= 1000.0;
+    }
+    if (nSustainedHashesPerSecond > 1000)
+    {
+        label = "zh";
+        nSustainedHashesPerSecond /= 1000.0;
+    }
+    if (nSustainedHashesPerSecond > 1000)
+    {
+        label = "yh";
+        nSustainedHashesPerSecond /= 1000.0;
+    }
+}
+    
 int main(int argc, char** argv)
 {
     // SIGMA paramaters (centrally set by network)
@@ -313,6 +357,7 @@ int main(int argc, char** argv)
         }
     }
     
+    uint64_t nMineStart = GetTimeMicros();
     {
         if (mineOnly)
         {
@@ -355,7 +400,9 @@ int main(int argc, char** argv)
             }
             workerThreads->join();
         }
-        LogPrintf("Arena setup time [%.2f micros]\n", (GetTimeMicros() - nStart));
+        double nHalfHashAverage=0;
+        uint64_t nArenaSetuptime = (GetTimeMicros() - nStart);
+        LogPrintf("Arena setup time [%.2f micros]\n", nArenaSetuptime);
         nStart = GetTimeMicros();
         {
             auto workerThreads = new boost::asio::thread_pool(numThreads);
@@ -368,8 +415,42 @@ int main(int argc, char** argv)
             }
             workerThreads->join();
         }
-        LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per half-hash[%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)halfHashCounter, ((GetTimeMicros() - nStart)) / (double)hashCounter);
+        nHalfHashAverage = ((GetTimeMicros() - nStart)) / (double)halfHashCounter;
+        LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per half-hash[%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), nHalfHashAverage, ((GetTimeMicros() - nStart)) / (double)hashCounter);
+        
+        
+        // We need to recalculate the arenas every time we exhaust the hash space, or when a new block comes in, whichever comes first.
+        // Block target is 2.5 minutes, so we assume that the maximum time we can mine in between arena calculations is 3 minutes,
+        // or the full hash space, whichever is lower.
+        uint64_t maxHalfHashes = maxHashesPre*maxHashesPost;
+        maxHalfHashes = std::min(maxHalfHashes, (uint64_t)((150*1000000)/nHalfHashAverage));
+        
+        // The total time is then the arena setup time plus the time that calculating maxHalfHashes would take (all in microseconds)
+        uint64_t nTimeTotal = nArenaSetuptime + (maxHalfHashes*nHalfHashAverage);
+        
+        // Finally we can get a sustained hashrate by calculating the time per hash and then calculating how many hashes per second.
+        double nSustainedMicrosecondsPerHash = ((double)nTimeTotal / (double)maxHalfHashes);
+        double nSustainedHashesPerMicrosecond = (1/nSustainedMicrosecondsPerHash);
+        double nSustainedHashesPerSecond = nSustainedHashesPerMicrosecond * 1000000;
+        
+        // Convert to the largest unit we can so that output is easier to read
+        std::string label = " h";        
+        selectLargesHashUnit(nSustainedHashesPerSecond, label);
+        
+        // Log a highly noticeable number for users who just want a number to compare without all the gritty details.
+        LogPrintf("\n====================================================");
+        LogPrintf("\n* Estimated sustained hashrate %12.2f %s/s *", nSustainedHashesPerSecond, label);
+        LogPrintf("\n====================================================\n");
     }
-    LogPrintf("\nBenchmarks finished.\n");
+    
+    uint64_t nMineEnd = GetTimeMicros();
+    LogPrintf("\nBenchmarks finished in [%d seconds]\n", (nMineEnd-nMineStart)*0.000001);
+    
+    if ((nMineEnd-nMineStart)*0.000001< 30)
+    {
+        // Calculate hash target to spend 200 seconds running and suggest user set that.
+        // NB! We delibritely test for 30 but calculate on 200 to prevent making people run the program multiple times unnecessarily.
+        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine_num_hashes=%d` or larger for at least 200 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*((2000000000)/(nMineEnd-nMineStart))));
+    }
     //NB! We leak sigmaContexts here, we don't really care because this is a trivial benchmark program its faster for the user to just exit than to actually free them.
 }
