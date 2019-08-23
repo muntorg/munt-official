@@ -624,14 +624,22 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
                                                                            boost::uuids::to_string(witnessAccount->getUUID())));
 
     // Check for immaturity
-    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
-    (unused)currentWitnessOutpoint;
-    //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    //fixme: (PHASE4) - Look into shortening the maturity period here, the full period is too long.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
-        throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+    for ( const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] : unspentWitnessOutputs )
+    {
+        (unused) currentWitnessTxOut;
+        (unused) currentWitnessOutpoint;
+        //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+        //fixme: (PHASE4) - Look into shortening the maturity period here, the full period is too long.
+        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
+            throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
+    }
+
 
     EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);
+
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    (unused)currentWitnessOutpoint;
+    (unused)currentWitnessHeight;
 
     // Check that new distribution value matches old
     CAmount redistributionTotal = std::accumulate(redistributionAmounts.begin(), redistributionAmounts.end(), CAmount(0), [](const CAmount acc, const CAmount amount){ return acc + amount; });
