@@ -652,12 +652,25 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
     CAmount transactionFee;
     CMutableTransaction witnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
     {
+
+        uint64_t highestActionNonce = 0;
+        uint64_t highestFailCount = 0;
+
         // Add all original outputs as inputs
         for (const auto&it: unspentWitnessOutputs)
         {
             const CTxOut& txOut = std::get<0>(it);
             const COutPoint outPoint = std::get<2>(it);
             pwallet->AddTxInput(witnessTransaction, CInputCoin(outPoint, txOut), false);
+
+            CTxOutPoW2Witness details;
+            if (!GetPow2WitnessOutput(txOut, details))
+                throw witness_error(witness::RPC_MISC_ERROR, "Failure extracting witness details.");
+
+            if (details.actionNonce > highestActionNonce)
+                highestActionNonce = details.actionNonce;
+            if (details.failCount > highestFailCount)
+                highestFailCount = details.failCount;
         }
 
         // Add new witness outputs
@@ -670,8 +683,8 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
             distTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
             distTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
             distTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
-            distTxOutput.output.witnessDetails.failCount = currentWitnessDetails.failCount;
-            distTxOutput.output.witnessDetails.actionNonce = currentWitnessDetails.actionNonce+1;
+            distTxOutput.output.witnessDetails.failCount = highestFailCount;
+            distTxOutput.output.witnessDetails.actionNonce = highestActionNonce + 1;
             distTxOutput.nValue = distAmount;
             witnessTransaction.vout.push_back(distTxOutput);
         }
