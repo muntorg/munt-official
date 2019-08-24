@@ -450,7 +450,7 @@ int main(int argc, char** argv)
     {
         // Calculate hash target to spend 200 seconds running and suggest user set that.
         // NB! We delibritely test for 30 but calculate on 200 to prevent making people run the program multiple times unnecessarily.
-        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine_num_hashes=%d` or larger for at least 200 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*((2000000000)/(nMineEnd-nMineStart))));
+        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine_num_hashes=%d` or larger for at least 200 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*((200000000)/(nMineEnd-nMineStart))));
     }
     //NB! We leak sigmaContexts here, we don't really care because this is a trivial benchmark program its faster for the user to just exit than to actually free them.
 }
