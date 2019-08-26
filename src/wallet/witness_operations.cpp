@@ -775,20 +775,24 @@ std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet*
 
     LOCK2(cs_main, pWallet->cs_wallet);
 
-    std::vector<CAmount> distribution;
-    CAmount total = 0;
-    int64_t duration = 0;
+    const auto unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(account);
 
-    for (const auto& item : witnessInfo.witnessSelectionPoolFiltered)
-    {
-        if (IsMine(*account, item.coin.out)) {
-            distribution.push_back(item.coin.out.nValue);
-            total += item.coin.out.nValue;
-            if (duration == 0) {
-            uint64_t nUnused1, nUnused2;
-            duration = GetPoW2LockLengthInBlocksFromOutput(item.coin.out, item.coin.nHeight, nUnused1, nUnused2);
-            }
-        }
+    std::vector<CAmount> distribution;
+    std::transform(unspentWitnessOutputs.begin(), unspentWitnessOutputs.end(), std::back_inserter(distribution), [](const auto& it) {
+        const CTxOut& txOut = std::get<0>(it);
+        return txOut.nValue;
+    });
+
+    CAmount total = std::accumulate(unspentWitnessOutputs.begin(), unspentWitnessOutputs.end(), CAmount(0), [](const CAmount acc, const auto& it){
+        const CTxOut& txOut = std::get<0>(it);
+        return acc + txOut.nValue;
+    });
+
+    int64_t duration = 0;
+    if (unspentWitnessOutputs.size() > 0) {
+        const CTxOut& txOut = std::get<0>(unspentWitnessOutputs[0]);
+        uint64_t nUnused1, nUnused2;
+        duration = GetPoW2LockLengthInBlocksFromOutput(txOut, std::get<1>(unspentWitnessOutputs[0]), nUnused1, nUnused2);
     }
 
     return std::tuple(distribution, duration, total);
