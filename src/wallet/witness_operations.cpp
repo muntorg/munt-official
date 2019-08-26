@@ -800,7 +800,11 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
 
     CAmount partMax = maxWorkableWitnessAmount(duration, totalWeight);
 
-    CAmount partTarget = (100 * partMax) / 90; // target part into 90% of maximum workable amount
+    // Divide int parts into 90% of maximum workable amount. Staying (well) below the maximum workable amount
+    // does not reduce the expected witness rewards but it leaves some room for:
+    // a) adding remaining part if it is below minimum witness amount (5000) without going over max workable (which would hurt expected rewards)
+    // b) leaves some room when total network witness weight changes
+    CAmount partTarget = (90 * partMax) / 100;
 
     int wholeParts = totalAmount / partTarget;
 
