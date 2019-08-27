@@ -53,9 +53,12 @@
 // Argon memory cost (currently 16mb):
 // * How much memory each individual argon hash uses.
 // * Increasing this increases GPU resistance, but also increases verification requirements.
-// Argon round cost (currently 10):
-// * Increasing this affects how long the argon hashes take (in conjunction with the memory cost)
-// * Longer is better, however also means longer 
+// Argon arena round cost (currently 8):
+// * Increasing this affects how long the argon hashes for the initial arena takes (in conjunction with the memory cost)
+// * Should be lower than the slow hash cost but high enough to still be secure
+// Argon slow hash round cost (currently 12):
+// * Increasing this affects how long the argon slow hashes take (in conjunction with the memory cost)
+// * Longer is better, however also means longer verification
 // Num pre-hashes (currently 65536):
 // * Affects how many times the same global memory buffer can be hashed before a new one must be generated
 // Num post-hashes (currently 40000):
@@ -67,7 +70,7 @@
 class sigma_context
 {
 public:
-    sigma_context(uint32_t argonRoundCost_, uint64_t argonMemoryCostKb_, uint64_t arena_size_kb, uint64_t allocateArenaSizeKb_, uint64_t numHashesPre_, uint64_t numHashesPost_, uint64_t numThreads_, uint64_t numVerifyThreads_, uint64_t numUserVerifyThreads_, uint64_t fastHashSizeBytes_);
+    sigma_context(uint32_t argonArenaRoundCost_, uint32_t argonSlowHashRoundCost_, uint64_t argonMemoryCostKb_, uint64_t arena_size_kb, uint64_t allocateArenaSizeKb_, uint64_t numHashesPre_, uint64_t numHashesPost_, uint64_t numThreads_, uint64_t numVerifyThreads_, uint64_t numUserVerifyThreads_, uint64_t fastHashSizeBytes_);
     void prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeight);
     void benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashes);
     void benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes);
@@ -84,7 +87,8 @@ public:
     uint64_t arenaSizeKb=0;
     uint64_t allocatedArenaSizeKb=0;
     uint64_t argonMemoryCostKb=0;
-    uint64_t argonRoundCost=0;
+    uint64_t argonArenaRoundCost=0;
+    uint64_t argonSlowHashRoundCost=0;
     uint64_t numHashesPre=0;
     uint64_t numHashesPost=0;
     uint64_t fastHashSizeBytes=0;

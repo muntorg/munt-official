@@ -87,14 +87,15 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
     }
 }
 
-sigma_context::sigma_context(uint32_t argonRoundCost_, uint64_t argonMemoryCostKb_, uint64_t arena_size_kb, uint64_t allocateArenaSizeKb_, uint64_t numHashesPre_, uint64_t numHashesPost_, uint64_t numThreads_, uint64_t numVerifyThreads_, uint64_t numUserVerifyThreads_, uint64_t fastHashSizeBytes_)
+sigma_context::sigma_context(uint32_t argonArenaRoundCost_, uint32_t argonSlowHashRoundCost_, uint64_t argonMemoryCostKb_, uint64_t arena_size_kb, uint64_t allocateArenaSizeKb_, uint64_t numHashesPre_, uint64_t numHashesPost_, uint64_t numThreads_, uint64_t numVerifyThreads_, uint64_t numUserVerifyThreads_, uint64_t fastHashSizeBytes_)
 : numThreads(numThreads_)
 , numVerifyThreads(numVerifyThreads_)
 , numUserVerifyThreads(numUserVerifyThreads_)
 , arenaSizeKb(arena_size_kb)
 , allocatedArenaSizeKb(allocateArenaSizeKb_)
 , argonMemoryCostKb(argonMemoryCostKb_)
-, argonRoundCost(argonRoundCost_)
+, argonArenaRoundCost(argonArenaRoundCost_)
+, argonSlowHashRoundCost(argonSlowHashRoundCost_)
 , numHashesPre(numHashesPre_)
 , numHashesPost(numHashesPost_)
 , fastHashSizeBytes(fastHashSizeBytes_)
@@ -126,7 +127,7 @@ void sigma_context::prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeigh
         {
             headerData.nNonce = headerBlockHeight+i;
             argon2_echo_context context;
-            context.t_cost = argonRoundCost;
+            context.t_cost = argonArenaRoundCost;
             context.m_cost = argonMemoryCostKb;
             context.allocated_memory = &arena[(argonMemoryCostKb*1024)*i];                
             context.pwd = (uint8_t*)&headerData.nVersion;
@@ -147,7 +148,7 @@ void sigma_context::benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashe
 {
     uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];
     argon2_echo_context argonContext;
-    argonContext.t_cost = argonRoundCost;
+    argonContext.t_cost = argonSlowHashRoundCost;
     argonContext.m_cost = argonMemoryCostKb;
     argonContext.allocated_memory = hashMem;
     argonContext.pwd = (uint8_t*)&hashData[0];
@@ -212,7 +213,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
             headerData.nPostNonce = 0;
             
             argon2_echo_context argonContext;
-            argonContext.t_cost = argonRoundCost;
+            argonContext.t_cost = argonSlowHashRoundCost;
             argonContext.m_cost = argonMemoryCostKb;
             argonContext.allocated_memory = hashMem;
             argonContext.pwd = (uint8_t*)&headerData.nVersion;
@@ -290,7 +291,6 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                             LogPrintf("pseudorandomnonce1[%d] pseudorandomalg1[%d] fasthashoffset1[%d] arenaoffset1[%d]\n", nPseudoRandomNonce1, nPseudoRandomAlg1, nFastHashOffset1, (nPseudoRandomNonce1*arenaChunkSizeBytes)+nFastHashOffset1);
                             LogPrintf("pseudorandomnonce2[%d] pseudorandomalg2[%d] fasthashoffset2[%d] arenaoffset2[%d]\n", nPseudoRandomNonce2, nPseudoRandomAlg2, nFastHashOffset2, (nPseudoRandomNonce2*arenaChunkSizeBytes)+nFastHashOffset2);
                             LogPrintf("pre [%d] post [%d] nversion [%d] nbits [%d] ntime [%d]\n", headerData.nPreNonce, headerData.nPostNonce, headerData.nVersion, headerData.nBits, headerData.nTime);
-                            exit(-1);
                             #endif
                             ++blockCounter;
                         }
@@ -321,7 +321,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
     headerData.nPostNonce = 0;
     
     argon2_echo_context argonContext;
-    argonContext.t_cost = argonRoundCost;
+    argonContext.t_cost = argonSlowHashRoundCost;
     argonContext.m_cost = argonMemoryCostKb;
     argonContext.allocated_memory = hashMem;
     argonContext.pwd = (uint8_t*)&headerData.nVersion;
@@ -361,7 +361,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
     {
         headerData.nNonce = nBlockHeight+nArenaMemoryIndex1;
         argon2_echo_context context;
-        context.t_cost = argonRoundCost;
+        context.t_cost = argonArenaRoundCost;
         context.m_cost = argonMemoryCostKb;
         context.allocated_memory =  (uint8_t*)malloc(argonMemoryCostKb*1024);
         context.pwd = (uint8_t*)&headerData.nVersion;
