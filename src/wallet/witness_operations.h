@@ -82,11 +82,20 @@ enum class WitnessStatus {
 
 CGetWitnessInfo GetWitnessInfoWrapper();
 
-/** Get account (status, total weight, account weight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx)
+struct CWitnessAccountStatus
+{
+    WitnessStatus status;
+    uint64_t networkWeight;
+    uint64_t accountWeight;
+    bool hasScriptLegacyOutput;
+    bool hasUnconfirmedWittnessTx;
+};
+
+/** Get account witness status and accompanying details
  * hasScriptLegacyOutput iff any of the outputs is CTxOutType::ScriptLegacyOutput
  * hasUnconfirmedWittnessTx iff unconfirmed witness tx for the account (not actually checked for witness type, see implementation note)
 */
-std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
+CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
 
 bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
 std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);

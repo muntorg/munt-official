@@ -539,7 +539,7 @@ void EnsureMatchingWitnessCharacteristics(const std::vector<std::tuple<CTxOut, u
     }
 }
 
-std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
 {
     WitnessStatus status;
 
@@ -592,11 +592,15 @@ std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(C
 
     bool hasScriptLegacyOutput = std::any_of(accountItems.begin(), accountItems.end(), [](const RouletteItem& ri){ return ri.coin.out.GetType() == CTxOutType::ScriptLegacyOutput; });
 
-    return std::tuple(status,
-                      witnessInfo.nTotalWeightRaw,
-                      isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), 0, [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : 0,
-                      hasScriptLegacyOutput,
-                      hasUnconfirmedWittnessTx);
+    CWitnessAccountStatus result {
+        status,
+        witnessInfo.nTotalWeightRaw,
+        isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : uint64_t(0),
+        hasScriptLegacyOutput,
+        hasUnconfirmedWittnessTx
+    };
+
+    return result;
 }
 
 void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& redistributionAmounts, std::string* pTxid, CAmount* pFee)

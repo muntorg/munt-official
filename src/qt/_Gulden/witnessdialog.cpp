@@ -782,9 +782,9 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
         ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
         const auto witnessInfo = GetWitnessInfoWrapper();
-        auto [witnessStatus, nTotalNetworkWeight, nOurWeight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx] = AccountWitnessStatus(pactiveWallet, forAccount, witnessInfo);
+        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, witnessInfo);
         if (pWitnessStatus != nullptr)
-            *pWitnessStatus = witnessStatus;
+            *pWitnessStatus = accountStatus.status;
 
         //Witness only witness account skips all the fancy states for now and just always shows the statistics page
         if (forAccount->m_Type == WitnessOnlyWitnessAccount)
@@ -793,7 +793,7 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
             stateWithdrawEarningsButton = true;
         }
         else {
-            switch (witnessStatus) {
+            switch (accountStatus.status) {
             case WitnessStatus::Empty:
                 computedWidgetIndex = WitnessDialogStates::EMPTY;
                 break;
@@ -816,18 +816,20 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
 
             bool hasSpendableBalance = pactiveWallet->GetBalance(forAccount, false, false, true) > 0;
 
-            stateEmptyWitnessButton = witnessStatus == WitnessStatus::Ended && !hasUnconfirmedWittnessTx;
-            stateWithdrawEarningsButton = hasSpendableBalance && witnessStatus == WitnessStatus::Witnessing;
-            stateWithdrawEarningsButton2 = hasSpendableBalance && witnessStatus == WitnessStatus::Expired;
-            stateRenewWitnessButton = witnessStatus == WitnessStatus::Expired && !hasUnconfirmedWittnessTx;
-            stateUpgradeButton = witnessStatus == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && hasScriptLegacyOutput && !hasUnconfirmedWittnessTx;
-            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (witnessStatus == WitnessStatus::Witnessing || witnessStatus == WitnessStatus::Expired) && !hasUnconfirmedWittnessTx;
-            stateOptimizeButton = witnessStatus == WitnessStatus::Witnessing && !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
+            stateEmptyWitnessButton = accountStatus.status == WitnessStatus::Ended && !accountStatus.hasUnconfirmedWittnessTx;
+            stateWithdrawEarningsButton = hasSpendableBalance && accountStatus.status == WitnessStatus::Witnessing;
+            stateWithdrawEarningsButton2 = hasSpendableBalance && accountStatus.status == WitnessStatus::Expired;
+            stateRenewWitnessButton = accountStatus.status == WitnessStatus::Expired && !accountStatus.hasUnconfirmedWittnessTx;
+            stateUpgradeButton = accountStatus.status == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
+            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (accountStatus.status == WitnessStatus::Witnessing || accountStatus.status == WitnessStatus::Expired) && !accountStatus.hasUnconfirmedWittnessTx;
+            stateOptimizeButton = accountStatus.status == WitnessStatus::Witnessing && !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
 
             setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
 
-            if (computedWidgetIndex == WitnessDialogStates::STATISTICS)
-                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
+            if (computedWidgetIndex == WitnessDialogStates::STATISTICS) {
+                const auto witnessInfoForAccount = GetWitnessInfoForAccount(forAccount, accountStatus.networkWeight, accountStatus.accountWeight);
+                plotGraphForAccount(witnessInfoForAccount);
+            }
         }
 
     }
