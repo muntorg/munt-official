@@ -26,321 +26,277 @@
 // Only x86 family CPUs have AES-NI
 #ifdef ARCH_CPU_X86_FAMILY
 
-#define tos(a)    #a
-#define tostr(a)  tos(a)
-
 #define T8(x) ((x) & 0xff)
-
-#define rev_reg_0321(j){\
-        asm ("pshufb xmm" tostr(j) ", SHAVITE_REVERSE[rip]");\
-}
-
-#define replace_aes(i, j){\
-        asm ("aesenc xmm" tostr(i) ", xmm" tostr(j) "");\
-}
 
 /* Encrypts the plaintext pt[] using the key message[], salt[],      */
 /* and counter[], to produce the ciphertext ct[]                     */
 
-__attribute__ ((aligned (16))) unsigned int SHAVITE_MESS[16];
-__attribute__ ((aligned (16))) unsigned char SHAVITE_PTXT[8*4];
-__attribute__ ((aligned (16))) unsigned int SHAVITE_CNTS[4] = {0,0,0,0}; 
-__attribute__ ((aligned (16))) unsigned int SHAVITE_REVERSE[4] = {0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100 };
-__attribute__ ((aligned (16))) unsigned int SHAVITE256_XOR2[4] = {0x0, 0xFFFFFFFF, 0x0, 0x0};
-__attribute__ ((aligned (16))) unsigned int SHAVITE256_XOR3[4] = {0x0, 0x0, 0xFFFFFFFF, 0x0};
-__attribute__ ((aligned (16))) unsigned int SHAVITE256_XOR4[4] = {0x0, 0x0, 0x0, 0xFFFFFFFF};
+__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE_MESS[16];
+__attribute__ ((aligned (16))) thread_local unsigned char SHAVITE_PTXT[8*4];
+__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE_CNTS[4] = {0,0,0,0}; 
+__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE_REVERSE[4] = {0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100 };
+__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE256_XOR2[4] = {0x0, 0xFFFFFFFF, 0x0, 0x0};
+__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE256_XOR3[4] = {0x0, 0x0, 0xFFFFFFFF, 0x0};
+__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE256_XOR4[4] = {0x0, 0x0, 0x0, 0xFFFFFFFF};
 
 
-#define mixing() do {\
-   asm("movaps  xmm11, xmm15");\
-   asm("movaps  xmm10, xmm14");\
-   asm("movaps  xmm9,  xmm13");\
-   asm("movaps  xmm8,  xmm12");\
-\
-   asm("movaps  xmm6,  xmm11");\
-   asm("psrldq  xmm6,  4");\
-   asm("pxor    xmm8,  xmm6");\
-   asm("movaps  xmm6,  xmm8");\
-   asm("pslldq  xmm6,  12");\
-   asm("pxor    xmm8,  xmm6");\
-\
-   asm("movaps  xmm7,  xmm8");\
-   asm("psrldq  xmm7,  4");\
-   asm("pxor    xmm9,  xmm7");\
-   asm("movaps  xmm7,  xmm9");\
-   asm("pslldq  xmm7,  12");\
-   asm("pxor    xmm9,  xmm7");\
-\
-   asm("movaps  xmm6,  xmm9");\
-   asm("psrldq  xmm6,  4");\
-   asm("pxor    xmm10, xmm6");\
-   asm("movaps  xmm6,  xmm10");\
-   asm("pslldq  xmm6,  12");\
-   asm("pxor    xmm10, xmm6");\
-\
-   asm("movaps  xmm7,  xmm10");\
-   asm("psrldq  xmm7,  4");\
-   asm("pxor    xmm11, xmm7");\
-   asm("movaps  xmm7,  xmm11");\
-   asm("pslldq  xmm7,  12");\
-   asm("pxor    xmm11, xmm7");\
-} while(0);
+#define PERFORM_MIXING        \
+   "movaps  xmm11, xmm15\n\t" \
+   "movaps  xmm10, xmm14\n\t" \
+   "movaps  xmm9,  xmm13\n\t" \
+   "movaps  xmm8,  xmm12\n\t" \
+                              \
+   "movaps  xmm6,  xmm11\n\t" \
+   "psrldq  xmm6,  4\n\t"     \
+   "pxor    xmm8,  xmm6\n\t"  \
+   "movaps  xmm6,  xmm8\n\t"  \
+   "pslldq  xmm6,  12\n\t"    \
+   "pxor    xmm8,  xmm6\n\t"  \
+                              \
+   "movaps  xmm7,  xmm8\n\t"  \
+   "psrldq  xmm7,  4\n\t"     \
+   "pxor    xmm9,  xmm7\n\t"  \
+   "movaps  xmm7,  xmm9\n\t"  \
+   "pslldq  xmm7,  12\n\t"    \
+   "pxor    xmm9,  xmm7\n\t"  \
+                              \
+   "movaps  xmm6,  xmm9\n\t"  \
+   "psrldq  xmm6,  4\n\t"     \
+   "pxor    xmm10, xmm6\n\t"  \
+   "movaps  xmm6,  xmm10\n\t" \
+   "pslldq  xmm6,  12\n\t"    \
+   "pxor    xmm10, xmm6\n\t"  \
+                              \
+   "movaps  xmm7,  xmm10\n\t" \
+   "psrldq  xmm7,  4\n\t"     \
+   "pxor    xmm11, xmm7\n\t"  \
+   "movaps  xmm7,  xmm11\n\t" \
+   "pslldq  xmm7,  12\n\t"    \
+   "pxor    xmm11, xmm7\n\t"
 
 void E256()
 {
    asm (".intel_syntax noprefix");
 
    /* (L,R) = (xmm0,xmm1) */
-   asm ("movaps xmm0, SHAVITE_PTXT[rip]");
-   asm ("movaps xmm1, SHAVITE_PTXT[rip+16]");
-   asm ("movaps xmm3, SHAVITE_CNTS[rip]");
-   asm ("movaps xmm4, SHAVITE256_XOR2[rip]");
-   asm ("pxor   xmm2,  xmm2");
-
+   asm ("movaps xmm0,  %[PTXT] \n\t"
+        "movaps xmm1,  %[PTXT]+16 \n\t"
+        "movaps xmm3,  %[CNTS] \n\t"
+        "movaps xmm4,  %[XOR2_256] \n\t"
+        "pxor   xmm2,  xmm2 \n\t"
    /* init key schedule */
-   asm ("movaps xmm8,  SHAVITE_MESS[rip]");
-   asm ("movaps xmm9,  SHAVITE_MESS[rip+16]");
-   asm ("movaps xmm10, SHAVITE_MESS[rip+32]");
-   asm ("movaps xmm11, SHAVITE_MESS[rip+48]");
-
+        "movaps xmm8,  %[MESS] \n\t"
+        "movaps xmm9,  %[MESS]+16 \n\t"
+        "movaps xmm10, %[MESS]+32 \n\t"
+        "movaps xmm11, %[MESS]+48\n\t" 
    /* xmm8..xmm11 = rk[0..15] */
-
    /* start key schedule */
-   asm ("movaps xmm12, xmm8");
-   asm ("movaps xmm13, xmm9");
-   asm ("movaps xmm14, xmm10");
-   asm ("movaps xmm15, xmm11");
-
-   rev_reg_0321(12);
-   rev_reg_0321(13);
-   rev_reg_0321(14);
-   rev_reg_0321(15);
-   replace_aes(12, 2);
-   replace_aes(13, 2);
-   replace_aes(14, 2);
-   replace_aes(15, 2);
-
-   asm ("pxor   xmm12, xmm3");
-   asm ("pxor   xmm12, xmm4");
-   asm ("movaps xmm4, SHAVITE256_XOR3[rip]");
-   asm ("pxor   xmm12, xmm11");
-   asm ("pxor   xmm13, xmm12");
-   asm ("pxor   xmm14, xmm13");
-   asm ("pxor   xmm15, xmm14");
+        "movaps xmm12, xmm8\n\t"
+        "movaps xmm13, xmm9\n\t"
+        "movaps xmm14, xmm10\n\t"
+        "movaps xmm15, xmm11\n\t"
+        "pshufb xmm12, %[REV]\n\t"
+        "pshufb xmm13, %[REV]\n\t"
+        "pshufb xmm14, %[REV]\n\t"
+        "pshufb xmm15, %[REV]\n\t"
+        "aesenc xmm12, xmm2\n\t"
+        "aesenc xmm13, xmm2\n\t"
+        "aesenc xmm14, xmm2\n\t"
+        "aesenc xmm15, xmm2\n\t"
+        "pxor   xmm12, xmm3\n\t"
+        "pxor   xmm12, xmm4\n\t"
+        "movaps xmm4,  %[XOR3_256]\n\t"
+        "pxor   xmm12, xmm11\n\t"
+        "pxor   xmm13, xmm12\n\t"
+        "pxor   xmm14, xmm13\n\t"
+        "pxor   xmm15, xmm14\n\t"
    /* xmm12..xmm15 = rk[16..31] */
-   
    /* F3 - first round */
-
-   asm ("movaps xmm6,  xmm8");
-   asm ("pxor   xmm8,  xmm1");
-   replace_aes(8, 9);
-   replace_aes(8, 10);
-   replace_aes(8, 2);
-   asm ("pxor   xmm0,  xmm8");
-   asm ("movaps xmm8,  xmm6");
-   
-   /* F3 - second round */
-
-   asm ("movaps xmm6,  xmm11");
-   asm ("pxor   xmm11, xmm0");
-   replace_aes(11, 12);
-   replace_aes(11, 13);
-   replace_aes(11, 2);
-   asm ("pxor   xmm1,  xmm11");
-   asm ("movaps xmm11,  xmm6");
-
-   /* key schedule */
-   mixing();
-
-   /* xmm8..xmm11 - rk[32..47] */
-
-   /* F3 - third round */
-   asm ("movaps xmm6, xmm14");
-   asm ("pxor   xmm14, xmm1");
-   replace_aes(14, 15);
-   replace_aes(14, 8);
-   replace_aes(14, 2);
-   asm ("pxor   xmm0,  xmm14");
-   asm ("movaps xmm14,  xmm6");
-
-   /* key schedule */
-
-   asm ("pshufd xmm3,  xmm3,135");
-
-   asm ("movaps xmm12, xmm8");
-   asm ("movaps xmm13, xmm9");
-   asm ("movaps xmm14, xmm10");
-   asm ("movaps xmm15, xmm11");
-   rev_reg_0321(12);
-   rev_reg_0321(13);
-   rev_reg_0321(14);
-   rev_reg_0321(15);
-   replace_aes(12, 2);
-   replace_aes(13, 2);
-   replace_aes(14, 2);
-   replace_aes(15, 2);
-   
-   asm ("pxor   xmm12, xmm11");
-   asm ("pxor   xmm14, xmm3");
-   asm ("pxor   xmm14, xmm4");
-   asm ("movaps xmm4, SHAVITE256_XOR4[rip]");
-   asm ("pxor   xmm13, xmm12");
-   asm ("pxor   xmm14, xmm13");
-   asm ("pxor   xmm15, xmm14");
-   
-   /* xmm12..xmm15 - rk[48..63] */
-
-   /* F3 - fourth round */
-   asm ("movaps xmm6, xmm9");
-   asm ("pxor   xmm9, xmm0");
-   replace_aes(9, 10);
-   replace_aes(9, 11);
-   replace_aes(9, 2);
-   asm ("pxor   xmm1,  xmm9");
-   asm ("movaps xmm9,  xmm6");
-
-   /* key schedule */
-   mixing();
-   /* xmm8..xmm11 = rk[64..79] */
-
-   /* F3  - fifth round */
-   asm ("movaps xmm6,  xmm12");
-   asm ("pxor   xmm12,  xmm1");
-   replace_aes(12, 13);
-   replace_aes(12, 14);
-   replace_aes(12, 2);
-   asm ("pxor   xmm0,  xmm12");
-   asm ("movaps xmm12,  xmm6");
-   
-   /* F3 - sixth round */
-   asm ("movaps xmm6,  xmm15");
-   asm ("pxor   xmm15, xmm0");
-   replace_aes(15, 8);
-   replace_aes(15, 9);
-   replace_aes(15, 2);
-   asm ("pxor   xmm1,  xmm15");
-   asm ("movaps xmm15,  xmm6");
-
-   /* key schedule */
-   asm ("pshufd xmm3,  xmm3, 147");
-
-   asm ("movaps xmm12, xmm8");
-   asm ("movaps xmm13, xmm9");
-   asm ("movaps xmm14, xmm10");
-   asm ("movaps xmm15, xmm11");
-   rev_reg_0321(12);
-   rev_reg_0321(13);
-   rev_reg_0321(14);
-   rev_reg_0321(15);
-   replace_aes(12, 2);
-   replace_aes(13, 2);
-   replace_aes(14, 2);
-   replace_aes(15, 2);
-   asm ("pxor   xmm12, xmm11");
-   asm ("pxor   xmm13, xmm3");
-   asm ("pxor   xmm13, xmm4");
-   asm ("pxor   xmm13, xmm12");
-   asm ("pxor   xmm14, xmm13");
-   asm ("pxor   xmm15, xmm14");
-
-   /* xmm12..xmm15 = rk[80..95] */
-
-   /* F3 - seventh round */
-   asm ("movaps xmm6,  xmm10");
-   asm ("pxor   xmm10,  xmm1");
-   replace_aes(10, 11);
-   replace_aes(10, 12);
-   replace_aes(10, 2);
-   asm ("pxor   xmm0,  xmm10");
-   asm ("movaps xmm10,  xmm6");
-
-   /* key schedule */
-   mixing();
-
-   /* xmm8..xmm11 = rk[96..111] */
-
-   /* F3 - eigth round */
-   asm ("movaps xmm6, xmm13");
-   asm ("pxor   xmm13, xmm0");
-   replace_aes(13, 14);
-   replace_aes(13, 15);
-   replace_aes(13, 2);
-   asm ("pxor   xmm1,  xmm13");
-   asm ("movaps xmm13,  xmm6");
-
-
-   /* key schedule */
-   asm ("pshufd xmm3,  xmm3, 135");
-
-   asm ("movaps xmm12, xmm8");
-   asm ("movaps xmm13, xmm9");
-   asm ("movaps xmm14, xmm10");
-   asm ("movaps xmm15, xmm11");
-   rev_reg_0321(12);
-   rev_reg_0321(13);
-   rev_reg_0321(14);
-   rev_reg_0321(15);
-   replace_aes(12, 2);
-   replace_aes(13, 2);
-   replace_aes(14, 2);
-   replace_aes(15, 2);
-   asm ("pxor   xmm12, xmm11");
-   asm ("pxor   xmm15, xmm3");
-   asm ("pxor   xmm15, xmm4");
-   asm ("pxor   xmm13, xmm12");
-   asm ("pxor   xmm14, xmm13");
-   asm ("pxor   xmm15, xmm14");
-
-   /* xmm12..xmm15 = rk[112..127] */
-   
-   /* F3 - ninth round */
-   asm ("movaps xmm6,  xmm8");
-   asm ("pxor   xmm8,  xmm1");
-   replace_aes(8, 9);
-   replace_aes(8, 10);
-   replace_aes(8, 2);
-   asm ("pxor   xmm0,  xmm8");
-   asm ("movaps xmm8,  xmm6");
-   /* F3 - tenth round */
-   asm ("movaps xmm6,  xmm11");
-   asm ("pxor   xmm11, xmm0");
-   replace_aes(11, 12);
-   replace_aes(11, 13);
-   replace_aes(11, 2);
-   asm ("pxor   xmm1,  xmm11");
-   asm ("movaps xmm11,  xmm6");
-
-   /* key schedule */
-   mixing();
-
-   /* xmm8..xmm11 = rk[128..143] */
-
-   /* F3 - eleventh round */
-   asm ("movaps xmm6,  xmm14");
-   asm ("pxor   xmm14,  xmm1");
-   replace_aes(14, 15);
-   replace_aes(14, 8);
-   replace_aes(14, 2);
-   asm ("pxor   xmm0,  xmm14");
-   asm ("movaps xmm14,  xmm6");
-
+        "movaps xmm6,  xmm8\n\t"
+        "pxor   xmm8,  xmm1\n\t"
+        "aesenc xmm8,  xmm9\n\t"
+        "aesenc xmm8,  xmm10\n\t"
+        "aesenc xmm8,  xmm2\n\t"
+        "pxor   xmm0,  xmm8\n\t"
+        "movaps xmm8,  xmm6\n\t"
+    /* F3 - second round */
+        "movaps xmm6,  xmm11\n\t"
+        "pxor   xmm11, xmm0\n\t"
+        "aesenc xmm11, xmm12\n\t"
+        "aesenc xmm11, xmm13\n\t"
+        "aesenc xmm11, xmm2\n\t"
+        "pxor   xmm1,  xmm11\n\t"
+        "movaps xmm11, xmm6\n\t"
+    /* key schedule */
+        PERFORM_MIXING
+    /* xmm8..xmm11 - rk[32..47] */
+    /* F3 - third round */
+        "movaps xmm6,  xmm14\n\t"
+        "pxor   xmm14, xmm1\n\t"
+        "aesenc xmm14, xmm15\n\t"
+        "aesenc xmm14, xmm8\n\t"
+        "aesenc xmm14, xmm2\n\t"
+        "pxor   xmm0,  xmm14\n\t"
+        "movaps xmm14, xmm6\n\t"
+    /* key schedule */
+        "pshufd xmm3,  xmm3,135\n\t"
+        "movaps xmm12, xmm8\n\t"
+        "movaps xmm13, xmm9\n\t"
+        "movaps xmm14, xmm10\n\t"
+        "movaps xmm15, xmm11\n\t"
+        "pshufb xmm12, %[REV]\n\t"
+        "pshufb xmm13, %[REV]\n\t"
+        "pshufb xmm14, %[REV]\n\t"
+        "pshufb xmm15, %[REV]\n\t"
+        "aesenc xmm12, xmm2\n\t"
+        "aesenc xmm13, xmm2\n\t"
+        "aesenc xmm14, xmm2\n\t"
+        "aesenc xmm15, xmm2\n\t"
+        "pxor   xmm12, xmm11\n\t"
+        "pxor   xmm14, xmm3\n\t"
+        "pxor   xmm14, xmm4\n\t"
+        "movaps xmm4,  %[XOR4_256]\n\t"
+        "pxor   xmm13, xmm12\n\t"
+        "pxor   xmm14, xmm13\n\t"
+        "pxor   xmm15, xmm14\n\t"
+    /* xmm12..xmm15 - rk[48..63] */
+    /* F3 - fourth round */
+        "movaps xmm6,  xmm9\n\t"
+        "pxor   xmm9,  xmm0\n\t"
+        "aesenc xmm9,  xmm10\n\t"
+        "aesenc xmm9,  xmm11\n\t"
+        "aesenc xmm9,  xmm2\n\t"
+        "pxor   xmm1,  xmm9\n\t"
+        "movaps xmm9,  xmm6\n\t"
+    /* key schedule */
+        PERFORM_MIXING
+    /* xmm8..xmm11 = rk[64..79] */
+    /* F3  - fifth round */
+        "movaps xmm6,  xmm12\n\t"
+        "pxor   xmm12, xmm1\n\t"
+        "aesenc xmm12, xmm13\n\t"
+        "aesenc xmm12, xmm14\n\t"
+        "aesenc xmm12, xmm2\n\t"
+        "pxor   xmm0,  xmm12\n\t"
+        "movaps xmm12, xmm6\n\t"
+    /* F3 - sixth round */
+        "movaps xmm6,  xmm15\n\t"
+        "pxor   xmm15, xmm0\n\t"
+        "aesenc xmm15, xmm8\n\t"
+        "aesenc xmm15, xmm9\n\t"
+        "aesenc xmm15, xmm2\n\t"
+        "pxor   xmm1,  xmm15\n\t"
+        "movaps xmm15, xmm6\n\t"
+    /* key schedule */
+        "pshufd xmm3,  xmm3, 147\n\t"
+        "movaps xmm12, xmm8\n\t"
+        "movaps xmm13, xmm9\n\t"
+        "movaps xmm14, xmm10\n\t"
+        "movaps xmm15, xmm11\n\t"
+        "pshufb xmm12, %[REV]\n\t"
+        "pshufb xmm13, %[REV]\n\t"
+        "pshufb xmm14, %[REV]\n\t"
+        "pshufb xmm15, %[REV]\n\t"
+        "aesenc xmm12, xmm2\n\t"
+        "aesenc xmm13, xmm2\n\t"
+        "aesenc xmm14, xmm2\n\t"
+        "aesenc xmm15, xmm2\n\t"
+        "pxor   xmm12, xmm11\n\t"
+        "pxor   xmm13, xmm3\n\t"
+        "pxor   xmm13, xmm4\n\t"
+        "pxor   xmm13, xmm12\n\t"
+        "pxor   xmm14, xmm13\n\t"
+        "pxor   xmm15, xmm14\n\t"
+    /* xmm12..xmm15 = rk[80..95] */
+    /* F3 - seventh round */
+        "movaps xmm6,  xmm10\n\t"
+        "pxor   xmm10, xmm1\n\t"
+        "aesenc xmm10, xmm11\n\t"
+        "aesenc xmm10, xmm12\n\t"
+        "aesenc xmm10, xmm2\n\t"
+        "pxor   xmm0,  xmm10\n\t"
+        "movaps xmm10, xmm6\n\t"
+    /* key schedule */
+        PERFORM_MIXING
+    /* xmm8..xmm11 = rk[96..111] */
+    /* F3 - eigth round */
+        "movaps xmm6,  xmm13\n\t"
+        "pxor   xmm13, xmm0\n\t"
+        "aesenc xmm13, xmm14\n\t"
+        "aesenc xmm13, xmm15\n\t"
+        "aesenc xmm13, xmm2\n\t"
+        "pxor   xmm1,  xmm13\n\t"
+        "movaps xmm13, xmm6\n\t"
+    /* key schedule */
+        "pshufd xmm3,  xmm3, 135\n\t"
+        "movaps xmm12, xmm8\n\t"
+        "movaps xmm13, xmm9\n\t"
+        "movaps xmm14, xmm10\n\t"
+        "movaps xmm15, xmm11\n\t"
+        "pshufb xmm12, %[REV]\n\t"
+        "pshufb xmm13, %[REV]\n\t"
+        "pshufb xmm14, %[REV]\n\t"
+        "pshufb xmm15, %[REV]\n\t"
+        "aesenc xmm12, xmm2\n\t"
+        "aesenc xmm13, xmm2\n\t"
+        "aesenc xmm14, xmm2\n\t"
+        "aesenc xmm15, xmm2\n\t"
+        "pxor   xmm12, xmm11\n\t"
+        "pxor   xmm15, xmm3\n\t"
+        "pxor   xmm15, xmm4\n\t"
+        "pxor   xmm13, xmm12\n\t"
+        "pxor   xmm14, xmm13\n\t"
+        "pxor   xmm15, xmm14\n\t"
+    /* xmm12..xmm15 = rk[112..127] */
+    /* F3 - ninth round */
+        "movaps xmm6,  xmm8\n\t"
+        "pxor   xmm8,  xmm1\n\t"
+        "aesenc xmm8,  xmm9\n\t"
+        "aesenc xmm8,  xmm10\n\t"
+        "aesenc xmm8,  xmm2\n\t"
+        "pxor   xmm0,  xmm8\n\t"
+        "movaps xmm8,  xmm6\n\t"
+    /* F3 - tenth round */
+        "movaps xmm6,  xmm11\n\t"
+        "pxor   xmm11, xmm0\n\t"
+        "aesenc xmm11, xmm12\n\t"
+        "aesenc xmm11, xmm13\n\t"
+        "aesenc xmm11, xmm2\n\t"
+        "pxor   xmm1,  xmm11\n\t"
+        "movaps xmm11, xmm6\n\t"
+    /* key schedule */
+        PERFORM_MIXING
+    /* xmm8..xmm11 = rk[128..143] */
+    /* F3 - eleventh round */
+        "movaps xmm6,  xmm14\n\t"
+        "pxor   xmm14, xmm1\n\t"
+        "aesenc xmm14, xmm15\n\t"
+        "aesenc xmm14, xmm8\n\t"
+        "aesenc xmm14, xmm2\n\t"
+        "pxor   xmm0,  xmm14\n\t"
+        "movaps xmm14, xmm6\n\t"
    /* F3 - twelfth round */
-   asm ("movaps xmm6,  xmm9");
-   asm ("pxor   xmm9, xmm0");
-   replace_aes(9, 10);
-   replace_aes(9, 11);
-   replace_aes(9, 2);
-   asm ("pxor   xmm1,  xmm9");
-   asm ("movaps xmm9,  xmm6");
-
-
+        "movaps xmm6,  xmm9\n\t"
+        "pxor   xmm9,  xmm0\n\t"
+        "aesenc xmm9,  xmm10\n\t"
+        "aesenc xmm9,  xmm11\n\t"
+        "aesenc xmm9,  xmm2\n\t"
+        "pxor   xmm1,  xmm9\n\t"
+        "movaps xmm9,  xmm6\n\t"
    /* feedforward */
-   asm ("pxor   xmm0,  SHAVITE_PTXT[rip]");
-   asm ("pxor   xmm1,  SHAVITE_PTXT[rip+16]");
-   asm ("movaps SHAVITE_PTXT[rip],    xmm0");
-   asm ("movaps SHAVITE_PTXT[rip+16], xmm1");
-   asm (".att_syntax noprefix");
-
+        "pxor   xmm0,  %[PTXT]\n\t"
+        "pxor   xmm1,  %[PTXT]+16\n\t"
+        "movaps %[PTXT], xmm0\n\t"
+        "movaps %[PTXT]+16, xmm1\n\t"
+        ".att_syntax noprefix"
+        : [MESS]     "+m" (SHAVITE_MESS)
+        , [CNTS]     "+m" (SHAVITE_CNTS) 
+        , [PTXT]     "+m" (SHAVITE_PTXT)
+        , [XOR2_256] "+m" (SHAVITE256_XOR2)
+        , [XOR3_256] "+m" (SHAVITE256_XOR3)
+        , [XOR4_256] "+m" (SHAVITE256_XOR4)
+        , [REV]      "+m" (SHAVITE_REVERSE)
+   );
    return;
 }
 
