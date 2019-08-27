@@ -57,7 +57,7 @@
  * is commented out afterwards.
  */
 
-#define AES_BIG_ENDIAN   0
+/*#define AES_BIG_ENDIAN   0
 #include "aes_helper.c"
 
 static const sph_u32 IV224[] = {
@@ -90,12 +90,12 @@ static const sph_u32 IV512[] = {
         sph_u32 t2 = (x2); \
         sph_u32 t3 = (x3); \
         AES_ROUND_NOKEY_LE(t0, t1, t2, t3, x0, x1, x2, x3); \
-    } while (0)
+    } while (0)*/
 
-/*
- * This is the code needed to match the "reference implementation" as
- * published on Nov 23rd, 2009, instead of the published specification.
- * 
+///*
+ //* This is the code needed to match the "reference implementation" as
+ //* published on Nov 23rd, 2009, instead of the published specification.
+ //* 
 
 #define AES_BIG_ENDIAN   1
 #include "aes_helper.c"
@@ -132,7 +132,6 @@ static const sph_u32 IV512[] = {
         AES_ROUND_NOKEY_BE(t0, t1, t2, t3, x0, x1, x2, x3); \
     } while (0)
 
- */
 
 #define KEY_EXPAND_ELT(k0, k1, k2, k3)   do { \
         sph_u32 kt; \
