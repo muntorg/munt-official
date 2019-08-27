@@ -59,9 +59,28 @@ void selectLargesHashUnit(double& nSustainedHashesPerSecond, std::string& label)
         nSustainedHashesPerSecond /= 1000.0;
     }
 }
+
+double calculateSustainedHashrateForTimePeriod(uint64_t maxHashesPre, uint64_t maxHashesPost, double nHalfHashAverage, uint64_t nArenaSetuptime, uint64_t nTimePeriodSeconds)
+{
+    // We need to recalculate the arenas every time we exhaust the hash space, or when a new block comes in, whichever comes first.
+    // Block target is 2.5 minutes, so we assume that the maximum time we can mine in between arena calculations is 3 minutes,
+    // or the full hash space, whichever is lower.
+    uint64_t maxHalfHashes = maxHashesPre*maxHashesPost;
+    maxHalfHashes = std::min(maxHalfHashes, (uint64_t)((nTimePeriodSeconds*1000000)/nHalfHashAverage));
+    
+    // The total time is then the arena setup time plus the time that calculating maxHalfHashes would take (all in microseconds)
+    uint64_t nTimeTotal = nArenaSetuptime + (maxHalfHashes*nHalfHashAverage);
+    
+    // Finally we can get a sustained hashrate by calculating the time per hash and then calculating how many hashes per second.
+    double nSustainedMicrosecondsPerHash = ((double)nTimeTotal / (double)maxHalfHashes);
+    double nSustainedHashesPerMicrosecond = (1/nSustainedMicrosecondsPerHash);
+    return nSustainedHashesPerMicrosecond * 1000000;
+}
     
 int main(int argc, char** argv)
 {
+    srand(GetTimeMicros());
+
     // SIGMA paramaters (centrally set by network)
     uint64_t cpuCostRounds = 10;
     uint64_t memCostGb = 4;   
@@ -98,8 +117,17 @@ int main(int argc, char** argv)
     
     
     variables_map vm;
-    store(parse_command_line(argc, argv, desc), vm);
-    notify(vm);    
+    try
+    {
+        store(parse_command_line(argc, argv, desc), vm);
+        notify(vm);    
+    }
+    catch (std::exception& e)
+    {
+        LogPrintf("%s\n", e.what());
+        LogPrintf("%s", desc);
+        return 1;
+    }
 
     if (vm.size() == 0)
     {
@@ -419,28 +447,25 @@ int main(int argc, char** argv)
         LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per half-hash[%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), nHalfHashAverage, ((GetTimeMicros() - nStart)) / (double)hashCounter);
         
         
-        // We need to recalculate the arenas every time we exhaust the hash space, or when a new block comes in, whichever comes first.
-        // Block target is 2.5 minutes, so we assume that the maximum time we can mine in between arena calculations is 3 minutes,
-        // or the full hash space, whichever is lower.
-        uint64_t maxHalfHashes = maxHashesPre*maxHashesPost;
-        maxHalfHashes = std::min(maxHalfHashes, (uint64_t)((150*1000000)/nHalfHashAverage));
-        
-        // The total time is then the arena setup time plus the time that calculating maxHalfHashes would take (all in microseconds)
-        uint64_t nTimeTotal = nArenaSetuptime + (maxHalfHashes*nHalfHashAverage);
-        
-        // Finally we can get a sustained hashrate by calculating the time per hash and then calculating how many hashes per second.
-        double nSustainedMicrosecondsPerHash = ((double)nTimeTotal / (double)maxHalfHashes);
-        double nSustainedHashesPerMicrosecond = (1/nSustainedMicrosecondsPerHash);
-        double nSustainedHashesPerSecond = nSustainedHashesPerMicrosecond * 1000000;
+        double nSustainedHashesPerSecond = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 150);
+        double nSustainedHashesPerSecond30s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 30);
+        double nSustainedHashesPerSecond60s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 60);
         
         // Convert to the largest unit we can so that output is easier to read
-        std::string label = " h";        
-        selectLargesHashUnit(nSustainedHashesPerSecond, label);
+        std::string labelSustained = " h";        
+        selectLargesHashUnit(nSustainedHashesPerSecond, labelSustained);
+        std::string labelSustained30s = " h";        
+        selectLargesHashUnit(nSustainedHashesPerSecond30s, labelSustained30s);
+        std::string labelSustained60s = " h";        
+        selectLargesHashUnit(nSustainedHashesPerSecond60s, labelSustained60s);
         
         // Log a highly noticeable number for users who just want a number to compare without all the gritty details.
-        LogPrintf("\n====================================================");
-        LogPrintf("\n* Estimated sustained hashrate %12.2f %s/s *", nSustainedHashesPerSecond, label);
-        LogPrintf("\n====================================================\n");
+        
+        LogPrintf("\n================================================");
+        LogPrintf("\n* Estimated 30s hashrate %16.2f %s/s *", nSustainedHashesPerSecond30s, labelSustained30s);
+        LogPrintf("\n* Estimated 1m hashrate %17.2f %s/s *", nSustainedHashesPerSecond60s, labelSustained60s);
+        LogPrintf("\n* Estimated sustained hashrate %10.2f %s/s *", nSustainedHashesPerSecond, labelSustained);
+        LogPrintf("\n================================================\n");
     }
     
     uint64_t nMineEnd = GetTimeMicros();
