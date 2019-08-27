@@ -79,8 +79,8 @@ public:
     void setClientModel(ClientModel *clientModel);
     void setModel(WalletModel *model);
 
-    void GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount);
-    void plotGraphForAccount(CAccount* account, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip);
+    WitnessInfoForAccount GetWitnessInfoForAccount(CAccount* forAccount, uint64_t nTotalNetworkWeight, uint64_t nOurWeight) const;
+    void plotGraphForAccount(const WitnessInfoForAccount& witnessInfoForAccount);
 
     void updateAccountIndicators();
 

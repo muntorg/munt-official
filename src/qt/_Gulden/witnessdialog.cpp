@@ -478,8 +478,20 @@ static void AddPointToMapWithAdjustedTimePeriod(std::map<double, CAmount>& point
         pointMap[nXF] += nY;
 }
 
-void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount)
+WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, uint64_t nTotalNetworkWeight, uint64_t nOurWeight) const
 {
+    LOG_QT_METHOD;
+
+    if(!filter || !model)
+        throw std::runtime_error("filter && model required");
+
+    WitnessInfoForAccount infoForAccount;
+
+    infoForAccount.nTotalNetworkWeightTip = nTotalNetworkWeight;
+    infoForAccount.nOurWeight = nOurWeight;
+
+    infoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
+
     std::map<double, CAmount> pointMapForecast; pointMapForecast[0] = 0;
     std::map<double, CAmount> pointMapGenerated;
 
@@ -514,7 +526,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
                         std::string strErrorMessage = "Error in witness dialog, failed to get weight for account";
                         CAlert::Notify(strErrorMessage, true, true);
                         LogPrintf("%s", strErrorMessage.c_str());
-                        return;
+                        throw std::runtime_error(strErrorMessage);
                     }
                     pointMapGenerated[0] = 0;
 
@@ -525,7 +537,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
                     auto walletTxIter = pactiveWallet->mapWallet.find(originHash);
                     if(walletTxIter == pactiveWallet->mapWallet.end())
                     {
-                        return;
+                        throw std::runtime_error("GetWitnessInfoForAccount error lookup wallet tx");
                     }
 
                     for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
@@ -625,26 +637,14 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
     infoForAccount.nEstimatedWitnessBlockPeriod = estimatedWitnessBlockPeriod(infoForAccount.nOurWeight, infoForAccount.nTotalNetworkWeightTip);
     infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(witnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
 
-    return;
+    return infoForAccount;
 }
 
-void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip)
+void WitnessDialog::plotGraphForAccount(const WitnessInfoForAccount& witnessInfoForAccount)
 {
     LOG_QT_METHOD;
 
     DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
-
-    if(!filter || !model)
-        return;
-
-    // Calculate all the account info
-    WitnessInfoForAccount witnessInfoForAccount;
-    {
-        witnessInfoForAccount.nOurWeight = nOurWeight;
-        witnessInfoForAccount.nTotalNetworkWeightTip = nTotalNetworkWeightTip;
-        witnessInfoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
-        GetWitnessInfoForAccount(forAccount, witnessInfoForAccount);
-    }
 
     // Populate graph with info
     {
