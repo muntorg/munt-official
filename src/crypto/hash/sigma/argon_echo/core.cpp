@@ -32,7 +32,7 @@
 #include <pthread.h>
  
 #include <crypto/hash/echo256/echo256_aesni.h>
-#include <crypto/hash/sphlib/sph_echo.h>
+#include <crypto/hash/echo256/sphlib/sph_echo.h>
 
 #ifdef ARCH_CPU_X86_FAMILY
     #define FILL_SEGMENT_OPTIMISED(I, P)                                            \

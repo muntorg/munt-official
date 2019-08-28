@@ -1,8 +1,8 @@
+// File originates from the supercop project
 #ifndef AESROUND_H
 #define AESROUND_H
 
 // Tables of the combined subbytes MixColumns operation
-
 static const unsigned long AESTable0[256] = {
 0xA56363C6U, 0x847C7CF8U, 0x997777EEU, 0x8D7B7BF6U, 0x0DF2F2FFU, 0xBD6B6BD6U, 
 0xB16F6FDEU, 0x54C5C591U, 0x50303060U, 0x03010102U, 0xA96767CEU, 0x7D2B2B56U, 
@@ -187,53 +187,20 @@ static const unsigned long AESTable3[256] = {
 0x7BCBB0B0U, 0xA8FC5454U, 0x6DD6BBBBU, 0x2C3A1616U, 
 };
 
-#define roundAESnokey(_input0, _input1, _input2, _input3,            \
-                    _output0, _output1, _output2, _output3)          \
-{                                                                    \
-  _output0 = AESTable0[_input0 & 0xff ] ^                            \
-             AESTable1[(_input1 >> 8) & 0xff] ^                      \
-             AESTable2[(_input2 >> 16) & 0xff] ^                     \
-             AESTable3[_input3 >> 24];                               \
-                                                                     \
-  _output1 = AESTable0[_input1 & 0xff ] ^                            \
-             AESTable1[(_input2 >> 8) & 0xff] ^                      \
-             AESTable2[(_input3 >> 16) & 0xff] ^                     \
-             AESTable3[_input0 >> 24];                               \
-                                                                     \
-  _output2 = AESTable0[_input2 & 0xff ] ^                            \
-             AESTable1[(_input3 >> 8) & 0xff] ^                      \
-             AESTable2[(_input0 >> 16) & 0xff] ^                     \
-             AESTable3[_input1 >> 24];                               \
-                                                                     \
-  _output3 = AESTable0[_input3 & 0xff ] ^                            \
-             AESTable1[(_input0 >> 8) & 0xff] ^                      \
-             AESTable2[(_input1 >> 16) & 0xff] ^                     \
-             AESTable3[_input2 >> 24];                               \
+#define roundAESnokey(_input0, _input1, _input2, _input3, _output0, _output1, _output2, _output3) \
+{ \
+  _output0 = AESTable0[_input0 & 0xff ] ^ AESTable1[(_input1 >> 8) & 0xff] ^ AESTable2[(_input2 >> 16) & 0xff] ^ AESTable3[_input3 >> 24]; \
+  _output1 = AESTable0[_input1 & 0xff ] ^ AESTable1[(_input2 >> 8) & 0xff] ^ AESTable2[(_input3 >> 16) & 0xff] ^ AESTable3[_input0 >> 24]; \
+  _output2 = AESTable0[_input2 & 0xff ] ^ AESTable1[(_input3 >> 8) & 0xff] ^ AESTable2[(_input0 >> 16) & 0xff] ^ AESTable3[_input1 >> 24]; \
+  _output3 = AESTable0[_input3 & 0xff ] ^ AESTable1[(_input0 >> 8) & 0xff] ^ AESTable2[(_input1 >> 16) & 0xff] ^ AESTable3[_input2 >> 24]; \
 }
 
-#define roundAES(_input0, _input1, _input2, _input3,                 \
-                 _output0, _output1, _output2, _output3,             \
-		 _key0, _key1, _key2, _key3)                         \
-{                                                                    \
-  _output0 = AESTable0[_input0 & 0xff ] ^                            \
-             AESTable1[(_input1 >> 8) & 0xff] ^                      \
-             AESTable2[(_input2 >> 16) & 0xff] ^                     \
-             AESTable3[_input3 >> 24]^_key0;                         \
-                                                                     \
-  _output1 = AESTable0[_input1 & 0xff ] ^                            \
-             AESTable1[(_input2 >> 8) & 0xff] ^                      \
-             AESTable2[(_input3 >> 16) & 0xff] ^                     \
-             AESTable3[_input0 >> 24]^_key1;                         \
-                                                                     \
-  _output2 = AESTable0[_input2 & 0xff ] ^                            \
-             AESTable1[(_input3 >> 8) & 0xff] ^                      \
-             AESTable2[(_input0 >> 16) & 0xff] ^                     \
-             AESTable3[_input1 >> 24]^_key2;                         \
-                                                                     \
-  _output3 = AESTable0[_input3 & 0xff ] ^                            \
-             AESTable1[(_input0 >> 8) & 0xff] ^                      \
-             AESTable2[(_input1 >> 16) & 0xff] ^                     \
-             AESTable3[_input2 >> 24]^_key3;                         \
+#define roundAES(_input0, _input1, _input2, _input3, _output0, _output1, _output2, _output3, _key0, _key1, _key2, _key3) \
+{ \
+  _output0 = AESTable0[_input0 & 0xff ] ^ AESTable1[(_input1 >> 8) & 0xff] ^ AESTable2[(_input2 >> 16) & 0xff] ^ AESTable3[_input3 >> 24]^_key0; \
+  _output1 = AESTable0[_input1 & 0xff ] ^ AESTable1[(_input2 >> 8) & 0xff] ^ AESTable2[(_input3 >> 16) & 0xff] ^ AESTable3[_input0 >> 24]^_key1; \
+  _output2 = AESTable0[_input2 & 0xff ] ^ AESTable1[(_input3 >> 8) & 0xff] ^ AESTable2[(_input0 >> 16) & 0xff] ^ AESTable3[_input1 >> 24]^_key2; \
+  _output3 = AESTable0[_input3 & 0xff ] ^ AESTable1[(_input0 >> 8) & 0xff] ^ AESTable2[(_input1 >> 16) & 0xff] ^ AESTable3[_input2 >> 24]^_key3; \
 }
 
 #endif

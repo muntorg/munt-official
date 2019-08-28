@@ -1,3 +1,13 @@
+// File originates from the supercop project
+// Authors: Eli Biham and Orr Dunkelman
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 #ifndef SHAVITE_REF_256_H
 #define SHAVITE_REF_256_H
 
@@ -209,11 +219,11 @@
    state7^=y3;\
 }
 
-inline void E256_ref(u32 pt[8], u32 ct[8], u32 message[16], u32 counter[2])
+inline void E256_ref(uint32_t pt[8], uint32_t ct[8], uint32_t message[16], uint32_t counter[2])
 {
-    u32 state0,state1,state2,state3,state4,state5,state6,state7,i,j,k;
-    u32 x0,x1,x2,x3,y0,y1,y2,y3;
-    u32 rk[ExpandedMessageSize];
+    uint32_t state0,state1,state2,state3,state4,state5,state6,state7,i,j,k;
+    uint32_t x0,x1,x2,x3,y0,y1,y2,y3;
+    uint32_t rk[ExpandedMessageSize];
 
     state0=pt[0]; 
     state1=pt[1]; 
@@ -254,11 +264,11 @@ inline void E256_ref(u32 pt[8], u32 ct[8], u32 message[16], u32 counter[2])
 }
 
 // The actual compression function C_{256}
-inline void Compress256(const u8 *message_block, u8 *chaining_value, u64 counter)
+inline void Compress256_ref(const uint8_t* message_block, uint8_t* chaining_value, uint64_t counter)
 {    
-    u32 pt[8],ct[8];
-    u32 msg_u32[16];
-    u32 cnt[2];
+    uint32_t pt[8],ct[8];
+    uint32_t msg_u32[16];
+    uint32_t cnt[2];
     int i;
 
     // Translating all the inputs to 32-bit words
@@ -272,8 +282,8 @@ inline void Compress256(const u8 *message_block, u8 *chaining_value, u64 counter
         msg_u32[i]=U8TO32_LITTLE(message_block+4*i);
     }
 
-    cnt[1]=(u32)(counter>>32);
-    cnt[0]=(u32)(counter & 0xFFFFFFFFULL);
+    cnt[1]=(uint32_t)(counter>>32);
+    cnt[0]=(uint32_t)(counter & 0xFFFFFFFFULL);
 
     // Computing the encryption function
     E256_ref(pt, ct, msg_u32, cnt);

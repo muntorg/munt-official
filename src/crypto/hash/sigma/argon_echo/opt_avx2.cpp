@@ -39,6 +39,9 @@
 #ifndef __clang__
 #pragma GCC push_options
 #pragma GCC target("avx2")
+#ifndef DEBUG
+    #pragma GCC optimize ("O3")
+#endif
 #else
 #pragma clang attribute push (__attribute__((target("avx2"))), apply_to=any(function))
 #endif

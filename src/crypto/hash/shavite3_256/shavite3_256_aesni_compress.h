@@ -1,18 +1,9 @@
-/* Modified (October 2010) by Eli Biham and Orr Dunkelman    * 
- * (applying the SHAvite-3 tweak) from:                      */
-
-/*                     compress.h                            */
-
-/*************************************************************
- * Source for Intel AES-NI assembly implementation/emulation *
- * of the compression function of SHAvite-3 256              *
- *                                                           *
- * Authors:  Ryad Benadjila -- Orange Labs                   *
- *           Olivier Billet -- Orange Labs                   *
- *                                                           *
- * June, 2009                                                *
- *************************************************************/
-// File contains modifications by: The Gulden developers
+// File originates from the supercop project
+// Authors: Ryad Benadjila -- Orange Labs, Olivier Billet -- Orange Labs (June 2009(
+// Modified (October 2010): Eli Biham and Orr Dunkelman (applying the SHAvite-3 tweak)
+// Modified (August 2019) Conversion from asm to intrinsic instructions: David Wohlferd (https://stackoverflow.com/questions/57664080/access-thread-local-variable-in-inline-assembly/57684519#57684519)
+//
+// File contains further modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2019 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
@@ -26,308 +17,362 @@
 // Only x86 family CPUs have AES-NI
 #ifdef ARCH_CPU_X86_FAMILY
 
+#ifndef __clang__
+#pragma GCC push_options
+#pragma GCC target("aes,ssse3")
+#ifndef DEBUG
+    #pragma GCC optimize ("O3")
+#endif
+#else
+#pragma clang attribute push (__attribute__((target("aes,ssse3"))), apply_to=any(function))
+#endif
+#include <immintrin.h>
+
 #define T8(x) ((x) & 0xff)
 
-/* Encrypts the plaintext pt[] using the key message[], salt[],      */
-/* and counter[], to produce the ciphertext ct[]                     */
-
-__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE_MESS[16];
-__attribute__ ((aligned (16))) thread_local unsigned char SHAVITE_PTXT[8*4];
-__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE_CNTS[4] = {0,0,0,0}; 
-__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE_REVERSE[4] = {0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100 };
-__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE256_XOR2[4] = {0x0, 0xFFFFFFFF, 0x0, 0x0};
-__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE256_XOR3[4] = {0x0, 0x0, 0xFFFFFFFF, 0x0};
-__attribute__ ((aligned (16))) thread_local unsigned int SHAVITE256_XOR4[4] = {0x0, 0x0, 0x0, 0xFFFFFFFF};
+/// Encrypts the plaintext pt[] using the key message[], and counter[], to produce the ciphertext ct[]
 
 
-#define PERFORM_MIXING        \
-   "movaps  xmm11, xmm15\n\t" \
-   "movaps  xmm10, xmm14\n\t" \
-   "movaps  xmm9,  xmm13\n\t" \
-   "movaps  xmm8,  xmm12\n\t" \
-                              \
-   "movaps  xmm6,  xmm11\n\t" \
-   "psrldq  xmm6,  4\n\t"     \
-   "pxor    xmm8,  xmm6\n\t"  \
-   "movaps  xmm6,  xmm8\n\t"  \
-   "pslldq  xmm6,  12\n\t"    \
-   "pxor    xmm8,  xmm6\n\t"  \
-                              \
-   "movaps  xmm7,  xmm8\n\t"  \
-   "psrldq  xmm7,  4\n\t"     \
-   "pxor    xmm9,  xmm7\n\t"  \
-   "movaps  xmm7,  xmm9\n\t"  \
-   "pslldq  xmm7,  12\n\t"    \
-   "pxor    xmm9,  xmm7\n\t"  \
-                              \
-   "movaps  xmm6,  xmm9\n\t"  \
-   "psrldq  xmm6,  4\n\t"     \
-   "pxor    xmm10, xmm6\n\t"  \
-   "movaps  xmm6,  xmm10\n\t" \
-   "pslldq  xmm6,  12\n\t"    \
-   "pxor    xmm10, xmm6\n\t"  \
-                              \
-   "movaps  xmm7,  xmm10\n\t" \
-   "psrldq  xmm7,  4\n\t"     \
-   "pxor    xmm11, xmm7\n\t"  \
-   "movaps  xmm7,  xmm11\n\t" \
-   "pslldq  xmm7,  12\n\t"    \
-   "pxor    xmm11, xmm7\n\t"
+__attribute__ ((aligned (16))) const unsigned int SHAVITE_REVERSE[4] = {0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100 };
+__attribute__ ((aligned (16))) const unsigned int SHAVITE256_XOR2[4] = {0x0, 0xFFFFFFFF, 0x0, 0x0};
+__attribute__ ((aligned (16))) const unsigned int SHAVITE256_XOR3[4] = {0x0, 0x0, 0xFFFFFFFF, 0x0};
+__attribute__ ((aligned (16))) const unsigned int SHAVITE256_XOR4[4] = {0x0, 0x0, 0x0, 0xFFFFFFFF};
 
-void E256()
+
+#define SHAVITE_MIXING_256_OPT   \
+    x11 = x15;                   \
+    x10 = x14;                   \
+    x9 =  x13;                   \
+    x8 = x12;                    \
+                                 \
+    x6 = x11;                    \
+    x6 = _mm_srli_si128(x6, 4);  \
+    x8 = _mm_xor_si128(x8,  x6); \
+    x6 = x8;                     \
+    x6 = _mm_slli_si128(x6,  12);\
+    x8 = _mm_xor_si128(x8, x6);  \
+                                 \
+    x7 = x8;                     \
+    x7 =  _mm_srli_si128(x7,  4);\
+    x9 = _mm_xor_si128(x9,  x7); \
+    x7 = x9;                     \
+    x7 = _mm_slli_si128(x7, 12); \
+    x9 = _mm_xor_si128(x9, x7);  \
+                                 \
+    x6 = x9;                     \
+    x6 =  _mm_srli_si128(x6, 4); \
+    x10 = _mm_xor_si128(x10, x6);\
+    x6 = x10;                    \
+    x6 = _mm_slli_si128(x6,  12);\
+    x10 = _mm_xor_si128(x10, x6);\
+                                 \
+    x7 = x10;                    \
+    x7 = _mm_srli_si128(x7,  4); \
+    x11 = _mm_xor_si128(x11, x7);\
+    x7 = x11;                    \
+    x7 = _mm_slli_si128(x7,  12);\
+    x11 = _mm_xor_si128(x11, x7);
+
+void shavite3_256_aesni_E256(shavite3_256_aesni_hashState* state)
 {
-   asm (".intel_syntax noprefix");
+    __m128i x0;
+    __m128i x1;
+    __m128i x2;
+    __m128i x3;
+    __m128i x4;
+    __m128i x6;
+    __m128i x7;
+    __m128i x8;
+    __m128i x9;
+    __m128i x10;
+    __m128i x11;
+    __m128i x12;
+    __m128i x13;
+    __m128i x14;
+    __m128i x15;
 
-   /* (L,R) = (xmm0,xmm1) */
-   asm ("movaps xmm0,  %[PTXT] \n\t"
-        "movaps xmm1,  %[PTXT]+16 \n\t"
-        "movaps xmm3,  %[CNTS] \n\t"
-        "movaps xmm4,  %[XOR2_256] \n\t"
-        "pxor   xmm2,  xmm2 \n\t"
-   /* init key schedule */
-        "movaps xmm8,  %[MESS] \n\t"
-        "movaps xmm9,  %[MESS]+16 \n\t"
-        "movaps xmm10, %[MESS]+32 \n\t"
-        "movaps xmm11, %[MESS]+48\n\t" 
-   /* xmm8..xmm11 = rk[0..15] */
-   /* start key schedule */
-        "movaps xmm12, xmm8\n\t"
-        "movaps xmm13, xmm9\n\t"
-        "movaps xmm14, xmm10\n\t"
-        "movaps xmm15, xmm11\n\t"
-        "pshufb xmm12, %[REV]\n\t"
-        "pshufb xmm13, %[REV]\n\t"
-        "pshufb xmm14, %[REV]\n\t"
-        "pshufb xmm15, %[REV]\n\t"
-        "aesenc xmm12, xmm2\n\t"
-        "aesenc xmm13, xmm2\n\t"
-        "aesenc xmm14, xmm2\n\t"
-        "aesenc xmm15, xmm2\n\t"
-        "pxor   xmm12, xmm3\n\t"
-        "pxor   xmm12, xmm4\n\t"
-        "movaps xmm4,  %[XOR3_256]\n\t"
-        "pxor   xmm12, xmm11\n\t"
-        "pxor   xmm13, xmm12\n\t"
-        "pxor   xmm14, xmm13\n\t"
-        "pxor   xmm15, xmm14\n\t"
-   /* xmm12..xmm15 = rk[16..31] */
-   /* F3 - first round */
-        "movaps xmm6,  xmm8\n\t"
-        "pxor   xmm8,  xmm1\n\t"
-        "aesenc xmm8,  xmm9\n\t"
-        "aesenc xmm8,  xmm10\n\t"
-        "aesenc xmm8,  xmm2\n\t"
-        "pxor   xmm0,  xmm8\n\t"
-        "movaps xmm8,  xmm6\n\t"
-    /* F3 - second round */
-        "movaps xmm6,  xmm11\n\t"
-        "pxor   xmm11, xmm0\n\t"
-        "aesenc xmm11, xmm12\n\t"
-        "aesenc xmm11, xmm13\n\t"
-        "aesenc xmm11, xmm2\n\t"
-        "pxor   xmm1,  xmm11\n\t"
-        "movaps xmm11, xmm6\n\t"
-    /* key schedule */
-        PERFORM_MIXING
-    /* xmm8..xmm11 - rk[32..47] */
-    /* F3 - third round */
-        "movaps xmm6,  xmm14\n\t"
-        "pxor   xmm14, xmm1\n\t"
-        "aesenc xmm14, xmm15\n\t"
-        "aesenc xmm14, xmm8\n\t"
-        "aesenc xmm14, xmm2\n\t"
-        "pxor   xmm0,  xmm14\n\t"
-        "movaps xmm14, xmm6\n\t"
-    /* key schedule */
-        "pshufd xmm3,  xmm3,135\n\t"
-        "movaps xmm12, xmm8\n\t"
-        "movaps xmm13, xmm9\n\t"
-        "movaps xmm14, xmm10\n\t"
-        "movaps xmm15, xmm11\n\t"
-        "pshufb xmm12, %[REV]\n\t"
-        "pshufb xmm13, %[REV]\n\t"
-        "pshufb xmm14, %[REV]\n\t"
-        "pshufb xmm15, %[REV]\n\t"
-        "aesenc xmm12, xmm2\n\t"
-        "aesenc xmm13, xmm2\n\t"
-        "aesenc xmm14, xmm2\n\t"
-        "aesenc xmm15, xmm2\n\t"
-        "pxor   xmm12, xmm11\n\t"
-        "pxor   xmm14, xmm3\n\t"
-        "pxor   xmm14, xmm4\n\t"
-        "movaps xmm4,  %[XOR4_256]\n\t"
-        "pxor   xmm13, xmm12\n\t"
-        "pxor   xmm14, xmm13\n\t"
-        "pxor   xmm15, xmm14\n\t"
-    /* xmm12..xmm15 - rk[48..63] */
-    /* F3 - fourth round */
-        "movaps xmm6,  xmm9\n\t"
-        "pxor   xmm9,  xmm0\n\t"
-        "aesenc xmm9,  xmm10\n\t"
-        "aesenc xmm9,  xmm11\n\t"
-        "aesenc xmm9,  xmm2\n\t"
-        "pxor   xmm1,  xmm9\n\t"
-        "movaps xmm9,  xmm6\n\t"
-    /* key schedule */
-        PERFORM_MIXING
-    /* xmm8..xmm11 = rk[64..79] */
-    /* F3  - fifth round */
-        "movaps xmm6,  xmm12\n\t"
-        "pxor   xmm12, xmm1\n\t"
-        "aesenc xmm12, xmm13\n\t"
-        "aesenc xmm12, xmm14\n\t"
-        "aesenc xmm12, xmm2\n\t"
-        "pxor   xmm0,  xmm12\n\t"
-        "movaps xmm12, xmm6\n\t"
-    /* F3 - sixth round */
-        "movaps xmm6,  xmm15\n\t"
-        "pxor   xmm15, xmm0\n\t"
-        "aesenc xmm15, xmm8\n\t"
-        "aesenc xmm15, xmm9\n\t"
-        "aesenc xmm15, xmm2\n\t"
-        "pxor   xmm1,  xmm15\n\t"
-        "movaps xmm15, xmm6\n\t"
-    /* key schedule */
-        "pshufd xmm3,  xmm3, 147\n\t"
-        "movaps xmm12, xmm8\n\t"
-        "movaps xmm13, xmm9\n\t"
-        "movaps xmm14, xmm10\n\t"
-        "movaps xmm15, xmm11\n\t"
-        "pshufb xmm12, %[REV]\n\t"
-        "pshufb xmm13, %[REV]\n\t"
-        "pshufb xmm14, %[REV]\n\t"
-        "pshufb xmm15, %[REV]\n\t"
-        "aesenc xmm12, xmm2\n\t"
-        "aesenc xmm13, xmm2\n\t"
-        "aesenc xmm14, xmm2\n\t"
-        "aesenc xmm15, xmm2\n\t"
-        "pxor   xmm12, xmm11\n\t"
-        "pxor   xmm13, xmm3\n\t"
-        "pxor   xmm13, xmm4\n\t"
-        "pxor   xmm13, xmm12\n\t"
-        "pxor   xmm14, xmm13\n\t"
-        "pxor   xmm15, xmm14\n\t"
-    /* xmm12..xmm15 = rk[80..95] */
-    /* F3 - seventh round */
-        "movaps xmm6,  xmm10\n\t"
-        "pxor   xmm10, xmm1\n\t"
-        "aesenc xmm10, xmm11\n\t"
-        "aesenc xmm10, xmm12\n\t"
-        "aesenc xmm10, xmm2\n\t"
-        "pxor   xmm0,  xmm10\n\t"
-        "movaps xmm10, xmm6\n\t"
-    /* key schedule */
-        PERFORM_MIXING
-    /* xmm8..xmm11 = rk[96..111] */
-    /* F3 - eigth round */
-        "movaps xmm6,  xmm13\n\t"
-        "pxor   xmm13, xmm0\n\t"
-        "aesenc xmm13, xmm14\n\t"
-        "aesenc xmm13, xmm15\n\t"
-        "aesenc xmm13, xmm2\n\t"
-        "pxor   xmm1,  xmm13\n\t"
-        "movaps xmm13, xmm6\n\t"
-    /* key schedule */
-        "pshufd xmm3,  xmm3, 135\n\t"
-        "movaps xmm12, xmm8\n\t"
-        "movaps xmm13, xmm9\n\t"
-        "movaps xmm14, xmm10\n\t"
-        "movaps xmm15, xmm11\n\t"
-        "pshufb xmm12, %[REV]\n\t"
-        "pshufb xmm13, %[REV]\n\t"
-        "pshufb xmm14, %[REV]\n\t"
-        "pshufb xmm15, %[REV]\n\t"
-        "aesenc xmm12, xmm2\n\t"
-        "aesenc xmm13, xmm2\n\t"
-        "aesenc xmm14, xmm2\n\t"
-        "aesenc xmm15, xmm2\n\t"
-        "pxor   xmm12, xmm11\n\t"
-        "pxor   xmm15, xmm3\n\t"
-        "pxor   xmm15, xmm4\n\t"
-        "pxor   xmm13, xmm12\n\t"
-        "pxor   xmm14, xmm13\n\t"
-        "pxor   xmm15, xmm14\n\t"
-    /* xmm12..xmm15 = rk[112..127] */
-    /* F3 - ninth round */
-        "movaps xmm6,  xmm8\n\t"
-        "pxor   xmm8,  xmm1\n\t"
-        "aesenc xmm8,  xmm9\n\t"
-        "aesenc xmm8,  xmm10\n\t"
-        "aesenc xmm8,  xmm2\n\t"
-        "pxor   xmm0,  xmm8\n\t"
-        "movaps xmm8,  xmm6\n\t"
-    /* F3 - tenth round */
-        "movaps xmm6,  xmm11\n\t"
-        "pxor   xmm11, xmm0\n\t"
-        "aesenc xmm11, xmm12\n\t"
-        "aesenc xmm11, xmm13\n\t"
-        "aesenc xmm11, xmm2\n\t"
-        "pxor   xmm1,  xmm11\n\t"
-        "movaps xmm11, xmm6\n\t"
-    /* key schedule */
-        PERFORM_MIXING
-    /* xmm8..xmm11 = rk[128..143] */
-    /* F3 - eleventh round */
-        "movaps xmm6,  xmm14\n\t"
-        "pxor   xmm14, xmm1\n\t"
-        "aesenc xmm14, xmm15\n\t"
-        "aesenc xmm14, xmm8\n\t"
-        "aesenc xmm14, xmm2\n\t"
-        "pxor   xmm0,  xmm14\n\t"
-        "movaps xmm14, xmm6\n\t"
-   /* F3 - twelfth round */
-        "movaps xmm6,  xmm9\n\t"
-        "pxor   xmm9,  xmm0\n\t"
-        "aesenc xmm9,  xmm10\n\t"
-        "aesenc xmm9,  xmm11\n\t"
-        "aesenc xmm9,  xmm2\n\t"
-        "pxor   xmm1,  xmm9\n\t"
-        "movaps xmm9,  xmm6\n\t"
-   /* feedforward */
-        "pxor   xmm0,  %[PTXT]\n\t"
-        "pxor   xmm1,  %[PTXT]+16\n\t"
-        "movaps %[PTXT], xmm0\n\t"
-        "movaps %[PTXT]+16, xmm1\n\t"
-        ".att_syntax noprefix"
-        : [MESS]     "+m" (SHAVITE_MESS)
-        , [CNTS]     "+m" (SHAVITE_CNTS) 
-        , [PTXT]     "+m" (SHAVITE_PTXT)
-        , [XOR2_256] "+m" (SHAVITE256_XOR2)
-        , [XOR3_256] "+m" (SHAVITE256_XOR3)
-        , [XOR4_256] "+m" (SHAVITE256_XOR4)
-        , [REV]      "+m" (SHAVITE_REVERSE)
-   );
-   return;
+    // (L,R) = (xmm0,xmm1)
+    const __m128i ptxt1 = _mm_loadu_si128((const __m128i*)state->SHAVITE_PTXT);
+    const __m128i ptxt2 = _mm_loadu_si128((const __m128i*)(state->SHAVITE_PTXT+16));
+
+    x0 = ptxt1;
+    x1 = ptxt2;
+
+    x3 = _mm_loadu_si128((__m128i*)state->SHAVITE_CNTS);
+    x4 = _mm_loadu_si128((__m128i*)SHAVITE256_XOR2);
+    x2 = _mm_setzero_si128();
+
+    // init key schedule
+    x8 = _mm_loadu_si128((__m128i*)state->SHAVITE_MESS);
+    x9 = _mm_loadu_si128((__m128i*)(state->SHAVITE_MESS+4));
+    x10 = _mm_loadu_si128((__m128i*)(state->SHAVITE_MESS+8));
+    x11 = _mm_loadu_si128((__m128i*)(state->SHAVITE_MESS+12));
+
+    // xmm8..xmm11 = rk[0..15]
+    // start key schedule
+    x12 = x8;
+    x13 = x9;
+    x14 = x10;
+    x15 = x11;
+
+    const __m128i xtemp = _mm_loadu_si128((__m128i*)SHAVITE_REVERSE);
+    x12 = _mm_shuffle_epi8(x12, xtemp);
+    x13 = _mm_shuffle_epi8(x13, xtemp);
+    x14 = _mm_shuffle_epi8(x14, xtemp);
+    x15 = _mm_shuffle_epi8(x15, xtemp);
+
+    x12 = _mm_aesenc_si128(x12, x2);
+    x13 = _mm_aesenc_si128(x13, x2);
+    x14 = _mm_aesenc_si128(x14, x2);
+    x15 = _mm_aesenc_si128(x15, x2);
+
+    x12 = _mm_xor_si128(x12, x3);
+    x12 = _mm_xor_si128(x12, x4);
+    x4 =  _mm_loadu_si128((__m128i*)SHAVITE256_XOR3);
+    x12 = _mm_xor_si128(x12, x11);
+    x13 = _mm_xor_si128(x13, x12);
+    x14 = _mm_xor_si128(x14, x13);
+    x15 = _mm_xor_si128(x15, x14);
+   
+    // xmm12..xmm15 = rk[16..31]
+    // F3 - first round 
+    x6 = x8;
+    x8 = _mm_xor_si128(x8, x1);
+    x8 = _mm_aesenc_si128(x8, x9);
+    x8 = _mm_aesenc_si128(x8, x10);
+    x8 = _mm_aesenc_si128(x8, x2);
+    x0 = _mm_xor_si128(x0, x8);
+    x8 = x6;
+
+    // F3 - second round
+    x6 = x11;
+    x11 = _mm_xor_si128(x11, x0);
+    x11 = _mm_aesenc_si128(x11, x12);
+    x11 = _mm_aesenc_si128(x11, x13);
+    x11 = _mm_aesenc_si128(x11, x2);
+    x1 = _mm_xor_si128(x1, x11);
+    x11 = x6;
+
+    // key schedule
+    SHAVITE_MIXING_256_OPT
+
+    // xmm8..xmm11 - rk[32..47]
+    // F3 - third round
+    x6 = x14;
+    x14 = _mm_xor_si128(x14, x1);
+    x14 = _mm_aesenc_si128(x14, x15);
+    x14 = _mm_aesenc_si128(x14, x8);
+    x14 = _mm_aesenc_si128(x14, x2);
+    x0 = _mm_xor_si128(x0, x14);
+    x14 = x6;
+
+    // key schedule
+    x3 = _mm_shuffle_epi32(x3, 135);
+
+    x12 = x8;
+    x13 = x9;
+    x14 = x10;
+    x15 = x11;
+    x12 = _mm_shuffle_epi8(x12, xtemp);
+    x13 = _mm_shuffle_epi8(x13, xtemp);
+    x14 = _mm_shuffle_epi8(x14, xtemp);
+    x15 = _mm_shuffle_epi8(x15, xtemp);
+    x12 = _mm_aesenc_si128(x12, x2);
+    x13 = _mm_aesenc_si128(x13, x2);
+    x14 = _mm_aesenc_si128(x14, x2);
+    x15 = _mm_aesenc_si128(x15, x2);
+
+    x12 = _mm_xor_si128(x12, x11);
+    x14 = _mm_xor_si128(x14, x3);
+    x14 = _mm_xor_si128(x14, x4);
+    x4 = _mm_loadu_si128((__m128i*)SHAVITE256_XOR4);
+    x13 = _mm_xor_si128(x13, x12);
+    x14 = _mm_xor_si128(x14, x13);
+    x15 = _mm_xor_si128(x15, x14);
+
+    // xmm12..xmm15 - rk[48..63]
+
+    // F3 - fourth round
+    x6 = x9;
+    x9 = _mm_xor_si128(x9, x0);
+    x9 = _mm_aesenc_si128(x9, x10);
+    x9 = _mm_aesenc_si128(x9, x11);
+    x9 = _mm_aesenc_si128(x9, x2);
+    x1 = _mm_xor_si128(x1, x9);
+    x9 = x6;
+
+    // key schedule
+    SHAVITE_MIXING_256_OPT
+    // xmm8..xmm11 = rk[64..79]
+    // F3  - fifth round
+    x6 = x12;
+    x12 = _mm_xor_si128(x12, x1);
+    x12 = _mm_aesenc_si128(x12, x13);
+    x12 = _mm_aesenc_si128(x12, x14);
+    x12 = _mm_aesenc_si128(x12, x2);
+    x0 = _mm_xor_si128(x0, x12);
+    x12 = x6;
+
+    // F3 - sixth round
+    x6 = x15;
+    x15 = _mm_xor_si128(x15, x0);
+    x15 = _mm_aesenc_si128(x15, x8);
+    x15 = _mm_aesenc_si128(x15, x9);
+    x15 = _mm_aesenc_si128(x15, x2);
+    x1 = _mm_xor_si128(x1, x15);
+    x15 = x6;
+
+    // key schedule
+    x3 = _mm_shuffle_epi32(x3, 147);
+
+    x12 = x8;
+    x13 = x9;
+    x14 = x10;
+    x15 = x11;
+    x12 = _mm_shuffle_epi8(x12, xtemp);
+    x13 = _mm_shuffle_epi8(x13, xtemp);
+    x14 = _mm_shuffle_epi8(x14, xtemp);
+    x15 = _mm_shuffle_epi8(x15, xtemp);
+    x12 = _mm_aesenc_si128(x12, x2);
+    x13 = _mm_aesenc_si128(x13, x2);
+    x14 = _mm_aesenc_si128(x14, x2);
+    x15 = _mm_aesenc_si128(x15, x2);
+    x12 = _mm_xor_si128(x12, x11);
+    x13 = _mm_xor_si128(x13, x3);
+    x13 = _mm_xor_si128(x13, x4);
+    x13 = _mm_xor_si128(x13, x12);
+    x14 = _mm_xor_si128(x14, x13);
+    x15 = _mm_xor_si128(x15, x14);
+
+    // xmm12..xmm15 = rk[80..95]
+    // F3 - seventh round
+    x6 = x10;
+    x10 = _mm_xor_si128(x10, x1);
+    x10 = _mm_aesenc_si128(x10, x11);
+    x10 = _mm_aesenc_si128(x10, x12);
+    x10 = _mm_aesenc_si128(x10, x2);
+    x0 = _mm_xor_si128(x0, x10);
+    x10 = x6;
+
+    // key schedule
+    SHAVITE_MIXING_256_OPT
+
+    // xmm8..xmm11 = rk[96..111]
+    // F3 - eigth round
+    x6 = x13;
+    x13 = _mm_xor_si128(x13, x0);
+    x13 = _mm_aesenc_si128(x13, x14);
+    x13 = _mm_aesenc_si128(x13, x15);
+    x13 = _mm_aesenc_si128(x13, x2);
+    x1 = _mm_xor_si128(x1, x13);
+    x13 = x6;
+
+
+    // key schedule
+    x3 = _mm_shuffle_epi32(x3, 135);
+
+    x12 = x8;
+    x13 = x9;
+    x14 = x10;
+    x15 = x11;
+    x12 = _mm_shuffle_epi8(x12, xtemp);
+    x13 = _mm_shuffle_epi8(x13, xtemp);
+    x14 = _mm_shuffle_epi8(x14, xtemp);
+    x15 = _mm_shuffle_epi8(x15, xtemp);
+    x12 = _mm_aesenc_si128(x12, x2);
+    x13 = _mm_aesenc_si128(x13, x2);
+    x14 = _mm_aesenc_si128(x14, x2);
+    x15 = _mm_aesenc_si128(x15, x2);
+    x12 = _mm_xor_si128(x12, x11);
+    x15 = _mm_xor_si128(x15, x3);
+    x15 = _mm_xor_si128(x15, x4);
+    x13 = _mm_xor_si128(x13, x12);
+    x14 = _mm_xor_si128(x14, x13);
+    x15 = _mm_xor_si128(x15, x14);
+
+    // xmm12..xmm15 = rk[112..127]
+    // F3 - ninth round
+    x6 = x8;
+    x8 = _mm_xor_si128(x8, x1);
+    x8 = _mm_aesenc_si128(x8, x9);
+    x8 = _mm_aesenc_si128(x8, x10);
+    x8 = _mm_aesenc_si128(x8, x2);
+    x0 = _mm_xor_si128(x0, x8);
+    x8 = x6;
+    // F3 - tenth round
+    x6 = x11;
+    x11 = _mm_xor_si128(x11, x0);
+    x11 = _mm_aesenc_si128(x11, x12);
+    x11 = _mm_aesenc_si128(x11, x13);
+    x11 = _mm_aesenc_si128(x11, x2);
+    x1 = _mm_xor_si128(x1, x11);
+    x11 = x6;
+
+    // key schedule
+    SHAVITE_MIXING_256_OPT
+
+    // xmm8..xmm11 = rk[128..143]
+    // F3 - eleventh round
+    x6 = x14;
+    x14 = _mm_xor_si128(x14, x1);
+    x14 = _mm_aesenc_si128(x14, x15);
+    x14 = _mm_aesenc_si128(x14, x8);
+    x14 = _mm_aesenc_si128(x14, x2);
+    x0 = _mm_xor_si128(x0, x14);
+    x14 = x6;
+
+    // F3 - twelfth round
+    x6 = x9;
+    x9 = _mm_xor_si128(x9, x0);
+    x9 = _mm_aesenc_si128(x9, x10);
+    x9 = _mm_aesenc_si128(x9, x11);
+    x9 = _mm_aesenc_si128(x9, x2);
+    x1 = _mm_xor_si128(x1, x9);
+    x9 = x6;
+
+
+    // feedforward
+    x0 = _mm_xor_si128(x0, ptxt1);
+    x1 = _mm_xor_si128(x1, ptxt2);
+    _mm_storeu_si128((__m128i *)state->SHAVITE_PTXT, x0);
+    _mm_storeu_si128((__m128i *)(state->SHAVITE_PTXT + 16), x1);
+
+    return;
 }
 
-void shavite3_256_aesni_Compress256(const unsigned char *message_block, unsigned char *chaining_value, unsigned long long counter, const unsigned char salt[32])
+void shavite3_256_aesni_Compress256(shavite3_256_aesni_hashState* state, const unsigned char *message_block, unsigned char *chaining_value, unsigned long long counter)
 {    
-   int i;
+    int i;
 
-   for (i=0;i<8*4;i++)
-   {
-      SHAVITE_PTXT[i]=chaining_value[i];
-   }
-   
-   for (i=0;i<16;i++)
-   {
-      SHAVITE_MESS[i] = *((unsigned int*)(message_block+4*i));
-   }
-   
+    for (i=0;i<8*4;i++)
+    {
+        state->SHAVITE_PTXT[i]=chaining_value[i];
+    }
 
-   SHAVITE_CNTS[0] = (unsigned int)(counter & 0xFFFFFFFFULL);
-   SHAVITE_CNTS[1] = (unsigned int)(counter>>32);
-   /* encryption + Davies-Meyer transform */
-   E256();
-
-   for (i=0; i<4*8; i++)
-   {
-       chaining_value[i]=SHAVITE_PTXT[i];
-   }
+    for (i=0;i<16;i++)
+    {
+        state->SHAVITE_MESS[i] = *((unsigned int*)(message_block+4*i));
+    }
 
 
-   return;
+    state->SHAVITE_CNTS[0] = (unsigned int)(counter & 0xFFFFFFFFULL);
+    state->SHAVITE_CNTS[1] = (unsigned int)(counter>>32);
+    // encryption + Davies-Meyer transform
+    shavite3_256_aesni_E256(state);
+
+    for (i=0; i<4*8; i++)
+    {
+        chaining_value[i]=state->SHAVITE_PTXT[i];
+    }
+
+    return;
 }
+
+#ifdef __clang__
+#pragma clang attribute pop
+#else
+#pragma GCC pop_options
+#endif
 
 #endif
 #endif

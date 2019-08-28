@@ -16,7 +16,7 @@
 #include <stdlib.h>
 
 #include <crypto/hash/sigma/argon_echo/argon_echo.h>
-#include <crypto/hash/sphlib/sph_echo.h>
+#include <crypto/hash/echo256/sphlib/sph_echo.h>
 
 
 #define ECHO_DP
@@ -73,7 +73,7 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
             }
             case 1:
             {
-                hashState ctx_shavite;
+                shavite3_ref_hashState ctx_shavite;
                 shavite3_ref_Init(&ctx_shavite);
                 shavite3_ref_Update(&ctx_shavite, data1, data1Size);
                 shavite3_ref_Update(&ctx_shavite, data2, data2Size);

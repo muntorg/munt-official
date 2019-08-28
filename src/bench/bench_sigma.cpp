@@ -108,7 +108,7 @@ void testShaviteReference(uint64_t& nTestFailCount)
     {
         std::string data = shaviteTestVectorIn[i];
         std::vector<unsigned char> outHash(32);
-        hashState ctx_shavite;
+        shavite3_ref_hashState ctx_shavite;
         shavite3_ref_Init(&ctx_shavite);
         shavite3_ref_Update(&ctx_shavite, (const unsigned char*)&data[0], data.size());
         shavite3_ref_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
@@ -410,22 +410,7 @@ int main(int argc, char** argv)
         
         LogPrintf("SIGMA=============================================================\n\n");
         {
-            LogPrintf("Bench slow hashes [single thread]:\n");
             sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
-            
-            {
-                uint8_t hashData[80];
-                for (int i=0;i<80;++i)
-                {
-                    hashData[i] = rand();
-                }
-                    
-                uint64_t nStart = GetTimeMicros();
-                uint64_t numSlowHashes = 100;
-                sigmaContext.benchmarkSlowHashes(hashData, numSlowHashes);
-                LogPrintf("total [%.2f micros] per hash [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numSlowHashes);
-            }
-            
             {
                 LogPrintf("Bench fast hashes [single thread]:\n");
                 uint8_t hashData1[80];
@@ -447,6 +432,20 @@ int main(int argc, char** argv)
                 uint64_t numFastHashes = 100000;
                 sigmaContext.benchmarkFastHashes(hashData1, hashData2, &hashData3[0], numFastHashes);
                 LogPrintf("total [%.2f micros] per hash [%.4f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numFastHashes);
+            }
+            
+            {
+                LogPrintf("Bench slow hashes [single thread]:\n");
+                uint8_t hashData[80];
+                for (int i=0;i<80;++i)
+                {
+                    hashData[i] = rand();
+                }
+                    
+                uint64_t nStart = GetTimeMicros();
+                uint64_t numSlowHashes = 100;
+                sigmaContext.benchmarkSlowHashes(hashData, numSlowHashes);
+                LogPrintf("total [%.2f micros] per hash [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numSlowHashes);
             }
             
             {
