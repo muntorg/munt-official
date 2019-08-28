@@ -11,6 +11,8 @@
 
 #include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
+#include <crypto/hash/echo256/echo256_aesni.h>
+#include <crypto/hash/echo256/sphlib/sph_echo.h>
 
 // SIGMA paramaters (centrally set by network)
 uint64_t arenaCpuCostRounds = 8;
@@ -41,37 +43,37 @@ void selectLargesHashUnit(double& nSustainedHashesPerSecond, std::string& label)
 {
     if (nSustainedHashesPerSecond > 1000)
     {
-        label = "kh";
+        label = "Kh";
         nSustainedHashesPerSecond /= 1000.0;
     }
     if (nSustainedHashesPerSecond > 1000)
     {
-        label = "mh";
+        label = "Mh";
         nSustainedHashesPerSecond /= 1000.0;
     }
     if (nSustainedHashesPerSecond > 1000)
     {
-        label = "gh";
+        label = "Gh";
         nSustainedHashesPerSecond /= 1000.0;
     }
     if (nSustainedHashesPerSecond > 1000)
     {
-        label = "th";
+        label = "Th";
         nSustainedHashesPerSecond /= 1000.0;
     }
     if (nSustainedHashesPerSecond > 1000)
     {
-        label = "ph";
+        label = "Ph";
         nSustainedHashesPerSecond /= 1000.0;
     }
     if (nSustainedHashesPerSecond > 1000)
     {
-        label = "eh";
+        label = "Eh";
         nSustainedHashesPerSecond /= 1000.0;
     }
     if (nSustainedHashesPerSecond > 1000)
     {
-        label = "zh";
+        label = "Zh";
         nSustainedHashesPerSecond /= 1000.0;
     }
     if (nSustainedHashesPerSecond > 1000)
@@ -81,7 +83,7 @@ void selectLargesHashUnit(double& nSustainedHashesPerSecond, std::string& label)
     }
 }
 
-std::vector<std::string> shaviteTestVectorIn = {
+std::vector<std::string> hashTestVector = {
     "A",
     "AA",
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -91,26 +93,37 @@ std::vector<std::string> shaviteTestVectorIn = {
     "262C26AD4EDCD692FFB1B859CE729AD61BA67D6FA72AC7A7509D92E8", 
     "6FBD09FCE4600327A97540BFF4DF7A99DA7C13F8CB13FA39838EC010"
 };
+// Test vector results generated against latest reference implementation(s) of SHAvite3 in supercop. Not the website version which appears to
 std::vector shaviteTestVectorOut = {
-    "8b9b2d57fea66a7bcd2d591350643c7afb70fbab5eb99bfa8c931fba09044ab9",
-    "11e1e404ce9e0f41bd827e5127a3c3ff4593f57da338c5cc1197b40ec91fa056",
-    "de3713502c79619e18048aea9f30794d1060fa3e3f8e6eccb80eed8db79cc0e8",
-    "caf836603350dbe109b3728f8e1068d7cdf0483e19318a02b26fa595c725849d",
-    "e4e2c847729743ad3b3a60e89e42e7f04c3126a710e6862c29e8f6fc4e6ce6ed",
-    "edc7518651c3714d02c4fb92a9eaf86924f849bd4f7c77d90db4a960041c4b30",
-    "27abd4db5dd05aea3ea8423ef577272c0219516e643f39a13c5cb0dd2ca93e3c",
-    "bacc448533a6899223f3473f05d28c771aaa913f931823155a54a7b3ece5edd1"
+    "9206c5e42ac244c08d8383caa80093fb6e4d88ae8d11edf9c2d08442cba89337",
+    "4f4fd087b2831ca55ad51df0e18cd574bb30ec8089a42340142d2c2bb5b23ccc",
+    "2e747b74196c20b94253ca56730a28dda2aa49420bd53e053ed77a329a8f8469",
+    "df2318831b70ceb7986c722ba65df78fa51924bf5bd6582dd516b9357a47660f",
+    "f75fa0c12a54b93e122a3c5d476dd489e96aab749344f7062814f662d0460fa1",
+    "69a8a32cfe0f0f5e510e97f22a63ecb211425fe2f26267827e244e4ebe70774d",
+    "d0316c6d924f45913a8f0328a448f218dd18a1b28e38bf5355d8201a65bcc0b2",
+    "ad48f660cd6328ebbc5c40a73dfa365aab770e7ba08220b051633c5f8ee4b157",
+};
+std::vector echo256TestVectorOut = {
+    "1ffdd51e506ea633440daf864f02e80eb3c5371da068c39c11e3e7d637f60659",
+    "c5ddce445e589b14213707e68afda6d651736b6b4d223733bb5e68489492856e",
+    "949e61e69a5c473996432f4f137a98d4774dfaf503020565232e246b73fb8a68",
+    "960d74a005576c431a21f3f8ec8a4644094eb98e7ce14394ac92709d23097c03",
+    "7c002e865862c73e78c616e36b2f96341abbe018383163f16c6be934c7bebfb0",
+    "70de7acca4efe39c85e419964548155a212861dc9378b600f671f82be4ca4df0",
+    "a10db9cf5e865376b06a38108dc47397e90b6ffce7d73cb5670450a9ca077611",
+    "3d36df7adf6b181e5a6b3b10a09797917dbe2291b5548ec0652dde1e6f16a23c"
 };
 
 void testShaviteReference(uint64_t& nTestFailCount)
 {
-    for (unsigned int i=0;i<shaviteTestVectorIn.size();++i)
+    for (unsigned int i=0;i<hashTestVector.size();++i)
     {
-        std::string data = shaviteTestVectorIn[i];
+        std::string data = hashTestVector[i];
         std::vector<unsigned char> outHash(32);
         shavite3_ref_hashState ctx_shavite;
         shavite3_ref_Init(&ctx_shavite);
-        shavite3_ref_Update(&ctx_shavite, (const unsigned char*)&data[0], data.size());
+        shavite3_ref_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
         shavite3_ref_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
         std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
         std::string compare(shaviteTestVectorOut[i]);
@@ -130,13 +143,13 @@ void testShaviteReference(uint64_t& nTestFailCount)
 
 void testShaviteOptimised(uint64_t& nTestFailCount)
 {
-    for (unsigned int i=0;i<shaviteTestVectorIn.size();++i)
+    for (unsigned int i=0;i<hashTestVector.size();++i)
     {
-        std::string data = shaviteTestVectorIn[i];
+        std::string data = hashTestVector[i];
         std::vector<unsigned char> outHash(32);
         shavite3_256_aesni_hashState ctx_shavite;
         shavite3_256_aesni_Init(&ctx_shavite);
-        shavite3_256_aesni_Update(&ctx_shavite, (const unsigned char*)&data[0], data.size());
+        shavite3_256_aesni_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
         shavite3_256_aesni_Final(&ctx_shavite, &outHash[0]);
         std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
         std::string compare(shaviteTestVectorOut[i]);
@@ -154,13 +167,67 @@ void testShaviteOptimised(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
+void testEchoReference(uint64_t& nTestFailCount)
+{
+    for (unsigned int i=0;i<hashTestVector.size();++i)
+    {
+        std::string data = hashTestVector[i];
+        std::vector<unsigned char> outHash(32);
+        sph_echo256_context ctx_echo;
+        sph_echo256_init(&ctx_echo);
+        sph_echo256(&ctx_echo, (uint8_t*)&data[0], data.size());
+        sph_echo256_close(&ctx_echo, (void*)&outHash[0]);
+        std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
+        std::string compare(echo256TestVectorOut[i]);
+        if (outHashHex == compare)
+        {
+            LogPrintf("✔");
+        }
+        else
+        {
+            ++nTestFailCount;
+            LogPrintf("✘");
+            LogPrintf("%s\n", outHashHex);
+        }
+    }
+    LogPrintf("\n");
+}
+
+void testEchoOptimised(uint64_t& nTestFailCount)
+{
+    for (unsigned int i=0;i<hashTestVector.size();++i)
+    {
+        std::string data = hashTestVector[i];
+        std::vector<unsigned char> outHash(32);
+        echo256_aesni_hashState ctx_echo;
+        echo256_aesni_Init(&ctx_echo);
+        echo256_aesni_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+        echo256_aesni_Final(&ctx_echo, &outHash[0]);
+        std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
+        std::string compare(echo256TestVectorOut[i]);
+        if (outHashHex == compare)
+        {
+            LogPrintf("✔");
+        }
+        else
+        {
+            ++nTestFailCount;
+            LogPrintf("✘");
+            LogPrintf("%s\n", outHashHex);
+        }
+    }
+    LogPrintf("\n");
+}
+
 
 std::vector<std::pair<std::string, uint64_t> >
 validHeaderTestVectorIn = {
-                            {"daa464600000000080a6d654b146a17abe8e9cca80f477653f0350000000000000000000000000006fcb97fbd03a00ae5e1113a4e84616fcb43227000000000000000000d244645dffff3f1f0e003c83", 325540099},
-                            {"5a3f6d4e00000000000054c65c8ff213fc3c0df71dab3d5804620100000000000000000000000000c027f3654d83fe8556519b6e8989f89dc83501000000000000000000d145645dffff3f1f020025dd", 1219157114},
-                            {"10a2f82700000000eebb8ad5074e2c34c5feca57e84c32e8353cb301000000000000000000000000005425426760715d666805b4904c4f3551b30a0000000000000000006848645dffff3f1f0500b71e", 1548801618},
-                        };
+    {"8dd1c77100000000907417953c11ce0cae088b6dea9a2361684c850000000000000000000000000000ea096eb74fc2cd1a0774b250d4eb9bd2975b000000000000000000e6e7665dffff3f1fb702eac2", 617327633},
+    {"2a625146000000008001f4d57bde264346390c9a7902a0a40ad22c0000000000000000000000000060057ee29a88958d11e092f13d34c23f68b2570000000000000000006ae8665dffff3f1f9d0021d2", 778626333},
+    {"c1cdd97100000000c0ecb306c68d62f969ee328074116f41352b4600000000000000000000000000d0c6076635d1e4c55f64aae885e818a1e61e0a00000000000000000078e8665dffff3f1f7d00c58d", 74198191},
+    {"c973b5650000000000c0fa4613ec715e69446d33f56cef0e0ab0010000000000000000000000000058805be9017e7c2ae31567bc5655bf0a02ac0200000000000000000085e8665dffff3f1f4500da80", 1264517732},
+    {"4e71594500000000a00d0dba5ec8d5e1ca23a067160d071f3ad21400000000000000000000000000b8e5e402245035902e101060a97098b5524e2400000000000000000090e8665dffff3f1f65007b1a", 253513492},
+};
 void testValidateValidHeaders(uint64_t& nTestFailCount)
 {
     CBlockHeader header;
@@ -349,6 +416,12 @@ int main(int argc, char** argv)
         
         LogPrintf("Verify shavite optimised operation\n");
         testShaviteOptimised(nTestFailCount);
+        
+        LogPrintf("Verify echo reference operation\n");
+        testEchoReference(nTestFailCount);
+        
+        LogPrintf("Verify echo optimised operation\n");
+        testEchoOptimised(nTestFailCount);
         
         LogPrintf("Verify validation of valid headers\n");
         testValidateValidHeaders(nTestFailCount);

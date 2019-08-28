@@ -47,14 +47,14 @@ bool shavite3_ref_Init(shavite3_ref_hashState* state)
 
 
 // Compressing the input data, and updating the internal state
-bool shavite3_ref_Update(shavite3_ref_hashState* state, const uint8_t* data, uint64_t databitlen)
+bool shavite3_ref_Update(shavite3_ref_hashState* state, const uint8_t* data, uint64_t dataLenBytes)
 {
     // p is a pointer to the current location inside data that we need to process
     // (i.e., the first byte of the data which was not used as an input to the compression function
     uint8_t* p = (uint8_t*)data;
 
     // len is the size of the data that was not process yet in bytes
-    int len = databitlen>>3;
+    int len = dataLenBytes;
 
     // BlockSizeB is the size of the message block of the compression function
     int BlockSizeB = (state->BlockSize/8);
@@ -65,24 +65,11 @@ bool shavite3_ref_Update(shavite3_ref_hashState* state, const uint8_t* data, uin
     // local_bitcount contains the number of bits actually hashed so far
     uint64_t local_bitcount;
 
-    // If we had to process a message with partial bytes before, then Update() should not have been called again.
-    // We just discard the extra bits, and inform the user
-    if (state->bitcount&7ULL)
-    {
-        assert(0);
-    }
-
     // load the number of bits hashed so far into local_bitcount
     local_bitcount=state->bitcount;
 
     // mark that we processed more bits
-    state->bitcount += databitlen;
-
-    // if the input contains a partial byte - store it independently
-    if (databitlen&7)
-    {
-        state->partial_byte = data[databitlen>>3];
-    }
+    state->bitcount += dataLenBytes*8;
 
     // Check if we have enough data to call the compression function
     // If not, just copy the input to the buffer of the message block
@@ -143,11 +130,10 @@ bool shavite3_ref_Final(shavite3_ref_hashState* state, uint8_t* hashval)
     uint8_t result[64];
 
     // BlockSizeB is the size of the message block of the compression function
-    int BlockSizeB = (state->BlockSize/8);
+    uint64_t BlockSizeB = (state->BlockSize/8);
 
     // bufcnt stores the number of bytes that are were "sent" to the compression function, but were not yet processed, as a full block has not been obtained
     uint64_t bufcnt= ((uint64_t)state->bitcount>>3)%BlockSizeB;
-    int i;
 
     // Copy the current chaining value into result (as a temporary step)
     if (state->DigestSize < 257)
@@ -199,7 +185,7 @@ bool shavite3_ref_Final(shavite3_ref_hashState* state, uint8_t* hashval)
     }
 
     // Copy the result into the supplied array of bytes.
-    for (i=0;i<(state->DigestSize+7)/8;i++)
+    for (int i=0;i<(state->DigestSize+7)/8;i++)
     {
         hashval[i]=result[i];
     }

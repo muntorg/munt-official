@@ -209,6 +209,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
 
             //1. Select pre nonce, reset post nonce to zero and perform argon hash of header.
             uint8_t* hashMem = (uint8_t*)malloc(argonMemoryCostKb*1024);
+            headerData.nNonce = headerBlockHeight;
             headerData.nPreNonce = nPreNonce++;
             headerData.nPostNonce = 0;
             

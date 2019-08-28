@@ -90,13 +90,13 @@ bool shavite3_256_aesni_Init(shavite3_256_aesni_hashState* state)
 
 
 // Compressing the input data, and updating the internal state
-bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsigned char* data, uint64_t databitlen)
+bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsigned char* data, uint64_t dataLenBytes)
 {
     // p is a pointer to the current location inside data that we need to process (i.e., the first byte of the data which was not used as an input to the compression function
     uint8_t* p = (uint8_t*)data;
 
     // len is the size of the data that was not process yet in bytes
-    int len = databitlen>>3;
+    int len = dataLenBytes;
 
     // BlockSizeB is the size of the message block of the compression function
     int BlockSizeB = (state->BlockSize/8);
@@ -107,24 +107,11 @@ bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsign
     // local_bitcount contains the number of bits actually hashed so far
     uint64_t SHAVITE_CNT;
 
-    // If we had to process a message with partial bytes before, then Update() should not have been called again.
-    // We just discard the extra bits, and inform the user
-    if (state->bitcount&7ULL)
-    {
-        assert(0);
-    }
-
     // load the number of bits hashed so far into SHAVITE_CNT
     SHAVITE_CNT=state->bitcount;
 
     // mark that we processed more bits
-    state->bitcount += databitlen;
-
-    // if the input contains a partial byte - store it independently
-    if (databitlen&7)
-    {
-        state->partial_byte = data[databitlen>>3];
-    }
+    state->bitcount += dataLenBytes*8;
 
     // Check if we have enough data to call the compression function
     // If not, just copy the input to the buffer of the message block
