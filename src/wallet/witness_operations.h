@@ -89,6 +89,10 @@ struct CWitnessAccountStatus
     uint64_t accountWeight;
     bool hasScriptLegacyOutput;
     bool hasUnconfirmedWittnessTx;
+    uint64_t nLockFromBlock;
+    uint64_t nLockUntilBlock;
+    uint64_t nLockPeriodInBlocks;
+    std::vector<uint64_t> parts; // individual weights of all parts
 };
 
 /** Get account witness status and accompanying details

@@ -68,6 +68,8 @@ struct WitnessInfoForAccount
     QDateTime lastEarningsDate;
 };
 
+struct CWitnessAccountStatus;
+
 class WitnessDialog : public QFrame
 {
     Q_OBJECT
@@ -79,7 +81,7 @@ public:
     void setClientModel(ClientModel *clientModel);
     void setModel(WalletModel *model);
 
-    WitnessInfoForAccount GetWitnessInfoForAccount(CAccount* forAccount, uint64_t nTotalNetworkWeight, uint64_t nOurWeight) const;
+    WitnessInfoForAccount GetWitnessInfoForAccount(CAccount* forAccount, const CWitnessAccountStatus& accountStatus) const;
     void plotGraphForAccount(const WitnessInfoForAccount& witnessInfoForAccount);
 
     void updateAccountIndicators();

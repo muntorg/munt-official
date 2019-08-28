@@ -478,7 +478,7 @@ static void AddPointToMapWithAdjustedTimePeriod(std::map<double, CAmount>& point
         pointMap[nXF] += nY;
 }
 
-WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, uint64_t nTotalNetworkWeight, uint64_t nOurWeight) const
+WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, const CWitnessAccountStatus& accountStatus) const
 {
     LOG_QT_METHOD;
 
@@ -487,8 +487,14 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
 
     WitnessInfoForAccount infoForAccount;
 
-    infoForAccount.nTotalNetworkWeightTip = nTotalNetworkWeight;
-    infoForAccount.nOurWeight = nOurWeight;
+    infoForAccount.nTotalNetworkWeightTip = accountStatus.networkWeight;
+    infoForAccount.nOurWeight = accountStatus.accountWeight;
+
+    // the lock period could have been different initially if it was extended, this is not accounted for
+    infoForAccount.nOriginLength = accountStatus.nLockPeriodInBlocks;
+
+    // if the witness was extended or rearranged the initial weight will have been different, this is not accounted for
+    infoForAccount.nOriginWeight = accountStatus.accountWeight;
 
     infoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
 
@@ -529,31 +535,6 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
                         throw std::runtime_error(strErrorMessage);
                     }
                     pointMapGenerated[0] = 0;
-
-                    uint256 originHash;
-                    originHash.SetHex( filter->data(index, TransactionTableModel::TxHashRole).toString().toStdString());
-
-                    LOCK2(cs_main, pactiveWallet->cs_wallet);
-                    auto walletTxIter = pactiveWallet->mapWallet.find(originHash);
-                    if(walletTxIter == pactiveWallet->mapWallet.end())
-                    {
-                        throw std::runtime_error("GetWitnessInfoForAccount error lookup wallet tx");
-                    }
-
-                    for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
-                    {
-                        //fixme: (PHASE4) Handle multiple in one tx. Handle regular transactions that may have somehow been sent to the account.
-                        if (IsMine(*forAccount, walletTxIter->second.tx->vout[i]))
-                        {
-                            if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
-                            {
-                                uint64_t nUnused1, nUnused2;
-                                infoForAccount.nOriginLength = GetPoW2LockLengthInBlocksFromOutput(walletTxIter->second.tx->vout[i], infoForAccount.nOriginBlock, nUnused1, nUnused2);
-                                infoForAccount.nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), infoForAccount.nOriginLength);
-                                break;
-                            }
-                        }
-                    }
                 }
             }
             else if (nType == TransactionRecord::GeneratedWitness)
@@ -827,7 +808,7 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
             setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
 
             if (computedWidgetIndex == WitnessDialogStates::STATISTICS) {
-                const auto witnessInfoForAccount = GetWitnessInfoForAccount(forAccount, accountStatus.networkWeight, accountStatus.accountWeight);
+                const auto witnessInfoForAccount = GetWitnessInfoForAccount(forAccount, accountStatus);
                 plotGraphForAccount(witnessInfoForAccount);
             }
         }

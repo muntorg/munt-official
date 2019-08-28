@@ -559,6 +559,10 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
     if (haveUnspentWitnessUtxo && !GetPow2WitnessOutput(accountItems[0].coin.out, witnessDetails0))
         throw std::runtime_error("Failure extracting witness details.");
 
+    uint64_t nLockFromBlock = 0;
+    uint64_t nLockUntilBlock = 0;
+    uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(accountItems[0].coin.out, accountItems[0].coin.nHeight, nLockFromBlock, nLockUntilBlock);
+
     const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(account);
     EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);
 
@@ -592,12 +596,19 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 
     bool hasScriptLegacyOutput = std::any_of(accountItems.begin(), accountItems.end(), [](const RouletteItem& ri){ return ri.coin.out.GetType() == CTxOutType::ScriptLegacyOutput; });
 
+    std::vector<uint64_t> parts;
+    std::transform(accountItems.begin(), accountItems.end(), std::back_inserter(parts), [](const auto& ri) { return ri.nWeight; });
+
     CWitnessAccountStatus result {
         status,
         witnessInfo.nTotalWeightRaw,
         isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : uint64_t(0),
         hasScriptLegacyOutput,
-        hasUnconfirmedWittnessTx
+        hasUnconfirmedWittnessTx,
+        nLockFromBlock,
+        nLockUntilBlock,
+        nLockPeriodInBlocks,
+        parts
     };
 
     return result;
