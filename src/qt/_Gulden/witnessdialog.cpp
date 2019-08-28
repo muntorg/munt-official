@@ -487,6 +487,8 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
 
     WitnessInfoForAccount infoForAccount;
 
+    infoForAccount.accountStatus = accountStatus;
+
     infoForAccount.nTotalNetworkWeightTip = accountStatus.networkWeight;
     infoForAccount.nOurWeight = accountStatus.accountWeight;
 
@@ -652,6 +654,7 @@ void WitnessDialog::plotGraphForAccount(const WitnessInfoForAccount& witnessInfo
         QString labelWeightValue = lastEarningsDateLabel;
         QString lockedUntilValue = lastEarningsDateLabel;
         QString lockedFromValue = lastEarningsDateLabel;
+        QString partCountValue = QString::number(witnessInfoForAccount.accountStatus.parts.size());
 
         if (witnessInfoForAccount.nOurWeight > 0)
             labelWeightValue = QString::number(witnessInfoForAccount.nOurWeight);
@@ -719,6 +722,7 @@ void WitnessDialog::plotGraphForAccount(const WitnessInfoForAccount& witnessInfo
         ui->labelWeightValue->setText(labelWeightValue);
         ui->labelLockedFromValue->setText(lockedFromValue);
         ui->labelLockedUntilValue->setText(lockedUntilValue);
+        ui->labelPartCountValue->setText(partCountValue);
     }
 }
 

@@ -118,7 +118,7 @@
               <number>0</number>
              </property>
              <item>
-              <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0,0" columnstretch="2,0,0,2,0">
+              <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0,0,0,0,0,0" columnstretch="2,0,0,2,0">
                <property name="bottomMargin">
                 <number>20</number>
                </property>
@@ -369,7 +369,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="7" column="1">
+               <item row="8" column="1">
                 <spacer name="verticalSpacer_3">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
@@ -387,6 +387,29 @@
                </item>
                <item row="6" column="1">
                 <widget class="QLabel" name="labelWeightValue">
+                 <property name="text">
+                  <string>n/a</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="indent">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="labelPartCount">
+                 <property name="text">
+                  <string>Parts</string>
+                 </property>
+                 <property name="indent">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLabel" name="labelPartCountValue">
                  <property name="text">
                   <string>n/a</string>
                  </property>

@@ -14,6 +14,7 @@
 #include <QDateTime>
 #include <qwt_plot_picker.h>
 #include "optionsmodel.h"
+#include "wallet/witness_operations.h"
 
 
 class QMenu;
@@ -46,6 +47,8 @@ private:
 
 struct WitnessInfoForAccount
 {
+    CWitnessAccountStatus accountStatus;
+
     uint64_t nOurWeight = 0;
     uint64_t nTotalNetworkWeightTip = 0;
     uint64_t nWitnessLength = 0;
