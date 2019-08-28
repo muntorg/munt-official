@@ -17,24 +17,24 @@
 
 #include <crypto/hash/sigma/argon_echo/argon_echo.h>
 #include <crypto/hash/sphlib/sph_echo.h>
-#include <crypto/hash/sphlib/sph_shavite.h>
+
 
 #define ECHO_DP
 #define LENGTH 256
 #include <crypto/hash/echo256/echo256_aesni.h>
 #include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
+#include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
 
 inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
 {
     #ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
     if (__builtin_cpu_supports("aes"))
     {
-        shavite3_256_aesni_hashState ctx_shavite;
-        echo256_aesni_hashState ctx_echo;
         switch (nPseudoRandomAlg)
         {
             case 0:
             {
+                echo256_aesni_hashState ctx_echo;
                 echo256_aesni_Init(&ctx_echo);
                 echo256_aesni_Update(&ctx_echo, data1, data1Size);
                 echo256_aesni_Update(&ctx_echo, data2, data2Size);
@@ -44,6 +44,7 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
             }
             case 1:
             {
+                shavite3_256_aesni_hashState ctx_shavite;
                 shavite3_256_aesni_Init(&ctx_shavite);
                 shavite3_256_aesni_Update(&ctx_shavite, data1, data1Size);
                 shavite3_256_aesni_Update(&ctx_shavite, data2, data2Size);
@@ -58,13 +59,11 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
     else
     #endif
     {
-        sph_shavite256_context ctx_shavite;
-        sph_echo256_context ctx_echo;
-        
         switch (nPseudoRandomAlg)
         {
             case 0:
             {
+                sph_echo256_context ctx_echo;
                 sph_echo256_init(&ctx_echo);
                 sph_echo256(&ctx_echo, data1, data1Size);
                 sph_echo256(&ctx_echo, data2, data2Size);
@@ -74,11 +73,12 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
             }
             case 1:
             {
-                sph_shavite256_init(&ctx_shavite);
-                sph_shavite256(&ctx_shavite, data1, data1Size);
-                sph_shavite256(&ctx_shavite, data2, data2Size);
-                sph_shavite256(&ctx_shavite, data3, data3Size);
-                sph_shavite256_close(&ctx_shavite, outHash.begin());
+                hashState ctx_shavite;
+                shavite3_ref_Init(&ctx_shavite);
+                shavite3_ref_Update(&ctx_shavite, data1, data1Size);
+                shavite3_ref_Update(&ctx_shavite, data2, data2Size);
+                shavite3_ref_Update(&ctx_shavite, data3, data3Size);
+                shavite3_ref_Final(&ctx_shavite, (uint8_t*)outHash.begin());
                 break;
             }
             default:

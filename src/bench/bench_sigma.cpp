@@ -9,6 +9,27 @@
 #include <boost/program_options.hpp>
 #include <thread>
 
+#include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
+#include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
+
+// SIGMA paramaters (centrally set by network)
+uint64_t arenaCpuCostRounds = 8;
+uint64_t slowHashCpuCostRounds = 12;
+uint64_t memCostGb = 4;   
+uint64_t slowHashMemCostMb = 16;
+uint64_t fastHashMemCostBytes = 300;
+uint64_t maxHashesPre = 65536;
+uint64_t maxHashesPost = 65536;
+uint64_t numSigmaVerifyThreads = 4;
+bool defaultSigma = true;
+
+// User paramaters (adjustable on individual machines)
+uint64_t numThreads = std::thread::hardware_concurrency();
+uint64_t memAllowGb = memCostGb;
+uint64_t numUserVerifyThreads = std::min(numSigmaVerifyThreads, (uint64_t)std::thread::hardware_concurrency());
+uint64_t numFullHashesTarget = 50000;
+bool mineOnly=false;
+    
 using namespace boost::program_options;
 int LogPrintStr(const std::string &str)
 {
@@ -60,6 +81,122 @@ void selectLargesHashUnit(double& nSustainedHashesPerSecond, std::string& label)
     }
 }
 
+std::vector<std::string> shaviteTestVectorIn = {
+    "A",
+    "AA",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "B33F761F0D3A86BB1051905AEC7A691BD0B5A24C3721F67D8E48D839",
+    "D4773C6DAFE49604B4DF73725512483DB17578CD209C27ABB39782D8", 
+    "15D9174CBD4D22F8C49FE874F45EBBF23806DEEC190B20BC67945833", 
+    "262C26AD4EDCD692FFB1B859CE729AD61BA67D6FA72AC7A7509D92E8", 
+    "6FBD09FCE4600327A97540BFF4DF7A99DA7C13F8CB13FA39838EC010"
+};
+std::vector shaviteTestVectorOut = {
+    "8b9b2d57fea66a7bcd2d591350643c7afb70fbab5eb99bfa8c931fba09044ab9",
+    "11e1e404ce9e0f41bd827e5127a3c3ff4593f57da338c5cc1197b40ec91fa056",
+    "de3713502c79619e18048aea9f30794d1060fa3e3f8e6eccb80eed8db79cc0e8",
+    "caf836603350dbe109b3728f8e1068d7cdf0483e19318a02b26fa595c725849d",
+    "e4e2c847729743ad3b3a60e89e42e7f04c3126a710e6862c29e8f6fc4e6ce6ed",
+    "edc7518651c3714d02c4fb92a9eaf86924f849bd4f7c77d90db4a960041c4b30",
+    "27abd4db5dd05aea3ea8423ef577272c0219516e643f39a13c5cb0dd2ca93e3c",
+    "bacc448533a6899223f3473f05d28c771aaa913f931823155a54a7b3ece5edd1"
+};
+
+void testShaviteReference(uint64_t& nTestFailCount)
+{
+    for (unsigned int i=0;i<shaviteTestVectorIn.size();++i)
+    {
+        std::string data = shaviteTestVectorIn[i];
+        std::vector<unsigned char> outHash(32);
+        hashState ctx_shavite;
+        shavite3_ref_Init(&ctx_shavite);
+        shavite3_ref_Update(&ctx_shavite, (const unsigned char*)&data[0], data.size());
+        shavite3_ref_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
+        std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
+        std::string compare(shaviteTestVectorOut[i]);
+        if (outHashHex == compare)
+        {
+            LogPrintf("✔");
+        }
+        else
+        {
+            ++nTestFailCount;
+            LogPrintf("✘");
+            LogPrintf("%s\n", outHashHex);
+        }
+    }
+    LogPrintf("\n");
+}
+
+void testShaviteOptimised(uint64_t& nTestFailCount)
+{
+    for (unsigned int i=0;i<shaviteTestVectorIn.size();++i)
+    {
+        std::string data = shaviteTestVectorIn[i];
+        std::vector<unsigned char> outHash(32);
+        shavite3_256_aesni_hashState ctx_shavite;
+        shavite3_256_aesni_Init(&ctx_shavite);
+        shavite3_256_aesni_Update(&ctx_shavite, (const unsigned char*)&data[0], data.size());
+        shavite3_256_aesni_Final(&ctx_shavite, &outHash[0]);
+        std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
+        std::string compare(shaviteTestVectorOut[i]);
+        if (outHashHex == compare)
+        {
+            LogPrintf("✔");
+        }
+        else
+        {
+            ++nTestFailCount;
+            LogPrintf("✘");
+            LogPrintf("%s\n", outHashHex);
+        }
+    }
+    LogPrintf("\n");
+}
+
+
+std::vector<std::pair<std::string, uint64_t> >
+validHeaderTestVectorIn = {
+                            {"daa464600000000080a6d654b146a17abe8e9cca80f477653f0350000000000000000000000000006fcb97fbd03a00ae5e1113a4e84616fcb43227000000000000000000d244645dffff3f1f0e003c83", 325540099},
+                            {"5a3f6d4e00000000000054c65c8ff213fc3c0df71dab3d5804620100000000000000000000000000c027f3654d83fe8556519b6e8989f89dc83501000000000000000000d145645dffff3f1f020025dd", 1219157114},
+                            {"10a2f82700000000eebb8ad5074e2c34c5feca57e84c32e8353cb301000000000000000000000000005425426760715d666805b4904c4f3551b30a0000000000000000006848645dffff3f1f0500b71e", 1548801618},
+                        };
+void testValidateValidHeaders(uint64_t& nTestFailCount)
+{
+    CBlockHeader header;
+    for (const auto& [hash, height] : validHeaderTestVectorIn)
+    {
+        std::vector<unsigned char> data = ParseHex(hash);
+        memcpy(&header.nVersion, &data[0], 80);
+        sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+        if (!sigmaContext.verifyHeader(header, height))
+        {
+            LogPrintf("✘");
+            ++nTestFailCount;
+        }
+        LogPrintf("✔");
+    }
+    LogPrintf("\n");
+}
+
+void testValidateInvalidHeaders(uint64_t& nTestFailCount)
+{
+    CBlockHeader header;
+    for (const auto& [hash, height] : validHeaderTestVectorIn)
+    {
+        std::vector<unsigned char> data = ParseHex(hash);
+        memcpy(&header.nVersion, &data[0], 80);
+        sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+        if (sigmaContext.verifyHeader(header, 10))
+        {
+            LogPrintf("✘");
+            ++nTestFailCount;
+        }
+        LogPrintf("✔");
+    }
+    LogPrintf("\n");
+}
+
 double calculateSustainedHashrateForTimePeriod(uint64_t maxHashesPre, uint64_t maxHashesPost, double nHalfHashAverage, uint64_t nArenaSetuptime, uint64_t nTimePeriodSeconds)
 {
     // We need to recalculate the arenas every time we exhaust the hash space, or when a new block comes in, whichever comes first.
@@ -80,24 +217,6 @@ double calculateSustainedHashrateForTimePeriod(uint64_t maxHashesPre, uint64_t m
 int main(int argc, char** argv)
 {
     srand(GetTimeMicros());
-
-    // SIGMA paramaters (centrally set by network)
-    uint64_t arenaCpuCostRounds = 8;
-    uint64_t slowHashCpuCostRounds = 12;
-    uint64_t memCostGb = 4;   
-    uint64_t slowHashMemCostMb = 16;
-    uint64_t fastHashMemCostBytes = 300;
-    uint64_t maxHashesPre = 65536;
-    uint64_t maxHashesPost = 65536;
-    uint64_t numSigmaVerifyThreads = 4;
-    bool defaultSigma = true;
-    
-    // User paramaters (adjustable on individual machines)
-    uint64_t numThreads = std::thread::hardware_concurrency();
-    uint64_t memAllowGb = memCostGb;
-    uint64_t numUserVerifyThreads = std::min(numSigmaVerifyThreads, (uint64_t)std::thread::hardware_concurrency());
-    uint64_t numFullHashesTarget = 50000;
-    bool mineOnly=false;
     
     // Declare the supported options.
     options_description desc("Allowed options");
@@ -223,55 +342,24 @@ int main(int argc, char** argv)
     if (defaultSigma)
     {
         LogPrintf("Tests=============================================================\n\n");
+        uint64_t nTestFailCount=0;
         
-        CBlockHeader header;
-        LogPrintf("Attempt to validate valid header 1\n");
+        LogPrintf("Verify shavite reference operation\n");
+        testShaviteReference(nTestFailCount);
+        
+        LogPrintf("Verify shavite optimised operation\n");
+        testShaviteOptimised(nTestFailCount);
+        
+        LogPrintf("Verify validation of valid headers\n");
+        testValidateValidHeaders(nTestFailCount);
+        
+        LogPrintf("Verify validation of invalid headers\n");
+        testValidateInvalidHeaders(nTestFailCount);
+        
+        if (nTestFailCount > 0)
         {
-            std::vector<unsigned char> data = ParseHex("daa464600000000080a6d654b146a17abe8e9cca80f477653f0350000000000000000000000000006fcb97fbd03a00ae5e1113a4e84616fcb43227000000000000000000d244645dffff3f1f0e003c83");
-            memcpy(&header.nVersion, &data[0], 80);
-            sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
-            if (!sigmaContext.verifyHeader(header, 325540099))
-            {
-                LogPrintf("✘\n");
-                return 1;
-            }
-            LogPrintf("✔\n");
-        }
-        LogPrintf("Attempt to validate valid header 2\n");
-        {
-            std::vector<unsigned char> data = ParseHex("5a3f6d4e00000000000054c65c8ff213fc3c0df71dab3d5804620100000000000000000000000000c027f3654d83fe8556519b6e8989f89dc83501000000000000000000d145645dffff3f1f020025dd");
-            memcpy(&header.nVersion, &data[0], 80);
-            sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
-            if (!sigmaContext.verifyHeader(header, 1219157114))
-            {
-                LogPrintf("✘\n");
-                return 1;
-            }
-            LogPrintf("✔\n");
-        }
-        LogPrintf("Attempt to validate valid header 3\n");
-        {
-            std::vector<unsigned char> data = ParseHex("10a2f82700000000eebb8ad5074e2c34c5feca57e84c32e8353cb301000000000000000000000000005425426760715d666805b4904c4f3551b30a0000000000000000006848645dffff3f1f0500b71e");
-            memcpy(&header.nVersion, &data[0], 80);
-            sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
-            if (!sigmaContext.verifyHeader(header, 1548801618))
-            {
-                LogPrintf("✘\n");
-                return 1;
-            }
-            LogPrintf("✔\n");
-        }
-        LogPrintf("Attempt to validate invalid header 1\n");
-        {
-            std::vector<unsigned char> data = ParseHex("e3a9e279001100001e518f7f23b526c1eebcd14731253c4bcff35a0000000000000000000000000070b25754c4650ea64b3965ed65035c78a9be260000000000000000006b435c5dffff3f1f0a005943");
-            memcpy(&header.nVersion, &data[0], 80);
-            sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
-            if (sigmaContext.verifyHeader(header, 1967513924))
-            {
-                LogPrintf("✘\n");
-                return 1;
-            }
-            LogPrintf("✔\n");
+            LogPrintf("Aborting due to [%d] failed tests.\n", nTestFailCount);
+            exit(EXIT_FAILURE);
         }
         LogPrintf("\n");
     }

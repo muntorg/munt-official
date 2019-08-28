@@ -348,10 +348,8 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/scrypt/crypto_scrypt_smix.cpp \
   crypto/scrypt/crypto_scrypt_smix_sse2.h \
   crypto/scrypt/crypto_scrypt_smix_sse2.cpp \
-  crypto/hash/sphlib/shavite.cpp \
   crypto/hash/sphlib/echo.cpp \
   crypto/hash/sphlib/sph_types.h \
-  crypto/hash/sphlib/sph_shavite.h \
   crypto/hash/sphlib/sph_echo.h \
   crypto/hash/sphlib/aes_helper.c \
   crypto/hash/echo256/echo256.cpp \
@@ -361,6 +359,11 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/shavite3_256/shavite3_256_aesni.cpp \
   crypto/hash/shavite3_256/shavite3_256_aesni.h \
   crypto/hash/shavite3_256/shavite3_256_aesni_compress.h \
+  crypto/hash/shavite3_256/ref/AESround.h \
+  crypto/hash/shavite3_256/ref/portable.h \
+  crypto/hash/shavite3_256/ref/shavite3_256_ref_compress.h \
+  crypto/hash/shavite3_256/ref/shavite3_ref.h \
+  crypto/hash/shavite3_256/ref/shavite3_ref.cpp \
   crypto/hash/sigma/argon_echo/argon2.cpp \
   crypto/hash/sigma/argon_echo/core.cpp \
   crypto/hash/sigma/argon_echo/core.h \
