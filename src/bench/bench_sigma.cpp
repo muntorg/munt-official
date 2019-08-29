@@ -289,19 +289,19 @@ int main(int argc, char** argv)
     options_description desc("Allowed options");
     desc.add_options()
     ("help", "produce help message")
-    ("mine_threads", value<int64_t>(), "Set number of threads to use for mining")
-    ("mine_memory", value<int64_t>(), "Set how much memory in gb to mine with")
-    ("mine_num_hashes", value<int64_t>(), "How many full hash attempts to run mining for (default 50000)")
-    ("mine_only", value<bool>(), "Only benchmark actual mining, skip other benchmarks")
-    ("verify_threads", value<int64_t>(), "How many threads to use for verification, may not exceed sigma_verify_threads (defaults to same as sigma_verify_threads)")
-    ("sigma_global_mem", value<int64_t>(), "How much global memory optimal mining should require (in gigabytes)")
-    ("sigma_num_slow", value<int64_t>(), "How many slow hash attempts to allow for each global memory allocation  (maximum 65536)")
-    ("sigma_slowhash_mem", value<int64_t>(), "How much memory each slow hash should consume (in megabytes)")
-    ("sigma_slowhash_cpucost", value<int64_t>(), "How many rounds of computation to use in the argon slow hash computation (default 12)")
-    ("sigma_arena_cpucost", value<int64_t>(), "How many rounds of computation to use in the arena hash computation (default 8)")
-    ("sigma_num_fast", value<int64_t>(), "How many fast hash attempts to allow for each slow hash (maximum 65536)")
-    ("sigma_fasthash_mem", value<int64_t>(), "How much of the global memory to digest for each slow hash (bytes - should not exceed the size of a single slow hash)")
-    ("sigma_verify_threads", value<int64_t>(), "How many threads to allow for slow hashes and therefore verification. (Default 4)");
+    ("mine-threads", value<int64_t>(), "Set number of threads to use for mining")
+    ("mine-memory", value<int64_t>(), "Set how much memory in gb to mine with")
+    ("mine-num-hashes", value<int64_t>(), "How many full hash attempts to run mining for (default 50000)")
+    ("mine-only", value<bool>()->implicit_value(true), "Only benchmark actual mining, skip other benchmarks")
+    ("verify-threads", value<int64_t>(), "How many threads to use for verification, may not exceed sigma_verify_threads (defaults to same as sigma_verify_threads)")
+    ("sigma-global-mem", value<int64_t>(), "How much global memory optimal mining should require (in gigabytes)")
+    ("sigma-num-slow", value<int64_t>(), "How many slow hash attempts to allow for each global memory allocation  (maximum 65536)")
+    ("sigma-slowhash-mem", value<int64_t>(), "How much memory each slow hash should consume (in megabytes)")
+    ("sigma-slowhash-cpucost", value<int64_t>(), "How many rounds of computation to use in the argon slow hash computation (default 12)")
+    ("sigma-arena-cpucost", value<int64_t>(), "How many rounds of computation to use in the arena hash computation (default 8)")
+    ("sigma-num-fast", value<int64_t>(), "How many fast hash attempts to allow for each slow hash (maximum 65536)")
+    ("sigma-fasthash-mem", value<int64_t>(), "How much of the global memory to digest for each slow hash (bytes - should not exceed the size of a single slow hash)")
+    ("sigma-verify-threads", value<int64_t>(), "How many threads to allow for slow hashes and therefore verification. (Default 4)");
     
     
     variables_map vm;
@@ -332,65 +332,65 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    if (vm.count("mine_threads"))
+    if (vm.count("mine-threads"))
     {
-        numThreads = vm["mine_threads"].as<int64_t>();
+        numThreads = vm["mine-threads"].as<int64_t>();
     }
-    if (vm.count("mine_memory"))
+    if (vm.count("mine-memory"))
     {
-        memAllowGb = vm["mine_memory"].as<int64_t>();
+        memAllowGb = vm["mine-memory"].as<int64_t>();
     }
-    if (vm.count("mine_num_hashes"))
+    if (vm.count("mine-num-hashes"))
     {
-        numFullHashesTarget = vm["mine_num_hashes"].as<int64_t>();
+        numFullHashesTarget = vm["mine-num-hashes"].as<int64_t>();
     }
-    if (vm.count("mine_only"))
+    if (vm.count("mine-only"))
     {
-        mineOnly = vm["mine_only"].as<bool>();
+        mineOnly = vm["mine-only"].as<bool>();;
         defaultSigma = false;
     }
-    if (vm.count("verify_threads"))
+    if (vm.count("verify-threads"))
     {
-        numUserVerifyThreads = vm["verify_threads"].as<int64_t>();
+        numUserVerifyThreads = vm["verify-threads"].as<int64_t>();
     }
-    if (vm.count("sigma_global_mem"))
+    if (vm.count("sigma-global-mem"))
     {
-        memCostGb = vm["sigma_global_mem"].as<int64_t>();
+        memCostGb = vm["sigma-global-mem"].as<int64_t>();
         defaultSigma = false;
     }
-    if (vm.count("sigma_num_slow"))
+    if (vm.count("sigma-num-slow"))
     {
         defaultSigma = false;
-        maxHashesPre = vm["sigma_num_slow"].as<int64_t>();
+        maxHashesPre = vm["sigma-num-slow"].as<int64_t>();
     }
-    if (vm.count("sigma_slowhash_mem"))
+    if (vm.count("sigma-slowhash-mem"))
     {
-        slowHashMemCostMb = vm["sigma_slowhash_mem"].as<int64_t>();
+        slowHashMemCostMb = vm["sigma-slowhash-mem"].as<int64_t>();
         defaultSigma = false;
     }
-    if (vm.count("sigma_arena_cpucost"))
+    if (vm.count("sigma-arena-cpucost"))
     {
-        arenaCpuCostRounds = vm["sigma_arena_cpucost"].as<int64_t>();
+        arenaCpuCostRounds = vm["sigma-arena-cpucost"].as<int64_t>();
         defaultSigma = false;
     }
-    if (vm.count("sigma_slowhash_cpucost"))
+    if (vm.count("sigma-slowhash-cpucost"))
     {
-        slowHashCpuCostRounds = vm["sigma_slowhash_cpucost"].as<int64_t>();
+        slowHashCpuCostRounds = vm["sigma-slowhash-cpucost"].as<int64_t>();
         defaultSigma = false;
     }
-    if (vm.count("sigma_num_fast"))
+    if (vm.count("sigma-num-fast"))
     {
-        maxHashesPost = vm["sigma_num_fast"].as<int64_t>();
+        maxHashesPost = vm["sigma-num-fast"].as<int64_t>();
         defaultSigma = false;
     }
-    if (vm.count("sigma_fasthash_mem"))
+    if (vm.count("sigma-fasthash-mem"))
     {
-        fastHashMemCostBytes = vm["sigma_fasthash_mem"].as<int64_t>();
+        fastHashMemCostBytes = vm["sigma-fasthash-mem"].as<int64_t>();
         defaultSigma = false;
     }
-    if (vm.count("sigma_verify_threads"))
+    if (vm.count("sigma-verify-threads"))
     {
-        numSigmaVerifyThreads = vm["sigma_verify_threads"].as<int64_t>();
+        numSigmaVerifyThreads = vm["sigma-verify-threads"].as<int64_t>();
         defaultSigma = false;
     }
     
