@@ -552,6 +552,7 @@ int main(int argc, char** argv)
         }
     }
     
+    uint64_t nArenaSetuptime=0;
     uint64_t nMineStart = GetTimeMicros();
     {
         if (mineOnly)
@@ -596,7 +597,7 @@ int main(int argc, char** argv)
             workerThreads->join();
         }
         double nHalfHashAverage=0;
-        uint64_t nArenaSetuptime = (GetTimeMicros() - nStart);
+        nArenaSetuptime = (GetTimeMicros() - nStart);
         LogPrintf("Arena setup time [%.2f micros]\n", nArenaSetuptime);
         nStart = GetTimeMicros();
         {
@@ -613,10 +614,13 @@ int main(int argc, char** argv)
         nHalfHashAverage = ((GetTimeMicros() - nStart)) / (double)halfHashCounter;
         LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per half-hash[%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), nHalfHashAverage, ((GetTimeMicros() - nStart)) / (double)hashCounter);
         
-        
+        //Extrapolate sustained hashing speed for various time intervals
         double nSustainedHashesPerSecond = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 150);
         double nSustainedHashesPerSecond30s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 30);
         double nSustainedHashesPerSecond60s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 60);
+        double nSustainedHashesPerSecond120s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 120);
+        double nSustainedHashesPerSecond240s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 240);
+        double nSustainedHashesPerSecond480s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 480);
         
         // Convert to the largest unit we can so that output is easier to read
         std::string labelSustained = " h";        
@@ -625,24 +629,38 @@ int main(int argc, char** argv)
         selectLargesHashUnit(nSustainedHashesPerSecond30s, labelSustained30s);
         std::string labelSustained60s = " h";        
         selectLargesHashUnit(nSustainedHashesPerSecond60s, labelSustained60s);
+        std::string labelSustained120s = " h";        
+        selectLargesHashUnit(nSustainedHashesPerSecond120s, labelSustained120s);
+        std::string labelSustained240s = " h";        
+        selectLargesHashUnit(nSustainedHashesPerSecond240s, labelSustained240s);
+        std::string labelSustained480s = " h";        
+        selectLargesHashUnit(nSustainedHashesPerSecond480s, labelSustained480s);
+        
+        // Log extrapolated speeds
+        LogPrintf("Extrapolate sustained hashrates for block timings\n");
+        LogPrintf("Estimated 30s hashrate %.2f %s/s\n", nSustainedHashesPerSecond30s, labelSustained30s);
+        LogPrintf("Estimated 1m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond60s, labelSustained60s);
+        LogPrintf("Estimated 2m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond120s, labelSustained120s);
+        LogPrintf("Estimated 4m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond240s, labelSustained240s);
+        LogPrintf("Estimated 8m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond480s, labelSustained480s);
         
         // Log a highly noticeable number for users who just want a number to compare without all the gritty details.
-        
-        LogPrintf("\n================================================");
-        LogPrintf("\n* Estimated 30s hashrate %16.2f %s/s *", nSustainedHashesPerSecond30s, labelSustained30s);
-        LogPrintf("\n* Estimated 1m hashrate %17.2f %s/s *", nSustainedHashesPerSecond60s, labelSustained60s);
-        LogPrintf("\n* Estimated sustained hashrate %10.2f %s/s *", nSustainedHashesPerSecond, labelSustained);
-        LogPrintf("\n================================================\n");
+        LogPrintf("\n===========================================================");
+        LogPrintf("\n* Estimated continuous sustained hashrate %10.2f %s/s *", nSustainedHashesPerSecond, labelSustained);
+        LogPrintf("\n===========================================================\n");
     }
     
     uint64_t nMineEnd = GetTimeMicros();
     LogPrintf("\nBenchmarks finished in [%d seconds]\n", (nMineEnd-nMineStart)*0.000001);
     
-    if ((nMineEnd-nMineStart)*0.000001< 30)
+    if ((nMineEnd-nMineStart)*0.000001<30)
     {
-        // Calculate hash target to spend 200 seconds running and suggest user set that.
-        // NB! We delibritely test for 30 but calculate on 200 to prevent making people run the program multiple times unnecessarily.
-        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine_num_hashes=%d` or larger for at least 200 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*((200000000)/(nMineEnd-nMineStart))));
+        // Calculate hash target to spend 40 seconds running and suggest user set that.
+        // NB! We delibritely test for 30 but calculate on 40 to prevent making people run the program multiple times unnecessarily.
+        uint64_t nTimeSpentMining = (nMineEnd - (nArenaSetuptime+nMineStart));
+        double nMultiplier = ((40*1000000) / nTimeSpentMining);
+        
+        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine_num_hashes=%d` or larger for at least 200 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*nMultiplier));
     }
     //NB! We leak sigmaContexts here, we don't really care because this is a trivial benchmark program its faster for the user to just exit than to actually free them.
 }
