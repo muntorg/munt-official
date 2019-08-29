@@ -141,6 +141,7 @@ void testShaviteReference(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
+#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
 void testShaviteOptimised(uint64_t& nTestFailCount)
 {
     for (unsigned int i=0;i<hashTestVector.size();++i)
@@ -166,6 +167,7 @@ void testShaviteOptimised(uint64_t& nTestFailCount)
     }
     LogPrintf("\n");
 }
+#endif
 
 void testEchoReference(uint64_t& nTestFailCount)
 {
@@ -193,6 +195,7 @@ void testEchoReference(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
+#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
 void testEchoOptimised(uint64_t& nTestFailCount)
 {
     for (unsigned int i=0;i<hashTestVector.size();++i)
@@ -218,6 +221,7 @@ void testEchoOptimised(uint64_t& nTestFailCount)
     }
     LogPrintf("\n");
 }
+#endif
 
 
 std::vector<std::pair<std::string, uint64_t> >
@@ -414,14 +418,18 @@ int main(int argc, char** argv)
         LogPrintf("Verify shavite reference operation\n");
         testShaviteReference(nTestFailCount);
         
+        #ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
         LogPrintf("Verify shavite optimised operation\n");
         testShaviteOptimised(nTestFailCount);
+        #endif
         
         LogPrintf("Verify echo reference operation\n");
         testEchoReference(nTestFailCount);
         
+        #ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
         LogPrintf("Verify echo optimised operation\n");
         testEchoOptimised(nTestFailCount);
+        #endif
         
         LogPrintf("Verify validation of valid headers\n");
         testValidateValidHeaders(nTestFailCount);
