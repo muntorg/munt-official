@@ -623,9 +623,11 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/cpp/gulden_unified_backend.hpp \
   unity/djinni/cpp/gulden_unified_backend.cpp \
   unity/djinni/cpp/gulden_unified_frontend.hpp \
-  ../djinni/support-lib/jni/djinni_support.cpp \
-  ../djinni/support-lib/jni/djinni_main.cpp \
   $(GULDEN_CORE_H)
+
+nodist_libgulden_unity_jni_la_SOURCES = \
+  ../djinni/support-lib/jni/djinni_support.cpp \
+  ../djinni/support-lib/jni/djinni_main.cpp
 
 
 libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) -llog
