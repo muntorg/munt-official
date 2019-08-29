@@ -72,7 +72,8 @@ __attribute__((aligned(16))) const unsigned int invshiftrows[]  = {0x070a0d00, 0
 __attribute__((aligned(16))) const unsigned int zero[]          = {0x00000000, 0x00000000, 0x00000000, 0x00000000};
 __attribute__((aligned(16))) const unsigned int mul2ipt[]       = {0x728efc00, 0x6894e61a, 0x3fc3b14d, 0x25d9ab57, 0xfd5ba600, 0x2a8c71d7, 0x1eb845e3, 0xc96f9234};
 
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #define ECHO_SUBBYTES(state, i, j) \
     state[i][j] = _mm_aesenc_si128(state[i][j], k1);\
     state[i][j] = _mm_aesenc_si128(state[i][j], M128(zero));\
@@ -180,19 +181,20 @@ __attribute__((aligned(16))) const unsigned int mul2ipt[]       = {0x728efc00, 0
     dst[3][3] = src[3][3]
 
 
-void Compress(echo256_aesni_hashState *ctx, const unsigned char *pmsg, unsigned int uBlockCount)
-{
-   unsigned int r, b, i, j;
-   __m128i t1, t2, s2, k1;
-   __m128i _state[4][4], _state2[4][4], _statebackup[4][4]; 
 
-   for(i = 0; i < 4; i++)
-   {
+void Compress(echo256_aesni_hashState* ctx, const unsigned char* pmsg, unsigned int uBlockCount)
+{    
+    unsigned int r, b, i, j;
+    __m128i t1, t2, s2, k1;
+    __m128i _state[4][4], _state2[4][4], _statebackup[4][4]; 
+
+    for(i = 0; i < 4; i++)
+    {
         _state[i][0] = ctx->state[i][0];
-   }
+    }
 
-   for(b = 0; b < uBlockCount; b++)
-   {
+    for(b = 0; b < uBlockCount; b++)
+    {
         ctx->k = _mm_add_epi64(ctx->k, ctx->const1536);
 
         // load message
@@ -228,6 +230,7 @@ void Compress(echo256_aesni_hashState *ctx, const unsigned char *pmsg, unsigned 
     }
     SAVESTATE(ctx->state, _state);
 }
+#pragma GCC diagnostic pop
 
 
 
@@ -260,7 +263,7 @@ HashReturn echo256_aesni_Init(echo256_aesni_hashState *ctx)
     return SUCCESS;
 }
 
-HashReturn echo256_aesni_Update(echo256_aesni_hashState *state, const unsigned char *data, uint64_t dataByteLength)
+HashReturn echo256_aesni_Update(echo256_aesni_hashState* state, const unsigned char* data, uint64_t dataByteLength)
 {
     unsigned int uBlockCount, uRemainingBytes;
 
@@ -308,7 +311,7 @@ HashReturn echo256_aesni_Update(echo256_aesni_hashState *state, const unsigned c
     return SUCCESS;
 }
 
-HashReturn echo256_aesni_Final(echo256_aesni_hashState *state, unsigned char *hashval)
+HashReturn echo256_aesni_Final(echo256_aesni_hashState* state, unsigned char* hashval)
 {
     __m128i remainingbits;
 
@@ -379,24 +382,23 @@ HashReturn echo256_aesni_Final(echo256_aesni_hashState *state, unsigned char *ha
     return SUCCESS;
 }
 
-HashReturn update_final_echo( echo256_aesni_hashState *state, unsigned char *hashval, const unsigned char *data, uint64_t dataByteLength )
+HashReturn update_final_echo( echo256_aesni_hashState* state, unsigned char* hashval, const unsigned char* data, uint64_t dataByteLength )
 {
-   unsigned int uBlockCount, uRemainingBytes;
+    unsigned int uBlockCount, uRemainingBytes;
 
-   if( (state->uBufferBytes + dataByteLength) >= state->uBlockLength )
-   {
+    if( (state->uBufferBytes + dataByteLength) >= state->uBlockLength )
+    {
         if( state->uBufferBytes != 0 )
         {
-           // Fill the buffer
-           memcpy( state->buffer + state->uBufferBytes,
-                   (void*)data, state->uBlockLength - state->uBufferBytes );
+            // Fill the buffer
+            memcpy( state->buffer + state->uBufferBytes, (void*)data, state->uBlockLength - state->uBufferBytes );
 
-           // Process buffer
-           Compress( state, state->buffer, 1 );
-           state->processed_bits += state->uBlockLength * 8;
+            // Process buffer
+            Compress( state, state->buffer, 1 );
+            state->processed_bits += state->uBlockLength * 8;
 
-           data += state->uBlockLength - state->uBufferBytes;
-           dataByteLength -= state->uBlockLength - state->uBufferBytes;
+            data += state->uBlockLength - state->uBufferBytes;
+            dataByteLength -= state->uBlockLength - state->uBufferBytes;
         }
 
         // buffer now does not contain any unprocessed bytes
@@ -406,34 +408,34 @@ HashReturn update_final_echo( echo256_aesni_hashState *state, unsigned char *has
 
         if( uBlockCount > 0 )
         {
-           Compress( state, data, uBlockCount );
-           state->processed_bits += uBlockCount * state->uBlockLength * 8;
-           data += uBlockCount * state->uBlockLength;
+            Compress( state, data, uBlockCount );
+            state->processed_bits += uBlockCount * state->uBlockLength * 8;
+            data += uBlockCount * state->uBlockLength;
         }
 
         if( uRemainingBytes > 0 )
         memcpy(state->buffer, (void*)data, uRemainingBytes);
 
         state->uBufferBytes = uRemainingBytes;
-   }
-   else
-   {
+    }
+    else
+    {
         memcpy( state->buffer + state->uBufferBytes, (void*)data, dataByteLength );
         state->uBufferBytes += dataByteLength;
-   }
+    }
 
-   __m128i remainingbits;
+    __m128i remainingbits;
 
-   // Add remaining bytes in the buffer
-   state->processed_bits += state->uBufferBytes * 8;
+    // Add remaining bytes in the buffer
+    state->processed_bits += state->uBufferBytes * 8;
 
-   remainingbits = _mm_set_epi32( 0, 0, 0, state->uBufferBytes * 8 );
+    remainingbits = _mm_set_epi32( 0, 0, 0, state->uBufferBytes * 8 );
 
-   // Pad with 0x80
-   state->buffer[state->uBufferBytes++] = 0x80;
-   // Enough buffer space for padding in this block?
-   if( (state->uBlockLength - state->uBufferBytes) >= 18 )
-   {
+    // Pad with 0x80
+    state->buffer[state->uBufferBytes++] = 0x80;
+    // Enough buffer space for padding in this block?
+    if( (state->uBlockLength - state->uBufferBytes) >= 18 )
+    {
         // Pad with zeros
         memset( state->buffer + state->uBufferBytes, 0, state->uBlockLength - (state->uBufferBytes + 18) );
 
@@ -441,30 +443,28 @@ HashReturn update_final_echo( echo256_aesni_hashState *state, unsigned char *has
         *( (unsigned short*)(state->buffer + state->uBlockLength - 18) ) = state->uHashSize;
 
         // Processed bits
-        *( (uint64_t*)(state->buffer + state->uBlockLength - 16) ) =
-                   state->processed_bits;
+        *( (uint64_t*)(state->buffer + state->uBlockLength - 16) ) = state->processed_bits;
         *( (uint64_t*)(state->buffer + state->uBlockLength - 8) ) = 0;
 
         // Last block contains message bits?
         if( state->uBufferBytes == 1 )
         {
-           state->k = _mm_xor_si128( state->k, state->k );
-           state->k = _mm_sub_epi64( state->k, state->const1536 );
+            state->k = _mm_xor_si128( state->k, state->k );
+            state->k = _mm_sub_epi64( state->k, state->const1536 );
         }
         else
         {
-           state->k = _mm_add_epi64( state->k, remainingbits );
-           state->k = _mm_sub_epi64( state->k, state->const1536 );
+            state->k = _mm_add_epi64( state->k, remainingbits );
+            state->k = _mm_sub_epi64( state->k, state->const1536 );
         }
 
         // Compress
         Compress( state, state->buffer, 1 );
-   }
-   else
-   {
+    }
+    else
+    {
         // Fill with zero and compress
-        memset( state->buffer + state->uBufferBytes, 0,
-                state->uBlockLength - state->uBufferBytes );
+        memset( state->buffer + state->uBufferBytes, 0, state->uBlockLength - state->uBufferBytes );
         state->k = _mm_add_epi64( state->k, remainingbits );
         state->k = _mm_sub_epi64( state->k, state->const1536 );
         Compress( state, state->buffer, 1 );
@@ -473,24 +473,22 @@ HashReturn update_final_echo( echo256_aesni_hashState *state, unsigned char *has
         memset( state->buffer, 0, state->uBlockLength - 18 );
 
         // Hash size
-        *( (unsigned short*)(state->buffer + state->uBlockLength - 18) ) =
-                 state->uHashSize;
+        *( (unsigned short*)(state->buffer + state->uBlockLength - 18) ) = state->uHashSize;
 
         // Processed bits
-        *( (uint64_t*)(state->buffer + state->uBlockLength - 16) ) =
-                   state->processed_bits;
+        *( (uint64_t*)(state->buffer + state->uBlockLength - 16) ) = state->processed_bits;
         *( (uint64_t*)(state->buffer + state->uBlockLength - 8) ) = 0;
         // Compress the last block
         state->k = _mm_xor_si128( state->k, state->k );
         state->k = _mm_sub_epi64( state->k, state->const1536 );
         Compress( state, state->buffer, 1) ;
-   }
+    }
 
-   // Store the hash value
-   _mm_storeu_si128( (__m128i*)hashval + 0, state->state[0][0] );
-   _mm_storeu_si128( (__m128i*)hashval + 1, state->state[1][0] );
+    // Store the hash value
+    _mm_storeu_si128( (__m128i*)hashval + 0, state->state[0][0] );
+    _mm_storeu_si128( (__m128i*)hashval + 1, state->state[1][0] );
 
-   return SUCCESS;
+    return SUCCESS;
 }
 
 #ifdef __clang__
