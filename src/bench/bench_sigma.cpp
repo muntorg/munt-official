@@ -254,7 +254,7 @@ void testValidateInvalidHeaders(uint64_t& nTestFailCount)
         std::vector<unsigned char> data = ParseHex(hash);
         memcpy(&header.nVersion, &data[0], 80);
         sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
-        if (sigmaContext.verifyHeader(header, 10))
+        if (sigmaContext.verifyHeader(header, height+1))
         {
             LogPrintf("✘");
             ++nTestFailCount;
