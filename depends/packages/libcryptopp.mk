@@ -24,7 +24,7 @@ endef
 
 define $(package)_build_cmds
   PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f GNUmakefile libcryptopp.pc && \
-  CXXFLAGS="$($(package)_cxxflags)" LDFLAGS="$($(package)_ldflags)" PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f $($(package)_makefile) static
+  PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f $($(package)_makefile) static
 endef
 
 define $(package)_stage_cmds
