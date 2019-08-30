@@ -71,13 +71,13 @@ bool shavite3_256_aesni_Init(shavite3_256_aesni_hashState* state)
     memset(state->chaining_value,0,32); 
 
     // Compute MIV_{256}
-    shavite3_256_aesni_Compress256(state, state->buffer,state->chaining_value,0x0ULL);
+    shavite3_256_aesni_Compress256(state->buffer,state->chaining_value,0x0ULL);
 
     // Set the message block to the size of the requested digest size
     U16TO8_LITTLE(state->buffer,256);
 
     // Compute IV_m
-    shavite3_256_aesni_Compress256(state, state->buffer,state->chaining_value,0x0ULL);
+    shavite3_256_aesni_Compress256(state->buffer,state->chaining_value,0x0ULL);
 
     // Set the block size to be 512 bits (as required for C_{256})
     state->BlockSize=512; 
@@ -138,7 +138,7 @@ bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsign
         SHAVITE_CNT+=8*(BlockSizeB-bufcnt);
 
         // Call the compression function to process the current block
-        shavite3_256_aesni_Compress256(state, state->buffer, state->chaining_value, SHAVITE_CNT);
+        shavite3_256_aesni_Compress256(state->buffer, state->chaining_value, SHAVITE_CNT);
     }
 
 
@@ -150,7 +150,7 @@ bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsign
         SHAVITE_CNT+=8*BlockSizeB;
 
         // Call the compression function to process the current block
-        shavite3_256_aesni_Compress256(state, p, state->chaining_value, SHAVITE_CNT);
+        shavite3_256_aesni_Compress256(p, state->chaining_value, SHAVITE_CNT);
     }
 
     // If there are still unprocessed bytes, store them locally and wait for more
@@ -194,7 +194,7 @@ bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char
     if (bufcnt>=BlockSizeB-10)
     {
         // Compress the current block
-        shavite3_256_aesni_Compress256(state, block,result,state->bitcount);
+        shavite3_256_aesni_Compress256(block,result,state->bitcount);
 
         // Generate the full padding block
         memset(block, 0, BlockSizeB);
@@ -202,7 +202,7 @@ bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char
         U16TO8_LITTLE(block+BlockSizeB-2, state->DigestSize);
 
         // Compress the full padding block
-        shavite3_256_aesni_Compress256(state, block,result,0x0UL);
+        shavite3_256_aesni_Compress256(block,result,0x0UL);
     }
     else
     {
@@ -211,11 +211,11 @@ bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char
         U16TO8_LITTLE(block+BlockSizeB-2, state->DigestSize);
         if ((state->bitcount&(state->BlockSize-1))==0)
         {
-            shavite3_256_aesni_Compress256(state, block,result, 0ULL);
+            shavite3_256_aesni_Compress256(block,result, 0ULL);
         }
         else
         {
-            shavite3_256_aesni_Compress256(state, block,result, state->bitcount);
+            shavite3_256_aesni_Compress256(block,result, state->bitcount);
         }
     }
     

@@ -33,12 +33,6 @@
 /// Encrypts the plaintext pt[] using the key message[], and counter[], to produce the ciphertext ct[]
 
 
-__attribute__ ((aligned (16))) const unsigned int SHAVITE_REVERSE[4] = {0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100 };
-__attribute__ ((aligned (16))) const unsigned int SHAVITE256_XOR2[4] = {0x0, 0xFFFFFFFF, 0x0, 0x0};
-__attribute__ ((aligned (16))) const unsigned int SHAVITE256_XOR3[4] = {0x0, 0x0, 0xFFFFFFFF, 0x0};
-__attribute__ ((aligned (16))) const unsigned int SHAVITE256_XOR4[4] = {0x0, 0x0, 0x0, 0xFFFFFFFF};
-
-
 #define SHAVITE_MIXING_256_OPT   \
     x11 = x15;                   \
     x10 = x14;                   \
@@ -73,8 +67,15 @@ __attribute__ ((aligned (16))) const unsigned int SHAVITE256_XOR4[4] = {0x0, 0x0
     x7 = _mm_slli_si128(x7,  12);\
     x11 = _mm_xor_si128(x11, x7);
 
-void shavite3_256_aesni_E256(shavite3_256_aesni_hashState* state)
+// encryption + Davies-Meyer transform
+void shavite3_256_aesni_Compress256(const unsigned char* message_block, unsigned char* chaining_value, uint64_t counter)
 {
+    __attribute__ ((aligned (16))) static const unsigned int SHAVITE_REVERSE[4] = {0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100 };
+    __attribute__ ((aligned (16))) static const unsigned int SHAVITE256_XOR2[4] = {0x0, 0xFFFFFFFF, 0x0, 0x0};
+    __attribute__ ((aligned (16))) static const unsigned int SHAVITE256_XOR3[4] = {0x0, 0x0, 0xFFFFFFFF, 0x0};
+    __attribute__ ((aligned (16))) static const unsigned int SHAVITE256_XOR4[4] = {0x0, 0x0, 0x0, 0xFFFFFFFF};
+    __attribute__ ((aligned (16))) const unsigned int SHAVITE_CNTS[4] = {(unsigned int)(counter & 0xFFFFFFFFULL),(unsigned int)(counter>>32),0,0}; 
+
     __m128i x0;
     __m128i x1;
     __m128i x2;
@@ -92,21 +93,21 @@ void shavite3_256_aesni_E256(shavite3_256_aesni_hashState* state)
     __m128i x15;
 
     // (L,R) = (xmm0,xmm1)
-    const __m128i ptxt1 = _mm_loadu_si128((const __m128i*)state->SHAVITE_PTXT);
-    const __m128i ptxt2 = _mm_loadu_si128((const __m128i*)(state->SHAVITE_PTXT+16));
+    const __m128i ptxt1 = _mm_loadu_si128((const __m128i*)chaining_value);
+    const __m128i ptxt2 = _mm_loadu_si128((const __m128i*)(chaining_value+16));
 
     x0 = ptxt1;
     x1 = ptxt2;
 
-    x3 = _mm_loadu_si128((__m128i*)state->SHAVITE_CNTS);
+    x3 = _mm_loadu_si128((__m128i*)SHAVITE_CNTS);
     x4 = _mm_loadu_si128((__m128i*)SHAVITE256_XOR2);
     x2 = _mm_setzero_si128();
 
     // init key schedule
-    x8 = _mm_loadu_si128((__m128i*)state->SHAVITE_MESS);
-    x9 = _mm_loadu_si128((__m128i*)(state->SHAVITE_MESS+4));
-    x10 = _mm_loadu_si128((__m128i*)(state->SHAVITE_MESS+8));
-    x11 = _mm_loadu_si128((__m128i*)(state->SHAVITE_MESS+12));
+    x8 = _mm_loadu_si128((__m128i*)message_block);
+    x9 = _mm_loadu_si128((__m128i*)(((unsigned int*)message_block)+4));
+    x10 = _mm_loadu_si128((__m128i*)(((unsigned int*)message_block)+8));
+    x11 = _mm_loadu_si128((__m128i*)(((unsigned int*)message_block)+12));
 
     // xmm8..xmm11 = rk[0..15]
     // start key schedule
@@ -334,36 +335,8 @@ void shavite3_256_aesni_E256(shavite3_256_aesni_hashState* state)
     // feedforward
     x0 = _mm_xor_si128(x0, ptxt1);
     x1 = _mm_xor_si128(x1, ptxt2);
-    _mm_storeu_si128((__m128i *)state->SHAVITE_PTXT, x0);
-    _mm_storeu_si128((__m128i *)(state->SHAVITE_PTXT + 16), x1);
-
-    return;
-}
-
-void shavite3_256_aesni_Compress256(shavite3_256_aesni_hashState* state, const unsigned char *message_block, unsigned char *chaining_value, unsigned long long counter)
-{    
-    int i;
-
-    for (i=0;i<8*4;i++)
-    {
-        state->SHAVITE_PTXT[i]=chaining_value[i];
-    }
-
-    for (i=0;i<16;i++)
-    {
-        state->SHAVITE_MESS[i] = *((unsigned int*)(message_block+4*i));
-    }
-
-
-    state->SHAVITE_CNTS[0] = (unsigned int)(counter & 0xFFFFFFFFULL);
-    state->SHAVITE_CNTS[1] = (unsigned int)(counter>>32);
-    // encryption + Davies-Meyer transform
-    shavite3_256_aesni_E256(state);
-
-    for (i=0; i<4*8; i++)
-    {
-        chaining_value[i]=state->SHAVITE_PTXT[i];
-    }
+    _mm_storeu_si128((__m128i *)chaining_value, x0);
+    _mm_storeu_si128((__m128i *)(chaining_value + 16), x1);
 
     return;
 }

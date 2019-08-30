@@ -23,9 +23,6 @@ struct shavite3_256_aesni_hashState
    uint8_t partial_byte=0;       // A byte to store a fraction of a byte in case the input is not fully byte alligned
    int DigestSize;                   // The requested digest size
    int BlockSize;                    // The message block size
-    __attribute__ ((aligned (16))) unsigned int SHAVITE_MESS[16];
-    __attribute__ ((aligned (16))) unsigned char SHAVITE_PTXT[8*4];
-    __attribute__ ((aligned (16))) unsigned int SHAVITE_CNTS[4] = {0,0,0,0}; 
 };
 
 // Initialization of the internal state of the hash function
