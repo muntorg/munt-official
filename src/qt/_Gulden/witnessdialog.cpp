@@ -498,6 +498,22 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
     // if the witness was extended or rearranged the initial weight will have been different, this is not accounted for
     infoForAccount.nOriginWeight = accountStatus.accountWeight;
 
+    LOCK(cs_main);
+    infoForAccount.nOriginBlock = accountStatus.nLockFromBlock;
+    CBlockIndex* originIndex = chainActive[infoForAccount.nOriginBlock];
+    infoForAccount.originDate = QDateTime::fromTime_t(originIndex->GetBlockTime());
+
+    // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
+    CBlockIndex* sampleWeightIndex = chainActive[infoForAccount.nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? infoForAccount.nOriginBlock : infoForAccount.nOriginBlock+100];
+    int64_t nUnused1;
+    if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, infoForAccount.nOriginNetworkWeight, chainActive))
+    {
+        std::string strErrorMessage = "Error in witness dialog, failed to get weight for account";
+        CAlert::Notify(strErrorMessage, true, true);
+        LogPrintf("%s", strErrorMessage.c_str());
+        throw std::runtime_error(strErrorMessage);
+    }
+
     infoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
 
     std::map<double, CAmount> pointMapForecast; pointMapForecast[0] = 0;
@@ -505,9 +521,8 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
 
     CTxOutPoW2Witness witnessDetails;
 
-    //fixme: (PHASE4) Make this work for multiple 'origin' blocks.
-    // Iterate the transaction history and extract all 'origin' block details.
-    // Also extract details for every witness reward we have received.
+    // FIXME: (PHASE4) use only rewards of current witness parts, not of previous ones after a re-fund
+    // Extract details for every witness reward we have received.
     filter->setAccountFilter(forAccount);
     int rows = filter->rowCount();
     for (int row = 0; row < rows; ++row)
@@ -518,28 +533,7 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
         if ( nDepth > 0 )
         {
             int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
-            if ( (nType >= TransactionRecord::WitnessFundRecv) )
-            {
-                //fixme (PHASE4) - (multiple witnesses in single account etc.)
-                if (infoForAccount.nOriginBlock == 0)
-                {
-                    infoForAccount.originDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
-                    infoForAccount.nOriginBlock = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
-
-                    // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
-                    CBlockIndex* sampleWeightIndex = chainActive[infoForAccount.nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? infoForAccount.nOriginBlock : infoForAccount.nOriginBlock+100];
-                    int64_t nUnused1;
-                    if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, infoForAccount.nOriginNetworkWeight, chainActive))
-                    {
-                        std::string strErrorMessage = "Error in witness dialog, failed to get weight for account";
-                        CAlert::Notify(strErrorMessage, true, true);
-                        LogPrintf("%s", strErrorMessage.c_str());
-                        throw std::runtime_error(strErrorMessage);
-                    }
-                    pointMapGenerated[0] = 0;
-                }
-            }
-            else if (nType == TransactionRecord::GeneratedWitness)
+            if (nType == TransactionRecord::GeneratedWitness)
             {
                 int nX = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
                 if (nX > 0)
