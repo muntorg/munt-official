@@ -668,7 +668,7 @@ int main(int argc, char** argv)
         uint64_t nTimeSpentMining = (nMineEnd - (nArenaSetuptime+nMineStart));
         double nMultiplier = ((40*1000000) / nTimeSpentMining);
         
-        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine_num_hashes=%d` or larger for at least 200 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*nMultiplier));
+        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine-num-hashes=%d` or larger for at least 200 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*nMultiplier));
     }
     //NB! We leak sigmaContexts here, we don't really care because this is a trivial benchmark program its faster for the user to just exit than to actually free them.
 }
