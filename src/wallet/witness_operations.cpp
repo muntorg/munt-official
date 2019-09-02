@@ -600,6 +600,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
     std::transform(accountItems.begin(), accountItems.end(), std::back_inserter(parts), [](const auto& ri) { return ri.nWeight; });
 
     CWitnessAccountStatus result {
+        account,
         status,
         witnessInfo.nTotalWeightRaw,
         isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : uint64_t(0),

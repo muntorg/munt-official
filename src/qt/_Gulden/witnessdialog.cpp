@@ -289,6 +289,10 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(unitDaysAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Days); } );
     connect(unitWeeksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Weeks); } );
     connect(unitMonthsAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Months); } );
+
+    statsUpdateShouldUpdate = false;
+    statsUpdateShouldStop = false;
+    statsUpdateThread = std::thread(&WitnessDialog::updateStatisticsThreadLoop, this);
 }
 
 void WitnessDialog::clearLabels()
@@ -307,6 +311,14 @@ void WitnessDialog::clearLabels()
 WitnessDialog::~WitnessDialog()
 {
     LOG_QT_METHOD;
+
+    std::unique_lock lock(statsUpdateMutex);
+    {
+        std::lock_guard<std::mutex> lock(statsUpdateMutex);
+        statsUpdateShouldStop = true;
+    }
+    statsUpdateCondition.notify_all();
+    statsUpdateThread.join();
 
     delete ui;
 }
@@ -516,8 +528,7 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
 
     infoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
 
-    std::map<double, CAmount> pointMapForecast; pointMapForecast[0] = 0;
-    std::map<double, CAmount> pointMapGenerated;
+    infoForAccount.pointMapForecast[0] = 0;
 
     CTxOutPoW2Witness witnessDetails;
 
@@ -542,7 +553,7 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
                     uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
                     infoForAccount.nEarningsToDate += nY;
                     uint64_t nDays = infoForAccount.originDate.daysTo(infoForAccount.lastEarningsDate);
-                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, true);
+                    AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, true);
                 }
             }
         }
@@ -550,13 +561,13 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
 
     QDateTime tipTime = QDateTime::fromTime_t(chainActive.Tip()->GetBlockTime());
     // One last datapoint for 'current' block.
-    if (!pointMapGenerated.empty())
+    if (!infoForAccount.pointMapGenerated.empty())
     {
-        uint64_t nY = pointMapGenerated.rbegin()->second;
+        uint64_t nY = infoForAccount.pointMapGenerated.rbegin()->second;
         uint64_t nX = chainActive.Tip()->nHeight;
         uint64_t nDays = infoForAccount.originDate.daysTo(tipTime);
-        pointMapGenerated.erase(--pointMapGenerated.end());
-        AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, false);
+        infoForAccount.pointMapGenerated.erase(--infoForAccount.pointMapGenerated.end());
+        AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, false);
     }
 
     // Using the origin block details gathered from previous loop, generate the points for a 'forecast' of how much the account should earn over its entire existence.
@@ -564,50 +575,12 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
     if (infoForAccount.nOriginNetworkWeight == 0)
         infoForAccount.nOriginNetworkWeight = gStartingWitnessNetworkWeightEstimate;
     uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod(infoForAccount.nOriginWeight, infoForAccount.nOriginNetworkWeight);
-    pointMapForecast[0] = 0;
+    infoForAccount.pointMapForecast[0] = 0;
     for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < infoForAccount.nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
     {
         unsigned int nX = i;
         uint64_t nDays = infoForAccount.originDate.daysTo(tipTime.addSecs(i*Params().GetConsensus().nPowTargetSpacing));
-        AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
-    }
-
-    // Populate the 'expected earnings' curve
-    for (const auto& pointIter : pointMapForecast)
-    {
-        infoForAccount.nTotal1 += pointIter.second;
-        infoForAccount.nXForecast = pointIter.first;
-        infoForAccount.forecastedPoints << QPointF(infoForAccount.nXForecast, infoForAccount.nTotal1);
-    }
-
-    // Populate the 'actual earnings' curve.
-    int nXGenerated = 0;
-    for (const auto& pointIter : pointMapGenerated)
-    {
-        infoForAccount.nTotal2 += pointIter.second;
-        nXGenerated = pointIter.first;
-        infoForAccount.generatedPoints << QPointF(pointIter.first, infoForAccount.nTotal2);
-    }
-    if (infoForAccount.generatedPoints.size() > 1)
-    {
-        (infoForAccount.generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
-    }
-
-    //fixme: (PHASE4) This is a bit broken - use nOurWeight etc.
-    // Fill in the remaining time on the 'actual earnings' curve with a forecast.
-    int nXGeneratedForecast = 0;
-    if (infoForAccount.generatedPoints.size() > 0)
-    {
-        infoForAccount.generatedPointsForecast << infoForAccount.generatedPoints.back();
-        for (const auto& pointIter : pointMapForecast)
-        {
-            nXGeneratedForecast = pointIter.first;
-            if (nXGeneratedForecast > nXGenerated)
-            {
-                infoForAccount.nTotal2 += pointIter.second;
-                infoForAccount.generatedPointsForecast << QPointF(nXGeneratedForecast, infoForAccount.nTotal2);
-            }
-        }
+        AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
     }
 
     infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(infoForAccount.nOurWeight, infoForAccount.nTotalNetworkWeightTip);
@@ -615,109 +588,6 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
     infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(witnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
 
     return infoForAccount;
-}
-
-void WitnessDialog::plotGraphForAccount(const WitnessInfoForAccount& witnessInfoForAccount)
-{
-    LOG_QT_METHOD;
-
-    DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
-
-    // Populate graph with info
-    {
-        expectedEarningsCurve->setSamples( witnessInfoForAccount.forecastedPoints );
-        currentEarningsCurveShadow->setSamples( witnessInfoForAccount.generatedPoints );
-        currentEarningsCurve->setSamples( witnessInfoForAccount.generatedPoints );
-        currentEarningsCurveForecastShadow->setSamples( witnessInfoForAccount.generatedPointsForecast );
-        currentEarningsCurveForecast->setSamples( witnessInfoForAccount.generatedPointsForecast );
-        ui->witnessEarningsPlot->setAxisScale( QwtPlot::xBottom, 0, witnessInfoForAccount.nXForecast);
-        ui->witnessEarningsPlot->setAxisScale( QwtPlot::yLeft, 0, std::max(witnessInfoForAccount.nTotal1, witnessInfoForAccount.nTotal2));
-        ui->witnessEarningsPlot->replot();
-    }
-
-
-    // Populate stats table with info
-    {
-        QString lastEarningsDateLabel = tr("n/a");
-        QString earningsToDateLabel = lastEarningsDateLabel;
-        QString networkWeightLabel = lastEarningsDateLabel;
-        QString lockDurationLabel = lastEarningsDateLabel;
-        QString expectedEarningsDurationLabel = lastEarningsDateLabel;
-        QString estimatedEarningsDurationLabel = lastEarningsDateLabel;
-        QString lockTimeRemainingLabel = lastEarningsDateLabel;
-        QString labelWeightValue = lastEarningsDateLabel;
-        QString lockedUntilValue = lastEarningsDateLabel;
-        QString lockedFromValue = lastEarningsDateLabel;
-        QString partCountValue = QString::number(witnessInfoForAccount.accountStatus.parts.size());
-
-        if (witnessInfoForAccount.nOurWeight > 0)
-            labelWeightValue = QString::number(witnessInfoForAccount.nOurWeight);
-        if (!witnessInfoForAccount.originDate.isNull())
-            lockedFromValue = witnessInfoForAccount.originDate.toString("dd/MM/yy hh:mm");
-        if (chainActive.Tip())
-        {
-            QDateTime lockedUntilDate;
-            lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
-            lockedUntilDate = lockedUntilDate.addSecs(witnessInfoForAccount.nLockBlocksRemaining*150);
-            lockedUntilValue = lockedUntilDate.toString("dd/MM/yy hh:mm");
-        }
-
-        if (!witnessInfoForAccount.lastEarningsDate.isNull())
-            lastEarningsDateLabel = witnessInfoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm");
-        if (witnessInfoForAccount.generatedPoints.size() != 0)
-            earningsToDateLabel = QString::number(witnessInfoForAccount.nEarningsToDate);
-        if (witnessInfoForAccount.nTotalNetworkWeightTip > 0)
-            networkWeightLabel = QString::number(witnessInfoForAccount.nTotalNetworkWeightTip);
-
-        //fixme: (PHASE4) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
-        //Ideally this should be improved.
-        //Note if we do improve it we may want to keep the "dumb" behaviour for testnet.
-        {
-            QString formatStr;
-            double divideBy=1;
-            int roundTo = 2;
-            switch (witnessInfoForAccount.scale)
-            {
-                case GraphScale::Blocks:
-                    formatStr = tr("%1 blocks");
-                    divideBy = 1;
-                    roundTo = 0;
-                    break;
-                case GraphScale::Days:
-                    formatStr = tr("%1 days");
-                    divideBy = DailyBlocksTarget();
-                    break;
-                case GraphScale::Weeks:
-                    formatStr = tr("%1 weeks");
-                    divideBy = DailyBlocksTarget()*7;
-                    break;
-                case GraphScale::Months:
-                    formatStr = tr("%1 months");
-                    divideBy = DailyBlocksTarget()*30;
-                    break;
-            }
-            if (witnessInfoForAccount.nWitnessLength > 0)
-                lockDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nWitnessLength/divideBy, 'f', roundTo));
-            if (witnessInfoForAccount.nExpectedWitnessBlockPeriod > 0)
-                expectedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/divideBy, 'f', roundTo));
-            if (witnessInfoForAccount.nEstimatedWitnessBlockPeriod > 0)
-                estimatedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/divideBy, 'f', roundTo));
-            if (witnessInfoForAccount.nLockBlocksRemaining > 0)
-                lockTimeRemainingLabel = formatStr.arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
-        }
-
-        ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
-        ui->labelWitnessEarningsValue->setText(earningsToDateLabel);
-        ui->labelNetworkWeightValue->setText(networkWeightLabel);
-        ui->labelLockDurationValue->setText(lockDurationLabel);
-        ui->labelExpectedEarningsDurationValue->setText(expectedEarningsDurationLabel);
-        ui->labelEstimatedEarningsDurationValue->setText(estimatedEarningsDurationLabel);
-        ui->labelLockTimeRemainingValue->setText(lockTimeRemainingLabel);
-        ui->labelWeightValue->setText(labelWeightValue);
-        ui->labelLockedFromValue->setText(lockedFromValue);
-        ui->labelLockedUntilValue->setText(lockedUntilValue);
-        ui->labelPartCountValue->setText(partCountValue);
-    }
 }
 
 void WitnessDialog::update()
@@ -806,8 +676,7 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
             setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
 
             if (computedWidgetIndex == WitnessDialogStates::STATISTICS) {
-                const auto witnessInfoForAccount = GetWitnessInfoForAccount(forAccount, accountStatus);
-                plotGraphForAccount(witnessInfoForAccount);
+                requestStatisticsUpdate(accountStatus);
             }
         }
 
@@ -846,6 +715,185 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     auto rect = ui->horizontalSpacer->geometry();
     rect.setWidth(anyConfirmVisible ? 40 : 0);
     ui->horizontalSpacer->setGeometry(rect);
+}
+
+void WitnessDialog::requestStatisticsUpdate(const CWitnessAccountStatus& accountStatus)
+{
+    {
+        std::lock_guard<std::mutex> lock(statsUpdateMutex);
+        statsUpdateAccountStatus = accountStatus;
+        statsUpdateShouldUpdate = true;
+    }
+    statsUpdateCondition.notify_one();
+}
+
+void WitnessDialog::updateStatisticsThreadLoop()
+{
+    while (true) {
+        std::unique_lock<std::mutex> lock(statsUpdateMutex);
+        statsUpdateCondition.wait(lock, [this] { return statsUpdateShouldStop || statsUpdateShouldUpdate; });
+
+        if (statsUpdateShouldStop)
+            break;
+
+        CWitnessAccountStatus accountStatus = std::move(statsUpdateAccountStatus);
+        statsUpdateShouldUpdate = false;
+
+        lock.unlock();
+
+        WitnessInfoForAccount witnessInfoForAccount = GetWitnessInfoForAccount(accountStatus.account, accountStatus);
+
+
+        QMetaObject::invokeMethod(this, "displayUpdatedStatistics",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(WitnessInfoForAccount, witnessInfoForAccount));
+    }
+}
+
+void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoForAccount)
+{
+    LOG_QT_METHOD;
+
+    // Populate graph with info
+    {
+
+        // Populate the 'expected earnings' curve
+        QPolygonF forecastedPoints;
+        CAmount forecastTotal = 0;
+        int nXForecast = 0;
+        for (const auto& pointIter : infoForAccount.pointMapForecast)
+        {
+            forecastTotal += pointIter.second;
+            nXForecast = pointIter.first;
+            forecastedPoints << QPointF(nXForecast, forecastTotal);
+        }
+
+        // Populate the 'actual earnings' curve.
+        QPolygonF generatedPoints;
+        int nXGenerated = 0;
+        CAmount generatedTotal = 0;
+        for (const auto& pointIter : infoForAccount.pointMapGenerated)
+        {
+            generatedTotal += pointIter.second;
+            generatedPoints << QPointF(pointIter.first, generatedTotal);
+        }
+        if (generatedPoints.size() > 1)
+        {
+            (generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
+        }
+
+        //fixme: (PHASE4) This is a bit broken - use nOurWeight etc.
+        // Fill in the remaining time on the 'actual earnings' curve with a forecast.
+        QPolygonF generatedPointsForecast;
+        int nXGeneratedForecast = 0;
+        if (generatedPoints.size() > 0)
+        {
+            generatedPointsForecast << generatedPoints.back();
+            for (const auto& pointIter : infoForAccount.pointMapForecast)
+            {
+                nXGeneratedForecast = pointIter.first;
+                if (nXGeneratedForecast > nXGenerated)
+                {
+                    generatedTotal += pointIter.second;
+                    generatedPointsForecast << QPointF(nXGeneratedForecast, generatedTotal);
+                }
+            }
+        }
+
+        expectedEarningsCurve->setSamples( forecastedPoints );
+        currentEarningsCurveShadow->setSamples( generatedPoints );
+        currentEarningsCurve->setSamples( generatedPoints );
+        currentEarningsCurveForecastShadow->setSamples( generatedPointsForecast );
+        currentEarningsCurveForecast->setSamples( generatedPointsForecast );
+        ui->witnessEarningsPlot->setAxisScale( QwtPlot::xBottom, 0, nXForecast);
+        ui->witnessEarningsPlot->setAxisScale( QwtPlot::yLeft, 0, std::max(forecastTotal, generatedTotal));
+        ui->witnessEarningsPlot->replot();
+    }
+
+
+    // Populate stats table with info
+    {
+        QString lastEarningsDateLabel = tr("n/a");
+        QString earningsToDateLabel = lastEarningsDateLabel;
+        QString networkWeightLabel = lastEarningsDateLabel;
+        QString lockDurationLabel = lastEarningsDateLabel;
+        QString expectedEarningsDurationLabel = lastEarningsDateLabel;
+        QString estimatedEarningsDurationLabel = lastEarningsDateLabel;
+        QString lockTimeRemainingLabel = lastEarningsDateLabel;
+        QString labelWeightValue = lastEarningsDateLabel;
+        QString lockedUntilValue = lastEarningsDateLabel;
+        QString lockedFromValue = lastEarningsDateLabel;
+        QString partCountValue = QString::number(infoForAccount.accountStatus.parts.size());
+
+        if (infoForAccount.nOurWeight > 0)
+            labelWeightValue = QString::number(infoForAccount.nOurWeight);
+        if (!infoForAccount.originDate.isNull())
+            lockedFromValue = infoForAccount.originDate.toString("dd/MM/yy hh:mm");
+        if (chainActive.Tip())
+        {
+            QDateTime lockedUntilDate;
+            lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
+            lockedUntilDate = lockedUntilDate.addSecs(infoForAccount.nLockBlocksRemaining*150);
+            lockedUntilValue = lockedUntilDate.toString("dd/MM/yy hh:mm");
+        }
+
+        if (!infoForAccount.lastEarningsDate.isNull())
+            lastEarningsDateLabel = infoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm");
+        if (infoForAccount.pointMapGenerated.size() != 0)
+            earningsToDateLabel = QString::number(infoForAccount.nEarningsToDate);
+        if (infoForAccount.nTotalNetworkWeightTip > 0)
+            networkWeightLabel = QString::number(infoForAccount.nTotalNetworkWeightTip);
+
+        //fixme: (PHASE4) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
+        //Ideally this should be improved.
+        //Note if we do improve it we may want to keep the "dumb" behaviour for testnet.
+        {
+            QString formatStr;
+            double divideBy=1;
+            int roundTo = 2;
+            switch (infoForAccount.scale)
+            {
+            case GraphScale::Blocks:
+                formatStr = tr("%1 blocks");
+                divideBy = 1;
+                roundTo = 0;
+                break;
+            case GraphScale::Days:
+                formatStr = tr("%1 days");
+                divideBy = DailyBlocksTarget();
+                break;
+            case GraphScale::Weeks:
+                formatStr = tr("%1 weeks");
+                divideBy = DailyBlocksTarget()*7;
+                break;
+            case GraphScale::Months:
+                formatStr = tr("%1 months");
+                divideBy = DailyBlocksTarget()*30;
+                break;
+            }
+            if (infoForAccount.nWitnessLength > 0)
+                lockDurationLabel = formatStr.arg(QString::number(infoForAccount.nWitnessLength/divideBy, 'f', roundTo));
+            if (infoForAccount.nExpectedWitnessBlockPeriod > 0)
+                expectedEarningsDurationLabel = formatStr.arg(QString::number(infoForAccount.nExpectedWitnessBlockPeriod/divideBy, 'f', roundTo));
+            if (infoForAccount.nEstimatedWitnessBlockPeriod > 0)
+                estimatedEarningsDurationLabel = formatStr.arg(QString::number(infoForAccount.nEstimatedWitnessBlockPeriod/divideBy, 'f', roundTo));
+            if (infoForAccount.nLockBlocksRemaining > 0)
+                lockTimeRemainingLabel = formatStr.arg(QString::number(infoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
+        }
+
+        ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
+        ui->labelWitnessEarningsValue->setText(earningsToDateLabel);
+        ui->labelNetworkWeightValue->setText(networkWeightLabel);
+        ui->labelLockDurationValue->setText(lockDurationLabel);
+        ui->labelExpectedEarningsDurationValue->setText(expectedEarningsDurationLabel);
+        ui->labelEstimatedEarningsDurationValue->setText(estimatedEarningsDurationLabel);
+        ui->labelLockTimeRemainingValue->setText(lockTimeRemainingLabel);
+        ui->labelWeightValue->setText(labelWeightValue);
+        ui->labelLockedFromValue->setText(lockedFromValue);
+        ui->labelLockedUntilValue->setText(lockedUntilValue);
+        ui->labelPartCountValue->setText(partCountValue);
+    }
+
 }
 
 void WitnessDialog::updateAccountIndicators()

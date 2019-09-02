@@ -84,6 +84,7 @@ CGetWitnessInfo GetWitnessInfoWrapper();
 
 struct CWitnessAccountStatus
 {
+    CAccount* account;
     WitnessStatus status;
     uint64_t networkWeight;
     uint64_t accountWeight;

@@ -60,18 +60,14 @@ struct WitnessInfoForAccount
     uint64_t nOriginWeight = 0;
     uint64_t nOriginLength = 0;
     uint64_t nEarningsToDate = 0;
-    CAmount nTotal1 = 0;
-    CAmount nTotal2 = 0;
-    int nXForecast = 0;
     GraphScale scale = GraphScale::Blocks;
-    QPolygonF forecastedPoints;
-    QPolygonF generatedPoints;
-    QPolygonF generatedPointsForecast;
+    std::map<double, CAmount> pointMapForecast;
+    std::map<double, CAmount> pointMapGenerated;
     QDateTime originDate;
     QDateTime lastEarningsDate;
 };
 
-struct CWitnessAccountStatus;
+Q_DECLARE_METATYPE(WitnessInfoForAccount)
 
 class WitnessDialog : public QFrame
 {
@@ -85,7 +81,6 @@ public:
     void setModel(WalletModel *model);
 
     WitnessInfoForAccount GetWitnessInfoForAccount(CAccount* forAccount, const CWitnessAccountStatus& accountStatus) const;
-    void plotGraphForAccount(const WitnessInfoForAccount& witnessInfoForAccount);
 
     void updateAccountIndicators();
 
@@ -132,6 +127,15 @@ private:
 
     std::unique_ptr<TransactionFilterProxy> filter;
 
+    void updateStatisticsThreadLoop();
+    void requestStatisticsUpdate(const CWitnessAccountStatus& accountStatus);
+    std::thread statsUpdateThread;
+    std::mutex statsUpdateMutex;
+    std::condition_variable statsUpdateCondition;
+    bool statsUpdateShouldUpdate;
+    bool statsUpdateShouldStop;
+    CWitnessAccountStatus statsUpdateAccountStatus;
+
     /** Show dialog widget, hiding current.
      * Ownership of the dialog is transferred.
     */
@@ -148,7 +152,7 @@ private Q_SLOTS:
      * All dialog widgets popped will be deletedLater!
     */
     void popDialog(QWidget* dialog);
-
+    void displayUpdatedStatistics(const WitnessInfoForAccount& infoForAccount);
 
 Q_SIGNALS:
     // Sent when a message should be reported to the user.
