@@ -561,7 +561,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 
     uint64_t nLockFromBlock = 0;
     uint64_t nLockUntilBlock = 0;
-    uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(accountItems[0].coin.out, accountItems[0].coin.nHeight, nLockFromBlock, nLockUntilBlock);
+    uint64_t nLockPeriodInBlocks = accountItems.size() > 0 ? GetPoW2LockLengthInBlocksFromOutput(accountItems[0].coin.out, accountItems[0].coin.nHeight, nLockFromBlock, nLockUntilBlock) : 0;
 
     const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(account);
     EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);

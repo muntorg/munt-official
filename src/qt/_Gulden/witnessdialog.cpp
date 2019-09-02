@@ -393,9 +393,14 @@ void WitnessDialog::pushDialog(QWidget *dialog)
 
 void WitnessDialog::clearDialogStack()
 {
-    QWidget* dialog = ui->stack->widget(1);
-    if (dialog != nullptr)
-        popDialog(dialog);
+    if (ui->stack->count() <= 1)
+        return;
+    ui->stack->setCurrentIndex(0);
+    for (int i = ui->stack->count() - 1; i > 0; i--) {
+        QWidget* widget = ui->stack->widget(i);
+        ui->stack->removeWidget(widget);
+        widget->deleteLater();
+    }
 }
 
 void WitnessDialog::popDialog(QWidget* dialog)
@@ -410,7 +415,6 @@ void WitnessDialog::popDialog(QWidget* dialog)
         widget->deleteLater();
     }
     if (ui->stack->count() <= 1) {
-        setModel(model);
         doUpdate(true);
     }
 }
@@ -597,12 +601,12 @@ void WitnessDialog::update()
 }
 
 
-void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
+bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
 {
     // rate limit this expensive UI update when chain tip is still far from known height
     int heightRemaining = clientModel->cachedProbableHeight - chainActive.Height();
     if (!forceUpdate && heightRemaining > 10 && heightRemaining % 100 != 0)
-        return;
+        return true;
 
     LOG_QT_METHOD;
 
@@ -621,6 +625,8 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     bool stateUpgradeButton = false;
     bool stateExtendButton = false;
     bool stateOptimizeButton = false;
+
+    bool succes = false;
 
     try {
         CAccount* forAccount;
@@ -679,10 +685,10 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                 requestStatisticsUpdate(accountStatus);
             }
         }
-
+        succes = true;
     }
     catch (const std::runtime_error& e) {
-        computedWidgetIndex = WitnessDialogStates::ERROR;
+        computedWidgetIndex = setWidgetIndex = WitnessDialogStates::ERROR;
         ui->labelErrorInfo->setText(e.what());
     }
 
@@ -715,6 +721,8 @@ void WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     auto rect = ui->horizontalSpacer->geometry();
     rect.setWidth(anyConfirmVisible ? 40 : 0);
     ui->horizontalSpacer->setGeometry(rect);
+
+    return succes;
 }
 
 void WitnessDialog::requestStatisticsUpdate(const CWitnessAccountStatus& accountStatus)
@@ -1117,6 +1125,8 @@ void WitnessDialog::setModel(WalletModel* _model)
             connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
             connect( _model, SIGNAL( accountCompoundingChanged(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         }
+
+        activeAccountChanged(model->getActiveAccount());
     }
     else if(model)
     {
@@ -1127,13 +1137,17 @@ void WitnessDialog::setModel(WalletModel* _model)
     }
 }
 
-void WitnessDialog::activeAccountChanged(CAccount*)
+void WitnessDialog::activeAccountChanged(CAccount* account)
 {
+    if (prevActiveAccount == account || !account || !account->IsPoW2Witness())
+        return;
+
+    prevActiveAccount = account;
+
     userWidgetIndex = -1;
     clearDialogStack();
     WitnessStatus witnessStatus;
-    doUpdate(true, &witnessStatus);
-    if (witnessStatus == WitnessStatus::Empty)
+    if (doUpdate(true, &witnessStatus) && witnessStatus == WitnessStatus::Empty)
         pushDialog(new FundWitnessDialog(model, platformStyle, this));
 
     if (model) {

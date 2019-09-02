@@ -108,11 +108,12 @@ protected:
 
 private:
     void clearLabels();
-    void doUpdate(bool forceUpdate = false, WitnessStatus* pWitnessStatus = nullptr);
+    bool doUpdate(bool forceUpdate = false, WitnessStatus* pWitnessStatus = nullptr);
     Ui::WitnessDialog *ui;
     const QStyle *platformStyle;
     ClientModel *clientModel;
     WalletModel *model;
+    CAccount* prevActiveAccount = nullptr;
 
     int userWidgetIndex = -1;
     int prevWitnessedTipHeight = 0;

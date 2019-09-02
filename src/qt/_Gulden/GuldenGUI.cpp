@@ -1518,8 +1518,6 @@ void GUI::activeAccountChanged(CAccount* account)
     updateAccount( walletFrame->currentWalletView()->walletModel->getActiveAccount() );
 
     refreshTabVisibilities();
-    if ( walletFrame)
-        walletFrame->currentWalletView()->witnessDialogPage->update();
 
     //Update account name 'in place' in account list
     bool haveAccount=false;
@@ -1705,7 +1703,6 @@ void GUI::restoreCachedWidgetIfNeeded()
     bool stateSendCoinsAction = true;
 
     walletFrame->currentWalletView()->sendCoinsPage->update();
-    walletFrame->currentWalletView()->witnessDialogPage->update();
 
     if (pactiveWallet->getActiveAccount()->IsReadOnly())
     {
