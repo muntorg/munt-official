@@ -1021,8 +1021,20 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double)
     //Update account state indicators for the latest block
     updateAccountIndicators();
 
-    // Update graph and witness info for current account to latest block.
-    doUpdate(false);
+    // Update graph and witness info for current account to latest block, skipping updates for blocks that have not been witnessed yet
+    bool haveNewWitnessTipHeight = false;
+    {
+        LOCK(cs_main);
+        CBlockIndex* index = chainActive.Tip();
+        while (index && index->nVersionPoW2Witness == 0)
+            index = index->pprev;
+        if (index && prevWitnessedTipHeight != index->nHeight) {
+            prevWitnessedTipHeight = index->nHeight;
+            haveNewWitnessTipHeight = true;
+        }
+    }
+    if (haveNewWitnessTipHeight)
+        doUpdate(false);
 }
 
 void WitnessDialog::setClientModel(ClientModel* clientModel_)

@@ -120,6 +120,7 @@ private:
     WalletModel *model;
 
     int userWidgetIndex = -1;
+    int prevWitnessedTipHeight = 0;
 
     QwtPlotCurve* expectedEarningsCurve = nullptr;
     QwtPlotCurve* currentEarningsCurveShadow = nullptr;
