@@ -2,6 +2,7 @@
 
 RPC - Fix a bug in InvalidateBlock behaviour when called on a block that isn't currently in the main chain.
 CORE - Minor improvement to mining behaviour when an absent witness is present.
+UI - Fix a windows only issue with non-ASCII wallet paths. (Introduced by bdb upgrade)
 
 
 
