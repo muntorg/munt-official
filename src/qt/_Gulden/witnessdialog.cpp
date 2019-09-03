@@ -587,8 +587,20 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
         AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
     }
 
-    infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(infoForAccount.nOurWeight, infoForAccount.nTotalNetworkWeightTip);
-    infoForAccount.nEstimatedWitnessBlockPeriod = estimatedWitnessBlockPeriod(infoForAccount.nOurWeight, infoForAccount.nTotalNetworkWeightTip);
+    const auto& parts = infoForAccount.accountStatus.parts;
+    if (!parts.empty()) {
+        uint64_t networkWeight = infoForAccount.nTotalNetworkWeightTip;
+        // Worst case all parts witness at latest oppertunity so part with maximum weight will be the first to be required to witness
+        infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(*std::max_element(parts.begin(), parts.end()), networkWeight);
+
+        // Combine estimated witness frequency f for part frequencies f1..fN: 1/f = 1/f1 + .. 1/fN
+        double fInv = std::accumulate(parts.begin(), parts.end(), 0.0, [=](const double acc, const uint64_t w){
+            uint64_t fn = estimatedWitnessBlockPeriod(w, networkWeight);
+            return acc + 1.0/fn;
+        });
+        infoForAccount.nEstimatedWitnessBlockPeriod = uint64_t(1.0/fInv);
+    }
+
     infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(witnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
 
     return infoForAccount;

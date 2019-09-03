@@ -572,7 +572,10 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 
     bool isLocked = haveUnspentWitnessUtxo && IsPoW2WitnessLocked(witnessDetails0, chainActive.Tip()->nHeight);
 
-    bool isExpired = haveUnspentWitnessUtxo && witnessHasExpired(accountItems[0].nAge, accountItems[0].nWeight, witnessInfo.nTotalWeightRaw);
+    uint64_t networkWeight = witnessInfo.nTotalWeightRaw;
+    bool isExpired = haveUnspentWitnessUtxo && std::any_of(accountItems.begin(), accountItems.end(), [=](const RouletteItem& ri){
+                         return witnessHasExpired(ri.nAge, ri.nWeight, networkWeight);
+                     });
 
     if (!haveUnspentWitnessUtxo && hasBalance) status = WitnessStatus::Pending;
     else if (!haveUnspentWitnessUtxo && !hasBalance) status = WitnessStatus::Empty;
