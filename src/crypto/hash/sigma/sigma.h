@@ -71,13 +71,14 @@ class sigma_context
 {
 public:
     sigma_context(uint32_t argonArenaRoundCost_, uint32_t argonSlowHashRoundCost_, uint64_t argonMemoryCostKb_, uint64_t arena_size_kb, uint64_t allocateArenaSizeKb_, uint64_t numHashesPre_, uint64_t numHashesPost_, uint64_t numThreads_, uint64_t numVerifyThreads_, uint64_t numUserVerifyThreads_, uint64_t fastHashSizeBytes_);
+    bool arenaIsValid();
     void prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeight);
     void benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashes);
     void benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes);
     void benchmarkFastHashesRef(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes);
     void benchmarkMining(CBlockHeader& headerData, std::atomic<uint64_t>& slowHashCounter, std::atomic<uint64_t>& halfHashCounter, std::atomic<uint64_t>& skippedHashCounter, std::atomic<uint64_t>&hashCounter, std::atomic<uint64_t>&blockCounter, uint64_t nRoundsTarget);
     bool verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight);
-    ~sigma_context();
+    virtual ~sigma_context();
     sigma_context(const sigma_context&) = delete;
     sigma_context& operator=(const sigma_context&) = delete;
 public:

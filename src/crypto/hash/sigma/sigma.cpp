@@ -150,6 +150,11 @@ sigma_context::sigma_context(uint32_t argonArenaRoundCost_, uint32_t argonSlowHa
     assert(fastHashSizeBytes<=arenaChunkSizeBytes);
 }
 
+bool sigma_context::arenaIsValid()
+{
+    return (arena != nullptr);
+}
+
 void sigma_context::prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeight)
 {
     headerBlockHeight = nBlockHeight;

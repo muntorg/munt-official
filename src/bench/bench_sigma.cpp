@@ -240,6 +240,11 @@ void testValidateValidHeaders(uint64_t& nTestFailCount)
         std::vector<unsigned char> data = ParseHex(hash);
         memcpy(&header.nVersion, &data[0], 80);
         sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+        if (!sigmaContext.arenaIsValid())
+        {
+            LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
+            exit(EXIT_FAILURE);
+        }
         if (!sigmaContext.verifyHeader(header, height))
         {
             LogPrintf("✘");
@@ -258,6 +263,11 @@ void testValidateInvalidHeaders(uint64_t& nTestFailCount)
         std::vector<unsigned char> data = ParseHex(hash);
         memcpy(&header.nVersion, &data[0], 80);
         sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+        if (!sigmaContext.arenaIsValid())
+        {
+            LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
+            exit(EXIT_FAILURE);
+        }
         if (sigmaContext.verifyHeader(header, height+1))
         {
             LogPrintf("✘");
@@ -362,6 +372,7 @@ int main(int argc, char** argv)
         memCostGb = vm["sigma-global-mem"].as<int64_t>();
         defaultSigma = false;
     }
+    memAllowGb = memCostGb;
     if (vm.count("sigma-num-slow"))
     {
         defaultSigma = false;
@@ -492,6 +503,12 @@ int main(int argc, char** argv)
         LogPrintf("SIGMA=============================================================\n\n");
         {
             sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            if (!sigmaContext.arenaIsValid())
+            {
+                LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
+                exit(EXIT_FAILURE);
+            }
+            
             #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
             {
                 LogPrintf("Bench fast hashes optimised [single thread]:\n");
