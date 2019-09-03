@@ -141,7 +141,7 @@ void testShaviteReference(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
-#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
+#if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
 void testShaviteOptimised(uint64_t& nTestFailCount)
 {
     for (unsigned int i=0;i<hashTestVector.size();++i)
@@ -195,7 +195,7 @@ void testEchoReference(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
-#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
+#if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
 void testEchoOptimised(uint64_t& nTestFailCount)
 {
     for (unsigned int i=0;i<hashTestVector.size();++i)
@@ -418,7 +418,7 @@ int main(int argc, char** argv)
         LogPrintf("Verify shavite reference operation\n");
         testShaviteReference(nTestFailCount);
         
-        #ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
+        #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
         LogPrintf("Verify shavite optimised operation\n");
         testShaviteOptimised(nTestFailCount);
         #endif
@@ -426,7 +426,7 @@ int main(int argc, char** argv)
         LogPrintf("Verify echo reference operation\n");
         testEchoReference(nTestFailCount);
         
-        #ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
+        #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
         LogPrintf("Verify echo optimised operation\n");
         testEchoOptimised(nTestFailCount);
         #endif
@@ -492,8 +492,9 @@ int main(int argc, char** argv)
         LogPrintf("SIGMA=============================================================\n\n");
         {
             sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
             {
-                LogPrintf("Bench fast hashes [single thread]:\n");
+                LogPrintf("Bench fast hashes optimised [single thread]:\n");
                 uint8_t hashData1[80];
                 for (int i=0;i<80;++i)
                 {
@@ -510,8 +511,31 @@ int main(int argc, char** argv)
                     hashData3[i] = rand();
                 }
                 uint64_t nStart = GetTimeMicros();
-                uint64_t numFastHashes = 100000;
+                uint64_t numFastHashes = 20000;
                 sigmaContext.benchmarkFastHashes(hashData1, hashData2, &hashData3[0], numFastHashes);
+                LogPrintf("total [%.2f micros] per hash [%.4f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numFastHashes);
+            }
+            #endif
+            {
+                LogPrintf("Bench fast hashes reference [single thread]:\n");
+                uint8_t hashData1[80];
+                for (int i=0;i<80;++i)
+                {
+                    hashData1[i] = rand();
+                }
+                uint8_t hashData2[32];
+                for (int i=0;i<32;++i)
+                {
+                    hashData2[i] = rand();
+                }
+                std::vector<unsigned char> hashData3(sigmaContext.fastHashSizeBytes);
+                for (uint64_t i=0;i<sigmaContext.fastHashSizeBytes;++i)
+                {
+                    hashData3[i] = rand();
+                }
+                uint64_t nStart = GetTimeMicros();
+                uint64_t numFastHashes = 20000;
+                sigmaContext.benchmarkFastHashesRef(hashData1, hashData2, &hashData3[0], numFastHashes);
                 LogPrintf("total [%.2f micros] per hash [%.4f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numFastHashes);
             }
             

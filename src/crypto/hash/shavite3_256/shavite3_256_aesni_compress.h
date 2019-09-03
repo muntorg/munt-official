@@ -14,19 +14,21 @@
 #define SHAVITE_3_256_AESNI_COMPRESS_H
 
 #include <compat/arch.h>
-// Only x86 family CPUs have AES-NI
-#ifdef ARCH_CPU_X86_FAMILY
-
-#ifndef __clang__
-#pragma GCC push_options
-#pragma GCC target("aes,ssse3")
-#ifndef DEBUG
-    #pragma GCC optimize ("O3")
-#endif
+// We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.
+#if defined(ARCH_CPU_X86_FAMILY) || defined ARCH_CPU_ARM_FAMILY
+#include <compat/sse.h>
+#if defined(ARCH_CPU_X86_FAMILY)
+    PUSH_COMPILER_OPTIMISATIONS("aes,ssse3");
+#elif defined(ARCH_CPU_ARM_FAMILY)
+    #if __ARM_ARCH < 8 
+    PUSH_COMPILER_OPTIMISATIONS("fpu=neon");
+    #else
+    PUSH_COMPILER_OPTIMISATIONS("fpu=crypto-neon-fp-armv8");
+    #endif
 #else
-#pragma clang attribute push (__attribute__((target("aes,ssse3"))), apply_to=any(function))
+    #error sse or sse equivalents(neon) not currently supported for target achitecture, please modify source with appropriate compiler options.
 #endif
-#include <immintrin.h>
+
 
 #define T8(x) ((x) & 0xff)
 
@@ -341,11 +343,7 @@ void shavite3_256_aesni_Compress256(const unsigned char* message_block, unsigned
     return;
 }
 
-#ifdef __clang__
-#pragma clang attribute pop
-#else
-#pragma GCC pop_options
-#endif
+POP_COMPILER_OPTIMISATIONS();
 
 #endif
 #endif

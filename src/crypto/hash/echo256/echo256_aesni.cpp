@@ -21,62 +21,36 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "compat.h"
-#include <compat/arch.h>
-
-// Only x86 family CPUs have AES-NI
-#ifdef ARCH_CPU_X86_FAMILY
-#include <memory.h>
-
-#ifndef __clang__
-#pragma GCC push_options
-#pragma GCC target("aes,ssse3")
-#ifndef DEBUG
-    #pragma GCC optimize ("O3")
-#endif
-#else
-#pragma clang attribute push (__attribute__((target("aes,ssse3"))), apply_to=any(function))
-#endif
 
 #include "echo256_aesni.h"
+// We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.
+#if defined(ARCH_CPU_X86_FAMILY) || defined ARCH_CPU_ARM_FAMILY
+#include <memory.h>
 
-#include <immintrin.h>
+#if defined(ARCH_CPU_X86_FAMILY)
+    PUSH_COMPILER_OPTIMISATIONS("aes,ssse3");
+#elif defined(ARCH_CPU_ARM_FAMILY)
+    #if __ARM_ARCH < 8 
+    PUSH_COMPILER_OPTIMISATIONS("fpu=neon");
+    #else
+    PUSH_COMPILER_OPTIMISATIONS("fpu=crypto-neon-fp-armv8");
+    #endif
+#else
+    #error sse or sse equivalents(neon) not currently supported for target achitecture, please modify source with appropriate compiler options.
+#endif
 
 #define M128(x) *((__m128i*)x)
 
-__attribute__((aligned(16))) const unsigned int _k_s0F[]        = {0x0F0F0F0F, 0x0F0F0F0F, 0x0F0F0F0F, 0x0F0F0F0F};
-__attribute__((aligned(16))) const unsigned int _k_ipt[]        = {0x5A2A7000, 0xC2B2E898, 0x52227808, 0xCABAE090, 0x317C4D00, 0x4C01307D, 0xB0FDCC81, 0xCD80B1FC};
-__attribute__((aligned(16))) const unsigned int _k_opt[]        = {0xD6B66000, 0xFF9F4929, 0xDEBE6808, 0xF7974121, 0x50BCEC00, 0x01EDBD51, 0xB05C0CE0, 0xE10D5DB1};
-__attribute__((aligned(16))) const unsigned int _k_inv[]        = {0x0D080180, 0x0E05060F, 0x0A0B0C02, 0x04070309, 0x0F0B0780, 0x01040A06, 0x02050809, 0x030D0E0C};
-__attribute__((aligned(16))) const unsigned int _k_sb1[]        = {0xCB503E00, 0xB19BE18F, 0x142AF544, 0xA5DF7A6E, 0xFAE22300, 0x3618D415, 0x0D2ED9EF, 0x3BF7CCC1};
-__attribute__((aligned(16))) const unsigned int _k_sb2[]        = {0x0B712400, 0xE27A93C6, 0xBC982FCD, 0x5EB7E955, 0x0AE12900, 0x69EB8840, 0xAB82234A, 0xC2A163C8};
-__attribute__((aligned(16))) const unsigned int _k_sb3[]        = {0xC0211A00, 0x53E17249, 0xA8B2DA89, 0xFB68933B, 0xF0030A00, 0x5FF35C55, 0xA6ACFAA5, 0xF956AF09};
-__attribute__((aligned(16))) const unsigned int _k_sb4[]        = {0x3FD64100, 0xE1E937A0, 0x49087E9F, 0xA876DE97, 0xC393EA00, 0x3D50AED7, 0x876D2914, 0xBA44FE79};
-__attribute__((aligned(16))) const unsigned int _k_sb5[]        = {0xF4867F00, 0x5072D62F, 0x5D228BDB, 0x0DA9A4F9, 0x3971C900, 0x0B487AC2, 0x8A43F0FB, 0x81B332B8};
-__attribute__((aligned(16))) const unsigned int _k_sb7[]        = {0xFFF75B00, 0xB20845E9, 0xE1BAA416, 0x531E4DAC, 0x3390E000, 0x62A3F282, 0x21C1D3B1, 0x43125170};
-__attribute__((aligned(16))) const unsigned int _k_sbo[]        = {0x6FBDC700, 0xD0D26D17, 0xC502A878, 0x15AABF7A, 0x5FBB6A00, 0xCFE474A5, 0x412B35FA, 0x8E1E90D1};
-__attribute__((aligned(16))) const unsigned int _k_h63[]        = {0x63636363, 0x63636363, 0x63636363, 0x63636363};
-__attribute__((aligned(16))) const unsigned int _k_hc6[]        = {0xc6c6c6c6, 0xc6c6c6c6, 0xc6c6c6c6, 0xc6c6c6c6};
-__attribute__((aligned(16))) const unsigned int _k_h5b[]        = {0x5b5b5b5b, 0x5b5b5b5b, 0x5b5b5b5b, 0x5b5b5b5b};
-__attribute__((aligned(16))) const unsigned int _k_h4e[]        = {0x4e4e4e4e, 0x4e4e4e4e, 0x4e4e4e4e, 0x4e4e4e4e};
-__attribute__((aligned(16))) const unsigned int _k_h0e[]        = {0x0e0e0e0e, 0x0e0e0e0e, 0x0e0e0e0e, 0x0e0e0e0e};
-__attribute__((aligned(16))) const unsigned int _k_h15[]        = {0x15151515, 0x15151515, 0x15151515, 0x15151515};
-__attribute__((aligned(16))) const unsigned int _k_aesmix1[]    = {0x0f0a0500, 0x030e0904, 0x07020d08, 0x0b06010c};
-__attribute__((aligned(16))) const unsigned int _k_aesmix2[]    = {0x000f0a05, 0x04030e09, 0x0807020d, 0x0c0b0601};
-__attribute__((aligned(16))) const unsigned int _k_aesmix3[]    = {0x05000f0a, 0x0904030e, 0x0d080702, 0x010c0b06};
-__attribute__((aligned(16))) const unsigned int _k_aesmix4[]    = {0x0a05000f, 0x0e090403, 0x020d0807, 0x06010c0b};
 __attribute__((aligned(16))) const unsigned int const1[]        = {0x00000001, 0x00000000, 0x00000000, 0x00000000};
 __attribute__((aligned(16))) const unsigned int mul2mask[]      = {0x00001b00, 0x00000000, 0x00000000, 0x00000000};
 __attribute__((aligned(16))) const unsigned int lsbmask[]       = {0x01010101, 0x01010101, 0x01010101, 0x01010101};
-__attribute__((aligned(16))) const unsigned int invshiftrows[]  = {0x070a0d00, 0x0b0e0104, 0x0f020508, 0x0306090c};
-__attribute__((aligned(16))) const unsigned int zero[]          = {0x00000000, 0x00000000, 0x00000000, 0x00000000};
-__attribute__((aligned(16))) const unsigned int mul2ipt[]       = {0x728efc00, 0x6894e61a, 0x3fc3b14d, 0x25d9ab57, 0xfd5ba600, 0x2a8c71d7, 0x1eb845e3, 0xc96f9234};
 
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #define ECHO_SUBBYTES(state, i, j) \
     state[i][j] = _mm_aesenc_si128(state[i][j], k1);\
-    state[i][j] = _mm_aesenc_si128(state[i][j], M128(zero));\
+    state[i][j] = _mm_aesenc_si128(state[i][j], _mm_setzero_si128());\
     k1 = _mm_add_epi32(k1, M128(const1))
 
 #define ECHO_MIXBYTES(state1, state2, j, t1, t2, s2) \
@@ -233,6 +207,8 @@ void Compress(echo256_aesni_hashState* ctx, const unsigned char* pmsg, unsigned 
 #pragma GCC diagnostic pop
 
 
+__attribute__((aligned(16))) const unsigned int constinit1[] = {0x00000100, 0x00000000, 0x00000000, 0x00000000};
+__attribute__((aligned(16))) const unsigned int constinit2[] = {0x00000600, 0x00000000, 0x00000000, 0x00000000};
 
 HashReturn echo256_aesni_Init(echo256_aesni_hashState *ctx)
 {
@@ -245,8 +221,8 @@ HashReturn echo256_aesni_Init(echo256_aesni_hashState *ctx)
     ctx->uHashSize = 256;
     ctx->uBlockLength = 192;
     ctx->uRounds = 8;
-    ctx->hashsize = _mm_set_epi32(0, 0, 0, 0x00000100);
-    ctx->const1536 = _mm_set_epi32(0x00000000, 0x00000000, 0x00000000, 0x00000600);
+    ctx->hashsize = _mm_loadu_si128((__m128i*)constinit1);
+    ctx->const1536 = _mm_loadu_si128((__m128i*)constinit2);
 
     for(i = 0; i < 4; i++)
     {
@@ -257,7 +233,7 @@ HashReturn echo256_aesni_Init(echo256_aesni_hashState *ctx)
     {
         for(j = 1; j < 4; j++)
         {
-            ctx->state[i][j] = _mm_set_epi32(0, 0, 0, 0);
+            ctx->state[i][j] = _mm_setzero_si128();
         }
     }
     return SUCCESS;
@@ -318,7 +294,8 @@ HashReturn echo256_aesni_Final(echo256_aesni_hashState* state, unsigned char* ha
     // Add remaining bytes in the buffer
     state->processed_bits += state->uBufferBytes * 8;
 
-    remainingbits = _mm_set_epi32(0, 0, 0, state->uBufferBytes * 8);
+    __attribute__((aligned(16))) const unsigned int load_buffer_bytes[] = {state->uBufferBytes * 8, 0x00000000, 0x00000000, 0x00000000};
+    remainingbits = _mm_loadu_si128((__m128i*)load_buffer_bytes);
 
     // Pad with 0x80
     state->buffer[state->uBufferBytes++] = 0x80;
@@ -429,7 +406,8 @@ HashReturn update_final_echo( echo256_aesni_hashState* state, unsigned char* has
     // Add remaining bytes in the buffer
     state->processed_bits += state->uBufferBytes * 8;
 
-    remainingbits = _mm_set_epi32( 0, 0, 0, state->uBufferBytes * 8 );
+    __attribute__((aligned(16))) const unsigned int load_buffer_bytes[] = {state->uBufferBytes * 8, 0x00000000, 0x00000000, 0x00000000};
+    remainingbits = _mm_loadu_si128((__m128i*)load_buffer_bytes);
 
     // Pad with 0x80
     state->buffer[state->uBufferBytes++] = 0x80;
@@ -491,9 +469,6 @@ HashReturn update_final_echo( echo256_aesni_hashState* state, unsigned char* has
     return SUCCESS;
 }
 
-#ifdef __clang__
-#pragma clang attribute pop
-#else
-#pragma GCC pop_options
-#endif
+POP_COMPILER_OPTIMISATIONS();
+
 #endif

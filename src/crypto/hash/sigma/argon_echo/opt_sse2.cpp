@@ -22,7 +22,8 @@
 // file COPYING
 
 #include <compat/arch.h>
-#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have SSE2
+// We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.
+#if defined(ARCH_CPU_X86_FAMILY) || defined ARCH_CPU_ARM_FAMILY
 
 #include <stdint.h>
 #include <string.h>
@@ -36,14 +37,17 @@
 
 #include "compat.h"
 
-#ifndef __clang__
-#pragma GCC push_options
-#pragma GCC target("sse2")
-#ifndef DEBUG
-    #pragma GCC optimize ("O3")
-#endif
+#include <compat/sse.h>
+#if defined(ARCH_CPU_X86_FAMILY)
+    PUSH_COMPILER_OPTIMISATIONS("sse2");
+#elif defined(ARCH_CPU_ARM_FAMILY)
+    #if __ARM_ARCH < 8 
+    PUSH_COMPILER_OPTIMISATIONS("fpu=neon");
+    #else
+    PUSH_COMPILER_OPTIMISATIONS("fpu=crypto-neon-fp-armv8");
+    #endif
 #else
-#pragma clang attribute push (__attribute__((target("sse2"))), apply_to=any(function))
+    #error sse or sse equivalents(neon) not currently supported for target achitecture, please modify source with appropriate compiler options.
 #endif
 
 /*
@@ -228,9 +232,5 @@ void fill_segment_sse2(const argon2_echo_instance_t *instance, argon2_echo_posit
     }
 }
 
-#ifdef __clang__
-#pragma clang attribute pop
-#else
-#pragma GCC pop_options
-#endif
+POP_COMPILER_OPTIMISATIONS();
 #endif

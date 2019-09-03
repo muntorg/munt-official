@@ -25,21 +25,24 @@
 #define BLAKE_ROUND_MKA_OPT_H
 
 #include <compat/arch.h>
-#ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have SSE2
+// We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.
+#if defined(ARCH_CPU_X86_FAMILY) || defined ARCH_CPU_ARM_FAMILY
 
 #include "blake2-impl.h"
 #include "compat.h"
 
-#ifndef __clang__
-#pragma GCC push_options
-#pragma GCC target("sse2")
-#ifndef DEBUG
-    #pragma GCC optimize ("O3")
-#endif
+#include <compat/sse.h>
+#if defined(ARCH_CPU_X86_FAMILY)
+    PUSH_COMPILER_OPTIMISATIONS("sse2");
+#elif defined(ARCH_CPU_ARM_FAMILY)
+    #if __ARM_ARCH < 8 
+    PUSH_COMPILER_OPTIMISATIONS("fpu=neon");
+    #else
+    PUSH_COMPILER_OPTIMISATIONS("fpu=crypto-neon-fp-armv8");
+    #endif
 #else
-#pragma clang attribute push (__attribute__((target("sse2"))), apply_to=any(function))
+    #error sse or sse equivalents(neon) not currently supported for target achitecture, please modify source with appropriate compiler options.
 #endif
-#include <emmintrin.h>
 
 #define _mm_roti_epi64(r, c) _mm_xor_si128(_mm_srli_epi64((r), -(c)), _mm_slli_epi64((r), 64 - (-(c))))
 
@@ -118,10 +121,6 @@ do {                                                                       \
     UNDIAGONALIZE(A0, B0, C0, D0, A1, B1, C1, D1);                         \
 } while ((void)0, 0)
 
-#ifdef __clang__
-#pragma clang attribute pop
-#else
-#pragma GCC pop_options
-#endif
+POP_COMPILER_OPTIMISATIONS();
 #endif
 #endif

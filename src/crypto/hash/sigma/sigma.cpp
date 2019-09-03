@@ -27,8 +27,13 @@
 
 inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
 {
-    #ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AES-ni
+    #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
+    #if defined(ARCH_CPU_X86_FAMILY)
     if (__builtin_cpu_supports("aes"))
+    #else
+    // Always use the 'optimised' version on arm for now.
+    if (true)
+    #endif
     {
         switch (nPseudoRandomAlg)
         {
@@ -58,6 +63,37 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
     }
     else
     #endif
+    {
+        switch (nPseudoRandomAlg)
+        {
+            case 0:
+            {
+                sph_echo256_context ctx_echo;
+                sph_echo256_init(&ctx_echo);
+                sph_echo256(&ctx_echo, data1, data1Size);
+                sph_echo256(&ctx_echo, data2, data2Size);
+                sph_echo256(&ctx_echo, data3, data3Size);
+                sph_echo256_close(&ctx_echo, outHash.begin());
+                break;
+            }
+            case 1:
+            {
+                shavite3_ref_hashState ctx_shavite;
+                shavite3_ref_Init(&ctx_shavite);
+                shavite3_ref_Update(&ctx_shavite, data1, data1Size);
+                shavite3_ref_Update(&ctx_shavite, data2, data2Size);
+                shavite3_ref_Update(&ctx_shavite, data3, data3Size);
+                shavite3_ref_Final(&ctx_shavite, (uint8_t*)outHash.begin());
+                break;
+            }
+            default:
+                assert(0);
+        }
+    }
+}
+
+inline void sigmaRandomFastHashRef(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
+{
     {
         switch (nPseudoRandomAlg)
         {
@@ -189,6 +225,28 @@ void sigma_context::benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, 
         hashData2[rand()%32] = i;
         hashData2[rand()%32] = i;
         sigmaRandomFastHash(i%2, (uint8_t*)&hashData1[0], 80, (uint8_t*)&hashData2, 32,  (uint8_t*)&hashData3[0], fastHashSizeBytes, outHash);
+    }
+}
+
+void sigma_context::benchmarkFastHashesRef(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes)
+{   
+    CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
+    prng.SetKey((const unsigned char*)&hashData2[0], 32);
+    unsigned char ciphered[32];
+    prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&hashData2[0], 32);
+    memcpy(&hashData2[0], &ciphered[0], (size_t)32);
+
+    uint256 outHash;
+    for (uint64_t i=0;i<numFastHashes;++i)
+    {
+        prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&hashData2[0], 32);
+        memcpy(&hashData2[0], &ciphered[0], (size_t)32);
+                
+        hashData1[rand()%80] = rand();
+        hashData1[rand()%80] = i;
+        hashData2[rand()%32] = i;
+        hashData2[rand()%32] = i;
+        sigmaRandomFastHashRef(i%2, (uint8_t*)&hashData1[0], 80, (uint8_t*)&hashData2, 32,  (uint8_t*)&hashData3[0], fastHashSizeBytes, outHash);
     }
 }
 

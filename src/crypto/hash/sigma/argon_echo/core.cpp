@@ -71,7 +71,18 @@
         sph_echo256_init(&ctx_echo);                                                \
         sph_echo256(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN);          \
         sph_echo256_close(&ctx_echo, HASH);                                         \
-    }                                                                               
+    }
+#elif defined(ARCH_CPU_ARM_FAMILY)
+    #define FILL_SEGMENT_OPTIMISED(I, P)                                            \
+    {fill_segment_sse2(I, P);}                                                      \
+
+    #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
+    {                                                                               \
+        echo256_aesni_hashState ctx_echo;                                           \
+        echo256_aesni_Init(&ctx_echo);                                              \
+        echo256_aesni_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
+        echo256_aesni_Final(&ctx_echo, HASH);                                       \
+    }  
 #else
     #define FILL_SEGMENT_OPTIMISED(I, P)                                            \
     {fill_segment_ref(I, P);}                                                       \

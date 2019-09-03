@@ -127,6 +127,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   coins.h \
   compat.h \
   compat/arch.h \
+  compat/sse.h \
   compat/byteswap.h \
   compat/endian.h \
   compat/sanity.h \

@@ -12,8 +12,8 @@
 #define SHAVITE_3_256_AESNI_H
 
 #include <compat/arch.h>
-// Only x86 family CPUs have AES-NI
-#ifdef ARCH_CPU_X86_FAMILY
+// We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.
+#if defined(ARCH_CPU_X86_FAMILY) || defined ARCH_CPU_ARM_FAMILY
 
 struct shavite3_256_aesni_hashState
 {

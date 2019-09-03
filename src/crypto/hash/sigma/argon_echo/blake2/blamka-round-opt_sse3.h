@@ -33,9 +33,6 @@
 #ifndef __clang__
 #pragma GCC push_options
 #pragma GCC target("ssse3")
-#ifndef DEBUG
-    #pragma GCC optimize ("O3")
-#endif
 #else
 #pragma clang attribute push (__attribute__((target("ssse3"))), apply_to=any(function))
 #endif
