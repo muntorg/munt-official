@@ -46,7 +46,6 @@ __attribute__((aligned(16))) const unsigned int mul2mask[]      = {0x00001b00, 0
 __attribute__((aligned(16))) const unsigned int lsbmask[]       = {0x01010101, 0x01010101, 0x01010101, 0x01010101};
 
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #define ECHO_SUBBYTES(state, i, j) \
     state[i][j] = _mm_aesenc_si128(state[i][j], k1);\
