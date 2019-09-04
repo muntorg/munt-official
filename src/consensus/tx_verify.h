@@ -60,6 +60,7 @@ struct CWitnessTxBundle
 
     inline bool IsValidRearrangeBundle();
     inline bool IsValidSpendBundle(uint64_t nHeight, const CTransaction& transaction);
+    inline bool IsValidChangeWitnessKeyBundle();
 
     WitnessTxType bundleType=CreationType;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> inputs;

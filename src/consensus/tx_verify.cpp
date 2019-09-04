@@ -663,33 +663,60 @@ bool CWitnessTxBundle::IsValidRearrangeBundle()
 }
 
 /*
-* 7) Update, identical input/output but witness key changes.
-* Input/Output.
+* 7) Update, identical inputs/outputs but witness key changes.
+* M inputs, M outputs.
 * Signed by spending key.
+* Precondition - we must have already verified externally from here that the scriptwitness stack for the input is of size 2.
 */
-inline bool IsChangeWitnessKeyBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
+inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
 {
-    //fixme: (PHASE4) Check unused paramater.
-    (unused) nInputHeight;
-    // 2 signatures (spending key)
-    if (input.segregatedSignatureData.stack.size() != 2)
+    // # of witness inputs equal to # outputs
+    if (inputs.size() < 1 || inputs.size() != outputs.size())
         return false;
-    // Action nonce always increment
-    if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
+
+    const auto& output0 = outputs[0];
+    const auto& output0Details = output0.second;
+
+    // for every input there is exactly one output that matches
+    for (const auto& input : inputs)
+    {
+        const auto& inputDetails = input.second;
+
+        if (1 != std::count_if(outputs.begin(), outputs.end(), [&](const auto& output) {
+                const auto& outputDetails = output.second;
+                if (input.first.nValue != output.first.nValue)
+                    return false;
+                if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
+                    return false;
+                if (inputDetails.witnessKeyID == outputDetails.witnessKeyID)
+                    return false;
+                if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
+                    return false;
+                if (inputDetails.lockFromBlock != outputDetails.lockFromBlock)
+                    return false;
+                if (inputDetails.actionNonce + 1 != outputDetails.actionNonce)
+                    return false;
+                if (inputDetails.failCount != outputDetails.failCount)
+                    return false;
+                return true;
+            }))
+        {
+            return false;
+        }
+    }
+
+    // all outputs have the same (new) witness key and all outputs have the same spend key
+    if (std::any_of(++outputs.begin(), outputs.end(), [&](const auto& output) {
+            const auto& outputDetails = output.second;
+            return (outputDetails.spendingKeyID != output0Details.spendingKeyID) || (outputDetails.witnessKeyID != output0Details.witnessKeyID); }))
+    {
         return false;
-    // Everything unchanged except witness key.
-    if (nInputAmount != nOutputAmount)
+    }
+
+    // output witness key is different from spend key
+    if (output0Details.witnessKeyID == output0Details.spendingKeyID)
         return false;
-    if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
-        return false;
-    if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
-        return false;
-    if (inputDetails.lockFromBlock != outputDetails.lockFromBlock)
-        return false;
-    if (inputDetails.failCount != outputDetails.failCount)
-        return false;
-    if (inputDetails.witnessKeyID == outputDetails.witnessKeyID)
-        return false;
+
     return true;
 }
 
@@ -737,13 +764,6 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::IncreaseType;
                         break;
                     }
-                    else if ( IsChangeWitnessKeyBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
-                    {
-                        matchedExistingBundle = true;
-                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
-                        bundle.bundleType = CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType;
-                        break;
-                    }
                 }
             }
             if (!matchedExistingBundle)
@@ -763,6 +783,12 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                     if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::RearrangeType;
+                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        matchedExistingBundle = true;
+                    }
+                    else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID != inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
+                    {
+                        bundle.bundleType = CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType;
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         matchedExistingBundle = true;
                     }
@@ -866,6 +892,11 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                 {
                     if (!bundle.IsValidSpendBundle(nSpendHeight, tx))
                         return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-spend-bundle");
+                }
+                else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType)
+                {
+                    if (!bundle.IsValidChangeWitnessKeyBundle())
+                        return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-changewitnesskey-bundle");
                 }
                 else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::RenewType)
                 {
