@@ -1,3 +1,10 @@
+2.1.0.x
+
+CORE - Fix DOS vulnerability (crash) in witness bundle input checking
+
+
+
+
 2.1.0.7
 
 RPC - Fix a bug in InvalidateBlock behaviour when called on a block that isn't currently in the main chain.
