@@ -758,6 +758,8 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 bool matchedExistingBundle = false;
                 for (auto& bundle : *pWitnessBundles)
                 {
+                    if (bundle.outputs.size() == 0)
+                        continue;
                     if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::RearrangeType;
