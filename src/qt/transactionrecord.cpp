@@ -453,7 +453,19 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             isminetype mine = IsMine(*account, txOut);
                             if (mine)
                             {
-                                totalAmountLocked = txOut.nValue;
+                                totalAmountLocked += txOut.nValue;
+                            }
+                        }
+                    }
+                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
+                    {
+                        (unused) witnessDetails;
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, txOut);
+                            if (mine)
+                            {
                                 CTxDestination getAddress;
                                 if (ExtractDestination(txOut, getAddress))
                                 {
