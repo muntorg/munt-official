@@ -9,7 +9,8 @@
 #include "guiutil.h"
 #include <transactionfilterproxy.h>
 
-
+#include <thread>
+#include <condition_variable>
 #include <QFrame>
 #include <QDateTime>
 #include <qwt_plot_picker.h>
