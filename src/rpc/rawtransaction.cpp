@@ -803,7 +803,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     //fixme: (FUT) (BIP44) (MED)
     CKeyStore* keystore = ((fGivenKeys || !pwallet || !pwallet->activeAccount) ? &tempKeystore : pwallet->activeAccount);
 #else
-    CKeyStore* keystore = tempKeystore;
+    CKeyStore* keystore = &tempKeystore;
 #endif
 
     int nHashType = SIGHASH_ALL;
