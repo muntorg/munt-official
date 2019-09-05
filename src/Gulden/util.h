@@ -119,4 +119,8 @@ bool IsPartialNearPresent(enum BlockStatus nUpTo = BLOCK_PARTIAL_TREE);
   */
 bool IsChainNearPresent();
 
+int timeToBirthNumber(const int64_t time);
+
+int64_t birthNumberToTime(int number);
+
 #endif

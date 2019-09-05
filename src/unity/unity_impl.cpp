@@ -352,6 +352,11 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
         return false;
     }
 
+    // ensure that wallet is initialized with a starting time (else it will start from now and old tx will not be scanned)
+    // Use the hardcoded timestamp 1441212522 of block 250000, we didn't have any recovery phrase style wallets (using current phrase system) before that.
+    if (phraseBirthNumber == 0)
+        phraseBirthNumber = timeToBirthNumber(1441212522L);
+
     //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
     GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
@@ -378,6 +383,11 @@ bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& p
 
     if (!ValidateAndSplitRecoveryPhrase(phrase, phraseOnly, phraseBirthNumber))
         return false;
+
+    // ensure that wallet is initialized with a starting time (else it will start from now and old tx will not be scanned)
+    // Use the hardcoded timestamp 1441212522 of block 250000, we didn't have any recovery phrase style wallets (using current phrase system) before that.
+    if (phraseBirthNumber == 0)
+        phraseBirthNumber = timeToBirthNumber(1441212522L);
 
     if (!pactiveWallet)
     {

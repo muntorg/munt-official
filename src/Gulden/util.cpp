@@ -557,3 +557,25 @@ bool IsChainNearPresent()
 
     return index->GetBlockTime() > farBack;
 }
+
+static constexpr int recovery_birth_period = 7 * 24 * 3600; // one week
+
+int timeToBirthNumber(const int64_t time)
+{
+    // 0 for invalid time
+    if (time < Params().GenesisBlock().nTime)
+        return 0;
+
+    int periods = (time - Params().GenesisBlock().nTime) / recovery_birth_period;
+
+    return Base10ChecksumEncode(periods);
+}
+
+int64_t birthNumberToTime(int number)
+{
+    int periods;
+    if (!Base10ChecksumDecode(number, &periods))
+        return 0;
+
+    return Params().GenesisBlock().nTime + int64_t(periods) * recovery_birth_period;
+}
