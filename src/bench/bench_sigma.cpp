@@ -350,6 +350,12 @@ int main(int argc, char** argv)
     {
         numThreads = vm["mine-threads"].as<int64_t>();
     }
+    if (vm.count("sigma-global-mem"))
+    {
+        memCostGb = vm["sigma-global-mem"].as<int64_t>();
+        defaultSigma = false;
+    }
+    memAllowGb = memCostGb;
     if (vm.count("mine-memory"))
     {
         memAllowGb = vm["mine-memory"].as<int64_t>();
@@ -367,12 +373,6 @@ int main(int argc, char** argv)
     {
         numUserVerifyThreads = vm["verify-threads"].as<int64_t>();
     }
-    if (vm.count("sigma-global-mem"))
-    {
-        memCostGb = vm["sigma-global-mem"].as<int64_t>();
-        defaultSigma = false;
-    }
-    memAllowGb = memCostGb;
     if (vm.count("sigma-num-slow"))
     {
         defaultSigma = false;
