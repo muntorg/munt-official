@@ -587,6 +587,7 @@ public:
      * populate vCoins with vector of available COutputs.
      */
     void AvailableCoins(CAccount* forAccount, std::vector<COutput>& vCoins, bool fOnlySafe=true, const CCoinControl *coinControl = NULL, const CAmount& nMinimumAmount = 1, const CAmount& nMaximumAmount = MAX_MONEY, const CAmount& nMinimumSumAmount = MAX_MONEY, const uint64_t& nMaximumCount = 0, const int& nMinDepth = 0, const int& nMaxDepth = 9999999) const;
+    void AvailableCoins(std::vector<CKeyStore*>& accountsToTry, std::vector<COutput>& vCoins, bool fOnlySafe=true, const CCoinControl *coinControl = NULL, const CAmount& nMinimumAmount = 1, const CAmount& nMaximumAmount = MAX_MONEY, const CAmount& nMinimumSumAmount = MAX_MONEY, const uint64_t& nMaximumCount = 0, const int& nMinDepth = 0, const int& nMaxDepth = 9999999) const;
 
     /**
      * Return list of available coins and locked coins grouped by non-change output address.
@@ -735,6 +736,8 @@ public:
      * selected by SelectCoins(); Also create the change output, when needed
      * @note passing nChangePosInOut as -1 will result in setting a random position
      */
+    bool CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
+                           std::string& strFailReason, const CCoinControl *coinControl = NULL, bool sign = true);
     bool CreateTransaction(CAccount* forAccount, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
                            std::string& strFailReason, const CCoinControl *coinControl = NULL, bool sign = true);
 
@@ -752,7 +755,7 @@ public:
     bool AddAccountingEntry(const CAccountingEntry&);
     bool AddAccountingEntry(const CAccountingEntry&, CWalletDB *pwalletdb);
     template <typename ContainerType>
-    bool DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, const ContainerType &coins, SignType type) const;
+    bool DummySignTx(std::vector<CKeyStore*>& accountsToTry, CMutableTransaction &txNew, const ContainerType &coins, SignType type) const;
 
     static CFeeRate minTxFee;
     static CFeeRate fallbackFee;
@@ -947,7 +950,7 @@ private:
 // ContainerType is meant to hold pair<CWalletTx *, int>, and be iterable
 // so that each entry corresponds to each vIn, in order.
 template <typename ContainerType>
-bool CWallet::DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, const ContainerType &coins, SignType type) const
+bool CWallet::DummySignTx(std::vector<CKeyStore*>& accountsToTry, CMutableTransaction &txNew, const ContainerType &coins, SignType type) const
 {
     // Fill in dummy signatures for fee calculation.
     int nIn = 0;
@@ -955,7 +958,7 @@ bool CWallet::DummySignTx(CAccount* forAccount, CMutableTransaction &txNew, cons
     {
         SignatureData sigdata;
 
-        if (!ProduceSignature(DummySignatureCreator(forAccount), coin.txout, sigdata, type, txNew.nVersion))
+        if (!ProduceSignature(DummySignatureCreator(accountsToTry), coin.txout, sigdata, type, txNew.nVersion))
         {
             return false;
         } else {

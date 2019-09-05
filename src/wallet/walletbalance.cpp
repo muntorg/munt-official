@@ -485,7 +485,7 @@ CAmount CWalletTx::GetChange() const
     return nChangeCached;
 }
 
-extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
+extern bool IsMine(const CKeyStore* forAccount, const CWalletTx& tx);
 
 CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool includePoW2LockedWitnesses, bool includeChildren) const
 {

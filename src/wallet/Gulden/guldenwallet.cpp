@@ -262,7 +262,7 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     return ret;
 }
 
-bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
+bool IsMine(const CKeyStore* forAccount, const CWalletTx& tx)
 {
     for (const auto& txout : tx.tx->vout)
     {

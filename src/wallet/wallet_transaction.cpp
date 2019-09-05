@@ -54,7 +54,9 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             signAccount = FindAccountForTransaction(mi->second.tx->vout[input.prevout.n]);
         if (!signAccount)
             return false;
-        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, signAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
+        std::vector<CKeyStore*> accountsToTry;
+        accountsToTry.push_back(signAccount);
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -183,6 +185,24 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
         strFailReason = _("Can't send from read only (watch) account.");
         return false;
     }
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(forAccount);
+    return CreateTransaction(accountsToTry, vecSend, wtxNew, reservekey, nFeeRet, nChangePosInOut, strFailReason, coinControl, sign);
+}
+
+bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CAmount& nFeeRet,
+                                int& nChangePosInOut, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
+{
+
+    //fixme: (HIGH) (UNITY)
+    //for (const auto& forAccount : accountsToTry)
+    //{
+        //if (forAccount->IsReadOnly())
+        //{
+            //strFailReason = _("Can't send from read only (watch) account.");
+            //return false;
+        //}
+    //}
 
     CAmount nValue = 0;
     int nChangePosRequest = nChangePosInOut;
@@ -247,7 +267,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
         LOCK2(cs_main, cs_wallet);
         {
             std::vector<COutput> vAvailableCoins;
-            AvailableCoins(forAccount, vAvailableCoins, true, coinControl);
+            AvailableCoins(accountsToTry, vAvailableCoins, true, coinControl);
 
             nFeeRet = 0;
             // Start with no fee and loop until there is enough fee
@@ -443,9 +463,9 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 AddTxInputs(txNew, setCoins , rbf);
 
                 // Fill in dummy signatures for fee calculation.
-                if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
+                if (!DummySignTx(accountsToTry, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
-                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
+                    if (!ProduceSignature(DummySignatureCreator(accountsToTry), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
                         return false;
@@ -528,7 +548,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                 //fixme: (PHASE4) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
-                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
+                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;
@@ -595,6 +615,9 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
 
 bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& txNew, CReserveKeyOrScript& reservekey, CAmount& nFeeOut, bool sign, std::string& strFailReason, const CCoinControl* coinControl)
 {
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(forAccount);
+                
     CWalletTx wtxNew;
     if (forAccount->IsReadOnly())
     {
@@ -708,9 +731,9 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 AddTxInputs(txNew, setCoins, false);
 
                 // Fill in dummy signatures for fee calculation.
-                if (!DummySignTx(forAccount, txNew, setCoins, Spend)) {
+                if (!DummySignTx(accountsToTry, txNew, setCoins, Spend)) {
                     SignatureData sigdata;
-                    if (!ProduceSignature(DummySignatureCreator(forAccount), CTxOut(), sigdata, Spend, txNew.nVersion))
+                    if (!ProduceSignature(DummySignatureCreator(accountsToTry), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
                         strFailReason = _("Signing transaction failed");
                         return false;
@@ -793,7 +816,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 //fixme: (PHASE4) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
-                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, forAccount, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
+                if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;

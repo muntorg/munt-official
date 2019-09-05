@@ -1543,10 +1543,17 @@ void CWallet::ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman
  * @{
  */
 
-extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
+extern bool IsMine(const CKeyStore* forAccount, const CWalletTx& tx);
 
 
 void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins, bool fOnlySafe, const CCoinControl *coinControl, const CAmount &nMinimumAmount, const CAmount &nMaximumAmount, const CAmount &nMinimumSumAmount, const uint64_t &nMaximumCount, const int &nMinDepth, const int &nMaxDepth) const
+{
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(forAccount);
+    return AvailableCoins(accountsToTry, vCoins, fOnlySafe, coinControl, nMinimumAmount, nMaximumAmount, nMinimumSumAmount, nMaximumCount, nMinDepth, nMaxDepth);
+}
+
+void CWallet::AvailableCoins(std::vector<CKeyStore*>& accountsToTry, std::vector<COutput> &vCoins, bool fOnlySafe, const CCoinControl *coinControl, const CAmount &nMinimumAmount, const CAmount &nMaximumAmount, const CAmount &nMinimumSumAmount, const uint64_t &nMaximumCount, const int &nMinDepth, const int &nMaxDepth) const
 {
     vCoins.clear();
 
@@ -1560,7 +1567,15 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins,
             const uint256& wtxid = it->first;
             const CWalletTx* pcoin = &(*it).second;
 
-            if (!::IsMine(forAccount, *pcoin))
+            bool isMineAny=false;
+            for (const auto& forAccount : accountsToTry)
+            {
+                if (::IsMine(forAccount, *pcoin))
+                {
+                    isMineAny = true;
+                }
+            }
+            if (!isMineAny)
                 continue;
 
             if (!CheckFinalTx(*pcoin, IsPartialSyncActive() ? partialChain : chainActive))
@@ -1635,7 +1650,13 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins,
                 if (IsSpent(wtxid, i))
                     continue;
 
-                isminetype mine = ::IsMine(*forAccount, pcoin->tx->vout[i]);
+                isminetype mine = ISMINE_NO;
+                for (const auto& forAccount : accountsToTry)
+                {
+                    isminetype temp = ::IsMine(*forAccount, pcoin->tx->vout[i]);
+                    if (mine < temp)
+                        mine = temp;
+                }
 
                 if (mine == ISMINE_NO) {
                     continue;

@@ -801,9 +801,9 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
 
 #ifdef ENABLE_WALLET
     //fixme: (FUT) (BIP44) (MED)
-    const CKeyStore& keystore = ((fGivenKeys || !pwallet || !pwallet->activeAccount) ? tempKeystore : *pwallet->activeAccount);
+    CKeyStore* keystore = ((fGivenKeys || !pwallet || !pwallet->activeAccount) ? &tempKeystore : pwallet->activeAccount);
 #else
-    const CKeyStore& keystore = tempKeystore;
+    CKeyStore* keystore = tempKeystore;
 #endif
 
     int nHashType = SIGHASH_ALL;
@@ -859,9 +859,11 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
 
         SignatureData sigdata;
+        std::vector<CKeyStore*> accountsToTry;
+        accountsToTry.push_back(keystore);
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, &keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, signType, mergedTx.nVersion);
+            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, accountsToTry, &mergedTx, i, amount, nHashType), coin.out, sigdata, signType, mergedTx.nVersion);
 
         // ... and merge in other signatures:
         for(const CMutableTransaction& txv : txVariants) {

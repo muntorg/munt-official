@@ -923,7 +923,16 @@ PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRec
     int nChangePosRet = -1;
     std::string strError;
     CReserveKeyOrScript reservekey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_CHANGE);
-    if (!pactiveWallet->CreateTransaction(pactiveWallet->activeAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+    std::vector<CKeyStore*> accountsToTry;
+    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    {
+        if(accountPair.second->getParentUUID() == forAccount->getUUID())
+        {
+            accountsToTry.push_back(accountPair.second);
+        }
+        accountsToTry.push_back(forAccount);
+    }
+    if (!pactiveWallet->CreateTransaction(accountsToTry, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
     {
         if (!substract_fee && request.amount + nFeeRequired > GetBalance()) {
             return PaymentResultStatus::INSUFFICIENT_FUNDS;

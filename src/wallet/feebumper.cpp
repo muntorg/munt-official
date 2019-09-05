@@ -33,12 +33,13 @@ int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *pWal
         assert(mi != pWallet->mapWallet.end() && input.prevout.n < mi->second.tx->vout.size());
         vCoins.emplace_back(CInputCoin(&(mi->second), input.prevout.n));
     }
-    bool success = false;
-    for (auto accountPair : pWallet->mapAccounts)
+    std::vector<CKeyStore*> accountsToTry;
+    for (const auto& [accountUUID, account] : pWallet->mapAccounts)
     {
-        success = success || pWallet->DummySignTx(accountPair.second, txNew, vCoins, Spend);
+        (unused)accountUUID;
+        accountsToTry.push_back(account);
     }
-    if (!success)
+    if (!pWallet->DummySignTx(accountsToTry, txNew, vCoins, Spend))
     {
          // This should never happen, because IsAllFromMe(ISMINE_SPENDABLE)
         // implies that we can sign for every input.
