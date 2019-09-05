@@ -420,6 +420,12 @@ int main(int argc, char** argv)
     LogPrintf("NETWORK:\nGlobal memory cost [%dgb]\nArgon_echo cpu cost for arenas [%d rounds]\nArgon_echo cpu cost for slow hash [%d rounds]\nArgon_echo mem cost [%dMb]\nEcho/Shavite digest size [%d bytes]\nNumber of fast hashes per slow hash [%d]\nNumber of slow hashes per global arena [%d]\nNumber of verify threads [%d]\n\n", memCostGb, arenaCpuCostRounds ,slowHashCpuCostRounds, slowHashMemCostMb, fastHashMemCostBytes, maxHashesPost, maxHashesPre, numSigmaVerifyThreads);
     LogPrintf("USER:\nMining with [%d] threads\nMining with [%d gb] memory.\nVerifying with [%s] threads.\n\n", numThreads, memAllowGb, numUserVerifyThreads);
     
+    uint64_t memAllowKb = memAllowGb*1024*1024;
+    if (memAllowKb == 0)
+    {
+        memAllowKb = 512*1024;
+    }
+    
     // If we are using the default params then perform some tests to ensure everything runs the same across different machines
     if (defaultSigma)
     {
@@ -502,7 +508,7 @@ int main(int argc, char** argv)
         
         LogPrintf("SIGMA=============================================================\n\n");
         {
-            sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, std::min(memAllowKb, 1024*1024*memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
             if (!sigmaContext.arenaIsValid())
             {
                 LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
@@ -618,13 +624,13 @@ int main(int argc, char** argv)
         
         while (nMemoryAllocated < memAllowGb)
         {
-            uint64_t nMemoryChunk = std::min((memAllowGb-nMemoryAllocated), memCostGb);
+            uint64_t nMemoryChunk = std::min((memAllowKb-nMemoryAllocated), 1024*1024*memCostGb);
             nMemoryAllocated += nMemoryChunk;
             sigmaMemorySizes.emplace_back(nMemoryChunk);
         }
-        for (auto instanceMemorySize : sigmaMemorySizes)
+        for (auto instanceMemorySizeKb : sigmaMemorySizes)
         {
-            sigmaContexts.push_back(new sigma_context(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*instanceMemorySize, maxHashesPre, maxHashesPost, numThreads/sigmaMemorySizes.size(), numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes));
+            sigmaContexts.push_back(new sigma_context(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, instanceMemorySizeKb, maxHashesPre, maxHashesPost, numThreads/sigmaMemorySizes.size(), numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes));
         }
         
         LogPrintf("Bench mining for low difficulty target\n");
