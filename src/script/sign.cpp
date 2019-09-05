@@ -117,7 +117,6 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
         else
         {
             CPubKey vch;
-            bool gotKey = false;
             for (const auto& forAccount : creator.accounts())
             {
                 if (forAccount->GetPubKey(keyID, vch))
