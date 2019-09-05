@@ -15,9 +15,10 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#include <boost/scope_exit.hpp>
+
 #include <crypto/hash/sigma/argon_echo/argon_echo.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
-
 
 #define ECHO_DP
 #define LENGTH 256
@@ -375,13 +376,15 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
 
 bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
 {
+    uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];;
+    BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
+    
     arith_uint256 hashTarget = arith_uint256().SetCompact(headerData.nBits);
     
     uint64_t nPostNonce = headerData.nPostNonce;
     uint64_t nPreNonce = headerData.nPreNonce;
     
     //1. Reset post nonce to zero and perform argon hash of header.
-    uint8_t* hashMem = (uint8_t*)malloc(argonMemoryCostKb*1024);
     headerData.nPostNonce = 0;
     
     argon2_echo_context argonContext;
@@ -427,7 +430,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
         argon2_echo_context context;
         context.t_cost = argonArenaRoundCost;
         context.m_cost = argonMemoryCostKb;
-        context.allocated_memory =  (uint8_t*)malloc(argonMemoryCostKb*1024);
+        context.allocated_memory = hashMem;
         context.pwd = (uint8_t*)&headerData.nVersion;
         context.pwdlen = 80;
                
@@ -456,7 +459,6 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
                 return true;
             }
         }
-        free(context.allocated_memory);
     }
     return false;
 }
