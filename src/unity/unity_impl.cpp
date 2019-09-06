@@ -120,6 +120,19 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 
     std::vector<InputRecord> inputs;
     std::vector<OutputRecord> outputs;
+    
+    
+    //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
+    std::vector<CKeyStore*> accountsToTry;
+    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    {
+        if(accountPair.second->getParentUUID() == pactiveWallet->activeAccount->getUUID())
+        {
+            accountsToTry.push_back(accountPair.second);
+        }
+        accountsToTry.push_back(pactiveWallet->activeAccount);
+    }
+    
 
     int64_t subtracted = wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
     int64_t added = wtx.GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
@@ -158,7 +171,13 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         std::string label;
         if (pwallet->mapAddressBook.count(address))
             label = pwallet->mapAddressBook[address].name;
-        inputs.push_back(InputRecord(address, label, static_cast<const CGuldenWallet*>(pwallet)->IsMine(*pactiveWallet->activeAccount, txin)));
+        bool isMine = false;
+        for (const auto& account : accountsToTry)
+        {
+            if (static_cast<const CGuldenWallet*>(pwallet)->IsMine(*account, txin))
+                isMine = true;
+        }
+        inputs.push_back(InputRecord(address, label, isMine));
     }
 
     for (const CTxOut& txout: tx.vout) {
@@ -176,7 +195,13 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         std::string label;
         if (pwallet->mapAddressBook.count(address))
             label = pwallet->mapAddressBook[address].name;
-        outputs.push_back(OutputRecord(txout.nValue, address, label, IsMine(*pactiveWallet->activeAccount, txout)));
+        bool isMine = false;
+        for (const auto& account : accountsToTry)
+        {
+            if (IsMine(*account, txout))
+                isMine = true;
+        }
+        outputs.push_back(OutputRecord(txout.nValue, address, label, isMine));
     }
 
     TransactionStatus status = getStatusForTransaction(&wtx);
