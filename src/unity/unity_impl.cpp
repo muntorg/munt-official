@@ -525,7 +525,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
             int nChangePosRet = -1;
             std::string strError;
             CReserveKeyOrScript* pReserveKey = new CReserveKeyOrScript(pactiveWallet, pAccount, KEYCHAIN_CHANGE);
-              std::vector<CKeyStore*> accountsToTry;
+            std::vector<CKeyStore*> accountsToTry;
             for ( const auto& accountPair : pactiveWallet->mapAccounts )
             {
                 if(accountPair.second->getParentUUID() == pAccount->getUUID())
@@ -534,7 +534,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
                 }
                 accountsToTry.push_back(pAccount);
             }
-            if (!pactiveWallet->CreateTransaction(pAccount, vecSend, *pWallettx, *pReserveKey, nFeeRequired, nChangePosRet, strError))
+            if (!pactiveWallet->CreateTransaction(accountsToTry, vecSend, *pWallettx, *pReserveKey, nFeeRequired, nChangePosRet, strError))
             {
                 LogPrintf("ReplaceWalletLinkedFromURI: Failed to create transaction %s [%d]",strError.c_str(), nBalance);
                 return false;
