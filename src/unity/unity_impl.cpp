@@ -525,6 +525,15 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
             int nChangePosRet = -1;
             std::string strError;
             CReserveKeyOrScript* pReserveKey = new CReserveKeyOrScript(pactiveWallet, pAccount, KEYCHAIN_CHANGE);
+              std::vector<CKeyStore*> accountsToTry;
+            for ( const auto& accountPair : pactiveWallet->mapAccounts )
+            {
+                if(accountPair.second->getParentUUID() == pAccount->getUUID())
+                {
+                    accountsToTry.push_back(accountPair.second);
+                }
+                accountsToTry.push_back(pAccount);
+            }
             if (!pactiveWallet->CreateTransaction(pAccount, vecSend, *pWallettx, *pReserveKey, nFeeRequired, nChangePosRet, strError))
             {
                 LogPrintf("ReplaceWalletLinkedFromURI: Failed to create transaction %s [%d]",strError.c_str(), nBalance);
@@ -901,7 +910,16 @@ int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
     int nChangePosRet = -1;
     std::string strError;
     CReserveKeyOrScript reservekey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_CHANGE);
-    if (!pactiveWallet->CreateTransaction(pactiveWallet->activeAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError, NULL, false))
+    std::vector<CKeyStore*> accountsToTry;
+    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    {
+        if(accountPair.second->getParentUUID() == pactiveWallet->activeAccount->getUUID())
+        {
+            accountsToTry.push_back(accountPair.second);
+        }
+        accountsToTry.push_back(pactiveWallet->activeAccount);
+    }
+    if (!pactiveWallet->CreateTransaction(accountsToTry, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError, NULL, false))
     {
         LogPrintf("feeForRecipient: failed to create transaction %s",strError.c_str());
         throw std::runtime_error(strprintf(_("Failed to calculate fee\n%s"), strError));
