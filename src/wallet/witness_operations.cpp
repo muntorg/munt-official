@@ -615,10 +615,13 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
     if (std::any_of(redistributionAmounts.begin(), redistributionAmounts.end(), [](const auto& amount){ return amount < (gMinimumWitnessAmount*COIN); }))
         throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
-    uint64_t nLockFrom = currentWitnessDetails.lockFromBlock == 0 ? currentWitnessHeight : currentWitnessDetails.lockFromBlock;
+    uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
+    if (remainingLockDurationInBlocks == 0)
+    {
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "PoW² witness has already unlocked.");
+    }
 
     // extend specifics
-    uint64_t newLockUntil = 0;
     if (requestedLockPeriodInBlocks != 0) {
         if (requestedLockPeriodInBlocks > MaximumWitnessLockLength())
             throw witness_error(witness::RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
@@ -630,18 +633,17 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
         if (requestedLockPeriodInBlocks == MinimumWitnessLockLength())
             requestedLockPeriodInBlocks += 50;
 
-        // block height for new locking period
-        newLockUntil = nLockFrom + requestedLockPeriodInBlocks;
-
-        if (newLockUntil < currentWitnessDetails.lockUntilBlock)
+        if (requestedLockPeriodInBlocks < remainingLockDurationInBlocks)
         {
-            throw witness_error(witness::RPC_INVALID_PARAMETER, strprintf("New lock period [%d] ends before remaining lock period [%d]", newLockUntil, currentWitnessDetails.lockUntilBlock));
+            throw witness_error(witness::RPC_INVALID_PARAMETER, strprintf("New lock period [%d] does not exceed remaining lock period [%d]", requestedLockPeriodInBlocks, remainingLockDurationInBlocks));
         }
 
         // Enforce minimum weight
         if (std::any_of(redistributionAmounts.begin(), redistributionAmounts.end(), [&](const auto& amount){
                 return GetPoW2RawWeightForAmount(amount, requestedLockPeriodInBlocks) < gMinimumWitnessWeight; }))
             throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+
+        // FIXME: Enforce new combined weight > old combined weight
     }
 
     // Check for immaturity
@@ -668,11 +670,6 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
     if (redistributionTotal < oldTotal)
         throw witness_error(witness::RPC_INVALID_PARAMETER, strprintf("New amount [%s] is smaller than current amount [%s]", FormatMoney(redistributionTotal), FormatMoney(oldTotal)));
 
-    uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
-    if (remainingLockDurationInBlocks == 0)
-    {
-        throw witness_error(witness::RPC_INVALID_PARAMETER, "PoW² witness has already unlocked.");
-    }
 
     // Create the redistribution transaction
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
@@ -706,9 +703,16 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
         {
             CTxOut distTxOutput;
             distTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-            // As we are splitting the amount, only the amount may change.
-            distTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
-            distTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+             if (requestedLockPeriodInBlocks != 0) {
+                 // extend
+                 distTxOutput.output.witnessDetails.lockFromBlock = 0;
+                 distTxOutput.output.witnessDetails.lockUntilBlock = chainActive.Tip()->nHeight + requestedLockPeriodInBlocks;
+             }
+             else {
+                 // rearrange
+                 distTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+                 distTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+             }
             distTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
             distTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
             distTxOutput.output.witnessDetails.failCount = highestFailCount;
