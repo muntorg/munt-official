@@ -622,7 +622,7 @@ int main(int argc, char** argv)
         std::vector<uint64_t> sigmaMemorySizes;
         uint64_t nMemoryAllocated=0;
         
-        while (nMemoryAllocated < memAllowGb)
+        while (nMemoryAllocated < memAllowKb)
         {
             uint64_t nMemoryChunk = std::min((memAllowKb-nMemoryAllocated), 1024*1024*memCostGb);
             nMemoryAllocated += nMemoryChunk;
