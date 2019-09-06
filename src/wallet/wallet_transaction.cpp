@@ -974,7 +974,9 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservek
     {
         LOCK2(cs_main, cs_wallet);
         LogPrintf("CommitTransaction:\n%s", wtxNew.tx->ToString());
-        LogPrintf("TransactionHex[%s]\n", EncodeHexTx(*wtxNew.tx).c_str());
+        CDataStream ssTx(SER_NETWORK, 0);
+        ssTx << wtxNew.tx;
+        LogPrintf("TransactionHex[%s]\n", HexStr(ssTx.begin(), ssTx.end()));
         {
             // Take key pair from key pool so it won't be used again
             reservekey.KeepKey();
