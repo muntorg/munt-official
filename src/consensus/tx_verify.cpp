@@ -556,37 +556,86 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
     return false;
 }
 
+
 /*
-* 5) Increase amount and/or lock period to increase, reset lockfrom to 0. Lock period and/or amount must exceed or equal old period/amount.
-* Input/Output.
+* 5) Increase amount and/or lock period. Reset lockfrom to 0. Lock period and/or amount must exceed or equal old period/amount.
+* N inputs, M outputs.
 * Signed by spending key.
+* Precondition - we must have already verified externally from here that the scriptwitness stack for the input is of size 2.
 */
-inline bool IsIncreaseBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
+bool CWitnessTxBundle::IsValidIncreaseBundle()
 {
-    //fixme: (PHASE4) Check unused paramater.
-    (unused) nInputHeight;
-    // Needs 2 signature (spending key)
-    if (input.segregatedSignatureData.stack.size() != 2)
+    if (inputs.size() < 1)
         return false;
-    // Action nonce always increment
-    if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
+    if (outputs.size() < 1)
         return false;
-    // Keys unchanged.
-    if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
+
+    const auto& input0 = inputs[0];
+    const auto& input0Details = input0.second;
+
+    const auto& output0 = outputs[0];
+    const auto& output0Details = output0.second;
+
+    CAmount nInputValue = 0;
+    CAmount nOutputValue = 0;
+
+    uint64_t highestActionNonce = 0;
+    uint64_t highestFailCount = 0;
+
+    // A: verify inputs all have witness properties equal to output0 except lockUntilBlock
+    // in addition determine highestActionNonce and highestFailCount
+    for (const auto& input : inputs)
+    {
+        const auto& inputDetails = input.second;
+        if (inputDetails.spendingKeyID != output0Details.spendingKeyID)
+            return false;
+        if (inputDetails.witnessKeyID != output0Details.witnessKeyID)
+            return false;
+        if (inputDetails.lockFromBlock != output0Details.lockFromBlock)
+            return false;
+        if (inputDetails.actionNonce > highestActionNonce)
+            highestActionNonce = inputDetails.actionNonce;
+        if (inputDetails.failCount > highestFailCount)
+            highestFailCount = inputDetails.failCount;
+        nInputValue += input.first.nValue;
+    }
+
+    // B: verify outputs all have witness properties equal to input0 except lockUntilBlock
+    // verify values for actionNonce and failCount using highest input values and from block reset
+    for (const auto& output : outputs)
+    {
+        const auto& outputDetails = output.second;
+        if (highestActionNonce + 1 != outputDetails.actionNonce)
+            return false;
+        if (highestFailCount != outputDetails.failCount)
+            return false;
+        if (input0Details.spendingKeyID != outputDetails.spendingKeyID)
+            return false;
+        if (input0Details.witnessKeyID != outputDetails.witnessKeyID)
+            return false;
+        if (0 != outputDetails.lockFromBlock)
+            return false;
+        nOutputValue += output.first.nValue;
+    }
+
+    // A and B imply that all inputs and outputs have identical witness properties here (except
+
+    // C: verify that all inputs have the same lockUntilBlock
+    if (std::any_of(++inputs.begin(), inputs.end(), [&](const auto& input){ return input.second.lockUntilBlock != input0Details.lockUntilBlock; }))
         return false;
-    if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
+
+    // D: verify that all outputs have the same lockUntilBlock
+    if (std::any_of(++outputs.begin(), outputs.end(), [&](const auto& output){ return output.second.lockUntilBlock != output0Details.lockUntilBlock; }))
         return false;
-    if (inputDetails.failCount != outputDetails.failCount)
+
+    // E: verify that input lockUntilBlock <= output lockUntilBlock
+    if (input0Details.lockUntilBlock > output0Details.lockUntilBlock)
         return false;
-    // Amount must have increased or lock until must have increased
-    if (nInputAmount >= nOutputAmount && inputDetails.lockUntilBlock >= outputDetails.lockUntilBlock)
+
+    // F: verify that output value is at least input value
+    if (nInputValue > nOutputValue)
         return false;
-    // Lock until block may never decrease
-    if (inputDetails.lockUntilBlock > outputDetails.lockUntilBlock)
-        return false;
-    // Lock from block resets to 0
-    if (outputDetails.lockFromBlock != 0)
-        return false;
+
     return true;
 }
 
@@ -757,13 +806,6 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::RenewType;
                         break;
                     }
-                    else if ( IsIncreaseBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
-                    {
-                        matchedExistingBundle = true;
-                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
-                        bundle.bundleType = CWitnessTxBundle::WitnessTxType::IncreaseType;
-                        break;
-                    }
                 }
             }
             if (!matchedExistingBundle)
@@ -780,9 +822,9 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 {
                     if (bundle.outputs.size() == 0)
                         continue;
-                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
+                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType  || bundle.bundleType == CWitnessTxBundle::WitnessTxType::IncreaseType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
-                        bundle.bundleType = CWitnessTxBundle::WitnessTxType::RearrangeType;
+                        bundle.bundleType = bundle.outputs[0].second.lockFromBlock == 0 ? CWitnessTxBundle::WitnessTxType::IncreaseType : CWitnessTxBundle::WitnessTxType::RearrangeType;
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         matchedExistingBundle = true;
                     }
@@ -892,6 +934,11 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
                 {
                     if (!bundle.IsValidSpendBundle(nSpendHeight, tx))
                         return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-spend-bundle");
+                }
+                else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::IncreaseType)
+                {
+                    if (!bundle.IsValidIncreaseBundle())
+                        return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-increase-bundle");
                 }
                 else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType)
                 {
