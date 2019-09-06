@@ -159,33 +159,6 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
         *pFee = transactionFee;
 }
 
-void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
-{
-    if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
-        throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
-
-    LOCK2(cs_main, pwallet->cs_wallet);
-
-    if (!IsSegSigEnabled(chainActive.TipPrev()))
-        throw std::runtime_error("Segsig not activated");
-
-    if (pwallet->IsLocked()) {
-        throw std::runtime_error("Wallet locked");
-    }
-
-    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
-    {
-        throw witness_error(witness::RPC_MISC_ERROR, "Cannot extend a witness-only account as spend key is required to do this.");
-    }
-
-    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(witnessAccount);
-    if (unspentWitnessOutputs.size() == 0)
-        throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].",
-                                                                           boost::uuids::to_string(witnessAccount->getUUID())));
-
-    extendwitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, amount, requestedLockPeriodInBlocks, pTxid, pFee);
-}
-
 void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pAddress, std::string* pTxid)
 {
     if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
@@ -605,7 +578,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
     return result;
 }
 
-void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& redistributionAmounts, std::string* pTxid, CAmount* pFee)
+void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& redistributionAmounts, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
 {
     if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
         throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
@@ -629,6 +602,48 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
         throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Account does not contain any witness outputs [%s].",
                                                                            boost::uuids::to_string(witnessAccount->getUUID())));
 
+    EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);
+
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    (unused)currentWitnessOutpoint;
+    (unused)currentWitnessHeight;
+
+    // Get the current witness details
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    if (std::any_of(redistributionAmounts.begin(), redistributionAmounts.end(), [](const auto& amount){ return amount < (gMinimumWitnessAmount*COIN); }))
+        throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+
+    uint64_t nLockFrom = currentWitnessDetails.lockFromBlock == 0 ? currentWitnessHeight : currentWitnessDetails.lockFromBlock;
+
+    // extend specifics
+    uint64_t newLockUntil = 0;
+    if (requestedLockPeriodInBlocks != 0) {
+        if (requestedLockPeriodInBlocks > MaximumWitnessLockLength())
+            throw witness_error(witness::RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
+
+        if (requestedLockPeriodInBlocks < MinimumWitnessLockLength())
+            throw witness_error(witness::RPC_INVALID_PARAMETER, "Minimum lock period of 1 month exceeded.");
+
+        // Add a small buffer to give us time to enter the blockchain
+        if (requestedLockPeriodInBlocks == MinimumWitnessLockLength())
+            requestedLockPeriodInBlocks += 50;
+
+        // block height for new locking period
+        newLockUntil = nLockFrom + requestedLockPeriodInBlocks;
+
+        if (newLockUntil < currentWitnessDetails.lockUntilBlock)
+        {
+            throw witness_error(witness::RPC_INVALID_PARAMETER, strprintf("New lock period [%d] ends before remaining lock period [%d]", newLockUntil, currentWitnessDetails.lockUntilBlock));
+        }
+
+        // Enforce minimum weight
+        if (std::any_of(redistributionAmounts.begin(), redistributionAmounts.end(), [&](const auto& amount){
+                return GetPoW2RawWeightForAmount(amount, requestedLockPeriodInBlocks) < gMinimumWitnessWeight; }))
+            throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+    }
+
     // Check for immaturity
     for ( const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] : unspentWitnessOutputs )
     {
@@ -640,25 +655,24 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
             throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
     }
 
+    // Check type (can't extend script type, must witness once or renew/upgrade after phase 4 activated)
+    if (std::any_of(unspentWitnessOutputs.begin(), unspentWitnessOutputs.end(), [](const auto& it){ return std::get<0>(it).GetType() !=  CTxOutType::PoW2WitnessOutput; }))
+        throw witness_error(witness::RPC_TYPE_ERROR, "Witness has to be type POW2WITNESS, renew or upgrade account");
 
-    EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);
-
-    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
-    (unused)currentWitnessOutpoint;
-    (unused)currentWitnessHeight;
-
-    // Check that new distribution value matches old
+    // Check that total of new value is at least old total
     CAmount redistributionTotal = std::accumulate(redistributionAmounts.begin(), redistributionAmounts.end(), CAmount(0), [](const CAmount acc, const CAmount amount){ return acc + amount; });
     CAmount oldTotal = std::accumulate(unspentWitnessOutputs.begin(), unspentWitnessOutputs.end(), CAmount(0), [](const CAmount acc, const auto& it){
         const CTxOut& txOut = std::get<0>(it);
         return acc + txOut.nValue;
     });
-    if (redistributionTotal != oldTotal)
-        throw witness_error(witness::RPC_MISC_ERROR, strprintf("New distribution value [%s] doesn't match original value [%s]", FormatMoney(redistributionTotal), FormatMoney(oldTotal)));
+    if (redistributionTotal < oldTotal)
+        throw witness_error(witness::RPC_INVALID_PARAMETER, strprintf("New amount [%s] is smaller than current amount [%s]", FormatMoney(redistributionTotal), FormatMoney(oldTotal)));
 
-    // Get the current witness details
-    CTxOutPoW2Witness currentWitnessDetails;
-    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+    uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
+    if (remainingLockDurationInBlocks == 0)
+    {
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "PoW² witness has already unlocked.");
+    }
 
     // Create the redistribution transaction
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
@@ -727,6 +741,18 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
         *pTxid = finalTransactionHash.GetHex();
     if (pFee != nullptr)
         *pFee = transactionFee;
+}
+
+void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& redistributionAmounts, std::string* pTxid, CAmount* pFee)
+{
+    redistributeandextendwitnessaccount(pwallet, fundingAccount, witnessAccount, redistributionAmounts, 0, pTxid, pFee);
+}
+
+void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
+{
+    CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
+    auto distribution = optimalWitnessDistribution(amount, requestedLockPeriodInBlocks, witnessInfo.nTotalWeightEligibleAdjusted);
+    redistributeandextendwitnessaccount(pwallet, fundingAccount, witnessAccount, distribution, requestedLockPeriodInBlocks, pTxid, pFee);
 }
 
 /** Estimated witnessing count expressed as a fraction per block for a single amount */
