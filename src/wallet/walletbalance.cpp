@@ -657,7 +657,7 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
 // wallet, and then subtracts the values of TxIns spending from the wallet. This
 // also has fewer restrictions on which unconfirmed transactions are considered
 // trusted.
-CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, const boost::uuids::uuid* accountUUID) const
+CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, const boost::uuids::uuid* accountUUID, bool includeChildren) const
 {
     LOCK2(cs_main, cs_wallet);
 
@@ -678,8 +678,8 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
 
         if (depth >= minDepth)
         {
-            balance += wtx.GetCredit(filter, forAccount);
-            balance -= wtx.GetDebit(filter, forAccount);
+            balance += wtx.GetCredit(filter, forAccount, includeChildren);
+            balance -= wtx.GetDebit(filter, forAccount, includeChildren);
         }
     }
 

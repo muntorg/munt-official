@@ -1008,7 +1008,7 @@ UniValue movecmd(const JSONRPCRequest& request)
     }
     else
     {
-        nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
+        nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID, true);
     }
     CAmount nAmount = 0;
     if (request.params[2].getValStr() == "-1")
