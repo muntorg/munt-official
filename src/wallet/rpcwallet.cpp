@@ -440,7 +440,17 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
     int nChangePosRet = -1;
     CRecipient recipient = GetRecipientForDestination(address, nValue, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
     vecSend.push_back(recipient);
-    if (!pwallet->CreateTransaction(fromAccount, vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
+    
+    std::vector<CKeyStore*> accountsToTry;
+    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    {
+        if(accountPair.second->getParentUUID() == fromAccount->getUUID())
+        {
+            accountsToTry.push_back(accountPair.second);
+        }
+        accountsToTry.push_back(fromAccount);
+    }
+    if (!pwallet->CreateTransaction(accountsToTry, vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
         if (!fSubtractFeeFromAmount && nValue + nFeeRequired > curBalance)
             strError = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
