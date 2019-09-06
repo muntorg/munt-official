@@ -936,11 +936,11 @@ PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRec
     std::vector<CKeyStore*> accountsToTry;
     for ( const auto& accountPair : pactiveWallet->mapAccounts )
     {
-        if(accountPair.second->getParentUUID() == forAccount->getUUID())
+        if(accountPair.second->getParentUUID() == pactiveWallet->activeAccount->getUUID())
         {
             accountsToTry.push_back(accountPair.second);
         }
-        accountsToTry.push_back(forAccount);
+        accountsToTry.push_back(pactiveWallet->activeAccount);
     }
     if (!pactiveWallet->CreateTransaction(accountsToTry, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
     {
