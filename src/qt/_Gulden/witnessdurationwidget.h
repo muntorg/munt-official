@@ -26,7 +26,7 @@ public:
     /** Configuration.
      * @param minDurationInBlocks, extra minimum lock duration to use when extending a witness
      */
-    void configure(CAmount lockingAmount, int minDurationInBlocks, int64_t minimumWeight);
+    void configure(CAmount lockingAmount, int minDurationInBlocks);
 
     int duration();
 

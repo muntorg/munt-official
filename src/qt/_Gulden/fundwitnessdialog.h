@@ -30,7 +30,7 @@ class FundWitnessDialog : public QFrame
 
 public:
     /** Extend constructor */
-    explicit FundWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
+    explicit FundWitnessDialog(CAmount lockedAmount_, int minimumDuration, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
 
     /** (Re)fund constructor */
     explicit FundWitnessDialog(WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
@@ -43,7 +43,7 @@ Q_SIGNALS:
 protected:
 
 private:
-    FundWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
+    FundWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int minimumDuration, WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent = 0);
 
     Ui::FundWitnessDialog *ui;
     const QStyle *platformStyle;

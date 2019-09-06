@@ -16,7 +16,7 @@
 #include "optionsmodel.h"
 #include "consensus/validation.h"
 
-FundWitnessDialog::FundWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
+FundWitnessDialog::FundWitnessDialog(CAmount minimumFunding, CAmount lockedAmount_, int minimumDuration, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
 : QFrame( parent )
 , ui( new Ui::FundWitnessDialog )
 , platformStyle( _platformStyle )
@@ -35,11 +35,11 @@ FundWitnessDialog::FundWitnessDialog(CAmount minimumFunding, CAmount lockedAmoun
     ui->payAmount->setOptionsModel(walletModel->getOptionsModel());
     ui->payAmount->setDisplayMaxButton(false);
     ui->payAmount->setAmount(lockedAmount);
-    ui->lockDuration->configure(lockedAmount, durationRemaining, minimumWeight);
+    ui->lockDuration->configure(lockedAmount, minimumDuration);
 }
 
-FundWitnessDialog::FundWitnessDialog(CAmount lockedAmount_, int durationRemaining, int64_t minimumWeight, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
-    : FundWitnessDialog(1 * COIN, lockedAmount_, durationRemaining, minimumWeight, walletModel_, _platformStyle, parent)
+FundWitnessDialog::FundWitnessDialog(CAmount lockedAmount_, int durationRemaining, WalletModel* walletModel_, const QStyle *_platformStyle, QWidget *parent)
+    : FundWitnessDialog(1 * COIN, lockedAmount_, durationRemaining, walletModel_, _platformStyle, parent)
 {
     ui->extendButton->setVisible(true);
     ui->fundButton->setVisible(false);
@@ -47,7 +47,7 @@ FundWitnessDialog::FundWitnessDialog(CAmount lockedAmount_, int durationRemainin
 }
 
 FundWitnessDialog::FundWitnessDialog(WalletModel* walletModel_, const QStyle *platformStyle, QWidget *parent)
-    : FundWitnessDialog(gMinimumWitnessAmount * COIN, 0, 0, 0, walletModel_, platformStyle, parent)
+    : FundWitnessDialog(gMinimumWitnessAmount * COIN, 0, 0, walletModel_, platformStyle, parent)
 {
     ui->extendButton->setVisible(false);
     ui->fundButton->setVisible(true);

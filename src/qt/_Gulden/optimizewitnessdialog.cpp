@@ -61,7 +61,7 @@ void OptimizeWitnessDialog::confirmClicked()
             LOCK2(cs_main, pactiveWallet->cs_wallet);
             CAccount* witnessAccount = pactiveWallet->activeAccount;
             CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
-            auto [currentDistribution, duration, totalAmount] = witnessDistribution(pactiveWallet, witnessAccount, witnessInfo);
+            auto [currentDistribution, duration, totalAmount] = witnessDistribution(pactiveWallet, witnessAccount);
             (unused)currentDistribution;
             auto optimalDistribution = optimalWitnessDistribution(totalAmount, duration, witnessInfo.nTotalWeightEligibleAdjusted);
             redistributewitnessaccount(pactiveWallet,

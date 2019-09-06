@@ -36,11 +36,11 @@ WitnessDurationWidget::~WitnessDurationWidget()
     delete ui;
 }
 
-void WitnessDurationWidget::configure(CAmount lockingAmount, int minDurationInBlocks, int64_t minimumWeight)
+void WitnessDurationWidget::configure(CAmount lockingAmount, int minDurationInBlocks)
 {
     nAmount = lockingAmount;
     nMinDurationInBlocks = minDurationInBlocks;
-    nRequiredWeight = std::max(minimumWeight, int64_t(gMinimumWitnessWeight));
+    nRequiredWeight = gMinimumWitnessWeight;
     setDuration(nMinDurationInBlocks);
 }
 
