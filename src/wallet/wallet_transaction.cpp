@@ -27,6 +27,7 @@
 #include "policy/rbf.h"
 #include "Gulden/util.h"
 #include "alert.h"
+#include "core_io.h"
 
 bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type)
 {
