@@ -189,6 +189,8 @@ void sigma_context::prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeigh
 void sigma_context::benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashes)
 {
     uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];
+    BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
+
     argon2_echo_context argonContext;
     argonContext.t_cost = argonSlowHashRoundCost;
     argonContext.m_cost = argonMemoryCostKb;
@@ -209,7 +211,6 @@ void sigma_context::benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashe
         if (argon2_echo_ctx(&argonContext, true) != ARGON2_OK)
             assert(0);
     }
-    delete[] hashMem;
 }
 
 void sigma_context::benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes)
@@ -263,6 +264,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
     std::atomic<uint16_t> nPreNonce=0;
     
     workerThreads = new boost::asio::thread_pool(numThreads);
+    BOOST_SCOPE_EXIT(&workerThreads) { delete workerThreads; } BOOST_SCOPE_EXIT_END
     
     for (uint64_t nIndex = 0; nIndex <= numHashesPre;++nIndex)
     {
@@ -272,7 +274,8 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                 return;
 
             //1. Select pre nonce, reset post nonce to zero and perform argon hash of header.
-            uint8_t* hashMem = (uint8_t*)malloc(argonMemoryCostKb*1024);
+            uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];
+            BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
             headerData.nNonce = headerBlockHeight;
             headerData.nPreNonce = nPreNonce++;
             headerData.nPostNonce = 0;
@@ -368,7 +371,6 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                     break;
                 ++headerData.nPostNonce;
             }
-            free(hashMem);
         });
     }
     workerThreads->join();
@@ -376,7 +378,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
 
 bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
 {
-    uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];;
+    uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];
     BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
     
     arith_uint256 hashTarget = arith_uint256().SetCompact(headerData.nBits);
