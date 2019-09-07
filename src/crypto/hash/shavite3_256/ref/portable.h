@@ -48,7 +48,7 @@
 
 // U16TO8_LITTLE(c, v) stores the 16-bit-value v in little-endian convention into the unsigned char array pointed to by c.
 #ifndef WORDS_BIGENDIAN
-#define U16TO8_LITTLE(c, v) ((uint16_t*)(c))[0]=v
+#define U16TO8_LITTLE(c, v) memcpy(c, &v, 2)
 #else
 // Make sure that the local variable names do not collide with variables of the calling code (i.e., those used in c, v)
 #define U16TO8_LITTLE(c, v)    do { \
@@ -68,7 +68,7 @@
 
 // U32TO8_LITTLE(c, v) stores the 32-bit-value v in little-endian convention into the unsigned char array pointed to by c.
 #ifndef WORDS_BIGENDIAN
-#define U32TO8_LITTLE(c, v) ((uint32_t*)(c))[0]=v
+#define U32TO8_LITTLE(c, v) memcpy(c, &v, 4)
 #else
 // Make sure that the local variable names do not collide with variables of the calling code (i.e., those used in c, v)
 #define U32TO8_LITTLE(c, v)    do { \
@@ -83,7 +83,7 @@
 
 // U64TO8_LITTLE(c, v) stores the 64-bit-value v in little-endian convention into the unsigned char array pointed to by c.
 #ifndef WORDS_BIGENDIAN
-#define U64TO8_LITTLE(c, v) ((uint64_t*)(c))[0]=v
+#define U64TO8_LITTLE(c, v) memcpy(c, &v, 8)
 #else
 // Make sure that the local variable names do not collide with variables of the calling code (i.e., those used in c, v)
 #define U64TO8_LITTLE(c, v)    do { \
