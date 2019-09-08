@@ -27,7 +27,9 @@
     #define ARCH_CPU_ARM_FAMILY 1
 #elif defined(__aarch64__)
     #define ARCH_ARM64 1
+    #define ARCH_CPU_ARM_FAMILY 1
     #define ARCH_CPU_ARM64_FAMILY 1
+    #define __ARM_ARCH 8
 #elif defined(__ppc__) || defined(__powerpc__) || defined(_M_PPC)
     #define ARCH_PPC 1
     #define ARCH_CPU_PPC_FAMILY 1
