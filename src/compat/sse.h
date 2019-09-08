@@ -44,7 +44,7 @@
     #define __ARM_FEATURE_CRYPTO
     #endif
     #include <arm_neon.h>
-    typedef uint8x16_t __m128i;
+    typedef int32x4_t __m128i;
     
     
     #define _mm_mul_epu32 vmulq_u32
@@ -81,13 +81,13 @@
     {
         int64x1_t a1 = vget_low_s64(vreinterpretq_s64_s32(a));
         int64x1_t b1 = vget_low_s64(vreinterpretq_s64_s32(b));
-        return vcombine_s64(a1, b1);
+        return (int32x4_t)vcombine_s64(a1, b1);
     }
     inline __m128i _mm_unpackhi_epi64(__m128i a, __m128i b)
     {
         int64x1_t a1 = vget_high_s64(vreinterpretq_s64_s32(a));
         int64x1_t b1 = vget_high_s64(vreinterpretq_s64_s32(b));
-        return vcombine_s64(a1, b1);
+        return (int32x4_t)vcombine_s64(a1, b1);
     }
     
     // AESENC
