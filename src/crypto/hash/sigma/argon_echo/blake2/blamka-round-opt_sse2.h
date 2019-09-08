@@ -21,8 +21,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BLAKE_ROUND_MKA_OPT_H
-#define BLAKE_ROUND_MKA_OPT_H
+#ifndef BLAKE_ROUND_MKA_OPT_SSE2_H
+#define BLAKE_ROUND_MKA_OPT_SSE2_H
 
 #include <compat/arch.h>
 // We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.

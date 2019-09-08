@@ -21,8 +21,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef BLAKE_ROUND_MKA_OPT_H
-#define BLAKE_ROUND_MKA_OPT_H
+#ifndef BLAKE_ROUND_MKA_OPT_AVX2_H
+#define BLAKE_ROUND_MKA_OPT_AVX2_H
 
 #include <compat/arch.h>
 #ifdef ARCH_CPU_X86_FAMILY // Only x86 family CPUs have AVX2
