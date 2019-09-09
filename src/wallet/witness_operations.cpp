@@ -787,12 +787,18 @@ void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* 
     redistributeandextendwitnessaccount(pwallet, fundingAccount, witnessAccount, distribution, requestedLockPeriodInBlocks, pTxid, pFee);
 }
 
+uint64_t adjustedWeightForAmount(const CAmount amount, const uint64_t duration, uint64_t networkWeight)
+{
+    uint64_t maxWeight = networkWeight / 100;
+    uint64_t rawWeight = GetPoW2RawWeightForAmount(amount, duration);
+    uint64_t weight = std::min(rawWeight, maxWeight);
+    return weight;
+}
+
 /** Estimated witnessing count expressed as a fraction per block for a single amount */
 double witnessFraction(const CAmount amount, const uint64_t duration, const uint64_t totalWeight)
 {
-    uint64_t maxWeight = totalWeight / 100;
-    uint64_t rawWeight = GetPoW2RawWeightForAmount(amount, duration);
-    uint64_t weight = std::min(rawWeight, maxWeight);
+    uint64_t weight = adjustedWeightForAmount(amount, duration, totalWeight);
 
     // election probability
     const double p = double(weight) / totalWeight;
@@ -910,4 +916,11 @@ bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const
     const double OPTIMAL_DISTRIBUTION_THRESHOLD = 0.95;
     bool nearOptimal = currentFraction / optimalFraction >= OPTIMAL_DISTRIBUTION_THRESHOLD;
     return nearOptimal;
+}
+
+uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t duration, uint64_t totalWeight)
+{
+    return std::accumulate(amounts.begin(), amounts.end(), uint64_t(0), [=](uint64_t acc, CAmount amount) {
+        return acc + adjustedWeightForAmount(amount, duration, totalWeight);
+    });
 }

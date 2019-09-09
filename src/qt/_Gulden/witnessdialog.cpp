@@ -371,7 +371,13 @@ void WitnessDialog::extendClicked()
 
         auto [amounts, duration, lockedAmount] = witnessDistribution(pactiveWallet, witnessAccount);
         (unused)amounts;
-        pushDialog(new FundWitnessDialog(lockedAmount, duration, model, platformStyle, this));
+        (unused)duration;
+
+        const auto witnessInfo = GetWitnessInfoWrapper();
+        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, witnessAccount, witnessInfo);
+        uint64_t durationRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.nLockUntilBlock, chainActive.Tip()->nHeight);
+
+        pushDialog(new FundWitnessDialog(lockedAmount, durationRemaining, accountStatus.accountWeight, model, platformStyle, this));
     } catch (std::runtime_error& e) {
         GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
     }
