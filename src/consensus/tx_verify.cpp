@@ -330,6 +330,17 @@ inline bool IsLockFromConsistent(const CTxOutPoW2Witness& inputDetails, const CT
     return true;
 }
 
+bool CWitnessTxBundle::IsLockFromConsistent()
+{
+    // all ouputs must match the actual lockFrom value of the inputs
+    if (inputs.size() > 0 && inputsActualLockFromBlock == 0)
+        return false;
+
+    return std::all_of(outputs.begin(), outputs.end(), [&](const auto& output) {
+        return output.second.lockFromBlock == inputsActualLockFromBlock;
+    });
+}
+
 //fixme: (PHASE5) define this with rest of global constants (centralise all constants together)
 static const int gMaximumRenewalPenalty = COIN*20;
 static const int gPerFailCountRenewalPenalty = (2*COIN)/100;
@@ -582,7 +593,7 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
     uint64_t highestActionNonce = 0;
     uint64_t highestFailCount = 0;
 
-    // A: verify inputs all have witness properties equal to output0 except lockUntilBlock
+    // A: verify inputs all have witness properties equal to output0 except lockUntilBlock and lockFromBlock
     // in addition determine highestActionNonce and highestFailCount
     for (const auto& input : inputs)
     {
@@ -590,8 +601,6 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
         if (inputDetails.spendingKeyID != output0Details.spendingKeyID)
             return false;
         if (inputDetails.witnessKeyID != output0Details.witnessKeyID)
-            return false;
-        if (inputDetails.lockFromBlock != output0Details.lockFromBlock)
             return false;
         if (inputDetails.actionNonce > highestActionNonce)
             highestActionNonce = inputDetails.actionNonce;
@@ -664,7 +673,7 @@ bool CWitnessTxBundle::IsValidRearrangeBundle()
     uint64_t highestActionNonce = 0;
     uint64_t highestFailCount = 0;
 
-    // A: verify inputs all have witness properties equal to output0
+    // A: verify inputs all have witness properties equal to output0 (except lockFromBlock)
     for (const auto& input : inputs)
     {
         const auto& inputDetails = input.second;
@@ -673,8 +682,6 @@ bool CWitnessTxBundle::IsValidRearrangeBundle()
         if (inputDetails.witnessKeyID != output0Details.witnessKeyID)
             return false;
         if (inputDetails.lockUntilBlock != output0Details.lockUntilBlock)
-            return false;
-        if (inputDetails.lockFromBlock != output0Details.lockFromBlock)
             return false;
         if (inputDetails.actionNonce > highestActionNonce)
             highestActionNonce = inputDetails.actionNonce;
@@ -698,14 +705,17 @@ bool CWitnessTxBundle::IsValidRearrangeBundle()
             return false;
         if (input0Details.lockUntilBlock != outputDetails.lockUntilBlock)
             return false;
-        if (input0Details.lockFromBlock != outputDetails.lockFromBlock)
-            return false;
         nOutputValue += output.first.nValue;
     }
 
     // A and B imply that all inputs and outputs have identical witness properties here
 
+    // C: verify input and output value
     if (nInputValue != nOutputValue)
+        return false;
+
+    // D: verify outputs lockfrom matches actual lockfrom
+    if (!IsLockFromConsistent())
         return false;
 
     return true;
@@ -726,12 +736,12 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
     const auto& output0 = outputs[0];
     const auto& output0Details = output0.second;
 
-    // for every input there is exactly one output that matches
+    // for every input there is at least one output that matches
     for (const auto& input : inputs)
     {
         const auto& inputDetails = input.second;
 
-        if (1 != std::count_if(outputs.begin(), outputs.end(), [&](const auto& output) {
+        if (1 > std::count_if(outputs.begin(), outputs.end(), [&](const auto& output) {
                 const auto& outputDetails = output.second;
                 if (input.first.nValue != output.first.nValue)
                     return false;
@@ -740,8 +750,6 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
                 if (inputDetails.witnessKeyID == outputDetails.witnessKeyID)
                     return false;
                 if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
-                    return false;
-                if (inputDetails.lockFromBlock != outputDetails.lockFromBlock)
                     return false;
                 if (inputDetails.actionNonce + 1 != outputDetails.actionNonce)
                     return false;
@@ -753,6 +761,10 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
             return false;
         }
     }
+
+    // verify outputs lockfrom matches actual lockfrom
+    if (!IsLockFromConsistent())
+        return false;
 
     // all outputs have the same (new) witness key and all outputs have the same spend key
     if (std::any_of(++outputs.begin(), outputs.end(), [&](const auto& output) {
@@ -818,6 +830,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 }
 
                 bool matchedExistingBundle = false;
+                uint64_t actualLockFromBlock = inputDetails.lockFromBlock == 0 ? nInputHeight : inputDetails.lockFromBlock;
                 for (auto& bundle : *pWitnessBundles)
                 {
                     if (bundle.outputs.size() == 0)
@@ -825,12 +838,20 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                     if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType  || bundle.bundleType == CWitnessTxBundle::WitnessTxType::IncreaseType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
                         bundle.bundleType = bundle.outputs[0].second.lockFromBlock == 0 ? CWitnessTxBundle::WitnessTxType::IncreaseType : CWitnessTxBundle::WitnessTxType::RearrangeType;
+                        if (bundle.inputsActualLockFromBlock == 0)
+                            bundle.inputsActualLockFromBlock = actualLockFromBlock;
+                        else if (bundle.inputsActualLockFromBlock != actualLockFromBlock)
+                            return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-bundle-mismatching-lockfrom");
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         matchedExistingBundle = true;
                     }
                     else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID != inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
                     {
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType;
+                        if (bundle.inputsActualLockFromBlock == 0)
+                            bundle.inputsActualLockFromBlock = actualLockFromBlock;
+                        else if (bundle.inputsActualLockFromBlock != actualLockFromBlock)
+                            return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-bundle-mismatching-lockfrom");
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                         matchedExistingBundle = true;
                     }
@@ -838,6 +859,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 if (!matchedExistingBundle)
                 {
                     CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType);
+                    spendBundle.inputsActualLockFromBlock = actualLockFromBlock;
                     spendBundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
                     pWitnessBundles->push_back(spendBundle);
                 }

@@ -63,8 +63,10 @@ struct CWitnessTxBundle
     inline bool IsValidChangeWitnessKeyBundle();
     inline bool IsValidIncreaseBundle();
 
+    bool IsLockFromConsistent();
 
     WitnessTxType bundleType=CreationType;
+    uint64_t inputsActualLockFromBlock = 0;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> inputs;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> outputs;
 };
