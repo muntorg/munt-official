@@ -477,20 +477,48 @@ CGetWitnessInfo GetWitnessInfoWrapper()
 
 void EnsureMatchingWitnessCharacteristics(const std::vector<std::tuple<CTxOut, uint64_t, COutPoint>>& unspentWitnessOutputs)
 {
+    // Properties should beidentical, except lockFromBlock is special.
+    // Extending (or initial funding) of a multiple-part witness can result in different lockFromBlock values, which are test as follows:
+    // A) All outputs that have a non-zero lockFromBlock should share the same non-zero value.
+    // B) All outputs with a zero lockFromBlock should share the same coin height.
+    // C) And finally the non-zero value from A and B should be the same.
+    // When a new witness is created it enters with a lockFromBlock == 0, which is replaced by the height the tx entered the chain
+    // in a later operation (ie. a witness operation, rearrange, renew etc.)
     if (unspentWitnessOutputs.size() > 0)
     {
         CTxOutPoW2Witness witnessDetails0;
         if (!GetPow2WitnessOutput(std::get<0>(unspentWitnessOutputs[0]), witnessDetails0))
             throw std::runtime_error("Failure extracting witness details.");
 
+        // collect values for A and B tests
+        uint64_t nonZeroFrom = 0;
+        uint64_t nonZeroCoin = 0;
         for (unsigned int i = 1; i < unspentWitnessOutputs.size(); i++) {
+            CTxOutPoW2Witness witnessDetails;
+            if (!GetPow2WitnessOutput(std::get<0>(unspentWitnessOutputs[i]), witnessDetails))
+                throw std::runtime_error("Failure extracting witness details.");
+            if (witnessDetails.lockFromBlock != 0)
+                nonZeroFrom = witnessDetails.lockFromBlock;
+            else
+                nonZeroCoin = std::get<1>(unspentWitnessOutputs[i]);
+
+            if (nonZeroFrom != 0 && nonZeroCoin != 0)
+                break;
+        }
+
+        // test C
+        if (nonZeroFrom != 0 && nonZeroCoin != 0 && nonZeroFrom != nonZeroCoin)
+            throw std::runtime_error("Multiple addresses with different witness characteristics in account. Use RPC to furter handle this account.");
+
+        for (unsigned int i = 0; i < unspentWitnessOutputs.size(); i++) {
             CTxOutPoW2Witness witnessCompare;
             if (!GetPow2WitnessOutput(std::get<0>(unspentWitnessOutputs[i]), witnessCompare))
                 throw std::runtime_error("Failure extracting witness details.");
-            if (witnessCompare.lockFromBlock != witnessDetails0.lockFromBlock ||
-                witnessCompare.lockUntilBlock != witnessDetails0.lockUntilBlock ||
+            if (witnessCompare.lockUntilBlock != witnessDetails0.lockUntilBlock ||
                 witnessCompare.spendingKeyID != witnessDetails0.spendingKeyID ||
-                witnessCompare.witnessKeyID != witnessDetails0.witnessKeyID)
+                witnessCompare.witnessKeyID != witnessDetails0.witnessKeyID ||
+                (witnessCompare.lockFromBlock != 0 && witnessCompare.lockFromBlock != nonZeroFrom) || // test A
+                (witnessCompare.lockFromBlock == 0 && std::get<1>(unspentWitnessOutputs[i]) != nonZeroCoin)) // test B
             {
                 throw std::runtime_error("Multiple addresses with different witness characteristics in account. Use RPC to furter handle this account.");
             }
