@@ -49,7 +49,7 @@
     
     inline __m128i _mm_mul_epu32(__m128i a, __m128i b)
     {
-        return vreinterpretq_u32_s64(vmulq_u32(vreinterpretq_s64_u32(a), vreinterpretq_s64_u32(b)));
+        return vreinterpretq_s32_u32(vmulq_u32(vreinterpretq_u32_s32(a), vreinterpretq_u32_s32(b)));
     }
     inline __m128i _mm_sub_epi64(__m128i a, __m128i b)
     {
@@ -146,20 +146,22 @@
             w ^= vqtbl1q_u8(v ^ w, vld1q_u8(ror32by8));
 
             //  add round key
-            return vreinterpretq_m128i_u8(w) ^ RoundKey;
+            return vreinterpretq_s32_u8(w) ^ RoundKey;
         }
     #else
         // Implements equivalent of 'aesenc' by combining AESE (with an empty key) and AESMC and then manually applying the real key as an xor operation
         // This unfortunately means an additional xor op; the compiler should be able to optimise this away for repeated calls however
         // See  https://blog.michaelbrase.com/2018/05/08/emulating-x86-aes-intrinsics-on-armv8-a for more details.
-        #define _mm_aesenc_si128(A, B) vaesmcq_u8(vaeseq_u8((A), __m128i{})) ^ (B);
+        inline __m128i _mm_aesenc_si128(__m128i a, __m128i b)
+        {
+            return vreinterpretq_s32_u8(vaesmcq_u8(vaeseq_u8(vreinterpretq_u8_s32(a), uint8x16_t{})) ^ vreinterpretq_u8_s32(b));
+        }
     #endif
       
     // Most of the conversions after this are heavily inspired by or taken from sse2neon project (https://github.com/jratcliff63367/sse2neon)
     #define _mm_xor_si128 veorq_s32
     #define _mm_and_si128 vandq_s32
     #define _mm_add_epi32 vaddq_s32
-    #define _mm_sub_epi64 vsubq_s64
     #define _mm_loadu_si128(p) vld1q_s32((int32_t*)(p))
     #define _mm_setzero_si128() vdupq_n_s32(0)
     #define _mm_storeu_si128(p, a) vst1q_s32((int32_t*)(p), (a))
