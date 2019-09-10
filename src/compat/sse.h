@@ -47,8 +47,19 @@
     typedef int32x4_t __m128i;
     
     
-    #define _mm_mul_epu32 vmulq_u32
-    #define _mm_add_epi64 vaddq_s64
+    inline __m128i _mm_mul_epu32(__m128i a, __m128i b)
+    {
+        return vreinterpretq_u32_s64(vmulq_u32(vreinterpretq_s64_u32(a), vreinterpretq_s64_u32(b)));
+    }
+    inline __m128i _mm_sub_epi64(__m128i a, __m128i b)
+    {
+        return vreinterpretq_s32_s64(vsubq_s64(vreinterpretq_s64_s32(a), vreinterpretq_s64_s32(b)));
+    }
+    inline __m128i _mm_add_epi64(__m128i a, __m128i b)
+    {
+        return vreinterpretq_s32_s64(vaddq_s64(vreinterpretq_s64_s32(a), vreinterpretq_s64_s32(b)));
+    }
+
     #define _mm_srli_epi64(a, imm)                                                      \
     ({                                                                                  \
         __m128i ret;                                                                    \
@@ -89,6 +100,22 @@
         int64x1_t b1 = vget_high_s64(vreinterpretq_s64_s32(b));
         return (int32x4_t)vcombine_s64(a1, b1);
     }
+    
+    
+    // Older gcc does not define vld1q_u8_x4 type
+    #if defined(__GNUC__) && !defined(__clang__)
+    #if __GNUC__ < 9 || (__GNUC__ == 9 && (__GNUC_MINOR__ <= 2))
+    inline uint8x16x4_t vld1q_u8_x4(const uint8_t *p)
+    {
+            uint8x16x4_t ret;
+            ret.val[0] = vld1q_u8(p +  0);
+            ret.val[1] = vld1q_u8(p + 16);
+            ret.val[2] = vld1q_u8(p + 32);
+            ret.val[3] = vld1q_u8(p + 48);
+            return ret;
+    }
+    #endif
+    #endif
     
     // AESENC
     #ifndef __ARM_FEATURE_CRYPTO
