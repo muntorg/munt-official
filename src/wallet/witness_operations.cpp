@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <boost/uuid/uuid_io.hpp>
 #include <cmath>
+#include <inttypes.h>
 #include "wallet.h"
 #include "validation/witnessvalidation.h"
 #include "consensus/consensus.h"
@@ -666,12 +667,22 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
             throw witness_error(witness::RPC_INVALID_PARAMETER, strprintf("New lock period [%d] does not exceed remaining lock period [%d]", requestedLockPeriodInBlocks, remainingLockDurationInBlocks));
         }
 
-        // Enforce minimum weight
+        // Enforce minimum weight for each amount
         if (std::any_of(redistributionAmounts.begin(), redistributionAmounts.end(), [&](const auto& amount){
                 return GetPoW2RawWeightForAmount(amount, requestedLockPeriodInBlocks) < gMinimumWitnessWeight; }))
             throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
-        // FIXME: Enforce new combined weight > old combined weight
+        // Enforce new combined weight > old combined weight
+        const CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
+        uint64_t networkWeight = witnessInfo.nTotalWeightEligibleAdjusted;
+        uint64_t dummyLockFrom, dummyLockUntil;
+        uint64_t oldLockPeriod = GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, dummyLockFrom, dummyLockUntil);
+        std::vector<CAmount> oldAmounts;
+        std::transform(unspentWitnessOutputs.begin(), unspentWitnessOutputs.end(), std::back_inserter(oldAmounts), [](const auto& it) { return std::get<0>(it).nValue; });
+        uint64_t oldCombinedWeight = combinedWeight(oldAmounts, oldLockPeriod, networkWeight);
+        uint64_t newCombinedWeight = combinedWeight(redistributionAmounts, requestedLockPeriodInBlocks, networkWeight);
+        if (oldCombinedWeight >= newCombinedWeight)
+            throw witness_error(witness::RPC_TYPE_ERROR, strprintf("New combined witness weight (%" PRIu64 ") must exceed old (%" PRIu64 ")", newCombinedWeight, oldCombinedWeight));
     }
 
     // Check for immaturity
