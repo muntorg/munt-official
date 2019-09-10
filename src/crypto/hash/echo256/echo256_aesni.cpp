@@ -33,7 +33,7 @@
     #if __ARM_ARCH < 8 
     PUSH_COMPILER_OPTIMISATIONS("fpu=neon");
     #else
-    PUSH_COMPILER_OPTIMISATIONS("fpu=crypto-neon-fp-armv8");
+    PUSH_COMPILER_OPTIMISATIONS("+simd+crypto");
     #endif
 #else
     #error sse or sse equivalents(neon) not currently supported for target achitecture, please modify source with appropriate compiler options.
