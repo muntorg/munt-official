@@ -281,31 +281,36 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
 
             if (pWitnessBundles)
             {
-                if (witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0)
+                if (tx.IsPoW2WitnessCoinBase())
                 {
-                    pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::pair(txout,std::move(witnessDetails))));
+                    pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::WitnessType, std::pair(txout, std::move(witnessDetails))));
                 }
                 else
                 {
-                    if (tx.IsPoW2WitnessCoinBase())
+                    bool matchedExistingBundle = false;
+                    for (auto& bundle: *pWitnessBundles)
                     {
-                        pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::WitnessType, std::pair(txout, std::move(witnessDetails))));
-                    }
-                    else
-                    {
-                        bool matchedExistingBundle = false;
-                        for (auto& bundle: *pWitnessBundles)
+                        if (bundle.bundleType == CWitnessTxBundle::WitnessTxType::CreationType &&
+                            witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0 &&
+                            bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID)
                         {
-                            if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID) && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID )
-                            {
-                                bundle.bundleType = CWitnessTxBundle::WitnessTxType::RearrangeType;
-                                bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
-                                matchedExistingBundle = true;
-                                break;
-                            }
+                            bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
+                            matchedExistingBundle = true;
                         }
-                        if (!matchedExistingBundle)
+                        else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID) && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID )
                         {
+                            bundle.bundleType = CWitnessTxBundle::WitnessTxType::RearrangeType;
+                            bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
+                            matchedExistingBundle = true;
+                            break;
+                        }
+                    }
+                    if (!matchedExistingBundle)
+                    {
+                        if (witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0) {
+                            pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::pair(txout,std::move(witnessDetails))));
+                        }
+                        else {
                             CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType, std::pair(txout, std::move(witnessDetails)));
                             pWitnessBundles->push_back(spendBundle);
                         }
