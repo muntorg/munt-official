@@ -95,6 +95,22 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     TransactionRecord subSend(hash, nTime);
                     TransactionRecord subReceive(hash, nTime);
                     subReceive.idx = -1;
+
+                    CAmount totalAmountLocked = 0;
+                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
+                    {
+                        (unused) witnessDetails;
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, txOut);
+                            if (mine)
+                            {
+                                totalAmountLocked += txOut.nValue;
+                            }
+                        }
+                    }
+
                     for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
                     {
                         (unused) witnessDetails;
@@ -113,7 +129,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subReceive.actionAccountUUID = subReceive.receiveAccountUUID = account->getUUID();
                                 subReceive.actionAccountParentUUID = subReceive.receiveAccountParentUUID = account->getParentUUID();
-                                subReceive.credit = txOut.nValue;
+                                subReceive.credit = totalAmountLocked;
                                 subReceive.debit = 0;
                                 subReceive.idx = parts.size(); // sequence number
                                 parts.append(subReceive);
@@ -152,7 +168,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 subSend.receiveAccountUUID = subSend.receiveAccountParentUUID = subReceive.receiveAccountUUID;
                                 parts[subReceive.idx].fromAccountUUID = parts[subReceive.idx].fromAccountParentUUID = subSend.fromAccountUUID;
                                 subSend.credit = 0;
-                                subSend.debit = subReceive.credit;
+                                subSend.debit = totalAmountLocked;
                                 subSend.idx = parts.size(); // sequence number
                                 if (subSend.fromAccountUUID == subSend.receiveAccountUUID)
                                 {
@@ -300,8 +316,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 {
                     TransactionRecord subSend(hash, nTime);
                     TransactionRecord subReceive(hash, nTime);
-                    CAmount totalAmountLocked = 0;
                     subReceive.idx = -1;
+                    CAmount totalAmountLocked = 0;
                     for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
                     {
                         (unused) witnessDetails;
@@ -311,7 +327,33 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             isminetype mine = IsMine(*account, txOut);
                             if (mine)
                             {
-                                totalAmountLocked = txOut.nValue;
+                                totalAmountLocked += txOut.nValue;
+                            }
+                        }
+                    }
+                    CAmount oldAmountLocked = 0;
+                    for (const auto& [txOut, witnessDetails] : witnessBundle.inputs)
+                    {
+                        (unused) witnessDetails;
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, txOut);
+                            if (mine)
+                            {
+                                oldAmountLocked += txOut.nValue;
+                            }
+                        }
+                    }
+                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
+                    {
+                        (unused) witnessDetails;
+                        for( const auto& accountPair : wallet->mapAccounts )
+                        {
+                            CAccount* account = accountPair.second;
+                            isminetype mine = IsMine(*account, txOut);
+                            if (mine)
+                            {
                                 CTxDestination getAddress;
                                 if (ExtractDestination(txOut, getAddress))
                                 {
@@ -322,17 +364,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 subReceive.actionAccountUUID = subReceive.receiveAccountUUID = account->getUUID();
                                 subReceive.actionAccountParentUUID = subReceive.receiveAccountParentUUID = account->getParentUUID();
                                 subReceive.credit = totalAmountLocked;
-                                subReceive.debit = 0;
-
-                                isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
-                                if (mine)
-                                {
-                                    const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
-                                    if (parent && parent->tx->vout.size() != 0)
-                                    {
-                                        subReceive.debit = parent->tx->vout[inputs[0].prevout.n].nValue;
-                                    }
-                                }
+                                subReceive.debit = oldAmountLocked;
 
                                 subReceive.idx = parts.size(); // sequence number
                                 parts.append(subReceive);
@@ -349,17 +381,28 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     }
                     if (subReceive.idx != -1)
                     {
-                        for( const auto& [accountUUID, account] : wallet->mapAccounts )
+                        for (const auto& walIt: wallet->mapAccounts)
                         {
-                            (unused) accountUUID;
-                            isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[1]);
-                            if (mine)
+                            const CAccount* account = walIt.second;
+                            if (account->IsPoW2Witness() || account->getUUID() == subReceive.actionAccountUUID)
+                                continue;
+                            isminetype mine = ISMINE_NO;
+                            const CTxIn* myInput = nullptr;
+                            for (const CTxIn& input: inputs) {
+                                isminetype isthismine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, input);
+                                if (isthismine) {
+                                    mine = isthismine;
+                                    myInput = &input;
+                                    break;
+                                }
+                            }
+                            if (myInput)
                             {
                                 CTxDestination getAddress;
-                                const CWalletTx* parent = wallet->GetWalletTx(inputs[1].prevout.getHash());
-                                if (parent && parent->tx->vout.size() != 0)
+                                const CWalletTx* parent = wallet->GetWalletTx(myInput->prevout.getHash());
+                                if (parent && myInput->prevout.n < parent->tx->vout.size())
                                 {
-                                    if (ExtractDestination(parent->tx->vout[inputs[1].prevout.n], getAddress))
+                                    if (ExtractDestination(parent->tx->vout[myInput->prevout.n], getAddress))
                                     {
                                         subSend.address = CGuldenAddress(getAddress).ToString();
                                     }
