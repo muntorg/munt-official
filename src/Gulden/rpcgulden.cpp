@@ -1046,8 +1046,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "5. force_multiple         (boolean, optional, default=false) Allow funding an account that already contains a valid witness address. \n"
             "\nResult:\n"
             "[\n"
-            "     \"address\":\"address\", (string) The witness address that has been created \n"
-            "     \"txid\":\"txid\"        (string) The transaction id.\n"
+            "     \"txid\":\"txid\",   (string) The txid of the created transaction\n"
+            "     \"fee_amount\":n   (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
             "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 years.\n"
@@ -1092,11 +1092,11 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
 
     try {
         std::string txid;
-        std::string address;
-        fundwitnessaccount(pwallet, fundingAccount, targetWitnessAccount, nAmount, nLockPeriodInBlocks, fAllowMultiple, &address, &txid);
+        CAmount fee;
+        fundwitnessaccount(pwallet, fundingAccount, targetWitnessAccount, nAmount, nLockPeriodInBlocks, fAllowMultiple, &txid, &fee);
         UniValue result(UniValue::VOBJ);
-        result.push_back(Pair("address", address));
         result.push_back(Pair("txid", txid));
+        result.push_back(Pair("fee_amount", ValueFromAmount(fee)));
         return result;
     }
     catch (witness_error& e) {

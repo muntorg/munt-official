@@ -160,7 +160,14 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
         *pFee = transactionFee;
 }
 
-void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pAddress, std::string* pTxid)
+void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee)
+{
+    CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
+    auto amounts = optimalWitnessDistribution(amount, requestedPeriodInBlocks, witnessInfo.nTotalWeightEligibleAdjusted);
+    fundwitnessaccount(pwallet, fundingAccount, witnessAccount, amounts, requestedPeriodInBlocks, fAllowMultiple, pTxid, pFee);
+}
+
+void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& amounts, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee)
 {
     if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
         throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
@@ -179,7 +186,7 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
             throw std::runtime_error("Account already has an active funded witness address. Perhaps you intended to 'extend' it? See: 'help extendwitnessaccount'");
     }
 
-    if (amount < (gMinimumWitnessAmount*COIN))
+    if (std::any_of(amounts.begin(), amounts.end(), [](const auto& amount){ return amount < (gMinimumWitnessAmount*COIN); }))
         throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
     if (requestedPeriodInBlocks == 0)
@@ -195,9 +202,9 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
     if (requestedPeriodInBlocks == MinimumWitnessLockLength())
         requestedPeriodInBlocks += 50;
 
-    // Enforce minimum weight
-    int64_t nWeight = GetPoW2RawWeightForAmount(amount, requestedPeriodInBlocks);
-    if (nWeight < gMinimumWitnessWeight)
+    // Enforce minimum weight for each amount
+    if (std::any_of(amounts.begin(), amounts.end(), [&](const auto& amount){
+            return GetPoW2RawWeightForAmount(amount, requestedPeriodInBlocks) < gMinimumWitnessWeight; }))
         throw witness_error(witness::RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
 
     // Finally attempt to create and send the witness transaction.
@@ -230,25 +237,27 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
         destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
     }
 
-    CAmount nFeeRequired;
+    CAmount transactionFee;
     std::string strError;
     std::vector<CRecipient> vecSend;
     int nChangePosRet = -1;
 
-    CRecipient recipient = ( IsSegSigEnabled(chainActive.TipPrev()) ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), amount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), amount, false) ) ) ;
-    if (!IsSegSigEnabled(chainActive.TipPrev()))
-    {
-        // We have to copy this anyway even though we are using a CSCript as later code depends on it to grab the witness key id.
-        recipient.witnessDetails.witnessKeyID = destinationPoW2Witness.witnessKey;
-    }
+    std::for_each(amounts.begin(), amounts.end(), [&](const CAmount& amount){
+        CRecipient recipient = ( IsSegSigEnabled(chainActive.TipPrev()) ? ( CRecipient(GetPoW2WitnessOutputFromWitnessDestination(destinationPoW2Witness), amount, false) ) : ( CRecipient(GetScriptForDestination(destinationPoW2Witness), amount, false) ) ) ;
+        if (!IsSegSigEnabled(chainActive.TipPrev()))
+        {
+            // We have to copy this anyway even though we are using a CSCript as later code depends on it to grab the witness key id.
+            recipient.witnessDetails.witnessKeyID = destinationPoW2Witness.witnessKey;
+        }
 
-    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
-    recipient.witnessForAccount = witnessAccount;
-    vecSend.push_back(recipient);
+        //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
+        recipient.witnessForAccount = witnessAccount;
+        vecSend.push_back(recipient);
+    });
 
     CWalletTx wtx;
     CReserveKeyOrScript reservekey(pwallet, fundingAccount, KEYCHAIN_CHANGE);
-    if (!pwallet->CreateTransaction(fundingAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+    if (!pwallet->CreateTransaction(fundingAccount, vecSend, wtx, reservekey, transactionFee, nChangePosRet, strError))
     {
         throw witness_error(witness::RPC_WALLET_ERROR, strError);
     }
@@ -261,13 +270,10 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
     }
 
     // Set result parameters
-    if (pAddress != nullptr) {
-        CTxDestination dest;
-        ExtractDestination(wtx.tx->vout[0], dest);
-        *pAddress = CGuldenAddress(dest).ToString();
-    }
     if (pTxid != nullptr)
         *pTxid = wtx.GetHash().GetHex();
+    if (pFee != nullptr)
+        *pFee = transactionFee;
 }
 
 void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee)
