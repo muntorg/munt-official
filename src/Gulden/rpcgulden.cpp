@@ -2575,11 +2575,11 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3 )
         throw std::runtime_error(
-            "setwitnessrewardscript \"witness_account\" \"address_or_script\" force_pubkey \n"
+            "setwitnessrewardscript \"witness_account\" \"destination\" force_pubkey \n"
             "\nSet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
             "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
-            "2. \"pubkey_or_script\"       (required) An hex encoded script or public key.\n"
+            "2. \"destination\"           (required) An address or hex encoded script or public key.\n"
             "3. force_pubkey              (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
             "\nResult:\n"
             "[\n"
@@ -2604,27 +2604,34 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
         forcePubKey = request.params[2].get_bool();
 
     std::string pubKeyOrScript = request.params[1].get_str();
+
     CScript scriptForNonCompoundPayments;
-    if (!IsHex(pubKeyOrScript))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is not hex encoded");
 
-    // Try public key first.
-    std::vector<unsigned char> data(ParseHex(pubKeyOrScript));
-    CPubKey pubKey(data.begin(), data.end());
-    if (pubKey.IsFullyValid())
-    {
-        scriptForNonCompoundPayments = CScript() << ToByteVector(pubKey) << OP_CHECKSIG;
-    }
-    else
-    {
-        if (forcePubKey)
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid hex encoded public key");
+    CGuldenAddress address(pubKeyOrScript);
+    if (address.IsValid()) {
+        scriptForNonCompoundPayments = GetScriptForDestination(address.Get());
+    } else {
+        if (!IsHex(pubKeyOrScript))
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is neither hex encoded nor a valid address");
 
-        // Not a public key so treat it as a script.
-        scriptForNonCompoundPayments = CScript(data.begin(), data.end());
-        if (!scriptForNonCompoundPayments.HasValidOps())
+        // Try public key first.
+        std::vector<unsigned char> data(ParseHex(pubKeyOrScript));
+        CPubKey pubKey(data.begin(), data.end());
+        if (pubKey.IsFullyValid())
         {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is hex encoded, but not a valid pubkey or script");
+            scriptForNonCompoundPayments = CScript() << ToByteVector(pubKey) << OP_CHECKSIG;
+        }
+        else
+        {
+            if (forcePubKey)
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Not a valid hex encoded public key");
+
+            // Not a public key so treat it as a script.
+            scriptForNonCompoundPayments = CScript(data.begin(), data.end());
+            if (!scriptForNonCompoundPayments.HasValidOps())
+            {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is hex encoded, but not a valid pubkey or script");
+            }
         }
     }
 
