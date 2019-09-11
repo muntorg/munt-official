@@ -2740,30 +2740,12 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
     if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
         throw std::runtime_error("Failed to enumerate all witness coins.");
 
-    std::string witnessAccountKeys = "";
-    for (const auto& [witnessOutPoint, witnessCoin] : allWitnessCoins)
-    {
-        (unused)witnessOutPoint;
-        CTxOutPoW2Witness witnessDetails;
-        GetPow2WitnessOutput(witnessCoin.out, witnessDetails);
-        if (forAccount->HaveKey(witnessDetails.witnessKeyID))
-        {
-            CKey witnessPrivKey;
-            if (!forAccount->GetKey(witnessDetails.witnessKeyID, witnessPrivKey))
-            {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness account.");
-            }
-            //fixme: (PHASE5) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
-            witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
-            witnessAccountKeys += ":";
-        }
-    }
-    if (witnessAccountKeys.empty())
+    std::string linkUrl = witnessKeysLinkUrlForAccount(pwallet, forAccount);
+
+    if (linkUrl.empty())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Witness account has no active keys.");
 
-    witnessAccountKeys.pop_back();
-    witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
-    return witnessAccountKeys;
+    return linkUrl;
 }
 
 static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
@@ -2820,6 +2802,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
     if (witnessAccountKeys.empty())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Witness account has no active keys.");
 
+    // FIXME: only unique keys in here using the earliest time for each (so need to introduce a map for this)
     witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
     return witnessAccountKeys;
 }

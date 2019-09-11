@@ -941,3 +941,45 @@ uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t duration, u
         return acc + adjustedWeightForAmount(amount, duration, totalWeight);
     });
 }
+
+std::string witnessKeysLinkUrlForAccount(CWallet* pWallet, CAccount* account)
+{
+    std::set<CKeyID> keys;
+
+    LOCK2(cs_main, pWallet->cs_wallet);
+
+    if (chainActive.Tip())
+    {
+        std::map<COutPoint, Coin> allWitnessCoins;
+        if (getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+        {
+            for (const auto& [witnessOutPoint, witnessCoin] : allWitnessCoins)
+            {
+                (unused)witnessOutPoint;
+                CTxOutPoW2Witness witnessDetails;
+                GetPow2WitnessOutput(witnessCoin.out, witnessDetails);
+                if (account->HaveKey(witnessDetails.witnessKeyID))
+                {
+                    keys.insert(witnessDetails.witnessKeyID);
+                }
+            }
+        }
+    }
+
+    std::string witnessAccountKeys = "";
+    for (const CKeyID& key: keys) {
+        //fixme: (FUT) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+        CKey witnessPrivKey;
+        if (account->GetKey(key, witnessPrivKey))
+        witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", account->getEarliestPossibleCreationTime());
+        witnessAccountKeys += ":";
+    }
+
+    if (!witnessAccountKeys.empty())
+    {
+        witnessAccountKeys.pop_back();
+        witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
+    }
+
+    return witnessAccountKeys;
+}
