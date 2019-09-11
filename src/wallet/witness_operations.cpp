@@ -500,7 +500,7 @@ void EnsureMatchingWitnessCharacteristics(const std::vector<std::tuple<CTxOut, u
         // collect values for A and B tests
         uint64_t nonZeroFrom = 0;
         uint64_t nonZeroCoin = 0;
-        for (unsigned int i = 1; i < unspentWitnessOutputs.size(); i++) {
+        for (unsigned int i = 0; i < unspentWitnessOutputs.size(); i++) {
             CTxOutPoW2Witness witnessDetails;
             if (!GetPow2WitnessOutput(std::get<0>(unspentWitnessOutputs[i]), witnessDetails))
                 throw std::runtime_error("Failure extracting witness details.");
