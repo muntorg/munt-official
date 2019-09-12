@@ -21,24 +21,12 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-
-#include "echo256_aesni.h"
-// We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.
-#if defined(ARCH_CPU_X86_FAMILY) || defined ARCH_CPU_ARM_FAMILY
-#include <memory.h>
-
-#if defined(ARCH_CPU_X86_FAMILY)
-    PUSH_COMPILER_OPTIMISATIONS("aes,ssse3");
-#elif defined(ARCH_CPU_ARM_FAMILY)
-    #if __ARM_ARCH < 8 
-    PUSH_COMPILER_OPTIMISATIONS("fpu=neon");
-    #else
-    PUSH_COMPILER_OPTIMISATIONS("+simd+crypto");
-    #endif
+#ifndef ECHO256_OPT_IMPL
+int echo256_opt_selected=0;
 #else
-    #error sse or sse equivalents(neon) not currently supported for target achitecture, please modify source with appropriate compiler options.
-#endif
+#include "echo256_opt.h"
 
+#include <memory.h>
 #define M128(x) *((__m128i*)x)
 
 __attribute__((aligned(16))) const unsigned int const1[]        = {0x00000001, 0x00000000, 0x00000000, 0x00000000};
@@ -155,7 +143,7 @@ __attribute__((aligned(16))) const unsigned int lsbmask[]       = {0x01010101, 0
 
 
 
-void Compress(echo256_aesni_hashState* ctx, const unsigned char* pmsg, unsigned int uBlockCount)
+void Compress(echo256_opt_hashState* ctx, const unsigned char* pmsg, unsigned int uBlockCount)
 {    
     unsigned int r, b, i, j;
     __m128i t1, t2, s2, k1;
@@ -209,7 +197,7 @@ void Compress(echo256_aesni_hashState* ctx, const unsigned char* pmsg, unsigned 
 __attribute__((aligned(16))) const unsigned int constinit1[] = {0x00000100, 0x00000000, 0x00000000, 0x00000000};
 __attribute__((aligned(16))) const unsigned int constinit2[] = {0x00000600, 0x00000000, 0x00000000, 0x00000000};
 
-HashReturn echo256_aesni_Init(echo256_aesni_hashState *ctx)
+HashReturn echo256_opt_Init(echo256_opt_hashState *ctx)
 {
     int i, j;
 
@@ -238,7 +226,7 @@ HashReturn echo256_aesni_Init(echo256_aesni_hashState *ctx)
     return SUCCESS;
 }
 
-HashReturn echo256_aesni_Update(echo256_aesni_hashState* state, const unsigned char* data, uint64_t dataByteLength)
+HashReturn echo256_opt_Update(echo256_opt_hashState* state, const unsigned char* data, uint64_t dataByteLength)
 {
     unsigned int uBlockCount, uRemainingBytes;
 
@@ -286,7 +274,7 @@ HashReturn echo256_aesni_Update(echo256_aesni_hashState* state, const unsigned c
     return SUCCESS;
 }
 
-HashReturn echo256_aesni_Final(echo256_aesni_hashState* state, unsigned char* hashval)
+HashReturn echo256_opt_Final(echo256_opt_hashState* state, unsigned char* hashval)
 {
     __m128i remainingbits;
 
@@ -358,7 +346,7 @@ HashReturn echo256_aesni_Final(echo256_aesni_hashState* state, unsigned char* ha
     return SUCCESS;
 }
 
-HashReturn update_final_echo( echo256_aesni_hashState* state, unsigned char* hashval, const unsigned char* data, uint64_t dataByteLength )
+HashReturn echo256_opt_UpdateFinal( echo256_opt_hashState* state, unsigned char* hashval, const unsigned char* data, uint64_t dataByteLength )
 {
     unsigned int uBlockCount, uRemainingBytes;
 
@@ -467,7 +455,4 @@ HashReturn update_final_echo( echo256_aesni_hashState* state, unsigned char* has
 
     return SUCCESS;
 }
-
-POP_COMPILER_OPTIMISATIONS();
-
 #endif

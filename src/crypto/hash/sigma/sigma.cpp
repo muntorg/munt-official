@@ -22,7 +22,7 @@
 
 #define ECHO_DP
 #define LENGTH 256
-#include <crypto/hash/echo256/echo256_aesni.h>
+#include <crypto/hash/echo256/echo256_opt_sse3_aes.h>
 #include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
 
@@ -40,12 +40,12 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
         {
             case 0:
             {
-                echo256_aesni_hashState ctx_echo;
-                echo256_aesni_Init(&ctx_echo);
-                echo256_aesni_Update(&ctx_echo, data1, data1Size);
-                echo256_aesni_Update(&ctx_echo, data2, data2Size);
-                echo256_aesni_Update(&ctx_echo, data3, data3Size);
-                echo256_aesni_Final(&ctx_echo, outHash.begin());
+                echo256_opt_sse3_aes_hashState ctx_echo;
+                echo256_opt_sse3_aes_Init(&ctx_echo);
+                echo256_opt_sse3_aes_Update(&ctx_echo, data1, data1Size);
+                echo256_opt_sse3_aes_Update(&ctx_echo, data2, data2Size);
+                echo256_opt_sse3_aes_Update(&ctx_echo, data3, data3Size);
+                echo256_opt_sse3_aes_Final(&ctx_echo, outHash.begin());
                 break;
             }
             case 1:

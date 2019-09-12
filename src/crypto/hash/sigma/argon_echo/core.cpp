@@ -31,7 +31,7 @@
 #include "blake2/blake2-impl.h"
 #include <pthread.h>
  
-#include <crypto/hash/echo256/echo256_aesni.h>
+#include <crypto/hash/echo256/echo256_opt_sse3_aes.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
 
 #ifdef ARCH_CPU_X86_FAMILY
@@ -60,10 +60,10 @@
     #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
     if (__builtin_cpu_supports("aes"))                                              \
     {                                                                               \
-        echo256_aesni_hashState ctx_echo;                                           \
-        echo256_aesni_Init(&ctx_echo);                                              \
-        echo256_aesni_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
-        echo256_aesni_Final(&ctx_echo, HASH);                                       \
+        echo256_opt_sse3_aes_hashState ctx_echo;                                           \
+        echo256_opt_sse3_aes_Init(&ctx_echo);                                              \
+        echo256_opt_sse3_aes_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
+        echo256_opt_sse3_aes_Final(&ctx_echo, HASH);                                       \
     }                                                                               \
     else                                                                            \
     {                                                                               \

@@ -38,6 +38,7 @@ LIBGULDEN_CONSENSUS=libgulden_consensus.a
 LIBGULDEN_CLI=libgulden_cli.a
 LIBGULDEN_UTIL=libgulden_util.a
 LIBGULDEN_GENERIC=libgulden_generic.a
+LIBGULDEN_CRYPTO_SSE3_AES=crypto/libgulden_crypto_sse3_aes.a
 LIBGULDEN_CRYPTO=crypto/libgulden_crypto.a
 LIBGULDEN_ANDROID_COMPAT=libgulden_android_compat.a
 LIBGULDENQT=qt/libguldenqt.a
@@ -65,7 +66,7 @@ $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
-  $(LIBGULDEN_CRYPTO) \
+  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES)\
   $(LIBGULDEN_ANDROID_COMPAT) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \
@@ -332,6 +333,13 @@ libgulden_wallet_a_SOURCES = \
   $(GULDEN_CORE_H)
 
 # crypto primitives library: Shared between all binaries and unity libraries
+crypto_libgulden_crypto_sse3_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE3_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_sse3_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE3_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_sse3_aes_a_SOURCES = \
+  crypto/hash/echo256/echo256_opt_sse3_aes.h \
+  crypto/hash/echo256/echo256_opt_sse3_aes.cpp
+
+
 crypto_libgulden_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES)
 crypto_libgulden_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libgulden_crypto_a_SOURCES = \
@@ -353,8 +361,8 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/echo256/sphlib/sph_types.h \
   crypto/hash/echo256/sphlib/sph_echo.h \
   crypto/hash/echo256/sphlib/aes_helper.c \
-  crypto/hash/echo256/echo256_aesni.cpp \
-  crypto/hash/echo256/echo256_aesni.h \
+  crypto/hash/echo256/echo256_opt.h \
+  crypto/hash/echo256/echo256_opt.cpp \
   crypto/hash/shavite3_256/shavite3_256_aesni.cpp \
   crypto/hash/shavite3_256/shavite3_256_aesni.h \
   crypto/hash/shavite3_256/shavite3_256_aesni_compress.h \
@@ -777,7 +785,7 @@ GuldenD_LDADD = \
   $(LIBGULDEN_GENERIC) \
   $(LIBGULDEN_ZMQ) \
   $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO) \
+  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
@@ -799,7 +807,7 @@ Gulden_cli_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \
-  $(LIBGULDEN_CRYPTO)
+  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES)
 
 Gulden_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
@@ -820,8 +828,7 @@ Gulden_tx_LDADD = \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \
   $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO) \
-  $(LIBGULDEN_COMMON) \
+  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES)\
   $(LIBGULDEN_COMMON) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \

@@ -11,8 +11,8 @@
 
 #include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
-#include <crypto/hash/echo256/echo256_aesni.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
+#include <crypto/hash/echo256/echo256_opt_sse3_aes.h>
 
 // SIGMA paramaters (centrally set by network)
 uint64_t arenaCpuCostRounds = 8;
@@ -202,10 +202,17 @@ void testEchoOptimised(uint64_t& nTestFailCount)
     {
         std::string data = hashTestVector[i];
         std::vector<unsigned char> outHash(32);
-        echo256_aesni_hashState ctx_echo;
-        echo256_aesni_Init(&ctx_echo);
-        echo256_aesni_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-        echo256_aesni_Final(&ctx_echo, &outHash[0]);
+        switch(echo256_opt_selected)
+        {
+            case 0:
+            {
+                echo256_opt_sse3_aes_hashState ctx_echo;
+                echo256_opt_sse3_aes_Init(&ctx_echo);
+                echo256_opt_sse3_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_sse3_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+        }
         std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
         std::string compare(echo256TestVectorOut[i]);
         if (outHashHex == compare)
