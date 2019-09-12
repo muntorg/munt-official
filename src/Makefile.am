@@ -38,7 +38,17 @@ LIBGULDEN_CONSENSUS=libgulden_consensus.a
 LIBGULDEN_CLI=libgulden_cli.a
 LIBGULDEN_UTIL=libgulden_util.a
 LIBGULDEN_GENERIC=libgulden_generic.a
+LIBGULDEN_CRYPTO_SSE3=crypto/libgulden_crypto_sse3.a
 LIBGULDEN_CRYPTO_SSE3_AES=crypto/libgulden_crypto_sse3_aes.a
+LIBGULDEN_CRYPTO_SSE4=crypto/libgulden_crypto_sse4.a
+LIBGULDEN_CRYPTO_SSE4_AES=crypto/libgulden_crypto_sse4_aes.a
+LIBGULDEN_CRYPTO_AVX=crypto/libgulden_crypto_avx.a
+LIBGULDEN_CRYPTO_AVX_AES=crypto/libgulden_crypto_avx_aes.a
+LIBGULDEN_CRYPTO_AVX2=crypto/libgulden_crypto_avx2.a
+LIBGULDEN_CRYPTO_AVX2_AES=crypto/libgulden_crypto_avx2_aes.a
+LIBGULDEN_CRYPTO_AVX512F=crypto/libgulden_crypto_avx512f.a
+LIBGULDEN_CRYPTO_AVX512F_AES=crypto/libgulden_crypto_avx512f_aes.a
+
 LIBGULDEN_CRYPTO=crypto/libgulden_crypto.a
 LIBGULDEN_ANDROID_COMPAT=libgulden_android_compat.a
 LIBGULDENQT=qt/libguldenqt.a
@@ -63,10 +73,11 @@ endif
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
 
+LIBGULDEN_CRYPTO_ALL = $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3) $(LIBGULDEN_CRYPTO_SSE3_AES) $(LIBGULDEN_CRYPTO_SSE4) $(LIBGULDEN_CRYPTO_SSE4_AES) $(LIBGULDEN_CRYPTO_AVX) $(LIBGULDEN_CRYPTO_AVX_AES) $(LIBGULDEN_CRYPTO_AVX2) $(LIBGULDEN_CRYPTO_AVX2_AES) $(LIBGULDEN_CRYPTO_AVX512F) $(LIBGULDEN_CRYPTO_AVX512F_AES)
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
-  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES)\
+  $(LIBGULDEN_CRYPTO_ALL)\
   $(LIBGULDEN_ANDROID_COMPAT) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \
@@ -333,11 +344,66 @@ libgulden_wallet_a_SOURCES = \
   $(GULDEN_CORE_H)
 
 # crypto primitives library: Shared between all binaries and unity libraries
+crypto_libgulden_crypto_sse3_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE3_FLAGS)
+crypto_libgulden_crypto_sse3_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE3_FLAGS)
+crypto_libgulden_crypto_sse3_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_sse3.h \
+  crypto/hash/echo256/opt/echo256_opt_sse3.cpp
+
 crypto_libgulden_crypto_sse3_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE3_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
 crypto_libgulden_crypto_sse3_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE3_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
 crypto_libgulden_crypto_sse3_aes_a_SOURCES = \
-  crypto/hash/echo256/echo256_opt_sse3_aes.h \
-  crypto/hash/echo256/echo256_opt_sse3_aes.cpp
+  crypto/hash/echo256/opt/echo256_opt_sse3_aes.h \
+  crypto/hash/echo256/opt/echo256_opt_sse3_aes.cpp
+
+crypto_libgulden_crypto_sse4_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE4_FLAGS)
+crypto_libgulden_crypto_sse4_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE4_FLAGS)
+crypto_libgulden_crypto_sse4_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_sse4.h \
+  crypto/hash/echo256/opt/echo256_opt_sse4.cpp
+
+crypto_libgulden_crypto_sse4_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE4_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_sse4_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE4_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_sse4_aes_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_sse4_aes.h \
+  crypto/hash/echo256/opt/echo256_opt_sse4_aes.cpp
+
+crypto_libgulden_crypto_avx_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX_FLAGS)
+crypto_libgulden_crypto_avx_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX_FLAGS)
+crypto_libgulden_crypto_avx_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_avx.h \
+  crypto/hash/echo256/opt/echo256_opt_avx.cpp
+
+crypto_libgulden_crypto_avx_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_avx_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_avx_aes_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_avx_aes.h \
+  crypto/hash/echo256/opt/echo256_opt_avx_aes.cpp
+
+crypto_libgulden_crypto_avx2_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX2_FLAGS)
+crypto_libgulden_crypto_avx2_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX2_FLAGS)
+crypto_libgulden_crypto_avx2_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_avx2.h \
+  crypto/hash/echo256/opt/echo256_opt_avx2.cpp
+
+crypto_libgulden_crypto_avx2_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX2_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_avx2_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX2_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_avx2_aes_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_avx2_aes.h \
+  crypto/hash/echo256/opt/echo256_opt_avx2_aes.cpp
+
+crypto_libgulden_crypto_avx512f_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX512F_FLAGS)
+crypto_libgulden_crypto_avx512f_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX512F_FLAGS)
+crypto_libgulden_crypto_avx512f_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_avx512f.h \
+  crypto/hash/echo256/opt/echo256_opt_avx512f.cpp
+
+crypto_libgulden_crypto_avx512f_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX512F_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_avx512f_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX512F_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_libgulden_crypto_avx512f_aes_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_avx512f_aes.h \
+  crypto/hash/echo256/opt/echo256_opt_avx512f_aes.cpp
+
 
 
 crypto_libgulden_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES)
@@ -785,7 +851,7 @@ GuldenD_LDADD = \
   $(LIBGULDEN_GENERIC) \
   $(LIBGULDEN_ZMQ) \
   $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES) \
+  $(LIBGULDEN_CRYPTO_ALL) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
@@ -807,7 +873,7 @@ Gulden_cli_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \
-  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES)
+  $(LIBGULDEN_CRYPTO_ALL)
 
 Gulden_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
@@ -828,7 +894,7 @@ Gulden_tx_LDADD = \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \
   $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES)\
+  $(LIBGULDEN_CRYPTO_ALL) \
   $(LIBGULDEN_COMMON) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_GENERIC) \

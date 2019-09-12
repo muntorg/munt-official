@@ -31,7 +31,7 @@
 #include "blake2/blake2-impl.h"
 #include <pthread.h>
  
-#include <crypto/hash/echo256/echo256_opt_sse3_aes.h>
+#include <crypto/hash/echo256/echo256_opt.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
 
 #ifdef ARCH_CPU_X86_FAMILY

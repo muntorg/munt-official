@@ -12,7 +12,8 @@
 #include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
-#include <crypto/hash/echo256/echo256_opt_sse3_aes.h>
+
+#include <crypto/hash/echo256/echo256_opt.h>
 
 // SIGMA paramaters (centrally set by network)
 uint64_t arenaCpuCostRounds = 8;
@@ -204,12 +205,88 @@ void testEchoOptimised(uint64_t& nTestFailCount)
         std::vector<unsigned char> outHash(32);
         switch(echo256_opt_selected)
         {
-            case 0:
+            case Echo256OptSelection::OPT_NONE:
+            {
+                assert(0);
+            }
+            case Echo256OptSelection::OPT_SSE3:
+            {
+                echo256_opt_sse3_hashState ctx_echo;
+                echo256_opt_sse3_Init(&ctx_echo);
+                echo256_opt_sse3_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_sse3_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_SSE3_AES:
             {
                 echo256_opt_sse3_aes_hashState ctx_echo;
                 echo256_opt_sse3_aes_Init(&ctx_echo);
                 echo256_opt_sse3_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
                 echo256_opt_sse3_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_SSE4:
+            {
+                echo256_opt_sse4_hashState ctx_echo;
+                echo256_opt_sse4_Init(&ctx_echo);
+                echo256_opt_sse4_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_sse4_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_SSE4_AES:
+            {
+                echo256_opt_sse4_aes_hashState ctx_echo;
+                echo256_opt_sse4_aes_Init(&ctx_echo);
+                echo256_opt_sse4_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_sse4_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_AVX:
+            {
+                echo256_opt_avx_hashState ctx_echo;
+                echo256_opt_avx_Init(&ctx_echo);
+                echo256_opt_avx_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_avx_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_AVX_AES:
+            {
+                echo256_opt_avx_aes_hashState ctx_echo;
+                echo256_opt_avx_aes_Init(&ctx_echo);
+                echo256_opt_avx_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_avx_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_AVX2:
+            {
+                echo256_opt_avx2_hashState ctx_echo;
+                echo256_opt_avx2_Init(&ctx_echo);
+                echo256_opt_avx2_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_avx2_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_AVX2_AES:
+            {
+                echo256_opt_avx2_aes_hashState ctx_echo;
+                echo256_opt_avx2_aes_Init(&ctx_echo);
+                echo256_opt_avx2_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_avx2_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_AVX512F:
+            {
+                echo256_opt_avx512f_hashState ctx_echo;
+                echo256_opt_avx512f_Init(&ctx_echo);
+                echo256_opt_avx512f_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_avx512f_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Echo256OptSelection::OPT_AVX512F_AES:
+            {
+                echo256_opt_avx512f_aes_hashState ctx_echo;
+                echo256_opt_avx512f_aes_Init(&ctx_echo);
+                echo256_opt_avx512f_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                echo256_opt_avx512f_aes_Final(&ctx_echo, &outHash[0]);
                 break;
             }
         }
@@ -303,7 +380,7 @@ double calculateSustainedHashrateForTimePeriod(uint64_t maxHashesPre, uint64_t m
 }
     
 int main(int argc, char** argv)
-{
+{    
     srand(GetTimeMicros());
     
     // Declare the supported options.

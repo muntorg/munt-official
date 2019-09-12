@@ -22,7 +22,7 @@
 
 #define ECHO_DP
 #define LENGTH 256
-#include <crypto/hash/echo256/echo256_opt_sse3_aes.h>
+#include <crypto/hash/echo256/echo256_opt.h>
 #include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
 
@@ -40,12 +40,113 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
         {
             case 0:
             {
-                echo256_opt_sse3_aes_hashState ctx_echo;
-                echo256_opt_sse3_aes_Init(&ctx_echo);
-                echo256_opt_sse3_aes_Update(&ctx_echo, data1, data1Size);
-                echo256_opt_sse3_aes_Update(&ctx_echo, data2, data2Size);
-                echo256_opt_sse3_aes_Update(&ctx_echo, data3, data3Size);
-                echo256_opt_sse3_aes_Final(&ctx_echo, outHash.begin());
+                switch (echo256_opt_selected)
+                {
+                    case Echo256OptSelection::OPT_NONE:
+                    {
+                        assert(0);
+                    }
+                    case Echo256OptSelection::OPT_SSE3:
+                    {
+                        echo256_opt_sse3_hashState ctx_echo;
+                        echo256_opt_sse3_Init(&ctx_echo);
+                        echo256_opt_sse3_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_sse3_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_sse3_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_sse3_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_SSE3_AES:
+                    {
+                        echo256_opt_sse3_aes_hashState ctx_echo;
+                        echo256_opt_sse3_aes_Init(&ctx_echo);
+                        echo256_opt_sse3_aes_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_sse3_aes_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_sse3_aes_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_sse3_aes_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_SSE4:
+                    {
+                        echo256_opt_sse4_hashState ctx_echo;
+                        echo256_opt_sse4_Init(&ctx_echo);
+                        echo256_opt_sse4_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_sse4_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_sse4_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_sse4_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_SSE4_AES:
+                    {
+                        echo256_opt_sse4_aes_hashState ctx_echo;
+                        echo256_opt_sse4_aes_Init(&ctx_echo);
+                        echo256_opt_sse4_aes_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_sse4_aes_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_sse4_aes_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_sse4_aes_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_AVX:
+                    {
+                        echo256_opt_avx_hashState ctx_echo;
+                        echo256_opt_avx_Init(&ctx_echo);
+                        echo256_opt_avx_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_avx_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_avx_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_avx_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_AVX_AES:
+                    {
+                        echo256_opt_avx_aes_hashState ctx_echo;
+                        echo256_opt_avx_aes_Init(&ctx_echo);
+                        echo256_opt_avx_aes_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_avx_aes_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_avx_aes_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_avx_aes_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_AVX2:
+                    {
+                        echo256_opt_avx2_hashState ctx_echo;
+                        echo256_opt_avx2_Init(&ctx_echo);
+                        echo256_opt_avx2_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_avx2_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_avx2_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_avx2_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_AVX2_AES:
+                    {
+                        echo256_opt_avx2_aes_hashState ctx_echo;
+                        echo256_opt_avx2_aes_Init(&ctx_echo);
+                        echo256_opt_avx2_aes_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_avx2_aes_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_avx2_aes_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_avx2_aes_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_AVX512F:
+                    {
+                        echo256_opt_avx512f_hashState ctx_echo;
+                        echo256_opt_avx512f_Init(&ctx_echo);
+                        echo256_opt_avx512f_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_avx512f_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_avx512f_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_avx512f_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                    case Echo256OptSelection::OPT_AVX512F_AES:
+                    {
+                        echo256_opt_avx512f_aes_hashState ctx_echo;
+                        echo256_opt_avx512f_aes_Init(&ctx_echo);
+                        echo256_opt_avx512f_aes_Update(&ctx_echo, data1, data1Size);
+                        echo256_opt_avx512f_aes_Update(&ctx_echo, data2, data2Size);
+                        echo256_opt_avx512f_aes_Update(&ctx_echo, data3, data3Size);
+                        echo256_opt_avx512f_aes_Final(&ctx_echo, outHash.begin());
+                        break;
+                    }
+                }
                 break;
             }
             case 1:

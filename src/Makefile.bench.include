@@ -37,7 +37,7 @@ bench_bench_gulden_LDADD = \
   $(LIBGULDEN_COMMON) \
   $(LIBGULDEN_UTIL) \
   $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3_AES) \
+  $(LIBGULDEN_CRYPTO_ALL) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1) \
@@ -49,7 +49,7 @@ endif
 
 if ENABLE_WALLET
 bench_bench_gulden_SOURCES += bench/coin_selection.cpp
-bench_bench_gulden_LDADD += $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO)
+bench_bench_gulden_LDADD += $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL)
 endif
 
 bench_bench_gulden_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)

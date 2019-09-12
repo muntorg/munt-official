@@ -21,10 +21,15 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef ECHO256_OPT_IMPL
-int echo256_opt_selected=0;
-#else
 #include "echo256_opt.h"
+
+#ifndef USE_HARDWARE_AES
+#define _mm_aesenc_si128 _mm_aesenc_si128_sw
+#endif
+
+#ifndef ECHO256_OPT_IMPL
+Echo256OptSelection echo256_opt_selected=Echo256OptSelection::OPT_AVX512F_AES;
+#else
 
 #include <memory.h>
 #define M128(x) *((__m128i*)x)
