@@ -429,9 +429,9 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/echo256/sphlib/aes_helper.c \
   crypto/hash/echo256/echo256_opt.h \
   crypto/hash/echo256/echo256_opt.cpp \
-  crypto/hash/shavite3_256/shavite3_256_aesni.cpp \
-  crypto/hash/shavite3_256/shavite3_256_aesni.h \
-  crypto/hash/shavite3_256/shavite3_256_aesni_compress.h \
+  crypto/hash/shavite3_256/shavite3_256_opt.cpp \
+  crypto/hash/shavite3_256/shavite3_256_opt.h \
+  crypto/hash/shavite3_256/shavite3_256_opt_compress.h \
   crypto/hash/shavite3_256/ref/AESround.h \
   crypto/hash/shavite3_256/ref/portable.h \
   crypto/hash/shavite3_256/ref/shavite3_256_ref_compress.h \

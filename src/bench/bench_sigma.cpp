@@ -9,7 +9,7 @@
 #include <boost/program_options.hpp>
 #include <thread>
 
-#include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
+#include <crypto/hash/shavite3_256/shavite3_256_opt.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
 
