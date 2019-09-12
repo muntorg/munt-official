@@ -73,10 +73,7 @@ typedef struct
 } echo256_opt_hashState __attribute__ ((aligned (64)));
 
 HashReturn echo256_opt_Init(echo256_opt_hashState* state);
-
 HashReturn echo256_opt_Update(echo256_opt_hashState* state, const unsigned char* data, uint64_t databitlen);
-
 HashReturn echo256_opt_Final(echo256_opt_hashState* state, unsigned char* hashval);
-
 HashReturn echo256_opt_UpdateFinal(echo256_opt_hashState* state, unsigned char* hashval, const unsigned char* data, uint64_t databitlen);
 #endif

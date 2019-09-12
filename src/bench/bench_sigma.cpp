@@ -149,10 +149,93 @@ void testShaviteOptimised(uint64_t& nTestFailCount)
     {
         std::string data = hashTestVector[i];
         std::vector<unsigned char> outHash(32);
-        shavite3_256_aesni_hashState ctx_shavite;
-        shavite3_256_aesni_Init(&ctx_shavite);
-        shavite3_256_aesni_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
-        shavite3_256_aesni_Final(&ctx_shavite, &outHash[0]);
+        switch(shavite3_256_opt_selected)
+        {
+            case Shavite3OptSelection::SOPT_NONE:
+            {
+                assert(0);
+            }
+            case Shavite3OptSelection::SOPT_SSE3:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_sse3_Init(&ctx_echo);
+                shavite3_256_opt_sse3_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_sse3_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_SSE3_AES:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_sse3_aes_Init(&ctx_echo);
+                shavite3_256_opt_sse3_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_sse3_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_SSE4:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_sse4_Init(&ctx_echo);
+                shavite3_256_opt_sse4_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_sse4_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_SSE4_AES:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_sse4_aes_Init(&ctx_echo);
+                shavite3_256_opt_sse4_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_sse4_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_AVX:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_avx_Init(&ctx_echo);
+                shavite3_256_opt_avx_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_avx_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_AVX_AES:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_avx_aes_Init(&ctx_echo);
+                shavite3_256_opt_avx_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_avx_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_AVX2:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_avx2_Init(&ctx_echo);
+                shavite3_256_opt_avx2_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_avx2_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_AVX2_AES:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_avx2_aes_Init(&ctx_echo);
+                shavite3_256_opt_avx2_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_avx2_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_AVX512F:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_avx512f_Init(&ctx_echo);
+                shavite3_256_opt_avx512f_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_avx512f_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+            case Shavite3OptSelection::SOPT_AVX512F_AES:
+            {
+                shavite3_256_opt_hashState ctx_echo;
+                shavite3_256_opt_avx512f_aes_Init(&ctx_echo);
+                shavite3_256_opt_avx512f_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+                shavite3_256_opt_avx512f_aes_Final(&ctx_echo, &outHash[0]);
+                break;
+            }
+        }
         std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
         std::string compare(shaviteTestVectorOut[i]);
         if (outHashHex == compare)

@@ -8,32 +8,20 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include <compat/arch.h>
-// We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.
-#if defined(ARCH_CPU_X86_FAMILY) || defined ARCH_CPU_ARM_FAMILY
+
+#include "shavite3_256_opt.h"
+
+#ifndef USE_HARDWARE_AES
+#define _mm_aesenc_si128 _mm_aesenc_si128_sw
+#endif
+
+#ifndef SHAVITE3_256_OPT_IMPL
+Shavite3OptSelection shavite3_256_opt_selected=Shavite3OptSelection::SOPT_AVX512F_AES;
+#else
 
 #include "compat.h"
 #include "assert.h"
 #include <memory.h>
-
-#include "shavite3_256_opt.h"
-
-#include <compat/arch.h>
-// We only implement aes-ni/sse equivalent optimisations for x86 and arm processors currently.
-#if defined(ARCH_CPU_X86_FAMILY) || defined ARCH_CPU_ARM_FAMILY
-#include <compat/sse.h>
-#if defined(ARCH_CPU_X86_FAMILY)
-    PUSH_COMPILER_OPTIMISATIONS("aes,ssse3");
-#elif defined(ARCH_CPU_ARM_FAMILY)
-    #if __ARM_ARCH < 8 
-    PUSH_COMPILER_OPTIMISATIONS("fpu=neon");
-    #else
-    PUSH_COMPILER_OPTIMISATIONS("+simd+crypto");
-    #endif
-#else
-    #error sse or sse equivalents(neon) not currently supported for target achitecture, please modify source with appropriate compiler options.
-#endif
-
 
 #define T8(x) ((x) & 0xff)
 
@@ -75,7 +63,7 @@
     x11 = _mm_xor_si128(x11, x7);
 
 // encryption + Davies-Meyer transform
-void shavite3_256_aesni_Compress256(const unsigned char* message_block, unsigned char* chaining_value, uint64_t counter)
+void shavite3_256_opt_Compress256(const unsigned char* message_block, unsigned char* chaining_value, uint64_t counter)
 {
     __attribute__ ((aligned (16))) static const unsigned int SHAVITE_REVERSE[4] = {0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100 };
     __attribute__ ((aligned (16))) static const unsigned int SHAVITE256_XOR2[4] = {0x0, 0xFFFFFFFF, 0x0, 0x0};
@@ -348,10 +336,6 @@ void shavite3_256_aesni_Compress256(const unsigned char* message_block, unsigned
     return;
 }
 
-POP_COMPILER_OPTIMISATIONS();
-
-#endif
-
 #define U8TO16_LITTLE(c)  (((uint16_t)T8(*((uint8_t*)(c)))) | ((uint16_t)T8(*(((uint8_t*)(c)) + 1)) << 8))
 
 // Make sure that the local variable names do not collide with variables of the calling code (i.e., those used in c, v)
@@ -389,7 +373,7 @@ POP_COMPILER_OPTIMISATIONS();
 } while (0)
 
 // Initialization of the internal state of the hash function
-bool shavite3_256_aesni_Init(shavite3_256_aesni_hashState* state)
+bool shavite3_256_opt_Init ( shavite3_256_opt_hashState* state)
 {
     // Initialization of the counter of number of bits that were hashed so far
     state->bitcount = 0;
@@ -404,13 +388,13 @@ bool shavite3_256_aesni_Init(shavite3_256_aesni_hashState* state)
     memset(state->chaining_value,0,32); 
 
     // Compute MIV_{256}
-    shavite3_256_aesni_Compress256(state->buffer,state->chaining_value,0x0ULL);
+    shavite3_256_opt_Compress256(state->buffer,state->chaining_value,0x0ULL);
 
     // Set the message block to the size of the requested digest size
     U16TO8_LITTLE(state->buffer,256);
 
     // Compute IV_m
-    shavite3_256_aesni_Compress256(state->buffer,state->chaining_value,0x0ULL);
+    shavite3_256_opt_Compress256(state->buffer,state->chaining_value,0x0ULL);
 
     // Set the block size to be 512 bits (as required for C_{256})
     state->BlockSize=512; 
@@ -423,7 +407,7 @@ bool shavite3_256_aesni_Init(shavite3_256_aesni_hashState* state)
 
 
 // Compressing the input data, and updating the internal state
-bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsigned char* data, uint64_t dataLenBytes)
+bool shavite3_256_opt_Update ( shavite3_256_opt_hashState* state, const unsigned char* data, uint64_t dataLenBytes)
 {
     // p is a pointer to the current location inside data that we need to process (i.e., the first byte of the data which was not used as an input to the compression function
     uint8_t* p = (uint8_t*)data;
@@ -471,7 +455,7 @@ bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsign
         SHAVITE_CNT+=8*(BlockSizeB-bufcnt);
 
         // Call the compression function to process the current block
-        shavite3_256_aesni_Compress256(state->buffer, state->chaining_value, SHAVITE_CNT);
+        shavite3_256_opt_Compress256(state->buffer, state->chaining_value, SHAVITE_CNT);
     }
 
 
@@ -483,7 +467,7 @@ bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsign
         SHAVITE_CNT+=8*BlockSizeB;
 
         // Call the compression function to process the current block
-        shavite3_256_aesni_Compress256(p, state->chaining_value, SHAVITE_CNT);
+        shavite3_256_opt_Compress256(p, state->chaining_value, SHAVITE_CNT);
     }
 
     // If there are still unprocessed bytes, store them locally and wait for more
@@ -496,7 +480,7 @@ bool shavite3_256_aesni_Update(shavite3_256_aesni_hashState* state, const unsign
 
 
 // Performing the padding scheme, and dealing with any remaining bits
-bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char *hashval)
+bool shavite3_256_opt_Final ( shavite3_256_opt_hashState *state, unsigned char *hashval)
 {
     // Stores inputs (message blocks) to the compression function
     uint8_t block[64];
@@ -527,7 +511,7 @@ bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char
     if (bufcnt>=BlockSizeB-10)
     {
         // Compress the current block
-        shavite3_256_aesni_Compress256(block,result,state->bitcount);
+        shavite3_256_opt_Compress256(block,result,state->bitcount);
 
         // Generate the full padding block
         memset(block, 0, BlockSizeB);
@@ -535,7 +519,7 @@ bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char
         U16TO8_LITTLE(block+BlockSizeB-2, state->DigestSize);
 
         // Compress the full padding block
-        shavite3_256_aesni_Compress256(block,result,0x0UL);
+        shavite3_256_opt_Compress256(block,result,0x0UL);
     }
     else
     {
@@ -544,11 +528,11 @@ bool shavite3_256_aesni_Final(shavite3_256_aesni_hashState *state, unsigned char
         U16TO8_LITTLE(block+BlockSizeB-2, state->DigestSize);
         if ((state->bitcount&(state->BlockSize-1))==0)
         {
-            shavite3_256_aesni_Compress256(block,result, 0ULL);
+            shavite3_256_opt_Compress256(block,result, 0ULL);
         }
         else
         {
-            shavite3_256_aesni_Compress256(block,result, state->bitcount);
+            shavite3_256_opt_Compress256(block,result, state->bitcount);
         }
     }
     

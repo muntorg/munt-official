@@ -23,7 +23,7 @@
 #define ECHO_DP
 #define LENGTH 256
 #include <crypto/hash/echo256/echo256_opt.h>
-#include <crypto/hash/shavite3_256/shavite3_256_aesni.h>
+#include <crypto/hash/shavite3_256/shavite3_256_opt.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
 
 inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
@@ -151,12 +151,113 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
             }
             case 1:
             {
-                shavite3_256_aesni_hashState ctx_shavite;
-                shavite3_256_aesni_Init(&ctx_shavite);
-                shavite3_256_aesni_Update(&ctx_shavite, data1, data1Size);
-                shavite3_256_aesni_Update(&ctx_shavite, data2, data2Size);
-                shavite3_256_aesni_Update(&ctx_shavite, data3, data3Size);
-                shavite3_256_aesni_Final(&ctx_shavite, outHash.begin());
+                switch (shavite3_256_opt_selected)
+                {
+                    case Shavite3OptSelection::SOPT_NONE:
+                    {
+                        assert(0);
+                    }
+                    case Shavite3OptSelection::SOPT_SSE3:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_sse3_Init (&ctx_shavite);
+                        shavite3_256_opt_sse3_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_sse3_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_sse3_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_sse3_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_SSE3_AES:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_sse3_aes_Init (&ctx_shavite);
+                        shavite3_256_opt_sse3_aes_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_sse3_aes_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_sse3_aes_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_sse3_aes_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_SSE4:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_sse4_Init (&ctx_shavite);
+                        shavite3_256_opt_sse4_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_sse4_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_sse4_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_sse4_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_SSE4_AES:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_sse4_aes_Init (&ctx_shavite);
+                        shavite3_256_opt_sse4_aes_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_sse4_aes_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_sse4_aes_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_sse4_aes_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_AVX:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_avx_Init (&ctx_shavite);
+                        shavite3_256_opt_avx_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_avx_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_avx_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_avx_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_AVX_AES:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_avx_aes_Init (&ctx_shavite);
+                        shavite3_256_opt_avx_aes_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_avx_aes_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_avx_aes_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_avx_aes_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_AVX2:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_avx2_Init (&ctx_shavite);
+                        shavite3_256_opt_avx2_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_avx2_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_avx2_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_avx2_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_AVX2_AES:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_avx2_aes_Init (&ctx_shavite);
+                        shavite3_256_opt_avx2_aes_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_avx2_aes_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_avx2_aes_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_avx2_aes_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_AVX512F:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_avx512f_Init (&ctx_shavite);
+                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_avx512f_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                    case Shavite3OptSelection::SOPT_AVX512F_AES:
+                    {
+                        shavite3_256_opt_hashState ctx_shavite;
+                        shavite3_256_opt_avx512f_Init (&ctx_shavite);
+                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data1, data1Size);
+                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data2, data2Size);
+                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data3, data3Size);
+                        shavite3_256_opt_avx512f_Final (&ctx_shavite, outHash.begin());
+                        break;
+                    }
+                }
                 break;
             }
             default:
