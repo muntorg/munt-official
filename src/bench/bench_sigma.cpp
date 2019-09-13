@@ -504,7 +504,7 @@ void selectOptimisedImplementations()
     
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
-    shavite3_256_opt_hashState ctx_shavite
+    shavite3_256_opt_hashState ctx_shavite;
     uint64_t nBestTime;
     uint64_t nSel=0;
     
