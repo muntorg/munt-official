@@ -19,20 +19,22 @@
 
 #define ARGON2_BLOCK_WORD_SIZE __m128i
 #define ARGON2_BLOCK_WORD_COUNT ARGON2_OWORDS_IN_BLOCK
-#define next_addresses next_addresses_sse4
-#define fill_segment fill_segment_sse4
-#define fill_block fill_block_sse4
-#define initialize initialize_sse4
-#define fill_memory_blocks fill_memory_blocks_sse4
+#define next_addresses     sse4_next_addresses
+#define fill_segment       sse4_fill_segment
+#define fill_block         sse4_fill_block
+#define initialize         sse4_initialize
+#define fill_memory_blocks sse4_fill_memory_blocks
+#define Compress           sse4_argon2_echo_compress
+#define init_block_value   sse4_argon2_echo_init_block_value
+#define copy_block         sse4_argon2_echo_copy_block_value
+#define xor_block          sse4_argon2_echo_xor_block_value
+#define finalize           sse4_argon2_echo_finalize
+#define index_alpha        sse4_argon2_echo_index_alpha
+#define initial_hash       sse4_argon2_echo_initial_hash
+#define fill_first_blocks  sse4_argon2_echo_fill_first_blocks
+
 #define argon2_echo_ctx argon2_echo_ctx_sse4
-#define Compress argon2_echo_compress_sse4
-#define init_block_value argon2_echo_init_block_value_sse4
-#define copy_block argon2_echo_copy_block_value_sse4
-#define xor_block argon2_echo_xor_block_value_sse4
-#define finalize argon2_echo_finalize_sse4
-#define index_alpha argon2_echo_index_alpha_sse4
-#define initial_hash argon2_echo_initial_hash_sse4
-#define fill_first_blocks argon2_echo_fill_first_blocks_sse4
+
 #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                     \
 {                                                                                  \
     echo256_opt_hashState ctx_echo;                                                \

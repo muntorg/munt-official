@@ -19,20 +19,22 @@
 
 #define ARGON2_BLOCK_WORD_SIZE __m512i
 #define ARGON2_BLOCK_WORD_COUNT ARGON2_512BIT_WORDS_IN_BLOCK
-#define next_addresses next_addresses_avx512f
-#define fill_segment fill_segment_avx512f
-#define fill_block fill_block_avx512f
-#define initialize initialize_avx512f
-#define fill_memory_blocks fill_memory_blocks_avx512f
+#define next_addresses     avx512f_next_addresses
+#define fill_segment       avx512f_fill_segment
+#define fill_block         avx512f_fill_block
+#define initialize         avx512f_initialize
+#define fill_memory_blocks avx512f_fill_memory_blocks
+#define Compress           avx512f_argon2_echo_compress
+#define init_block_value   avx512f_argon2_echo_init_block_value
+#define copy_block         avx512f_argon2_echo_copy_block_value
+#define xor_block          avx512f_argon2_echo_xor_block_value
+#define finalize           avx512f_argon2_echo_finalize
+#define index_alpha        avx512f_argon2_echo_index_alpha
+#define initial_hash       avx512f_argon2_echo_initial_hash
+#define fill_first_blocks  avx512f_argon2_echo_fill_first_blocks
+
 #define argon2_echo_ctx argon2_echo_ctx_avx512f
-#define Compress argon2_echo_compress_avx512f
-#define init_block_value argon2_echo_init_block_value_avx512f
-#define copy_block argon2_echo_copy_block_value_avx512f
-#define xor_block argon2_echo_xor_block_value_avx512f
-#define finalize argon2_echo_finalize_avx512f
-#define index_alpha argon2_echo_index_alpha_avx512f
-#define initial_hash argon2_echo_initial_hash_avx512f
-#define fill_first_blocks argon2_echo_fill_first_blocks_avx512f
+
 #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                        \
 {                                                                                     \
     echo256_opt_hashState ctx_echo;                                                   \

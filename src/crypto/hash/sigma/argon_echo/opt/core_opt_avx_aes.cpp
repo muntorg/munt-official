@@ -19,20 +19,22 @@
 
 #define ARGON2_BLOCK_WORD_SIZE __m128i
 #define ARGON2_BLOCK_WORD_COUNT ARGON2_OWORDS_IN_BLOCK
-#define next_addresses next_addresses_avx_aes
-#define fill_segment fill_segment_avx_aes
-#define fill_block fill_block_avx_aes
-#define initialize initialize_avx_aes
-#define fill_memory_blocks fill_memory_blocks_avx_aes
+#define next_addresses     avx_aes_next_addresses
+#define fill_segment       avx_aes_fill_segment
+#define fill_block         avx_aes_fill_block
+#define initialize         avx_aes_initialize
+#define fill_memory_blocks avx_aes_fill_memory_blocks
+#define Compress           avx_aes_argon2_echo_compress
+#define init_block_value   avx_aes_argon2_echo_init_block_value
+#define copy_block         avx_aes_argon2_echo_copy_block_value
+#define xor_block          avx_aes_argon2_echo_xor_block_value
+#define finalize           avx_aes_argon2_echo_finalize
+#define index_alpha        avx_aes_argon2_echo_index_alpha
+#define initial_hash       avx_aes_argon2_echo_initial_hash
+#define fill_first_blocks  avx_aes_argon2_echo_fill_first_blocks
+
 #define argon2_echo_ctx argon2_echo_ctx_avx_aes
-#define Compress argon2_echo_compress_avx_aes
-#define init_block_value argon2_echo_init_block_value_avx_aes
-#define copy_block argon2_echo_copy_block_value_avx_aes
-#define xor_block argon2_echo_xor_block_value_avx_aes
-#define finalize argon2_echo_finalize_avx_aes
-#define index_alpha argon2_echo_index_alpha_avx_aes
-#define initial_hash argon2_echo_initial_hash_avx_aes
-#define fill_first_blocks argon2_echo_fill_first_blocks_avx_aes
+
 #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                        \
 {                                                                                     \
     echo256_opt_hashState ctx_echo;                                                   \

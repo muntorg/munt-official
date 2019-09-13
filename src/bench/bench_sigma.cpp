@@ -484,34 +484,45 @@ void selectOptimisedImplementations()
 #endif
 
 #ifdef ARCH_CPU_ARM_FAMILY
+#include <sys/auxv.h>
 void selectOptimisedImplementations()
 {
     bool haveAES=false;
+    #if defined HWCAP_AES
+    long hwcaps2 = getauxval(AT_HWCAP);
+    if(hwcaps2 & HWCAP_AES)
+    {
+        haveAES=true;
+    }
+    #elif defined HWCAP2_AES
     long hwcaps2 = getauxval(AT_HWCAP2);
     if(hwcaps2 & HWCAP2_AES)
     {
         haveAES=true;
     }
+    #endif
+    
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
-    shavite3_ref_hashState ctx_shavite;
+    shavite3_256_opt_hashState ctx_shavite
     uint64_t nBestTime;
     uint64_t nSel=0;
     
     {
         uint64_t nStart = GetTimeMicros();
-        shavite3_ref_hashState ctx_shavite;
-        shavite3_ref_Init(&ctx_shavite);
+        shavite3_ref_hashState ctx_shavite_ref;
+        shavite3_ref_Init(&ctx_shavite_ref);
         for (int i=0;i<10;++i)
         {
-            shavite3_ref_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
+            shavite3_ref_Update(&ctx_shavite_ref, (uint8_t*)&data[0], data.size());
         }
-        shavite3_ref_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
+        shavite3_ref_Final(&ctx_shavite_ref, (uint8_t*)&outHash[0]);
         nBestTime = GetTimeMicros() - nStart;
     }
     
     #ifdef COMPILER_HAS_CORTEX53
     {
+        uint64_t nStart = GetTimeMicros();
         shavite3_256_opt_arm_cortex_a53_Init(&ctx_shavite);
         for (int i=0;i<10;++i)
         {
@@ -537,6 +548,7 @@ void selectOptimisedImplementations()
     #endif
     #ifdef COMPILER_HAS_CORTEX72
     {
+        uint64_t nStart = GetTimeMicros();
         shavite3_256_opt_arm_cortex_a72_Init(&ctx_shavite);
         for (int i=0;i<10;++i)
         {
@@ -563,6 +575,7 @@ void selectOptimisedImplementations()
     if (haveAES)
     {
         {
+            uint64_t nStart = GetTimeMicros();
             shavite3_256_opt_arm_cortex_a53_aes_Init(&ctx_shavite);
             for (int i=0;i<10;++i)
             {
@@ -587,6 +600,7 @@ void selectOptimisedImplementations()
         }
         #ifdef COMPILER_HAS_CORTEX72
         {
+            uint64_t nStart = GetTimeMicros();
             shavite3_256_opt_arm_cortex_a72_aes_Init(&ctx_shavite);
             for (int i=0;i<10;++i)
             {
