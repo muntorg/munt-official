@@ -28,6 +28,7 @@
 #include "argon_echo.h"
 #include "core.h"
 
+#if defined(ARGON2_CORE_OPT_IMPL) || defined(ARGON2_CORE_REF_IMPL)
 int argon2_echo_ctx(argon2_echo_context *context, bool doHash)
 {
     /* 1. Validate all inputs */
@@ -95,9 +96,7 @@ int argon2_echo_ctx(argon2_echo_context *context, bool doHash)
     return ARGON2_OK;
 }
 
-
-
-
+#else
 
 const char *argon2_echo_error_message(int error_code)
 {
@@ -145,4 +144,6 @@ const char *argon2_echo_error_message(int error_code)
             return "Unknown error code";
     }
 }
+
+#endif
 

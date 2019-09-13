@@ -32,6 +32,23 @@
 #include "blake2/blake2-impl.h"
 #include "blake2/blake2.h"
 
+#define next_addresses next_addresses_ref
+#define fill_segment fill_segment_ref
+#define fill_block fill_block_ref
+#define initialize initialize_ref
+#define fill_memory_blocks fill_memory_blocks_ref
+#define argon2_echo_ctx argon2_echo_ctx_ref
+#define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
+{                                                                               \
+    sph_echo256_context ctx_echo;                                               \
+    sph_echo256_init(&ctx_echo);                                                \
+    sph_echo256(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN);          \
+    sph_echo256_close(&ctx_echo, HASH);                                         \
+}
+
+#define ARGON2_CORE_REF_IMPL
+#include "core.cpp"
+#include "argon2.cpp"
 
 /*
  * Function fills a new memory block and optionally XORs the old block over the new one.

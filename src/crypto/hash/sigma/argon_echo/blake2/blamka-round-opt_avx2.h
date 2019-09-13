@@ -31,15 +31,6 @@
 
 #include "compat.h"
 
-#ifndef __clang__
-#pragma GCC push_options
-#pragma GCC target("avx2")
-#ifndef DEBUG
-    #pragma GCC optimize ("O3")
-#endif
-#else
-#pragma clang attribute push (__attribute__((target("avx2"))), apply_to=any(function))
-#endif
 #include <immintrin.h>
 
 #define rotr32(x)   _mm256_shuffle_epi32(x, _MM_SHUFFLE(2, 3, 0, 1))
@@ -165,10 +156,5 @@ do{ \
     UNDIAGONALIZE_2(A0, A1, B0, B1, C0, C1, D0, D1) \
 } while((void)0, 0);
 
-#ifdef __clang__
-#pragma clang attribute pop
-#else
-#pragma GCC pop_options
-#endif
 #endif
 #endif

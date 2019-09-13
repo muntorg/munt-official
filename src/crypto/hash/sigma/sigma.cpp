@@ -28,236 +28,29 @@
 
 inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
 {
-    #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
-    #if defined(ARCH_CPU_X86_FAMILY)
-    if (__builtin_cpu_supports("aes"))
-    #else
-    // Always use the 'optimised' version on arm for now.
-    if (true)
-    #endif
+    //fixme: (SIGMA) - We can obtain a slight speedup by removing this if statement and normalising to always using a pointer for everything
+    if (selected_echo256_opt_Init)
     {
         switch (nPseudoRandomAlg)
         {
             case 0:
             {
-                switch (echo256_opt_selected)
-                {
-                    case Echo256OptSelection::OPT_NONE:
-                    {
-                        assert(0);
-                    }
-                    case Echo256OptSelection::OPT_SSE3:
-                    {
-                        echo256_opt_sse3_hashState ctx_echo;
-                        echo256_opt_sse3_Init(&ctx_echo);
-                        echo256_opt_sse3_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_sse3_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_sse3_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_sse3_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_SSE3_AES:
-                    {
-                        echo256_opt_sse3_aes_hashState ctx_echo;
-                        echo256_opt_sse3_aes_Init(&ctx_echo);
-                        echo256_opt_sse3_aes_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_sse3_aes_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_sse3_aes_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_sse3_aes_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_SSE4:
-                    {
-                        echo256_opt_sse4_hashState ctx_echo;
-                        echo256_opt_sse4_Init(&ctx_echo);
-                        echo256_opt_sse4_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_sse4_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_sse4_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_sse4_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_SSE4_AES:
-                    {
-                        echo256_opt_sse4_aes_hashState ctx_echo;
-                        echo256_opt_sse4_aes_Init(&ctx_echo);
-                        echo256_opt_sse4_aes_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_sse4_aes_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_sse4_aes_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_sse4_aes_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_AVX:
-                    {
-                        echo256_opt_avx_hashState ctx_echo;
-                        echo256_opt_avx_Init(&ctx_echo);
-                        echo256_opt_avx_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_avx_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_avx_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_avx_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_AVX_AES:
-                    {
-                        echo256_opt_avx_aes_hashState ctx_echo;
-                        echo256_opt_avx_aes_Init(&ctx_echo);
-                        echo256_opt_avx_aes_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_avx_aes_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_avx_aes_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_avx_aes_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_AVX2:
-                    {
-                        echo256_opt_avx2_hashState ctx_echo;
-                        echo256_opt_avx2_Init(&ctx_echo);
-                        echo256_opt_avx2_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_avx2_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_avx2_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_avx2_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_AVX2_AES:
-                    {
-                        echo256_opt_avx2_aes_hashState ctx_echo;
-                        echo256_opt_avx2_aes_Init(&ctx_echo);
-                        echo256_opt_avx2_aes_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_avx2_aes_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_avx2_aes_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_avx2_aes_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_AVX512F:
-                    {
-                        echo256_opt_avx512f_hashState ctx_echo;
-                        echo256_opt_avx512f_Init(&ctx_echo);
-                        echo256_opt_avx512f_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_avx512f_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_avx512f_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_avx512f_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                    case Echo256OptSelection::OPT_AVX512F_AES:
-                    {
-                        echo256_opt_avx512f_aes_hashState ctx_echo;
-                        echo256_opt_avx512f_aes_Init(&ctx_echo);
-                        echo256_opt_avx512f_aes_Update(&ctx_echo, data1, data1Size);
-                        echo256_opt_avx512f_aes_Update(&ctx_echo, data2, data2Size);
-                        echo256_opt_avx512f_aes_Update(&ctx_echo, data3, data3Size);
-                        echo256_opt_avx512f_aes_Final(&ctx_echo, outHash.begin());
-                        break;
-                    }
-                }
+                echo256_opt_hashState ctx_echo;
+                selected_echo256_opt_Init(&ctx_echo);
+                selected_echo256_opt_Update(&ctx_echo, data1, data1Size);
+                selected_echo256_opt_Update(&ctx_echo, data2, data2Size);
+                selected_echo256_opt_Update(&ctx_echo, data3, data3Size);
+                selected_echo256_opt_Final(&ctx_echo, outHash.begin());
                 break;
             }
             case 1:
-            {
-                switch (shavite3_256_opt_selected)
-                {
-                    case Shavite3OptSelection::SOPT_NONE:
-                    {
-                        assert(0);
-                    }
-                    case Shavite3OptSelection::SOPT_SSE3:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_sse3_Init (&ctx_shavite);
-                        shavite3_256_opt_sse3_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_sse3_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_sse3_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_sse3_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_SSE3_AES:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_sse3_aes_Init (&ctx_shavite);
-                        shavite3_256_opt_sse3_aes_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_sse3_aes_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_sse3_aes_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_sse3_aes_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_SSE4:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_sse4_Init (&ctx_shavite);
-                        shavite3_256_opt_sse4_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_sse4_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_sse4_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_sse4_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_SSE4_AES:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_sse4_aes_Init (&ctx_shavite);
-                        shavite3_256_opt_sse4_aes_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_sse4_aes_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_sse4_aes_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_sse4_aes_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_AVX:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_avx_Init (&ctx_shavite);
-                        shavite3_256_opt_avx_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_avx_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_avx_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_avx_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_AVX_AES:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_avx_aes_Init (&ctx_shavite);
-                        shavite3_256_opt_avx_aes_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_avx_aes_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_avx_aes_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_avx_aes_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_AVX2:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_avx2_Init (&ctx_shavite);
-                        shavite3_256_opt_avx2_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_avx2_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_avx2_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_avx2_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_AVX2_AES:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_avx2_aes_Init (&ctx_shavite);
-                        shavite3_256_opt_avx2_aes_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_avx2_aes_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_avx2_aes_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_avx2_aes_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_AVX512F:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_avx512f_Init (&ctx_shavite);
-                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_avx512f_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                    case Shavite3OptSelection::SOPT_AVX512F_AES:
-                    {
-                        shavite3_256_opt_hashState ctx_shavite;
-                        shavite3_256_opt_avx512f_Init (&ctx_shavite);
-                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data1, data1Size);
-                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data2, data2Size);
-                        shavite3_256_opt_avx512f_Update (&ctx_shavite, data3, data3Size);
-                        shavite3_256_opt_avx512f_Final (&ctx_shavite, outHash.begin());
-                        break;
-                    }
-                }
+            {        
+                shavite3_256_opt_hashState ctx_shavite;
+                selected_shavite3_256_opt_Init (&ctx_shavite);
+                selected_shavite3_256_opt_Update (&ctx_shavite, data1, data1Size);
+                selected_shavite3_256_opt_Update (&ctx_shavite, data2, data2Size);
+                selected_shavite3_256_opt_Update (&ctx_shavite, data3, data3Size);
+                selected_shavite3_256_opt_Final (&ctx_shavite, outHash.begin());
                 break;
             }
             default:
@@ -265,7 +58,6 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
         }
     }
     else
-    #endif
     {
         switch (nPseudoRandomAlg)
         {
@@ -380,7 +172,7 @@ void sigma_context::prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeigh
             context.lanes = numVerifyThreads;
             context.threads = 1;
             
-            if (argon2_echo_ctx(&context, false) != ARGON2_OK)
+            if (selected_argon2_echo_hash(&context, false) != ARGON2_OK)
                 assert(0);
         });
     }
@@ -410,7 +202,7 @@ void sigma_context::benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashe
         hashData[rand()%80] = rand();
         hashData[rand()%80] = rand();
         
-        if (argon2_echo_ctx(&argonContext, true) != ARGON2_OK)
+        if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
             assert(0);
     }
 }
@@ -494,7 +286,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
             
             ++slowHashCounter;
             
-            if (argon2_echo_ctx(&argonContext, true) != ARGON2_OK)
+            if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
                 assert(0);
             
             //2. Set the initial state of the seed for the 'pseudo random' nonces.
@@ -601,7 +393,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
     argonContext.lanes = numVerifyThreads;
     argonContext.threads = numUserVerifyThreads;
 
-    if (argon2_echo_ctx(&argonContext, true) != ARGON2_OK)
+    if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
         assert(0);
             
     //2. Set the initial state of the seed for the 'pseudo random' nonces.
@@ -641,7 +433,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
         context.lanes = numVerifyThreads;
         context.threads = numUserVerifyThreads;            
         
-        if (argon2_echo_ctx(&context, false) != ARGON2_OK)
+        if (selected_argon2_echo_hash(&context, false) != ARGON2_OK)
             assert(0);
         
         uint256 outHash;
@@ -652,7 +444,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
         if (UintToArith256(outHash) <= hashTarget)
         {
             headerData.nNonce = nBlockHeight+nArenaMemoryIndex2;
-            if (argon2_echo_ctx(&context, false) != ARGON2_OK)
+            if (selected_argon2_echo_hash(&context, false) != ARGON2_OK)
                 assert(0);
             headerData.nPreNonce = nPreNonce;
             headerData.nPostNonce = nPostNonce;

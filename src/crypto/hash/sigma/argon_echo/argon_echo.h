@@ -21,6 +21,10 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+
+
+
+#ifndef ARGON2_CORE_OPT_IMPL
 #ifndef ARGON2_ECHO_H
 #define ARGON2_ECHO_H
 
@@ -28,7 +32,6 @@
 #include <stddef.h>
 #include <limits.h>
 #include <stdlib.h>
-
 
 /*
  * Argon2 input parameter restrictions
@@ -114,18 +117,35 @@ struct argon2_echo_context
     uint8_t* allocated_memory; /* pointer to pre-allocated memory */
 };
 
-
-/*
- * Function that performs memory-hard hashing with certain degree of parallelism
- * @param  context  Pointer to the Argon2 internal structure
- * @return Error code if smth is wrong, ARGON2_OK otherwise
- */
-int argon2_echo_ctx(argon2_echo_context* context, bool doHash);
+extern int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash);
 
 /**
  * Get the associated error message for given error code
  * @return  The error message associated with the given error code
  */
 const char* argon2_echo_error_message(int error_code);
+
+//fixme: (SIGMA) - Implement sse2 (we have argon version but not echo etc.)
+//#include "opt/core_opt_sse2.h"
+//#include "opt/core_opt_sse2_aes.h"
+#include "opt/core_opt_sse3.h"
+#include "opt/core_opt_sse3_aes.h"
+#include "opt/core_opt_sse4.h"
+#include "opt/core_opt_sse4_aes.h"
+#include "opt/core_opt_avx.h"
+#include "opt/core_opt_avx_aes.h"
+#include "opt/core_opt_avx2.h"
+#include "opt/core_opt_avx2_aes.h"
+#include "opt/core_opt_avx512f.h"
+#include "opt/core_opt_avx512f_aes.h"
+int argon2_echo_ctx_ref(argon2_echo_context* context, bool doHash);
+#endif
+#else
+/*
+ * Function that performs memory-hard hashing with certain degree of parallelism
+ * @param  context  Pointer to the Argon2 internal structure
+ * @return Error code if smth is wrong, ARGON2_OK otherwise
+ */
+int argon2_echo_ctx(argon2_echo_context* context, bool doHash);
 
 #endif

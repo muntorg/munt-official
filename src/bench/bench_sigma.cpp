@@ -12,8 +12,8 @@
 #include <crypto/hash/shavite3_256/shavite3_256_opt.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
-
 #include <crypto/hash/echo256/echo256_opt.h>
+#include <crypto/hash/sigma/argon_echo/argon_echo.h>
 
 // SIGMA paramaters (centrally set by network)
 uint64_t arenaCpuCostRounds = 8;
@@ -142,100 +142,18 @@ void testShaviteReference(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
-#if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
 void testShaviteOptimised(uint64_t& nTestFailCount)
 {
     for (unsigned int i=0;i<hashTestVector.size();++i)
     {
         std::string data = hashTestVector[i];
         std::vector<unsigned char> outHash(32);
-        switch(shavite3_256_opt_selected)
-        {
-            case Shavite3OptSelection::SOPT_NONE:
-            {
-                assert(0);
-            }
-            case Shavite3OptSelection::SOPT_SSE3:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_sse3_Init(&ctx_echo);
-                shavite3_256_opt_sse3_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_sse3_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_SSE3_AES:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_sse3_aes_Init(&ctx_echo);
-                shavite3_256_opt_sse3_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_sse3_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_SSE4:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_sse4_Init(&ctx_echo);
-                shavite3_256_opt_sse4_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_sse4_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_SSE4_AES:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_sse4_aes_Init(&ctx_echo);
-                shavite3_256_opt_sse4_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_sse4_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_AVX:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_avx_Init(&ctx_echo);
-                shavite3_256_opt_avx_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_avx_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_AVX_AES:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_avx_aes_Init(&ctx_echo);
-                shavite3_256_opt_avx_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_avx_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_AVX2:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_avx2_Init(&ctx_echo);
-                shavite3_256_opt_avx2_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_avx2_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_AVX2_AES:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_avx2_aes_Init(&ctx_echo);
-                shavite3_256_opt_avx2_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_avx2_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_AVX512F:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_avx512f_Init(&ctx_echo);
-                shavite3_256_opt_avx512f_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_avx512f_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Shavite3OptSelection::SOPT_AVX512F_AES:
-            {
-                shavite3_256_opt_hashState ctx_echo;
-                shavite3_256_opt_avx512f_aes_Init(&ctx_echo);
-                shavite3_256_opt_avx512f_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                shavite3_256_opt_avx512f_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-        }
+
+        shavite3_256_opt_hashState ctx_echo;
+        selected_shavite3_256_opt_Init(&ctx_echo);
+        selected_shavite3_256_opt_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+        selected_shavite3_256_opt_Final(&ctx_echo, &outHash[0]);
+        
         std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
         std::string compare(shaviteTestVectorOut[i]);
         if (outHashHex == compare)
@@ -251,7 +169,6 @@ void testShaviteOptimised(uint64_t& nTestFailCount)
     }
     LogPrintf("\n");
 }
-#endif
 
 void testEchoReference(uint64_t& nTestFailCount)
 {
@@ -279,100 +196,18 @@ void testEchoReference(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
-#if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
 void testEchoOptimised(uint64_t& nTestFailCount)
 {
     for (unsigned int i=0;i<hashTestVector.size();++i)
     {
         std::string data = hashTestVector[i];
         std::vector<unsigned char> outHash(32);
-        switch(echo256_opt_selected)
-        {
-            case Echo256OptSelection::OPT_NONE:
-            {
-                assert(0);
-            }
-            case Echo256OptSelection::OPT_SSE3:
-            {
-                echo256_opt_sse3_hashState ctx_echo;
-                echo256_opt_sse3_Init(&ctx_echo);
-                echo256_opt_sse3_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_sse3_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_SSE3_AES:
-            {
-                echo256_opt_sse3_aes_hashState ctx_echo;
-                echo256_opt_sse3_aes_Init(&ctx_echo);
-                echo256_opt_sse3_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_sse3_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_SSE4:
-            {
-                echo256_opt_sse4_hashState ctx_echo;
-                echo256_opt_sse4_Init(&ctx_echo);
-                echo256_opt_sse4_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_sse4_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_SSE4_AES:
-            {
-                echo256_opt_sse4_aes_hashState ctx_echo;
-                echo256_opt_sse4_aes_Init(&ctx_echo);
-                echo256_opt_sse4_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_sse4_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_AVX:
-            {
-                echo256_opt_avx_hashState ctx_echo;
-                echo256_opt_avx_Init(&ctx_echo);
-                echo256_opt_avx_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_avx_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_AVX_AES:
-            {
-                echo256_opt_avx_aes_hashState ctx_echo;
-                echo256_opt_avx_aes_Init(&ctx_echo);
-                echo256_opt_avx_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_avx_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_AVX2:
-            {
-                echo256_opt_avx2_hashState ctx_echo;
-                echo256_opt_avx2_Init(&ctx_echo);
-                echo256_opt_avx2_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_avx2_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_AVX2_AES:
-            {
-                echo256_opt_avx2_aes_hashState ctx_echo;
-                echo256_opt_avx2_aes_Init(&ctx_echo);
-                echo256_opt_avx2_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_avx2_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_AVX512F:
-            {
-                echo256_opt_avx512f_hashState ctx_echo;
-                echo256_opt_avx512f_Init(&ctx_echo);
-                echo256_opt_avx512f_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_avx512f_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-            case Echo256OptSelection::OPT_AVX512F_AES:
-            {
-                echo256_opt_avx512f_aes_hashState ctx_echo;
-                echo256_opt_avx512f_aes_Init(&ctx_echo);
-                echo256_opt_avx512f_aes_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-                echo256_opt_avx512f_aes_Final(&ctx_echo, &outHash[0]);
-                break;
-            }
-        }
+        
+        echo256_opt_hashState ctx_echo;
+        selected_echo256_opt_Init(&ctx_echo);
+        selected_echo256_opt_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
+        selected_echo256_opt_Final(&ctx_echo, &outHash[0]); 
+       
         std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
         std::string compare(echo256TestVectorOut[i]);
         if (outHashHex == compare)
@@ -388,7 +223,6 @@ void testEchoOptimised(uint64_t& nTestFailCount)
     }
     LogPrintf("\n");
 }
-#endif
 
 
 std::vector<std::pair<std::string, uint64_t> >
@@ -462,8 +296,176 @@ double calculateSustainedHashrateForTimePeriod(uint64_t maxHashesPre, uint64_t m
     return nSustainedHashesPerMicrosecond * 1000000;
 }
     
+HashReturn (*selected_echo256_opt_Init)(echo256_opt_hashState* state);
+HashReturn (*selected_echo256_opt_Update)(echo256_opt_hashState* state, const unsigned char* data, uint64_t databitlen);
+HashReturn (*selected_echo256_opt_Final)(echo256_opt_hashState* state, unsigned char* hashval);
+HashReturn (*selected_echo256_opt_UpdateFinal)(echo256_opt_hashState* state, unsigned char* hashval, const unsigned char* data, uint64_t databitlen);
+
+bool (*selected_shavite3_256_opt_Init)(shavite3_256_opt_hashState* state);
+bool (*selected_shavite3_256_opt_Update)(shavite3_256_opt_hashState* state, const unsigned char* data, uint64_t dataLenBytes);
+bool (*selected_shavite3_256_opt_Final)(shavite3_256_opt_hashState* state, unsigned char* hashval);
+
+int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash);
+
+#ifdef ARCH_CPU_X86_FAMILY
+void selectOptimisedImplementations()
+{
+    if (__builtin_cpu_supports("aes"))
+    {
+        if (__builtin_cpu_supports("avx512f"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_avx512f_aes_Init;
+            selected_echo256_opt_Update       =      echo256_opt_avx512f_aes_Update;
+            selected_echo256_opt_Final        =      echo256_opt_avx512f_aes_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_avx512f_aes_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_avx512f_aes_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_avx512f_aes_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_avx512f_aes_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_avx512f_aes;
+        }
+        else if (__builtin_cpu_supports("avx2"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_avx2_aes_Init;
+            selected_echo256_opt_Update       =      echo256_opt_avx2_aes_Update;
+            selected_echo256_opt_Final        =      echo256_opt_avx2_aes_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_avx2_aes_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_avx2_aes_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_avx2_aes_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_avx2_aes_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_avx2_aes;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_avx2_aes;
+        }
+        else if (__builtin_cpu_supports("avx"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_avx_aes_Init;
+            selected_echo256_opt_Update       =      echo256_opt_avx_aes_Update;
+            selected_echo256_opt_Final        =      echo256_opt_avx_aes_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_avx_aes_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_avx_aes_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_avx_aes_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_avx_aes_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_avx_aes;
+        }
+        else if (__builtin_cpu_supports("sse4.2"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_sse4_aes_Init;
+            selected_echo256_opt_Update       =      echo256_opt_sse4_aes_Update;
+            selected_echo256_opt_Final        =      echo256_opt_sse4_aes_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_sse4_aes_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_sse4_aes_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_sse4_aes_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_sse4_aes_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_sse4_aes;
+        }
+        else if (__builtin_cpu_supports("sse3"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_sse3_aes_Init;
+            selected_echo256_opt_Update       =      echo256_opt_sse3_aes_Update;
+            selected_echo256_opt_Final        =      echo256_opt_sse3_aes_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_sse3_aes_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_sse3_aes_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_sse3_aes_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_sse3_aes_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_sse3_aes;
+        }
+        //fixme: (SIGMA)
+        /*else if (__builtin_cpu_supports("sse2"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_sse2_aes_Init;
+            selected_echo256_opt_Update       =      echo256_opt_sse2_aes_Update;
+            selected_echo256_opt_Final        =      echo256_opt_sse2_aes_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_sse2_aes_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_sse2_aes_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_sse2_aes_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_sse2_aes_Final;
+        }*/
+    }
+    else
+    {
+        if (__builtin_cpu_supports("avx512f"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_avx512f_Init;
+            selected_echo256_opt_Update       =      echo256_opt_avx512f_Update;
+            selected_echo256_opt_Final        =      echo256_opt_avx512f_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_avx512f_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_avx512f_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_avx512f_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_avx512f_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_avx512f;
+        }
+        else if (__builtin_cpu_supports("avx2"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_avx2_Init;
+            selected_echo256_opt_Update       =      echo256_opt_avx2_Update;
+            selected_echo256_opt_Final        =      echo256_opt_avx2_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_avx2_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_avx2_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_avx2_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_avx2_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_avx2;
+        }
+        else if (__builtin_cpu_supports("avx"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_avx_Init;
+            selected_echo256_opt_Update       =      echo256_opt_avx_Update;
+            selected_echo256_opt_Final        =      echo256_opt_avx_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_avx_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_avx_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_avx_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_avx_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_avx;
+        }
+        else if (__builtin_cpu_supports("sse4.2"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_sse4_Init;
+            selected_echo256_opt_Update       =      echo256_opt_sse4_Update;
+            selected_echo256_opt_Final        =      echo256_opt_sse4_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_sse4_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_sse4_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_sse4_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_sse4_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_sse4;
+        }
+        else if (__builtin_cpu_supports("sse3"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_sse3_Init;
+            selected_echo256_opt_Update       =      echo256_opt_sse3_Update;
+            selected_echo256_opt_Final        =      echo256_opt_sse3_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_sse3_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_sse3_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_sse3_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_sse3_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_sse3;
+        }
+        //fixme: (SIGMA)
+        /*else if (__builtin_cpu_supports("sse2"))
+        {
+            selected_echo256_opt_Init         =      echo256_opt_sse2_Init;
+            selected_echo256_opt_Update       =      echo256_opt_sse2_Update;
+            selected_echo256_opt_Final        =      echo256_opt_sse2_Final;
+            selected_echo256_opt_UpdateFinal  =      echo256_opt_sse2_UpdateFinal;
+            selected_shavite3_256_opt_Init    = shavite3_256_opt_sse2_Init;
+            selected_shavite3_256_opt_Update  = shavite3_256_opt_sse2_Update;
+            selected_shavite3_256_opt_Final   = shavite3_256_opt_sse2_Final;
+            selected_argon2_echo_hash         =  argon2_echo_ctx_sse2;
+        }*/
+    }
+}
+#endif
+
+#ifdef ARCH_CPU_ARM_FAMILY
+void selectOptimisedImplementations()
+{
+    
+}
+#endif
+
+
 int main(int argc, char** argv)
-{    
+{
+    selected_argon2_echo_hash = argon2_echo_ctx_ref;
+    selectOptimisedImplementations();
+
     srand(GetTimeMicros());
     
     // Declare the supported options.
@@ -602,18 +604,20 @@ int main(int argc, char** argv)
         LogPrintf("Verify shavite reference operation\n");
         testShaviteReference(nTestFailCount);
         
-        #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
-        LogPrintf("Verify shavite optimised operation\n");
-        testShaviteOptimised(nTestFailCount);
-        #endif
+        if (selected_shavite3_256_opt_Final)
+        {
+            LogPrintf("Verify shavite optimised operation\n");
+            testShaviteOptimised(nTestFailCount);
+        }
         
         LogPrintf("Verify echo reference operation\n");
         testEchoReference(nTestFailCount);
         
-        #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
-        LogPrintf("Verify echo optimised operation\n");
-        testEchoOptimised(nTestFailCount);
-        #endif
+        if (selected_echo256_opt_Final)
+        {
+            LogPrintf("Verify echo optimised operation\n");
+            testEchoOptimised(nTestFailCount);
+        }
         
         LogPrintf("Verify validation of valid headers\n");
         testValidateValidHeaders(nTestFailCount);
@@ -882,7 +886,7 @@ int main(int argc, char** argv)
         uint64_t nTimeSpentMining = (nMineEnd - (nArenaSetuptime+nMineStart));
         double nMultiplier = ((40*1000000) / nTimeSpentMining);
         
-        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine-num-hashes=%d` or larger for at least 200 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*nMultiplier));
+        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine-num-hashes=%d` or larger for at least 30 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*nMultiplier));
     }
     //NB! We leak sigmaContexts here, we don't really care because this is a trivial benchmark program its faster for the user to just exit than to actually free them.
 }

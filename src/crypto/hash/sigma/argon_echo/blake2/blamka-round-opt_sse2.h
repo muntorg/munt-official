@@ -32,17 +32,6 @@
 #include "compat.h"
 
 #include <compat/sse.h>
-#if defined(ARCH_CPU_X86_FAMILY)
-    PUSH_COMPILER_OPTIMISATIONS("sse2");
-#elif defined(ARCH_CPU_ARM_FAMILY)
-    #if __ARM_ARCH < 8 
-    PUSH_COMPILER_OPTIMISATIONS("fpu=neon");
-    #else
-    PUSH_COMPILER_OPTIMISATIONS("+simd+crypto");
-    #endif
-#else
-    #error sse or sse equivalents(neon) not currently supported for target achitecture, please modify source with appropriate compiler options.
-#endif
 
 #define _mm_roti_epi64(r, c) _mm_xor_si128(_mm_srli_epi64((r), -(c)), _mm_slli_epi64((r), 64 - (-(c))))
 
@@ -121,6 +110,5 @@ do {                                                                       \
     UNDIAGONALIZE(A0, B0, C0, D0, A1, B1, C1, D1);                         \
 } while ((void)0, 0)
 
-POP_COMPILER_OPTIMISATIONS();
 #endif
 #endif

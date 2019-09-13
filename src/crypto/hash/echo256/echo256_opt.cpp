@@ -27,9 +27,7 @@
 #define _mm_aesenc_si128 _mm_aesenc_si128_sw
 #endif
 
-#ifndef ECHO256_OPT_IMPL
-Echo256OptSelection echo256_opt_selected=Echo256OptSelection::OPT_AVX512F_AES;
-#else
+#ifdef ECHO256_OPT_IMPL
 
 #include <memory.h>
 #define M128(x) *((__m128i*)x)

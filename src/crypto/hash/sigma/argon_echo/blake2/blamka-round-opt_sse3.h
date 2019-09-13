@@ -30,12 +30,6 @@
 #include "blake2-impl.h"
 #include "compat.h"
 
-#ifndef __clang__
-#pragma GCC push_options
-#pragma GCC target("ssse3")
-#else
-#pragma clang attribute push (__attribute__((target("ssse3"))), apply_to=any(function))
-#endif
 #include <emmintrin.h>
 #include <tmmintrin.h> /* for _mm_shuffle_epi8 and _mm_alignr_epi8 */
 
@@ -134,10 +128,5 @@ do {                                                                       \
     UNDIAGONALIZE(A0, B0, C0, D0, A1, B1, C1, D1);                         \
 } while ((void)0, 0)
 
-#ifdef __clang__
-#pragma clang attribute pop
-#else
-#pragma GCC pop_options
-#endif
 #endif
 #endif

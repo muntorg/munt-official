@@ -9,31 +9,6 @@
 #ifndef COMPAT_SSE_H
 #define COMPAT_SSE_H
 
-#ifndef __clang__
-    #define PRAGMA_HELPER0(x) #x
-    #define PRAGMA_HELPER1(x) PRAGMA_HELPER0(GCC target(x))
-    #ifndef DEBUG
-        #define PUSH_COMPILER_OPTIMISATIONS(OPT) \
-        _Pragma("GCC push_options")              \
-        _Pragma(PRAGMA_HELPER1(OPT))             \
-        _Pragma("GCC optimize (\"O3\")")
-    #else
-        #define PUSH_COMPILER_OPTIMISATIONS(OPT) \
-        _Pragma("GCC push_options")              \
-        _Pragma(PRAGMA_HELPER1(OPT))
-    #endif
-    #define POP_COMPILER_OPTIMISATIONS() \
-    _Pragma("GCC pop_options")
-#else
-    #define PRAGMA_HELPER0(x) #x
-    #define PRAGMA_HELPER1(x) PRAGMA_HELPER0(clang attribute push (__attribute__((target(x))), apply_to=any(function)))
-    #define PRAGMA_HELPER2(y) PRAGMA_HELPER1(y)
-    #define PUSH_COMPILER_OPTIMISATIONS(OPT) \
-    _Pragma(PRAGMA_HELPER1(OPT))
-    #define POP_COMPILER_OPTIMISATIONS() \
-    _Pragma("clang attribute pop")
-#endif
-
 #if defined(ARCH_CPU_X86_FAMILY)
     #include <emmintrin.h>
     #include <immintrin.h>

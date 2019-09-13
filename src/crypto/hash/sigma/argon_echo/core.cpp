@@ -25,76 +25,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "core.h"
+
+
+#if defined(ARGON2_CORE_OPT_IMPL) || defined(ARGON2_CORE_REF_IMPL)
 #include "blake2/blake2.h"
 #include "blake2/blake2-impl.h"
 #include <pthread.h>
  
 #include <crypto/hash/echo256/echo256_opt.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
-
-#ifdef ARCH_CPU_X86_FAMILY
-    #define FILL_SEGMENT_OPTIMISED(I, P)                                            \
-    if (__builtin_cpu_supports("avx512f"))                                          \
-    {                                                                               \
-        fill_segment_avx512f(I, P);                                                 \
-    }                                                                               \
-    else if (__builtin_cpu_supports("avx2"))                                        \
-    {                                                                               \
-        fill_segment_avx2(I, P);                                                    \
-    }                                                                               \
-    else if (__builtin_cpu_supports("sse3"))                                        \
-    {                                                                               \
-        fill_segment_sse3(I, P);                                                    \
-    }                                                                               \
-    else if (__builtin_cpu_supports("sse2"))                                        \
-    {                                                                               \
-        fill_segment_sse2(I, P);                                                    \
-    }                                                                               \
-    else                                                                            \
-    {                                                                               \
-        fill_segment_ref(I, P);                                                     \
-    }                                                                               \
-
-    #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
-    if (__builtin_cpu_supports("aes"))                                              \
-    {                                                                               \
-        echo256_opt_sse3_aes_hashState ctx_echo;                                           \
-        echo256_opt_sse3_aes_Init(&ctx_echo);                                              \
-        echo256_opt_sse3_aes_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
-        echo256_opt_sse3_aes_Final(&ctx_echo, HASH);                                       \
-    }                                                                               \
-    else                                                                            \
-    {                                                                               \
-        sph_echo256_context ctx_echo;                                               \
-        sph_echo256_init(&ctx_echo);                                                \
-        sph_echo256(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN);          \
-        sph_echo256_close(&ctx_echo, HASH);                                         \
-    }
-#elif defined(ARCH_CPU_ARM_FAMILY)
-    #define FILL_SEGMENT_OPTIMISED(I, P)                                            \
-    {fill_segment_sse2(I, P);}                                                      \
-
-    #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
-    {                                                                               \
-        echo256_aesni_hashState ctx_echo;                                           \
-        echo256_aesni_Init(&ctx_echo);                                              \
-        echo256_aesni_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
-        echo256_aesni_Final(&ctx_echo, HASH);                                       \
-    }  
-#else
-    #define FILL_SEGMENT_OPTIMISED(I, P)                                            \
-    {fill_segment_ref(I, P);}                                                       \
-
-    #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                  \
-    {                                                                               \
-        sph_echo256_context ctx_echo;                                               \
-        sph_echo256_init(&ctx_echo);                                                \
-        sph_echo256(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN);          \
-        sph_echo256_close(&ctx_echo, HASH);                                         \
-    }  
-#endif
 
 /***************Instance and Position constructors**********/
 void init_block_value(argon2_echo_block* b, uint8_t in)
@@ -210,7 +150,7 @@ static int fill_memory_blocks_st(argon2_echo_instance_t* instance)
             for (l = 0; l < instance->lanes; ++l)
             {
                 argon2_echo_position_t position = {r, l, (uint8_t)s, 0};
-                FILL_SEGMENT_OPTIMISED(instance, position);
+                fill_segment(instance, position);
             }
         }
     }
@@ -220,7 +160,7 @@ static int fill_memory_blocks_st(argon2_echo_instance_t* instance)
 static void* fill_segment_thr(void* thread_data)
 {
     argon2_echo_thread_data* my_data = static_cast<argon2_echo_thread_data*>(thread_data);
-    FILL_SEGMENT_OPTIMISED(my_data->instance_ptr, my_data->pos);
+    fill_segment(my_data->instance_ptr, my_data->pos);
     pthread_exit(nullptr);
     return 0;
 }
@@ -287,7 +227,7 @@ static int fill_memory_blocks_mt(argon2_echo_instance_t* instance)
                     goto fail;
                 }
 
-                /* FILL_SEGMENT_OPTIMISED(instance, position); */
+                /* fill_segment(instance, position); */
                 /*Non-thread equivalent of the lines above */
             }
 
@@ -324,6 +264,205 @@ int fill_memory_blocks(argon2_echo_instance_t* instance)
     return instance->threads == 1 ? fill_memory_blocks_st(instance) : fill_memory_blocks_mt(instance);
 }
 
+void fill_first_blocks(uint8_t* blockhash, const argon2_echo_instance_t* instance)
+{
+    uint32_t l;
+    /* Make the first and second block in each lane as G(H0||0||i) or G(H0||1||i) */
+    uint8_t blockhash_bytes[ARGON2_BLOCK_SIZE];
+    for (l = 0; l < instance->lanes; ++l)
+    {
+        store32(blockhash + ARGON2_PREHASH_DIGEST_LENGTH, 0);
+        store32(blockhash + ARGON2_PREHASH_DIGEST_LENGTH + 4, l);
+        blake2b_long(blockhash_bytes, ARGON2_BLOCK_SIZE, blockhash, ARGON2_PREHASH_SEED_LENGTH);
+        load_block(&instance->memory[l * instance->lane_length + 0], blockhash_bytes);
+
+        store32(blockhash + ARGON2_PREHASH_DIGEST_LENGTH, 1);
+        blake2b_long(blockhash_bytes, ARGON2_BLOCK_SIZE, blockhash, ARGON2_PREHASH_SEED_LENGTH);
+        load_block(&instance->memory[l * instance->lane_length + 1], blockhash_bytes);
+    }
+    // NB! Ordinarily argon would erase the memory here to keep sensitive data out of memory.
+    // For our use case (PoW) this is not necessary, as we are hashing a block header that is anyway public knowledge.
+}
+
+void initial_hash(uint8_t* blockhash, argon2_echo_context* context)
+{
+    if (NULL == context || NULL == blockhash)
+    {
+        return;
+    }
+
+    // NB! Ordinarily argon2 would produce a 64 bit blake hash of the various input paramaters here.
+    // However we have stripped away most the paramaters we aren't using, and the remaining paramaters are all constant (m_cost, t_cost, pwdlen are all constant so no point hashing these)
+    // So we perform a double echo-256 hash on the password instead to obtain the full 512 bits argon requires for initalisation.
+    ECHO_HASH_256(context->pwd, context->pwdlen, blockhash);
+    ECHO_HASH_256(blockhash, 32, blockhash+32);
+}
+
+#ifdef ARGON2_CORE_OPT_IMPL
+static void next_addresses(argon2_echo_block* address_block, argon2_echo_block* input_block)
+{
+    /*Temporary zero-initialized blocks*/
+    ARGON2_BLOCK_WORD_SIZE zero_block[ARGON2_BLOCK_WORD_COUNT];
+    ARGON2_BLOCK_WORD_SIZE zero2_block[ARGON2_BLOCK_WORD_COUNT];
+
+    memset(zero_block, 0, sizeof(zero_block));
+    memset(zero2_block, 0, sizeof(zero2_block));
+
+    /*Increasing index counter*/
+    input_block->v[6]++;
+
+    /*First iteration of G*/
+    fill_block(zero_block, input_block, address_block, 0);
+
+    /*Second iteration of G*/
+    fill_block(zero2_block, address_block, address_block, 0);
+}
+
+void fill_segment(const argon2_echo_instance_t *instance, argon2_echo_position_t position)
+{
+    argon2_echo_block *ref_block = NULL, *curr_block = NULL;
+    argon2_echo_block address_block, input_block;
+    uint64_t pseudo_rand, ref_index, ref_lane;
+    uint32_t prev_offset, curr_offset;
+    uint32_t starting_index, i;
+    ARGON2_BLOCK_WORD_SIZE state[ARGON2_BLOCK_WORD_COUNT];
+
+    //Argon2d always has data dependent addressing
+    bool data_independent_addressing = false;
+
+    if (instance == NULL)
+    {
+        return;
+    }
+
+    //data_independent_addressing = (instance->type == Argon2_i) || (instance->type == Argon2_id && (position.pass == 0) && (position.slice < ARGON2_SYNC_POINTS / 2));
+
+    if (data_independent_addressing)
+    {
+        init_block_value(&input_block, 0);
+
+        input_block.v[0] = position.pass;
+        input_block.v[1] = position.lane;
+        input_block.v[2] = position.slice;
+        input_block.v[3] = instance->memory_blocks;
+        input_block.v[4] = instance->passes;
+        //input_block.v[5] = instance->type;
+    }
+
+    starting_index = 0;
+
+    if ((0 == position.pass) && (0 == position.slice))
+    {
+        starting_index = 2; /* we have already generated the first two blocks */
+
+        /* Don't forget to generate the first block of addresses: */
+        if (data_independent_addressing)
+        {
+            next_addresses(&address_block, &input_block);
+        }
+    }
+
+    /* Offset of the current block */
+    curr_offset = position.lane * instance->lane_length + position.slice * instance->segment_length + starting_index;
+
+    if (0 == curr_offset % instance->lane_length)
+    {
+        /* Last block in this lane */
+        prev_offset = curr_offset + instance->lane_length - 1;
+    }
+    else
+    {
+        /* Previous block */
+        prev_offset = curr_offset - 1;
+    }
+
+    memcpy(state, ((instance->memory + prev_offset)->v), ARGON2_BLOCK_SIZE);
+
+    for (i = starting_index; i < instance->segment_length; ++i, ++curr_offset, ++prev_offset)
+    {
+        /*1.1 Rotating prev_offset if needed */
+        if (curr_offset % instance->lane_length == 1)
+        {
+            prev_offset = curr_offset - 1;
+        }
+
+        /* 1.2 Computing the index of the reference block */
+        /* 1.2.1 Taking pseudo-random value from the previous block */
+        if (data_independent_addressing)
+        {
+            if (i % ARGON2_ADDRESSES_IN_BLOCK == 0)
+            {
+                next_addresses(&address_block, &input_block);
+            }
+            pseudo_rand = address_block.v[i % ARGON2_ADDRESSES_IN_BLOCK];
+        }
+        else
+        {
+            pseudo_rand = instance->memory[prev_offset].v[0];
+        }
+
+        /* 1.2.2 Computing the lane of the reference block */
+        ref_lane = ((pseudo_rand >> 32)) % instance->lanes;
+
+        if ((position.pass == 0) && (position.slice == 0))
+        {
+            /* Can not reference other lanes yet */
+            ref_lane = position.lane;
+        }
+
+        /* 1.2.3 Computing the number of possible reference block within the
+         * lane.
+         */
+        position.index = i;
+        ref_index = index_alpha(instance, &position, pseudo_rand & 0xFFFFFFFF, ref_lane == position.lane);
+
+        /* 2 Creating a new block */
+        ref_block = instance->memory + instance->lane_length * ref_lane + ref_index;
+        curr_block = instance->memory + curr_offset;
+            
+        if(0 == position.pass)
+        {
+            fill_block(state, ref_block, curr_block, 0);
+        }
+        else
+        {
+            fill_block(state, ref_block, curr_block, 1);
+        }
+    }
+}
+#endif
+
+int initialize(argon2_echo_instance_t* instance, argon2_echo_context* context)
+{
+    uint8_t blockhash[ARGON2_PREHASH_SEED_LENGTH];
+
+    if (instance == NULL || context == NULL)
+    {
+        return ARGON2_INCORRECT_PARAMETER;
+    }
+    instance->context_ptr = context;
+
+    /* 1. Memory allocation */
+    // Ordinarily argon would allocate memory here, but for our implementation we let the caller pre-allocate instead so we just grab out memory from 'allocated_memory'
+    instance->memory = (argon2_echo_block*)context->allocated_memory;
+
+    /* 2. Initial hashing */
+    /* H_0 + 8 extra bytes to produce the first blocks */
+    /* uint8_t blockhash[ARGON2_PREHASH_SEED_LENGTH]; */
+    /* Hashing all inputs */
+    initial_hash(blockhash, context);
+    /* Zeroing 8 extra bytes */
+    memset(blockhash + ARGON2_PREHASH_DIGEST_LENGTH, 0, ARGON2_PREHASH_SEED_LENGTH - ARGON2_PREHASH_DIGEST_LENGTH);
+
+    /* 3. Creating first blocks, we always have at least two blocks in a slice */
+    fill_first_blocks(blockhash, instance);
+    
+    /* Clearing the hash */
+    // NB! Ordinarily argon would erase the memory here to keep sensitive data out of memory.
+    // For our use case (PoW) this is not necessary, as we are hashing a block header that is anyway public knowledge.
+    return ARGON2_OK;
+}
+#else
 int validate_inputs(const argon2_echo_context* context)
 {
     if (NULL == context)
@@ -401,68 +540,4 @@ int validate_inputs(const argon2_echo_context* context)
 
     return ARGON2_OK;
 }
-
-void fill_first_blocks(uint8_t* blockhash, const argon2_echo_instance_t* instance)
-{
-    uint32_t l;
-    /* Make the first and second block in each lane as G(H0||0||i) or G(H0||1||i) */
-    uint8_t blockhash_bytes[ARGON2_BLOCK_SIZE];
-    for (l = 0; l < instance->lanes; ++l)
-    {
-        store32(blockhash + ARGON2_PREHASH_DIGEST_LENGTH, 0);
-        store32(blockhash + ARGON2_PREHASH_DIGEST_LENGTH + 4, l);
-        blake2b_long(blockhash_bytes, ARGON2_BLOCK_SIZE, blockhash, ARGON2_PREHASH_SEED_LENGTH);
-        load_block(&instance->memory[l * instance->lane_length + 0], blockhash_bytes);
-
-        store32(blockhash + ARGON2_PREHASH_DIGEST_LENGTH, 1);
-        blake2b_long(blockhash_bytes, ARGON2_BLOCK_SIZE, blockhash, ARGON2_PREHASH_SEED_LENGTH);
-        load_block(&instance->memory[l * instance->lane_length + 1], blockhash_bytes);
-    }
-    // NB! Ordinarily argon would erase the memory here to keep sensitive data out of memory.
-    // For our use case (PoW) this is not necessary, as we are hashing a block header that is anyway public knowledge.
-}
-
-void initial_hash(uint8_t* blockhash, argon2_echo_context* context)
-{
-    if (NULL == context || NULL == blockhash)
-    {
-        return;
-    }
-
-    // NB! Ordinarily argon2 would produce a 64 bit blake hash of the various input paramaters here.
-    // However we have stripped away most the paramaters we aren't using, and the remaining paramaters are all constant (m_cost, t_cost, pwdlen are all constant so no point hashing these)
-    // So we perform a double echo-256 hash on the password instead to obtain the full 512 bits argon requires for initalisation.
-    ECHO_HASH_256(context->pwd, context->pwdlen, blockhash);
-    ECHO_HASH_256(blockhash, 32, blockhash+32);
-}
-
-int initialize(argon2_echo_instance_t* instance, argon2_echo_context* context)
-{
-    uint8_t blockhash[ARGON2_PREHASH_SEED_LENGTH];
-
-    if (instance == NULL || context == NULL)
-    {
-        return ARGON2_INCORRECT_PARAMETER;
-    }
-    instance->context_ptr = context;
-
-    /* 1. Memory allocation */
-    // Ordinarily argon would allocate memory here, but for our implementation we let the caller pre-allocate instead so we just grab out memory from 'allocated_memory'
-    instance->memory = (argon2_echo_block*)context->allocated_memory;
-
-    /* 2. Initial hashing */
-    /* H_0 + 8 extra bytes to produce the first blocks */
-    /* uint8_t blockhash[ARGON2_PREHASH_SEED_LENGTH]; */
-    /* Hashing all inputs */
-    initial_hash(blockhash, context);
-    /* Zeroing 8 extra bytes */
-    memset(blockhash + ARGON2_PREHASH_DIGEST_LENGTH, 0, ARGON2_PREHASH_SEED_LENGTH - ARGON2_PREHASH_DIGEST_LENGTH);
-
-    /* 3. Creating first blocks, we always have at least two blocks in a slice */
-    fill_first_blocks(blockhash, instance);
-    
-    /* Clearing the hash */
-    // NB! Ordinarily argon would erase the memory here to keep sensitive data out of memory.
-    // For our use case (PoW) this is not necessary, as we are hashing a block header that is anyway public knowledge.
-    return ARGON2_OK;
-}
+#endif

@@ -36,6 +36,10 @@ struct shavite3_256_opt_hashState
    int DigestSize;                   // The requested digest size
    int BlockSize;                    // The message block size
 };
+
+extern bool (*selected_shavite3_256_opt_Init)(shavite3_256_opt_hashState* state);
+extern bool (*selected_shavite3_256_opt_Update)(shavite3_256_opt_hashState* state, const unsigned char* data, uint64_t dataLenBytes);
+extern bool (*selected_shavite3_256_opt_Final)(shavite3_256_opt_hashState* state, unsigned char* hashval);
 #endif
 
 

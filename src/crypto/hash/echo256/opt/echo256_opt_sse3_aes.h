@@ -7,7 +7,6 @@
 
 #ifndef HASH_ECHO_256_SSE3_AES_H
 #define HASH_ECHO_256_SSE3_AES_H
-    #define echo256_opt_hashState   echo256_opt_sse3_aes_hashState
     #define echo256_opt_Init        echo256_opt_sse3_aes_Init
     #define echo256_opt_Update      echo256_opt_sse3_aes_Update
     #define echo256_opt_Final       echo256_opt_sse3_aes_Final
@@ -17,7 +16,6 @@
     #include "../echo256_opt.h"
     #undef ECHO256_OPT_IMPL
 
-    #undef echo256_opt_hashState
     #undef echo256_opt_Init
     #undef echo256_opt_Update
     #undef echo256_opt_Final

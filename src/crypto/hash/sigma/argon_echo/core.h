@@ -21,6 +21,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#ifndef ARGON2_CORE_OPT_IMPL
 #ifndef ARGON2_ECHO_CORE_H
 #define ARGON2_ECHO_CORE_H
 
@@ -56,17 +57,6 @@ struct argon2_echo_block
 {
     uint64_t v[ARGON2_QWORDS_IN_BLOCK];
 };
-
-/*****************Functions that work with the block******************/
-
-/* Initialize each byte of the block with @in */
-void init_block_value(argon2_echo_block* b, uint8_t in);
-
-/* Copy block @src to block @dst */
-void copy_block(argon2_echo_block* dst, const argon2_echo_block* src);
-
-/* XOR @src onto @dst bytewise */
-void xor_block(argon2_echo_block* dst, const argon2_echo_block* src);
 
 /*
  * Argon2 instance: memory pointer, number of passes, amount of memory,
@@ -105,6 +95,20 @@ struct argon2_echo_thread_data
     argon2_echo_instance_t *instance_ptr;
     argon2_echo_position_t pos;
 };
+
+#endif
+#endif
+
+/*****************Functions that work with the block******************/
+
+/* Initialize each byte of the block with @in */
+void init_block_value(argon2_echo_block* b, uint8_t in);
+
+/* Copy block @src to block @dst */
+void copy_block(argon2_echo_block* dst, const argon2_echo_block* src);
+
+/* XOR @src onto @dst bytewise */
+void xor_block(argon2_echo_block* dst, const argon2_echo_block* src);
 
 /*************************Argon2_echo core functions********************************/
 /*
@@ -179,11 +183,7 @@ void finalize(const argon2_echo_context* context, argon2_echo_instance_t* instan
  * @param position Current position
  * @pre all block pointers must be valid
  */
-void fill_segment_ref(const argon2_echo_instance_t* instance, argon2_echo_position_t position);
-void fill_segment_sse2(const argon2_echo_instance_t* instance, argon2_echo_position_t position);
-void fill_segment_sse3(const argon2_echo_instance_t* instance, argon2_echo_position_t position);
-void fill_segment_avx2(const argon2_echo_instance_t* instance, argon2_echo_position_t position);
-void fill_segment_avx512f(const argon2_echo_instance_t* instance, argon2_echo_position_t position);
+void fill_segment(const argon2_echo_instance_t* instance, argon2_echo_position_t position);
 
 /*
  * Function that fills the entire memory t_cost times based on the first two
@@ -192,5 +192,3 @@ void fill_segment_avx512f(const argon2_echo_instance_t* instance, argon2_echo_po
  * @return ARGON2_OK if successful, @context->state
  */
 int fill_memory_blocks(argon2_echo_instance_t* instance);
-
-#endif

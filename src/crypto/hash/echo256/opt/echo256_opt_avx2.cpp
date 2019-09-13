@@ -9,11 +9,11 @@
 #include <compat/arch.h>
 
 #if defined(ARCH_CPU_X86_FAMILY)
-    #define echo256_opt_hashState   echo256_opt_avx2_hashState
     #define echo256_opt_Init        echo256_opt_avx2_Init
     #define echo256_opt_Update      echo256_opt_avx2_Update
     #define echo256_opt_Final       echo256_opt_avx2_Final
     #define echo256_opt_UpdateFinal echo256_opt_avx2_UpdateFinal
+    #define Compress                echo256_opt_compress_avx2
 
     #define ECHO256_OPT_IMPL
     #include "../echo256_opt.cpp"
