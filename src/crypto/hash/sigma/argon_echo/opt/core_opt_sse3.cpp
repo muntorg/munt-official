@@ -43,7 +43,7 @@
     echo256_opt_sse3_Final(&ctx_echo, HASH);                                       \
 }
 
-static void fill_block_sse3(__m128i *state, const argon2_echo_block *ref_block, argon2_echo_block *next_block, int with_xor)
+static void sse3_fill_block(__m128i *state, const argon2_echo_block *ref_block, argon2_echo_block *next_block, int with_xor)
 {
     __m128i block_XY[ARGON2_OWORDS_IN_BLOCK];
     unsigned int i;

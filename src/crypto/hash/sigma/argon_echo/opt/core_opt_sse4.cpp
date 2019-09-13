@@ -44,7 +44,7 @@
 }
 
 //fixme: (SIGMA) (CBSU) - This is just a direct copy of the SSE3 version that we compile with SSE4 flags; it might theoretically be possible to speed this up with explicit SSE4 intrinsics.
-static void fill_block_sse4(__m128i *state, const argon2_echo_block *ref_block, argon2_echo_block *next_block, int with_xor)
+static void sse4_fill_block(__m128i *state, const argon2_echo_block *ref_block, argon2_echo_block *next_block, int with_xor)
 {
     __m128i block_XY[ARGON2_OWORDS_IN_BLOCK];
     unsigned int i;

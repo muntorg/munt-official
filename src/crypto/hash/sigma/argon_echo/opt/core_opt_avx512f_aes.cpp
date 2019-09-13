@@ -43,7 +43,7 @@
     echo256_opt_avx512f_aes_Final(&ctx_echo, HASH);                                       \
 }
 
-static void fill_block_avx512f_aes(__m512i* state, const argon2_echo_block* ref_block, argon2_echo_block* next_block, int with_xor)
+static void avx512f_aes_fill_block(__m512i* state, const argon2_echo_block* ref_block, argon2_echo_block* next_block, int with_xor)
 {
     __m512i block_XY[ARGON2_512BIT_WORDS_IN_BLOCK];
     unsigned int i;
