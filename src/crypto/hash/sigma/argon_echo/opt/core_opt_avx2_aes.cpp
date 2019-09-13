@@ -6,8 +6,7 @@
 // This file is a thin wrapper around the actual 'argon2_echo_opt' implementation, along with various other similarly named files.
 // The build system compiles each file with slightly different optimisation flags so that we have optimised implementations for a wide spread of processors.
 
-#include <compat/arch.h>
-#if defined(ARCH_CPU_X86_FAMILY)
+#if defined(COMPILER_HAS_AVX2) && defined(COMPILER_HAS_AES)
 
 #include <stdint.h>
 #include <string.h>

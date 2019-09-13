@@ -310,8 +310,10 @@ int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash);
 #ifdef ARCH_CPU_X86_FAMILY
 void selectOptimisedImplementations()
 {
+    #if defined(COMPILER_HAS_AES)
     if (__builtin_cpu_supports("aes"))
     {
+        #if defined(COMPILER_HAS_AVX512F)
         if (__builtin_cpu_supports("avx512f"))
         {
             selected_echo256_opt_Init         =      echo256_opt_avx512f_aes_Init;
@@ -323,7 +325,9 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_avx512f_aes_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_avx512f_aes;
         }
-        else if (__builtin_cpu_supports("avx2"))
+        #endif
+        #if defined(COMPILER_HAS_AVX2)
+        if (__builtin_cpu_supports("avx2"))
         {
             selected_echo256_opt_Init         =      echo256_opt_avx2_aes_Init;
             selected_echo256_opt_Update       =      echo256_opt_avx2_aes_Update;
@@ -335,7 +339,9 @@ void selectOptimisedImplementations()
             selected_argon2_echo_hash         =  argon2_echo_ctx_avx2_aes;
             selected_argon2_echo_hash         =  argon2_echo_ctx_avx2_aes;
         }
-        else if (__builtin_cpu_supports("avx"))
+        #endif
+        #if defined(COMPILER_HAS_AVX)
+        if (__builtin_cpu_supports("avx"))
         {
             selected_echo256_opt_Init         =      echo256_opt_avx_aes_Init;
             selected_echo256_opt_Update       =      echo256_opt_avx_aes_Update;
@@ -346,7 +352,9 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_avx_aes_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_avx_aes;
         }
-        else if (__builtin_cpu_supports("sse4.2"))
+        #endif
+        #if defined(COMPILER_HAS_SSE4)
+        if (__builtin_cpu_supports("sse4.2"))
         {
             selected_echo256_opt_Init         =      echo256_opt_sse4_aes_Init;
             selected_echo256_opt_Update       =      echo256_opt_sse4_aes_Update;
@@ -357,7 +365,9 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_sse4_aes_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_sse4_aes;
         }
-        else if (__builtin_cpu_supports("sse3"))
+        #endif
+        #if defined(COMPILER_HAS_SSE3)
+        if (__builtin_cpu_supports("sse3"))
         {
             selected_echo256_opt_Init         =      echo256_opt_sse3_aes_Init;
             selected_echo256_opt_Update       =      echo256_opt_sse3_aes_Update;
@@ -368,8 +378,11 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_sse3_aes_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_sse3_aes;
         }
+        #endif
+        #if defined(COMPILER_HAS_SSE2)
+        #if 0
         //fixme: (SIGMA)
-        /*else if (__builtin_cpu_supports("sse2"))
+        if (__builtin_cpu_supports("sse2"))
         {
             selected_echo256_opt_Init         =      echo256_opt_sse2_aes_Init;
             selected_echo256_opt_Update       =      echo256_opt_sse2_aes_Update;
@@ -378,10 +391,14 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Init    = shavite3_256_opt_sse2_aes_Init;
             selected_shavite3_256_opt_Update  = shavite3_256_opt_sse2_aes_Update;
             selected_shavite3_256_opt_Final   = shavite3_256_opt_sse2_aes_Final;
-        }*/
+        }
+        #endif
+        #endif
     }
     else
+    #endif
     {
+        #if defined(COMPILER_HAS_AVX512F)
         if (__builtin_cpu_supports("avx512f"))
         {
             selected_echo256_opt_Init         =      echo256_opt_avx512f_Init;
@@ -393,7 +410,9 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_avx512f_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_avx512f;
         }
-        else if (__builtin_cpu_supports("avx2"))
+        #endif
+        #if defined(COMPILER_HAS_AVX2)
+        if (__builtin_cpu_supports("avx2"))
         {
             selected_echo256_opt_Init         =      echo256_opt_avx2_Init;
             selected_echo256_opt_Update       =      echo256_opt_avx2_Update;
@@ -404,7 +423,9 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_avx2_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_avx2;
         }
-        else if (__builtin_cpu_supports("avx"))
+        #endif
+        #if defined(COMPILER_HAS_AVX)
+        if (__builtin_cpu_supports("avx"))
         {
             selected_echo256_opt_Init         =      echo256_opt_avx_Init;
             selected_echo256_opt_Update       =      echo256_opt_avx_Update;
@@ -415,7 +436,9 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_avx_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_avx;
         }
-        else if (__builtin_cpu_supports("sse4.2"))
+        #endif
+        #if defined(COMPILER_HAS_SSE4)
+        if (__builtin_cpu_supports("sse4.2"))
         {
             selected_echo256_opt_Init         =      echo256_opt_sse4_Init;
             selected_echo256_opt_Update       =      echo256_opt_sse4_Update;
@@ -426,7 +449,9 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_sse4_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_sse4;
         }
-        else if (__builtin_cpu_supports("sse3"))
+        #endif
+        #if defined(COMPILER_HAS_SSE3)
+        if (__builtin_cpu_supports("sse3"))
         {
             selected_echo256_opt_Init         =      echo256_opt_sse3_Init;
             selected_echo256_opt_Update       =      echo256_opt_sse3_Update;
@@ -437,8 +462,11 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_sse3_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_sse3;
         }
+        #endif
+        #if defined(COMPILER_HAS_SSE2)
+        #if 0
         //fixme: (SIGMA)
-        /*else if (__builtin_cpu_supports("sse2"))
+        else if (__builtin_cpu_supports("sse2"))
         {
             selected_echo256_opt_Init         =      echo256_opt_sse2_Init;
             selected_echo256_opt_Update       =      echo256_opt_sse2_Update;
@@ -448,7 +476,9 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Update  = shavite3_256_opt_sse2_Update;
             selected_shavite3_256_opt_Final   = shavite3_256_opt_sse2_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_sse2;
-        }*/
+        }
+        #endif
+        #endif
     }
 }
 #endif
