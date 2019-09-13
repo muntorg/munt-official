@@ -62,6 +62,18 @@ AC_DEFUN([INTRINSIC_FLAG_CHECK],
   
   dnl -------------------------- End of x86 tests ------------------------------------------
   dnl -------------------------- Start of arm tests ------------------------------------------
+
+  INTRINSICFLAGS="-O3 -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits"
+  CXXFLAGS="-Werror $INTRINSICFLAGS"
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
+  AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_CORTEX53_FLAGS, $INTRINSICFLAGS)])
+  AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_CORTEX53 ")
+  
+  INTRINSICFLAGS="-O3 -mcpu=cortex-a53+crypto -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits"
+  CXXFLAGS="-Werror $INTRINSICFLAGS"
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
+  AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_CORTEX53_AES_FLAGS, $INTRINSICFLAGS)])
+  AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_CORTEX53_AES ")
   
   INTRINSICFLAGS="-O3 -mcpu=cortex-a72 -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
@@ -72,20 +84,8 @@ AC_DEFUN([INTRINSIC_FLAG_CHECK],
   INTRINSICFLAGS="-O3 -mcpu=cortex-a72+crypto -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
-  AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_CORTEX72_FLAGS, $INTRINSICFLAGS)])
+  AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_CORTEX72_AES_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_CORTEX72_AES ")
-  
-  INTRINSICFLAGS="-O3 -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits"
-  CXXFLAGS="-Werror $INTRINSICFLAGS"
-  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
-  AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_CORTEX53_FLAGS, $INTRINSICFLAGS)])
-  AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_CORTEX53 ")
-  
-  INTRINSICFLAGS="-O3 -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=neon-fp-armv8 -mneon-for-64bits"
-  CXXFLAGS="-Werror $INTRINSICFLAGS"
-  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
-  AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_CORTEX53_FLAGS, $INTRINSICFLAGS)])
-  AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_CORTEX53 ")
   
   dnl -------------------------- End of arm tests ------------------------------------------
   

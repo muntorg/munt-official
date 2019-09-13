@@ -43,7 +43,8 @@
 #elif defined(ARCH_CPU_ARM_FAMILY)
     // Compat layer for neon intrinsics
     #include <stdint.h>
-    #if __ARM_ARCH >= 8
+    
+    #ifdef USE_HARDWARE_AES
     #define __ARM_FEATURE_CRYPTO
     #endif
     #include <arm_neon.h>
@@ -121,7 +122,15 @@
     #endif
     
     // AESENC
-    #ifndef __ARM_FEATURE_CRYPTO
+    #ifdef USE_HARDWARE_AES
+        // Implements equivalent of 'aesenc' by combining AESE (with an empty key) and AESMC and then manually applying the real key as an xor operation
+        // This unfortunately means an additional xor op; the compiler should be able to optimise this away for repeated calls however
+        // See  https://blog.michaelbrase.com/2018/05/08/emulating-x86-aes-intrinsics-on-armv8-a for more details.
+        inline __m128i _mm_aesenc_si128(__m128i a, __m128i b)
+        {
+            return vreinterpretq_s32_u8(vaesmcq_u8(vaeseq_u8(vreinterpretq_u8_s32(a), uint8x16_t{})) ^ vreinterpretq_u8_s32(b));
+        }
+    #else
         // In the absence of crypto extensions, implement aesenc using regular neon intrinsics instead.
         // See: http://www.workofard.com/2017/01/accelerated-aes-for-the-arm64-linux-kernel/ http://www.workofard.com/2017/07/ghash-for-low-end-cores/ and https://github.com/ColinIanKing/linux-next-mirror/blob/b5f466091e130caaf0735976648f72bd5e09aa84/crypto/aegis128-neon-inner.c#L52 for more information
         // Reproduced with permission of the author.
@@ -150,14 +159,6 @@
 
             //  add round key
             return vreinterpretq_s32_u8(w) ^ RoundKey;
-        }
-    #else
-        // Implements equivalent of 'aesenc' by combining AESE (with an empty key) and AESMC and then manually applying the real key as an xor operation
-        // This unfortunately means an additional xor op; the compiler should be able to optimise this away for repeated calls however
-        // See  https://blog.michaelbrase.com/2018/05/08/emulating-x86-aes-intrinsics-on-armv8-a for more details.
-        inline __m128i _mm_aesenc_si128(__m128i a, __m128i b)
-        {
-            return vreinterpretq_s32_u8(vaesmcq_u8(vaeseq_u8(vreinterpretq_u8_s32(a), uint8x16_t{})) ^ vreinterpretq_u8_s32(b));
         }
     #endif
       

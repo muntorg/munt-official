@@ -54,6 +54,10 @@ extern bool (*selected_shavite3_256_opt_Final)(shavite3_256_opt_hashState* state
 #include "opt/shavite3_256_opt_avx2_aes.h"
 #include "opt/shavite3_256_opt_avx512f.h"
 #include "opt/shavite3_256_opt_avx512f_aes.h"
+#include "opt/shavite3_256_opt_arm_cortex_a53.h"
+#include "opt/shavite3_256_opt_arm_cortex_a53_aes.h"
+#include "opt/shavite3_256_opt_arm_cortex_a72.h"
+#include "opt/shavite3_256_opt_arm_cortex_a72_aes.h"
 #else
 #include "compat.h"
 #include <compat/arch.h>
