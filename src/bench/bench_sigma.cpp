@@ -568,7 +568,7 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a57_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a57;
             nBestTime=nTime;
-            nSel=1;
+            nSel=2;
         }
     }
     #endif
@@ -594,7 +594,7 @@ void selectOptimisedImplementations()
             selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a72_Final;
             selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a72;
             nBestTime=nTime;
-            nSel=2;
+            nSel=3;
         }
     }
     #endif
@@ -622,7 +622,7 @@ void selectOptimisedImplementations()
                 selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a53_aes_Final;
                 selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a53_aes;
                 nBestTime=nTime;
-                nSel=3;
+                nSel=4;
             }
         }
         #endif
@@ -648,7 +648,7 @@ void selectOptimisedImplementations()
                 selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a57_aes_Final;
                 selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a57_aes;
                 nBestTime=nTime;
-                nSel=3;
+                nSel=5;
             }
         }
         #endif
@@ -674,7 +674,7 @@ void selectOptimisedImplementations()
                 selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a72_aes_Final;
                 selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a72_aes;
                 nBestTime=nTime;
-                nSel=4;
+                nSel=6;
             }
         }
         #endif
@@ -687,10 +687,14 @@ void selectOptimisedImplementations()
         case 1:
             LogPrintf("Running with Cortex-A53 optimised NEON support (no hardware AES)\n"); break;
         case 2:
-            LogPrintf("Running with Cortex-A72 optimised NEON support (no hardware AES)\n"); break;
+            LogPrintf("Running with Cortex-A57 optimised NEON support (no hardware AES)\n"); break;
         case 3:
-            LogPrintf("Running with Cortex-A53 optimised NEON+AES support\n"); break;
+            LogPrintf("Running with Cortex-A72 optimised NEON support (no hardware AES)\n"); break;
         case 4:
+            LogPrintf("Running with Cortex-A53 optimised NEON+AES support\n"); break;
+        case 5:
+            LogPrintf("Running with Cortex-A57 optimised NEON+AES support\n"); break;
+        case 6:
             LogPrintf("Running with Cortex-A72 optimised NEON+AES support\n"); break;
     }
 }
