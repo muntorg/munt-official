@@ -321,6 +321,16 @@ bool CWalletDB::EraseAccountNonCompoundWitnessEarningsScript(const std::string& 
     return EraseIC(std::pair(std::string("acc_non_compound_wit_earn_script"), strUUID));
 }
 
+bool CWalletDB::WriteAccountRewardTemplate(const std::string& strUUID, const CWitnessRewardTemplate& rewardTemplate)
+{
+    return WriteIC(std::pair(std::string("acc_reward_template"), strUUID), rewardTemplate);
+}
+
+bool CWalletDB::EraseAccountRewardTemplate(const std::string& strUUID)
+{
+    return EraseIC(std::pair(std::string("acc_reward_template"), strUUID));
+}
+
 bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount* account)
 {
     if (account->IsHD())
@@ -859,6 +869,25 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             else
             {
                 strErr = "Error reading compound script for account";
+                return false;
+            }
+        }
+        else if (strType == "acc_reward_template")
+        {
+            std::string accountUUID;
+            CWitnessRewardTemplate rewardTemplate;
+
+            ssKey >> accountUUID;
+            ssValue >> rewardTemplate;
+
+            auto findIter = pwallet->mapAccounts.find(getUUIDFromString(accountUUID));
+            if (findIter != pwallet->mapAccounts.end())
+            {
+                findIter->second->setRewardTemplate(rewardTemplate, nullptr);
+            }
+            else
+            {
+                strErr = "Error reading reward template for account";
                 return false;
             }
         }
