@@ -639,33 +639,29 @@ void selectOptimisedImplementations()
         }
         nBestTimeArgon = GetTimeMicros() - nStart;
     }
-    
-    SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
-    SELECT_OPTIMISED_ECHO(avx512f_aes, 1);
-    SELECT_OPTIMISED_ARGON(avx512f_aes, 1);
-    
+  
     #ifdef COMPILER_HAS_CORTEX53
-    TEST_OPTIMISED(arm_cortex_a53, 1);
+    SELECT_OPTIMISED_SHAVITE(arm_cortex_a53, 1);
     #endif
     #ifdef COMPILER_HAS_CORTEX57
-    TEST_OPTIMISED(arm_cortex_a57, 2);
+    SELECT_OPTIMISED_SHAVITE(arm_cortex_a57, 2);
     #endif
     #ifdef COMPILER_HAS_CORTEX72
-    TEST_OPTIMISED(arm_cortex_a72, 3);
+    SELECT_OPTIMISED_SHAVITE(arm_cortex_a72, 3);
     #endif
     if (haveAES)
     {
         #ifdef COMPILER_HAS_CORTEX53_AES
-        TEST_OPTIMISED(arm_cortex_a53_aes, 4);
+        SELECT_OPTIMISED_SHAVITE(arm_cortex_a53_aes, 4);
         #endif
         #ifdef COMPILER_HAS_CORTEX57_AES
-        TEST_OPTIMISED(arm_cortex_a57_aes, 5);
+        SELECT_OPTIMISED_SHAVITE(arm_cortex_a57_aes, 5);
         #endif
         #ifdef COMPILER_HAS_CORTEX72_AES
-        TEST_OPTIMISED(arm_cortex_a72_aes, 6);
+        SELECT_OPTIMISED_SHAVITE(arm_cortex_a72_aes, 6);
         #endif
         #ifdef COMPILER_HAS_THUNDERX_AES
-        TEST_OPTIMISED(arm_thunderx_aes, 7);
+        SELECT_OPTIMISED_SHAVITE(arm_thunderx_aes, 7);
         #endif
     }
     
