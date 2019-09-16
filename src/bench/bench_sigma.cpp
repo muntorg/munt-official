@@ -642,26 +642,40 @@ void selectOptimisedImplementations()
   
     #ifdef COMPILER_HAS_CORTEX53
     SELECT_OPTIMISED_SHAVITE(arm_cortex_a53, 1);
+    SELECT_OPTIMISED_ECHO(arm_cortex_a53, 1);
+    SELECT_OPTIMISED_ARGON(arm_cortex_a53, 1);
     #endif
     #ifdef COMPILER_HAS_CORTEX57
     SELECT_OPTIMISED_SHAVITE(arm_cortex_a57, 2);
+    SELECT_OPTIMISED_ECHO(arm_cortex_a57, 2);
+    SELECT_OPTIMISED_ARGON(arm_cortex_a57, 2);
     #endif
     #ifdef COMPILER_HAS_CORTEX72
     SELECT_OPTIMISED_SHAVITE(arm_cortex_a72, 3);
+    SELECT_OPTIMISED_ECHO(arm_cortex_a72, 3);
+    SELECT_OPTIMISED_ARGON(arm_cortex_a72, 3);
     #endif
     if (haveAES)
     {
         #ifdef COMPILER_HAS_CORTEX53_AES
         SELECT_OPTIMISED_SHAVITE(arm_cortex_a53_aes, 4);
+        SELECT_OPTIMISED_ECHO(arm_cortex_a53_aes, 4);
+        SELECT_OPTIMISED_ARGON(arm_cortex_a53_aes, 4);
         #endif
         #ifdef COMPILER_HAS_CORTEX57_AES
         SELECT_OPTIMISED_SHAVITE(arm_cortex_a57_aes, 5);
+        SELECT_OPTIMISED_ECHO(arm_cortex_a57_aes, 5);
+        SELECT_OPTIMISED_ARGON(arm_cortex_a57_aes, 5);
         #endif
         #ifdef COMPILER_HAS_CORTEX72_AES
         SELECT_OPTIMISED_SHAVITE(arm_cortex_a72_aes, 6);
+        SELECT_OPTIMISED_ECHO(arm_cortex_a72_aes, 6);
+        SELECT_OPTIMISED_ARGON(arm_cortex_a72_aes, 6);
         #endif
         #ifdef COMPILER_HAS_THUNDERX_AES
         SELECT_OPTIMISED_SHAVITE(arm_thunderx_aes, 7);
+        SELECT_OPTIMISED_ECHO(arm_thunderx_aes, 7);
+        SELECT_OPTIMISED_ARGON(arm_thunderx_aes, 7);
         #endif
     }
     
