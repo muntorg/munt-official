@@ -307,6 +307,70 @@ bool (*selected_shavite3_256_opt_Final)(shavite3_256_opt_hashState* state, unsig
 
 int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash);
 
+#define SELECT_OPTIMISED_SHAVITE(CPU, IDX) \
+{\
+    uint64_t nStart = GetTimeMicros();\
+    shavite3_256_opt_##CPU##_Init(&ctx_shavite);\
+    for (int i=0;i<100;++i)\
+    {\
+        shavite3_256_opt_##CPU##_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());\
+    }\
+    shavite3_256_opt_##CPU##_Final(&ctx_shavite, (uint8_t*)&outHash[0]);\
+    uint64_t nTime = GetTimeMicros() - nStart;\
+    if (nTime < nBestTimeShavite)\
+    {\
+        selected_shavite3_256_opt_Init   = shavite3_256_opt_##CPU##_Init;\
+        selected_shavite3_256_opt_Update = shavite3_256_opt_##CPU##_Update;\
+        selected_shavite3_256_opt_Final  = shavite3_256_opt_##CPU##_Final;\
+        nBestTimeShavite=nTime;\
+        nSelShavite=IDX;\
+    }\
+}
+#define SELECT_OPTIMISED_ECHO(CPU, IDX) \
+{\
+    uint64_t nStart = GetTimeMicros();\
+    shavite3_256_opt_##CPU##_Init(&ctx_shavite);\
+    for (int i=0;i<100;++i)\
+    {\
+        shavite3_256_opt_##CPU##_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());\
+    }\
+    shavite3_256_opt_##CPU##_Final(&ctx_shavite, (uint8_t*)&outHash[0]);\
+    uint64_t nTime = GetTimeMicros() - nStart;\
+    if (nTime < nBestTimeEcho)\
+    {\
+        selected_echo256_opt_Init        = echo256_opt_##CPU##_Init;\
+        selected_echo256_opt_Update      = echo256_opt_##CPU##_Update;\
+        selected_echo256_opt_Final       = echo256_opt_##CPU##_Final;\
+        selected_echo256_opt_UpdateFinal = echo256_opt_##CPU##_UpdateFinal;\
+        nBestTimeEcho=nTime;\
+        nSelEcho=IDX;\
+    }\
+}      
+#define SELECT_OPTIMISED_ARGON(CPU, IDX) \
+{\
+    uint8_t argonScratch[1024];\
+    argon2_echo_context context;\
+    context.t_cost = 5;\
+    context.m_cost = 1;\
+    context.allocated_memory = argonScratch;\
+    context.pwd = (uint8_t*)&data[0];\
+    context.pwdlen = data.size();\
+    context.lanes = 4;\
+    context.threads = 1;\
+    uint64_t nStart = GetTimeMicros();\
+    for (int i=0;i<10;++i)\
+    {\
+        argon2_echo_ctx_ref(&context, true);\
+    }\
+    uint64_t nTime = GetTimeMicros() - nStart;\
+    if (nTime < nBestTimeArgon)\
+    {\
+        selected_argon2_echo_hash = argon2_echo_ctx_##CPU;\
+        nBestTimeArgon=nTime;\
+        nSelArgon=IDX;\
+    }\
+}
+
 #ifdef ARCH_CPU_X86_FAMILY
 void selectOptimisedImplementations()
 {
@@ -485,6 +549,27 @@ void selectOptimisedImplementations()
 
 #ifdef ARCH_CPU_ARM_FAMILY
 #include <sys/auxv.h>
+
+void LogSelection(uint64_t nSel, std::string sAlgoName)
+{
+    switch (nSel)
+    {
+        case 0:
+            LogPrintf("[%d] Selected reference implementation as fastest (no NEON support)\n", sAlgoName); break;
+        case 1:
+            LogPrintf("[%d] Running with Cortex-A53 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+        case 2:
+            LogPrintf("[%d] Running with Cortex-A57 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+        case 3:
+            LogPrintf("[%d] Running with Cortex-A72 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+        case 4:
+            LogPrintf("[%d] Running with Cortex-A53 optimised NEON+AES support\n", sAlgoName); break;
+        case 5:
+            LogPrintf("[%d] Running with Cortex-A57 optimised NEON+AES support\n", sAlgoName); break;
+        case 6:
+            LogPrintf("[%d] Running with Cortex-A72 optimised NEON+AES support\n", sAlgoName); break;
+    }
+}
 void selectOptimisedImplementations()
 {
     bool haveAES=false;
@@ -505,8 +590,12 @@ void selectOptimisedImplementations()
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
     shavite3_256_opt_hashState ctx_shavite;
-    uint64_t nBestTime;
-    uint64_t nSel=0;
+    uint64_t nBestTimeShavite = std::numeric_limits<uint64_t>::max();
+    uint64_t nBestTimeEcho = std::numeric_limits<uint64_t>::max();
+    uint64_t nBestTimeArgon = std::numeric_limits<uint64_t>::max();
+    uint64_t nSelShavite=0;
+    uint64_t nSelEcho=0;
+    uint64_t nSelArgon=0;
     
     {
         uint64_t nStart = GetTimeMicros();
@@ -517,186 +606,67 @@ void selectOptimisedImplementations()
             shavite3_ref_Update(&ctx_shavite_ref, (uint8_t*)&data[0], data.size());
         }
         shavite3_ref_Final(&ctx_shavite_ref, (uint8_t*)&outHash[0]);
-        nBestTime = GetTimeMicros() - nStart;
+        nBestTimeShavite = GetTimeMicros() - nStart;
+    }
+    {
+        uint64_t nStart = GetTimeMicros();
+        sph_echo256_context ctx_echo_ref;
+        sph_echo256_init(&ctx_echo_ref);
+        for (int i=0;i<10;++i)
+        {
+            sph_echo256(&ctx_echo_ref, (uint8_t*)&data[0], data.size());
+        }
+        sph_echo256_close(&ctx_echo_ref, (uint8_t*)&outHash[0]);
+        nBestTimeEcho = GetTimeMicros() - nStart;
+    }
+    {
+        uint8_t argonScratch[1024];
+        argon2_echo_context context;
+        context.t_cost = 5;
+        context.m_cost = 1;
+        context.allocated_memory = argonScratch;
+        context.pwd = (uint8_t*)&data[0];
+        context.pwdlen = data.size();
+        context.lanes = 4;
+        context.threads = 1;
+        
+        uint64_t nStart = GetTimeMicros();       
+        for (int i=0;i<10;++i)
+        {
+            argon2_echo_ctx_ref(&context, true);
+        }
+        nBestTimeArgon = GetTimeMicros() - nStart;
     }
     
+    SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
+    SELECT_OPTIMISED_ECHO(avx512f_aes, 1);
+    SELECT_OPTIMISED_ARGON(avx512f_aes, 1);
+    
     #ifdef COMPILER_HAS_CORTEX53
-    {
-        uint64_t nStart = GetTimeMicros();
-        shavite3_256_opt_arm_cortex_a53_Init(&ctx_shavite);
-        for (int i=0;i<10;++i)
-        {
-            shavite3_256_opt_arm_cortex_a53_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
-        }
-        shavite3_256_opt_arm_cortex_a53_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
-        uint64_t nTime = GetTimeMicros() - nStart;
-        
-        if (nTime < nBestTime)
-        {
-            selected_echo256_opt_Init         =      echo256_opt_arm_cortex_a53_Init;
-            selected_echo256_opt_Update       =      echo256_opt_arm_cortex_a53_Update;
-            selected_echo256_opt_Final        =      echo256_opt_arm_cortex_a53_Final;
-            selected_echo256_opt_UpdateFinal  =      echo256_opt_arm_cortex_a53_UpdateFinal;
-            selected_shavite3_256_opt_Init    = shavite3_256_opt_arm_cortex_a53_Init;
-            selected_shavite3_256_opt_Update  = shavite3_256_opt_arm_cortex_a53_Update;
-            selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a53_Final;
-            selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a53;
-            nBestTime=nTime;
-            nSel=1;
-        }
-    }
+    TEST_OPTIMISED(arm_cortex_a53, 1);
     #endif
     #ifdef COMPILER_HAS_CORTEX57
-    {
-        uint64_t nStart = GetTimeMicros();
-        shavite3_256_opt_arm_cortex_a53_Init(&ctx_shavite);
-        for (int i=0;i<10;++i)
-        {
-            shavite3_256_opt_arm_cortex_a57_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
-        }
-        shavite3_256_opt_arm_cortex_a57_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
-        uint64_t nTime = GetTimeMicros() - nStart;
-        
-        if (nTime < nBestTime)
-        {
-            selected_echo256_opt_Init         =      echo256_opt_arm_cortex_a57_Init;
-            selected_echo256_opt_Update       =      echo256_opt_arm_cortex_a57_Update;
-            selected_echo256_opt_Final        =      echo256_opt_arm_cortex_a57_Final;
-            selected_echo256_opt_UpdateFinal  =      echo256_opt_arm_cortex_a57_UpdateFinal;
-            selected_shavite3_256_opt_Init    = shavite3_256_opt_arm_cortex_a57_Init;
-            selected_shavite3_256_opt_Update  = shavite3_256_opt_arm_cortex_a57_Update;
-            selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a57_Final;
-            selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a57;
-            nBestTime=nTime;
-            nSel=2;
-        }
-    }
+    TEST_OPTIMISED(arm_cortex_a57, 2);
     #endif
     #ifdef COMPILER_HAS_CORTEX72
-    {
-        uint64_t nStart = GetTimeMicros();
-        shavite3_256_opt_arm_cortex_a72_Init(&ctx_shavite);
-        for (int i=0;i<10;++i)
-        {
-            shavite3_256_opt_arm_cortex_a72_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
-        }
-        shavite3_256_opt_arm_cortex_a72_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
-        uint64_t nTime = GetTimeMicros() - nStart;
-        
-        if (nTime < nBestTime)
-        {
-            selected_echo256_opt_Init         =      echo256_opt_arm_cortex_a72_Init;
-            selected_echo256_opt_Update       =      echo256_opt_arm_cortex_a72_Update;
-            selected_echo256_opt_Final        =      echo256_opt_arm_cortex_a72_Final;
-            selected_echo256_opt_UpdateFinal  =      echo256_opt_arm_cortex_a72_UpdateFinal;
-            selected_shavite3_256_opt_Init    = shavite3_256_opt_arm_cortex_a72_Init;
-            selected_shavite3_256_opt_Update  = shavite3_256_opt_arm_cortex_a72_Update;
-            selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a72_Final;
-            selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a72;
-            nBestTime=nTime;
-            nSel=3;
-        }
-    }
+    TEST_OPTIMISED(arm_cortex_a72, 3);
     #endif
     if (haveAES)
     {
         #ifdef COMPILER_HAS_CORTEX53
-        {
-            uint64_t nStart = GetTimeMicros();
-            shavite3_256_opt_arm_cortex_a53_aes_Init(&ctx_shavite);
-            for (int i=0;i<10;++i)
-            {
-                shavite3_256_opt_arm_cortex_a53_aes_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
-            }
-            shavite3_256_opt_arm_cortex_a53_aes_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
-            uint64_t nTime = GetTimeMicros() - nStart;
-            
-            if (nTime < nBestTime)
-            {
-                selected_echo256_opt_Init         =      echo256_opt_arm_cortex_a53_aes_Init;
-                selected_echo256_opt_Update       =      echo256_opt_arm_cortex_a53_aes_Update;
-                selected_echo256_opt_Final        =      echo256_opt_arm_cortex_a53_aes_Final;
-                selected_echo256_opt_UpdateFinal  =      echo256_opt_arm_cortex_a53_aes_UpdateFinal;
-                selected_shavite3_256_opt_Init    = shavite3_256_opt_arm_cortex_a53_aes_Init;
-                selected_shavite3_256_opt_Update  = shavite3_256_opt_arm_cortex_a53_aes_Update;
-                selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a53_aes_Final;
-                selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a53_aes;
-                nBestTime=nTime;
-                nSel=4;
-            }
-        }
+        TEST_OPTIMISED(arm_cortex_a53_aes, 4);
         #endif
         #ifdef COMPILER_HAS_CORTEX57
-        {
-            uint64_t nStart = GetTimeMicros();
-            shavite3_256_opt_arm_cortex_a57_aes_Init(&ctx_shavite);
-            for (int i=0;i<10;++i)
-            {
-                shavite3_256_opt_arm_cortex_a57_aes_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
-            }
-            shavite3_256_opt_arm_cortex_a57_aes_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
-            uint64_t nTime = GetTimeMicros() - nStart;
-            
-            if (nTime < nBestTime)
-            {
-                selected_echo256_opt_Init         =      echo256_opt_arm_cortex_a57_aes_Init;
-                selected_echo256_opt_Update       =      echo256_opt_arm_cortex_a57_aes_Update;
-                selected_echo256_opt_Final        =      echo256_opt_arm_cortex_a57_aes_Final;
-                selected_echo256_opt_UpdateFinal  =      echo256_opt_arm_cortex_a57_aes_UpdateFinal;
-                selected_shavite3_256_opt_Init    = shavite3_256_opt_arm_cortex_a57_aes_Init;
-                selected_shavite3_256_opt_Update  = shavite3_256_opt_arm_cortex_a57_aes_Update;
-                selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a57_aes_Final;
-                selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a57_aes;
-                nBestTime=nTime;
-                nSel=5;
-            }
-        }
+        TEST_OPTIMISED(arm_cortex_a57_aes, 5);
         #endif
         #ifdef COMPILER_HAS_CORTEX72
-        {
-            uint64_t nStart = GetTimeMicros();
-            shavite3_256_opt_arm_cortex_a72_aes_Init(&ctx_shavite);
-            for (int i=0;i<10;++i)
-            {
-                shavite3_256_opt_arm_cortex_a72_aes_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
-            }
-            shavite3_256_opt_arm_cortex_a72_Final(&ctx_shavite, (uint8_t*)&outHash[0]);
-            uint64_t nTime = GetTimeMicros() - nStart;
-            
-            if (nTime < nBestTime)
-            {
-                selected_echo256_opt_Init         =      echo256_opt_arm_cortex_a72_aes_Init;
-                selected_echo256_opt_Update       =      echo256_opt_arm_cortex_a72_aes_Update;
-                selected_echo256_opt_Final        =      echo256_opt_arm_cortex_a72_aes_Final;
-                selected_echo256_opt_UpdateFinal  =      echo256_opt_arm_cortex_a72_aes_UpdateFinal;
-                selected_shavite3_256_opt_Init    = shavite3_256_opt_arm_cortex_a72_aes_Init;
-                selected_shavite3_256_opt_Update  = shavite3_256_opt_arm_cortex_a72_aes_Update;
-                selected_shavite3_256_opt_Final   = shavite3_256_opt_arm_cortex_a72_aes_Final;
-                selected_argon2_echo_hash         =  argon2_echo_ctx_arm_cortex_a72_aes;
-                nBestTime=nTime;
-                nSel=6;
-            }
-        }
+        TEST_OPTIMISED(arm_cortex_a72_aes, 4);
         #endif
     }
     
-    switch (nSel)
-    {
-        case 0:
-            LogPrintf("Selected reference implementation as fastest (no NEON support)\n"); break;
-        case 1:
-            LogPrintf("Running with Cortex-A53 optimised NEON support (no hardware AES)\n"); break;
-        case 2:
-            LogPrintf("Running with Cortex-A57 optimised NEON support (no hardware AES)\n"); break;
-        case 3:
-            LogPrintf("Running with Cortex-A72 optimised NEON support (no hardware AES)\n"); break;
-        case 4:
-            LogPrintf("Running with Cortex-A53 optimised NEON+AES support\n"); break;
-        case 5:
-            LogPrintf("Running with Cortex-A57 optimised NEON+AES support\n"); break;
-        case 6:
-            LogPrintf("Running with Cortex-A72 optimised NEON+AES support\n"); break;
-    }
+    LogSelection(nSelShavite, "shavite");
+    LogSelection(nSelEcho, "echo");
+    LogSelection(nSelArgon, "argon");
 }
 #endif
 
