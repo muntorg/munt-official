@@ -144,6 +144,7 @@ const char* argon2_echo_error_message(int error_code);
 #include "opt/core_opt_arm_cortex_a57_aes.h"
 #include "opt/core_opt_arm_cortex_a72.h"
 #include "opt/core_opt_arm_cortex_a72_aes.h"
+#include "opt/core_opt_arm_thunderx_aes.h"
 int argon2_echo_ctx_ref(argon2_echo_context* context, bool doHash);
 #endif
 #else

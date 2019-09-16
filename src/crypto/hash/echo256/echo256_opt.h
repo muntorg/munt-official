@@ -66,6 +66,7 @@ extern HashReturn (*selected_echo256_opt_UpdateFinal)(echo256_opt_hashState* sta
 #include "opt/echo256_opt_arm_cortex_a57_aes.h"
 #include "opt/echo256_opt_arm_cortex_a72.h"
 #include "opt/echo256_opt_arm_cortex_a72_aes.h"
+#include "opt/echo256_opt_arm_thunderx_aes.h"
 #else
 
 HashReturn echo256_opt_Init(echo256_opt_hashState* state);

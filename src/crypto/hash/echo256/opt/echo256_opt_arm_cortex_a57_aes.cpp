@@ -6,7 +6,7 @@
 // This file is a thin wrapper around the actual 'echo256_aesni_opt' implementation, along with various other similarly named files.
 // The build system compiles each file with slightly different optimisation flags so that we have optimised implementations for a wide spread of processors.
 
-#if defined(COMPILER_HAS_CORTEX57)
+#if defined(COMPILER_HAS_CORTEX57_AES)
     #define echo256_opt_Init        echo256_opt_arm_cortex_a57_aes_Init
     #define echo256_opt_Update      echo256_opt_arm_cortex_a57_aes_Update
     #define echo256_opt_Final       echo256_opt_arm_cortex_a57_aes_Final

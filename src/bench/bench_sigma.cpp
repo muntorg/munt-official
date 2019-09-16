@@ -568,6 +568,8 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
             LogPrintf("[%d] Running with Cortex-A57 optimised NEON+AES support\n", sAlgoName); break;
         case 6:
             LogPrintf("[%d] Running with Cortex-A72 optimised NEON+AES support\n", sAlgoName); break;
+        case 7:
+            LogPrintf("[%d] Running with Thunderx optimised NEON+AES support\n", sAlgoName); break;
     }
 }
 void selectOptimisedImplementations()
@@ -653,14 +655,17 @@ void selectOptimisedImplementations()
     #endif
     if (haveAES)
     {
-        #ifdef COMPILER_HAS_CORTEX53
+        #ifdef COMPILER_HAS_CORTEX53_AES
         TEST_OPTIMISED(arm_cortex_a53_aes, 4);
         #endif
-        #ifdef COMPILER_HAS_CORTEX57
+        #ifdef COMPILER_HAS_CORTEX57_AES
         TEST_OPTIMISED(arm_cortex_a57_aes, 5);
         #endif
-        #ifdef COMPILER_HAS_CORTEX72
-        TEST_OPTIMISED(arm_cortex_a72_aes, 4);
+        #ifdef COMPILER_HAS_CORTEX72_AES
+        TEST_OPTIMISED(arm_cortex_a72_aes, 6);
+        #endif
+        #ifdef COMPILER_HAS_THUNDERX_AES
+        TEST_OPTIMISED(arm_thunderx_aes, 7);
         #endif
     }
     
