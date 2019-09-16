@@ -35,12 +35,12 @@
 
 #define argon2_echo_ctx    argon2_echo_ctx_arm_thunderx_aes
 
-#define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                             \
-{                                                                                          \
-    echo256_opt_hashState ctx_echo;                                                        \
-    echo256_opt_arm_thunderx_Init(&ctx_echo);                                              \
-    echo256_opt_arm_thunderx_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
-    echo256_opt_arm_thunderx_Final(&ctx_echo, HASH);                                       \
+#define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                                 \
+{                                                                                              \
+    echo256_opt_hashState ctx_echo;                                                            \
+    echo256_opt_arm_thunderx_aes_Init(&ctx_echo);                                              \
+    echo256_opt_arm_thunderx_aes_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
+    echo256_opt_arm_thunderx_aes_Final(&ctx_echo, HASH);                                       \
 }
 
 //fixme: (SIGMA) (CBSU) - This is just a direct copy of the SSE2 version that we compile with substituted neon intrinsics and flags; it might theoretically be possible to speed this up with explicit NEON intrinsic design.

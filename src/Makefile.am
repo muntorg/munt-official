@@ -54,6 +54,7 @@ LIBGULDEN_CRYPTO_ARM_CORTEX_A57=crypto/libgulden_crypto_arm_cortex_a57.a
 LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES=crypto/libgulden_crypto_arm_cortex_a57_aes.a
 LIBGULDEN_CRYPTO_ARM_CORTEX_A72=crypto/libgulden_crypto_arm_cortex_a72.a
 LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES=crypto/libgulden_crypto_arm_cortex_a72_aes.a
+LIBGULDEN_CRYPTO_ARM_THUNDERX_AES=crypto/libgulden_crypto_arm_thunderx_aes.a
 
 
 
@@ -82,9 +83,9 @@ $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
 
 LIBGULDEN_CRYPTO_ALL = $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3) $(LIBGULDEN_CRYPTO_SSE3_AES) $(LIBGULDEN_CRYPTO_SSE4) $(LIBGULDEN_CRYPTO_SSE4_AES) $(LIBGULDEN_CRYPTO_AVX) $(LIBGULDEN_CRYPTO_AVX_AES) $(LIBGULDEN_CRYPTO_AVX2) $(LIBGULDEN_CRYPTO_AVX2_AES) $(LIBGULDEN_CRYPTO_AVX512F) $(LIBGULDEN_CRYPTO_AVX512F_AES) \
-                       $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES) \
+                       $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES) $(LIBGULDEN_CRYPTO_ARM_THUNDERX_AES) \
                        $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3) $(LIBGULDEN_CRYPTO_SSE3_AES) $(LIBGULDEN_CRYPTO_SSE4) $(LIBGULDEN_CRYPTO_SSE4_AES) $(LIBGULDEN_CRYPTO_AVX) $(LIBGULDEN_CRYPTO_AVX_AES) $(LIBGULDEN_CRYPTO_AVX2) $(LIBGULDEN_CRYPTO_AVX2_AES) $(LIBGULDEN_CRYPTO_AVX512F) $(LIBGULDEN_CRYPTO_AVX512F_AES) \
-                       $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES)
+                       $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES) $(LIBGULDEN_CRYPTO_ARM_THUNDERX_AES)
 
 
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
@@ -519,6 +520,15 @@ crypto_libgulden_crypto_arm_cortex_a72_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a72_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a72_aes.cpp
 
+crypto_libgulden_crypto_arm_thunderx_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_THUNDERX_AES_FLAGS)
+crypto_libgulden_crypto_arm_thunderx_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_THUNDERX_AES_FLAGS)
+crypto_libgulden_crypto_arm_thunderx_aes_a_SOURCES = \
+  crypto/hash/echo256/opt/echo256_opt_arm_thunderx_aes.h \
+  crypto/hash/echo256/opt/echo256_opt_arm_thunderx_aes.cpp \
+  crypto/hash/shavite3_256/opt/shavite3_256_opt_arm_thunderx_aes.h \
+  crypto/hash/shavite3_256/opt/shavite3_256_opt_arm_thunderx_aes.cpp \
+  crypto/hash/sigma/argon_echo/opt/core_opt_arm_thunderx_aes.h \
+  crypto/hash/sigma/argon_echo/opt/core_opt_arm_thunderx_aes.cpp
 
 
 
