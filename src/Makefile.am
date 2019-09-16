@@ -568,6 +568,8 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/argon_echo/core.h \
   crypto/hash/sigma/argon_echo/argon_echo.h \
   crypto/hash/sigma/argon_echo/ref.cpp \
+  crypto/hash/sigma/argon_echo/opt/core_opt_hybrid.cpp \
+  crypto/hash/sigma/argon_echo/opt/core_opt_hybrid.h \
   crypto/hash/sigma/argon_echo/blake2/blake2.h \
   crypto/hash/sigma/argon_echo/blake2/blake2b.cpp \
   crypto/hash/sigma/argon_echo/blake2/blake2-impl.h \

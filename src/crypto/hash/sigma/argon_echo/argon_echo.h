@@ -125,6 +125,7 @@ extern int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHas
  */
 const char* argon2_echo_error_message(int error_code);
 
+#include "opt/core_opt_hybrid.h"
 //fixme: (SIGMA) - Implement sse2 (we have argon version but not echo etc.)
 //#include "opt/core_opt_sse2.h"
 //#include "opt/core_opt_sse2_aes.h"

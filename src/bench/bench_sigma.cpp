@@ -570,6 +570,8 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
             LogPrintf("[%d] Running with Cortex-A72 optimised NEON+AES support\n", sAlgoName); break;
         case 7:
             LogPrintf("[%d] Running with Thunderx optimised NEON+AES support\n", sAlgoName); break;
+        case 8:
+            LogPrintf("[%d] Running in hybrid mode.\n", sAlgoName); break;
     }
 }
 void selectOptimisedImplementations()
@@ -678,6 +680,10 @@ void selectOptimisedImplementations()
         SELECT_OPTIMISED_ARGON(arm_thunderx_aes, 7);
         #endif
     }
+    
+    // Finally (only after we have fastest echo implementation) give the hybrid echo a go
+    // Just in case it happens to be faster.
+    SELECT_OPTIMISED_ARGON(hybrid, 8);
     
     LogSelection(nSelShavite, "shavite");
     LogSelection(nSelEcho, "echo");
