@@ -116,6 +116,18 @@ std::vector echo256TestVectorOut = {
     "3d36df7adf6b181e5a6b3b10a09797917dbe2291b5548ec0652dde1e6f16a23c"
 };
 
+std::vector argonTestVectorOut = {   
+    "c71df45da212b4066959f6411b3abd52eea22f25720753fc",
+    "3fe7f820f1f83699b882f59b7f977e84221afd31ad32953c",
+    "e7ef1e8f80c8c2e60ae7a81ae4dbbfcf0f20ae05146b335c",
+    "241e702180722bc5075941a4aafd04881e0701ddb7385cdd",
+    "0fc93233552419a6d036617f891576c0df81e70cb610be45",
+    "54098b89532a93f1f6055b05c5b561525c9d474bbc63fc0d",
+    "94c1ff956631b7022b904118b0f25b5de2ad977e0bfa0a43",
+    "33804bdf5e2bea6557e6a9a5cd100e8ad340ab212c88d8f8"
+};
+
+
 void testShaviteReference(uint64_t& nTestFailCount)
 {
     for (unsigned int i=0;i<hashTestVector.size();++i)
@@ -210,6 +222,40 @@ void testEchoOptimised(uint64_t& nTestFailCount)
        
         std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
         std::string compare(echo256TestVectorOut[i]);
+        if (outHashHex == compare)
+        {
+            LogPrintf("✔");
+        }
+        else
+        {
+            ++nTestFailCount;
+            LogPrintf("✘");
+            LogPrintf("%s\n", outHashHex);
+        }
+    }
+    LogPrintf("\n");
+}
+
+void testArgonReference(uint64_t& nTestFailCount)
+{
+    for (unsigned int i=0;i<hashTestVector.size();++i)
+    {
+        std::string data = hashTestVector[i];
+        
+        uint8_t argonScratch[1024*32];
+        argon2_echo_context context;
+        context.t_cost = 5;
+        context.m_cost = 32;
+        context.allocated_memory = argonScratch;
+        context.pwd = (uint8_t*)&data[0];
+        context.pwdlen = data.size();
+        context.lanes = 4;
+        context.threads = 1;
+        
+        argon2_echo_ctx_ref(&context, true);
+            
+        std::string outHashHex = HexStr((uint8_t*)(&context.outHash[0]), (uint8_t*)(&context.outHash[3])).c_str();
+        std::string compare(argonTestVectorOut[i]);
         if (outHashHex == compare)
         {
             LogPrintf("✔");
@@ -849,6 +895,9 @@ int main(int argc, char** argv)
             LogPrintf("Verify echo optimised operation\n");
             testEchoOptimised(nTestFailCount);
         }
+        
+        LogPrintf("Verify argon reference operation\n");
+        testArgonReference(nTestFailCount);
         
         LogPrintf("Verify validation of valid headers\n");
         testValidateValidHeaders(nTestFailCount);
