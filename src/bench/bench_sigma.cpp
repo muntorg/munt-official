@@ -285,6 +285,40 @@ void testArgonReference(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
+void testArgonOptimised(uint64_t& nTestFailCount)
+{
+    for (unsigned int i=0;i<hashTestVector.size();++i)
+    {
+        std::string data = hashTestVector[i];
+        
+        uint8_t argonScratch[1024*32];
+        argon2_echo_context context;
+        context.t_cost = 5;
+        context.m_cost = 32;
+        context.allocated_memory = argonScratch;
+        context.pwd = (uint8_t*)&data[0];
+        context.pwdlen = data.size();
+        context.lanes = 4;
+        context.threads = 1;
+        
+        selected_argon2_echo_hash(&context, true);
+            
+        std::string outHashHex = HexStr((uint8_t*)(&context.outHash[0]), (uint8_t*)(&context.outHash[3])).c_str();
+        std::string compare(argonTestVectorOut[i]);
+        if (outHashHex == compare)
+        {
+            LogPrintf("✔");
+        }
+        else
+        {
+            ++nTestFailCount;
+            LogPrintf("✘");
+            LogPrintf("%s\n", outHashHex);
+        }
+    }
+    LogPrintf("\n");
+}
+
 void testPRNG(uint64_t& nTestFailCount)
 {
     CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
@@ -428,12 +462,12 @@ int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash);
 #define SELECT_OPTIMISED_ECHO(CPU, IDX) \
 {\
     uint64_t nStart = GetTimeMicros();\
-    shavite3_256_opt_##CPU##_Init(&ctx_shavite);\
+    echo256_opt_##CPU##_Init(&ctx_shavite);\
     for (int i=0;i<100;++i)\
     {\
-        shavite3_256_opt_##CPU##_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());\
+        echo256_opt_##CPU##_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());\
     }\
-    shavite3_256_opt_##CPU##_Final(&ctx_shavite, (uint8_t*)&outHash[0]);\
+    echo256_opt_##CPU##_Final(&ctx_shavite, (uint8_t*)&outHash[0]);\
     uint64_t nTime = GetTimeMicros() - nStart;\
     if (nTime < nBestTimeEcho)\
     {\
@@ -459,7 +493,7 @@ int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash);
     uint64_t nStart = GetTimeMicros();\
     for (int i=0;i<10;++i)\
     {\
-        argon2_echo_ctx_ref(&context, true);\
+        argon2_echo_ctx_##CPU(&context, true);\
     }\
     uint64_t nTime = GetTimeMicros() - nStart;\
     if (nTime < nBestTimeArgon)\
@@ -951,6 +985,12 @@ int main(int argc, char** argv)
         
         LogPrintf("Verify argon reference operation\n");
         testArgonReference(nTestFailCount);
+        
+        if (selected_argon2_echo_hash)
+        {
+            LogPrintf("Verify argon optimised operation\n");
+            testArgonOptimised(nTestFailCount);
+        }
         
         LogPrintf("Verify PRNG\n");
         testPRNG(nTestFailCount);
