@@ -37,6 +37,7 @@
 #include "validation/validationinterface.h"
 
 #include <algorithm>
+#include <numeric>
 #include <queue>
 #include <utility>
 
@@ -169,13 +170,15 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     return true;
 }
 
-
-static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, CAmount compoundTargetAmount, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
+static bool alert(const std::string& msg)
 {
-    // Forbid compound earnings for phase 3, as we can't handle this in a backwards compatible way.
-    if (!bSegSigIsEnabled)
-        compoundTargetAmount = 0;
+    CAlert::Notify(msg, true, true);
+    LogPrintf("%s", msg.c_str());
+    return false;
+}
 
+static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, const CWitnessRewardTemplate& rewardTemplate, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
+{
     // First obtain the details of the signing witness transaction which must be consumed as an input and recreated as an output.
     CTxOutPoW2Witness witnessInput; GetPow2WitnessOutput(selectedWitnessOutput, witnessInput);
 
@@ -196,59 +199,64 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
     if (witnessDestination.failCount > 0)
         witnessDestination.failCount = witnessDestination.failCount - 1;
 
-    // If we are compounding then we need 2 outputs.
-    // If we are compounding then we want only 1 output.
-    // However if we are compounding and there are more fees than compouding rules allow; then the overflow needs to go in a second output so we need 2 outputs again.
-    CAmount noncompoundWitnessBlockSubsidy = 0;
     CAmount compoundWitnessBlockSubsidy = witnessBlockSubsidy + witnessFeeSubsidy;
-    if (compoundTargetAmount != 0)
-    {
-        // Compound target is negative
-        // Pay the first '-compoundTargetAmount' of reward to non-compound output and compound the remainder.
-        if (compoundTargetAmount < 0)
-        {
-            noncompoundWitnessBlockSubsidy = -compoundTargetAmount;
-            if (noncompoundWitnessBlockSubsidy > compoundWitnessBlockSubsidy)
-            {
-                noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy;
-                compoundWitnessBlockSubsidy = 0;
-            }
-            else
-            {
-                compoundWitnessBlockSubsidy -= noncompoundWitnessBlockSubsidy;
-            }
-        }
-        // Compound target is positive
-        // Compound the first '-compoundTargetAmount' of reward and pay the remainder to non-compound.
-        else if (compoundWitnessBlockSubsidy > compoundTargetAmount)
-        {
-            noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy - compoundTargetAmount;
-            compoundWitnessBlockSubsidy = compoundTargetAmount;
-        }
 
-        // If we are compounding more than the network allows then reduce accordingly.
-        if (compoundWitnessBlockSubsidy > witnessBlockSubsidy*2)
-        {
-            noncompoundWitnessBlockSubsidy += compoundWitnessBlockSubsidy - witnessBlockSubsidy*2;
-            compoundWitnessBlockSubsidy = witnessBlockSubsidy*2;
-        }
+    CAmount fixedTotal = rewardTemplate.fixedAmountsSum();
+    if (fixedTotal > compoundWitnessBlockSubsidy)
+        return alert(strprintf("%s, Witness template fixed amounts total (%s) exceed subsidy (%s)", __PRETTY_FUNCTION__, FormatMoney(fixedTotal), FormatMoney(compoundWitnessBlockSubsidy)));
 
-        //fixme: (FUT) (DUST)
-        //Rudimentary dust prevention - in future possibly improve this.
-        if ((noncompoundWitnessBlockSubsidy > 0) && (noncompoundWitnessBlockSubsidy < 1 * COIN / 10))
-        {
-            noncompoundWitnessBlockSubsidy += 1 * COIN / 10;
-            compoundWitnessBlockSubsidy -= 1 * COIN / 10;
-        }
+    CAmount percentageSum = rewardTemplate.percentagesSum();
+    if (percentageSum < 0.0 || percentageSum > 1.0)
+        return alert(strprintf("%s, Witness template percentage total (%f) out of range [0..100]", __PRETTY_FUNCTION__, percentageSum * 100.0));
+
+    CAmount flexibleTotal = compoundWitnessBlockSubsidy - fixedTotal;
+
+    CAmount percentageTotalAmount = std::accumulate(rewardTemplate.destinations.begin(), rewardTemplate.destinations.end(), CAmount(0), [&](const CAmount& acc, const CWitnessRewardDestination& dest){
+        return acc + dest.percent * flexibleTotal;
+    });
+
+    if (percentageTotalAmount > flexibleTotal)
+        return alert(strprintf("%s, Witness template percentages rounding error, specifiy less percentages and use remainder", __PRETTY_FUNCTION__));
+
+    // Calculate remainder
+    bool remainderDone = false;
+    CAmount remainderAmount = flexibleTotal - percentageTotalAmount;
+
+    // Calculate compound
+    CAmount compoundAmount = std::accumulate(rewardTemplate.destinations.begin(), rewardTemplate.destinations.end(), CAmount(0), [&](const CAmount& acc, const CWitnessRewardDestination& dest){
+        return acc + (dest.type == CWitnessRewardDestination::DestType::Compound ? dest.amount + dest.percent * flexibleTotal : 0);
+    });
+
+    // Calculate overflow (adjusting compound)
+    // FIXME: get actual maximum compound here instead of "magic" number
+    const CAmount effectiveCompoundLimit  = bSegSigIsEnabled ? 40 * COIN : 0;
+    bool overflowDone = false;
+    CAmount overflowAmount = 0;
+    if (compoundAmount > effectiveCompoundLimit) {
+        overflowAmount = compoundAmount - effectiveCompoundLimit;
+        compoundAmount = effectiveCompoundLimit;
     }
-    else
-    {
-        noncompoundWitnessBlockSubsidy = compoundWitnessBlockSubsidy;
-        compoundWitnessBlockSubsidy = 0;
-    }
-    coinbaseTx.vout.resize((noncompoundWitnessBlockSubsidy == 0) ? 1 : 2);
 
-    // Finally create the output(s).
+    // Special case for compound overflow while no overflow destination defined
+    if (overflowAmount > 0 && 0 == std::count_if(rewardTemplate.destinations.begin(), rewardTemplate.destinations.end(),
+                                                 [](const CWitnessRewardDestination& dest) { return dest.takesCompoundOverflow; })) {
+        // must have remainder, but not on a compound destination
+        bool hasRemainder = false;
+        for (const CWitnessRewardDestination& dest: rewardTemplate.destinations) {
+            hasRemainder = hasRemainder || dest.takesRemainder;
+            if (dest.takesRemainder && dest.type == CWitnessRewardDestination::DestType::Compound)
+                return alert(strprintf("%s, Witness template could not output overflow", __PRETTY_FUNCTION__));
+        }
+        if (!hasRemainder)
+            return alert(strprintf("%s, Witness template needed remainder to output overflow", __PRETTY_FUNCTION__));
+
+        // Move overflow to remainder
+        remainderAmount += overflowAmount;
+        overflowDone = true;
+    }
+
+    // Create the witness output
+    coinbaseTx.vout.resize(1);
     if (bSegSigIsEnabled)
     {
         coinbaseTx.vout[0].SetType(CTxOutType::PoW2WitnessOutput);
@@ -264,30 +272,58 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, std::sh
         coinbaseTx.vout[0].SetType(CTxOutType::ScriptLegacyOutput);
         coinbaseTx.vout[0].output.scriptPubKey = GetScriptForDestination(witnessDestination);
     }
-    coinbaseTx.vout[0].nValue = selectedWitnessOutput.nValue + compoundWitnessBlockSubsidy;
+    coinbaseTx.vout[0].nValue = selectedWitnessOutput.nValue + compoundAmount;
 
-    if (noncompoundWitnessBlockSubsidy > 0)
-    {
-        if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
+    for (const CWitnessRewardDestination& dest: rewardTemplate.destinations) {
+        // Calculate amount for this dest. Important: exact same calculation method here as in the above accumulation
+        CAmount amount = dest.amount + dest.percent * flexibleTotal;
+        if (dest.takesRemainder && !remainderDone) {
+            amount += remainderAmount;
+            remainderDone = true;
+        }
+        if (dest.takesCompoundOverflow && !overflowDone) {
+            amount += overflowAmount;
+            overflowDone = true;
+        }
+
+        // Don't create output for 0 amounts (for example a compound_overflow where there is no overflow)
+        if (amount == 0)
+            continue;
+
+        switch (dest.type) {
+        case CWitnessRewardDestination::DestType::Account:
         {
-            coinbaseTx.vout[1].SetType(CTxOutType::StandardKeyHashOutput);
-            CPubKey addressPubKey;
-            if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
+            CTxOut txOut;
+            txOut.nValue = amount;
+            if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
             {
-                std::string strErrorMessage = strprintf("CreateWitnessSubsidyOutputs, failed to get reserved key with which to sign as witness: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
-                CAlert::Notify(strErrorMessage, true, true);
-                LogPrintf("%s", strErrorMessage.c_str());
-                return false;
+                txOut.SetType(CTxOutType::StandardKeyHashOutput);
+                CPubKey addressPubKey;
+                if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
+                    return alert(strprintf("%s, failed to get reserved key with which to sign as witness: chain-tip-height[%d]", __PRETTY_FUNCTION__, chainActive.Tip()? chainActive.Tip()->nHeight : 0));
+                txOut.output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
             }
-            coinbaseTx.vout[1].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+            else
+            {
+                txOut.SetType(CTxOutType::ScriptLegacyOutput);
+                txOut.output.scriptPubKey = coinbaseReservedKey->reserveScript;
+            }
+            coinbaseTx.vout.push_back(txOut);
+            break;
         }
-        else
-        {
-            coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
-            coinbaseTx.vout[1].output.scriptPubKey = coinbaseReservedKey->reserveScript;
+        case CWitnessRewardDestination::DestType::Address:
+            coinbaseTx.vout.push_back(CTxOut(amount, GetScriptForDestination(dest.address.Get())));
+            break;
+        default: // DestType::Compound is handled in witness output
+            break;
         }
-        coinbaseTx.vout[1].nValue = noncompoundWitnessBlockSubsidy;
     }
+
+    if (remainderAmount > 0 && !remainderDone)
+        return alert(strprintf("%s, Witness template could not output remainder", __PRETTY_FUNCTION__));
+
+    if (overflowAmount > 0 && !overflowDone)
+        return alert(strprintf("%s, Witness template could not output remainder", __PRETTY_FUNCTION__));
 
     return true;
 }
@@ -330,8 +366,23 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
         }
     }
 
+    CWitnessRewardTemplate rewardTemplate;
+    if (selectedWitnessAccount->hasRewardTemplate()) {
+        LOCK(pactiveWallet->cs_wallet);
+        rewardTemplate = selectedWitnessAccount->getRewardTemplate();
+    }
+    else { // Create default template
+
+        // Take compounding setting
+        rewardTemplate.destinations.push_back(
+            CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), selectedWitnessAccount->getCompounding(), 0.0, false, false));
+        // Any remaing (and compound overflow) goes to witness account non-compounding (or reward script if set)
+        rewardTemplate.destinations.push_back(
+            CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+    }
+
     // Output for subsidy and refresh witness address.
-    if (!CreateWitnessSubsidyOutputs(coinbaseTx, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, selectedWitnessAccount->getCompounding(), bSegSigIsEnabled, nSelectedWitnessBlockHeight))
+    if (!CreateWitnessSubsidyOutputs(coinbaseTx, rewardTemplate, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, bSegSigIsEnabled, nSelectedWitnessBlockHeight))
     {
         // Error message already handled inside function
         return std::pair(false, coinbaseTx);
