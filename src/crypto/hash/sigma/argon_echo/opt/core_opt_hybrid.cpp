@@ -24,6 +24,18 @@
 #define initialize                 initialize_hybrid
 #define fill_memory_blocks fill_memory_blocks_hybrid
 #define argon2_echo_ctx       argon2_echo_ctx_hybrid
+#define init_block_value     init_block_value_hybrid
+#define copy_block                 copy_block_hybrid
+#define xor_block                   xor_block_hybrid
+#define finalize                     finalize_hybrid
+#define fill_first_blocks   fill_first_blocks_hybrid
+#define initial_hash             initial_hash_hybrid
+#define fill_segment_ref         fill_segment_hybrid
+#define fill_segment_thr     fill_segment_thr_hybrid
+#define index_alpha               index_alpha_hybrid
+
+
+
 #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                         \
 {                                                                                      \
     echo256_opt_hashState ctx_echo;                                                    \
@@ -45,7 +57,7 @@
  * @param with_xor Whether to XOR into the new block (1) or just overwrite (0)
  * @pre all block pointers must be valid
  */
-static void fill_block_ref(const argon2_echo_block *prev_block, const argon2_echo_block *ref_block, argon2_echo_block *next_block, int with_xor)
+static void fill_block_hybrid(const argon2_echo_block *prev_block, const argon2_echo_block *ref_block, argon2_echo_block *next_block, int with_xor)
 {
     argon2_echo_block blockR, block_tmp;
     unsigned i;
@@ -89,14 +101,14 @@ static void fill_block_ref(const argon2_echo_block *prev_block, const argon2_ech
     xor_block(next_block, &blockR);
 }
 
-static void next_addresses_ref(argon2_echo_block *address_block, argon2_echo_block *input_block, const argon2_echo_block *zero_block)
+static void next_addresses_hybrid(argon2_echo_block *address_block, argon2_echo_block *input_block, const argon2_echo_block *zero_block)
 {
     input_block->v[6]++;
-    fill_block_ref(zero_block, input_block, address_block, 0);
-    fill_block_ref(zero_block, address_block, address_block, 0);
+    fill_block_hybrid(zero_block, input_block, address_block, 0);
+    fill_block_hybrid(zero_block, address_block, address_block, 0);
 }
 
-void fill_segment_ref(const argon2_echo_instance_t *instance, argon2_echo_position_t position)
+void fill_segment_hybrid(const argon2_echo_instance_t *instance, argon2_echo_position_t position)
 {
     argon2_echo_block *ref_block = NULL, *curr_block = NULL;
     argon2_echo_block address_block, input_block, zero_block;
@@ -137,7 +149,7 @@ void fill_segment_ref(const argon2_echo_instance_t *instance, argon2_echo_positi
         /* Don't forget to generate the first block of addresses: */
         if (data_independent_addressing)
         {
-            next_addresses_ref(&address_block, &input_block, &zero_block);
+            next_addresses_hybrid(&address_block, &input_block, &zero_block);
         }
     }
 
@@ -169,7 +181,7 @@ void fill_segment_ref(const argon2_echo_instance_t *instance, argon2_echo_positi
         {
             if (i % ARGON2_ADDRESSES_IN_BLOCK == 0)
             {
-                next_addresses_ref(&address_block, &input_block, &zero_block);
+                next_addresses_hybrid(&address_block, &input_block, &zero_block);
             }
             pseudo_rand = address_block.v[i % ARGON2_ADDRESSES_IN_BLOCK];
         }
@@ -199,11 +211,11 @@ void fill_segment_ref(const argon2_echo_instance_t *instance, argon2_echo_positi
 
         if(0 == position.pass)
         {
-            fill_block_ref(instance->memory + prev_offset, ref_block, curr_block, 0);
+            fill_block_hybrid(instance->memory + prev_offset, ref_block, curr_block, 0);
         }
         else
         {
-            fill_block_ref(instance->memory + prev_offset, ref_block, curr_block, 1);
+            fill_block_hybrid(instance->memory + prev_offset, ref_block, curr_block, 1);
         }
     }
 }
