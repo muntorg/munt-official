@@ -462,12 +462,12 @@ int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash);
 #define SELECT_OPTIMISED_ECHO(CPU, IDX) \
 {\
     uint64_t nStart = GetTimeMicros();\
-    echo256_opt_##CPU##_Init(&ctx_shavite);\
+    echo256_opt_##CPU##_Init(&ctx_echo);\
     for (int i=0;i<100;++i)\
     {\
-        echo256_opt_##CPU##_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());\
+        echo256_opt_##CPU##_Update(&ctx_echo, (uint8_t*)&data[0], data.size());\
     }\
-    echo256_opt_##CPU##_Final(&ctx_shavite, (uint8_t*)&outHash[0]);\
+    echo256_opt_##CPU##_Final(&ctx_echo, (uint8_t*)&outHash[0]);\
     uint64_t nTime = GetTimeMicros() - nStart;\
     if (nTime < nBestTimeEcho)\
     {\
@@ -727,6 +727,8 @@ void selectOptimisedImplementations()
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
     shavite3_256_opt_hashState ctx_shavite;
+    echo256_opt_hashState ctx_echo;
+
     uint64_t nBestTimeShavite = std::numeric_limits<uint64_t>::max();
     uint64_t nBestTimeEcho = std::numeric_limits<uint64_t>::max();
     uint64_t nBestTimeArgon = std::numeric_limits<uint64_t>::max();
