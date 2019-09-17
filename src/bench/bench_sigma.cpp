@@ -15,6 +15,10 @@
 #include <crypto/hash/echo256/echo256_opt.h>
 #include <crypto/hash/sigma/argon_echo/argon_echo.h>
 
+#include <cryptopp/config.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/modes.h>
+
 // SIGMA paramaters (centrally set by network)
 uint64_t arenaCpuCostRounds = 8;
 uint64_t slowHashCpuCostRounds = 12;
@@ -116,7 +120,7 @@ std::vector echo256TestVectorOut = {
     "3d36df7adf6b181e5a6b3b10a09797917dbe2291b5548ec0652dde1e6f16a23c"
 };
 
-std::vector argonTestVectorOut = {   
+std::vector argonTestVectorOut = {
     "c71df45da212b4066959f6411b3abd52eea22f25720753fc",
     "3fe7f820f1f83699b882f59b7f977e84221afd31ad32953c",
     "e7ef1e8f80c8c2e60ae7a81ae4dbbfcf0f20ae05146b335c",
@@ -125,6 +129,17 @@ std::vector argonTestVectorOut = {
     "54098b89532a93f1f6055b05c5b561525c9d474bbc63fc0d",
     "94c1ff956631b7022b904118b0f25b5de2ad977e0bfa0a43",
     "33804bdf5e2bea6557e6a9a5cd100e8ad340ab212c88d8f8"
+};
+
+std::vector prngTestVectorOut = {
+    "ff2c21f49ae9aa37a80646d739caf085cd94b822db0676413c62b84f51bde9",
+    "0c61008393ca6ece11a192182a798cf49f3bafdfbe54c42ff3fa6fa86fc687",
+    "30542c1cd581a3ca5d5a4456bac5275663a522bc10f228089cb1a8c6ad6f84",
+    "28db8c95db562c79ef25fc9fb7cd640dfb4ae8afe1e5c3115f755d6337282d",
+    "51eba29e2a7b21596f5149476f396b58af3cfdcb0f7b2f855f964c0d548324",
+    "566af98eb1efe32fc8b07ec571e65f4e64f428c3b68708800133e4d8e920f5",
+    "80f0f7bbf45342427938b4bac8c44c81d1dab08b85c73556acc2c6cbc84217",
+    "a701a7d61279cbef20fa66c17ed67d7d6308a5035264de1ec64d066bcd6189"
 };
 
 
@@ -256,6 +271,44 @@ void testArgonReference(uint64_t& nTestFailCount)
             
         std::string outHashHex = HexStr((uint8_t*)(&context.outHash[0]), (uint8_t*)(&context.outHash[3])).c_str();
         std::string compare(argonTestVectorOut[i]);
+        if (outHashHex == compare)
+        {
+            LogPrintf("✔");
+        }
+        else
+        {
+            ++nTestFailCount;
+            LogPrintf("✘");
+            LogPrintf("%s\n", outHashHex);
+        }
+    }
+    LogPrintf("\n");
+}
+
+void testPRNG(uint64_t& nTestFailCount)
+{
+    CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
+    
+    
+    for (unsigned int i=0;i<hashTestVector.size();++i)
+    {
+        std::string data = hashTestVector[i];
+        if (data.length() < 32)
+        {
+            data = data + std::string(32-data.length(), 'a');
+        }
+        
+        prng.SetKey((const unsigned char*)&data[0], 32);
+        unsigned char ciphered[32];
+        prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&data[0], 32);
+        memcpy(&data[0], &ciphered[0], (size_t)32);
+        prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&data[0], 32);
+        memcpy(&data[0], &ciphered[0], (size_t)32);
+        prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&data[0], 32);
+        memcpy(&data[0], &ciphered[0], (size_t)32);
+                   
+        std::string outHashHex = HexStr(&ciphered[0], &ciphered[31]).c_str();
+        std::string compare(prngTestVectorOut[i]);
         if (outHashHex == compare)
         {
             LogPrintf("✔");
@@ -898,6 +951,9 @@ int main(int argc, char** argv)
         
         LogPrintf("Verify argon reference operation\n");
         testArgonReference(nTestFailCount);
+        
+        LogPrintf("Verify PRNG\n");
+        testPRNG(nTestFailCount);
         
         LogPrintf("Verify validation of valid headers\n");
         testValidateValidHeaders(nTestFailCount);
