@@ -2692,6 +2692,186 @@ static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
     return result;
 }
 
+static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
+{
+#ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+#else
+    LOCK(cs_main);
+#endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "setwitnessrewardtemplate \"witness_account\" [[\"destination1\" (,\"amount\") (,\"percentage%\") (,\"remainder\") (,\"compound_overflow\")], [\"destination2\" ...], ...]\n"
+            "\nSet the template to control where witness earnings are paid. Multiple destianations can be specified, compounding or not each receving a fixed\n"
+            "amount and/or a percentage of the witness amounts earned.\n"
+            "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"destinationX\"           (required) an address or one of the special keywords: \"account\" or \"compound\"\n"
+            "                                  where: \"compound\", compound into witness\n"
+            "                                         \"account\", to witness account, but not compounding (ie. spendable)\n"
+            "3. amount                     (string, optional) Fixed amount for this destination.\n"
+            "4. percentage                 (string, optional) Percentage of remaining non-fixed amount for this destination (postfixed with % symbol).\n"
+            "4. remainder                  (string, optional) The remainder marked destination receives amount reamining after dishing out fixed and percentage amounts.\n"
+            "5. compound_overflow          (string, optional) The compound_overflow marked destination receives any excess compound.\n"
+            "\nResult:\n"
+            "(string) The UUID of the account that has been modified.\n"
+            "\nRemarks:\n"
+            "If a reward template is set on the account it overrides the witness-compound setting (see \"setwitnesscompound\").\n"
+            "For each entry the destination has to be the first element. The order of the following elements is arbitrary. When multiple entries have remainder, compound or compound_overflow set "
+            "behaviour is undefined (only one can receive the remainder). When using percentages it is recommended to also use a remainder, instead of giving multiple "
+            "entries that total 100%. Because percentages are floating point specifying a total of 100% can lead to rounding errors and over specification.\n"
+            "If a reward script is set (see \"setwitnessrewardscript\") that is used as the \"account\" destination.\n"
+            "When resulting compound exceeds the allowed amount without a \"compound_overflow\" in the template, the overflow will go to the remainder (which cannot be on the \"compound\" destination in this case).\n"
+            "\nDistribution of rewards:\n"
+            "1. All fixed amounts are distributed (including compound)\n"
+            "2. Percentages of the remaining amount are dihsed out.\n"
+            "3. Any remaining amount goes to the remainder destination.\n"
+            "4. If the compound amount resulting from above calculation exceeds the maximum allowed the maximum will be compound and the excess amount will go to compound_overflow.\n"
+            "\nExamples:\n"
+            "Assuming there is 90 NLG witness reward to dive, then in the example below the fixed amount to divide is 40 (10 + 30), leaving 50 for percentage splits. Only 40% (20 NLG) is specified (5% + 5% + 30%), leaving 30 NLG as remainder.\n"
+            "So the distribution is: 2.5 NLG to TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF, 40 non-compounding to the witness account, 2.5 NLG to TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo (compound overflow = 0) and 45 is compounded into the witness.\n"
+            + HelpExampleCli("setwitnessrewardtemplate \"my witness account\" '[[\"TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF\", \"5%\"], [\"account\", \"10\", \"remainder\"],[\"TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo\", \"5%\", \"compound_overflow\"], [\"compound\", \"30\", \"30%\"]]'", "")
+            + HelpExampleRpc("setwitnessrewardtemplate \"my witness account\" '[[\"TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF\", \"5%\"], [\"account\", \"10\", \"remainder\"],[\"TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo\", \"5%\", \"compound_overflow\"], [\"compound\", \"30\", \"30%\"]]'", ""));
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+
+    if (!forAccount)
+        throw std::runtime_error("Invalid account name or UUID");
+
+    if (!forAccount->IsPoW2Witness())
+        throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
+
+    const std::vector<UniValue>& destinations = request.params[1].get_array().getValues();
+
+    CWitnessRewardTemplate rewardTemplate;
+
+    for (const UniValue& dst: destinations) {
+        const std::vector<UniValue>& dstArr = dst.get_array().getValues();
+        if (dstArr.size() < 2)
+            throw JSONRPCError(RPC_INVALID_PARAMS, "Need destination and at least one quantity specifier");
+
+        CWitnessRewardDestination rewardDestination;
+
+        std::string destSpec = dstArr[0].getValStr();
+        if (destSpec == "compound") {
+            rewardDestination.type = CWitnessRewardDestination::DestType::Compound;
+        }
+        else if (destSpec == "account") {
+            rewardDestination.type = CWitnessRewardDestination::DestType::Account;
+        }
+        else {
+            rewardDestination.type = CWitnessRewardDestination::DestType::Address;
+            rewardDestination.address = CGuldenAddress(destSpec);
+        }
+
+        for (auto it = ++dstArr.begin(); it != dstArr.end(); it++) {
+            std::string qtySpec = it->getValStr();
+            if (qtySpec == "remainder") {
+                rewardDestination.takesRemainder = true;
+            }
+            else if (qtySpec == "compound_overflow") {
+                rewardDestination.takesCompoundOverflow = true;
+            }
+            else if (qtySpec.size() > 0 && qtySpec[qtySpec.size() - 1] == '%') {
+                rewardDestination.percent = std::stod(qtySpec.substr(0, qtySpec.size() - 1)) / 100.0;
+            }
+            else {
+                rewardDestination.amount = AmountFromValue(*it);
+            }
+        }
+
+        rewardTemplate.destinations.push_back(rewardDestination);
+    }
+
+    rewardTemplate.validate();
+
+    CWalletDB walletdb(*pwallet->dbw);
+    forAccount->setRewardTemplate(rewardTemplate, &walletdb);
+
+    UniValue result(getUUIDAsString(forAccount->getUUID()));
+    return result;
+}
+
+static UniValue getwitnessrewardtemplate(const JSONRPCRequest& request)
+{
+#ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+#else
+    LOCK(cs_main);
+#endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "getwitnessrewardtemplate \"witness_account\" \n"
+            "\nGet the template how witness earnings will be paid..\n"
+            "\nSee \"setwitnessrewardtemplate\" for additional information.\n"
+            "1. \"witness_account\"    (required) The unique UUID or label for the account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getwitnessrewardtemplate \"my witness account\"", "")
+            + HelpExampleRpc("getwitnessrewardtemplate \"my witness account\"", ""));
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+
+    if (!forAccount)
+        throw std::runtime_error("Invalid account name or UUID");
+
+    if (!forAccount->IsPoW2Witness())
+        throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
+
+    UniValue result(UniValue::VOBJ);
+    if (!forAccount->hasRewardTemplate())
+    {
+        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), ""));
+    }
+    else
+    {
+        CWitnessRewardTemplate rewardTemplate = forAccount->getRewardTemplate();
+        UniValue templateArray(UniValue::VARR);
+        for (const CWitnessRewardDestination& dest: rewardTemplate.destinations) {
+            UniValue destArray(UniValue::VARR);
+            std::string destStr;
+
+            switch (dest.type) {
+            case CWitnessRewardDestination::DestType::Address:
+                destStr = dest.address.ToString();
+                break;
+            case CWitnessRewardDestination::DestType::Compound:
+                destStr = "compound";
+                break;
+            case CWitnessRewardDestination::DestType::Account:
+                destStr = "account";
+                break;
+            }
+            destArray.push_back(destStr);
+
+            if (dest.amount > 0)
+                destArray.push_back(ValueFromAmount(dest.amount));
+
+            if (dest.percent > 0.0)
+                destArray.push_back(strprintf("%.2f%%", 100.0 * dest.percent));
+
+            if (dest.takesRemainder)
+                destArray.push_back("remainder");
+
+            if (dest.takesCompoundOverflow)
+                destArray.push_back("compound_overflow");
+
+            templateArray.push_back(destArray);
+        }
+
+        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), templateArray));
+    }
+    return result;
+}
+
 static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -2895,6 +3075,8 @@ static const CRPCCommand commands[] =
     { "witness",                 "renewwitnessaccount",             &renewwitnessaccount,            true,    {"funding_account", "witness_account"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
+    { "witness",                 "setwitnessrewardtemplate",        &setwitnessrewardtemplate,       true,    {"witness_account", "reward_template"} },
+    { "witness",                 "getwitnessrewardtemplate",        &getwitnessrewardtemplate,       true,    {"witness_account" } },
     { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account", "witness_account", "amounts"} },
     { "witness",                 "enablewitnessing",                &enablewitnessing,               true,    {} },
     { "witness",                 "disablewitnessing",               &disablewitnessing,              true,    {} },
