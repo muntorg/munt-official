@@ -53,6 +53,49 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     uint256 hash = wtx.GetHash();
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
+    // New method to decompose witness generation tx
+    // The existing code below produces odd/unexpected results for some witness generation tx.
+    // Instead of fixing up the code below (which has more issues) simpler new code was introduced here to handle it.
+    if (wtx.IsPoW2WitnessCoinBase()) {
+        for( const auto& accountPair : wallet->mapAccounts )
+        {
+            CAccount* account = accountPair.second;
+            CAmount received = 0;
+            std::string outAddresses;
+            bool involvesWatchAddress = false;
+            for(const CTxOut& txout : wtx.tx->vout)
+            {
+                isminetype mine = IsMine(*account, txout);
+                if (mine) {
+                    received += txout.nValue;
+                    if (mine & ISMINE_WATCH_ONLY)
+                        involvesWatchAddress = true;
+                    if (IsPow2WitnessOutput(txout)) {
+                        // output is witness and ours => witness input is also ours, substract input value as we only want to show received rewards
+                        received -= nDebit;
+                    }
+                        CTxDestination address;
+                        if (ExtractDestination(txout, address))
+                        {
+                            if (!outAddresses.empty())
+                                outAddresses += " ";
+                            outAddresses += CGuldenAddress(address).ToString();
+                        }
+                }
+            }
+
+            if (received > 0) {
+                TransactionRecord sub(hash, nTime, TransactionRecord::GeneratedWitness, outAddresses, 0, received);
+                sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
+                sub.actionAccountParentUUID = sub.receiveAccountParentUUID = account->getParentUUID();
+                sub.idx = parts.size();
+                sub.involvesWatchAddress = involvesWatchAddress;
+                parts.append(sub);
+            }
+        }
+        return parts;
+    }
+
     //fixme: (PHASE4) - This isn't very efficient, we do the same calculations already when verifying the inputs; Ideally we should just cache this information as part of the wtx to avoid recalc.
     // Deal with special "complex" witness transaction types first.
     std::vector<CWitnessTxBundle> witnessBundles;
