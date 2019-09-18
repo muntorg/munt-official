@@ -176,10 +176,10 @@ void testShaviteOptimised(uint64_t& nTestFailCount)
         std::string data = hashTestVector[i];
         std::vector<unsigned char> outHash(32);
 
-        shavite3_256_opt_hashState ctx_echo;
-        selected_shavite3_256_opt_Init(&ctx_echo);
-        selected_shavite3_256_opt_Update(&ctx_echo, (uint8_t*)&data[0], data.size());
-        selected_shavite3_256_opt_Final(&ctx_echo, &outHash[0]);
+        shavite3_256_opt_hashState ctx_shavite;
+        selected_shavite3_256_opt_Init(&ctx_shavite);
+        selected_shavite3_256_opt_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());
+        selected_shavite3_256_opt_Final(&ctx_shavite, &outHash[0]);
         
         std::string outHashHex = HexStr(outHash.begin(), outHash.end()).c_str();
         std::string compare(shaviteTestVectorOut[i]);

@@ -37,10 +37,10 @@
 
 #define ECHO_HASH_256(DATA, DATABYTELEN, HASH)                                     \
 {                                                                                  \
-    echo256_opt_sse2_hashState ctx_echo;                                           \
-    echo256_opt_sse2_Init(&ctx_echo);                                              \
-    echo256_opt_sse2_Update(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN); \
-    echo256_opt_sse2_Final(&ctx_echo, HASH);                                       \
+    sph_echo256_context ctx_echo;                                                  \
+    sph_echo256_init(&ctx_echo);                                                   \
+    sph_echo256(&ctx_echo, (const unsigned char*)(DATA), DATABYTELEN);             \
+    sph_echo256_close(&ctx_echo, HASH);                                            \
 }
 
 static void sse2_fill_block(__m128i *state, const argon2_echo_block *ref_block, argon2_echo_block *next_block, int with_xor)
