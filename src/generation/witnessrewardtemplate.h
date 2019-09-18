@@ -59,7 +59,7 @@ public:
     double percentagesSum() const;
 
     //! Basic sanity checks on the template (like total % < 100 etc), throws if there are issues
-    void validate();
+    void validate(const CAmount witnessBlockSubsidy);
 };
 
 #endif

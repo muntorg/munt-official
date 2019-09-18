@@ -22,7 +22,7 @@ double CWitnessRewardTemplate::percentagesSum() const {
                            [](const double acc, const auto& it){ return acc + it.percent; });
 }
 
-void CWitnessRewardTemplate::validate()
+void CWitnessRewardTemplate::validate(const CAmount witnessBlockSubsidy)
 {
     int numRemainder = std::count_if(destinations.begin(), destinations.end(), [](const CWitnessRewardDestination& dest) { return dest.takesRemainder; });
     if (numRemainder > 1)
@@ -47,7 +47,6 @@ void CWitnessRewardTemplate::validate()
     if (totalPercent < 1.0 && numRemainder == 0)
         throw std::runtime_error("Remainder required in reward template");
 
-    // FIXME: get actual minimum reward here instead of "magic" number
-    if (fixedAmountsSum() > 20 * COIN)
-        throw std::runtime_error("Fixed payouts exceed minimum block reward in reward template");
+    if (fixedAmountsSum() > witnessBlockSubsidy)
+        throw std::runtime_error("Fixed payouts exceed block reward in reward template");
 }

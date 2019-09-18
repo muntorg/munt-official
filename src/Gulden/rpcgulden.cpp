@@ -2787,7 +2787,7 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
         rewardTemplate.destinations.push_back(rewardDestination);
     }
 
-    rewardTemplate.validate();
+    rewardTemplate.validate(GetBlockSubsidyWitness(chainActive.Height()));
 
     CWalletDB walletdb(*pwallet->dbw);
     forAccount->setRewardTemplate(rewardTemplate, &walletdb);
