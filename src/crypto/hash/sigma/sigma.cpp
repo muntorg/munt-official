@@ -20,8 +20,6 @@
 #include <crypto/hash/sigma/argon_echo/argon_echo.h>
 #include <crypto/hash/echo256/sphlib/sph_echo.h>
 
-#define ECHO_DP
-#define LENGTH 256
 #include <crypto/hash/echo256/echo256_opt.h>
 #include <crypto/hash/shavite3_256/shavite3_256_opt.h>
 #include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
@@ -395,7 +393,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
 
     if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
         assert(0);
-            
+
     //2. Set the initial state of the seed for the 'pseudo random' nonces.
     CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
     prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
@@ -440,7 +438,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
         headerData.nPreNonce = nPreNonce;
         headerData.nPostNonce = nPostNonce;
         sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &context.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], fastHashSizeBytes, outHash);
-        
+
         if (UintToArith256(outHash) <= hashTarget)
         {
             headerData.nNonce = nBlockHeight+nArenaMemoryIndex2;
