@@ -2579,7 +2579,7 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
             "\nSet the output key into which all non-compound witness earnings will be paid.\n"
             "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
             "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
-            "2. \"destination\"           (required) An address or hex encoded script or public key.\n"
+            "2. \"destination\"           (required) An address or hex encoded script or public key. Set empty string to reset the reward script.\n"
             "3. force_pubkey              (boolean, optional, default=false) Cause command to fail if an invalid pubkey is passed, without this the pubkey may be imported as a script.\n"
             "\nResult:\n"
             "[\n"
@@ -2610,7 +2610,8 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
     CGuldenAddress address(pubKeyOrScript);
     if (address.IsValid()) {
         scriptForNonCompoundPayments = GetScriptForDestination(address.Get());
-    } else {
+    }
+    else if (!pubKeyOrScript.empty()) {
         if (!IsHex(pubKeyOrScript))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Data is neither hex encoded nor a valid address");
 
