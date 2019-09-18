@@ -228,8 +228,7 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, const C
     });
 
     // Calculate overflow (adjusting compound)
-    // FIXME: get actual maximum compound here instead of "magic" number
-    const CAmount effectiveCompoundLimit  = bSegSigIsEnabled ? 40 * COIN : 0;
+    const CAmount effectiveCompoundLimit  = bSegSigIsEnabled ? gMaximumWitnessCompoundAmount * COIN : 0;
     bool overflowDone = false;
     CAmount overflowAmount = 0;
     if (compoundAmount > effectiveCompoundLimit) {
