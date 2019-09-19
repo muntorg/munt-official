@@ -360,11 +360,11 @@ void testPRNG(uint64_t& nTestFailCount)
 
 std::vector<std::pair<std::string, uint64_t> >
 validHeaderTestVectorIn = {
-    {"8dd1c77100000000907417953c11ce0cae088b6dea9a2361684c850000000000000000000000000000ea096eb74fc2cd1a0774b250d4eb9bd2975b000000000000000000e6e7665dffff3f1fb702eac2", 617327633},
-    {"2a625146000000008001f4d57bde264346390c9a7902a0a40ad22c0000000000000000000000000060057ee29a88958d11e092f13d34c23f68b2570000000000000000006ae8665dffff3f1f9d0021d2", 778626333},
-    {"c1cdd97100000000c0ecb306c68d62f969ee328074116f41352b4600000000000000000000000000d0c6076635d1e4c55f64aae885e818a1e61e0a00000000000000000078e8665dffff3f1f7d00c58d", 74198191},
-    {"c973b5650000000000c0fa4613ec715e69446d33f56cef0e0ab0010000000000000000000000000058805be9017e7c2ae31567bc5655bf0a02ac0200000000000000000085e8665dffff3f1f4500da80", 1264517732},
-    {"4e71594500000000a00d0dba5ec8d5e1ca23a067160d071f3ad21400000000000000000000000000b8e5e402245035902e101060a97098b5524e2400000000000000000090e8665dffff3f1f65007b1a", 253513492},
+    {"e346fe62000000004080b46f23c5d0cdb2b54bcf7018935a3717000000000000000000000000000000ce7cb9f3053879602b3e592db673d63aa678000000000000000000fb43835dffff3f1fdb004a9f", 1872090435},
+    {"9d54723a00000000c0ce73c1404f01e9467ae665575e98bfde100200000000000000000000000000b2cb01383f7bc2efae41af524342fd2726e0040000000000000000009445835dffff3f1fb300d58d", 735962043},
+    {"5c9192160000000090693022fe6c8793d7ff42620abc5baf0eee6900000000000000000000000000c0f73c897b9f1143ad51115e6b92a594d8d00d000000000000000000aa45835dffff3f1f6000cdf6", 106466628},
+    {"af5c892d00000000441c66cd50e0bff46791aef0cd45510cc3031f0000000000000000000000000000d1a45e9bf88e76249026fcbcbfd2bbcee302000000000000000000bc45835dffff3f1f680086b1", 991073506},
+    {"58359a2a00000000a01b5eceae5be377509bce63063042b9adb30000000000000000000000000000f0a714e69d3d9a00e787a025482f3ab4c7ce1f000000000000000000ce45835dffff3f1fee006814", 628156664},
 };
 void testValidateValidHeaders(uint64_t& nTestFailCount)
 {
@@ -379,12 +379,16 @@ void testValidateValidHeaders(uint64_t& nTestFailCount)
             LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
             exit(EXIT_FAILURE);
         }
-        if (!sigmaContext.verifyHeader(header, height))
+        if (sigmaContext.verifyHeader(header, height))
+        {
+            LogPrintf("✔");
+        }
+        else
         {
             LogPrintf("✘");
             ++nTestFailCount;
         }
-        LogPrintf("✔");
+        
     }
     LogPrintf("\n");
 }
@@ -402,12 +406,15 @@ void testValidateInvalidHeaders(uint64_t& nTestFailCount)
             LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
             exit(EXIT_FAILURE);
         }
-        if (sigmaContext.verifyHeader(header, height+1))
+        if (!sigmaContext.verifyHeader(header, height+1))
+        {
+            LogPrintf("✔");
+        }
+        else
         {
             LogPrintf("✘");
             ++nTestFailCount;
         }
-        LogPrintf("✔");
     }
     LogPrintf("\n");
 }

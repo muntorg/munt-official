@@ -210,8 +210,6 @@ void sigma_context::benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, 
     CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
     prng.SetKey((const unsigned char*)&hashData2[0], 32);
     unsigned char ciphered[32];
-    prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&hashData2[0], 32);
-    memcpy(&hashData2[0], &ciphered[0], (size_t)32);
 
     uint256 outHash;
     for (uint64_t i=0;i<numFastHashes;++i)
@@ -232,8 +230,6 @@ void sigma_context::benchmarkFastHashesRef(uint8_t* hashData1, uint8_t* hashData
     CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
     prng.SetKey((const unsigned char*)&hashData2[0], 32);
     unsigned char ciphered[32];
-    prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&hashData2[0], 32);
-    memcpy(&hashData2[0], &ciphered[0], (size_t)32);
 
     uint256 outHash;
     for (uint64_t i=0;i<numFastHashes;++i)
@@ -302,8 +298,6 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
             CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
             prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
             unsigned char ciphered[32];
-            prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
-            memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
                             
             //3. Iterate through all 'post' nonce combinations, calculating 2 hashes from the global memory.
             //The input of one is determined by the 'post' nonce, while the second is determined by the 'pseudo random' nonce, forcing random memory access.
@@ -399,8 +393,8 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
     prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
     unsigned char ciphered[32];
                             
-    //3. Advance PRNG to 'post' nonce (Mining calls PRNG once to prime - i.e. at index 0 we already call the PRNG twice - so add an extra call as well)
-    for (uint64_t i=0; i<nPostNonce+2; ++i)
+    //3. Advance PRNG to 'post' nonce 
+    for (uint64_t i=0; i<=nPostNonce; ++i)
     {               
         prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
         memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
