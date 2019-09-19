@@ -166,11 +166,16 @@ typedef int32x4_t __m128i;
 // individual components.  The use of this union should be hidden behind a macro
 // that is used throughout the codebase to access the members instead of always
 // declaring this type of variable.
+#if defined(__GNUC__) && !defined(__clang__)
+typedef int32_t sint32_t __attribute__((vector_size(16)));
+#endif
 typedef union ALIGN_STRUCT(16) SIMDVec {
-    float
-        m128_f32[4];  // as floats - do not to use this.  Added for convenience.
+    float m128_f32[4];     // as floats - do not to use this.  Added for convenience.
     int8_t m128_i8[16];    // as signed 8-bit integers.
     int16_t m128_i16[8];   // as signed 16-bit integers.
+    #if defined(__GNUC__) && !defined(__clang__)
+    sint32_t m128_s32;
+    #endif
     int32_t m128_i32[4];   // as signed 32-bit integers.
     int64_t m128_i64[2];   // as signed 64-bit integers.
     uint8_t m128_u8[16];   // as unsigned 8-bit integers.
@@ -941,91 +946,21 @@ FORCE_INLINE __m128 _mm_shuffle_ps_default(__m128 a,
         ret;                                               \
     })
 
-// Takes the upper 64 bits of a and places it in the low end of the result
-// Takes the lower 64 bits of a and places it into the high end of the result.
-FORCE_INLINE __m128i _mm_shuffle_epi_1032(__m128i a)
-{
-    int32x2_t a32 = vget_high_s32(vreinterpretq_s32_m128i(a));
-    int32x2_t a10 = vget_low_s32(vreinterpretq_s32_m128i(a));
-    return vreinterpretq_m128i_s32(vcombine_s32(a32, a10));
-}
-
-// takes the lower two 32-bit values from a and swaps them and places in low end
-// of result takes the higher two 32 bit values from a and swaps them and places
-// in high end of result.
-FORCE_INLINE __m128i _mm_shuffle_epi_2301(__m128i a)
-{
-    int32x2_t a01 = vrev64_s32(vget_low_s32(vreinterpretq_s32_m128i(a)));
-    int32x2_t a23 = vrev64_s32(vget_high_s32(vreinterpretq_s32_m128i(a)));
-    return vreinterpretq_m128i_s32(vcombine_s32(a01, a23));
-}
-
-// rotates the least significant 32 bits into the most signficant 32 bits, and
-// shifts the rest down
-FORCE_INLINE __m128i _mm_shuffle_epi_0321(__m128i a)
-{
-    return vreinterpretq_m128i_s32(
-        vextq_s32(vreinterpretq_s32_m128i(a), vreinterpretq_s32_m128i(a), 1));
-}
-
-// rotates the most significant 32 bits into the least signficant 32 bits, and
-// shifts the rest up
-FORCE_INLINE __m128i _mm_shuffle_epi_2103(__m128i a)
-{
-    return vreinterpretq_m128i_s32(
-        vextq_s32(vreinterpretq_s32_m128i(a), vreinterpretq_s32_m128i(a), 3));
-}
-
-// gets the lower 64 bits of a, and places it in the upper 64 bits
-// gets the lower 64 bits of a and places it in the lower 64 bits
-FORCE_INLINE __m128i _mm_shuffle_epi_1010(__m128i a)
-{
-    int32x2_t a10 = vget_low_s32(vreinterpretq_s32_m128i(a));
-    return vreinterpretq_m128i_s32(vcombine_s32(a10, a10));
-}
-
-// gets the lower 64 bits of a, swaps the 0 and 1 elements, and places it in the
-// lower 64 bits gets the lower 64 bits of a, and places it in the upper 64 bits
-FORCE_INLINE __m128i _mm_shuffle_epi_1001(__m128i a)
-{
-    int32x2_t a01 = vrev64_s32(vget_low_s32(vreinterpretq_s32_m128i(a)));
-    int32x2_t a10 = vget_low_s32(vreinterpretq_s32_m128i(a));
-    return vreinterpretq_m128i_s32(vcombine_s32(a01, a10));
-}
-
-// gets the lower 64 bits of a, swaps the 0 and 1 elements and places it in the
-// upper 64 bits gets the lower 64 bits of a, swaps the 0 and 1 elements, and
-// places it in the lower 64 bits
-FORCE_INLINE __m128i _mm_shuffle_epi_0101(__m128i a)
-{
-    int32x2_t a01 = vrev64_s32(vget_low_s32(vreinterpretq_s32_m128i(a)));
-    return vreinterpretq_m128i_s32(vcombine_s32(a01, a01));
-}
-
-FORCE_INLINE __m128i _mm_shuffle_epi_2211(__m128i a)
-{
-    int32x2_t a11 = vdup_lane_s32(vget_low_s32(vreinterpretq_s32_m128i(a)), 1);
-    int32x2_t a22 = vdup_lane_s32(vget_high_s32(vreinterpretq_s32_m128i(a)), 0);
-    return vreinterpretq_m128i_s32(vcombine_s32(a11, a22));
-}
-
-FORCE_INLINE __m128i _mm_shuffle_epi_0122(__m128i a)
-{
-    int32x2_t a22 = vdup_lane_s32(vget_high_s32(vreinterpretq_s32_m128i(a)), 0);
-    int32x2_t a01 = vrev64_s32(vget_low_s32(vreinterpretq_s32_m128i(a)));
-    return vreinterpretq_m128i_s32(vcombine_s32(a22, a01));
-}
-
-FORCE_INLINE __m128i _mm_shuffle_epi_3332(__m128i a)
-{
-    int32x2_t a32 = vget_high_s32(vreinterpretq_s32_m128i(a));
-    int32x2_t a33 = vdup_lane_s32(vget_high_s32(vreinterpretq_s32_m128i(a)), 1);
-    return vreinterpretq_m128i_s32(vcombine_s32(a32, a33));
-}
-
 // Shuffle packed 8-bit integers in a according to shuffle control mask in the
 // corresponding 8-bit element of b, and store the results in dst.
 // https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm_shuffle_epi8&expand=5146
+#if 1
+// Alternative implementation from SIMDe - appears to be faster but requires more investigation.
+inline __attribute__((__always_inline__)) __attribute__((__artificial__)) __m128i _mm_shuffle_epi8(__m128i a, __m128i b)
+{
+  __m128i r;
+  for (uint64_t i = 0 ; i < 16 ; i++)
+  {
+    ((SIMDVec*)&r)->m128_u8[i] = ((SIMDVec*)&a)->m128_u8[((SIMDVec*)&b)->m128_u8[i] & 15] * ((~(((SIMDVec*)&b)->m128_u8[i]) >> 7) & 1);
+  }
+  return r;
+}
+#else
 FORCE_INLINE __m128i _mm_shuffle_epi8(__m128i a, __m128i b)
 {
 #if __aarch64__
@@ -1066,109 +1001,168 @@ FORCE_INLINE __m128i _mm_shuffle_epi8(__m128i a, __m128i b)
     return vld1q_s32(r);
 #endif
 }
+#endif
 
 
-#if 0 /* C version */
-FORCE_INLINE __m128i _mm_shuffle_epi32_default(__m128i a,
-                                               __constrange(0, 255) int imm)
+#if defined(__GNUC__) && !defined(__clang__)
+// Alternative implementation from SIMDe - appears to be faster but requires more investigation.
+FORCE_INLINE __m128i _mm_shuffle_epi32(__m128i a, int imm)
 {
-    __m128i ret;
-    ret[0] = a[imm & 0x3];
-    ret[1] = a[(imm >> 2) & 0x3];
-    ret[2] = a[(imm >> 4) & 0x03];
-    ret[3] = a[(imm >> 6) & 0x03];
-    return ret;
+    const __m128i tmp_a_ = a;
+    __m128i r;
+    sint32_t args =  { ((imm)) & 3, ((imm) >> 2) & 3, ((imm) >> 4) & 3, ((imm) >> 6) & 3};
+    ((SIMDVec *)&r)->m128_s32 = __builtin_shuffle(
+                               ((SIMDVec *) &tmp_a_)->m128_s32,
+                               ((SIMDVec *) &tmp_a_)->m128_s32,
+                               args);
+       return r;
 }
-#endif
-#define _mm_shuffle_epi32_default(a, imm)                                   \
-    ({                                                                      \
-        int32x4_t ret;                                                      \
-        ret = vmovq_n_s32(                                                  \
-            vgetq_lane_s32(vreinterpretq_s32_m128i(a), (imm) &0x3));        \
-        ret = vsetq_lane_s32(                                               \
-            vgetq_lane_s32(vreinterpretq_s32_m128i(a), ((imm) >> 2) & 0x3), \
-            ret, 1);                                                        \
-        ret = vsetq_lane_s32(                                               \
-            vgetq_lane_s32(vreinterpretq_s32_m128i(a), ((imm) >> 4) & 0x3), \
-            ret, 2);                                                        \
-        ret = vsetq_lane_s32(                                               \
-            vgetq_lane_s32(vreinterpretq_s32_m128i(a), ((imm) >> 6) & 0x3), \
-            ret, 3);                                                        \
-        vreinterpretq_m128i_s32(ret);                                       \
-    })
-
-// FORCE_INLINE __m128i _mm_shuffle_epi32_splat(__m128i a, __constrange(0,255)
-// int imm)
-#if defined(__aarch64__)
-#define _mm_shuffle_epi32_splat(a, imm)                          \
-    ({                                                           \
-        vreinterpretq_m128i_s32(                                 \
-            vdupq_laneq_s32(vreinterpretq_s32_m128i(a), (imm))); \
-    })
 #else
-#define _mm_shuffle_epi32_splat(a, imm)                                      \
-    ({                                                                       \
-        vreinterpretq_m128i_s32(                                             \
-            vdupq_n_s32(vgetq_lane_s32(vreinterpretq_s32_m128i(a), (imm)))); \
-    })
+#if defined(ARCH_ARM64)
+    #define _mm_shuffle_epi32_splat(a, imm) vdupq_laneq_s32(a, (imm))
+#else
+    #define _mm_shuffle_epi32_splat(a, imm) vdupq_n_s32(vgetq_lane_s32(a, (imm)))
 #endif
-
-// Shuffles the 4 signed or unsigned 32-bit integers in a as specified by imm.
-// https://msdn.microsoft.com/en-us/library/56f67xbk%28v=vs.90%29.aspx
-// FORCE_INLINE __m128i _mm_shuffle_epi32(__m128i a, __constrange(0,255) int
-// imm)
-#define _mm_shuffle_epi32(a, imm)                        \
-    ({                                                   \
-        __m128i ret;                                     \
-        switch (imm) {                                   \
-        case _MM_SHUFFLE(1, 0, 3, 2):                    \
-            ret = _mm_shuffle_epi_1032((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(2, 3, 0, 1):                    \
-            ret = _mm_shuffle_epi_2301((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(0, 3, 2, 1):                    \
-            ret = _mm_shuffle_epi_0321((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(2, 1, 0, 3):                    \
-            ret = _mm_shuffle_epi_2103((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(1, 0, 1, 0):                    \
-            ret = _mm_shuffle_epi_1010((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(1, 0, 0, 1):                    \
-            ret = _mm_shuffle_epi_1001((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(0, 1, 0, 1):                    \
-            ret = _mm_shuffle_epi_0101((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(2, 2, 1, 1):                    \
-            ret = _mm_shuffle_epi_2211((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(0, 1, 2, 2):                    \
-            ret = _mm_shuffle_epi_0122((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(3, 3, 3, 2):                    \
-            ret = _mm_shuffle_epi_3332((a));             \
-            break;                                       \
-        case _MM_SHUFFLE(0, 0, 0, 0):                    \
-            ret = _mm_shuffle_epi32_splat((a), 0);       \
-            break;                                       \
-        case _MM_SHUFFLE(1, 1, 1, 1):                    \
-            ret = _mm_shuffle_epi32_splat((a), 1);       \
-            break;                                       \
-        case _MM_SHUFFLE(2, 2, 2, 2):                    \
-            ret = _mm_shuffle_epi32_splat((a), 2);       \
-            break;                                       \
-        case _MM_SHUFFLE(3, 3, 3, 3):                    \
-            ret = _mm_shuffle_epi32_splat((a), 3);       \
-            break;                                       \
-        default:                                         \
-            ret = _mm_shuffle_epi32_default((a), (imm)); \
-            break;                                       \
-        }                                                \
-        ret;                                             \
-    })
+template<typename A, size_t B> class IntrinsicShuffleEpi32Wrapper
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x4_t ret;
+        ret = vmovq_n_s32(vgetq_lane_s32(a, (B) & 0x3));
+        ret = vsetq_lane_s32(vgetq_lane_s32(a, ((B) >> 2) & 0x3), ret, 1);
+        ret = vsetq_lane_s32(vgetq_lane_s32(a, ((B) >> 4) & 0x3), ret, 2);
+        return vsetq_lane_s32(vgetq_lane_s32(a, ((B) >> 6) & 0x3), ret, 3);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 78>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x2_t a32 = vget_high_s32(a);
+        int32x2_t a10 = vget_low_s32(a);
+        return vcombine_s32(a32, a10);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 177>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x2_t a01 = vrev64_s32(vget_low_s32(a));
+        int32x2_t a23 = vrev64_s32(vget_high_s32(a));
+        return vcombine_s32(a01, a23);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 57>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        return vextq_s32(a, a, 1);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 147>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        return vextq_s32(a, a, 3);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 68>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x2_t a10 = vget_low_s32(a);
+        return vcombine_s32(a10, a10);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 65>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x2_t a01 = vrev64_s32(vget_low_s32(a));
+        int32x2_t a10 = vget_low_s32(a);
+        return vcombine_s32(a01, a10);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 17>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x2_t a01 = vrev64_s32(vget_low_s32(a));
+        return vcombine_s32(a01, a01);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 165>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x2_t a11 = vdup_lane_s32(vget_low_s32(a), 1);
+        int32x2_t a22 = vdup_lane_s32(vget_high_s32(a), 0);
+        return vcombine_s32(a11, a22);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 26>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x2_t a22 = vdup_lane_s32(vget_high_s32(a), 0);
+        int32x2_t a01 = vrev64_s32(vget_low_s32(a));
+        return vcombine_s32(a22, a01);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 254>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        int32x2_t a32 = vget_high_s32(a);
+    int32x2_t a33 = vdup_lane_s32(vget_high_s32(a), 1);
+    return vcombine_s32(a32, a33);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 0>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        return _mm_shuffle_epi32_splat((a),0);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 85>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        return _mm_shuffle_epi32_splat((a),1);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 170>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        return _mm_shuffle_epi32_splat((a),2);
+    }
+};
+template<typename A> class IntrinsicShuffleEpi32Wrapper<A, 255>
+{
+    public:
+    static __m128i perform_mm_shuffle_epi32(A a)
+    {
+        return _mm_shuffle_epi32_splat((a),3);
+    }
+};
+#define _mm_shuffle_epi32(A, B) IntrinsicShuffleEpi32Wrapper<decltype(A), B>::perform_mm_shuffle_epi32(A);
+#endif
 
 // Shuffles the upper 4 signed or unsigned 16 - bit integers in a as specified
 // by imm.  https://msdn.microsoft.com/en-us/library/13ywktbs(v=vs.100).aspx

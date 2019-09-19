@@ -9,6 +9,8 @@
 #ifndef COMPAT_SSE_H
 #define COMPAT_SSE_H
 
+#include <compat/arch.h>
+
 #if defined(ARCH_CPU_X86_FAMILY)
     #include <emmintrin.h>
     #include <immintrin.h>
@@ -45,7 +47,12 @@
     #ifdef USE_HARDWARE_AES
     #define __ARM_FEATURE_CRYPTO
     #endif
+    
     #include "sse2neon.h"
+    // We currently use the following sse2neon commands:
+    // _mm_mul_epu32 _mm_sub_epi64 _mm_add_epi64 _mm_srli_epi64 _mm_slli_epi64 _mm_unpacklo_epi64 _mm_unpackhi_epi64 _mm_aesenc_si128
+    // _mm_xor_si128 _mm_and_si128 _mm_add_epi32 _mm_loadu_si128 _mm_setzero_si128 _mm_storeu_si128 _mm_add_epi8 _mm_shuffle_epi8 _mm_set_epi32
+    // _mm_srli_epi16 _mm_srli_si128 _mm_slli_si128 _mm_shuffle_epi32 
     
     // AESENC
     #ifdef USE_HARDWARE_AES
