@@ -70,7 +70,7 @@ void finalize(const argon2_echo_context* context, argon2_echo_instance_t* instan
     if (context != NULL && instance != NULL)
     {
         /* Hash the entire memory to produce our final output hash */
-        ECHO_HASH_256(instance->memory, instance->memory_blocks * ARGON2_BLOCK_SIZE, (unsigned char*)context->outHash);
+        ECHO_HASH_256(instance->memory, instance->memory_blocks * ARGON2_BLOCK_SIZE, (unsigned char*)context->outHash.begin());
     }
 }
 

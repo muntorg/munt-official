@@ -366,20 +366,15 @@ validHeaderTestVectorIn = {
     {"af5c892d00000000441c66cd50e0bff46791aef0cd45510cc3031f0000000000000000000000000000d1a45e9bf88e76249026fcbcbfd2bbcee302000000000000000000bc45835dffff3f1f680086b1", 991073506},
     {"58359a2a00000000a01b5eceae5be377509bce63063042b9adb30000000000000000000000000000f0a714e69d3d9a00e787a025482f3ab4c7ce1f000000000000000000ce45835dffff3f1fee006814", 628156664},
 };
-void testValidateValidHeaders(uint64_t& nTestFailCount)
+void testValidateValidHeaders(sigma_settings settings, uint64_t& nTestFailCount)
 {
     CBlockHeader header;
     for (const auto& [hash, height] : validHeaderTestVectorIn)
     {
         std::vector<unsigned char> data = ParseHex(hash);
         memcpy(&header.nVersion, &data[0], 80);
-        sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
-        if (!sigmaContext.arenaIsValid())
-        {
-            LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
-            exit(EXIT_FAILURE);
-        }
-        if (sigmaContext.verifyHeader(header, height))
+        sigma_verify_context verify(settings, numUserVerifyThreads);
+        if (verify.verifyHeader(header, height))
         {
             LogPrintf("✔");
         }
@@ -393,20 +388,15 @@ void testValidateValidHeaders(uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
-void testValidateInvalidHeaders(uint64_t& nTestFailCount)
+void testValidateInvalidHeaders(sigma_settings settings, uint64_t& nTestFailCount)
 {
     CBlockHeader header;
     for (const auto& [hash, height] : validHeaderTestVectorIn)
     {
         std::vector<unsigned char> data = ParseHex(hash);
         memcpy(&header.nVersion, &data[0], 80);
-        sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, 1024*1024*std::min(memAllowGb, memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
-        if (!sigmaContext.arenaIsValid())
-        {
-            LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
-            exit(EXIT_FAILURE);
-        }
-        if (!sigmaContext.verifyHeader(header, height+1))
+        sigma_verify_context verify(settings, numUserVerifyThreads);
+        if (!verify.verifyHeader(header, height+1))
         {
             LogPrintf("✔");
         }
@@ -948,6 +938,8 @@ int main(int argc, char** argv)
         memAllowKb = 512*1024;
     }
     
+    sigma_settings sigmaSettings(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, maxHashesPre, maxHashesPost, numSigmaVerifyThreads, fastHashMemCostBytes);
+    
     // If we are using the default params then perform some tests to ensure everything runs the same across different machines
     if (defaultSigma)
     {
@@ -985,10 +977,10 @@ int main(int argc, char** argv)
         testPRNG(nTestFailCount);
         
         LogPrintf("Verify validation of valid headers\n");
-        testValidateValidHeaders(nTestFailCount);
+        testValidateValidHeaders(sigmaSettings, nTestFailCount);
         
         LogPrintf("Verify validation of invalid headers\n");
-        testValidateInvalidHeaders(nTestFailCount);
+        testValidateInvalidHeaders(sigmaSettings, nTestFailCount);
         
         if (nTestFailCount > 0)
         {
@@ -1044,7 +1036,7 @@ int main(int argc, char** argv)
         
         LogPrintf("SIGMA=============================================================\n\n");
         {
-            sigma_context sigmaContext(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, std::min(memAllowKb, 1024*1024*memCostGb), maxHashesPre, maxHashesPost, numThreads, numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes);
+            sigma_context sigmaContext(sigmaSettings, std::min(memAllowKb, 1024*1024*memCostGb), numThreads);
             if (!sigmaContext.arenaIsValid())
             {
                 LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
@@ -1064,8 +1056,8 @@ int main(int argc, char** argv)
                 {
                     hashData2[i] = rand();
                 }
-                std::vector<unsigned char> hashData3(sigmaContext.fastHashSizeBytes);
-                for (uint64_t i=0;i<sigmaContext.fastHashSizeBytes;++i)
+                std::vector<unsigned char> hashData3(sigmaSettings.fastHashSizeBytes);
+                for (uint64_t i=0;i<sigmaSettings.fastHashSizeBytes;++i)
                 {
                     hashData3[i] = rand();
                 }
@@ -1087,8 +1079,8 @@ int main(int argc, char** argv)
                 {
                     hashData2[i] = rand();
                 }
-                std::vector<unsigned char> hashData3(sigmaContext.fastHashSizeBytes);
-                for (uint64_t i=0;i<sigmaContext.fastHashSizeBytes;++i)
+                std::vector<unsigned char> hashData3(sigmaSettings.fastHashSizeBytes);
+                for (uint64_t i=0;i<sigmaSettings.fastHashSizeBytes;++i)
                 {
                     hashData3[i] = rand();
                 }
@@ -1121,9 +1113,11 @@ int main(int argc, char** argv)
                     sigmaContext.prepareArenas(header, rand());
                 }
                 LogPrintf("total [%.2f micros] per round: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numArenas);
-            }
-            
+            }  
+        }
+        {
             {
+                sigma_verify_context verify(sigmaSettings, numUserVerifyThreads);
                 LogPrintf("Bench verify [single thread]\n");
                 uint64_t nVerifyNumber=100;
                 uint64_t nCountValid=0;
@@ -1133,7 +1127,7 @@ int main(int argc, char** argv)
                     header.nNonce = rand();
                     nStart = GetTimeMicros();
                     // Count and log number of successes to avoid possibility of compiler optimising the call out.
-                    if (sigmaContext.verifyHeader(header, rand()))
+                    if (verify.verifyHeader(header, rand()))
                     {
                         ++nCountValid;
                     }
@@ -1166,7 +1160,7 @@ int main(int argc, char** argv)
         }
         for (auto instanceMemorySizeKb : sigmaMemorySizes)
         {
-            sigmaContexts.push_back(new sigma_context(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, instanceMemorySizeKb, maxHashesPre, maxHashesPost, numThreads/sigmaMemorySizes.size(), numSigmaVerifyThreads, numUserVerifyThreads, fastHashMemCostBytes));
+            sigmaContexts.push_back(new sigma_context(sigmaSettings, instanceMemorySizeKb, numThreads/sigmaMemorySizes.size()));
         }
         
         LogPrintf("Bench mining for low difficulty target\n");

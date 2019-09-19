@@ -26,12 +26,12 @@
 
 inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
 {
-    //fixme: (SIGMA) - We can obtain a slight speedup by removing this if statement and normalising to always using a pointer for everything
-    if (selected_echo256_opt_Init)
+    switch (nPseudoRandomAlg)
     {
-        switch (nPseudoRandomAlg)
+        case 0:
         {
-            case 0:
+            //fixme: (SIGMA) - We can obtain a slight speedup by removing this if statement and normalising to always using a pointer for everything
+            if (selected_echo256_opt_Init)
             {
                 echo256_opt_hashState ctx_echo;
                 selected_echo256_opt_Init(&ctx_echo);
@@ -39,27 +39,8 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
                 selected_echo256_opt_Update(&ctx_echo, data2, data2Size);
                 selected_echo256_opt_Update(&ctx_echo, data3, data3Size);
                 selected_echo256_opt_Final(&ctx_echo, outHash.begin());
-                break;
             }
-            case 1:
-            {        
-                shavite3_256_opt_hashState ctx_shavite;
-                selected_shavite3_256_opt_Init (&ctx_shavite);
-                selected_shavite3_256_opt_Update (&ctx_shavite, data1, data1Size);
-                selected_shavite3_256_opt_Update (&ctx_shavite, data2, data2Size);
-                selected_shavite3_256_opt_Update (&ctx_shavite, data3, data3Size);
-                selected_shavite3_256_opt_Final (&ctx_shavite, outHash.begin());
-                break;
-            }
-            default:
-                assert(0);
-        }
-    }
-    else
-    {
-        switch (nPseudoRandomAlg)
-        {
-            case 0:
+            else
             {
                 sph_echo256_context ctx_echo;
                 sph_echo256_init(&ctx_echo);
@@ -67,9 +48,22 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
                 sph_echo256(&ctx_echo, data2, data2Size);
                 sph_echo256(&ctx_echo, data3, data3Size);
                 sph_echo256_close(&ctx_echo, outHash.begin());
-                break;
             }
-            case 1:
+            break;
+        }
+        case 1:
+        {
+            //fixme: (SIGMA) - We can obtain a slight speedup by removing this if statement and normalising to always using a pointer for everything
+            if (selected_shavite3_256_opt_Init)
+            {   
+                shavite3_256_opt_hashState ctx_shavite;
+                selected_shavite3_256_opt_Init (&ctx_shavite);
+                selected_shavite3_256_opt_Update (&ctx_shavite, data1, data1Size);
+                selected_shavite3_256_opt_Update (&ctx_shavite, data2, data2Size);
+                selected_shavite3_256_opt_Update (&ctx_shavite, data3, data3Size);
+                selected_shavite3_256_opt_Final (&ctx_shavite, outHash.begin());
+            }
+            else
             {
                 shavite3_ref_hashState ctx_shavite;
                 shavite3_ref_Init(&ctx_shavite);
@@ -77,11 +71,11 @@ inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint6
                 shavite3_ref_Update(&ctx_shavite, data2, data2Size);
                 shavite3_ref_Update(&ctx_shavite, data3, data3Size);
                 shavite3_ref_Final(&ctx_shavite, (uint8_t*)outHash.begin());
-                break;
             }
-            default:
-                assert(0);
+            break;
         }
+        default:
+            assert(0);
     }
 }
 
@@ -116,31 +110,34 @@ inline void sigmaRandomFastHashRef(uint64_t nPseudoRandomAlg, uint8_t* data1, ui
     }
 }
 
-sigma_context::sigma_context(uint32_t argonArenaRoundCost_, uint32_t argonSlowHashRoundCost_, uint64_t argonMemoryCostKb_, uint64_t arena_size_kb, uint64_t allocateArenaSizeKb_, uint64_t numHashesPre_, uint64_t numHashesPost_, uint64_t numThreads_, uint64_t numVerifyThreads_, uint64_t numUserVerifyThreads_, uint64_t fastHashSizeBytes_)
-: numThreads(numThreads_)
-, numVerifyThreads(numVerifyThreads_)
-, numUserVerifyThreads(numUserVerifyThreads_)
+sigma_settings::sigma_settings(uint32_t argonArenaRoundCost_, uint32_t argonSlowHashRoundCost_, uint64_t argonMemoryCostKb_, uint64_t arena_size_kb, uint64_t numHashesPre_, uint64_t numHashesPost_, uint64_t numVerifyThreads_, uint64_t fastHashSizeBytes_)
+: numVerifyThreads(numVerifyThreads_)
 , arenaSizeKb(arena_size_kb)
-, allocatedArenaSizeKb(allocateArenaSizeKb_)
 , argonMemoryCostKb(argonMemoryCostKb_)
 , argonArenaRoundCost(argonArenaRoundCost_)
 , argonSlowHashRoundCost(argonSlowHashRoundCost_)
 , numHashesPre(numHashesPre_)
 , numHashesPost(numHashesPost_)
 , fastHashSizeBytes(fastHashSizeBytes_)
-{           
-    assert(allocatedArenaSizeKb <= arenaSizeKb);
-    assert(allocatedArenaSizeKb%argonMemoryCostKb==0);
+{
     assert(arenaSizeKb%argonMemoryCostKb==0);
     assert(numHashesPre <= std::numeric_limits<uint16_t>::max()+1);
     assert(numHashesPost <= std::numeric_limits<uint16_t>::max()+1);
-    assert(numUserVerifyThreads <= numVerifyThreads);
+    arenaChunkSizeBytes = (arenaSizeKb*1024)/numHashesPost;
+    assert(fastHashSizeBytes<=arenaChunkSizeBytes);
+}
+
+
+sigma_context::sigma_context(sigma_settings settings_, uint64_t allocateArenaSizeKb_, uint64_t numThreads_)
+: numThreads(numThreads_)
+, allocatedArenaSizeKb(allocateArenaSizeKb_)
+, settings(settings_)
+{           
+    assert(allocatedArenaSizeKb <= settings.arenaSizeKb);
+    assert(allocatedArenaSizeKb%settings.argonMemoryCostKb==0);
     
     arena = (uint8_t*)malloc(allocatedArenaSizeKb*1024);
-    
-    arenaChunkSizeBytes = (arenaSizeKb*1024)/numHashesPost;
-    numHashesPossibleWithAvailableMemory = (allocatedArenaSizeKb*1024)/arenaChunkSizeBytes;
-    assert(fastHashSizeBytes<=arenaChunkSizeBytes);
+    numHashesPossibleWithAvailableMemory = (allocatedArenaSizeKb*1024)/settings.arenaChunkSizeBytes;
 }
 
 bool sigma_context::arenaIsValid()
@@ -153,7 +150,7 @@ void sigma_context::prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeigh
     headerBlockHeight = nBlockHeight;
     workerThreads = new boost::asio::thread_pool(numThreads);
 
-    int numHashes = allocatedArenaSizeKb/argonMemoryCostKb;
+    int numHashes = allocatedArenaSizeKb/settings.argonMemoryCostKb;
     
     for (int i=0;i<numHashes;++i)
     {
@@ -161,13 +158,13 @@ void sigma_context::prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeigh
         {
             headerData.nNonce = headerBlockHeight+i;
             argon2_echo_context context;
-            context.t_cost = argonArenaRoundCost;
-            context.m_cost = argonMemoryCostKb;
-            context.allocated_memory = &arena[(argonMemoryCostKb*1024)*i];                
+            context.t_cost = settings.argonArenaRoundCost;
+            context.m_cost = settings.argonMemoryCostKb;
+            context.allocated_memory = &arena[(settings.argonMemoryCostKb*1024)*i];                
             context.pwd = (uint8_t*)&headerData.nVersion;
             context.pwdlen = 80;
             
-            context.lanes = numVerifyThreads;
+            context.lanes = settings.numVerifyThreads;
             context.threads = 1;
             
             if (selected_argon2_echo_hash(&context, false) != ARGON2_OK)
@@ -180,17 +177,17 @@ void sigma_context::prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeigh
 
 void sigma_context::benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashes)
 {
-    uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];
+    uint8_t* hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
     BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
 
     argon2_echo_context argonContext;
-    argonContext.t_cost = argonSlowHashRoundCost;
-    argonContext.m_cost = argonMemoryCostKb;
+    argonContext.t_cost = settings.argonSlowHashRoundCost;
+    argonContext.m_cost = settings.argonMemoryCostKb;
     argonContext.allocated_memory = hashMem;
     argonContext.pwd = (uint8_t*)&hashData[0];
     argonContext.pwdlen = 80;
     
-    argonContext.lanes = numVerifyThreads;
+    argonContext.lanes = settings.numVerifyThreads;
     argonContext.threads = 1;
 
     for (uint64_t i=0;i<numSlowHashes;++i)
@@ -221,7 +218,7 @@ void sigma_context::benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, 
         hashData1[rand()%80] = i;
         hashData2[rand()%32] = i;
         hashData2[rand()%32] = i;
-        sigmaRandomFastHash(i%2, (uint8_t*)&hashData1[0], 80, (uint8_t*)&hashData2, 32,  (uint8_t*)&hashData3[0], fastHashSizeBytes, outHash);
+        sigmaRandomFastHash(i%2, (uint8_t*)&hashData1[0], 80, (uint8_t*)&hashData2, 32,  (uint8_t*)&hashData3[0], settings.fastHashSizeBytes, outHash);
     }
 }
 
@@ -241,7 +238,7 @@ void sigma_context::benchmarkFastHashesRef(uint8_t* hashData1, uint8_t* hashData
         hashData1[rand()%80] = i;
         hashData2[rand()%32] = i;
         hashData2[rand()%32] = i;
-        sigmaRandomFastHashRef(i%2, (uint8_t*)&hashData1[0], 80, (uint8_t*)&hashData2, 32,  (uint8_t*)&hashData3[0], fastHashSizeBytes, outHash);
+        sigmaRandomFastHashRef(i%2, (uint8_t*)&hashData1[0], 80, (uint8_t*)&hashData2, 32,  (uint8_t*)&hashData3[0], settings.fastHashSizeBytes, outHash);
     }
 }
 
@@ -254,7 +251,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
     workerThreads = new boost::asio::thread_pool(numThreads);
     BOOST_SCOPE_EXIT(&workerThreads) { delete workerThreads; } BOOST_SCOPE_EXIT_END
     
-    for (uint64_t nIndex = 0; nIndex <= numHashesPre;++nIndex)
+    for (uint64_t nIndex = 0; nIndex <= settings.numHashesPre;++nIndex)
     {
         boost::asio::post(*workerThreads, [&,headerData]() mutable
         {
@@ -262,20 +259,20 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                 return;
 
             //1. Select pre nonce, reset post nonce to zero and perform argon hash of header.
-            uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];
+            uint8_t* hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
             BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
             headerData.nNonce = headerBlockHeight;
             headerData.nPreNonce = nPreNonce++;
             headerData.nPostNonce = 0;
             
             argon2_echo_context argonContext;
-            argonContext.t_cost = argonSlowHashRoundCost;
-            argonContext.m_cost = argonMemoryCostKb;
+            argonContext.t_cost = settings.argonSlowHashRoundCost;
+            argonContext.m_cost = settings.argonMemoryCostKb;
             argonContext.allocated_memory = hashMem;
             argonContext.pwd = (uint8_t*)&headerData.nVersion;
             argonContext.pwdlen = 80;
             
-            argonContext.lanes = numVerifyThreads;
+            argonContext.lanes = settings.numVerifyThreads;
             argonContext.threads = 1;
             
             ++slowHashCounter;
@@ -309,8 +306,8 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                 //3.1. For each iteration advance the state of the pseudo random nonce
                 prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
                 memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
-                uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % numHashesPost;
-                uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % numHashesPost;
+                uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
+                uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
                 
                 if (nPseudoRandomNonce1 >= numHashesPossibleWithAvailableMemory || nPseudoRandomNonce2 >= numHashesPossibleWithAvailableMemory)
                 {
@@ -321,19 +318,19 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                     uint64_t nPseudoRandomAlg1 = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
                     uint64_t nPseudoRandomAlg2 = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
                     
-                    uint64_t nFastHashOffset1 = (argonContext.outHash[0] ^ argonContext.outHash[2])%(arenaChunkSizeBytes-fastHashSizeBytes);
-                    uint64_t nFastHashOffset2 = (argonContext.outHash[1] ^ argonContext.outHash[3])%(arenaChunkSizeBytes-fastHashSizeBytes);
+                    uint64_t nFastHashOffset1 = (argonContext.outHash[0] ^ argonContext.outHash[2])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+                    uint64_t nFastHashOffset2 = (argonContext.outHash[1] ^ argonContext.outHash[3])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
 
                     //3.2 Calculate first hash
                     uint256 outHash;
-                    sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce1*arenaChunkSizeBytes)+nFastHashOffset1], fastHashSizeBytes, outHash);
+                    sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1], settings.fastHashSizeBytes, outHash);
                     ++halfHashCounter;
                     
                     //3.3 Evaluate first hash (short circuit evaluation)
                     if (UintToArith256(outHash) <= hashTarget)
                     {
                         //3.4 Calculate second hash
-                        sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce2*arenaChunkSizeBytes)+nFastHashOffset2], fastHashSizeBytes, outHash);
+                        sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2], settings.fastHashSizeBytes, outHash);
                         ++hashCounter;
 
                         //3.5 See if we have a valid block
@@ -353,7 +350,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                         
                     }
                 }
-                if (headerData.nPostNonce == numHashesPost-1)
+                if (headerData.nPostNonce == settings.numHashesPost-1)
                     break;
                 ++headerData.nPostNonce;
             }
@@ -362,11 +359,25 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
     workerThreads->join();
 }
 
-bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
+sigma_context::~sigma_context()
 {
-    uint8_t* hashMem = new uint8_t[argonMemoryCostKb*1024];
-    BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
+    free(arena);
+}
+
+
+sigma_verify_context::sigma_verify_context(sigma_settings settings_, uint64_t numUserVerifyThreads_)
+: settings(settings_)
+, numUserVerifyThreads(numUserVerifyThreads_)
+{           
+    assert(numUserVerifyThreads <= settings.numVerifyThreads);
+    hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
     
+    //fixme: (SIGMA) - Instead of argon allocating and destroying threads internally we should create threads once per verify context and keep them for the life of the context.
+    //This should provide speed benefits when verifying multiple headers in a row.
+}
+
+bool sigma_verify_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
+{    
     arith_uint256 hashTarget = arith_uint256().SetCompact(headerData.nBits);
     
     uint64_t nPostNonce = headerData.nPostNonce;
@@ -376,13 +387,13 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
     headerData.nPostNonce = 0;
     
     argon2_echo_context argonContext;
-    argonContext.t_cost = argonSlowHashRoundCost;
-    argonContext.m_cost = argonMemoryCostKb;
+    argonContext.t_cost = settings.argonSlowHashRoundCost;
+    argonContext.m_cost = settings.argonMemoryCostKb;
     argonContext.allocated_memory = hashMem;
     argonContext.pwd = (uint8_t*)&headerData.nVersion;
     argonContext.pwdlen = 80;
     
-    argonContext.lanes = numVerifyThreads;
+    argonContext.lanes = settings.numVerifyThreads;
     argonContext.threads = numUserVerifyThreads;
 
     if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
@@ -400,49 +411,42 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
         memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
     }
     
-    uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % numHashesPost;
-    uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % numHashesPost;
-    uint64_t nPseudoRandomAlg1 = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
-    uint64_t nPseudoRandomAlg2 = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
-    uint64_t nFastHashOffset1 = (argonContext.outHash[0] ^ argonContext.outHash[2])%(arenaChunkSizeBytes-fastHashSizeBytes);
-    uint64_t nFastHashOffset2 = (argonContext.outHash[1] ^ argonContext.outHash[3])%(arenaChunkSizeBytes-fastHashSizeBytes);
+    uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
+    uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
+    uint64_t nPseudoRandomAlg1   = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
+    uint64_t nPseudoRandomAlg2   = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
+    uint64_t nFastHashOffset1    = (argonContext.outHash[0] ^ argonContext.outHash[2]) % (settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+    uint64_t nFastHashOffset2    = (argonContext.outHash[1] ^ argonContext.outHash[3]) % (settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+    std::array<uint64_t, 4> slowHash = std::move(argonContext.outHash);
 
-    uint64_t nArenaMemoryIndex1 = (arenaChunkSizeBytes*nPseudoRandomNonce1) / (argonMemoryCostKb*1024);
-    uint64_t nArenaMemoryOffset1 = (arenaChunkSizeBytes*nPseudoRandomNonce1) % (argonMemoryCostKb*1024);
-    uint64_t nArenaMemoryIndex2 = (arenaChunkSizeBytes*nPseudoRandomNonce2) / (argonMemoryCostKb*1024);
-    uint64_t nArenaMemoryOffset2 = (arenaChunkSizeBytes*nPseudoRandomNonce2) % (argonMemoryCostKb*1024);
+    uint64_t nArenaMemoryIndex1  = (settings.arenaChunkSizeBytes*nPseudoRandomNonce1) / (settings.argonMemoryCostKb*1024);
+    uint64_t nArenaMemoryOffset1 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce1) % (settings.argonMemoryCostKb*1024);
+    uint64_t nArenaMemoryIndex2  = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) / (settings.argonMemoryCostKb*1024);
+    uint64_t nArenaMemoryOffset2 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) % (settings.argonMemoryCostKb*1024);
     
     // Generate the part of the arena we need
     {
         headerData.nNonce = nBlockHeight+nArenaMemoryIndex1;
-        argon2_echo_context context;
-        context.t_cost = argonArenaRoundCost;
-        context.m_cost = argonMemoryCostKb;
-        context.allocated_memory = hashMem;
-        context.pwd = (uint8_t*)&headerData.nVersion;
-        context.pwdlen = 80;
-               
-        context.lanes = numVerifyThreads;
-        context.threads = numUserVerifyThreads;            
+        argonContext.t_cost = settings.argonArenaRoundCost;    
         
-        if (selected_argon2_echo_hash(&context, false) != ARGON2_OK)
+        if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
             assert(0);
         
-        uint256 outHash;
+        uint256 fastHash;
         headerData.nPreNonce = nPreNonce;
         headerData.nPostNonce = nPostNonce;
-        sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &context.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], fastHashSizeBytes, outHash);
+        sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
 
-        if (UintToArith256(outHash) <= hashTarget)
+        if (UintToArith256(fastHash) <= hashTarget)
         {
             headerData.nNonce = nBlockHeight+nArenaMemoryIndex2;
-            if (selected_argon2_echo_hash(&context, false) != ARGON2_OK)
+            if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
                 assert(0);
             headerData.nPreNonce = nPreNonce;
             headerData.nPostNonce = nPostNonce;
-            sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &context.allocated_memory[nArenaMemoryOffset2+nFastHashOffset2], fastHashSizeBytes, outHash);
+            sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset2+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
             
-            if (UintToArith256(outHash) <= hashTarget)
+            if (UintToArith256(fastHash) <= hashTarget)
             {
                 return true;
             }
@@ -451,8 +455,7 @@ bool sigma_context::verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight)
     return false;
 }
 
-
-sigma_context::~sigma_context()
+sigma_verify_context::~sigma_verify_context()
 {
-    free(arena);
+    delete[] hashMem;
 }

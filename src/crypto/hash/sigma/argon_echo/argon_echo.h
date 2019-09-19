@@ -32,6 +32,7 @@
 #include <stddef.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <array>
 
 /*
  * Argon2 input parameter restrictions
@@ -105,7 +106,7 @@ struct argon2_echo_context
     uint8_t* pwd;    /* password array */
     uint32_t pwdlen; /* password length */
 
-    uint64_t outHash[4];
+    std::array<uint64_t, 4> outHash;
 
     uint32_t t_cost;  /* number of passes */
     uint32_t m_cost;  /* amount of memory requested (KB) */
