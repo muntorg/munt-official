@@ -6,6 +6,7 @@
 #include "sigma.h"
 
 #include <compat/arch.h>
+#include "util.h"
 
 #include <cryptopp/config.h>
 #include <cryptopp/aes.h>
@@ -300,7 +301,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
             //The input of one is determined by the 'post' nonce, while the second is determined by the 'pseudo random' nonce, forcing random memory access.
             while(true)
             {
-                if (hashCounter >= nRoundsTarget)
+                if (UNLIKELY(hashCounter >= nRoundsTarget))
                     break;
                 
                 //3.1. For each iteration advance the state of the pseudo random nonce
@@ -309,7 +310,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                 uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
                 uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
                 
-                if (nPseudoRandomNonce1 >= numHashesPossibleWithAvailableMemory || nPseudoRandomNonce2 >= numHashesPossibleWithAvailableMemory)
+                if (bool skip = nPseudoRandomNonce1 >= numHashesPossibleWithAvailableMemory || nPseudoRandomNonce2 >= numHashesPossibleWithAvailableMemory; UNLIKELY(skip))
                 {
                     ++skippedHashCounter;
                 }
@@ -322,19 +323,19 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                     uint64_t nFastHashOffset2 = (argonContext.outHash[1] ^ argonContext.outHash[3])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
 
                     //3.2 Calculate first hash
-                    uint256 outHash;
-                    sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1], settings.fastHashSizeBytes, outHash);
+                    uint256 fastHash;
+                    sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
                     ++halfHashCounter;
                     
                     //3.3 Evaluate first hash (short circuit evaluation)
-                    if (UintToArith256(outHash) <= hashTarget)
+                    if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
                     {
                         //3.4 Calculate second hash
-                        sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2], settings.fastHashSizeBytes, outHash);
+                        sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
                         ++hashCounter;
 
                         //3.5 See if we have a valid block
-                        if (UintToArith256(outHash) <= hashTarget)
+                        if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
                         {
                             //#define LOG_VALID_BLOCK
                             #ifdef LOG_VALID_BLOCK
@@ -345,12 +346,12 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                             #endif
                             ++blockCounter;
                         }
-                        if (hashCounter >= nRoundsTarget)
+                        if (UNLIKELY(hashCounter >= nRoundsTarget))
                             break;
                         
                     }
                 }
-                if (headerData.nPostNonce == settings.numHashesPost-1)
+                if (UNLIKELY(headerData.nPostNonce == settings.numHashesPost-1))
                     break;
                 ++headerData.nPostNonce;
             }
