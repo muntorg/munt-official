@@ -61,12 +61,11 @@ private:
 void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
 void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
 void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee);
-void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pAddress, std::string* pTxid);
+void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee);
+void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& amounts, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee);
 void rotatewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee);
 void rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet, std::string* pTxid, CAmount* pFee);
-
-/** Get tuple (locked amount, remaining locking duration, weight, immature witness) with details for witness extending */
-std::tuple<CAmount, int64_t, int64_t, bool> extendWitnessInfo(CWallet* pwallet, CAccount* witnessAccount);
+void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& redistributionAmounts, std::string* pTxid, CAmount* pFee);
 
 struct CGetWitnessInfo;
 
@@ -79,10 +78,33 @@ enum class WitnessStatus {
     Emptying
 };
 
-/** Get account (status, total weight, account weight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx)
+CGetWitnessInfo GetWitnessInfoWrapper();
+
+struct CWitnessAccountStatus
+{
+    CAccount* account;
+    WitnessStatus status;
+    uint64_t networkWeight;
+    uint64_t accountWeight;
+    bool hasScriptLegacyOutput;
+    bool hasUnconfirmedWittnessTx;
+    uint64_t nLockFromBlock;
+    uint64_t nLockUntilBlock;
+    uint64_t nLockPeriodInBlocks;
+    std::vector<uint64_t> parts; // individual weights of all parts
+};
+
+/** Get account witness status and accompanying details
  * hasScriptLegacyOutput iff any of the outputs is CTxOutType::ScriptLegacyOutput
  * hasUnconfirmedWittnessTx iff unconfirmed witness tx for the account (not actually checked for witness type, see implementation note)
 */
-std::tuple<WitnessStatus, uint64_t, uint64_t, bool, bool> AccountWitnessStatus(CWallet* pWallet, CAccount* account);
+CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
+
+bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
+std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet* pWallet, CAccount* account);
+std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t duration, uint64_t totalWeight);
+uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t duration, uint64_t totalWeight);
+double witnessFraction(const std::vector<CAmount>& amounts, const uint64_t duration, const uint64_t totalWeight);
+std::string witnessKeysLinkUrlForAccount(CWallet* pWallet, CAccount* account);
 
 #endif // WITNESS_OPERATIONS_H

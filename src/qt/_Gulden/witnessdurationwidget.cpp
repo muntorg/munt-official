@@ -11,6 +11,7 @@
 //#include "consensus/consensus.h"
 #include "consensus/validation.h"
 #include "Gulden/util.h"
+#include "wallet/witness_operations.h"
 //#include "coincontrol.h"
 #include <qt/_Gulden/forms/ui_witnessdurationwidget.h>
 
@@ -96,42 +97,10 @@ void WitnessDurationWidget::update()
     int nDays = newValue;
     int nEarnings = 0;
 
-    int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays * DailyBlocksTarget());
-
-    static int64_t nNetworkWeight = gStartingWitnessNetworkWeightEstimate;
-    if (chainActive.Tip())
-    {
-        static uint64_t lastUpdate = GetTimeMillis();
-        // Only check this once a minute, no need to be constantly updating.
-        if (GetTimeMillis() - lastUpdate > 60000)
-        {
-            LOCK(cs_main);
-
-            lastUpdate = GetTimeMillis();
-            if (IsPow2WitnessingActive(chainActive.TipPrev(), Params(), chainActive))
-            {
-                CGetWitnessInfo witnessInfo;
-                CBlock block;
-                if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
-                {
-                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
-                    LogPrintf(strErrorMessage.c_str());
-                    CAlert::Notify(strErrorMessage, true, true);
-                    return;
-                }
-                if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
-                {
-                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
-                    LogPrintf(strErrorMessage.c_str());
-                    CAlert::Notify(strErrorMessage, true, true);
-                    return;
-                }
-                nNetworkWeight = witnessInfo.nTotalWeightRaw;
-            }
-        }
-    }
-
-
+    uint64_t duration = nDays * DailyBlocksTarget();
+    uint64_t networkWeight = GetNetworkWeight();
+    const auto optimalAmounts = optimalWitnessDistribution(nAmount, duration, networkWeight);
+    int64_t nOurWeight = combinedWeight(optimalAmounts, duration, networkWeight);
 
     if (nOurWeight < nRequiredWeight)
     {
@@ -139,17 +108,8 @@ void WitnessDurationWidget::update()
         return;
     }
 
-    double fWeightPercent = nOurWeight/(double)nNetworkWeight;
-    if (fWeightPercent > 0.01)
-    {
-        if (!IsSegSigEnabled(chainActive.TipPrev()))
-            ui->pow2WeightExceedsMaxPercentWarning->setVisible(true);
-        fWeightPercent = 0.01;
-    }
-
-    double fBlocksPerDay = DailyBlocksTarget() * fWeightPercent;
-    if (fBlocksPerDay > 0.01 * DailyBlocksTarget())
-        fBlocksPerDay = 0.01 * DailyBlocksTarget();
+    double witnessProbability = witnessFraction(optimalAmounts, duration, networkWeight);
+    double fBlocksPerDay = DailyBlocksTarget() * witnessProbability;
 
     nEarnings = fBlocksPerDay * nDays * WITNESS_SUBSIDY;
 
@@ -166,4 +126,41 @@ void WitnessDurationWidget::update()
     );
 
     QWidget::update();
+}
+
+uint64_t WitnessDurationWidget::GetNetworkWeight()
+{
+    static int64_t nNetworkWeight = gStartingWitnessNetworkWeightEstimate;
+    if (chainActive.Tip())
+    {
+        static uint64_t lastUpdate = 0;
+        // Only check this once a minute, no need to be constantly updating.
+        if (GetTimeMillis() - lastUpdate > 60000)
+        {
+            LOCK(cs_main);
+
+            lastUpdate = GetTimeMillis();
+            if (IsPow2WitnessingActive(chainActive.TipPrev(), Params(), chainActive))
+            {
+                CGetWitnessInfo witnessInfo;
+                CBlock block;
+                if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
+                {
+                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
+                    LogPrintf(strErrorMessage.c_str());
+                    CAlert::Notify(strErrorMessage, true, true);
+                    return nNetworkWeight;
+                }
+                if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
+                {
+                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
+                    LogPrintf(strErrorMessage.c_str());
+                    CAlert::Notify(strErrorMessage, true, true);
+                    return nNetworkWeight;
+                }
+                nNetworkWeight = witnessInfo.nTotalWeightRaw;
+            }
+        }
+    }
+    return nNetworkWeight;
 }

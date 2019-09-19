@@ -37,6 +37,7 @@ private:
     int nDuration;
     int64_t nRequiredWeight;
     void setDuration(int newDuration);
+    uint64_t GetNetworkWeight();
 
 private Q_SLOTS:
     void durationValueChanged(int newValue);

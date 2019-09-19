@@ -17,6 +17,7 @@
 #include "walletmodel.h"
 #include "rotatewitnessdialog.h"
 #include <Gulden/util.h>
+#include "wallet/witness_operations.h"
 
 AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)
 : QStackedWidget(parent)
@@ -124,44 +125,16 @@ void AccountSettingsDialog::showSyncQr()
         }
         else if(activeAccount->IsPoW2Witness() && !activeAccount->IsFixedKeyPool())
         {
-            //fixme: (PHASE4) HIGH - seperate this and "getwitnessaccountkeys" (RPC) into a seperate helper function instead of duplicating code.
-            if (chainActive.Tip())
-            {
-                std::map<COutPoint, Coin> allWitnessCoins;
-                if (getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
-                {
-                    std::string witnessAccountKeys = "";
-                    for (const auto& [witnessOutPoint, witnessCoin] : allWitnessCoins)
-                    {
-                        (unused)witnessOutPoint;
-                        CTxOutPoW2Witness witnessDetails;
-                        GetPow2WitnessOutput(witnessCoin.out, witnessDetails);
-                        if (activeAccount->HaveKey(witnessDetails.witnessKeyID))
-                        {
-                            CKey witnessPrivKey;
-                            if (activeAccount->GetKey(witnessDetails.witnessKeyID, witnessPrivKey))
-                            {
-                                //fixme: (FUT) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
-                                witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", activeAccount->getEarliestPossibleCreationTime());
-                                witnessAccountKeys += ":";
-                            }
-                        }
-                    }
-                    if (!witnessAccountKeys.empty())
-                    {
-                        witnessAccountKeys.pop_back();
-                        witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
-                        qrString = QString::fromStdString(witnessAccountKeys);
-                    }
-                    else
-                    {
-                        ui->addressQRContents->setText(tr("Please fund the witness account first."));
-                        ui->addressQRContents->setVisible(true);
-                        ui->addressQRImage->setVisible(false);
-                        disconnect(this, SLOT(showSyncQr()));
-                        return;
-                    }
-                }
+            std::string linkUrl = witnessKeysLinkUrlForAccount(pactiveWallet, activeAccount);
+            if (!linkUrl.empty()) {
+                qrString = QString::fromStdString(linkUrl);
+            }
+            else {
+                ui->addressQRContents->setText(tr("Please fund the witness account first."));
+                ui->addressQRContents->setVisible(true);
+                ui->addressQRImage->setVisible(false);
+                disconnect(this, SLOT(showSyncQr()));
+                return;
             }
             ui->addressQRContents->setVisible(true);
         }

@@ -1123,6 +1123,25 @@ void CAccount::setNonCompoundRewardScript(const CScript& rewardScript, CWalletDB
     }
 }
 
+bool CAccount::hasRewardTemplate() const
+{
+    return !rewardTemplate.empty();
+}
+
+CWitnessRewardTemplate CAccount::getRewardTemplate() const
+{
+    return rewardTemplate;
+}
+
+void CAccount::setRewardTemplate(const CWitnessRewardTemplate& _rewardTemplate, CWalletDB* Db)
+{
+    rewardTemplate = _rewardTemplate;
+    if (Db)
+    {
+        Db->EraseAccountRewardTemplate(getUUIDAsString(getUUID()));
+        Db->WriteAccountRewardTemplate(getUUIDAsString(getUUID()), rewardTemplate);
+    }
+}
 
 boost::uuids::uuid CAccount::getUUID() const
 {

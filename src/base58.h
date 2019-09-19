@@ -145,6 +145,15 @@ public:
     bool IsScript() const;
 
     bool operator==(const CGuldenAddress& otherAddress) const { return CBase58Data::CompareTo((CBase58Data)otherAddress) == 0; }
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
+        READWRITECOMPACTSIZEVECTOR(vchVersion);
+        READWRITECOMPACTSIZEVECTOR(vchData);
+    }
 };
 
 /**

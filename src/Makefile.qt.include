@@ -66,6 +66,7 @@ qt/_Gulden/moc_witnessdialog.cpp \
 qt/_Gulden/moc_fundwitnessdialog.cpp \
 qt/_Gulden/moc_upgradewitnessdialog.cpp \
 qt/_Gulden/moc_rotatewitnessdialog.cpp \
+qt/_Gulden/moc_optimizewitnessdialog.cpp \
 qt/_Gulden/moc_exchangeratedialog.cpp \
 qt/_Gulden/moc_importprivkeydialog.cpp \
 qt/_Gulden/moc_importwitnessdialog.cpp \
@@ -86,6 +87,7 @@ qt/_Gulden/forms/witnessdialog.ui \
 qt/_Gulden/forms/fundwitnessdialog.ui \
 qt/_Gulden/forms/upgradewitnessdialog.ui \
 qt/_Gulden/forms/rotatewitnessdialog.ui \
+qt/_Gulden/forms/optimizewitnessdialog.ui \
 qt/_Gulden/forms/exchangeratedialog.ui \
 qt/_Gulden/forms/importprivkeydialog.ui \
 qt/_Gulden/forms/importwitnessdialog.ui
@@ -111,6 +113,7 @@ qt/_Gulden/witnessdialog.h \
 qt/_Gulden/fundwitnessdialog.h \
 qt/_Gulden/upgradewitnessdialog.h \
 qt/_Gulden/rotatewitnessdialog.h \
+qt/_Gulden/optimizewitnessdialog.h \
 qt/_Gulden/exchangeratedialog.h \
 qt/_Gulden/importprivkeydialog.h \
 qt/_Gulden/importwitnessdialog.h \
@@ -137,6 +140,7 @@ qt/_Gulden/witnessdialog.cpp \
 qt/_Gulden/fundwitnessdialog.cpp \
 qt/_Gulden/upgradewitnessdialog.cpp \
 qt/_Gulden/rotatewitnessdialog.cpp \
+qt/_Gulden/optimizewitnessdialog.cpp \
 qt/_Gulden/exchangeratedialog.cpp \
 qt/_Gulden/importprivkeydialog.cpp \
 qt/_Gulden/importwitnessdialog.cpp \

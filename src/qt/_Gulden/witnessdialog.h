@@ -9,11 +9,13 @@
 #include "guiutil.h"
 #include <transactionfilterproxy.h>
 
-
+#include <thread>
+#include <condition_variable>
 #include <QFrame>
 #include <QDateTime>
 #include <qwt_plot_picker.h>
 #include "optionsmodel.h"
+#include "wallet/witness_operations.h"
 
 
 class QMenu;
@@ -23,6 +25,7 @@ class ClientModel;
 class OptionsModel;
 class WalletModel;
 class CAccount;
+enum class WitnessStatus;
 
 namespace Ui {
     class WitnessDialog;
@@ -45,6 +48,8 @@ private:
 
 struct WitnessInfoForAccount
 {
+    CWitnessAccountStatus accountStatus;
+
     uint64_t nOurWeight = 0;
     uint64_t nTotalNetworkWeightTip = 0;
     uint64_t nWitnessLength = 0;
@@ -56,16 +61,14 @@ struct WitnessInfoForAccount
     uint64_t nOriginWeight = 0;
     uint64_t nOriginLength = 0;
     uint64_t nEarningsToDate = 0;
-    CAmount nTotal1 = 0;
-    CAmount nTotal2 = 0;
-    int nXForecast = 0;
     GraphScale scale = GraphScale::Blocks;
-    QPolygonF forecastedPoints;
-    QPolygonF generatedPoints;
-    QPolygonF generatedPointsForecast;
+    std::map<double, CAmount> pointMapForecast;
+    std::map<double, CAmount> pointMapGenerated;
     QDateTime originDate;
     QDateTime lastEarningsDate;
 };
+
+Q_DECLARE_METATYPE(WitnessInfoForAccount)
 
 class WitnessDialog : public QFrame
 {
@@ -78,8 +81,7 @@ public:
     void setClientModel(ClientModel *clientModel);
     void setModel(WalletModel *model);
 
-    void GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount);
-    void plotGraphForAccount(CAccount* account, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip);
+    WitnessInfoForAccount GetWitnessInfoForAccount(CAccount* forAccount, const CWitnessAccountStatus& accountStatus) const;
 
     void updateAccountIndicators();
 
@@ -100,18 +102,22 @@ public Q_SLOTS:
     void renewWitnessClicked();
     void upgradeWitnessClicked();
     void extendClicked();
+    void optimizeClicked();
+    void activeAccountChanged(CAccount* account);
 
 protected:
 
 private:
     void clearLabels();
-    void doUpdate(bool forceUpdate=false);
+    bool doUpdate(bool forceUpdate = false, WitnessStatus* pWitnessStatus = nullptr);
     Ui::WitnessDialog *ui;
     const QStyle *platformStyle;
     ClientModel *clientModel;
     WalletModel *model;
+    CAccount* prevActiveAccount = nullptr;
 
     int userWidgetIndex = -1;
+    int prevWitnessedTipHeight = 0;
 
     QwtPlotCurve* expectedEarningsCurve = nullptr;
     QwtPlotCurve* currentEarningsCurveShadow = nullptr;
@@ -122,6 +128,15 @@ private:
     QMenu* unitSelectionMenu;
 
     std::unique_ptr<TransactionFilterProxy> filter;
+
+    void updateStatisticsThreadLoop();
+    void requestStatisticsUpdate(const CWitnessAccountStatus& accountStatus);
+    std::thread statsUpdateThread;
+    std::mutex statsUpdateMutex;
+    std::condition_variable statsUpdateCondition;
+    bool statsUpdateShouldUpdate;
+    bool statsUpdateShouldStop;
+    CWitnessAccountStatus statsUpdateAccountStatus;
 
     /** Show dialog widget, hiding current.
      * Ownership of the dialog is transferred.
@@ -139,8 +154,7 @@ private Q_SLOTS:
      * All dialog widgets popped will be deletedLater!
     */
     void popDialog(QWidget* dialog);
-
-    void activeAccountChanged(CAccount* account);
+    void displayUpdatedStatistics(const WitnessInfoForAccount& infoForAccount);
 
 Q_SIGNALS:
     // Sent when a message should be reported to the user.

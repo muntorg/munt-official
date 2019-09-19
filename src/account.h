@@ -11,9 +11,9 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "validation/validationinterface.h"
+#include "generation/witnessrewardtemplate.h"
 #include "script/ismine.h"
 #include "wallet/crypter.h"
-#include "account.h"
 #include <validation/validation.h>
 
 #include <algorithm>
@@ -362,6 +362,11 @@ public:
     bool hasNonCompoundRewardScript() const;
     CScript getNonCompoundRewardScript() const;
 
+    //! Reward template controlling how witness rewards are are distributed. If set it takes precedence over the compounding amount above. See rpc setwitnessrewardtemplate help for more documentation.
+    bool hasRewardTemplate() const;
+    CWitnessRewardTemplate getRewardTemplate() const;
+    void setRewardTemplate(const CWitnessRewardTemplate& _rewardTemplate, CWalletDB* Db);
+
     AccountStatus GetWarningState() { return nWarningState; };
     void SetWarningState(AccountStatus nWarningState_) { nWarningState = nWarningState_; };
 
@@ -388,6 +393,7 @@ protected:
     std::string accountLabel;
     CAmount compoundEarnings = 0;
     CScript nonCompoundRewardScript;
+    CWitnessRewardTemplate rewardTemplate;
     uint64_t earliestPossibleCreationTime;
 
     bool m_readOnly = false;

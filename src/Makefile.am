@@ -181,6 +181,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   generation/miner.h \
   generation/witness.h \
   generation/generation.h \
+  generation/witnessrewardtemplate.h \
   net.h \
   net_processing.h \
   netaddress.h \
@@ -299,6 +300,7 @@ libgulden_node_a_SOURCES = \
   merkleblock.cpp \
   generation/miner.cpp \
   generation/witness.cpp \
+  generation/witnessrewardtemplate.cpp \
   net.cpp \
   net_processing.cpp \
   noui.cpp \

@@ -156,6 +156,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getwitnessinfo", 2, "mine_only" },
     { "fundwitnessaccount", 4, "force_multiple" },
     { "setwitnessrewardscript", 2, "force_pubkey" },
+    { "setwitnessrewardtemplate", 1, "reward_template" },
     { "sethashlimit", 0, "limit" },
     { "dumpdiffarray", 0, "height" },
     { "dumpblockgaps", 0, "start_height" },

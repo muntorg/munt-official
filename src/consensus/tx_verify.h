@@ -28,7 +28,7 @@ class CValidationState;
 * Spending coins (when the lock is expired only)
 * Reactivating (renewing) a witness that has been kicked out for non-participation
 * Increasing the lock amount/time on an existing account
-* Splitting or re-merging existing accounts where the weight exceeds the ideal
+* Rearrange existing accounts where the weight exceeds the ideal taking N inputs and M outputs sharing the same properties and equal total amount
 * Changing the witness key if it has been compromised
 * 
 * Depending on the type of operation that is being performed, different constraints apply - can only spend when lock expired but other actions allowed all the time etc.
@@ -48,8 +48,7 @@ struct CWitnessTxBundle
         SpendType,
         RenewType,
         IncreaseType,
-        SplitType,
-        MergeType,
+        RearrangeType,
         ChangeWitnessKeyType
     };
     CWitnessTxBundle(WitnessTxType bundleType_, std::pair<const CTxOut, CTxOutPoW2Witness> output)
@@ -59,11 +58,15 @@ struct CWitnessTxBundle
     }
     CWitnessTxBundle(WitnessTxType bundleType_) : bundleType(bundleType_) {}
 
-    inline bool IsValidSplitBundle();
-    inline bool IsValidMergeBundle();
+    inline bool IsValidRearrangeBundle();
     inline bool IsValidSpendBundle(uint64_t nHeight, const CTransaction& transaction);
+    inline bool IsValidChangeWitnessKeyBundle();
+    inline bool IsValidIncreaseBundle();
+
+    bool IsLockFromConsistent();
 
     WitnessTxType bundleType=CreationType;
+    uint64_t inputsActualLockFromBlock = 0;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> inputs;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> outputs;
 };

@@ -54,6 +54,7 @@ class CWallet;
 class CWalletTx;
 class uint160;
 class uint256;
+class CWitnessRewardTemplate;
 
 enum WalletLoadState
 {
@@ -208,6 +209,10 @@ public:
     //! Write the account compounding script settings; used only by witness accounts, controls where the account should pay any non-compounding earnings it has to pay out.
     bool WriteAccountNonCompoundWitnessEarningsScript(const std::string& strUUID, const CScript& earningsScript);
     bool EraseAccountNonCompoundWitnessEarningsScript(const std::string& strUUID);
+
+    //! Write the account witness reward template; used only by witness accounts when witnessing, controls where witness earnings go to.
+    bool WriteAccountRewardTemplate(const std::string& strUUID, const CWitnessRewardTemplate& rewardTemplate);
+    bool EraseAccountRewardTemplate(const std::string& strUUID);
 
     //! write the seed (mnemonic / account index counter)
     bool WriteHDSeed(const CHDSeed& seed);

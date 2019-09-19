@@ -43,6 +43,7 @@
 #include "GuldenGUI.h"
 #include "fundwitnessdialog.h"
 #include "upgradewitnessdialog.h"
+#include "optimizewitnessdialog.h"
 #include "accounttablemodel.h"
 #include "consensus/validation.h"
 
@@ -123,7 +124,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->emptyWitnessButton2->setCursor(Qt::PointingHandCursor);
     ui->withdrawEarningsButton->setCursor(Qt::PointingHandCursor);
     ui->withdrawEarningsButton2->setCursor(Qt::PointingHandCursor);
-    ui->fundWitnessButton->setCursor(Qt::PointingHandCursor);
     ui->compoundEarningsCheckBox->setCursor(Qt::PointingHandCursor);
 
     // Force qwt graph back to normal cursor instead of cross hair.
@@ -268,7 +268,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->emptyWitnessButton2->setVisible(false);
     ui->withdrawEarningsButton->setVisible(false);
     ui->withdrawEarningsButton2->setVisible(false);
-    ui->fundWitnessButton->setVisible(false);
     ui->renewWitnessButton->setVisible(false);
     ui->unitButton->setVisible(false);
     ui->viewWitnessGraphButton->setVisible(false);
@@ -281,15 +280,19 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(ui->emptyWitnessButton2, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
     connect(ui->withdrawEarningsButton, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
     connect(ui->withdrawEarningsButton2, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
-    connect(ui->fundWitnessButton, SIGNAL(clicked()), this, SLOT(fundWitnessClicked()));
     connect(ui->renewWitnessButton, SIGNAL(clicked()), this, SLOT(renewWitnessClicked()));
     connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
     connect(ui->upgradeButton, SIGNAL(clicked()), this, SLOT(upgradeWitnessClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
+    connect(ui->optimizeButton, SIGNAL(clicked()), this, SLOT(optimizeClicked()));
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
     connect(unitDaysAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Days); } );
     connect(unitWeeksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Weeks); } );
     connect(unitMonthsAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Months); } );
+
+    statsUpdateShouldUpdate = false;
+    statsUpdateShouldStop = false;
+    statsUpdateThread = std::thread(&WitnessDialog::updateStatisticsThreadLoop, this);
 }
 
 void WitnessDialog::clearLabels()
@@ -308,6 +311,14 @@ void WitnessDialog::clearLabels()
 WitnessDialog::~WitnessDialog()
 {
     LOG_QT_METHOD;
+
+    std::unique_lock lock(statsUpdateMutex);
+    {
+        std::lock_guard<std::mutex> lock(statsUpdateMutex);
+        statsUpdateShouldStop = true;
+    }
+    statsUpdateCondition.notify_all();
+    statsUpdateThread.join();
 
     delete ui;
 }
@@ -332,9 +343,6 @@ void WitnessDialog::fundWitnessClicked()
     LOG_QT_METHOD;
 
     pushDialog(new FundWitnessDialog(model, platformStyle, this));
-//    CAccount* funderAccount = ui->fundWitnessAccountTableView->selectedAccount();
-//    if (funderAccount)
-//        Q_EMIT requestFundWitness(funderAccount);
 }
 
 void WitnessDialog::renewWitnessClicked()
@@ -360,13 +368,27 @@ void WitnessDialog::extendClicked()
     try {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
         CAccount* witnessAccount = pactiveWallet->activeAccount;
-        auto [lockedAmount, durationRemaining, oldWeight, immature] = extendWitnessInfo(pactiveWallet, witnessAccount);
-        (unused)immature;
-        pushDialog(new FundWitnessDialog(lockedAmount, durationRemaining, oldWeight, model, platformStyle, this));
+
+        auto [amounts, duration, lockedAmount] = witnessDistribution(pactiveWallet, witnessAccount);
+        (unused)amounts;
+        (unused)duration;
+
+        const auto witnessInfo = GetWitnessInfoWrapper();
+        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, witnessAccount, witnessInfo);
+        uint64_t durationRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.nLockUntilBlock, chainActive.Tip()->nHeight);
+
+        pushDialog(new FundWitnessDialog(lockedAmount, durationRemaining, accountStatus.accountWeight + 1, model, platformStyle, this));
     } catch (std::runtime_error& e) {
         GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
     }
 
+}
+
+void WitnessDialog::optimizeClicked()
+{
+    LOG_QT_METHOD;
+
+    pushDialog(new OptimizeWitnessDialog(model, platformStyle, this));
 }
 
 void WitnessDialog::pushDialog(QWidget *dialog)
@@ -378,9 +400,14 @@ void WitnessDialog::pushDialog(QWidget *dialog)
 
 void WitnessDialog::clearDialogStack()
 {
-    QWidget* dialog = ui->stack->widget(1);
-    if (dialog != nullptr)
-        popDialog(dialog);
+    if (ui->stack->count() <= 1)
+        return;
+    ui->stack->setCurrentIndex(0);
+    for (int i = ui->stack->count() - 1; i > 0; i--) {
+        QWidget* widget = ui->stack->widget(i);
+        ui->stack->removeWidget(widget);
+        widget->deleteLater();
+    }
 }
 
 void WitnessDialog::popDialog(QWidget* dialog)
@@ -395,7 +422,6 @@ void WitnessDialog::popDialog(QWidget* dialog)
         widget->deleteLater();
     }
     if (ui->stack->count() <= 1) {
-        setModel(model);
         doUpdate(true);
     }
 }
@@ -475,16 +501,50 @@ static void AddPointToMapWithAdjustedTimePeriod(std::map<double, CAmount>& point
         pointMap[nXF] += nY;
 }
 
-void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount)
+WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, const CWitnessAccountStatus& accountStatus) const
 {
-    std::map<double, CAmount> pointMapForecast; pointMapForecast[0] = 0;
-    std::map<double, CAmount> pointMapGenerated;
+    LOG_QT_METHOD;
+
+    if(!filter || !model)
+        throw std::runtime_error("filter && model required");
+
+    WitnessInfoForAccount infoForAccount;
+
+    infoForAccount.accountStatus = accountStatus;
+
+    infoForAccount.nTotalNetworkWeightTip = accountStatus.networkWeight;
+    infoForAccount.nOurWeight = accountStatus.accountWeight;
+
+    // the lock period could have been different initially if it was extended, this is not accounted for
+    infoForAccount.nOriginLength = accountStatus.nLockPeriodInBlocks;
+
+    // if the witness was extended or rearranged the initial weight will have been different, this is not accounted for
+    infoForAccount.nOriginWeight = accountStatus.accountWeight;
+
+    LOCK(cs_main);
+    infoForAccount.nOriginBlock = accountStatus.nLockFromBlock;
+    CBlockIndex* originIndex = chainActive[infoForAccount.nOriginBlock];
+    infoForAccount.originDate = QDateTime::fromTime_t(originIndex->GetBlockTime());
+
+    // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
+    CBlockIndex* sampleWeightIndex = chainActive[infoForAccount.nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? infoForAccount.nOriginBlock : infoForAccount.nOriginBlock+100];
+    int64_t nUnused1;
+    if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, infoForAccount.nOriginNetworkWeight, chainActive))
+    {
+        std::string strErrorMessage = "Error in witness dialog, failed to get weight for account";
+        CAlert::Notify(strErrorMessage, true, true);
+        LogPrintf("%s", strErrorMessage.c_str());
+        throw std::runtime_error(strErrorMessage);
+    }
+
+    infoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
+
+    infoForAccount.pointMapForecast[0] = 0;
 
     CTxOutPoW2Witness witnessDetails;
 
-    //fixme: (PHASE4) Make this work for multiple 'origin' blocks.
-    // Iterate the transaction history and extract all 'origin' block details.
-    // Also extract details for every witness reward we have received.
+    // FIXME: (PHASE4) use only rewards of current witness parts, not of previous ones after a re-fund
+    // Extract details for every witness reward we have received.
     filter->setAccountFilter(forAccount);
     int rows = filter->rowCount();
     for (int row = 0; row < rows; ++row)
@@ -495,53 +555,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
         if ( nDepth > 0 )
         {
             int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
-            if ( (nType >= TransactionRecord::WitnessFundRecv) )
-            {
-                //fixme (PHASE4) - (multiple witnesses in single account etc.)
-                if (infoForAccount.nOriginBlock == 0)
-                {
-                    infoForAccount.originDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
-                    infoForAccount.nOriginBlock = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
-
-                    // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
-                    CBlockIndex* sampleWeightIndex = chainActive[infoForAccount.nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? infoForAccount.nOriginBlock : infoForAccount.nOriginBlock+100];
-                    int64_t nUnused1;
-                    if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, infoForAccount.nOriginNetworkWeight, chainActive))
-                    {
-                        std::string strErrorMessage = "Error in witness dialog, failed to get weight for account";
-                        CAlert::Notify(strErrorMessage, true, true);
-                        LogPrintf("%s", strErrorMessage.c_str());
-                        return;
-                    }
-                    pointMapGenerated[0] = 0;
-
-                    uint256 originHash;
-                    originHash.SetHex( filter->data(index, TransactionTableModel::TxHashRole).toString().toStdString());
-
-                    LOCK2(cs_main, pactiveWallet->cs_wallet);
-                    auto walletTxIter = pactiveWallet->mapWallet.find(originHash);
-                    if(walletTxIter == pactiveWallet->mapWallet.end())
-                    {
-                        return;
-                    }
-
-                    for (unsigned int i=0; i<walletTxIter->second.tx->vout.size(); ++i)
-                    {
-                        //fixme: (PHASE4) Handle multiple in one tx. Handle regular transactions that may have somehow been sent to the account.
-                        if (IsMine(*forAccount, walletTxIter->second.tx->vout[i]))
-                        {
-                            if (GetPow2WitnessOutput(walletTxIter->second.tx->vout[i], witnessDetails))
-                            {
-                                uint64_t nUnused1, nUnused2;
-                                infoForAccount.nOriginLength = GetPoW2LockLengthInBlocksFromOutput(walletTxIter->second.tx->vout[i], infoForAccount.nOriginBlock, nUnused1, nUnused2);
-                                infoForAccount.nOriginWeight = GetPoW2RawWeightForAmount(filter->data(index, TransactionTableModel::AmountRole).toLongLong(), infoForAccount.nOriginLength);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (nType == TransactionRecord::GeneratedWitness)
+            if (nType == TransactionRecord::GeneratedWitness)
             {
                 int nX = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
                 if (nX > 0)
@@ -550,7 +564,7 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
                     uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
                     infoForAccount.nEarningsToDate += nY;
                     uint64_t nDays = infoForAccount.originDate.daysTo(infoForAccount.lastEarningsDate);
-                    AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, true);
+                    AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, true);
                 }
             }
         }
@@ -558,13 +572,13 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
 
     QDateTime tipTime = QDateTime::fromTime_t(chainActive.Tip()->GetBlockTime());
     // One last datapoint for 'current' block.
-    if (!pointMapGenerated.empty())
+    if (!infoForAccount.pointMapGenerated.empty())
     {
-        uint64_t nY = pointMapGenerated.rbegin()->second;
+        uint64_t nY = infoForAccount.pointMapGenerated.rbegin()->second;
         uint64_t nX = chainActive.Tip()->nHeight;
         uint64_t nDays = infoForAccount.originDate.daysTo(tipTime);
-        pointMapGenerated.erase(--pointMapGenerated.end());
-        AddPointToMapWithAdjustedTimePeriod(pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, false);
+        infoForAccount.pointMapGenerated.erase(--infoForAccount.pointMapGenerated.end());
+        AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, false);
     }
 
     // Using the origin block details gathered from previous loop, generate the points for a 'forecast' of how much the account should earn over its entire existence.
@@ -572,170 +586,31 @@ void WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoFo
     if (infoForAccount.nOriginNetworkWeight == 0)
         infoForAccount.nOriginNetworkWeight = gStartingWitnessNetworkWeightEstimate;
     uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod(infoForAccount.nOriginWeight, infoForAccount.nOriginNetworkWeight);
-    pointMapForecast[0] = 0;
+    infoForAccount.pointMapForecast[0] = 0;
     for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < infoForAccount.nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
     {
         unsigned int nX = i;
         uint64_t nDays = infoForAccount.originDate.daysTo(tipTime.addSecs(i*Params().GetConsensus().nPowTargetSpacing));
-        AddPointToMapWithAdjustedTimePeriod(pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
+        AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
     }
 
-    // Populate the 'expected earnings' curve
-    for (const auto& pointIter : pointMapForecast)
-    {
-        infoForAccount.nTotal1 += pointIter.second;
-        infoForAccount.nXForecast = pointIter.first;
-        infoForAccount.forecastedPoints << QPointF(infoForAccount.nXForecast, infoForAccount.nTotal1);
+    const auto& parts = infoForAccount.accountStatus.parts;
+    if (!parts.empty()) {
+        uint64_t networkWeight = infoForAccount.nTotalNetworkWeightTip;
+        // Worst case all parts witness at latest oppertunity so part with maximum weight will be the first to be required to witness
+        infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(*std::max_element(parts.begin(), parts.end()), networkWeight);
+
+        // Combine estimated witness frequency f for part frequencies f1..fN: 1/f = 1/f1 + .. 1/fN
+        double fInv = std::accumulate(parts.begin(), parts.end(), 0.0, [=](const double acc, const uint64_t w){
+            uint64_t fn = estimatedWitnessBlockPeriod(w, networkWeight);
+            return acc + 1.0/fn;
+        });
+        infoForAccount.nEstimatedWitnessBlockPeriod = uint64_t(1.0/fInv);
     }
 
-    // Populate the 'actual earnings' curve.
-    int nXGenerated = 0;
-    for (const auto& pointIter : pointMapGenerated)
-    {
-        infoForAccount.nTotal2 += pointIter.second;
-        nXGenerated = pointIter.first;
-        infoForAccount.generatedPoints << QPointF(pointIter.first, infoForAccount.nTotal2);
-    }
-    if (infoForAccount.generatedPoints.size() > 1)
-    {
-        (infoForAccount.generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
-    }
-
-    //fixme: (PHASE4) This is a bit broken - use nOurWeight etc.
-    // Fill in the remaining time on the 'actual earnings' curve with a forecast.
-    int nXGeneratedForecast = 0;
-    if (infoForAccount.generatedPoints.size() > 0)
-    {
-        infoForAccount.generatedPointsForecast << infoForAccount.generatedPoints.back();
-        for (const auto& pointIter : pointMapForecast)
-        {
-            nXGeneratedForecast = pointIter.first;
-            if (nXGeneratedForecast > nXGenerated)
-            {
-                infoForAccount.nTotal2 += pointIter.second;
-                infoForAccount.generatedPointsForecast << QPointF(nXGeneratedForecast, infoForAccount.nTotal2);
-            }
-        }
-    }
-
-    infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(infoForAccount.nOurWeight, infoForAccount.nTotalNetworkWeightTip);
-    infoForAccount.nEstimatedWitnessBlockPeriod = estimatedWitnessBlockPeriod(infoForAccount.nOurWeight, infoForAccount.nTotalNetworkWeightTip);
     infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(witnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
 
-    return;
-}
-
-void WitnessDialog::plotGraphForAccount(CAccount* forAccount, uint64_t nOurWeight, uint64_t nTotalNetworkWeightTip)
-{
-    LOG_QT_METHOD;
-
-    DO_BENCHMARK("WIT: WitnessDialog::plotGraphForAccount", BCLog::BENCH|BCLog::WITNESS);
-
-    if(!filter || !model)
-        return;
-
-    // Calculate all the account info
-    WitnessInfoForAccount witnessInfoForAccount;
-    {
-        witnessInfoForAccount.nOurWeight = nOurWeight;
-        witnessInfoForAccount.nTotalNetworkWeightTip = nTotalNetworkWeightTip;
-        witnessInfoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
-        GetWitnessInfoForAccount(forAccount, witnessInfoForAccount);
-    }
-
-    // Populate graph with info
-    {
-        expectedEarningsCurve->setSamples( witnessInfoForAccount.forecastedPoints );
-        currentEarningsCurveShadow->setSamples( witnessInfoForAccount.generatedPoints );
-        currentEarningsCurve->setSamples( witnessInfoForAccount.generatedPoints );
-        currentEarningsCurveForecastShadow->setSamples( witnessInfoForAccount.generatedPointsForecast );
-        currentEarningsCurveForecast->setSamples( witnessInfoForAccount.generatedPointsForecast );
-        ui->witnessEarningsPlot->setAxisScale( QwtPlot::xBottom, 0, witnessInfoForAccount.nXForecast);
-        ui->witnessEarningsPlot->setAxisScale( QwtPlot::yLeft, 0, std::max(witnessInfoForAccount.nTotal1, witnessInfoForAccount.nTotal2));
-        ui->witnessEarningsPlot->replot();
-    }
-
-
-    // Populate stats table with info
-    {
-        QString lastEarningsDateLabel = tr("n/a");
-        QString earningsToDateLabel = lastEarningsDateLabel;
-        QString networkWeightLabel = lastEarningsDateLabel;
-        QString lockDurationLabel = lastEarningsDateLabel;
-        QString expectedEarningsDurationLabel = lastEarningsDateLabel;
-        QString estimatedEarningsDurationLabel = lastEarningsDateLabel;
-        QString lockTimeRemainingLabel = lastEarningsDateLabel;
-        QString labelWeightValue = lastEarningsDateLabel;
-        QString lockedUntilValue = lastEarningsDateLabel;
-        QString lockedFromValue = lastEarningsDateLabel;
-
-        if (witnessInfoForAccount.nOurWeight > 0)
-            labelWeightValue = QString::number(witnessInfoForAccount.nOurWeight);
-        if (!witnessInfoForAccount.originDate.isNull())
-            lockedFromValue = witnessInfoForAccount.originDate.toString("dd/MM/yy hh:mm");
-        if (chainActive.Tip())
-        {
-            QDateTime lockedUntilDate;
-            lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
-            lockedUntilDate = lockedUntilDate.addSecs(witnessInfoForAccount.nLockBlocksRemaining*150);
-            lockedUntilValue = lockedUntilDate.toString("dd/MM/yy hh:mm");
-        }
-
-        if (!witnessInfoForAccount.lastEarningsDate.isNull())
-            lastEarningsDateLabel = witnessInfoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm");
-        if (witnessInfoForAccount.generatedPoints.size() != 0)
-            earningsToDateLabel = QString::number(witnessInfoForAccount.nEarningsToDate);
-        if (witnessInfoForAccount.nTotalNetworkWeightTip > 0)
-            networkWeightLabel = QString::number(witnessInfoForAccount.nTotalNetworkWeightTip);
-
-        //fixme: (PHASE4) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
-        //Ideally this should be improved.
-        //Note if we do improve it we may want to keep the "dumb" behaviour for testnet.
-        {
-            QString formatStr;
-            double divideBy=1;
-            int roundTo = 2;
-            switch (witnessInfoForAccount.scale)
-            {
-                case GraphScale::Blocks:
-                    formatStr = tr("%1 blocks");
-                    divideBy = 1;
-                    roundTo = 0;
-                    break;
-                case GraphScale::Days:
-                    formatStr = tr("%1 days");
-                    divideBy = DailyBlocksTarget();
-                    break;
-                case GraphScale::Weeks:
-                    formatStr = tr("%1 weeks");
-                    divideBy = DailyBlocksTarget()*7;
-                    break;
-                case GraphScale::Months:
-                    formatStr = tr("%1 months");
-                    divideBy = DailyBlocksTarget()*30;
-                    break;
-            }
-            if (witnessInfoForAccount.nWitnessLength > 0)
-                lockDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nWitnessLength/divideBy, 'f', roundTo));
-            if (witnessInfoForAccount.nExpectedWitnessBlockPeriod > 0)
-                expectedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nExpectedWitnessBlockPeriod/divideBy, 'f', roundTo));
-            if (witnessInfoForAccount.nEstimatedWitnessBlockPeriod > 0)
-                estimatedEarningsDurationLabel = formatStr.arg(QString::number(witnessInfoForAccount.nEstimatedWitnessBlockPeriod/divideBy, 'f', roundTo));
-            if (witnessInfoForAccount.nLockBlocksRemaining > 0)
-                lockTimeRemainingLabel = formatStr.arg(QString::number(witnessInfoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
-        }
-
-        ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
-        ui->labelWitnessEarningsValue->setText(earningsToDateLabel);
-        ui->labelNetworkWeightValue->setText(networkWeightLabel);
-        ui->labelLockDurationValue->setText(lockDurationLabel);
-        ui->labelExpectedEarningsDurationValue->setText(expectedEarningsDurationLabel);
-        ui->labelEstimatedEarningsDurationValue->setText(estimatedEarningsDurationLabel);
-        ui->labelLockTimeRemainingValue->setText(lockTimeRemainingLabel);
-        ui->labelWeightValue->setText(labelWeightValue);
-        ui->labelLockedFromValue->setText(lockedFromValue);
-        ui->labelLockedUntilValue->setText(lockedUntilValue);
-    }
+    return infoForAccount;
 }
 
 void WitnessDialog::update()
@@ -745,12 +620,12 @@ void WitnessDialog::update()
 }
 
 
-void WitnessDialog::doUpdate(bool forceUpdate)
+bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
 {
     // rate limit this expensive UI update when chain tip is still far from known height
     int heightRemaining = clientModel->cachedProbableHeight - chainActive.Height();
     if (!forceUpdate && heightRemaining > 10 && heightRemaining % 100 != 0)
-        return;
+        return true;
 
     LOG_QT_METHOD;
 
@@ -765,10 +640,12 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     bool stateEmptyWitnessButton = false;
     bool stateWithdrawEarningsButton = false;
     bool stateWithdrawEarningsButton2 = false;
-    bool stateFundWitnessButton = false;
     bool stateRenewWitnessButton = false;
     bool stateUpgradeButton = false;
     bool stateExtendButton = false;
+    bool stateOptimizeButton = false;
+
+    bool succes = false;
 
     try {
         CAccount* forAccount;
@@ -778,7 +655,10 @@ void WitnessDialog::doUpdate(bool forceUpdate)
         //fixme: (PHASE5) - Compounding (via RPC at least) is not a binary setting, so display this as semi checked (or something else) when its in a non binary state.
         ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
-        auto [witnessStatus, nTotalNetworkWeight, nOurWeight, hasScriptLegacyOutput, hasUnconfirmedWittnessTx] = AccountWitnessStatus(pactiveWallet, forAccount);
+        const auto witnessInfo = GetWitnessInfoWrapper();
+        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, witnessInfo);
+        if (pWitnessStatus != nullptr)
+            *pWitnessStatus = accountStatus.status;
 
         //Witness only witness account skips all the fancy states for now and just always shows the statistics page
         if (forAccount->m_Type == WitnessOnlyWitnessAccount)
@@ -787,7 +667,7 @@ void WitnessDialog::doUpdate(bool forceUpdate)
             stateWithdrawEarningsButton = true;
         }
         else {
-            switch (witnessStatus) {
+            switch (accountStatus.status) {
             case WitnessStatus::Empty:
                 computedWidgetIndex = WitnessDialogStates::EMPTY;
                 break;
@@ -810,23 +690,24 @@ void WitnessDialog::doUpdate(bool forceUpdate)
 
             bool hasSpendableBalance = pactiveWallet->GetBalance(forAccount, false, false, true) > 0;
 
-            stateEmptyWitnessButton = witnessStatus == WitnessStatus::Ended && !hasUnconfirmedWittnessTx;
-            stateWithdrawEarningsButton = hasSpendableBalance && witnessStatus == WitnessStatus::Witnessing;
-            stateWithdrawEarningsButton2 = hasSpendableBalance && witnessStatus == WitnessStatus::Expired;
-            stateFundWitnessButton = witnessStatus == WitnessStatus::Empty;
-            stateRenewWitnessButton = witnessStatus == WitnessStatus::Expired && !hasUnconfirmedWittnessTx;
-            stateUpgradeButton = witnessStatus == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && hasScriptLegacyOutput && !hasUnconfirmedWittnessTx;
-            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (witnessStatus == WitnessStatus::Witnessing || witnessStatus == WitnessStatus::Expired) && !hasUnconfirmedWittnessTx;
+            stateEmptyWitnessButton = accountStatus.status == WitnessStatus::Ended && !accountStatus.hasUnconfirmedWittnessTx;
+            stateWithdrawEarningsButton = hasSpendableBalance && accountStatus.status == WitnessStatus::Witnessing;
+            stateWithdrawEarningsButton2 = hasSpendableBalance && accountStatus.status == WitnessStatus::Expired;
+            stateRenewWitnessButton = accountStatus.status == WitnessStatus::Expired && !accountStatus.hasUnconfirmedWittnessTx;
+            stateUpgradeButton = accountStatus.status == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
+            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (accountStatus.status == WitnessStatus::Witnessing || accountStatus.status == WitnessStatus::Expired) && !accountStatus.hasUnconfirmedWittnessTx;
+            stateOptimizeButton = accountStatus.status == WitnessStatus::Witnessing && !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
 
             setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
 
-            if (computedWidgetIndex == WitnessDialogStates::STATISTICS)
-                plotGraphForAccount(forAccount, nOurWeight, nTotalNetworkWeight);
+            if (computedWidgetIndex == WitnessDialogStates::STATISTICS) {
+                requestStatisticsUpdate(accountStatus);
+            }
         }
-
+        succes = true;
     }
     catch (const std::runtime_error& e) {
-        computedWidgetIndex = WitnessDialogStates::ERROR;
+        computedWidgetIndex = setWidgetIndex = WitnessDialogStates::ERROR;
         ui->labelErrorInfo->setText(e.what());
     }
 
@@ -849,16 +730,197 @@ void WitnessDialog::doUpdate(bool forceUpdate)
     ui->emptyWitnessButton->setVisible(stateEmptyWitnessButton);
     ui->withdrawEarningsButton->setVisible(stateWithdrawEarningsButton);
     ui->withdrawEarningsButton2->setVisible(stateWithdrawEarningsButton2);
-    ui->fundWitnessButton->setVisible(stateFundWitnessButton);
     ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
     ui->upgradeButton->setVisible(stateUpgradeButton);
     ui->extendButton->setVisible(stateExtendButton);
+    ui->optimizeButton->setVisible(stateOptimizeButton);
 
     // put normal buttons to the right if there are no confirming buttons visible
-    bool anyConfirmVisible = stateFundWitnessButton || stateEmptyWitnessButton || stateWithdrawEarningsButton || stateRenewWitnessButton;
+    bool anyConfirmVisible = stateEmptyWitnessButton || stateWithdrawEarningsButton || stateRenewWitnessButton;
     auto rect = ui->horizontalSpacer->geometry();
     rect.setWidth(anyConfirmVisible ? 40 : 0);
     ui->horizontalSpacer->setGeometry(rect);
+
+    return succes;
+}
+
+void WitnessDialog::requestStatisticsUpdate(const CWitnessAccountStatus& accountStatus)
+{
+    {
+        std::lock_guard<std::mutex> lock(statsUpdateMutex);
+        statsUpdateAccountStatus = accountStatus;
+        statsUpdateShouldUpdate = true;
+    }
+    statsUpdateCondition.notify_one();
+}
+
+void WitnessDialog::updateStatisticsThreadLoop()
+{
+    while (true) {
+        std::unique_lock<std::mutex> lock(statsUpdateMutex);
+        statsUpdateCondition.wait(lock, [this] { return statsUpdateShouldStop || statsUpdateShouldUpdate; });
+
+        if (statsUpdateShouldStop)
+            break;
+
+        CWitnessAccountStatus accountStatus = std::move(statsUpdateAccountStatus);
+        statsUpdateShouldUpdate = false;
+
+        lock.unlock();
+
+        WitnessInfoForAccount witnessInfoForAccount = GetWitnessInfoForAccount(accountStatus.account, accountStatus);
+
+
+        QMetaObject::invokeMethod(this, "displayUpdatedStatistics",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(WitnessInfoForAccount, witnessInfoForAccount));
+    }
+}
+
+void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoForAccount)
+{
+    LOG_QT_METHOD;
+
+    // Populate graph with info
+    {
+
+        // Populate the 'expected earnings' curve
+        QPolygonF forecastedPoints;
+        CAmount forecastTotal = 0;
+        int nXForecast = 0;
+        for (const auto& pointIter : infoForAccount.pointMapForecast)
+        {
+            forecastTotal += pointIter.second;
+            nXForecast = pointIter.first;
+            forecastedPoints << QPointF(nXForecast, forecastTotal);
+        }
+
+        // Populate the 'actual earnings' curve.
+        QPolygonF generatedPoints;
+        int nXGenerated = 0;
+        CAmount generatedTotal = 0;
+        for (const auto& pointIter : infoForAccount.pointMapGenerated)
+        {
+            generatedTotal += pointIter.second;
+            generatedPoints << QPointF(pointIter.first, generatedTotal);
+        }
+        if (generatedPoints.size() > 1)
+        {
+            (generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
+        }
+
+        //fixme: (PHASE4) This is a bit broken - use nOurWeight etc.
+        // Fill in the remaining time on the 'actual earnings' curve with a forecast.
+        QPolygonF generatedPointsForecast;
+        int nXGeneratedForecast = 0;
+        if (generatedPoints.size() > 0)
+        {
+            generatedPointsForecast << generatedPoints.back();
+            for (const auto& pointIter : infoForAccount.pointMapForecast)
+            {
+                nXGeneratedForecast = pointIter.first;
+                if (nXGeneratedForecast > nXGenerated)
+                {
+                    generatedTotal += pointIter.second;
+                    generatedPointsForecast << QPointF(nXGeneratedForecast, generatedTotal);
+                }
+            }
+        }
+
+        expectedEarningsCurve->setSamples( forecastedPoints );
+        currentEarningsCurveShadow->setSamples( generatedPoints );
+        currentEarningsCurve->setSamples( generatedPoints );
+        currentEarningsCurveForecastShadow->setSamples( generatedPointsForecast );
+        currentEarningsCurveForecast->setSamples( generatedPointsForecast );
+        ui->witnessEarningsPlot->setAxisScale( QwtPlot::xBottom, 0, nXForecast);
+        ui->witnessEarningsPlot->setAxisScale( QwtPlot::yLeft, 0, std::max(forecastTotal, generatedTotal));
+        ui->witnessEarningsPlot->replot();
+    }
+
+
+    // Populate stats table with info
+    {
+        QString lastEarningsDateLabel = tr("n/a");
+        QString earningsToDateLabel = lastEarningsDateLabel;
+        QString networkWeightLabel = lastEarningsDateLabel;
+        QString lockDurationLabel = lastEarningsDateLabel;
+        QString expectedEarningsDurationLabel = lastEarningsDateLabel;
+        QString estimatedEarningsDurationLabel = lastEarningsDateLabel;
+        QString lockTimeRemainingLabel = lastEarningsDateLabel;
+        QString labelWeightValue = lastEarningsDateLabel;
+        QString lockedUntilValue = lastEarningsDateLabel;
+        QString lockedFromValue = lastEarningsDateLabel;
+        QString partCountValue = QString::number(infoForAccount.accountStatus.parts.size());
+
+        if (infoForAccount.nOurWeight > 0)
+            labelWeightValue = QString::number(infoForAccount.nOurWeight);
+        if (!infoForAccount.originDate.isNull())
+            lockedFromValue = infoForAccount.originDate.toString("dd/MM/yy hh:mm");
+        if (chainActive.Tip())
+        {
+            QDateTime lockedUntilDate;
+            lockedUntilDate.setTime_t(chainActive.Tip()->nTime);
+            lockedUntilDate = lockedUntilDate.addSecs(infoForAccount.nLockBlocksRemaining*150);
+            lockedUntilValue = lockedUntilDate.toString("dd/MM/yy hh:mm");
+        }
+
+        if (!infoForAccount.lastEarningsDate.isNull())
+            lastEarningsDateLabel = infoForAccount.lastEarningsDate.toString("dd/MM/yy hh:mm");
+        if (infoForAccount.pointMapGenerated.size() != 0)
+            earningsToDateLabel = QString::number(infoForAccount.nEarningsToDate);
+        if (infoForAccount.nTotalNetworkWeightTip > 0)
+            networkWeightLabel = QString::number(infoForAccount.nTotalNetworkWeightTip);
+
+        //fixme: (PHASE4) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
+        //Ideally this should be improved.
+        //Note if we do improve it we may want to keep the "dumb" behaviour for testnet.
+        {
+            QString formatStr;
+            double divideBy=1;
+            int roundTo = 2;
+            switch (infoForAccount.scale)
+            {
+            case GraphScale::Blocks:
+                formatStr = tr("%1 blocks");
+                divideBy = 1;
+                roundTo = 0;
+                break;
+            case GraphScale::Days:
+                formatStr = tr("%1 days");
+                divideBy = DailyBlocksTarget();
+                break;
+            case GraphScale::Weeks:
+                formatStr = tr("%1 weeks");
+                divideBy = DailyBlocksTarget()*7;
+                break;
+            case GraphScale::Months:
+                formatStr = tr("%1 months");
+                divideBy = DailyBlocksTarget()*30;
+                break;
+            }
+            if (infoForAccount.nWitnessLength > 0)
+                lockDurationLabel = formatStr.arg(QString::number(infoForAccount.nWitnessLength/divideBy, 'f', roundTo));
+            if (infoForAccount.nExpectedWitnessBlockPeriod > 0)
+                expectedEarningsDurationLabel = formatStr.arg(QString::number(infoForAccount.nExpectedWitnessBlockPeriod/divideBy, 'f', roundTo));
+            if (infoForAccount.nEstimatedWitnessBlockPeriod > 0)
+                estimatedEarningsDurationLabel = formatStr.arg(QString::number(infoForAccount.nEstimatedWitnessBlockPeriod/divideBy, 'f', roundTo));
+            if (infoForAccount.nLockBlocksRemaining > 0)
+                lockTimeRemainingLabel = formatStr.arg(QString::number(infoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
+        }
+
+        ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
+        ui->labelWitnessEarningsValue->setText(earningsToDateLabel);
+        ui->labelNetworkWeightValue->setText(networkWeightLabel);
+        ui->labelLockDurationValue->setText(lockDurationLabel);
+        ui->labelExpectedEarningsDurationValue->setText(expectedEarningsDurationLabel);
+        ui->labelEstimatedEarningsDurationValue->setText(estimatedEarningsDurationLabel);
+        ui->labelLockTimeRemainingValue->setText(lockTimeRemainingLabel);
+        ui->labelWeightValue->setText(labelWeightValue);
+        ui->labelLockedFromValue->setText(lockedFromValue);
+        ui->labelLockedUntilValue->setText(lockedUntilValue);
+        ui->labelPartCountValue->setText(partCountValue);
+    }
+
 }
 
 void WitnessDialog::updateAccountIndicators()
@@ -1034,8 +1096,20 @@ void WitnessDialog::numBlocksChanged(int,QDateTime,double)
     //Update account state indicators for the latest block
     updateAccountIndicators();
 
-    // Update graph and witness info for current account to latest block.
-    doUpdate(false);
+    // Update graph and witness info for current account to latest block, skipping updates for blocks that have not been witnessed yet
+    bool haveNewWitnessTipHeight = false;
+    {
+        LOCK(cs_main);
+        CBlockIndex* index = chainActive.Tip();
+        while (index && index->nVersionPoW2Witness == 0)
+            index = index->pprev;
+        if (index && prevWitnessedTipHeight != index->nHeight) {
+            prevWitnessedTipHeight = index->nHeight;
+            haveNewWitnessTipHeight = true;
+        }
+    }
+    if (haveNewWitnessTipHeight)
+        doUpdate(false);
 }
 
 void WitnessDialog::setClientModel(ClientModel* clientModel_)
@@ -1070,6 +1144,8 @@ void WitnessDialog::setModel(WalletModel* _model)
             connect( _model, SIGNAL( activeAccountChanged(CAccount*) ), this , SLOT( activeAccountChanged(CAccount*) ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
             connect( _model, SIGNAL( accountCompoundingChanged(CAccount*) ), this , SLOT( update() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
         }
+
+        activeAccountChanged(model->getActiveAccount());
     }
     else if(model)
     {
@@ -1080,11 +1156,19 @@ void WitnessDialog::setModel(WalletModel* _model)
     }
 }
 
-void WitnessDialog::activeAccountChanged(CAccount*)
+void WitnessDialog::activeAccountChanged(CAccount* account)
 {
+    if (prevActiveAccount == account || !account || !account->IsPoW2Witness())
+        return;
+
+    prevActiveAccount = account;
+
     userWidgetIndex = -1;
     clearDialogStack();
-    doUpdate(true);
+    WitnessStatus witnessStatus;
+    if (doUpdate(true, &witnessStatus) && witnessStatus == WitnessStatus::Empty)
+        pushDialog(new FundWitnessDialog(model, platformStyle, this));
+
     if (model) {
         ui->renewWitnessAccountTableView->setWalletModel(model, 1 * COIN);
     }
