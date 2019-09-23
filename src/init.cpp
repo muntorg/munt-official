@@ -171,7 +171,7 @@ static CCoinsViewErrorCatcher *ppow2witcatcher = NULL;
 void CoreInterrupt(boost::thread_group& threadGroup)
 {
     LogPrintf("Core interrupt: commence core interrupt\n");
-    PoWMineGulden(false, 0, Params());
+    PoWMineGulden(false, 0, 0, Params());
     if (g_connman)
         g_connman->Interrupt();
     InterruptHTTPServer();
@@ -1306,6 +1306,11 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         return false;
     }
 
+    //fixme: (SIGMA) Improve.
+    // Select optimised algorithms for SIGMA
+    selected_argon2_echo_hash = argon2_echo_ctx_ref;
+    selectOptimisedImplementations();
+
 #ifndef WIN32
     CreatePidFile(GetPidFile(), getpid());
 #endif
@@ -1891,7 +1896,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
 
     // Generate coins in the background
-    PoWMineGulden(GetBoolArg("-gen", DEFAULT_GENERATE), GetArg("-genproclimit", DEFAULT_GENERATE_THREADS), chainparams);
+    //fixme: (SIGMA) - Better handle memory selection here
+    PoWMineGulden(GetBoolArg("-gen", DEFAULT_GENERATE), GetArg("-genproclimit", DEFAULT_GENERATE_THREADS), 4*1024*1024, chainparams);
     // ********************************************************* Step 12: finished
 
     SetRPCWarmupFinished();

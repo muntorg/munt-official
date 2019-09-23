@@ -49,7 +49,17 @@ public:
     uint256 hashMerkleRoot;
     uint32_t nTime;
     uint32_t nBits;
-    uint32_t nNonce;
+
+    //fixme: (SIGMA) - Ensure this works on both big and little endian - if not we might have to drop the struct and just use bit manipulation instead.
+    union
+    {
+        struct
+        {
+            uint16_t nPreNonce;
+            uint16_t nPostNonce;
+        };
+        uint32_t nNonce;
+    };
 
     CBlockHeader()
     {

@@ -65,6 +65,9 @@ AX_CXX_COMPILE_STDCXX([17], [noext], [mandatory], [nodefault])
 dnl Check if -latomic is required for <std::atomic>
 CHECK_ATOMIC
 
+dnl Check for compiler (not cpu/runtime) intrinsic support.
+INTRINSIC_FLAG_CHECK
+
 dnl Unless the user specified OBJCXX, force it to be the same as CXX. This ensures
 dnl that we get the same -std flags for both.
 m4_ifdef([AC_PROG_OBJCXX],[
@@ -873,6 +876,7 @@ if test x$use_pkgconfig = xyes; then
   m4_ifdef(
     [PKG_CHECK_MODULES],
     [
+      PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, PKG_CHECK_MODULES([CRYPTOPP], [libcrypto++],, [AC_MSG_ERROR(libcryptopp not found.)]))
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
       GULDEN_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [GULDEN_QT_FAIL(libprotobuf not found)])])

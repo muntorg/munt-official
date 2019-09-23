@@ -55,11 +55,11 @@ static UniValue gethashps(const JSONRPCRequest& request)
             "\nReturns the estimated hashes per second that this computer is mining at.\n");
 
     if (dHashesPerSec > 1000000)
-        return strprintf("%lf mh/s (%lf)", dHashesPerSec/1000000, dBestHashesPerSec/1000000);
+        return strprintf("%lf Mh/s (best %lf Mh/s)", dHashesPerSec/1000000, dBestHashesPerSec/1000000);
     else if (dHashesPerSec > 1000)
-        return strprintf("%lf kh/s (%ls)", dHashesPerSec/1000, dBestHashesPerSec/1000);
+        return strprintf("%lf Kh/s (best %ls Kh/s)", dHashesPerSec/1000, dBestHashesPerSec/1000);
     else
-        return strprintf("%lf h/s (%lf)", dHashesPerSec, dBestHashesPerSec);
+        return strprintf("%lf h/s (best %lf h/s)", dHashesPerSec, dBestHashesPerSec);
 }
 
 static UniValue sethashlimit(const JSONRPCRequest& request)
