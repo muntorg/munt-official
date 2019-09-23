@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "../blake2/blake2.h"
 #include "../blake2/blamka-round-opt_avx512f.h"
-#include "../../../echo256/echo256_opt.h"
+#include "../../../sigma/echo256/echo256_opt.h"
 #include "../argon_echo.h"
 #include "../core.h"
 

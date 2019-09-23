@@ -13,10 +13,10 @@
 #include <boost/asio/thread_pool.hpp>
 
 #include <crypto/hash/sigma/argon_echo/argon_echo.h>
-#include <crypto/hash/echo256/sphlib/sph_echo.h>
-#include <crypto/hash/echo256/echo256_opt.h>
-#include <crypto/hash/shavite3_256/shavite3_256_opt.h>
-#include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
+#include <crypto/hash/sigma/echo256/sphlib/sph_echo.h>
+#include <crypto/hash/sigma/echo256/echo256_opt.h>
+#include <crypto/hash/sigma/shavite3_256/shavite3_256_opt.h>
+#include <crypto/hash/sigma/shavite3_256/ref/shavite3_ref.h>
 
 //  SIGMA hash
 // *S*emi

@@ -33,8 +33,8 @@
 #include "blake2/blake2-impl.h"
 #include <pthread.h>
  
-#include <crypto/hash/echo256/echo256_opt.h>
-#include <crypto/hash/echo256/sphlib/sph_echo.h>
+#include <crypto/hash/sigma/echo256/echo256_opt.h>
+#include <crypto/hash/sigma/echo256/sphlib/sph_echo.h>
 
 /***************Instance and Position constructors**********/
 void init_block_value(argon2_echo_block* b, uint8_t in)

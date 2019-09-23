@@ -10,7 +10,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../../../echo256/echo256_opt.h"
+#include "../../../sigma/echo256/echo256_opt.h"
 #include "../argon_echo.h"
 #include "../core.h"
 
