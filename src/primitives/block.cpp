@@ -79,6 +79,7 @@ uint256 CBlock::GetPoWHash() const
 std::string CBlock::ToString() const
 {
     std::stringstream s;
+    //fixme: (SIGMA)
     s << strprintf("CBlock(hashlegacy=%s, hashpow2=%s, powhash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
         GetHashLegacy().ToString(),
         GetHashPoW2().ToString(),

@@ -12,6 +12,7 @@
 
 #include "chainparams.h"
 #include "consensus/merkle.h"
+#include "crypto/hash/sigma/sigma.h"
 
 #include "tinyformat.h"
 #include "util.h"
@@ -382,6 +383,15 @@ public:
 
             int targetInterval = atoi(sTestnetParams.substr(sTestnetParams.find(":")+1));
             int64_t seedTimestamp = atoi64(sTestnetParams.substr(1,sTestnetParams.find(":")));
+            
+            if (sTestnetParams == "C1534687770:60")
+            {
+                defaultSigmaSettings.activationDate = 1569081600;
+            }
+            else
+            {
+                defaultSigmaSettings.activationDate = seedTimestamp+300;
+            }
 
             consensus.nPowTargetSpacing = targetInterval;
             consensus.fPowAllowMinDifficultyBlocks = false;

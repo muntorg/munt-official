@@ -49,4 +49,4 @@
 
 
 
-#endif // GULDEN_COMPAT_ENDIAN_H
+#endif

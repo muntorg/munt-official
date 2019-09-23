@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -35,6 +35,7 @@
 #include "arith_uint256.h"
 #include "warnings.h"
 #include "Gulden/util.h"
+#include <compat/sys.h>
 
 #include <memory>
 #include <stdint.h>
@@ -137,7 +138,7 @@ static UniValue generateBlocks(std::shared_ptr<CReserveKeyOrScript> coinbaseScri
             LOCK(cs_main);
             IncrementExtraNonce(pblock, chainActive.Tip(), nExtraNonce);
         }
-        while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock->GetPoWHash(), pblock->nBits, Params().GetConsensus())) {
+        while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && !CheckProofOfWork(pblock, Params().GetConsensus())) {
             ++pblock->nNonce;
             --nMaxTries;
         }
@@ -243,7 +244,7 @@ static UniValue generate(const JSONRPCRequest& request)
 
 static UniValue setgenerate(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 4)
         throw std::runtime_error(
             "setgenerate generate ( gen_proc_limit )\n"
             "\nSet 'generate' true or false to turn generation on or off.\n"
@@ -252,7 +253,8 @@ static UniValue setgenerate(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. generate         (boolean, required) Set to true to turn on generation, off to turn off.\n"
             "2. gen_proc_limit   (numeric, optional) Set the processor limit for when generation is on. Can be -1 for unlimited.\n"
-            "3. account          (string, optional) The UUID or unique label of the account.\n"
+            "3. gen_memory_limit (numeric, optional) How much system memory to use. -1 to use system default\n"
+            "4. account          (string, optional) The UUID or unique label of the account.\n"
             "\nExamples:\n"
             "\nSet the generation on with a limit of one processor\n"
             + HelpExampleCli("setgenerate", "true 1") +
@@ -270,35 +272,74 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     #ifdef ENABLE_WALLET
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
     if (!pwallet)
+    {
         throw std::runtime_error("Cannot use command without an active wallet");
+    }
 
     bool fGenerate = true;
     if (request.params.size() > 0)
+    {
         fGenerate = request.params[0].get_bool();
+    }
 
     CAccount* forAccount = nullptr;
-    if (request.params.size() > 2)
-        forAccount = AccountFromValue(pactiveWallet, request.params[2], false);
-    else {
+    if (request.params.size() > 3)
+    {
+        forAccount = AccountFromValue(pactiveWallet, request.params[3], false);
+    }
+    else
+    {
         if (!pactiveWallet->activeAccount)
+        {
             throw std::runtime_error("No active account selected, first select an active account.");
+        }
         forAccount = pactiveWallet->activeAccount;
     }
 
     if (fGenerate && forAccount->IsPoW2Witness())
+    {
         throw std::runtime_error("Witness account selected, first select a regular account as the active account or specifiy a regular account.");
+    }
 
     int nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
     if (request.params.size() > 1)
     {
         nGenProcLimit = request.params[1].get_int();
         if (nGenProcLimit == 0)
+        {
             fGenerate = false;
+        }
     }
 
+    // Try to avoid swap by never using more than sysmem-1gb or on machines with only 1gb of memory sysmem-512mb.
+    uint64_t systemMemory = systemPhysicalMemoryInBytes();
+    if (systemMemory > 1 * 1024 * 1024 * 1024)
+    {
+        systemMemory -= 1 * 1024 * 1024 * 1024;
+    }
+    else
+    {
+        systemMemory -= 512 * 1024 * 1024;
+    }
+
+    // Allow user to override default memory selection.
+    int64_t nGenMemoryLimit = std::min(systemMemory, defaultSigmaSettings.arenaSizeKb*1024);
+    if (request.params.size() > 2)
+    {
+        nGenMemoryLimit = request.params[2].get_int();
+        if (nGenMemoryLimit == 0)
+        {
+            fGenerate = false;
+        }
+        if (nGenMemoryLimit < 0)
+        {
+            nGenMemoryLimit = systemMemory;
+        }
+    }
+    
     SoftSetBoolArg("-gen", fGenerate);
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
-    PoWMineGulden(fGenerate, nGenProcLimit, Params(), forAccount);
+    PoWMineGulden(fGenerate, nGenProcLimit, nGenMemoryLimit/1024, Params(), forAccount);
 
     if (!fGenerate)
     {
@@ -306,7 +347,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     }
     else
     {
-        return strprintf("Block generation enabled into account [%s], thread limit: [%d].", pwallet->mapAccountLabels[forAccount->getUUID()] ,nGenProcLimit);
+        return strprintf("Block generation enabled into account [%s], thread limit: [%d threads], memory: [%d Mb].", pwallet->mapAccountLabels[forAccount->getUUID()] ,nGenProcLimit, nGenMemoryLimit/1024/1024);
     }
     #else
     throw std::runtime_error("Cannot use command without an active wallet");
@@ -706,7 +747,7 @@ static const CRPCCommand commands[] =
     { "generating",         "generate",               &generate,               true,  {"num_blocks","max_tries"} },
     { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"num_blocks","address","max_tries"} },
     { "generating",         "getgenerate",            &getgenerate,            true,  {}  },
-    { "generating",         "setgenerate",            &setgenerate,            true,  {"generate", "gen_proc_limit"}  },
+    { "generating",         "setgenerate",            &setgenerate,            true,  {"generate", "gen_proc_limit", "gen_memory_limit"}  },
 
     { "util",               "estimatefee",            &estimatefee,            true,  {"num_blocks"} },
     { "util",               "estimatesmartfee",       &estimatesmartfee,       true,  {"num_blocks", "conservative"} },

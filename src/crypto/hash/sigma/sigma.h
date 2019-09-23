@@ -12,6 +12,12 @@
 #include <boost/asio.hpp>
 #include <boost/asio/thread_pool.hpp>
 
+#include <crypto/hash/sigma/argon_echo/argon_echo.h>
+#include <crypto/hash/echo256/sphlib/sph_echo.h>
+#include <crypto/hash/echo256/echo256_opt.h>
+#include <crypto/hash/shavite3_256/shavite3_256_opt.h>
+#include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
+
 //  SIGMA hash
 // *S*emi
 // *I*terated               - A key part of the algorithm is that parts of the hash can be iterated over cheaply.
@@ -67,32 +73,58 @@
 // * Affects how much memory from the global buffer is consumed by each fast hash.
 // * This ultimately affects the speed of the fast hash
 
+
+// Consensus level SIGMA options and global defaults.
+// NB! Must call verify after changing any settings.
 class sigma_settings
 {
 public:
-    sigma_settings(uint32_t argonArenaRoundCost_, uint32_t argonSlowHashRoundCost_, uint64_t argonMemoryCostKb_, uint64_t arena_size_kb, uint64_t numHashesPre_, uint64_t numHashesPost_, uint64_t numVerifyThreads_, uint64_t fastHashSizeBytes_);
+    sigma_settings();
+    void verify();
 public:
-    uint64_t numVerifyThreads=0;
-    uint64_t arenaSizeKb=0;
-    uint64_t argonMemoryCostKb=0;
-    uint64_t argonArenaRoundCost=0;
-    uint64_t argonSlowHashRoundCost=0;
-    uint64_t numHashesPre=0;
-    uint64_t numHashesPost=0;
-    uint64_t fastHashSizeBytes=0;
-    uint64_t arenaChunkSizeBytes=0;
-};
+    uint64_t numVerifyThreads=4;         // Allow verification with 4 threads
+    uint64_t arenaSizeKb=4*1024*1024;    // 4gb overall arena size
+    uint64_t argonMemoryCostKb=16*1024;  // 16mb per arena/slow hash
+    uint64_t argonArenaRoundCost=8;      // 8 rounds per arena hash
+    uint64_t argonSlowHashRoundCost=12;  // 12 rounds per slow hash
+    uint64_t numHashesPre=65536;         // 65536 pre-hashes
+    uint64_t numHashesPost=65536;        // 65536 post-hashes 
+    uint64_t fastHashSizeBytes=300;      // 300 bytes per fast hash
     
+    // Calculated from other values in constructor.
+    uint64_t arenaChunkSizeBytes=0;
+    // Affects program behaviour (SIGMA activation block) not SIGMA itself.
+    uint64_t activationDate=2524611661;
+};
+// Consensus level SIGMA defaults.
+extern sigma_settings defaultSigmaSettings;
+
+
+// We select the optimal implementation of these hash functions to match our CPU once at program start and then just use the function pointers throghout the SIGMA code.
+void selectOptimisedImplementations();
+inline HashReturn (*selected_echo256_opt_Init)(echo256_opt_hashState* state) = nullptr;
+inline HashReturn (*selected_echo256_opt_Update)(echo256_opt_hashState* state, const unsigned char* data, uint64_t databitlen) = nullptr;
+inline HashReturn (*selected_echo256_opt_Final)(echo256_opt_hashState* state, unsigned char* hashval) = nullptr;
+inline HashReturn (*selected_echo256_opt_UpdateFinal)(echo256_opt_hashState* state, unsigned char* hashval, const unsigned char* data, uint64_t databitlen) = nullptr;
+inline bool (*selected_shavite3_256_opt_Init)(shavite3_256_opt_hashState* state) = nullptr;
+inline bool (*selected_shavite3_256_opt_Update)(shavite3_256_opt_hashState* state, const unsigned char* data, uint64_t dataLenBytes) = nullptr;
+inline bool (*selected_shavite3_256_opt_Final)(shavite3_256_opt_hashState* state, unsigned char* hashval) = nullptr;
+inline int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash) = nullptr;
+
+
+// Heavy weight sigma context for mining - allocated the entire arena (currently 4gb)
+// NB!!! Take care creating/using these they allocate lots of memory..
 class sigma_context
 {
 public:
     sigma_context(sigma_settings settings_, uint64_t allocateArenaSizeKb_, uint64_t numThreads_);
     bool arenaIsValid();
-    void prepareArenas(CBlockHeader& headerData, uint64_t nBlockHeight);
+    void prepareArenas(CBlockHeader& headerData);
     void benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashes);
     void benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes);
     void benchmarkFastHashesRef(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes);
     void benchmarkMining(CBlockHeader& headerData, std::atomic<uint64_t>& slowHashCounter, std::atomic<uint64_t>& halfHashCounter, std::atomic<uint64_t>& skippedHashCounter, std::atomic<uint64_t>&hashCounter, std::atomic<uint64_t>&blockCounter, uint64_t nRoundsTarget);
+    void mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCounter, uint256& foundBlockHash);
     virtual ~sigma_context();
     sigma_context(const sigma_context&) = delete;
     sigma_context& operator=(const sigma_context&) = delete;
@@ -103,22 +135,21 @@ public:
     uint8_t* arena=nullptr;
 private:
     sigma_settings settings;
-    uint64_t headerBlockHeight=0;
     uint64_t numHashesPossibleWithAvailableMemory=0;
 };
 
+// Light weight sigma context for header verification - allocates just the size of one argon round (16mb)
 class sigma_verify_context
 {
 public:
     sigma_verify_context(sigma_settings settings_, uint64_t numUserVerifyThreads_);
-    bool verifyHeader(CBlockHeader headerData, uint64_t nBlockHeight);
+    bool verifyHeader(CBlockHeader headerData);
     virtual ~sigma_verify_context();
     sigma_verify_context(const sigma_verify_context&) = delete;
     sigma_verify_context& operator=(const sigma_verify_context&) = delete;
 private:
     sigma_settings settings;
     uint64_t numUserVerifyThreads;
-    uint64_t headerBlockHeight=0;
     uint8_t* hashMem;
 };
 

@@ -9,31 +9,20 @@
 #include <boost/program_options.hpp>
 #include <thread>
 
-#include <crypto/hash/shavite3_256/shavite3_256_opt.h>
-#include <crypto/hash/shavite3_256/ref/shavite3_ref.h>
-#include <crypto/hash/echo256/sphlib/sph_echo.h>
-#include <crypto/hash/echo256/echo256_opt.h>
-#include <crypto/hash/sigma/argon_echo/argon_echo.h>
+#include <crypto/hash/sigma/sigma.h>
 
 #include <cryptopp/config.h>
 #include <cryptopp/aes.h>
 #include <cryptopp/modes.h>
+#include <random.h>
 
-// SIGMA paramaters (centrally set by network)
-uint64_t arenaCpuCostRounds = 8;
-uint64_t slowHashCpuCostRounds = 12;
-uint64_t memCostGb = 4;   
-uint64_t slowHashMemCostMb = 16;
-uint64_t fastHashMemCostBytes = 300;
-uint64_t maxHashesPre = 65536;
-uint64_t maxHashesPost = 65536;
-uint64_t numSigmaVerifyThreads = 4;
+// Are we running with all options at default or are any overriden by user.
 bool defaultSigma = true;
 
 // User paramaters (adjustable on individual machines)
 uint64_t numThreads = std::thread::hardware_concurrency();
-uint64_t memAllowGb = memCostGb;
-uint64_t numUserVerifyThreads = std::min(numSigmaVerifyThreads, (uint64_t)std::thread::hardware_concurrency());
+uint64_t memAllowGb;
+uint64_t numUserVerifyThreads;
 uint64_t numFullHashesTarget = 50000;
 bool mineOnly=false;
     
@@ -358,23 +347,23 @@ void testPRNG(uint64_t& nTestFailCount)
 }
 
 
-std::vector<std::pair<std::string, uint64_t> >
+std::vector<std::string>
 validHeaderTestVectorIn = {
-    {"e346fe62000000004080b46f23c5d0cdb2b54bcf7018935a3717000000000000000000000000000000ce7cb9f3053879602b3e592db673d63aa678000000000000000000fb43835dffff3f1fdb004a9f", 1872090435},
-    {"9d54723a00000000c0ce73c1404f01e9467ae665575e98bfde100200000000000000000000000000b2cb01383f7bc2efae41af524342fd2726e0040000000000000000009445835dffff3f1fb300d58d", 735962043},
-    {"5c9192160000000090693022fe6c8793d7ff42620abc5baf0eee6900000000000000000000000000c0f73c897b9f1143ad51115e6b92a594d8d00d000000000000000000aa45835dffff3f1f6000cdf6", 106466628},
-    {"af5c892d00000000441c66cd50e0bff46791aef0cd45510cc3031f0000000000000000000000000000d1a45e9bf88e76249026fcbcbfd2bbcee302000000000000000000bc45835dffff3f1f680086b1", 991073506},
-    {"58359a2a00000000a01b5eceae5be377509bce63063042b9adb30000000000000000000000000000f0a714e69d3d9a00e787a025482f3ab4c7ce1f000000000000000000ce45835dffff3f1fee006814", 628156664},
+    "a0da8101c2c1f7ae98536a4c215f48e38ca17e925f61234c9aa602205d6fd5e27eb0c885452abf7e8515e3e7c4758cefd55c9331760b7c711280a451067c6b01e0e46234a7a5845dffff3f1f1700ee6c",
+    "b0d6563c856c89be804b189b9a36856b795770243b2f2b4efab1b8f021962c3129da01148537c2f19b7d52321415d834cc04ddf199022f105ebf194d4e6470f8bab50a21aba5845dffff3f1f0e00b01f",
+    "47a5866c8b1e9eeff7f62b654d0cd2e70785cd13c2e1446cc74231df906ba4f4113413a5b56e88336447db61875cf4862e5587ed25d26de8a0c61c8c23070a4a62eea35eaea5845dffff3f1f1a003d51",
+    "72b6032ae5c1db9982e2d9135052ec3cc47c7414947da6e55a76e47b4b2ec6744a3140ba0baf06a69dece43f9dbba5008ca490a3098c41d06279af6811c386080ad0b1cdb2a5845dffff3f1f1200d425",
+    "73d7b147d565af53774df3252c7dbf358fb8a8328ead1b656c3d216b533a2bffcc16869309825486c5945373a11d4219531948a9d8d5af501b1cdc0fe83c2ebb5f1d37d8b5a5845dffff3f1f1800f632"
 };
 void testValidateValidHeaders(sigma_settings settings, uint64_t& nTestFailCount)
 {
     CBlockHeader header;
-    for (const auto& [hash, height] : validHeaderTestVectorIn)
+    for (const auto& hash : validHeaderTestVectorIn)
     {
         std::vector<unsigned char> data = ParseHex(hash);
         memcpy(&header.nVersion, &data[0], 80);
         sigma_verify_context verify(settings, numUserVerifyThreads);
-        if (verify.verifyHeader(header, height))
+        if (verify.verifyHeader(header))
         {
             LogPrintf("✔");
         }
@@ -388,15 +377,23 @@ void testValidateValidHeaders(sigma_settings settings, uint64_t& nTestFailCount)
     LogPrintf("\n");
 }
 
+std::vector<std::string>
+invalidHeaderTestVectorIn = {
+    "c6ee0071f1f3ffffd5485a7a43264e0e10b6c760154a082117c7b0671339c55dfec8574c7e3e5158e7fba254588c0be72e5df6d502206aa9c43216f529e71ac83e84f512c4a63589ea7f1c2c1018ad0a",
+    "f10b00e0f1f3ffffd5485aba12a05bab8f0746e4d491fbe501f220991fdd40cc438d51412325d7b91f2c73584110ad9213c269120f8b1bafe4b2f2b342077597b65863a9b981b408eb98c658c3656d0b",
+    "15d300a1f1f3ffffd5485aeae53aee26a4a07032c8c16c0a8ed62d52de7855e2684fc57816bd74463388e65b5a3143114f4ab609fd13247cc6441e2c31dc58707e2dc0d456b26f7ffee9e1b8c6685a74",
+    "524d0021f1f3ffffd5485a2bdc1b0da080683c1186fa97260d14c8903a094ac8005abbd9f34eced96a60fab0ab0413a4476ce2b4b74e67a55e6ad7494147c74cc3ce2505319d2e2899bd1c5ea2306b27",
+    "236f0081f1f3ffffd5485a5b8d73d1f5bbe2c38ef0cdc1b105fa5d8d9a8491359124d11a3735495c68452890396861ccffb2a335b612d3c656b1dae8238a8bf853fbd7c2523fd47735fa565d741b7d37"
+};
 void testValidateInvalidHeaders(sigma_settings settings, uint64_t& nTestFailCount)
 {
     CBlockHeader header;
-    for (const auto& [hash, height] : validHeaderTestVectorIn)
+    for (const auto& hash : invalidHeaderTestVectorIn)
     {
         std::vector<unsigned char> data = ParseHex(hash);
         memcpy(&header.nVersion, &data[0], 80);
         sigma_verify_context verify(settings, numUserVerifyThreads);
-        if (!verify.verifyHeader(header, height+1))
+        if (!verify.verifyHeader(header))
         {
             LogPrintf("✔");
         }
@@ -426,386 +423,10 @@ double calculateSustainedHashrateForTimePeriod(uint64_t maxHashesPre, uint64_t m
     return nSustainedHashesPerMicrosecond * 1000000;
 }
     
-HashReturn (*selected_echo256_opt_Init)(echo256_opt_hashState* state);
-HashReturn (*selected_echo256_opt_Update)(echo256_opt_hashState* state, const unsigned char* data, uint64_t databitlen);
-HashReturn (*selected_echo256_opt_Final)(echo256_opt_hashState* state, unsigned char* hashval);
-HashReturn (*selected_echo256_opt_UpdateFinal)(echo256_opt_hashState* state, unsigned char* hashval, const unsigned char* data, uint64_t databitlen);
-
-bool (*selected_shavite3_256_opt_Init)(shavite3_256_opt_hashState* state);
-bool (*selected_shavite3_256_opt_Update)(shavite3_256_opt_hashState* state, const unsigned char* data, uint64_t dataLenBytes);
-bool (*selected_shavite3_256_opt_Final)(shavite3_256_opt_hashState* state, unsigned char* hashval);
-
-int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash);
-
-uint64_t nNumShaviteTrials=100;
-uint64_t nNumEchoTrials=100;
-uint64_t nNumArgonTrials=10;
-#define SELECT_OPTIMISED_SHAVITE(CPU, IDX) \
-{\
-    uint64_t nStart = GetTimeMicros();\
-    shavite3_256_opt_##CPU##_Init(&ctx_shavite);\
-    for (uint64_t i=0;i<nNumShaviteTrials;++i)\
-    {\
-        shavite3_256_opt_##CPU##_Update(&ctx_shavite, (uint8_t*)&data[0], data.size());\
-    }\
-    shavite3_256_opt_##CPU##_Final(&ctx_shavite, (uint8_t*)&outHash[0]);\
-    uint64_t nTime = GetTimeMicros() - nStart;\
-    if (nTime < nBestTimeShavite)\
-    {\
-        selected_shavite3_256_opt_Init   = shavite3_256_opt_##CPU##_Init;\
-        selected_shavite3_256_opt_Update = shavite3_256_opt_##CPU##_Update;\
-        selected_shavite3_256_opt_Final  = shavite3_256_opt_##CPU##_Final;\
-        nBestTimeShavite=nTime;\
-        nSelShavite=IDX;\
-    }\
-}
-#define SELECT_OPTIMISED_ECHO(CPU, IDX) \
-{\
-    uint64_t nStart = GetTimeMicros();\
-    echo256_opt_##CPU##_Init(&ctx_echo);\
-    for (uint64_t i=0;i<nNumEchoTrials;++i)\
-    {\
-        echo256_opt_##CPU##_Update(&ctx_echo, (uint8_t*)&data[0], data.size());\
-    }\
-    echo256_opt_##CPU##_Final(&ctx_echo, (uint8_t*)&outHash[0]);\
-    uint64_t nTime = GetTimeMicros() - nStart;\
-    if (nTime < nBestTimeEcho)\
-    {\
-        selected_echo256_opt_Init        = echo256_opt_##CPU##_Init;\
-        selected_echo256_opt_Update      = echo256_opt_##CPU##_Update;\
-        selected_echo256_opt_Final       = echo256_opt_##CPU##_Final;\
-        selected_echo256_opt_UpdateFinal = echo256_opt_##CPU##_UpdateFinal;\
-        nBestTimeEcho=nTime;\
-        nSelEcho=IDX;\
-    }\
-}      
-#define SELECT_OPTIMISED_ARGON(CPU, IDX) \
-{\
-    uint8_t argonScratch[1024];\
-    argon2_echo_context context;\
-    context.t_cost = 5;\
-    context.m_cost = 1;\
-    context.allocated_memory = argonScratch;\
-    context.pwd = (uint8_t*)&data[0];\
-    context.pwdlen = data.size();\
-    context.lanes = 4;\
-    context.threads = 1;\
-    uint64_t nStart = GetTimeMicros();\
-    for (uint64_t i=0;i<nNumArgonTrials;++i)\
-    {\
-        argon2_echo_ctx_##CPU(&context, true);\
-    }\
-    uint64_t nTime = GetTimeMicros() - nStart;\
-    if (nTime < nBestTimeArgon)\
-    {\
-        selected_argon2_echo_hash = argon2_echo_ctx_##CPU;\
-        nBestTimeArgon=nTime;\
-        nSelArgon=IDX;\
-    }\
-}
-
-#ifdef ARCH_CPU_X86_FAMILY
-void LogSelection(uint64_t nSel, std::string sAlgoName)
-{
-    switch (nSel)
-    {
-        case 0:
-            LogPrintf("[%d] Selected reference implementation as fastest\n", sAlgoName); break;
-        case 1:
-            LogPrintf("[%d] Selected avx512f-aes as fastest\n", sAlgoName); break;
-        case 2:
-            LogPrintf("[%d] Selected avx2-aes as fastest\n", sAlgoName); break;
-        case 3:
-            LogPrintf("[%d] Selected avx-aes as fastest\n", sAlgoName); break;
-        case 4:
-            LogPrintf("[%d] Selected sse4-aes as fastest\n", sAlgoName); break;
-        case 5:
-            LogPrintf("[%d] Selected sse3-aes as fastest\n", sAlgoName); break;
-        case 6:
-            LogPrintf("[%d] Selected sse2-aes as fastest\n", sAlgoName); break;
-        case 7:
-            LogPrintf("[%d] Selected avx512f as fastest\n", sAlgoName); break;
-        case 8:
-            LogPrintf("[%d] Selected avx2 as fastest\n", sAlgoName); break;
-        case 9:
-            LogPrintf("[%d] Selected avx as fastest\n", sAlgoName); break;
-        case 10:
-            LogPrintf("[%d] Selected sse4 as fastest\n", sAlgoName); break;
-        case 11:
-            LogPrintf("[%d] Selected sse3 as fastest\n", sAlgoName); break;
-        case 12:
-            LogPrintf("[%d] Selected sse2 as fastest\n", sAlgoName); break;
-        case 9999:
-            LogPrintf("[%d] Selected hybrid implementation as fastest\n", sAlgoName); break;
-    }
-}
-#endif
-
-#ifdef ARCH_CPU_ARM_FAMILY
-void LogSelection(uint64_t nSel, std::string sAlgoName)
-{
-    switch (nSel)
-    {
-        case 0:
-            LogPrintf("[%d] Selected reference implementation as fastest (no NEON support)\n", sAlgoName); break;
-        case 1:
-            LogPrintf("[%d] Running with Cortex-A53 optimised NEON support (no hardware AES)\n", sAlgoName); break;
-        case 2:
-            LogPrintf("[%d] Running with Cortex-A57 optimised NEON support (no hardware AES)\n", sAlgoName); break;
-        case 3:
-            LogPrintf("[%d] Running with Cortex-A72 optimised NEON support (no hardware AES)\n", sAlgoName); break;
-        case 4:
-            LogPrintf("[%d] Running with Cortex-A53 optimised NEON+AES support\n", sAlgoName); break;
-        case 5:
-            LogPrintf("[%d] Running with Cortex-A57 optimised NEON+AES support\n", sAlgoName); break;
-        case 6:
-            LogPrintf("[%d] Running with Cortex-A72 optimised NEON+AES support\n", sAlgoName); break;
-        case 7:
-            LogPrintf("[%d] Running with Thunderx optimised NEON+AES support\n", sAlgoName); break;
-        case 9999:
-            LogPrintf("[%d] Running in hybrid mode.\n", sAlgoName); break;
-    }
-}
-#include <sys/auxv.h>
-#endif
-
-void selectOptimisedImplementations()
-{    
-    std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
-    std::vector<unsigned char> outHash(32);
-    shavite3_256_opt_hashState ctx_shavite;
-    echo256_opt_hashState ctx_echo;
-
-    uint64_t nBestTimeShavite = std::numeric_limits<uint64_t>::max();
-    uint64_t nBestTimeEcho = std::numeric_limits<uint64_t>::max();
-    uint64_t nBestTimeArgon = std::numeric_limits<uint64_t>::max();
-    uint64_t nSelShavite=0;
-    uint64_t nSelEcho=0;
-    uint64_t nSelArgon=0;
-    
-    {
-        uint64_t nStart = GetTimeMicros();
-        shavite3_ref_hashState ctx_shavite_ref;
-        shavite3_ref_Init(&ctx_shavite_ref);
-        for (uint64_t i=0;i<nNumShaviteTrials;++i)
-        {
-            shavite3_ref_Update(&ctx_shavite_ref, (uint8_t*)&data[0], data.size());
-        }
-        shavite3_ref_Final(&ctx_shavite_ref, (uint8_t*)&outHash[0]);
-        nBestTimeShavite = GetTimeMicros() - nStart;
-    }
-    {
-        uint64_t nStart = GetTimeMicros();
-        sph_echo256_context ctx_echo_ref;
-        sph_echo256_init(&ctx_echo_ref);
-        for (uint64_t i=0;i<nNumEchoTrials;++i)
-        {
-            sph_echo256(&ctx_echo_ref, (uint8_t*)&data[0], data.size());
-        }
-        sph_echo256_close(&ctx_echo_ref, (uint8_t*)&outHash[0]);
-        nBestTimeEcho = GetTimeMicros() - nStart;
-    }
-    {
-        uint8_t argonScratch[1024];
-        argon2_echo_context context;
-        context.t_cost = 5;
-        context.m_cost = 1;
-        context.allocated_memory = argonScratch;
-        context.pwd = (uint8_t*)&data[0];
-        context.pwdlen = data.size();
-        context.lanes = 4;
-        context.threads = 1;
-        
-        uint64_t nStart = GetTimeMicros();       
-        for (uint64_t i=0;i<nNumArgonTrials;++i)
-        {
-            argon2_echo_ctx_ref(&context, true);
-        }
-        nBestTimeArgon = GetTimeMicros() - nStart;
-    }
-  
-    #ifdef ARCH_CPU_X86_FAMILY
-    {
-        #if defined(COMPILER_HAS_AES)
-        if (__builtin_cpu_supports("aes"))
-        {
-            #if defined(COMPILER_HAS_AVX512F)
-            if (__builtin_cpu_supports("avx512f"))
-            {
-                SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
-                SELECT_OPTIMISED_ECHO   (avx512f_aes, 1);
-                SELECT_OPTIMISED_ARGON  (avx512f_aes, 1);
-            }
-            #endif
-            #if defined(COMPILER_HAS_AVX2)
-            if (__builtin_cpu_supports("avx2"))
-            {
-                SELECT_OPTIMISED_SHAVITE(avx2_aes, 2);
-                SELECT_OPTIMISED_ECHO   (avx2_aes, 2);
-                SELECT_OPTIMISED_ARGON  (avx2_aes, 2);
-            }
-            #endif
-            #if defined(COMPILER_HAS_AVX)
-            if (__builtin_cpu_supports("avx"))
-            {
-                SELECT_OPTIMISED_SHAVITE(avx_aes, 3);
-                SELECT_OPTIMISED_ECHO   (avx_aes, 3);
-                SELECT_OPTIMISED_ARGON  (avx_aes, 3);
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE4)
-            if (__builtin_cpu_supports("sse4.2"))
-            {
-                SELECT_OPTIMISED_SHAVITE(sse4_aes, 4);
-                SELECT_OPTIMISED_ECHO   (sse4_aes, 4);
-                SELECT_OPTIMISED_ARGON  (sse4_aes, 4);
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("sse3"))
-            {
-                SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
-                SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
-                SELECT_OPTIMISED_ARGON  (sse3_aes, 5);
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE2)
-            #if 0
-            //fixme: (SIGMA)
-            if (__builtin_cpu_supports("sse2"))
-            {
-                SELECT_OPTIMISED_SHAVITE(sse2_aes, 6);
-                SELECT_OPTIMISED_ECHO   (sse2_aes, 6);
-                SELECT_OPTIMISED_ARGON  (sse2_aes, 6);
-            }
-            #endif
-            #endif
-        }
-        else
-        #endif
-        {
-            #if defined(COMPILER_HAS_AVX512F)
-            if (__builtin_cpu_supports("avx512f"))
-            {
-                SELECT_OPTIMISED_SHAVITE(avx512f, 7);
-                SELECT_OPTIMISED_ECHO   (avx512f, 7);
-                SELECT_OPTIMISED_ARGON  (avx512f, 7);
-            }
-            #endif
-            #if defined(COMPILER_HAS_AVX2)
-            if (__builtin_cpu_supports("avx2"))
-            {
-                SELECT_OPTIMISED_SHAVITE(avx2, 8);
-                SELECT_OPTIMISED_ECHO   (avx2, 8);
-                SELECT_OPTIMISED_ARGON  (avx2, 8);
-            }
-            #endif
-            #if defined(COMPILER_HAS_AVX)
-            if (__builtin_cpu_supports("avx"))
-            {
-                SELECT_OPTIMISED_SHAVITE(avx, 9);
-                SELECT_OPTIMISED_ECHO   (avx, 9);
-                SELECT_OPTIMISED_ARGON  (avx, 9);
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE4)
-            if (__builtin_cpu_supports("sse4.2"))
-            {
-                SELECT_OPTIMISED_SHAVITE(sse4, 10);
-                SELECT_OPTIMISED_ECHO   (sse4, 10);
-                SELECT_OPTIMISED_ARGON  (sse4, 10);
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("sse3"))
-            {
-                SELECT_OPTIMISED_SHAVITE(sse3, 11);
-                SELECT_OPTIMISED_ECHO   (sse3, 11);
-                SELECT_OPTIMISED_ARGON  (sse3, 11);
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE2)
-            #if 0
-            //fixme: (SIGMA)
-            else if (__builtin_cpu_supports("sse2"))
-            {
-                SELECT_OPTIMISED_SHAVITE(sse2, 12);
-                SELECT_OPTIMISED_ECHO   (sse2, 12);
-                SELECT_OPTIMISED_ARGON  (sse2, 12);
-            }
-            #endif
-            #endif
-        }
-    }
-    #elif defined (ARCH_CPU_ARM_FAMILY)
-    {
-        bool haveAES=false;
-        #if defined HWCAP_AES
-        long hwcaps2 = getauxval(AT_HWCAP);
-        if(hwcaps2 & HWCAP_AES)
-        {
-            haveAES=true;
-        }
-        #elif defined HWCAP2_AES
-        long hwcaps2 = getauxval(AT_HWCAP2);
-        if(hwcaps2 & HWCAP2_AES)
-        {
-            haveAES=true;
-        }
-        #endif
-        #ifdef COMPILER_HAS_CORTEX53
-        SELECT_OPTIMISED_SHAVITE(arm_cortex_a53, 1);
-        SELECT_OPTIMISED_ECHO(arm_cortex_a53, 1);
-        SELECT_OPTIMISED_ARGON(arm_cortex_a53, 1);
-        #endif
-        #ifdef COMPILER_HAS_CORTEX57
-        SELECT_OPTIMISED_SHAVITE(arm_cortex_a57, 2);
-        SELECT_OPTIMISED_ECHO(arm_cortex_a57, 2);
-        SELECT_OPTIMISED_ARGON(arm_cortex_a57, 2);
-        #endif
-        #ifdef COMPILER_HAS_CORTEX72
-        SELECT_OPTIMISED_SHAVITE(arm_cortex_a72, 3);
-        SELECT_OPTIMISED_ECHO(arm_cortex_a72, 3);
-        SELECT_OPTIMISED_ARGON(arm_cortex_a72, 3);
-        #endif
-        if (haveAES)
-        {
-            #ifdef COMPILER_HAS_CORTEX53_AES
-            SELECT_OPTIMISED_SHAVITE(arm_cortex_a53_aes, 4);
-            SELECT_OPTIMISED_ECHO(arm_cortex_a53_aes, 4);
-            SELECT_OPTIMISED_ARGON(arm_cortex_a53_aes, 4);
-            #endif
-            #ifdef COMPILER_HAS_CORTEX57_AES
-            SELECT_OPTIMISED_SHAVITE(arm_cortex_a57_aes, 5);
-            SELECT_OPTIMISED_ECHO(arm_cortex_a57_aes, 5);
-            SELECT_OPTIMISED_ARGON(arm_cortex_a57_aes, 5);
-            #endif
-            #ifdef COMPILER_HAS_CORTEX72_AES
-            SELECT_OPTIMISED_SHAVITE(arm_cortex_a72_aes, 6);
-            SELECT_OPTIMISED_ECHO(arm_cortex_a72_aes, 6);
-            SELECT_OPTIMISED_ARGON(arm_cortex_a72_aes, 6);
-            #endif
-            #ifdef COMPILER_HAS_THUNDERX_AES
-            SELECT_OPTIMISED_SHAVITE(arm_thunderx_aes, 7);
-            SELECT_OPTIMISED_ECHO(arm_thunderx_aes, 7);
-            SELECT_OPTIMISED_ARGON(arm_thunderx_aes, 7);
-            #endif
-        }
-    }
-    #endif
-    
-    // Finally (only after we have fastest echo implementation) give the hybrid echo a go
-    // Just in case it happens to be faster.
-    SELECT_OPTIMISED_ARGON(hybrid, 9999);
-    
-    LogSelection(nSelShavite, "shavite");
-    LogSelection(nSelEcho, "echo");
-    LogSelection(nSelArgon, "argon");
-}
-
-
 int main(int argc, char** argv)
 {
+    memAllowGb = defaultSigmaSettings.arenaSizeKb/1024/1024;
+    numUserVerifyThreads = defaultSigmaSettings.numVerifyThreads;
     selected_argon2_echo_hash = argon2_echo_ctx_ref;
     selectOptimisedImplementations();
 
@@ -864,10 +485,10 @@ int main(int argc, char** argv)
     }
     if (vm.count("sigma-global-mem"))
     {
-        memCostGb = vm["sigma-global-mem"].as<int64_t>();
+        defaultSigmaSettings.arenaSizeKb = vm["sigma-global-mem"].as<int64_t>() * 1024 * 1024;
         defaultSigma = false;
     }
-    memAllowGb = memCostGb;
+    memAllowGb = defaultSigmaSettings.arenaSizeKb / 1024 / 1024;
     if (vm.count("mine-memory"))
     {
         memAllowGb = vm["mine-memory"].as<int64_t>();
@@ -888,48 +509,48 @@ int main(int argc, char** argv)
     if (vm.count("sigma-num-slow"))
     {
         defaultSigma = false;
-        maxHashesPre = vm["sigma-num-slow"].as<int64_t>();
+        defaultSigmaSettings.numHashesPre = vm["sigma-num-slow"].as<int64_t>();
     }
     if (vm.count("sigma-slowhash-mem"))
     {
-        slowHashMemCostMb = vm["sigma-slowhash-mem"].as<int64_t>();
+        defaultSigmaSettings.argonMemoryCostKb = vm["sigma-slowhash-mem"].as<int64_t>()*1024;
         defaultSigma = false;
     }
     if (vm.count("sigma-arena-cpucost"))
     {
-        arenaCpuCostRounds = vm["sigma-arena-cpucost"].as<int64_t>();
+        defaultSigmaSettings.argonArenaRoundCost = vm["sigma-arena-cpucost"].as<int64_t>();
         defaultSigma = false;
     }
     if (vm.count("sigma-slowhash-cpucost"))
     {
-        slowHashCpuCostRounds = vm["sigma-slowhash-cpucost"].as<int64_t>();
+        defaultSigmaSettings.argonSlowHashRoundCost = vm["sigma-slowhash-cpucost"].as<int64_t>();
         defaultSigma = false;
     }
     if (vm.count("sigma-num-fast"))
     {
-        maxHashesPost = vm["sigma-num-fast"].as<int64_t>();
+        defaultSigmaSettings.numHashesPost = vm["sigma-num-fast"].as<int64_t>();
         defaultSigma = false;
     }
     if (vm.count("sigma-fasthash-mem"))
     {
-        fastHashMemCostBytes = vm["sigma-fasthash-mem"].as<int64_t>();
+        defaultSigmaSettings.fastHashSizeBytes = vm["sigma-fasthash-mem"].as<int64_t>();
         defaultSigma = false;
     }
     if (vm.count("sigma-verify-threads"))
     {
-        numSigmaVerifyThreads = vm["sigma-verify-threads"].as<int64_t>();
+        defaultSigmaSettings.numVerifyThreads = vm["sigma-verify-threads"].as<int64_t>();
         defaultSigma = false;
     }
     
     
-    if (numUserVerifyThreads > numSigmaVerifyThreads)
+    if (numUserVerifyThreads > defaultSigmaSettings.numVerifyThreads)
     {
         LogPrintf("Number of user verify threads may not exceed number of sigma verify threads");
         return 1;
     }
     
     LogPrintf("Configuration=====================================================\n\n");
-    LogPrintf("NETWORK:\nGlobal memory cost [%dgb]\nArgon_echo cpu cost for arenas [%d rounds]\nArgon_echo cpu cost for slow hash [%d rounds]\nArgon_echo mem cost [%dMb]\nEcho/Shavite digest size [%d bytes]\nNumber of fast hashes per slow hash [%d]\nNumber of slow hashes per global arena [%d]\nNumber of verify threads [%d]\n\n", memCostGb, arenaCpuCostRounds ,slowHashCpuCostRounds, slowHashMemCostMb, fastHashMemCostBytes, maxHashesPost, maxHashesPre, numSigmaVerifyThreads);
+    LogPrintf("NETWORK:\nGlobal memory cost [%dgb]\nArgon_echo cpu cost for arenas [%d rounds]\nArgon_echo cpu cost for slow hash [%d rounds]\nArgon_echo mem cost [%dMb]\nEcho/Shavite digest size [%d bytes]\nNumber of fast hashes per slow hash [%d]\nNumber of slow hashes per global arena [%d]\nNumber of verify threads [%d]\n\n", defaultSigmaSettings.arenaSizeKb/1024/1024, defaultSigmaSettings.argonArenaRoundCost ,defaultSigmaSettings.argonSlowHashRoundCost, defaultSigmaSettings.argonMemoryCostKb/1024, defaultSigmaSettings.fastHashSizeBytes, defaultSigmaSettings.numHashesPost, defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numVerifyThreads);
     LogPrintf("USER:\nMining with [%d] threads\nMining with [%d gb] memory.\nVerifying with [%s] threads.\n\n", numThreads, memAllowGb, numUserVerifyThreads);
     
     uint64_t memAllowKb = memAllowGb*1024*1024;
@@ -937,11 +558,13 @@ int main(int argc, char** argv)
     {
         memAllowKb = 512*1024;
     }
-    
-    sigma_settings sigmaSettings(arenaCpuCostRounds, slowHashCpuCostRounds, 1024*slowHashMemCostMb, 1024*1024*memCostGb, maxHashesPre, maxHashesPost, numSigmaVerifyThreads, fastHashMemCostBytes);
-    
+        
     // If we are using the default params then perform some tests to ensure everything runs the same across different machines
-    if (defaultSigma)
+    if (!defaultSigma)
+    {
+        defaultSigmaSettings.verify();
+    }
+    else
     {
         LogPrintf("Tests=============================================================\n\n");
         uint64_t nTestFailCount=0;
@@ -977,10 +600,10 @@ int main(int argc, char** argv)
         testPRNG(nTestFailCount);
         
         LogPrintf("Verify validation of valid headers\n");
-        testValidateValidHeaders(sigmaSettings, nTestFailCount);
+        testValidateValidHeaders(defaultSigmaSettings, nTestFailCount);
         
         LogPrintf("Verify validation of invalid headers\n");
-        testValidateInvalidHeaders(sigmaSettings, nTestFailCount);
+        testValidateInvalidHeaders(defaultSigmaSettings, nTestFailCount);
         
         if (nTestFailCount > 0)
         {
@@ -993,8 +616,8 @@ int main(int argc, char** argv)
     //Random header to benchmark with, we will randomly change it more throughout the tests.
     CBlockHeader header;
     header.nVersion = rand();
-    header.hashPrevBlock = ArithToUint256(((((((((arith_uint256(rand()) << 8) * rand()) << 8) * rand()) << 8) * rand()) << 8) * rand()));
-    header.hashMerkleRoot = ArithToUint256(((((((((arith_uint256(rand()) << 8) * rand()) << 8) * rand()) << 8) * rand()) << 8) * rand()));
+    header.hashPrevBlock = GetRandHash();
+    header.hashMerkleRoot = GetRandHash();
     header.nTime = rand();
     header.nBits = rand();
     header.nNonce = rand();
@@ -1036,7 +659,7 @@ int main(int argc, char** argv)
         
         LogPrintf("SIGMA=============================================================\n\n");
         {
-            sigma_context sigmaContext(sigmaSettings, std::min(memAllowKb, 1024*1024*memCostGb), numThreads);
+            sigma_context sigmaContext(defaultSigmaSettings, std::min(memAllowKb, defaultSigmaSettings.arenaSizeKb), numThreads);
             if (!sigmaContext.arenaIsValid())
             {
                 LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
@@ -1056,8 +679,8 @@ int main(int argc, char** argv)
                 {
                     hashData2[i] = rand();
                 }
-                std::vector<unsigned char> hashData3(sigmaSettings.fastHashSizeBytes);
-                for (uint64_t i=0;i<sigmaSettings.fastHashSizeBytes;++i)
+                std::vector<unsigned char> hashData3(defaultSigmaSettings.fastHashSizeBytes);
+                for (uint64_t i=0;i<defaultSigmaSettings.fastHashSizeBytes;++i)
                 {
                     hashData3[i] = rand();
                 }
@@ -1079,8 +702,8 @@ int main(int argc, char** argv)
                 {
                     hashData2[i] = rand();
                 }
-                std::vector<unsigned char> hashData3(sigmaSettings.fastHashSizeBytes);
-                for (uint64_t i=0;i<sigmaSettings.fastHashSizeBytes;++i)
+                std::vector<unsigned char> hashData3(defaultSigmaSettings.fastHashSizeBytes);
+                for (uint64_t i=0;i<defaultSigmaSettings.fastHashSizeBytes;++i)
                 {
                     hashData3[i] = rand();
                 }
@@ -1105,19 +728,19 @@ int main(int argc, char** argv)
             }
             
             {
-                LogPrintf("Bench global arena priming [cpu_cost %drounds] [mem_cost %dgb]:\n", arenaCpuCostRounds, memCostGb );
+                LogPrintf("Bench global arena priming [cpu_cost %drounds] [mem_cost %dgb]:\n", defaultSigmaSettings.argonArenaRoundCost, defaultSigmaSettings.argonMemoryCostKb/1024/1024 );
                 uint64_t nStart = GetTimeMicros(); 
                 uint64_t numArenas=4;
                 for (uint64_t i=0; i<numArenas; ++i)
                 {
-                    sigmaContext.prepareArenas(header, rand());
+                    sigmaContext.prepareArenas(header);
                 }
                 LogPrintf("total [%.2f micros] per round: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numArenas);
             }  
         }
         {
             {
-                sigma_verify_context verify(sigmaSettings, numUserVerifyThreads);
+                sigma_verify_context verify(defaultSigmaSettings, numUserVerifyThreads);
                 LogPrintf("Bench verify [single thread]\n");
                 uint64_t nVerifyNumber=100;
                 uint64_t nCountValid=0;
@@ -1127,7 +750,7 @@ int main(int argc, char** argv)
                     header.nNonce = rand();
                     nStart = GetTimeMicros();
                     // Count and log number of successes to avoid possibility of compiler optimising the call out.
-                    if (verify.verifyHeader(header, rand()))
+                    if (verify.verifyHeader(header))
                     {
                         ++nCountValid;
                     }
@@ -1150,17 +773,17 @@ int main(int argc, char** argv)
         
         std::vector<sigma_context*> sigmaContexts;
         std::vector<uint64_t> sigmaMemorySizes;
-        uint64_t nMemoryAllocated=0;
+        uint64_t nMemoryAllocatedKb=0;
         
-        while (nMemoryAllocated < memAllowKb)
+        while (nMemoryAllocatedKb < memAllowKb)
         {
-            uint64_t nMemoryChunk = std::min((memAllowKb-nMemoryAllocated), 1024*1024*memCostGb);
-            nMemoryAllocated += nMemoryChunk;
-            sigmaMemorySizes.emplace_back(nMemoryChunk);
+            uint64_t nMemoryChunkKb = std::min((memAllowKb-nMemoryAllocatedKb), defaultSigmaSettings.arenaSizeKb);
+            nMemoryAllocatedKb += nMemoryChunkKb;
+            sigmaMemorySizes.emplace_back(nMemoryChunkKb);
         }
         for (auto instanceMemorySizeKb : sigmaMemorySizes)
         {
-            sigmaContexts.push_back(new sigma_context(sigmaSettings, instanceMemorySizeKb, numThreads/sigmaMemorySizes.size()));
+            sigmaContexts.push_back(new sigma_context(defaultSigmaSettings, instanceMemorySizeKb, numThreads/sigmaMemorySizes.size()));
         }
         
         LogPrintf("Bench mining for low difficulty target\n");
@@ -1176,7 +799,7 @@ int main(int argc, char** argv)
             {
                 boost::asio::post(*workerThreads, [&, header, sigmaContext]() mutable
                 {
-                    sigmaContext->prepareArenas(header, rand());
+                    sigmaContext->prepareArenas(header);
                 });
             }
             workerThreads->join();
@@ -1200,12 +823,12 @@ int main(int argc, char** argv)
         LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per half-hash[%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), nHalfHashAverage, ((GetTimeMicros() - nStart)) / (double)hashCounter);
         
         //Extrapolate sustained hashing speed for various time intervals
-        double nSustainedHashesPerSecond = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 150);
-        double nSustainedHashesPerSecond30s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 30);
-        double nSustainedHashesPerSecond60s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 60);
-        double nSustainedHashesPerSecond120s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 120);
-        double nSustainedHashesPerSecond240s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 240);
-        double nSustainedHashesPerSecond480s = calculateSustainedHashrateForTimePeriod(maxHashesPre, maxHashesPost, nHalfHashAverage, nArenaSetuptime, 480);
+        double nSustainedHashesPerSecond30s  = calculateSustainedHashrateForTimePeriod(defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numHashesPost, nHalfHashAverage, nArenaSetuptime, 30);
+        double nSustainedHashesPerSecond60s  = calculateSustainedHashrateForTimePeriod(defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numHashesPost, nHalfHashAverage, nArenaSetuptime, 60);
+        double nSustainedHashesPerSecond120s = calculateSustainedHashrateForTimePeriod(defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numHashesPost, nHalfHashAverage, nArenaSetuptime, 120);
+        double nSustainedHashesPerSecond     = calculateSustainedHashrateForTimePeriod(defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numHashesPost, nHalfHashAverage, nArenaSetuptime, 150);
+        double nSustainedHashesPerSecond240s = calculateSustainedHashrateForTimePeriod(defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numHashesPost, nHalfHashAverage, nArenaSetuptime, 240);
+        double nSustainedHashesPerSecond480s = calculateSustainedHashrateForTimePeriod(defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numHashesPost, nHalfHashAverage, nArenaSetuptime, 480);
         
         // Convert to the largest unit we can so that output is easier to read
         std::string labelSustained = " h";        

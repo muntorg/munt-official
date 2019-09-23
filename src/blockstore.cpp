@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2018 The Gulden developers
+// Copyright (c) 2018-2019 The Gulden developers
 // Authored by: Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -140,7 +140,7 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
     }
     else
     {
-        fPOW_ok = CheckProofOfWork(block.GetPoWHash(), block.nBits, params.GetConsensus());
+        fPOW_ok = CheckProofOfWork(&block, params.GetConsensus());
     }
 
     if (fPOW_ok)

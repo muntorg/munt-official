@@ -2460,7 +2460,7 @@ static bool CheckBlockHeader(const CBlock& block, CValidationState& state, const
     // Check proof of work matches claimed amount
     if (fCheckPOW) {
         // Nested if statement for easier breakpoint management
-        if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
+        if (!CheckProofOfWork(&block, consensusParams))
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
     }
 
