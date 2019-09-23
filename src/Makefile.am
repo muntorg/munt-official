@@ -137,6 +137,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   coins.h \
   compat.h \
   compat/arch.h \
+  compat/sys.h \
   compat/sse.h \
   compat/sse2neon.h \
   compat/byteswap.h \
@@ -504,8 +505,6 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/echo256/sphlib/sph_types.h \
   crypto/hash/sigma/echo256/sphlib/sph_echo.h \
   crypto/hash/sigma/echo256/sphlib/aes_helper.c \
-  crypto/hash/sigma/echo256/echo256_opt.h \
-  crypto/hash/sigma/echo256/echo256_opt.cpp \
   crypto/hash/sigma/shavite3_256/shavite3_256_opt.cpp \
   crypto/hash/sigma/shavite3_256/shavite3_256_opt.h \
   crypto/hash/sigma/shavite3_256/ref/AESround.h \
@@ -543,6 +542,10 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/sha256.h \
   crypto/sha512.cpp \
   crypto/sha512.h
+
+crypto_libgulden_crypto_a_DIST = \
+  crypto/hash/sigma/echo256/echo256_opt.h \
+  crypto/hash/sigma/echo256/echo256_opt.cpp
 
 # consensus: shared between all executables that validate any consensus rules.
 libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
