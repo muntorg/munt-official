@@ -1096,7 +1096,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             // Search
             //
             uint64_t nStart = GetTimeMillis();
-            std::uint64_t nTimeout =  120000 + GetRand(60000))
+            std::uint64_t nTimeout =  120000 + GetRand(60000);
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             if (pblock->nTime > defaultSigmaSettings.activationDate)
             {
@@ -1186,7 +1186,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                             
                             // Abort for timestamp update if its been longer than ~3 minutes.
                             // Randomly stagger the checks so that all miners perform slightly differently.
-                            if (GetTimeMillis() - nStart  > nTimeout)
+                            if (GetTimeMillis() - nStart > nTimeout)
                                 break;
                             
                             // Abort mining and start mining a new block instead if chain tip changed
