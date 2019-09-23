@@ -46,7 +46,6 @@
 #endif
 #include "generation/generation.h"
 #include "script/script.h"
-#include <Gulden/Common/diff.h>
 #include <Gulden/rpcgulden.h>
 #include <validation/witnessvalidation.h>
 
