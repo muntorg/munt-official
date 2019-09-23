@@ -29,6 +29,7 @@ enum HashReturn
 #include "compat.h"
 #include <compat/arch.h>
 #include <compat/sse.h>
+#include <stdint.h>
 typedef struct
 {
     __m128i        state[4][4];
