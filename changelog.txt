@@ -1,6 +1,7 @@
-2.1.0.x
+2.1.0.8
 
 CORE - Fix DOS vulnerability (crash) in witness bundle input checking
+CORE - Introduce SIGMA as the new PoW algorithm in testnet builds.
 
 
 
