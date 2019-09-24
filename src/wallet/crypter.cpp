@@ -88,10 +88,6 @@ bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned
     if (!fKeySet)
         return false;
 
-    // max ciphertext len for a n bytes of plaintext is
-    // n + AES_BLOCKSIZE bytes
-    //vchCiphertext.resize(vchPlaintext.size() + CryptoPP::AES::BLOCKSIZE);
-
     CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enc;
     enc.SetKeyWithIV(vchKey.data(), vchKey.size(), vchIV.data());
     try
