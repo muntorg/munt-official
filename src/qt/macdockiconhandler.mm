@@ -11,6 +11,10 @@
 #include <QWidget>
 
 #undef slots
+
+// Required to compile with Xcode 11 toolchain where ENABLE_STRICT_OBJC_MSGSEND is enabled by default
+#define OBJC_OLD_DISPATCH_PROTOTYPES 1
+
 #include <Cocoa/Cocoa.h>
 #include <objc/objc.h>
 #include <objc/message.h>
