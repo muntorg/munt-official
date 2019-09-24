@@ -162,8 +162,15 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
 
 void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee)
 {
-    CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
-    auto amounts = optimalWitnessDistribution(amount, requestedPeriodInBlocks, witnessInfo.nTotalWeightEligibleAdjusted);
+    std::vector<CAmount> amounts;
+    LOCK(cs_main);
+    if (IsSegSigEnabled(chainActive.TipPrev())) {
+        CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
+        amounts = optimalWitnessDistribution(amount, requestedPeriodInBlocks, witnessInfo.nTotalWeightEligibleAdjusted);
+    }
+    else
+        amounts = { amount };
+
     fundwitnessaccount(pwallet, fundingAccount, witnessAccount, amounts, requestedPeriodInBlocks, fAllowMultiple, pTxid, pFee);
 }
 
