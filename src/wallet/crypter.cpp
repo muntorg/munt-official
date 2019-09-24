@@ -22,6 +22,7 @@
 #include <cryptopp/config.h>
 #include <cryptopp/aes.h>
 #include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
 
 int CCrypter::BytesToKeySHA512AES(const std::vector<unsigned char>& chSalt, const SecureString& strKeyData, int count, unsigned char *key,unsigned char *iv) const
 {
@@ -89,17 +90,18 @@ bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned
 
     // max ciphertext len for a n bytes of plaintext is
     // n + AES_BLOCKSIZE bytes
-    vchCiphertext.resize(vchPlaintext.size() + CryptoPP::AES::BLOCKSIZE);
+    //vchCiphertext.resize(vchPlaintext.size() + CryptoPP::AES::BLOCKSIZE);
 
-    //fixme: (SIGMA)
     CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enc;
-    //PAD?
     enc.SetKeyWithIV(vchKey.data(), vchKey.size(), vchIV.data());
-    enc.ProcessData(&vchCiphertext[0], &vchPlaintext[0], vchPlaintext.size());    
-    //size_t nLen = enc.Encrypt(, );
-    //if(nLen < vchPlaintext.size())
-        //return false;
-    //vchCiphertext.resize(nLen);
+    try
+    {
+        CryptoPP::ArraySource s(&vchPlaintext[0], vchPlaintext.size(), true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(vchCiphertext)));
+    }
+    catch(...)
+    {
+        return false;
+    }
 
     return true;
 }
@@ -111,18 +113,21 @@ bool CCrypter::Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingM
 
     // plaintext will always be equal to or lesser than length of ciphertext
     int nLen = vchCiphertext.size();
-
     vchPlaintext.resize(nLen);
 
-    //fixme: (SIGMA)
     CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
-    //PAD?
     dec.SetKeyWithIV(vchKey.data(), vchKey.size(), vchIV.data());
-    dec.ProcessData(&vchPlaintext[0], &vchCiphertext[0], vchCiphertext.size());
-    
-    //if(nLen == 0)
-        //return false;
-    //vchPlaintext.resize(nLen);
+    try
+    {
+        auto sink = new CryptoPP::ArraySink(&vchPlaintext[0], vchPlaintext.size());
+        CryptoPP::VectorSource s(vchCiphertext, true, new CryptoPP::StreamTransformationFilter(dec, sink));
+        // Trim plaintext to original length
+        vchPlaintext.resize(sink->TotalPutLength());
+    }
+    catch(...)
+    {
+        return false;
+    }
     return true;
 }
 
