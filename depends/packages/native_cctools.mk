@@ -4,11 +4,11 @@ $(package)_download_path=https://github.com/tpoechtrager/cctools-port/archive
 $(package)_file_name=cctools-$($(package)_version).tar.gz
 $(package)_sha256_hash=c88b0631b1d7bb5186dd6466a62f5220dc6191f2b2d9c7c122b327385e734aaf
 $(package)_build_subdir=cctools
-$(package)_clang_version=6.0.0
+$(package)_clang_version=7.0.1
 $(package)_clang_download_path=http://releases.llvm.org/$($(package)_clang_version)
 $(package)_clang_download_file=clang+llvm-$($(package)_clang_version)-x86_64-linux-gnu-ubuntu-16.04.tar.xz
 $(package)_clang_file_name=clang-llvm-$($(package)_clang_version)-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-$(package)_clang_sha256_hash=cc99fda45b4c740f35d0a367985a2bf55491065a501e2dd5d1ad3f97dcac89da
+$(package)_clang_sha256_hash=02ad925add5b2b934d64c3dd5cbd1b2002258059f7d962993ba7f16524c3089c
 $(package)_extra_sources=$($(package)_clang_file_name)
 
 define $(package)_fetch_cmds
@@ -59,7 +59,7 @@ define $(package)_stage_cmds
   cp -P bin/clang++ $($(package)_staging_prefix_dir)/bin/ &&\
   cp lib/libLTO.so $($(package)_staging_prefix_dir)/lib/ && \
   cp -rf lib/clang/$($(package)_clang_version)/include/* $($(package)_staging_prefix_dir)/lib/clang/$($(package)_clang_version)/include/ && \
-  cp bin/llvm-dsymutil $($(package)_staging_prefix_dir)/bin/$(host)-dsymutil && \
+  cp bin/dsymutil $($(package)_staging_prefix_dir)/bin/$(host)-dsymutil && \
   if `test -d include/c++/`; then cp -rf include/c++/ $($(package)_staging_prefix_dir)/include/; fi && \
   if `test -d lib/c++/`; then cp -rf lib/c++/ $($(package)_staging_prefix_dir)/lib/; fi
 endef

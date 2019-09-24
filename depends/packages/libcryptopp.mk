@@ -5,9 +5,9 @@ $(package)_download_path=https://github.com/weidai11/cryptopp/archive/
 $(package)_file_name=CRYPTOPP_8_2_0.tar.gz
 $(package)_sha256_hash=e3bcd48a62739ad179ad8064b523346abb53767bcbefc01fe37303412292343e
 
-
-$(package)_makefile_arm_linux=GNUmakefile-cross
-$(package)_makefile=GNUmakefile
+$(package)_makefile_darwin=GNUmakefile
+$(package)_makefile_linux=GNUmakefile
+$(package)_makefile=$($(package)_makefile_$(host_os))
 
 $(package)_cxxflags_debug += -DDEBUG -DDEBUG_LOCKORDER
 $(package)_cxxflags_release += -DNDEBUG -O3 -fPIC
@@ -20,15 +20,17 @@ define $(package)_set_vars
 endef
 
 define $(package)_config_cmds
+    sed -Ei.old "s|[^A-Z][(]CXX[)]|$($(package)_cxx)|" GNUmakefile && \
+    sed -Ei.old "s|AR = libtool|AR = $($(package)_libtool)|" GNUmakefile
 endef
 
 define $(package)_build_cmds
   PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f GNUmakefile libcryptopp.pc && \
-  PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f $($(package)_makefile) static
+  PREFIX=$($(package)_staging_prefix_dir) RANLIB=$($(package)_ranlib) $(MAKE) -f $($(package)_makefile) static
 endef
 
 define $(package)_stage_cmds
-  PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f $($(package)_makefile) install-lib
+  PREFIX=$($(package)_staging_prefix_dir) RANLIB=$($(package)_ranlib) $(MAKE) -f $($(package)_makefile) install-lib
 endef
 
 define $(package)_postprocess_cmds
