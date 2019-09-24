@@ -14,7 +14,16 @@
 
 #include <stdint.h>
 
-#ifdef MAC_OSX
+#if defined(WIN32)
+#include <windows.h>
+uint64_t systemPhysicalMemoryInBytes()
+{
+    MEMORYSTATUS status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatus(&status);
+    return status.dwTotalPhys;
+}
+#elif defined(MAC_OSX)
 #include <sys/types.h>
 #include <sys/sysctl.h>
 uint64_t systemPhysicalMemoryInBytes()
