@@ -12,14 +12,30 @@
 #include "config/gulden-config.h"
 #endif
 
-#include <sys/sysinfo.h>
 #include <stdint.h>
 
+#ifdef MAC_OSX
+#include <sys/types.h>
+#include <sys/sysctl.h>
+uint64_t systemPhysicalMemoryInBytes()
+{
+    int dataRequest[2];
+    dataRequest[0] = CTL_HW;
+    dataRequest[1] = HW_MEMSIZE;
+    int64_t totalRam = 0;
+    size_t dataLen = sizeof(totalRam);
+    if (sysctl(dataRequest, 2, &totalRam, &dataLen, nullptr, 0) == 0)
+        return totalRam;
+    return 0;
+}
+#else
+#include <sys/sysinfo.h>
 uint64_t systemPhysicalMemoryInBytes()
 {
     struct sysinfo info;
     sysinfo(&info);
     return info.totalram/info.mem_unit;
 }
+#endif
 
 #endif
