@@ -97,8 +97,9 @@ struct CWitnessAccountStatus
 /** Get account witness status and accompanying details
  * hasScriptLegacyOutput iff any of the outputs is CTxOutType::ScriptLegacyOutput
  * hasUnconfirmedWittnessTx iff unconfirmed witness tx for the account (not actually checked for witness type, see implementation note)
+ * pWitnessInfo if != nullptr it will be filled with the witnessInfo if available
 */
-CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
+CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, CGetWitnessInfo* pWitnessInfo = nullptr);
 
 bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
 std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet* pWallet, CAccount* account);

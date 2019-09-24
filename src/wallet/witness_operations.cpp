@@ -541,11 +541,17 @@ void EnsureMatchingWitnessCharacteristics(const std::vector<std::tuple<CTxOut, u
     }
 }
 
-CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
+CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, CGetWitnessInfo* pWitnessInfo)
 {
     WitnessStatus status;
 
     LOCK2(cs_main, pWallet->cs_wallet);
+
+    CGetWitnessInfo witnessInfo;
+
+    if (IsPow2Phase3Active(chainActive.Height())) {
+        witnessInfo = GetWitnessInfoWrapper();
+    }
 
     // Collect uspent witnesses coins on for the account
     std::vector<RouletteItem> accountItems;
@@ -607,7 +613,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
     CWitnessAccountStatus result {
         account,
         status,
-        witnessInfo.nTotalWeightRaw,
+        networkWeight,
         isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : uint64_t(0),
         hasScriptLegacyOutput,
         hasUnconfirmedWittnessTx,
@@ -616,6 +622,9 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         nLockPeriodInBlocks,
         parts
     };
+
+    if (pWitnessInfo && IsPow2Phase3Active(chainActive.Height()))
+        *pWitnessInfo = std::move(witnessInfo);
 
     return result;
 }

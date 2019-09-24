@@ -373,8 +373,8 @@ void WitnessDialog::extendClicked()
         (unused)amounts;
         (unused)duration;
 
-        const auto witnessInfo = GetWitnessInfoWrapper();
-        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, witnessAccount, witnessInfo);
+
+        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, witnessAccount);
         uint64_t durationRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.nLockUntilBlock, chainActive.Tip()->nHeight);
 
         pushDialog(new FundWitnessDialog(lockedAmount, durationRemaining, accountStatus.accountWeight + 1, model, platformStyle, this));
@@ -655,8 +655,8 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
         //fixme: (PHASE5) - Compounding (via RPC at least) is not a binary setting, so display this as semi checked (or something else) when its in a non binary state.
         ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
-        const auto witnessInfo = GetWitnessInfoWrapper();
-        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, witnessInfo);
+        CGetWitnessInfo witnessInfo;
+        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, &witnessInfo);
         if (pWitnessStatus != nullptr)
             *pWitnessStatus = accountStatus.status;
 
