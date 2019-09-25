@@ -729,7 +729,6 @@ static const CRPCCommand commands[] =
     { "generating",         "generate",               &generate,               true,  {"num_blocks","max_tries"} },
     { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"num_blocks","address","max_tries"} },
     { "generating",         "getgenerate",            &getgenerate,            true,  {}  },
-    { "generating",         "setgenerate",            &setgenerate,            true,  {"generate", "gen_proc_limit"}  },
     { "generating",         "setgenerate",            &setgenerate,            true,  {"generate", "gen_proc_limit", "gen_memory_limit"}  },
 
     { "util",               "estimatefee",            &estimatefee,            true,  {"num_blocks"} },
