@@ -545,7 +545,8 @@ EXTRA_crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/echo256/echo256_opt.h \
   crypto/hash/sigma/echo256/echo256_opt.cpp \
   crypto/hash/sigma/shavite3_256/shavite3_256_opt.cpp \
-  crypto/hash/sigma/shavite3_256/shavite3_256_opt.h
+  crypto/hash/sigma/shavite3_256/shavite3_256_opt.h \
+  llvm-cpumodel-hack.cpp
 
 
 # consensus: shared between all executables that validate any consensus rules.

@@ -240,7 +240,7 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
 #endif
 
 void selectOptimisedImplementations()
-{    
+{
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
     shavite3_256_opt_hashState ctx_shavite;

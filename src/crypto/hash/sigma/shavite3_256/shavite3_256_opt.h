@@ -11,21 +11,6 @@
 #ifndef SHAVITE3_256_OPT_H
 #define SHAVITE3_256_OPT_H
 #include <stdint.h>
-enum Shavite3OptSelection
-{
-    SOPT_NONE=0,
-    SOPT_SSE3,
-    SOPT_SSE3_AES,
-    SOPT_SSE4,
-    SOPT_SSE4_AES,
-    SOPT_AVX,
-    SOPT_AVX_AES,
-    SOPT_AVX2,
-    SOPT_AVX2_AES,
-    SOPT_AVX512F,
-    SOPT_AVX512F_AES,
-};
-extern Shavite3OptSelection shavite3_256_opt_selected;
 
 struct shavite3_256_opt_hashState 
 {

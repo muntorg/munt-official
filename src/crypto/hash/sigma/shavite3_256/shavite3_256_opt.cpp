@@ -15,9 +15,7 @@
 #define _mm_aesenc_si128 _mm_aesenc_si128_sw
 #endif
 
-#ifndef SHAVITE3_256_OPT_IMPL
-Shavite3OptSelection shavite3_256_opt_selected=Shavite3OptSelection::SOPT_AVX512F_AES;
-#else
+#ifdef SHAVITE3_256_OPT_IMPL
 
 #include "compat.h"
 #include "assert.h"
