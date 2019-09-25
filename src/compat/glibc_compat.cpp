@@ -78,3 +78,10 @@ extern "C" float __wrap_log2f(float x)
     return log2f_old(x);
 }
 
+#include <sys/random.h>
+#include <errno.h>
+#include <unistd.h>
+ssize_t __wrap_getrandom (void *buffer, size_t length, unsigned int flags)
+{
+    return getrandom(buffer, length, flags);
+}
