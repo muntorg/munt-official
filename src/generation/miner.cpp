@@ -87,6 +87,13 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     static const int64_t nDrift   = 1;
     static int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
     static int64_t nLongTimeStep  = nDrift * 60;
+    
+    // Forbid diff drop when mining on a fork (stalled witness)
+    if (chainActive.Tip() && (pindexPrev->nHeight > chainActive.Tip()->nHeight))
+    {
+        nMaxMissedSteps=0;
+    }
+        
     while (true)
     {
         int64_t nNumMissedSteps = 0;

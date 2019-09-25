@@ -8,12 +8,32 @@ RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fi
 
 
 
+
+2.1.0.7
+
+RPC - Fix a bug in InvalidateBlock behaviour when called on a block that isn't currently in the main chain.
+CORE - Minor improvement to mining behaviour when an absent witness is present.
+UI - Fix a windows only issue with non-ASCII wallet paths. (Introduced by bdb upgrade)
+
+
+
+
+2.1.0.6
+
+MISC - Update checkpoints.
+CORE - Introduce an improvement to checkpoint server mechanism to temporarily help stabalise chain against mining instability. Mechanism will be removed once phase4 and/or SIGMA are active and is just a temporary measure.
+
+
+
+
 2.1.0.5
 
+CORE - Fix a rare issue where witnessing devices would fail to witness due to not completing a proper rescan after importing a witness address.
 CORE - Improve transaction propagation speed by pushing mempool to new connections
 CORE - Introduce builds of the UI client for all architectures ("arm" and "aarch64" previously did not have)
 CORE - Introduce "riscv64" to the list of officially supported architectures.
 CORE - Introduce AppImage installers for "arm" and "aarch64"
+RPC - New command "getaccountaddress" to get current receiving address (as would be displayed in UI) for an account.
 MISC - Update to newer version of Qt which should improve various minor UI aspects.
 
 
@@ -21,7 +41,7 @@ MISC - Update to newer version of Qt which should improve various minor UI aspec
 
 2.1.0.4
 
-UI - Fix a small dispaly update issue when switching between witness and normal accounts in some instances.
+UI - Fix a small display update issue when switching between witness and normal accounts in some instances.
 MISC - Minor maintenance release, update checkpoints and other minor changes
 CORE - Introduce some code to automatically detect and clear the failed verification status of blocks in certain situations where it is safe to do so. This will make it easier for users who fail to update before a fork to update after the fork without having to issue any manual commands.
 CORE - Add some additional logging of error conditions to the witness loop.

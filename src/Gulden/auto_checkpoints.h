@@ -33,9 +33,9 @@ namespace Checkpoints
 	extern CCriticalSection cs_hashSyncCheckpoint;
 	extern CBlockIndex* GetLastSyncCheckpoint();
 	extern bool ValidateSyncCheckpoint(uint256 hashCheckpoint);
-    extern bool ReadCheckpointPubKey(std::string& strPubKey);
-    extern bool WriteCheckpointPubKey(std::string& strPubKey);
-    extern bool ReadSyncCheckpoint(uint256& hashCheckpoint);
+	extern bool ReadCheckpointPubKey(std::string& strPubKey);
+	extern bool WriteCheckpointPubKey(std::string& strPubKey);
+	extern bool ReadSyncCheckpoint(uint256& hashCheckpoint);
 	extern bool WriteSyncCheckpoint(const uint256& hashCheckpoint);
 	extern bool AcceptPendingSyncCheckpoint(const CChainParams& chainparams);
 	extern uint256 AutoSelectSyncCheckpoint();
@@ -46,8 +46,8 @@ namespace Checkpoints
 	extern void AskForPendingSyncCheckpoint(CNode* pfrom);
 	extern bool SetCheckpointPrivKey(std::string strPrivKey);
 	extern bool SendSyncCheckpoint(uint256 hashCheckpoint, const CChainParams& chainparams);
-	extern bool IsSyncCheckpointTooOld(unsigned int nSeconds);
-}
+	extern bool SendCheckpointInvalidate(uint256 hashInvalidate, const CChainParams& chainparams);
+	extern bool IsSyncCheckpointTooOld(unsigned int nSeconds);}
 
 class CUnsignedSyncCheckpoint
 {
@@ -57,7 +57,7 @@ public:
 
 	ADD_SERIALIZE_METHODS;
 	template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+	inline void SerializationOp(Stream& s, Operation ser_action)
 	{
 		READWRITE(this->nVersion);
 		nVersion = this->nVersion;
@@ -73,7 +73,7 @@ class CSyncCheckpoint : public CUnsignedSyncCheckpoint
 public:
 	static const std::string strMasterPubKey;
 	static const std::string strMasterPubKeyTestnet;
-        static const std::string strMasterPubKeyOld;
+	static const std::string strMasterPubKeyOld;
 	static std::string strMasterPrivKey;
 
 	std::vector<unsigned char> vchMsg;
@@ -82,7 +82,7 @@ public:
 	CSyncCheckpoint();
 	ADD_SERIALIZE_METHODS;
 	template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
+	inline void SerializationOp(Stream& s, Operation ser_action)
 	{
 		READWRITECOMPACTSIZEVECTOR(vchMsg);
 		READWRITECOMPACTSIZEVECTOR(vchSig);
@@ -93,5 +93,51 @@ public:
 	bool RelayTo(CNode* pnode) const;
 	bool CheckSignature(CNode* pfrom);
 	bool ProcessSyncCheckpoint(CNode* pfrom, const CChainParams& chainparams);
+};
+
+class CUnsignedSyncCheckpointInvalidate
+{
+public:
+	int nVersion;
+	uint256 hashInvalidate;      // checkpoint block
+
+	ADD_SERIALIZE_METHODS;
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action)
+	{
+		READWRITE(this->nVersion);
+		nVersion = this->nVersion;
+		READWRITE(hashInvalidate);
+	}
+	void SetNull();
+	std::string ToString() const;
+	void print() const;
+};
+
+class CSyncCheckpointInvalidate : public CUnsignedSyncCheckpointInvalidate
+{
+public:
+	static const std::string strMasterPubKey;
+	static const std::string strMasterPubKeyTestnet;
+	static const std::string strMasterPubKeyOld;
+	static std::string strMasterPrivKey;
+
+	std::vector<unsigned char> vchMsg;
+	std::vector<unsigned char> vchSig;
+
+	CSyncCheckpointInvalidate();
+	ADD_SERIALIZE_METHODS;
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action)
+	{
+		READWRITECOMPACTSIZEVECTOR(vchMsg);
+		READWRITECOMPACTSIZEVECTOR(vchSig);
+	}
+	void SetNull();
+	bool IsNull() const;
+	uint256 GetHash() const;
+	bool RelayTo(CNode* pnode) const;
+	bool CheckSignature(CNode* pfrom);
+	bool Process(CNode* pfrom, const CChainParams& chainparams);
 };
 #endif

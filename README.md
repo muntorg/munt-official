@@ -17,20 +17,20 @@
   <tr border=0>
     <td>
       <a href="https://github.com/Gulden/gulden-official/issues">
-        <img  height="20px" src="https://img.shields.io/github/issues/gulden/gulden-official.svg" alt="open issues"/>
+        <img  height="20px" src="https://img.shields.io/github/issues/gulden/gulden-official.svg?color=blue" alt="open issues"/>
     </td>
   </tr>
   <tr border=0>
     <td>
       <a href="https://github.com/Gulden/gulden-official/issues?q=is%3Aissue+is%3Aclosed">
-        <img  height="20px" src="https://img.shields.io/github/issues-closed/gulden/gulden-official.svg" alt="closed issues"/>
+        <img  height="20px" src="https://img.shields.io/github/issues-closed/gulden/gulden-official.svg?color=blue" alt="closed issues"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td border=0>
       <a href="https://github.com/Gulden/gulden-official/releases">
-        <img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg" alt="total downloads"/>
+        <img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg?color=blue" alt="total downloads"/>
       </a>
     </td>
   </tr>
@@ -42,7 +42,11 @@
     </td>
   </tr>
   <tr>
-    <td>&nbsp;</td>
+    <td>
+      <a href="https://github.com/Gulden/gulden-official/compare/master@%7B12month%7D...unity_phase4">
+        <img height="20px" src="https://img.shields.io/badge/dev%20branch-unity_phase4-blue.svg" alt="active_branch"/>
+      </a>
+    </td>
   </tr>
 </table>
 
@@ -50,6 +54,14 @@
 
 ### License
 All code, binaries and other assets in this repository are subject to [The Gulden license](https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden) except where explicitely stated otherwise.
+
+### Branches
+`master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the sofrware than use the `master` branch.
+
+Each major version of the software gets its own branch e.g. `2.0_development`, `2.1_development` where if `2.1` were the next major release than both `2.0` and `2.1` may see some activity with `2.0` getting minor backports and updates while `2.1` development continues.
+
+Major features may also see their own release e.g. `unity`.
+The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches.
 
 ### Contributing
 If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
@@ -101,7 +113,6 @@ If you are sure you need to build the software yourself, please read the [build 
 |**Infrastructure**|**Main network**|**Testnet**|
 |Official block explorer|blockchain.gulden.com|-|
 |Community block explorer|www.dactual.com|-|
-|Community block explorer|www.guldenchain.com|testnet.guldenchain.com|
 |DNS Seed 1|seed.gulden.com|-|
 |DNS Seed 2|amsterdam.gulden.com|-|
 |DNS Seed 3|rotterdam.gulden.network|-|

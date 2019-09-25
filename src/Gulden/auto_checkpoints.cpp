@@ -435,9 +435,51 @@ namespace Checkpoints
 
         // Test signing successful, proceed
         CSyncCheckpoint::strMasterPrivKey = strPrivKey;
+        CSyncCheckpointInvalidate::strMasterPrivKey = strPrivKey;
         return true;
     }
 
+    bool SendCheckpointInvalidate(uint256 hashInvalidate, const CChainParams& chainparams)
+    {
+        CSyncCheckpointInvalidate invalidate;
+        invalidate.hashInvalidate = hashInvalidate;
+        CDataStream sMsg(SER_NETWORK, PROTOCOL_VERSION);
+        sMsg << (CUnsignedSyncCheckpointInvalidate)invalidate;
+        invalidate.vchMsg = std::vector<unsigned char>(sMsg.begin(), sMsg.end());
+
+        if (CSyncCheckpoint::strMasterPrivKey.empty())
+        {
+            return error("SendCheckpointInvalidate: Checkpoint master key unavailable.");
+        }
+
+        std::vector<unsigned char> vchPrivKey = ParseHex(CSyncCheckpoint::strMasterPrivKey);
+        CKey key;
+        key.SetPrivKey(CPrivKey(vchPrivKey.begin(), vchPrivKey.end()), false); // if key is not correct openssl may crash
+
+        if (!key.Sign(Hash(invalidate.vchMsg.begin(), invalidate.vchMsg.end()), invalidate.vchSig))
+        {
+            return error("SendCheckpointInvalidate: Unable to sign invalidate checkpoint, check private key?");
+        }
+
+        if(!invalidate.Process(NULL, chainparams))
+        {
+            LogPrintf("WARNING: SendCheckpointInvalidate: Failed to process checkpoint.\n");
+            return false;
+        }
+        else
+        {
+            LogPrintf("SendCheckpointInvalidate: SUCCESS.\n");
+        }
+
+        // Relay checkpoint
+        {
+            g_connman->ForEachNode([&invalidate](CNode* pnode) {
+                    invalidate.RelayTo(pnode);
+                });
+        }
+        return true;
+    }
+    
     // Broadcast a new checkpoint to the network [Checkpoint server only]
     bool SendSyncCheckpoint(uint256 hashCheckpoint, const CChainParams& chainparams)
     {
@@ -634,6 +676,112 @@ bool CSyncCheckpoint::RelayTo(CNode* pnode) const
     {
         pnode->hashCheckpointKnown = hashCheckpoint;
         g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::CHECKPOINT, *this));
+        return true;
+    }
+    return false;
+}
+
+
+
+
+
+const std::string CSyncCheckpointInvalidate::strMasterPubKey		= "04ff1007ffe5cffe8889b1842c7bd2d82894f9a5a946fbec95f5f748a190fcb724c29ab304b026ba2040fca893c617ca09f7b67f53be0f18146ee93638ab39c0dc";
+const std::string CSyncCheckpointInvalidate::strMasterPubKeyTestnet  	= "042785eba41f699847a7afa0fd3d70485065b5d04d726925e5a7827ca11b5a0479ea8f90dc74e10500adff05ca695f1590bb6bd17ad3cccea80441d4c2e9a4e5e5";
+const std::string CSyncCheckpointInvalidate::strMasterPubKeyOld             = "043872e04721dc342fee16ca8f76e0d0bee23170e000523241f83e5190dece6e259a465e8efd4194c0b8f208967c59089fc2d85fcb9847764568833021197344b0";
+
+std::string CSyncCheckpointInvalidate::strMasterPrivKey = "";
+
+// ppcoin: verify signature of sync-checkpoint message
+bool CSyncCheckpointInvalidate::CheckSignature(CNode* pfrom)
+{
+    CPubKey key(ParseHex(IsArgSet("-testnet") ? CSyncCheckpointInvalidate::strMasterPubKeyTestnet : CSyncCheckpointInvalidate::strMasterPubKey));
+    if (!key.IsValid())
+    {
+        return error("CSyncCheckpointInvalidate::CheckSignature() : SetPubKey failed");
+    }
+    if (!key.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
+    {
+        CPubKey keyOld(ParseHex(strMasterPubKeyOld));
+        if (!keyOld.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
+        {
+            Misbehaving(pfrom->GetId(), 10);
+            return error("CSyncCheckpointInvalidate::CheckSignature() : verify signature failed");
+        }
+        return false;
+    }
+
+    // Now unserialize the data
+    CDataStream sMsg(vchMsg, SER_NETWORK, PROTOCOL_VERSION);
+    sMsg >> *(CUnsignedSyncCheckpointInvalidate*)this;
+    return true;
+}
+
+// ppcoin: process synchronized checkpoint
+bool CSyncCheckpointInvalidate::Process(CNode* pfrom, const CChainParams& chainparams)
+{
+    if (!CheckSignature(pfrom))
+    {
+        return false;
+    }
+
+    LOCK2(cs_main, Checkpoints::cs_hashSyncCheckpoint);// cs_main lock required for ReadBlockFromDisk
+
+    if (mapBlockIndex.count(hashInvalidate))
+    {
+        CValidationState state;
+        CBlockIndex* pblockindex = mapBlockIndex[hashInvalidate];
+        InvalidateBlock(state, Params(), pblockindex);
+    }
+    
+    return true;
+}
+
+
+void CUnsignedSyncCheckpointInvalidate::SetNull()
+{
+    nVersion = 1;
+    hashInvalidate = uint256();
+}
+
+std::string CUnsignedSyncCheckpointInvalidate::ToString() const
+{
+    return strprintf("CSyncCheckpoint(\n    nVersion       = %d\n    hashInvalidate = %s\n)\n", nVersion, hashInvalidate.ToString().c_str());
+}
+
+void CUnsignedSyncCheckpointInvalidate::print() const
+{
+    LogPrintf("%s", ToString().c_str());
+}
+
+CSyncCheckpointInvalidate::CSyncCheckpointInvalidate()
+{
+    SetNull();
+}
+
+void CSyncCheckpointInvalidate::SetNull()
+{
+    CUnsignedSyncCheckpointInvalidate::SetNull();
+    vchMsg.clear();
+    vchSig.clear();
+}
+
+bool CSyncCheckpointInvalidate::IsNull() const
+{
+    return (hashInvalidate == uint256());
+}
+
+uint256 CSyncCheckpointInvalidate::GetHash() const
+{
+    return SerializeHash(*this);
+}
+
+bool CSyncCheckpointInvalidate::RelayTo(CNode* pnode) const
+{
+    // returns true if wasn't already sent
+    if (pnode->hashInvalidateKnown != hashInvalidate)
+    {
+        pnode->hashInvalidateKnown = hashInvalidate;
+        g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::CHECKPOINT_INVALIDATE, *this));
         return true;
     }
     return false;
