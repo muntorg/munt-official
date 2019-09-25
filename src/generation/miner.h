@@ -30,6 +30,7 @@ class CBlockIndex;
 class CChainParams;
 class CScript;
 class CWallet;
+class CAccount;
 
 extern double dBestHashesPerSec;
 extern double dHashesPerSec;
@@ -155,7 +156,7 @@ struct update_for_parent_inclusion
 CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainparams, std::string& strError, CBlockIndex*& pWitnessBlockToEmbed);
 
 /** Run the miner threads */
-void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams);
+void PoWMineGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount = nullptr);
 
 /** Generate a new block, without valid proof-of-work */
 class BlockAssembler
@@ -197,7 +198,7 @@ public:
     BlockAssembler(const CChainParams& params, const Options& options);
 
     /** Construct a new block template with coinbase to scriptPubKeyIn */
-    std::unique_ptr<CBlockTemplate> CreateNewBlock(CBlockIndex* pIndexPrev, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineWitnessTx=true, CBlockIndex* pWitnessBlockIndex=nullptr, bool noValidityCheck=false, std::vector<unsigned char>* pWitnessCoinbaseHex=nullptr, std::vector<unsigned char>* pWitnessSubsidyHex=nullptr, CAmount* pAmountPoW2Subsidy=nullptr);
+    std::unique_ptr<CBlockTemplate> CreateNewBlock(CBlockIndex* pIndexPrev, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineWitnessTx=true, CBlockIndex* pWitnessBlockIndex=nullptr, bool noValidityCheck=false);
 
 private:
     // utility functions

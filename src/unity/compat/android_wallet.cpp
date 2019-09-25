@@ -12,14 +12,17 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/descriptor.pb.h>
 #include <crypto/scrypt/crypto_scrypt.h>
-#include <crypto/aes.h>
+
+#include <cryptopp/config.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
 
 #include <codecvt>
 #include <locale>
 
 #include <boost/scope_exit.hpp>
 
-#include <fcntl.h>
 
 
 using namespace google::protobuf;
@@ -228,16 +231,15 @@ android_wallet ParseAndroidProtoWallet(std::string walletPath, std::string walle
         crypto_scrypt((uint8_t*)&passwordData[0], passwordData.size(), (uint8_t*)scryptSalt.c_str(), scryptSalt.length(), scryptN, scryptR, scryptP, &aesKeyData[0], 32);
 
         // Combine the AES key with the IV and the encrypted data to retrieve the original unencrypted data
-        AES256CBCDecrypt dec(&aesKeyData[0], (const unsigned char*)&aesIV[0], true);
-        int nLen = aesCryptedData.size(); // plaintext will always be equal to or lesser than length of ciphertext
-        walletRet.walletSeedMnemonic.resize(nLen);
-        nLen = dec.Decrypt((const unsigned char*)&aesCryptedData[0], aesCryptedData.size(), (unsigned char*)&walletRet.walletSeedMnemonic[0]);
-        if (nLen == 0)
+        CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
+        dec.SetKeyWithIV(&aesKeyData[0], aesKeyData.size(), (const unsigned char*)&aesIV[0]);
+        CryptoPP::StringSource s(walletRet.walletSeedMnemonic, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::StringSink(aesCryptedData)));
+        
+        if (walletRet.walletSeedMnemonic.size() == 0)
         {
             walletRet.resultMessage = "Decryption failed.";
             return walletRet;
         }
-        walletRet.walletSeedMnemonic.resize(nLen);
     }
     if (!walletRet.walletSeedMnemonic.empty())
     {

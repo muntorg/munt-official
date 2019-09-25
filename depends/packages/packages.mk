@@ -1,4 +1,4 @@
-packages:=boost openssl
+packages:=boost openssl libcryptopp
 
 ifneq ($(host_os),ios)
 packages += libevent zeromq

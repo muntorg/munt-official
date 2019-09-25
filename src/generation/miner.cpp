@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -56,6 +56,7 @@
 
 //Gulden includes
 #include "streams.h"
+#include <boost/scope_exit.hpp>
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -80,21 +81,20 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     if (nOldTime < nNewTime)
         pblock->nTime = nNewTime;
 
-    // Allow pools to control maximum diff drop to suit their hashrate (prevent sudden pool ddos from 100s of blocks)
-    // Larger pools should stick to 0, smaller pools should put a higher value.
-    //fixme: (POST-PHASE5) Speed up once confirmed working.
-    int64_t nMaxMissedSteps = GetArg("-limitdeltadiffdrop", 0);
+    //fixme: (PHASE5) - We can likely remove this
+    // Allow miners to control maximum diff drop to suit their hashrate (prevent sudden self-ddos from 100s of blocks being found per second)
+    int64_t nMaxMissedSteps = GetArg("-limitdeltadiffdrop", 5000);
     static const int64_t nDrift   = 1;
     static int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
     static int64_t nLongTimeStep  = nDrift * 60;
-    
+
     // Forbid diff drop when mining on a fork (stalled witness)
     if (chainActive.Tip() && (pindexPrev->nHeight > chainActive.Tip()->nHeight))
     {
         nMaxMissedSteps=0;
     }
-        
-    while (true)
+
+    while (true && (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1))
     {
         int64_t nNumMissedSteps = 0;
         if ((pblock->nTime - pindexPrev->GetBlockTime()) > nLongTimeLimit)
@@ -181,7 +181,7 @@ void BlockAssembler::resetBlock()
 }
 
 
-static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const CChainParams& params, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase, std::vector<unsigned char>& witnessCoinbaseHex, std::vector<unsigned char>& witnessSubsidyHex)
+static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pindexPrev, const CChainParams& params, CBlockIndex* pWitnessBlockToEmbed, int nParentPoW2Phase)
 {
     assert(pindexPrev->nHeight == pWitnessBlockToEmbed->nHeight);
     assert(pindexPrev->pprev == pWitnessBlockToEmbed->pprev);
@@ -241,13 +241,6 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
         // Serialised PoW2 witness header (witness portion only)
         // Followed by a single transaction for the witness reward (20 NLG witness reward)
         {
-            // For the benefit of GetBlockTemplate
-            CVectorWriter serialisedCoinbase(SER_NETWORK, INIT_PROTO_VERSION,witnessCoinbaseHex, 0);
-            out.WriteToStream(serialisedCoinbase, CTransaction::CURRENT_VERSION);
-            CVectorWriter serialisedWitnessSubsidy(SER_NETWORK, INIT_PROTO_VERSION,witnessSubsidyHex, 0);
-            pWitnessBlock->vtx[nWitnessCoinbasePos]->vout[1].WriteToStream(serialisedWitnessSubsidy, CTransaction::CURRENT_VERSION);
-
-            // For the actual coinbase
             CMutableTransaction coinbaseTx(*block.vtx[0]);
             coinbaseTx.vout.push_back(out);
             coinbaseTx.vout.push_back(pWitnessBlock->vtx[nWitnessCoinbasePos]->vout[1]); // Witness subsidy
@@ -266,7 +259,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     return true;
 }
 
-std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck, std::vector<unsigned char>* pWitnessCoinbaseHex, std::vector<unsigned char>* pWitnessSubsidyHex, CAmount* pAmountPoW2Subsidy)
+std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
 {
     fMineSegSig = true;
 
@@ -314,14 +307,12 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     if (nParentPoW2Phase >= 3)
     {
         nSubsidyWitness = GetBlockSubsidyWitness(nHeight);
-        if (pAmountPoW2Subsidy)
-            *pAmountPoW2Subsidy = nSubsidyWitness;
         nSubsidy -= nSubsidyWitness;
     }
 
 
     // First 'active' block of phase 4 (first block with a phase 4 parent) contains two witness subsidies so miner loses out on 20 NLG for this block
-    // This block is treated special. (but special casing can dissapear for 2.1 release.
+    // This block is treated special. (but special casing can dissapear for PHASE5 release.
     if (nGrandParentPoW2Phase == 3 && nParentPoW2Phase == 4)
         nSubsidy -= GetBlockSubsidyWitness(nHeight);
 
@@ -450,14 +441,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         if (pWitnessBlockToEmbed)
         {
             //NB! Modifies block version so must be called *after* ComputeBlockVersion and not before.
-            std::vector<unsigned char> witnessCoinbaseHex;
-            std::vector<unsigned char> witnessSubsidyHex;
-            if (!InsertPoW2WitnessIntoCoinbase(*pblock, pParent, chainparams, pWitnessBlockToEmbed, nParentPoW2Phase, witnessCoinbaseHex, witnessSubsidyHex))
+            if (!InsertPoW2WitnessIntoCoinbase(*pblock, pParent, chainparams, pWitnessBlockToEmbed, nParentPoW2Phase))
                 return nullptr;
-            if (pWitnessCoinbaseHex)
-                *pWitnessCoinbaseHex = witnessCoinbaseHex;
-            if (pWitnessSubsidyHex)
-                *pWitnessSubsidyHex = witnessSubsidyHex;
         }
     }
 
@@ -852,7 +837,7 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
     int nPoW2PhaseTip = GetPoW2Phase(chainActive.Tip(), chainparams, chainActive);
     int nPoW2PhasePrev = GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive);
     LogPrintf("%s\n", pblock->ToString());
-    LogPrintf("Generated: hash= %s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetPoWHash().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
+    LogPrintf("Generated: hash=%s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
 
     //fixme: (POST-PHASE5) we should avoid submitting stale blocks here
     //but only if they are really stale (there are cases where we want to mine not on the tip (stalled chain)
@@ -1025,31 +1010,20 @@ std::atomic<int64_t> nHashThrottle(-1);
 static CCriticalSection timerCS;
 
 static const unsigned int hashPSTimerInterval = 200;
-void static GuldenGenerate(const CChainParams& chainparams)
+
+void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemory)
 {
     LogPrintf("GuldenGenerate started\n");
     RenameThread("gulden-generate");
 
     int64_t nUpdateTimeStart = GetTimeMillis();
 
-    static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
+    static bool testnet = IsArgSet("-testnet");
     static bool regTest = GetBoolArg("-regtest", false);
 
     unsigned int nExtraNonce = 0;
     std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
-    GetMainSignals().ScriptForMining(coinbaseScript, NULL);
-
-     // Meter hashes/sec
-    if (nHPSTimerStart == 0)
-    {
-        LOCK(timerCS);
-        if (nHPSTimerStart == 0)
-        {
-            nHPSTimerStart = GetTimeMillis();
-            nHashCounter = 0;
-            dHashesPerSec = 0;
-        }
-    }
+    GetMainSignals().ScriptForMining(coinbaseScript, forAccount);
 
     try {
         // Throw an error if no script was provided.  This can happen
@@ -1062,7 +1036,7 @@ void static GuldenGenerate(const CChainParams& chainparams)
 
         while (true)
         {
-            if (!regTest && !hashCity)
+            if (!regTest && !testnet)
             {
                 // Busy-wait for the network to come online so we don't waste time mining on an obsolete chain. In regtest mode we expect to fly solo.
                 while (true)
@@ -1084,6 +1058,7 @@ void static GuldenGenerate(const CChainParams& chainparams)
             unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
             CBlockIndex* pindexParent = chainActive.Tip();
             CBlockIndex* pTipAtStartOfMining = pindexParent;
+            uint64_t nOrphansAtStartOfMining = GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size();
 
             if ( !pindexParent )
                 continue;
@@ -1124,57 +1099,131 @@ void static GuldenGenerate(const CChainParams& chainparams)
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexParent, nExtraNonce);
 
-            //LogPrintf("GuldenGenerate running: %u transactions (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
-
             //
             // Search
             //
-            int64_t nStart = GetTime();
+            uint64_t nStart = GetTimeMillis();
+            std::uint64_t nTimeout =  120000 + GetRand(60000);
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
-
-            // Check if something found
-            arith_uint256 hashMined;
-            while (true)
+            if (pblock->nTime > defaultSigmaSettings.activationDate)
             {
-                if (GetTimeMillis() - nHPSTimerStart > hashPSTimerInterval)
+                std::vector<std::unique_ptr<sigma_context>> sigmaContexts;
+                std::vector<uint64_t> sigmaMemorySizes;
+                uint64_t nMemoryAllocatedKb=0;
+                
+                
+                while (nMemoryAllocatedKb < nMemory)
                 {
-                    // Check for stop or if block needs to be rebuilt
-                    boost::this_thread::interruption_point();
-
-                    TRY_LOCK(timerCS, lockhc);
-                    if (lockhc && GetTimeMillis() - nHPSTimerStart > hashPSTimerInterval)
+                    uint64_t nMemoryChunkKb = std::min((nMemory-nMemoryAllocatedKb), defaultSigmaSettings.arenaSizeKb);
+                    nMemoryAllocatedKb += nMemoryChunkKb;
+                    sigmaMemorySizes.emplace_back(nMemoryChunkKb);
+                }
+                //fixme: (SIGMA) - better memory size handling - right now we just blindly allocate until we succeed...
+                //And we don't even attempt to account for swap, so if the user sets a memory size too large for system memory we will just happily swap and perform worse than if the user picked a more reasonable size.
+                for (auto instanceMemorySizeKb : sigmaMemorySizes)
+                {
+                    int64_t trySizeKb = instanceMemorySizeKb;
+                    while (trySizeKb > 0)
                     {
-                        int64_t nTemp = nHashCounter;
-                        nHashCounter = 0;
-                        dHashesPerSec = hashPSTimerInterval * (nTemp / (GetTimeMillis() - nHPSTimerStart));
-                        dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
-                        nHPSTimerStart = GetTimeMillis();
+                        try
+                        {
+                            sigmaContexts.push_back(std::unique_ptr<sigma_context>(new sigma_context(defaultSigmaSettings, trySizeKb, nThreads/sigmaMemorySizes.size())));
+                            break;
+                        }
+                        catch (...)
+                        {
+                            // reduce by 256mb and try again.
+                            trySizeKb -= 256*1024*1024;
+                        }
                     }
                 }
-                if (GetTimeMillis() - nUpdateTimeStart > 5000)
+                
+                // Prepare arenas
+                CBlockHeader header = pblock->GetBlockHeader();
                 {
-                    nUpdateTimeStart = GetTimeMillis();
-                    // Update nTime every few seconds
-                    if (UpdateTime(pblock, chainparams.GetConsensus(), pindexParent) < 0)
-                        break; // Recreate the block if the clock has run backwards,so that we can use the correct time.
-                }
-                if (nHashThrottle != -1 && nHashCounter > nHashThrottle)
-                {
-                    MilliSleep(50);
-                    continue;
-                }
-
-                hashMined = UintToArith256(pblock->GetPoWHash());
-
-                if (hashMined <= hashTarget)
-                {
-                    TRY_LOCK(processBlockCS, lockProcessBlock);
-                    if(!lockProcessBlock)
-                        break;
-
+                    auto workerThreads = new boost::asio::thread_pool(nThreads);
+                    for (const auto& sigmaContext : sigmaContexts)
                     {
+                        boost::asio::post(*workerThreads, [&, header]() mutable
+                        {
+                            sigmaContext->prepareArenas(header);
+                        });
+                    }
+                    workerThreads->join();
+                }
+                
+                // Mine
+                {
+                    //fixme: (SIGMA) use hash instead of bool so we can log it
+                    //fixme: (SIGMA) set limitdeltadiffdrop for mining from wallet (SoftSetArg)
+                    uint256 foundBlockHash;
+                    std::atomic<uint64_t> halfHashCounter=0;
+                    std::atomic<uint64_t> nThreadCounter=0;
+                    bool interrupt = false;
+                    
+                    auto workerThreads = new boost::asio::thread_pool(nThreads);
+                    for (const auto& sigmaContext : sigmaContexts)
+                    {
+                        ++nThreadCounter;
+                        boost::asio::post(*workerThreads, [&, header]() mutable
+                        {
+                            sigmaContext->mineBlock(pblock, halfHashCounter, foundBlockHash, interrupt);
+                            --nThreadCounter;
+                        });
+                    }
+                    {
+                        // If this thread gets interrupted then terminate mining
+                        BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); } BOOST_SCOPE_EXIT_END
+                        while (true)
+                        {    
+                            //fixme: (SIGMA) - Instead of busy polling it would be better if we could wait here on various signals, we would need to wait on several signals
+                            // 1) A signal for block found by one of our mining threads
+                            // 2) A signal for chain tip change
+                            // 3) A signal for 'top level witness orphan' changes
+                            MilliSleep(100);
+
+                            // If we have found a block then exit loop and process it immediately
+                            if (foundBlockHash != uint256())
+                                break;
+                            
+                            //fixme: (SIGMA) - This can be improved in cases where we have 'uneven' contexts, one may still have lots of work when another is finished, we might want to only restart one of them and not both...
+                            // If at least one of the threads is done working then abandon the rest of them, and then see if we have found a block or need to start again with a different block etc.
+                            if (nThreadCounter < sigmaContexts.size())
+                                break;
+                            
+                            // Abort for timestamp update if its been longer than ~3 minutes.
+                            // Randomly stagger the checks so that all miners perform slightly differently.
+                            if (GetTimeMillis() - nStart > nTimeout)
+                                break;
+                            
+                            // Abort mining and start mining a new block instead if chain tip changed
+                            if (pTipAtStartOfMining != chainActive.Tip())
+                                break;
+                            
+                            // Abort mining and start mining a new block instead if alternative chain tip changed
+                            if (nOrphansAtStartOfMining != GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size())
+                            {
+                                nOrphansAtStartOfMining = GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size();
+                                if (pindexParent != FindMiningTip(pindexParent, chainparams, strError, pWitnessBlockToEmbed))
+                                    break;
+                            }
+                            
+                            // Allow opportunity for user to terminate mining.
+                            boost::this_thread::interruption_point();
+                        }
+                    }
+                    
+                    uint64_t nStop = GetTimeMillis();
+                    dHashesPerSec = (halfHashCounter*1000) / (nStop-nStart);
+                    dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
+                    if (foundBlockHash != uint256())
+                    {
+                        TRY_LOCK(processBlockCS, lockProcessBlock);
+                        if(!lockProcessBlock)
+                            continue;
+
                         // Found a solution
-                        LogPrintf("generated PoW\n  hash: %s\n  diff: %s\n", hashMined.GetHex(), hashTarget.GetHex());
+                        LogPrintf("generated PoW\n  hash: %s\n  diff: %s\n", foundBlockHash.GetHex(), hashTarget.GetHex());
                         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
                         ProcessBlockFound(shared_pblock, chainparams);
                         coinbaseScript->keepScriptOnDestroy();
@@ -1182,19 +1231,65 @@ void static GuldenGenerate(const CChainParams& chainparams)
                         // In regression test mode, stop mining after a block is found.
                         if (chainparams.MineBlocksOnDemand())
                             throw boost::thread_interrupted();
-
-                        break;
                     }
+                    boost::this_thread::interruption_point();
+                    // Try again with a new updated block header
+                    continue;
                 }
-                pblock->nNonce += 1;
-                ++nHashCounter;
+            }
+            else
+            {
+                // Check if something found
+                arith_uint256 hashMined;
+                while (true)
+                {
+                    // Check for stop or if block needs to be rebuilt
+                    boost::this_thread::interruption_point();
+                    if (GetTimeMillis() - nUpdateTimeStart > 5000)
+                    {
+                        nUpdateTimeStart = GetTimeMillis();
+                        // Update nTime every few seconds
+                        if (UpdateTime(pblock, chainparams.GetConsensus(), pindexParent) < 0)
+                            break; // Recreate the block if the clock has run backwards,so that we can use the correct time.
+                    }
+                    if (nHashThrottle != -1 && nHashCounter > nHashThrottle)
+                    {
+                        MilliSleep(50);
+                        continue;
+                    }
 
-                if (pblock->nNonce >= 0xffff0000)
-                    break;
-                if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
-                    break;
-                if (pTipAtStartOfMining != chainActive.Tip())
-                    break;
+                    hashMined = UintToArith256(pblock->GetPoWHash());
+
+                    if (hashMined <= hashTarget)
+                    {
+                        TRY_LOCK(processBlockCS, lockProcessBlock);
+                        if(!lockProcessBlock)
+                            break;
+
+                        {
+                            // Found a solution
+                            LogPrintf("generated PoW\n  hash: %s\n  diff: %s\n", hashMined.GetHex(), hashTarget.GetHex());
+                            std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+                            ProcessBlockFound(shared_pblock, chainparams);
+                            coinbaseScript->keepScriptOnDestroy();
+
+                            // In regression test mode, stop mining after a block is found.
+                            if (chainparams.MineBlocksOnDemand())
+                                throw boost::thread_interrupted();
+
+                            break;
+                        }
+                    }
+                    pblock->nNonce += 1;
+                    ++nHashCounter;
+
+                    if (pblock->nNonce >= 0xffff0000)
+                        break;
+                    if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
+                        break;
+                    if (pTipAtStartOfMining != chainActive.Tip())
+                        break;
+                }
             }
         }
     }
@@ -1210,25 +1305,24 @@ void static GuldenGenerate(const CChainParams& chainparams)
     }
 }
 
-void PoWMineGulden(bool fGenerate, int nThreads, const CChainParams& chainparams)
+void PoWMineGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount)
 {
-    static boost::thread_group* minerThreads = NULL;
+    static boost::thread* minerThread = NULL;
 
     if (nThreads < 0)
         nThreads = GetNumCores();
 
-    if (minerThreads != NULL)
+    if (minerThread != NULL)
     {
-        minerThreads->interrupt_all();
-        delete minerThreads;
-        minerThreads = NULL;
+        //fixme: (SIGMA) - The interrupt here doesn't work fast enough.
+        minerThread->interrupt();
+        minerThread->join();
+        delete minerThread;
+        minerThread = NULL;
     }
 
     if (nThreads == 0 || !fGenerate)
         return;
 
-    minerThreads = new boost::thread_group();
-    for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&GuldenGenerate, boost::cref(chainparams)));
+    minerThread = new boost::thread(boost::bind(&GuldenGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
 }
-

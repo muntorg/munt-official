@@ -2,7 +2,6 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "crypto/aes.h"
 #include "crypto/chacha20.h"
 #include "crypto/ripemd160.h"
 #include "crypto/sha1.h"
@@ -15,10 +14,14 @@
 #include "utilstrencodings.h"
 #include "test/test_gulden.h"
 
+#include <cryptopp/config.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
+
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
-#include <openssl/aes.h>
 #include <openssl/evp.h>
 
 BOOST_FIXTURE_TEST_SUITE(crypto_tests, BasicTestingSetup)
@@ -77,13 +80,17 @@ static void TestAES128(const std::string &hexkey, const std::string &hexin, cons
     assert(key.size() == 16);
     assert(in.size() == 16);
     assert(correctout.size() == 16);
-    AES128Encrypt enc(&key[0]);
+    
+    CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption enc;
+    enc.SetKey(&key[0], key.size());
     buf.resize(correctout.size());
     buf2.resize(correctout.size());
-    enc.Encrypt(&buf[0], &in[0]);
+    enc.ProcessData(&buf[0], &in[0], correctout.size());
     BOOST_CHECK_EQUAL(HexStr(buf), HexStr(correctout));
-    AES128Decrypt dec(&key[0]);
-    dec.Decrypt(&buf2[0], &buf[0]);
+    
+    CryptoPP::ECB_Mode<CryptoPP::AES>::Decryption dec;
+    dec.SetKey(&key[0], key.size());
+    dec.ProcessData(&buf2[0], &buf[0], correctout.size());
     BOOST_CHECK_EQUAL(HexStr(buf2), HexStr(in));
 }
 
@@ -97,12 +104,16 @@ static void TestAES256(const std::string &hexkey, const std::string &hexin, cons
     assert(key.size() == 32);
     assert(in.size() == 16);
     assert(correctout.size() == 16);
-    AES256Encrypt enc(&key[0]);
+    
+    CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption enc;
+    enc.SetKey(&key[0], key.size());
     buf.resize(correctout.size());
-    enc.Encrypt(&buf[0], &in[0]);
+    enc.ProcessData(&buf[0], &in[0], correctout.size());
     BOOST_CHECK(buf == correctout);
-    AES256Decrypt dec(&key[0]);
-    dec.Decrypt(&buf[0], &buf[0]);
+    
+    CryptoPP::ECB_Mode<CryptoPP::AES>::Decryption dec;
+    dec.SetKey(&key[0], key.size());
+    dec.ProcessData(&buf[0], &buf[0], correctout.size());
     BOOST_CHECK(buf == in);
 }
 
@@ -112,20 +123,40 @@ static void TestAES128CBC(const std::string &hexkey, const std::string &hexiv, b
     std::vector<unsigned char> iv = ParseHex(hexiv);
     std::vector<unsigned char> in = ParseHex(hexin);
     std::vector<unsigned char> correctout = ParseHex(hexout);
-    std::vector<unsigned char> realout(in.size() + AES_BLOCKSIZE);
+    std::vector<unsigned char> realout;
 
     // Encrypt the plaintext and verify that it equals the cipher
-    AES128CBCEncrypt enc(&key[0], &iv[0], pad);
-    int size = enc.Encrypt(&in[0], in.size(), &realout[0]);
-    realout.resize(size);
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enc;
+    enc.SetKeyWithIV(&key[0], key.size(), &iv[0]);
+    if (pad)
+    {
+        #if !defined(DEBUG_LOCKORDER)
+        CryptoPP::VectorSource s(in, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(realout)));
+        #endif
+    }
+    else
+    {
+        realout.resize(in.size());
+        enc.ProcessData(&realout[0], &in[0], in.size());
+    }
     BOOST_CHECK(realout.size() == correctout.size());
     BOOST_CHECK_MESSAGE(realout == correctout, HexStr(realout) + std::string(" != ") + hexout);
 
     // Decrypt the cipher and verify that it equals the plaintext
-    std::vector<unsigned char> decrypted(correctout.size());
-    AES128CBCDecrypt dec(&key[0], &iv[0], pad);
-    size = dec.Decrypt(&correctout[0], correctout.size(), &decrypted[0]);
-    decrypted.resize(size);
+    std::vector<unsigned char> decrypted;
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
+    dec.SetKeyWithIV(&key[0], key.size(), &iv[0]);
+    if (pad)
+    {
+        #if !defined(DEBUG_LOCKORDER)
+        CryptoPP::VectorSource s(correctout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(decrypted)));
+        #endif
+    }
+    else
+    {
+        decrypted.resize(correctout.size());
+        dec.ProcessData(&decrypted[0], &correctout[0], correctout.size());
+    }
     BOOST_CHECK(decrypted.size() == in.size());
     BOOST_CHECK_MESSAGE(decrypted == in, HexStr(decrypted) + std::string(" != ") + hexin);
 
@@ -133,17 +164,17 @@ static void TestAES128CBC(const std::string &hexkey, const std::string &hexiv, b
     for(std::vector<unsigned char>::iterator i(in.begin()); i != in.end(); ++i)
     {
         std::vector<unsigned char> sub(i, in.end());
-        std::vector<unsigned char> subout(sub.size() + AES_BLOCKSIZE);
-        int _size = enc.Encrypt(&sub[0], sub.size(), &subout[0]);
-        if (_size != 0)
-        {
-            subout.resize(_size);
-            std::vector<unsigned char> subdecrypted(subout.size());
-            _size = dec.Decrypt(&subout[0], subout.size(), &subdecrypted[0]);
-            subdecrypted.resize(_size);
-            BOOST_CHECK(decrypted.size() == in.size());
-            BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
-        }
+        std::vector<unsigned char> subout;
+        #if !defined(DEBUG_LOCKORDER)
+        CryptoPP::VectorSource encryptSource(sub, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(subout)));
+        #endif
+        
+        std::vector<unsigned char> subdecrypted;
+        #if !defined(DEBUG_LOCKORDER)
+        CryptoPP::VectorSource decryptSource(subout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(subdecrypted)));
+        #endif
+        BOOST_CHECK(decrypted.size() == in.size());
+        BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
     }
 }
 
@@ -153,20 +184,41 @@ static void TestAES256CBC(const std::string &hexkey, const std::string &hexiv, b
     std::vector<unsigned char> iv = ParseHex(hexiv);
     std::vector<unsigned char> in = ParseHex(hexin);
     std::vector<unsigned char> correctout = ParseHex(hexout);
-    std::vector<unsigned char> realout(in.size() + AES_BLOCKSIZE);
+    std::vector<unsigned char> realout;
 
     // Encrypt the plaintext and verify that it equals the cipher
-    AES256CBCEncrypt enc(&key[0], &iv[0], pad);
-    int size = enc.Encrypt(&in[0], in.size(), &realout[0]);
-    realout.resize(size);
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enc;
+    enc.SetKeyWithIV(&key[0], key.size(), &iv[0]);
+
+    if (pad)
+    {
+        #if !defined(DEBUG_LOCKORDER)
+        CryptoPP::VectorSource s(in, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(realout)));
+        #endif
+    }
+    else
+    {
+        realout.resize(in.size());
+        enc.ProcessData(&realout[0], &in[0], in.size());
+    }    
     BOOST_CHECK(realout.size() == correctout.size());
     BOOST_CHECK_MESSAGE(realout == correctout, HexStr(realout) + std::string(" != ") + hexout);
 
     // Decrypt the cipher and verify that it equals the plaintext
-    std::vector<unsigned char> decrypted(correctout.size());
-    AES256CBCDecrypt dec(&key[0], &iv[0], pad);
-    size = dec.Decrypt(&correctout[0], correctout.size(), &decrypted[0]);
-    decrypted.resize(size);
+    std::vector<unsigned char> decrypted;
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
+    dec.SetKeyWithIV(&key[0], key.size(), &iv[0]);
+    if (pad)
+    {
+        #if !defined(DEBUG_LOCKORDER)
+        CryptoPP::VectorSource s(correctout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(decrypted)));
+        #endif
+    }
+    else
+    {
+        decrypted.resize(correctout.size());
+        dec.ProcessData(&decrypted[0], &correctout[0], correctout.size());
+    }
     BOOST_CHECK(decrypted.size() == in.size());
     BOOST_CHECK_MESSAGE(decrypted == in, HexStr(decrypted) + std::string(" != ") + hexin);
 
@@ -174,17 +226,17 @@ static void TestAES256CBC(const std::string &hexkey, const std::string &hexiv, b
     for(std::vector<unsigned char>::iterator i(in.begin()); i != in.end(); ++i)
     {
         std::vector<unsigned char> sub(i, in.end());
-        std::vector<unsigned char> subout(sub.size() + AES_BLOCKSIZE);
-        int _size = enc.Encrypt(&sub[0], sub.size(), &subout[0]);
-        if (_size != 0)
-        {
-            subout.resize(_size);
-            std::vector<unsigned char> subdecrypted(subout.size());
-            _size = dec.Decrypt(&subout[0], subout.size(), &subdecrypted[0]);
-            subdecrypted.resize(_size);
-            BOOST_CHECK(decrypted.size() == in.size());
-            BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
-        }
+        std::vector<unsigned char> subout;
+        #if !defined(DEBUG_LOCKORDER)
+        CryptoPP::VectorSource encryptSource(sub, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(subout)));
+        #endif
+        
+        std::vector<unsigned char> subdecrypted;
+        #if !defined(DEBUG_LOCKORDER)
+        CryptoPP::VectorSource decryptSource(subout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(subdecrypted)));
+        #endif
+        BOOST_CHECK(decrypted.size() == in.size());
+        BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
     }
 }
 

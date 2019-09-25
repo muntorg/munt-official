@@ -418,4 +418,14 @@ private:
 #define DO_BENCHMARK(DESC, LOGCATEGORY) static uint64_t nTotalBenchMarkTime = 0; static uint64_t nBenchmarkCounter = 0; BenchMarkHelper<LOGCATEGORY>(DESC, nTotalBenchMarkTime, nBenchmarkCounter);
 #define DO_BENCHMARKT(DESC, LOGCATEGORY, THRESHOLD) static uint64_t nTotalBenchMarkTime = 0; static uint64_t nBenchmarkCounter = 0; BenchMarkHelper<LOGCATEGORY>(DESC, nTotalBenchMarkTime, nBenchmarkCounter, THRESHOLD);
 
+
+// Optimised branch prediction
+#if defined(__GNUC__) || defined(__clang__)
+#define LIKELY(x)   __builtin_expect((x),(true))
+#define UNLIKELY(x) __builtin_expect((x),(false))
+#else
+#define LIKELY(x) (x)
+#define UNLIKELY(x) (x)
+#endif
+
 #endif // GULDEN_UTIL_H

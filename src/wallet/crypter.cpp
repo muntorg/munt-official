@@ -4,14 +4,13 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2019 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
 #include "crypter.h"
 
-#include "crypto/aes.h"
 #include "crypto/sha512.h"
 #include "script/script.h"
 #include "script/standard.h"
@@ -20,6 +19,10 @@
 #include <string>
 #include <vector>
 
+#include <cryptopp/config.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
 
 int CCrypter::BytesToKeySHA512AES(const std::vector<unsigned char>& chSalt, const SecureString& strKeyData, int count, unsigned char *key,unsigned char *iv) const
 {
@@ -93,15 +96,16 @@ bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned
     if (!fKeySet)
         return false;
 
-    // max ciphertext len for a n bytes of plaintext is
-    // n + AES_BLOCKSIZE bytes
-    vchCiphertext.resize(vchPlaintext.size() + AES_BLOCKSIZE);
-
-    AES256CBCEncrypt enc(vchKey.data(), vchIV.data(), true);
-    size_t nLen = enc.Encrypt(&vchPlaintext[0], vchPlaintext.size(), &vchCiphertext[0]);
-    if(nLen < vchPlaintext.size())
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enc;
+    enc.SetKeyWithIV(vchKey.data(), vchKey.size(), vchIV.data());
+    try
+    {
+        CryptoPP::ArraySource s(&vchPlaintext[0], vchPlaintext.size(), true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(vchCiphertext)));
+    }
+    catch(...)
+    {
         return false;
-    vchCiphertext.resize(nLen);
+    }
 
     return true;
 }
@@ -113,17 +117,23 @@ bool CCrypter::Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingM
 
     // plaintext will always be equal to or lesser than length of ciphertext
     int nLen = vchCiphertext.size();
-
     vchPlaintext.resize(nLen);
 
-    AES256CBCDecrypt dec(vchKey.data(), vchIV.data(), true);
-    nLen = dec.Decrypt(&vchCiphertext[0], vchCiphertext.size(), &vchPlaintext[0]);
-    if(nLen == 0)
+    CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
+    dec.SetKeyWithIV(vchKey.data(), vchKey.size(), vchIV.data());
+    try
+    {
+        auto sink = new CryptoPP::ArraySink(&vchPlaintext[0], vchPlaintext.size());
+        CryptoPP::VectorSource s(vchCiphertext, true, new CryptoPP::StreamTransformationFilter(dec, sink));
+        // Trim plaintext to original length
+        vchPlaintext.resize(sink->TotalPutLength());
+    }
+    catch(...)
+    {
         return false;
-    vchPlaintext.resize(nLen);
+    }
     return true;
 }
-
 
 bool EncryptSecret(const CKeyingMaterial& vMasterKey, const CKeyingMaterial &vchPlaintext, const std::vector<unsigned char>& nIV, std::vector<unsigned char> &vchCiphertext)
 {

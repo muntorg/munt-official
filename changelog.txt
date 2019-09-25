@@ -9,6 +9,13 @@ RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fi
 
 
 
+2.1.0.8
+
+CORE - Fix DOS vulnerability (crash) in witness bundle input checking
+CORE - Introduce SIGMA as the new PoW algorithm in testnet builds.
+
+
+
 2.1.0.7
 
 RPC - Fix a bug in InvalidateBlock behaviour when called on a block that isn't currently in the main chain.
