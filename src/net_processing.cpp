@@ -593,7 +593,7 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
                 CBlockIndex* lastCheckpoint = Checkpoints::GetLastCheckpoint(Params().Checkpoints());
 
                 // If we were stuck on the wrong side of a fork (due to not updating)
-                // And have now updated to a nwer version, then this block may be valid on the newer version despite being marked invalid previously by the outdated version
+                // And have now updated to a newer version, then this block may be valid on the newer version despite being marked invalid previously by the outdated version
                 // If we don't reconsider the block we will be permanently "stuck"
                 // We can use the checkpoint to find out if this is the case, so we do this here.
                 // If we are the ancestor of a checkpoint then reset the failiure flags and try again
@@ -1683,6 +1683,21 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     checkpoint.RelayTo(pnode);
                 }); 
             }
+        }
+    }
+    
+    else if (strCommand == NetMsgType::CHECKPOINT_INVALIDATE)
+    {
+        CSyncCheckpointInvalidate invalidate;
+        vRecv >> invalidate;
+
+        if (invalidate.Process(pfrom, chainparams))
+        {
+            // Relay
+            pfrom->hashInvalidateKnown = invalidate.hashInvalidate;
+            g_connman->ForEachNode([invalidate](CNode* pnode) {
+                invalidate.RelayTo(pnode);
+            }); 
         }
     }
 

@@ -275,3 +275,9 @@ int main(int argc, char **argv)
     return do_fuzz();
 #endif
 }
+
+//fixme: (HIGH)
+//Super gross workaround - for some reason our macos build keeps failing to provide '___cpu_model' symbol, so we just define it ourselves as a workaround until we can fix the issue.
+#ifdef MAC_OSX
+#include "llvm-cpumodel-hack.cpp"
+#endif

@@ -140,7 +140,7 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
     }
     else
     {
-        fPOW_ok = CheckProofOfWork(block.GetPoWHash(), block.nBits, params.GetConsensus());
+        fPOW_ok = CheckProofOfWork(&block, params.GetConsensus());
     }
 
     if (fPOW_ok)

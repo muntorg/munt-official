@@ -651,6 +651,7 @@ public:
     bool fGetAddr;
     std::set<uint256> setKnown;
     uint256 hashCheckpointKnown;
+    uint256 hashInvalidateKnown;
     int64_t nNextAddrSend;
     int64_t nNextLocalAddrSend;
 

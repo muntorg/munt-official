@@ -12,6 +12,7 @@
 
 #include "chainparams.h"
 #include "consensus/merkle.h"
+#include "crypto/hash/sigma/sigma.h"
 
 #include "tinyformat.h"
 #include "util.h"
@@ -118,10 +119,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].requiredProtoUpgradePercent = 75;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000fad1c7f4818beec6");
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000012aa40d8808039612");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0a53aa18822f68dfc2fc5a7f5999e5b31320a6ea1a9955287faf358f7dc69546"); //880000
+        consensus.defaultAssumeValid = uint256S("0xb19ca1b1ea65fec4bb5eac8e548e29327281973a2ae0e4a4d307500a88bc7ee1"); //910000
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -342,12 +343,14 @@ public:
         { 900000, { uint256S("0x7fc71149acd4dd79f27e7f73b33170d1eb35b132fdec54d84551a1b677b41f50")} },
         { 905000, { uint256S("0xeaa2d4441498ab892dc8a2e112bbe8261c4555bc665b23545365b2ba71605a4c")} },
         { 910000, { uint256S("0xb19ca1b1ea65fec4bb5eac8e548e29327281973a2ae0e4a4d307500a88bc7ee1")} },
+        { 994500, { uint256S("0x06b3b987b0562eb7d61673f5d35e02191b6def5eb81044797cb53e3610c4cb86")} },
+        { 994818, { uint256S("0xf2e5888718c111cf5d8629fe45beb4b84b8df49a57e61cfa10f6a1277f29c54f")} },
         }
         };
 
         chainTxData = ChainTxData{
-            1552394784, // * UNIX timestamp of last checkpoint block
-            2326755,    // * total number of transactions between genesis and last checkpoint
+            1565997157, // * UNIX timestamp of last checkpoint block
+            2550653,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
@@ -376,6 +379,15 @@ public:
 
             int targetInterval = atoi(sTestnetParams.substr(sTestnetParams.find(":")+1));
             int64_t seedTimestamp = atoi64(sTestnetParams.substr(1,sTestnetParams.find(":")));
+
+            if (sTestnetParams == "C1534687770:60")
+            {
+                defaultSigmaSettings.activationDate = 1569423600;
+            }
+            else
+            {
+                defaultSigmaSettings.activationDate = seedTimestamp+300;
+            }
 
             consensus.nPowTargetSpacing = targetInterval;
             consensus.fPowAllowMinDifficultyBlocks = false;
