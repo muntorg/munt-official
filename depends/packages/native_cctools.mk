@@ -4,11 +4,11 @@ $(package)_download_path=https://github.com/tpoechtrager/cctools-port/archive
 $(package)_file_name=cctools-$($(package)_version).tar.gz
 $(package)_sha256_hash=c88b0631b1d7bb5186dd6466a62f5220dc6191f2b2d9c7c122b327385e734aaf
 $(package)_build_subdir=cctools
-$(package)_clang_version=7.0.1
+$(package)_clang_version=9.0.0
 $(package)_clang_download_path=http://releases.llvm.org/$($(package)_clang_version)
 $(package)_clang_download_file=clang+llvm-$($(package)_clang_version)-x86_64-linux-gnu-ubuntu-16.04.tar.xz
 $(package)_clang_file_name=clang-llvm-$($(package)_clang_version)-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-$(package)_clang_sha256_hash=02ad925add5b2b934d64c3dd5cbd1b2002258059f7d962993ba7f16524c3089c
+$(package)_clang_sha256_hash=5c1473c2611e1eac4ed1aeea5544eac5e9d266f40c5623bbaeb1c6555815a27d
 $(package)_extra_sources=$($(package)_clang_file_name)
 
 define $(package)_fetch_cmds
