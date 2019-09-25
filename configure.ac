@@ -3,7 +3,7 @@ AC_PREREQ([2.60])
 define(_CLIENT_VERSION_MAJOR,       2)
 define(_CLIENT_VERSION_MINOR,       1)
 define(_CLIENT_VERSION_REVISION, 0)
-define(_CLIENT_VERSION_BUILD,       4)
+define(_CLIENT_VERSION_BUILD,       7)
 define(_CLIENT_VERSION_IS_RELEASE, false)
 define(_COPYRIGHT_YEAR, 2019)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
@@ -946,11 +946,14 @@ if test x$use_pkgconfig = xyes; then
     ]
   )
 else
-  AC_CHECK_HEADER([openssl/crypto.h],,AC_MSG_ERROR(libcrypto headers missing))
-  AC_CHECK_LIB([crypto],      [main],CRYPTO_LIBS=-lcrypto, AC_MSG_ERROR(libcrypto missing))
+  AC_CHECK_HEADER([cryptopp/config.h],,AC_MSG_ERROR(libcryptopp headers missing))
+  AC_CHECK_LIB([cryptopp],    [main],CRYPTOPP_LIBS=-lcryptopp, AC_MSG_ERROR(libcryptopp missing))
 
   AC_CHECK_HEADER([openssl/ssl.h],, AC_MSG_ERROR(libssl headers missing),)
   AC_CHECK_LIB([ssl],         [main],SSL_LIBS=-lssl, AC_MSG_ERROR(libssl missing))
+
+  AC_CHECK_HEADER([openssl/crypto.h],,AC_MSG_ERROR(libcrypto headers missing))
+  AC_CHECK_LIB([crypto],      [main],CRYPTO_LIBS=-lcrypto, AC_MSG_ERROR(libcrypto missing))
 
   if test x$build_gulden_utils$build_GuldenD$gulden_enable_qt$use_tests != xnononono; then
     AC_CHECK_HEADER([event2/event.h],, AC_MSG_ERROR(libevent headers missing),)

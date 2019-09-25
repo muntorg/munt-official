@@ -21,6 +21,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include <stdint.h>
 #include "echo256_opt.h"
 
 #ifndef USE_HARDWARE_AES

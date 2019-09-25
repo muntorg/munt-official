@@ -515,10 +515,10 @@ void static GuldenWitness()
                         candidateOrphans.push_back(candidateIter);
                     }
                 }
-                if (cacheAlreadySeenWitnessCandidates.size() > 50)
+                if (cacheAlreadySeenWitnessCandidates.size() > 100000)
                 {
                     auto eraseEnd = cacheAlreadySeenWitnessCandidates.begin();
-                    std::advance(eraseEnd, cacheAlreadySeenWitnessCandidates.size() - 50);
+                    std::advance(eraseEnd, cacheAlreadySeenWitnessCandidates.size() - 10);
                     cacheAlreadySeenWitnessCandidates.erase(cacheAlreadySeenWitnessCandidates.begin(), eraseEnd);
                 }
             }

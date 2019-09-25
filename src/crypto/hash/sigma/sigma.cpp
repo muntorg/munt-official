@@ -240,7 +240,7 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
 #endif
 
 void selectOptimisedImplementations()
-{    
+{
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
     shavite3_256_opt_hashState ctx_shavite;
@@ -608,7 +608,7 @@ void sigma_context::benchmarkFastHashesRef(uint8_t* hashData1, uint8_t* hashData
 
 
 //fixme: (SIGMA) - dedup with benchmarkMining
-void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCounter, uint256& foundBlockHash)
+void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCounter, uint256& foundBlockHash, bool& interrupt)
 {
     CBlockHeader headerData = pBlock->GetBlockHeader();
     
@@ -622,7 +622,8 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
     {
         boost::asio::post(*workerThreads, [&,headerData]() mutable
         {
-            boost::this_thread::interruption_point();
+            if (UNLIKELY(interrupt))
+                return;
 
             uint16_t nPreNonce = nGlobalPreNonce++;
             uint32_t nBaseNonce = headerData.nBits ^ (uint32_t)(headerData.hashPrevBlock.GetCheapHash());
@@ -670,7 +671,8 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
             headerData.nPostNonce = 0;
             while(true)
             {
-                boost::this_thread::interruption_point();
+                if (UNLIKELY(interrupt))
+                    return;
 
                 // 4.1. For each iteration advance the state of the pseudo random nonce
                 prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
@@ -704,6 +706,7 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
                             // Found a block, set it and exit.
                             pBlock->nNonce = headerData.nNonce;
                             foundBlockHash = fastHash;
+                            interrupt=true;
                             workerThreads->stop();
                             return;
                         }

@@ -9,6 +9,12 @@
 #include <stdint.h>
 #include <primitives/block.h>
 
+// fixme: (BOOST) - Workaround for boost on macOS (when using newer clang) build issue (not detecting string_view properly)
+// Remove this when addressed by Boost's ASIO config.
+// https://www.boost.org/doc/libs/1_67_0/boost/asio/detail/config.hpp
+// Standard library support for std::string_view.
+#define BOOST_ASIO_HAS_STD_STRING_VIEW 1
+#define BOOST_ASIO_DISABLE_STD_STRING_VIEW 1
 #include <boost/asio.hpp>
 #include <boost/asio/thread_pool.hpp>
 
@@ -124,7 +130,7 @@ public:
     void benchmarkFastHashes(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes);
     void benchmarkFastHashesRef(uint8_t* hashData1, uint8_t* hashData2, uint8_t* hashData3, uint64_t numFastHashes);
     void benchmarkMining(CBlockHeader& headerData, std::atomic<uint64_t>& slowHashCounter, std::atomic<uint64_t>& halfHashCounter, std::atomic<uint64_t>& skippedHashCounter, std::atomic<uint64_t>&hashCounter, std::atomic<uint64_t>&blockCounter, uint64_t nRoundsTarget);
-    void mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCounter, uint256& foundBlockHash);
+    void mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCounter, uint256& foundBlockHash, bool& interrupt);
     virtual ~sigma_context();
     sigma_context(const sigma_context&) = delete;
     sigma_context& operator=(const sigma_context&) = delete;

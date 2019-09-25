@@ -49,7 +49,7 @@ public:
     uint256 hashMerkleRoot;
     uint32_t nTime;
     uint32_t nBits;
-    
+
     //fixme: (SIGMA) - Ensure this works on both big and little endian - if not we might have to drop the struct and just use bit manipulation instead.
     union
     {

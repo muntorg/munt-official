@@ -1096,6 +1096,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             // Search
             //
             uint64_t nStart = GetTimeMillis();
+            std::uint64_t nTimeout =  120000 + GetRand(60000);
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             if (pblock->nTime > defaultSigmaSettings.activationDate)
             {
@@ -1151,6 +1152,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                     uint256 foundBlockHash;
                     std::atomic<uint64_t> halfHashCounter=0;
                     std::atomic<uint64_t> nThreadCounter=0;
+                    bool interrupt = false;
                     
                     auto workerThreads = new boost::asio::thread_pool(nThreads);
                     for (const auto& sigmaContext : sigmaContexts)
@@ -1158,48 +1160,50 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                         ++nThreadCounter;
                         boost::asio::post(*workerThreads, [&, header]() mutable
                         {
-                            sigmaContext->mineBlock(pblock, halfHashCounter, foundBlockHash);
+                            sigmaContext->mineBlock(pblock, halfHashCounter, foundBlockHash, interrupt);
                             --nThreadCounter;
                         });
                     }
-                    while (true)
                     {
                         // If this thread gets interrupted then terminate mining
-                        BOOST_SCOPE_EXIT(&workerThreads) { workerThreads->stop(); workerThreads->join(); } BOOST_SCOPE_EXIT_END
-                        
-                        //fixme: (SIGMA) - Instead of busy polling it would be better if we could wait here on various signals, we would need to wait on several signals
-                        // 1) A signal for block found by one of our mining threads
-                        // 2) A signal for chain tip change
-                        // 3) A signal for 'top level witness orphan' changes
-                        MilliSleep(100);
+                        BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); } BOOST_SCOPE_EXIT_END
+                        while (true)
+                        {    
+                            //fixme: (SIGMA) - Instead of busy polling it would be better if we could wait here on various signals, we would need to wait on several signals
+                            // 1) A signal for block found by one of our mining threads
+                            // 2) A signal for chain tip change
+                            // 3) A signal for 'top level witness orphan' changes
+                            MilliSleep(100);
 
-                        // If we have found a block then exit loop and process it immediately
-                        if (foundBlockHash != uint256())
-                            break;
-                        
-                        //fixme: (SIGMA) - This can be improved in cases where we have 'uneven' contexts, one may still have lots of work when another is finished, we might want to only restart one of them and not both...
-                        // If at least one of the threads is done working then abandon the rest of them, and then see if we have found a block or need to start again with a different block etc.
-                        if (nThreadCounter < nThreads)
-                            break;
-                        
-                        // Abort for timestamp update if its been longer than 3 minutes.
-                        if (GetTimeMillis() - nStart  > 180000)
-                            break;
-                        
-                        // Abort mining and start mining a new block instead if chain tip changed
-                        if (pTipAtStartOfMining != chainActive.Tip())
-                            break;
-                        
-                        // Abort mining and start mining a new block instead if alternative chain tip changed
-                        if (nOrphansAtStartOfMining != GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size())
-                        {
-                            nOrphansAtStartOfMining = GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size();
-                            if (pindexParent != FindMiningTip(pindexParent, chainparams, strError, pWitnessBlockToEmbed))
+                            // If we have found a block then exit loop and process it immediately
+                            if (foundBlockHash != uint256())
                                 break;
+                            
+                            //fixme: (SIGMA) - This can be improved in cases where we have 'uneven' contexts, one may still have lots of work when another is finished, we might want to only restart one of them and not both...
+                            // If at least one of the threads is done working then abandon the rest of them, and then see if we have found a block or need to start again with a different block etc.
+                            if (nThreadCounter < sigmaContexts.size())
+                                break;
+                            
+                            // Abort for timestamp update if its been longer than ~3 minutes.
+                            // Randomly stagger the checks so that all miners perform slightly differently.
+                            if (GetTimeMillis() - nStart > nTimeout)
+                                break;
+                            
+                            // Abort mining and start mining a new block instead if chain tip changed
+                            if (pTipAtStartOfMining != chainActive.Tip())
+                                break;
+                            
+                            // Abort mining and start mining a new block instead if alternative chain tip changed
+                            if (nOrphansAtStartOfMining != GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size())
+                            {
+                                nOrphansAtStartOfMining = GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size();
+                                if (pindexParent != FindMiningTip(pindexParent, chainparams, strError, pWitnessBlockToEmbed))
+                                    break;
+                            }
+                            
+                            // Allow opportunity for user to terminate mining.
+                            boost::this_thread::interruption_point();
                         }
-                        
-                        // Allow opportunity for user to terminate mining.
-                        boost::this_thread::interruption_point();
                     }
                     
                     uint64_t nStop = GetTimeMillis();

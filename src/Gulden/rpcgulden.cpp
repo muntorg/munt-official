@@ -13,6 +13,8 @@
 #include <consensus/consensus.h>
 #include <boost/assign/list_of.hpp>
 
+#include "auto_checkpoints.h"
+
 #ifdef ENABLE_WALLET
 #include <wallet/rpcwallet.h>
 #include "wallet/wallet.h"
@@ -2157,6 +2159,32 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     return result;
 }
 
+
+static UniValue checkpointinvalidate(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "checkpointinvalidate \"block_hash\"\n"
+            "\nPermanently marks a block as invalid, as if it violated a consensus rule.\n"
+            "\nArguments:\n"
+            "1. \"block_hash\"   (string, required) the hash of the block to mark as invalid\n"
+            "\nResult:\n"
+            "\nExamples:\n"
+            + HelpExampleCli("invalidateblock", "\"block_hash\"")
+            + HelpExampleRpc("invalidateblock", "\"block_hash\"")
+        );
+
+    std::string strHash = request.params[0].get_str();
+    uint256 hash(uint256S(strHash));
+
+    if (!Checkpoints::SendCheckpointInvalidate(hash, Params()))
+    {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Failed to send invalidate-checkpoint");
+    }
+
+    return NullUniValue;
+}
+
 static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -3087,6 +3115,7 @@ static const CRPCCommand commands[] =
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
     { "developer",               "dumpdiffarray",                   &dumpdiffarray,                  true,    {"height"} },
     { "developer",               "verifywitnessaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
+    { "developer",               "checkpointinvalidate",            &checkpointinvalidate,           true,    {"block_hash" } },
 
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
     { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },

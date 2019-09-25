@@ -55,9 +55,6 @@ LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES=crypto/libgulden_crypto_arm_cortex_a57_aes.a
 LIBGULDEN_CRYPTO_ARM_CORTEX_A72=crypto/libgulden_crypto_arm_cortex_a72.a
 LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES=crypto/libgulden_crypto_arm_cortex_a72_aes.a
 LIBGULDEN_CRYPTO_ARM_THUNDERX_AES=crypto/libgulden_crypto_arm_thunderx_aes.a
-
-
-
 LIBGULDEN_CRYPTO=crypto/libgulden_crypto.a
 LIBGULDEN_ANDROID_COMPAT=libgulden_android_compat.a
 LIBGULDENQT=qt/libguldenqt.a
@@ -86,7 +83,6 @@ LIBGULDEN_CRYPTO_ALL = $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3) $(LIBGULDEN_
                        $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES) $(LIBGULDEN_CRYPTO_ARM_THUNDERX_AES) \
                        $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_SSE3) $(LIBGULDEN_CRYPTO_SSE3_AES) $(LIBGULDEN_CRYPTO_SSE4) $(LIBGULDEN_CRYPTO_SSE4_AES) $(LIBGULDEN_CRYPTO_AVX) $(LIBGULDEN_CRYPTO_AVX_AES) $(LIBGULDEN_CRYPTO_AVX2) $(LIBGULDEN_CRYPTO_AVX2_AES) $(LIBGULDEN_CRYPTO_AVX512F) $(LIBGULDEN_CRYPTO_AVX512F_AES) \
                        $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES) $(LIBGULDEN_CRYPTO_ARM_THUNDERX_AES)
-
 
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
@@ -153,6 +149,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   coins.h \
   compat.h \
   compat/arch.h \
+  compat/sys.h \
   compat/sse.h \
   compat/sse2neon.h \
   compat/byteswap.h \
@@ -533,8 +530,6 @@ crypto_libgulden_crypto_arm_thunderx_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_thunderx_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_thunderx_aes.cpp
 
-
-
 crypto_libgulden_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES)
 crypto_libgulden_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libgulden_crypto_a_SOURCES = \
@@ -556,10 +551,6 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/echo256/sphlib/sph_types.h \
   crypto/hash/sigma/echo256/sphlib/sph_echo.h \
   crypto/hash/sigma/echo256/sphlib/aes_helper.c \
-  crypto/hash/sigma/echo256/echo256_opt.h \
-  crypto/hash/sigma/echo256/echo256_opt.cpp \
-  crypto/hash/sigma/shavite3_256/shavite3_256_opt.cpp \
-  crypto/hash/sigma/shavite3_256/shavite3_256_opt.h \
   crypto/hash/sigma/shavite3_256/shavite3_256_opt_compress.h \
   crypto/hash/sigma/shavite3_256/ref/AESround.h \
   crypto/hash/sigma/shavite3_256/ref/portable.h \
@@ -596,6 +587,13 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/sha256.h \
   crypto/sha512.cpp \
   crypto/sha512.h
+
+EXTRA_crypto_libgulden_crypto_a_SOURCES = \
+  crypto/hash/sigma/echo256/echo256_opt.h \
+  crypto/hash/sigma/echo256/echo256_opt.cpp \
+  crypto/hash/sigma/shavite3_256/shavite3_256_opt.cpp \
+  crypto/hash/sigma/shavite3_256/shavite3_256_opt.h \
+  llvm-cpumodel-hack.cpp
 
 # android compat library; shared between unity and testing framework.
 libgulden_android_compat_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PROTOBUF_CFLAGS)

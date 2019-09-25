@@ -43,18 +43,34 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         }
 
         std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(input.prevout.getHash());
-        if(mi == mapWallet.end() || input.prevout.n >= mi->second.tx->vout.size()) {
+        CTransactionRef prevTx;
+        if(mi == mapWallet.end()) 
+        {
+            // In some cases (witnessing on a device where we didn't do a full rescan) we may want to sign a transaction that is ours but is not part of the wallet.
+            // So try/allow for a slower lookup here as well and don't just look in mapWallet...
+            uint256 hashBlock;
+            if (!GetTransaction(input.prevout.getHash(), prevTx, Params(), hashBlock, true))
+            {
+                return false;
+            }
+        }
+        else if (input.prevout.n >= mi->second.tx->vout.size())
+        {
             return false;
         }
-        const CAmount& amount = mi->second.tx->vout[input.prevout.n].nValue;
-        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(mi->second.tx->vout[input.prevout.n], type);
+        else
+        {
+            prevTx = mi->second.tx;
+        }
+        const CAmount& amount = prevTx->vout[input.prevout.n].nValue;
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(prevTx->vout[input.prevout.n], type);
         SignatureData sigdata;
         CAccount *signAccount=fromAccount;
         if (!signAccount)
-            signAccount = FindAccountForTransaction(mi->second.tx->vout[input.prevout.n]);
+            signAccount = FindAccountForTransaction(prevTx->vout[input.prevout.n]);
         if (!signAccount)
             return false;
-        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, signAccount, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, signAccount, &txNewConst, nIn, amount, SIGHASH_ALL), prevTx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);

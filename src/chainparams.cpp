@@ -383,10 +383,10 @@ public:
 
             int targetInterval = atoi(sTestnetParams.substr(sTestnetParams.find(":")+1));
             int64_t seedTimestamp = atoi64(sTestnetParams.substr(1,sTestnetParams.find(":")));
-            
+
             if (sTestnetParams == "C1534687770:60")
             {
-                defaultSigmaSettings.activationDate = 1569081600;
+                defaultSigmaSettings.activationDate = 1569423600;
             }
             else
             {

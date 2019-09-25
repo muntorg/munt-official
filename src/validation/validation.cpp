@@ -2080,38 +2080,45 @@ bool InvalidateBlock(CValidationState& state, const CChainParams& chainparams, C
     setDirtyBlockIndex.insert(pindex);
     setBlockIndexCandidates.erase(pindex);
 
-    DisconnectedBlockTransactions disconnectpool;
-    while (chainActive.Contains(pindex)) {
-        CBlockIndex *pindexWalk = chainActive.Tip();
-        pindexWalk->nStatus |= BLOCK_FAILED_CHILD;
-        setDirtyBlockIndex.insert(pindexWalk);
-        setBlockIndexCandidates.erase(pindexWalk);
-        // ActivateBestChain considers blocks already in chainActive
-        // unconditionally valid already, so force disconnect away from it.
-        if (!DisconnectTip(state, chainparams, &disconnectpool)) {
-            // It's probably hopeless to try to make the mempool consistent
-            // here if DisconnectTip failed, but we can try.
-            UpdateMempoolForReorg(disconnectpool, false);
-            return false;
+    if (chainActive.Contains(pindex))
+    {
+        DisconnectedBlockTransactions disconnectpool;
+        while (chainActive.Contains(pindex)) {
+            CBlockIndex *pindexWalk = chainActive.Tip();
+            pindexWalk->nStatus |= BLOCK_FAILED_CHILD;
+            setDirtyBlockIndex.insert(pindexWalk);
+            setBlockIndexCandidates.erase(pindexWalk);
+            // ActivateBestChain considers blocks already in chainActive
+            // unconditionally valid already, so force disconnect away from it.
+            if (!DisconnectTip(state, chainparams, &disconnectpool)) {
+                // It's probably hopeless to try to make the mempool consistent
+                // here if DisconnectTip failed, but we can try.
+                UpdateMempoolForReorg(disconnectpool, false);
+                return false;
+            }
         }
-    }
 
-    // DisconnectTip will add transactions to disconnectpool; try to add these
-    // back to the mempool.
-    UpdateMempoolForReorg(disconnectpool, true);
+        // DisconnectTip will add transactions to disconnectpool; try to add these
+        // back to the mempool.
+        UpdateMempoolForReorg(disconnectpool, true);
 
-    // The resulting new best tip may not be in setBlockIndexCandidates anymore, so
-    // add it again.
-    BlockMap::iterator it = mapBlockIndex.begin();
-    while (it != mapBlockIndex.end()) {
-        if (it->second->IsValid(BLOCK_VALID_TRANSACTIONS) && it->second->nChainTx && !setBlockIndexCandidates.value_comp()(it->second, chainActive.Tip())) {
-            setBlockIndexCandidates.insert(it->second);
+        // The resulting new best tip may not be in setBlockIndexCandidates anymore, so
+        // add it again.
+        BlockMap::iterator it = mapBlockIndex.begin();
+        while (it != mapBlockIndex.end()) {
+            if (it->second->IsValid(BLOCK_VALID_TRANSACTIONS) && it->second->nChainTx && !setBlockIndexCandidates.value_comp()(it->second, chainActive.Tip())) {
+                setBlockIndexCandidates.insert(it->second);
+            }
+            it++;
         }
-        it++;
-    }
 
-    InvalidChainFound(pindex);
-    uiInterface.NotifyBlockTip(IsInitialBlockDownload(), pindex->pprev);
+        InvalidChainFound(pindex);
+        uiInterface.NotifyBlockTip(IsInitialBlockDownload(), pindex->pprev);
+    }
+    else
+    {
+        InvalidChainFound(pindex);
+    }
     return true;
 }
 
