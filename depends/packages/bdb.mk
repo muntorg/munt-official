@@ -12,7 +12,6 @@ $(package)_config_opts_linux=--with-pic
 $(package)_config_opts_ios=--host=$(ios_HOST) --enable-posixmutexes
 $(package)_cxxflags=-std=c++11
 $(package)_cflags_ios=-Wno-implicit-function-declaration
-$(package)_cppflags_mingw32=-DUNICODE -D_UNICODE
 endef
 
 define $(package)_preprocess_cmds
