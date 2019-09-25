@@ -505,17 +505,15 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/echo256/sphlib/sph_types.h \
   crypto/hash/sigma/echo256/sphlib/sph_echo.h \
   crypto/hash/sigma/echo256/sphlib/aes_helper.c \
-  crypto/hash/sigma/shavite3_256/shavite3_256_opt.cpp \
-  crypto/hash/sigma/shavite3_256/shavite3_256_opt.h \
   crypto/hash/sigma/shavite3_256/ref/AESround.h \
   crypto/hash/sigma/shavite3_256/ref/portable.h \
   crypto/hash/sigma/shavite3_256/ref/shavite3_256_ref_compress.h \
   crypto/hash/sigma/shavite3_256/ref/shavite3_ref.h \
   crypto/hash/sigma/shavite3_256/ref/shavite3_ref.cpp \
   crypto/hash/sigma/argon_echo/argon2.cpp \
+  crypto/hash/sigma/argon_echo/argon_echo.h \
   crypto/hash/sigma/argon_echo/core.cpp \
   crypto/hash/sigma/argon_echo/core.h \
-  crypto/hash/sigma/argon_echo/argon_echo.h \
   crypto/hash/sigma/argon_echo/ref.cpp \
   crypto/hash/sigma/argon_echo/opt/core_opt_hybrid.cpp \
   crypto/hash/sigma/argon_echo/opt/core_opt_hybrid.h \
@@ -543,9 +541,12 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/sha512.cpp \
   crypto/sha512.h
 
-crypto_libgulden_crypto_a_DIST = \
+EXTRA_crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/echo256/echo256_opt.h \
-  crypto/hash/sigma/echo256/echo256_opt.cpp
+  crypto/hash/sigma/echo256/echo256_opt.cpp \
+  crypto/hash/sigma/shavite3_256/shavite3_256_opt.cpp \
+  crypto/hash/sigma/shavite3_256/shavite3_256_opt.h
+
 
 # consensus: shared between all executables that validate any consensus rules.
 libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
