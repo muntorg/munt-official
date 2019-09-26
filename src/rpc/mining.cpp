@@ -308,7 +308,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     int64_t nGenMemoryLimit = std::min(systemMemory, defaultSigmaSettings.arenaSizeKb*1024);
     if (request.params.size() > 2)
     {
-        nGenMemoryLimit = request.params[2].get_int();
+        nGenMemoryLimit = request.params[2].get_int64();
         if (nGenMemoryLimit == 0)
         {
             fGenerate = false;
