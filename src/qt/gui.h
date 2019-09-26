@@ -32,6 +32,7 @@
 #include "wallet/wallet.h"
 #endif
 
+#define BOOST_UUID_RANDOM_PROVIDER_FORCE_POSIX
 #include <boost/uuid/uuid.hpp>
 
 class ClientModel;

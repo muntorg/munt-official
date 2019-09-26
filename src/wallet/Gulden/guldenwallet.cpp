@@ -8,6 +8,8 @@
 #include "alert.h"
 #include "account.h"
 #include "script/ismine.h"
+
+#define BOOST_UUID_RANDOM_PROVIDER_FORCE_POSIX
 #include <boost/uuid/nil_generator.hpp>
 #include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
 #include <boost/algorithm/string.hpp> // for split()
