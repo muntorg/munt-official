@@ -23,6 +23,8 @@ endef
 define $(package)_config_cmds
     sed -Ei.old "s|[^A-Z][(]CXX[)]|$($(package)_cxx)|" GNUmakefile && \
     sed -Ei.old "s|AR = libtool|AR = $($(package)_libtool)|" GNUmakefile && \
+    sed -Ei.old "s|CC=gcc|CC=$($(package)_cxx)|" GNUmakefile && \
+    sed -Ei.old "s|CC=clang|CC=$($(package)_cxx)|" GNUmakefile && \
     sed -Ei.old "s|// [#]define CRYPTOPP_NO_CXX17|#define CRYPTOPP_NO_CXX17|" config.h && \
     sed -Ei.old "s|[#] define CRYPTOPP_UNCAUGHT_EXCEPTION_AVAILABLE|//# define CRYPTOPP_UNCAUGHT_EXCEPTION_AVAILABLE|" config.h
 endef

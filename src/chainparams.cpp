@@ -386,7 +386,7 @@ public:
 
             if (sTestnetParams == "C1534687770:60")
             {
-                defaultSigmaSettings.activationDate = 1569423600;
+                defaultSigmaSettings.activationDate = 1569510000;
             }
             else
             {
@@ -513,7 +513,9 @@ public:
                 { 131527, { uint256S("0xfd25ff32810f02cc803601fe29b0b3a9f39f417bfdb68fa5e4d452b3b2b4cb2a"), 1549288854 } },
                 { 132679, { uint256S("0x5c9de9c540a722ceeed12b86705fb760d2b50d1c26d1ecb60261ecfbfc42bf2e"), 1549361917 } }
             };
+            consensus.defaultAssumeValid = uint256S("0x5c9de9c540a722ceeed12b86705fb760d2b50d1c26d1ecb60261ecfbfc42bf2e");
         }
+        
 
         chainTxData = ChainTxData{
             0,

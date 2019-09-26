@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QRegularExpression>
 
+#define BOOST_UUID_RANDOM_PROVIDER_FORCE_POSIX
 #include <boost/uuid/uuid.hpp>
 #include "wallet/wallet.h"
 

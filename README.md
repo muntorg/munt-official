@@ -43,8 +43,8 @@
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/compare/master@%7B12month%7D...unity_phase4">
-        <img height="20px" src="https://img.shields.io/badge/dev%20branch-unity_phase4-blue.svg" alt="active_branch"/>
+      <a href="https://github.com/Gulden/gulden-official/compare/master@%7B12month%7D...2.2_development">
+        <img height="20px" src="https://img.shields.io/badge/dev%20branch-2.2_development-blue.svg" alt="active_branch"/>
       </a>
     </td>
   </tr>

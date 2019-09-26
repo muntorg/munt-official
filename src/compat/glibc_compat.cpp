@@ -77,4 +77,3 @@ extern "C" float __wrap_log2f(float x)
 {
     return log2f_old(x);
 }
-
