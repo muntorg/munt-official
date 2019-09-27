@@ -56,7 +56,8 @@
  * or from the last difficulty change if 'lookup' is nonpositive.
  * If 'height' is nonnegative, compute the estimate at the time when a given block was found.
  */
-static UniValue GetNetworkHashPS(int lookup, int height) {
+static UniValue GetNetworkHashPS(uint32_t lookup, int height)
+{
     CBlockIndex *pb = chainActive.Tip();
 
     if (height >= 0 && height < chainActive.Height())
@@ -65,18 +66,24 @@ static UniValue GetNetworkHashPS(int lookup, int height) {
     if (pb == NULL || !pb->nHeight)
         return 0;
 
-    // If lookup is -1, then use blocks since last difficulty change.
-    if (lookup <= 0)
-        lookup = pb->nHeight % Params().GetConsensus().DifficultyAdjustmentInterval() + 1;
-
     // If lookup is larger than chain, then set it to chain length.
     if (lookup > pb->nHeight)
         lookup = pb->nHeight;
+    
+    bool sigmaActive=false;
+    if (pb->nTime >= defaultSigmaSettings.activationDate)
+    {
+        sigmaActive = true;
+    }
+        
 
     CBlockIndex *pb0 = pb;
     int64_t minTime = pb0->GetBlockTime();
     int64_t maxTime = minTime;
-    for (int i = 0; i < lookup; i++) {
+    for (int i = 0; i < lookup; i++)
+    {
+        if (sigmaActive && pb0->pprev->nTime < defaultSigmaSettings.activationDate)
+            break;
         pb0 = pb0->pprev;
         int64_t time = pb0->GetBlockTime();
         minTime = std::min(time, minTime);
@@ -90,7 +97,13 @@ static UniValue GetNetworkHashPS(int lookup, int height) {
     arith_uint256 workDiff = pb->nChainWork - pb0->nChainWork;
     int64_t timeDiff = maxTime - minTime;
 
-    return workDiff.getdouble() / timeDiff;
+    //fixme: (SIGMA) Not 100% clear that this is exactly correct, but it seems to be a reasonable approximation for now.
+    //What we report to the user as 'hashes' are actually 'half hashes' (see sigma_bench to understand the distinction)
+    //So to match up we have to try approximate half hashes here as well.
+    if (sigmaActive)
+        return (workDiff.getdouble() / timeDiff) * defaultSigmaSettings.numHashesPre;
+    else
+        return workDiff.getdouble() / timeDiff;
 }
 
 static UniValue getnetworkhashps(const JSONRPCRequest& request)
@@ -99,7 +112,7 @@ static UniValue getnetworkhashps(const JSONRPCRequest& request)
         throw std::runtime_error(
             "getnetworkhashps ( nblocks height )\n"
             "\nReturns the estimated network hashes per second based on the last n blocks.\n"
-            "Pass in [blocks] to override # of blocks, -1 specifies since last difficulty change.\n"
+            "Pass in [blocks] to override # of blocks.\n"
             "Pass in [height] to estimate the network speed at the time when a certain block was found.\n"
             "\nArguments:\n"
             "1. nblocks     (numeric, optional, default=120) The number of blocks, or -1 for blocks since last difficulty change.\n"
@@ -112,7 +125,11 @@ static UniValue getnetworkhashps(const JSONRPCRequest& request)
        );
 
     LOCK(cs_main);
-    return GetNetworkHashPS(request.params.size() > 0 ? request.params[0].get_int() : 120, request.params.size() > 1 ? request.params[1].get_int() : -1);
+    int64_t lookup = request.params.size() > 0 ? request.params[0].get_int() : 120;
+    if (lookup < 0)
+        lookup = 120;
+
+    return GetNetworkHashPS(lookup, request.params.size() > 1 ? request.params[1].get_int() : -1);
 }
 
 static UniValue generateBlocks(std::shared_ptr<CReserveKeyOrScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)

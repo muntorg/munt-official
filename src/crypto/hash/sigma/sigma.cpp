@@ -828,7 +828,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                         // 4.5 See if we have a valid block
                         if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
                         {
-                            #define LOG_VALID_BLOCK
+                            //#define LOG_VALID_BLOCK
                             #ifdef LOG_VALID_BLOCK
                             LogPrintf("Found block [%s]\n", HexStr((uint8_t*)&headerData.nVersion, (uint8_t*)&headerData.nVersion+80).c_str());
                             LogPrintf("pseudorandomnonce1[%d] pseudorandomalg1[%d] fasthashoffset1[%d] arenaoffset1[%d]\n", nPseudoRandomNonce1, nPseudoRandomAlg1, nFastHashOffset1, (nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1);
