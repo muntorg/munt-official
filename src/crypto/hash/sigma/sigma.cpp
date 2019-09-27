@@ -209,9 +209,7 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
             LogPrintf("[%d] Selected hybrid implementation as fastest\n", sAlgoName); break;
     }
 }
-#endif
-
-#ifdef ARCH_CPU_ARM_FAMILY
+#elif defined(ARCH_CPU_ARM_FAMILY)
 void LogSelection(uint64_t nSel, std::string sAlgoName)
 {
     switch (nSel)
@@ -237,6 +235,11 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
     }
 }
 #include <sys/auxv.h>
+#else
+void LogSelection(uint64_t nSel, std::string sAlgoName)
+{
+    //fixme: (SIGMA) Implement for riscv
+}
 #endif
 
 void selectOptimisedImplementations()

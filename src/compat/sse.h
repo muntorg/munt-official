@@ -46,6 +46,10 @@
             #define SOFTWARE_AES
         #endif
     #endif
+#else
+    //fixme: (SIGMA) riscv
+    #include <array>
+    typedef std::array<uint8_t, 16> __m128i;
 #endif
 
 #ifdef SOFTWARE_AES
@@ -105,6 +109,8 @@
             return ((u128_wrap*)&a)->u128;
         }
     #endif
+#endif
+
 #endif
 
 #endif
