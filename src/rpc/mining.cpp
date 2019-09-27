@@ -49,6 +49,8 @@
 #include <Gulden/rpcgulden.h>
 #include <validation/witnessvalidation.h>
 
+#include <boost/algorithm/string/predicate.hpp> // for ends_with()
+
 /**
  * Return average network hashes per second based on the last 'lookup' blocks,
  * or from the last difficulty change if 'lookup' is nonpositive.
@@ -224,6 +226,65 @@ static UniValue generate(const JSONRPCRequest& request)
     return generateBlocks(coinbaseScript, nGenerate, nMaxTries, true);
 }
 
+//! Given a string specifier, calculate a memory size in bytes to match it e.g. 1K -> 1024; 2M -> 2097152;
+//! Returns 0 if specifier is invalid.
+static uint64_t GetMemLimitInBytesFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)
+{
+    if (formattedLockPeriodSpecifier.empty())
+        return 0;
+
+    uint64_t memLimitInBytes = 0;
+    uint64_t nMultiplier = 1;
+    if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "B") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "b"))
+    {
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "K") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "k"))
+    {
+        nMultiplier = 1024;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "M") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "m"))
+    {
+        nMultiplier = 1024*1024;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "G") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "g"))
+    {
+        nMultiplier = 1024*1024*1024;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "T") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "t"))
+    {
+        nMultiplier = 1024*1024*1024*1024;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "P") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "p"))
+    {
+        nMultiplier = 1024*1024*1024*1024*1024;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "E") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "e"))
+    {
+        nMultiplier = 1024*1024*1024*1024*1024*1024;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "Z") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "z"))
+    {
+        nMultiplier = 1024*1024*1024*1024*1024*1024*1024;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "Y") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "y"))
+    {
+        nMultiplier = 1024*1024*1024*1024*1024*1024*1024*1024;
+        formattedLockPeriodSpecifier.pop_back();
+    }
+    if (!ParseUInt64(formattedLockPeriodSpecifier, &memLimitInBytes))
+        return 0;
+    memLimitInBytes *=  nMultiplier;
+    return memLimitInBytes;
+}
+
 static UniValue setgenerate(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 4)
@@ -235,7 +296,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. generate         (boolean, required) Set to true to turn on generation, off to turn off.\n"
             "2. gen_proc_limit   (numeric, optional) Set the processor limit for when generation is on. Can be -1 for unlimited.\n"
-            "3. gen_memory_limit (numeric, optional) How much system memory to use. -1 to use system default\n"
+            "3. gen_memory_limit (string, optional) How much system memory to use, specify a letter G/M/K/B to determine size e.g. 524288K (Kilobytes), 512M (Megabytes), 3G (Gigabytes), defaults to bytes if no specifier given . Empty for automatic selection.\n"
             "4. account          (string, optional) The UUID or unique label of the account.\n"
             "\nExamples:\n"
             "\nSet the generation on with a limit of one processor\n"
@@ -280,7 +341,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
 
     if (fGenerate && forAccount->IsPoW2Witness())
     {
-        throw std::runtime_error("Witness account selected, first select a regular account as the active account or specifiy a regular account.");
+        throw std::runtime_error("Witness account selected, first select a regular account as the active account or specify a regular account.");
     }
 
     int nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
@@ -299,29 +360,34 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     {
         systemMemory -= 1 * 1024 * 1024 * 1024;
     }
-    else
+    else if (systemMemory > 512 * 1024 * 1024)
     {
         systemMemory -= 512 * 1024 * 1024;
     }
+    else if (systemMemory > 256 * 1024 * 1024)
+    {
+        systemMemory -= 256 * 1024 * 1024;
+    }
+    else if (systemMemory > 128 * 1024 * 1024)
+    {
+        systemMemory -= 128 * 1024 * 1024;
+    }
 
     // Allow user to override default memory selection.
-    int64_t nGenMemoryLimit = std::min(systemMemory, defaultSigmaSettings.arenaSizeKb*1024);
+    uint64_t nGenMemoryLimitBytes = std::min(systemMemory, defaultSigmaSettings.arenaSizeKb*1024);
     if (request.params.size() > 2)
     {
-        nGenMemoryLimit = request.params[2].get_int64();
-        if (nGenMemoryLimit == 0)
-        {
-            fGenerate = false;
-        }
-        if (nGenMemoryLimit < 0)
-        {
-            nGenMemoryLimit = systemMemory;
-        }
+        std::string sMemLimit = request.params[2].get_str();
+        nGenMemoryLimitBytes = GetMemLimitInBytesFromFormattedStringSpecifier(sMemLimit);
     }
+    
+    // Normalise for SIGMA arena expectations (arena size must be a multiple of 16mb)
+    normaliseBufferSize(nGenMemoryLimitBytes);
     
     SoftSetBoolArg("-gen", fGenerate);
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
-    PoWMineGulden(fGenerate, nGenProcLimit, nGenMemoryLimit/1024, Params(), forAccount);
+    SoftSetArg("-genmemlimit", i64tostr(nGenMemoryLimitBytes/1024));
+    PoWMineGulden(fGenerate, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount);
 
     if (!fGenerate)
     {
@@ -329,7 +395,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     }
     else
     {
-        return strprintf("Block generation enabled into account [%s], thread limit: [%d threads], memory: [%d Mb].", pwallet->mapAccountLabels[forAccount->getUUID()] ,nGenProcLimit, nGenMemoryLimit/1024/1024);
+        return strprintf("Block generation enabled into account [%s], thread limit: [%d threads], memory: [%d Mb].", pwallet->mapAccountLabels[forAccount->getUUID()] ,nGenProcLimit, nGenMemoryLimitBytes/1024/1024);
     }
     #else
     throw std::runtime_error("Cannot use command without an active wallet");
@@ -387,6 +453,7 @@ static UniValue getmininginfo(const JSONRPCRequest& request)
             "  \"networkhashps\": nnn,      (numeric) The network hashes per second\n"
             "  \"generate\": true|false     (boolean) If the generation is on or off (see getgenerate or setgenerate calls)\n"
             "  \"genproclimit\": n          (numeric) The processor limit for generation. -1 if no generation. (see getgenerate or setgenerate calls)\n"
+            "  \"genmemlimit\": n           (numeric) The memory limit for generation; In Kilobytes. (see getgenerate or setgenerate calls)\n"
             "  \"pooledtx\": n              (numeric) The size of the mempool\n"
             "  \"chain\": \"xxxx\",           (string) current network name as defined in BIP70 (main, test, regtest)\n"
             "}\n"
@@ -406,6 +473,7 @@ static UniValue getmininginfo(const JSONRPCRequest& request)
     obj.push_back(Pair("difficulty",       (double)GetDifficulty()));
     obj.push_back(Pair("errors",           GetWarnings("statusbar")));
     obj.push_back(Pair("genproclimit",     (int)GetArg("-genproclimit", DEFAULT_GENERATE_THREADS)));
+    obj.push_back(Pair("genmemlimit",      (uint64_t)GetArg("-genmemlimit", DEFAULT_GENERATE_THREADS)));
     obj.push_back(Pair("networkhashps",    getnetworkhashps(request)));
     obj.push_back(Pair("pooledtx",         (uint64_t)mempool.size()));
     obj.push_back(Pair("chain",            Params().NetworkIDString()));

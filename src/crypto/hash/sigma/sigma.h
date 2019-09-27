@@ -117,6 +117,7 @@ inline bool (*selected_shavite3_256_opt_Update)(shavite3_256_opt_hashState* stat
 inline bool (*selected_shavite3_256_opt_Final)(shavite3_256_opt_hashState* state, unsigned char* hashval) = nullptr;
 inline int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash) = nullptr;
 
+void normaliseBufferSize(uint64_t& nBufferSizeBytes);
 
 // Heavy weight sigma context for mining - allocated the entire arena (currently 4gb)
 // NB!!! Take care creating/using these they allocate lots of memory..

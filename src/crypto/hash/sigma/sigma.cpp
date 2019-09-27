@@ -476,6 +476,11 @@ void selectOptimisedImplementations()
     LogSelection(nSelArgon, "argon");
 }
 
+void normaliseBufferSize(uint64_t& nBufferSizeBytes)
+{
+    nBufferSizeBytes = (nBufferSizeBytes / (defaultSigmaSettings.argonMemoryCostKb*1024)) * (defaultSigmaSettings.argonMemoryCostKb*1024);
+}
+
 sigma_settings::sigma_settings()
 {
     verify();

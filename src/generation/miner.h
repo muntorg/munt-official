@@ -156,7 +156,7 @@ struct update_for_parent_inclusion
 CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainparams, std::string& strError, CBlockIndex*& pWitnessBlockToEmbed);
 
 /** Run the miner threads */
-void PoWMineGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount = nullptr);
+void PoWMineGulden(bool fGenerate, int64_t nThreads, int64_t nMemoryKb, const CChainParams& chainparams, CAccount* forAccount = nullptr);
 
 /** Generate a new block, without valid proof-of-work */
 class BlockAssembler
