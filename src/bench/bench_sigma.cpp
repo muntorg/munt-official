@@ -33,50 +33,6 @@ int LogPrintStr(const std::string &str)
     return 1;
 }
 
-void selectLargesHashUnit(double& nSustainedHashesPerSecond, std::string& label)
-{
-    if (nSustainedHashesPerSecond > 1000)
-    {
-        label = "Kh";
-        nSustainedHashesPerSecond /= 1000.0;
-    }
-    if (nSustainedHashesPerSecond > 1000)
-    {
-        label = "Mh";
-        nSustainedHashesPerSecond /= 1000.0;
-    }
-    if (nSustainedHashesPerSecond > 1000)
-    {
-        label = "Gh";
-        nSustainedHashesPerSecond /= 1000.0;
-    }
-    if (nSustainedHashesPerSecond > 1000)
-    {
-        label = "Th";
-        nSustainedHashesPerSecond /= 1000.0;
-    }
-    if (nSustainedHashesPerSecond > 1000)
-    {
-        label = "Ph";
-        nSustainedHashesPerSecond /= 1000.0;
-    }
-    if (nSustainedHashesPerSecond > 1000)
-    {
-        label = "Eh";
-        nSustainedHashesPerSecond /= 1000.0;
-    }
-    if (nSustainedHashesPerSecond > 1000)
-    {
-        label = "Zh";
-        nSustainedHashesPerSecond /= 1000.0;
-    }
-    if (nSustainedHashesPerSecond > 1000)
-    {
-        label = "yh";
-        nSustainedHashesPerSecond /= 1000.0;
-    }
-}
-
 std::vector<std::string> hashTestVector = {
     "A",
     "AA",

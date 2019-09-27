@@ -332,6 +332,52 @@ inline uint32_t ByteReverse(uint32_t value)
 }
 
 /**
+ * Format a hash number and string to be displayed to a user in the most compact/understandable form.
+ */
+inline static void selectLargesHashUnit(double& dHashes, std::string& sLabel)
+{
+    if (dHashes > 1000)
+    {
+        sLabel = "Kh";
+        dHashes /= 1000.0;
+    }
+    if (dHashes > 1000)
+    {
+        sLabel = "Mh";
+        dHashes /= 1000.0;
+    }
+    if (dHashes > 1000)
+    {
+        sLabel = "Gh";
+        dHashes /= 1000.0;        
+    }
+    if (dHashes > 1000)
+    {
+        sLabel = "Th";
+        dHashes /= 1000.0;
+    }
+    if (dHashes > 1000)
+    {
+        sLabel = "Ph";
+        dHashes /= 1000.0;
+    }
+    if (dHashes > 1000)
+    {
+        sLabel = "Eh";
+        dHashes /= 1000.0;
+    }
+    if (dHashes > 1000)
+    {
+        sLabel = "Zh";
+        dHashes /= 1000.0;
+    }
+    if (dHashes > 1000)
+    {
+        sLabel = "Yh";
+        dHashes /= 1000.0;
+    }
+}
+/**
  * Return the number of physical cores available on the current system.
  * @note This does not count virtual cores, such as those provided by HyperThreading
  * when boost is newer than 1.56.
