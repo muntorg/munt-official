@@ -39,6 +39,7 @@
     #else
         #ifdef ARCH_CPU_ARM64_FAMILY
             // In the absence of crypto extensions, implement aesenc using regular neon intrinsics instead.
+            #define SOFTWARE_AES
             #define SOFTWARE_AES_NEON
         #else
             // As a last resort use a complete software implementation
