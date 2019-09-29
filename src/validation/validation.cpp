@@ -2299,11 +2299,20 @@ static bool CheckBlockHeader(const CBlock& block, CValidationState& state, const
 {
     // Check proof of work matches claimed amount
     if (fCheckPOW) {
+        uint256 blockHash = block.GetHashLegacy();
+        
+        //fixme: (PHASE5) We can probably remove this after phase4
+        //Avoid unnecessary extra checkpow computation on witness blocks as they contain the exact same pow as their non-witness counterparts.
+        if (checkedPoWCache.contains(blockHash))
+            return true;
+
         // Nested if statement for easier breakpoint management
         if (!CheckProofOfWork(&block, consensusParams))
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+        
+        checkedPoWCache.insert(blockHash, true);
     }
-
+    
     return true;
 }
 

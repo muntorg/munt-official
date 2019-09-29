@@ -40,6 +40,8 @@
 
 #include "uint256.h"
 
+#include <LRUCache/LRUCache11.hpp>
+
 class CBlockIndex;
 class CBlockTreeDB;
 class CBloomFilter;
@@ -217,6 +219,9 @@ extern bool fEnableReplacement;
 
 /** Block hash whose ancestors we will assume to have valid scripts without checking them. */
 extern uint256 hashAssumeValid;
+
+/** Cache to prevent repeated calls of same expensive CheckProofOfWork in certain situations */
+inline lru11::Cache<uint256, bool, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, bool>>::iterator, BlockHasher>> checkedPoWCache(800, 100);
 
 /** Best header we've seen so far (used for getheaders queries' starting points). */
 extern CBlockIndex *pindexBestHeader;

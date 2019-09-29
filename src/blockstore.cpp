@@ -140,10 +140,15 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
     }
     else
     {
-        //fixme: (SIGMA) (PHASE4) - Disable PoW check on reading from disk (its already checked when we wrote it to disk)
-        //Ideally we should turn this back on but there are performance considerations - and especially in phase3 this is causing major issues.
-        fPOW_ok = true;
-        //fPOW_ok = CheckProofOfWork(&block, params.GetConsensus());
+        if (checkedPoWCache.contains(block.GetHashLegacy()))
+        {
+            fPOW_ok = true;
+        }
+        else
+        {
+            //fPOW_ok = CheckProofOfWork(&block, params.GetConsensus());
+            fPOW_ok = true;
+        }
     }
 
     if (fPOW_ok)
