@@ -173,6 +173,26 @@ uint64_t nNumArgonTrials=10;
         nSelArgon=IDX;\
     }\
 }
+#define FORCE_SELECT_OPTIMISED_SHAVITE(CPU, IDX) \
+{\
+    selected_shavite3_256_opt_Init   = shavite3_256_opt_##CPU##_Init;\
+    selected_shavite3_256_opt_Update = shavite3_256_opt_##CPU##_Update;\
+    selected_shavite3_256_opt_Final  = shavite3_256_opt_##CPU##_Final;\
+    nSelShavite=IDX;\
+}
+#define FORCE_SELECT_OPTIMISED_ECHO(CPU, IDX) \
+{\
+    selected_echo256_opt_Init        = echo256_opt_##CPU##_Init;\
+    selected_echo256_opt_Update      = echo256_opt_##CPU##_Update;\
+    selected_echo256_opt_Final       = echo256_opt_##CPU##_Final;\
+    selected_echo256_opt_UpdateFinal = echo256_opt_##CPU##_UpdateFinal;\
+    nSelEcho=IDX;\
+}      
+#define FORCE_SELECT_OPTIMISED_ARGON(CPU, IDX) \
+{\
+    selected_argon2_echo_hash = argon2_echo_ctx_##CPU;\
+    nSelArgon=IDX;\
+}
 
 #ifdef ARCH_CPU_X86_FAMILY
 void LogSelection(uint64_t nSel, std::string sAlgoName)
@@ -244,6 +264,11 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
 
 void selectOptimisedImplementations()
 {
+    uint64_t nSelShavite=0;
+    uint64_t nSelEcho=0;
+    uint64_t nSelArgon=0;
+
+    #ifndef ARCH_CPU_X86_FAMILY
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
     shavite3_256_opt_hashState ctx_shavite;
@@ -252,9 +277,6 @@ void selectOptimisedImplementations()
     uint64_t nBestTimeShavite = std::numeric_limits<uint64_t>::max();
     uint64_t nBestTimeEcho = std::numeric_limits<uint64_t>::max();
     uint64_t nBestTimeArgon = std::numeric_limits<uint64_t>::max();
-    uint64_t nSelShavite=0;
-    uint64_t nSelEcho=0;
-    uint64_t nSelArgon=0;
     
     {
         uint64_t nStart = GetTimeMicros();
@@ -296,6 +318,7 @@ void selectOptimisedImplementations()
         }
         nBestTimeArgon = GetTimeMicros() - nStart;
     }
+    #endif
   
     #ifdef ARCH_CPU_X86_FAMILY
     {
@@ -305,41 +328,46 @@ void selectOptimisedImplementations()
             #if defined(COMPILER_HAS_AVX512F)
             if (__builtin_cpu_supports("avx512f"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
-                SELECT_OPTIMISED_ECHO   (avx512f_aes, 1);
-                SELECT_OPTIMISED_ARGON  (avx512f_aes, 1);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx512f_aes, 1);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx512f_aes, 1);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_AVX2)
             if (__builtin_cpu_supports("avx2"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx2_aes, 2);
-                SELECT_OPTIMISED_ECHO   (avx2_aes, 2);
-                SELECT_OPTIMISED_ARGON  (avx2_aes, 2);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx2_aes, 2);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx2_aes, 2);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx2_aes, 2);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_AVX)
             if (__builtin_cpu_supports("avx"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx_aes, 3);
-                SELECT_OPTIMISED_ECHO   (avx_aes, 3);
-                SELECT_OPTIMISED_ARGON  (avx_aes, 3);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx_aes, 3);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx_aes, 3);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx_aes, 3);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE4)
             if (__builtin_cpu_supports("sse4.2"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse4_aes, 4);
-                SELECT_OPTIMISED_ECHO   (sse4_aes, 4);
-                SELECT_OPTIMISED_ARGON  (sse4_aes, 4);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse4_aes, 4);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse4_aes, 4);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse4_aes, 4);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
             if (__builtin_cpu_supports("sse3"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
-                SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
-                SELECT_OPTIMISED_ARGON  (sse3_aes, 5);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse3_aes, 5);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE2)
@@ -347,9 +375,10 @@ void selectOptimisedImplementations()
             //fixme: (SIGMA)
             if (__builtin_cpu_supports("sse2"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse2_aes, 6);
-                SELECT_OPTIMISED_ECHO   (sse2_aes, 6);
-                SELECT_OPTIMISED_ARGON  (sse2_aes, 6);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse2_aes, 6);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse2_aes, 6);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse2_aes, 6);
+                goto logselection;
             }
             #endif
             #endif
@@ -360,41 +389,46 @@ void selectOptimisedImplementations()
             #if defined(COMPILER_HAS_AVX512F)
             if (__builtin_cpu_supports("avx512f"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx512f, 7);
-                SELECT_OPTIMISED_ECHO   (avx512f, 7);
-                SELECT_OPTIMISED_ARGON  (avx512f, 7);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx512f, 7);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx512f, 7);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx512f, 7);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_AVX2)
             if (__builtin_cpu_supports("avx2"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx2, 8);
-                SELECT_OPTIMISED_ECHO   (avx2, 8);
-                SELECT_OPTIMISED_ARGON  (avx2, 8);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx2, 8);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx2, 8);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx2, 8);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_AVX)
             if (__builtin_cpu_supports("avx"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx, 9);
-                SELECT_OPTIMISED_ECHO   (avx, 9);
-                SELECT_OPTIMISED_ARGON  (avx, 9);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx, 9);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx, 9);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx, 9);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE4)
             if (__builtin_cpu_supports("sse4.2"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse4, 10);
-                SELECT_OPTIMISED_ECHO   (sse4, 10);
-                SELECT_OPTIMISED_ARGON  (sse4, 10);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse4, 10);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse4, 10);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse4, 10);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
             if (__builtin_cpu_supports("sse3"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse3, 11);
-                SELECT_OPTIMISED_ECHO   (sse3, 11);
-                SELECT_OPTIMISED_ARGON  (sse3, 11);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse3, 11);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse3, 11);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse3, 11);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE2)
@@ -402,9 +436,10 @@ void selectOptimisedImplementations()
             //fixme: (SIGMA)
             else if (__builtin_cpu_supports("sse2"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse2, 12);
-                SELECT_OPTIMISED_ECHO   (sse2, 12);
-                SELECT_OPTIMISED_ARGON  (sse2, 12);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse2, 12);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse2, 12);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse2, 12);
+                goto logselection;
             }
             #endif
             #endif
@@ -465,12 +500,13 @@ void selectOptimisedImplementations()
             #endif
         }
     }
-    #endif
     
     // Finally (only after we have fastest echo implementation) give the hybrid echo a go
     // Just in case it happens to be faster.
     SELECT_OPTIMISED_ARGON(hybrid, 9999);
+    #endif
     
+logselection:
     LogSelection(nSelShavite, "shavite");
     LogSelection(nSelEcho, "echo");
     LogSelection(nSelArgon, "argon");
