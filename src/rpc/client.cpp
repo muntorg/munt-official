@@ -147,7 +147,6 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "echojson", 9, "arg9" },
     { "setgenerate", 0, "generate" },
     { "setgenerate", 1, "gen_proc_limit" },
-    { "setgenerate", 2, "gen_memory_limit" },
     { "deleteseed", 1, "should_purge_accounts" },
     { "importseed", 2, "is_read_only" },
     { "importwitnesskeys", 2, "create_account" },
