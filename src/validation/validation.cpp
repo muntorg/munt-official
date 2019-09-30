@@ -1172,6 +1172,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //Phase 4/5 - miner mines 80 reward for himself, witness 20 reward for himself (two seperate coinbases)
     CAmount nSubsidy = GetBlockSubsidy(pindex->nHeight);
     CAmount nSubsidyWitness = GetBlockSubsidyWitness(pindex->nHeight);
+    CAmount nSubsidyDev = GetBlockSubsidyDev(pindex->nHeight);
 
     //fixme: (2.0.1) Unit tests
     // Second block with a phase 3 parent up to and including first block with a phase 4 parent.
@@ -1245,11 +1246,35 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //fixme: (2.0.1) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
 
     CAmount expectedBlockReward = nFees + nSubsidy;
-    CAmount actualBlockReward = block.vtx[0]->GetValueOut() ;
-    if (actualBlockReward > expectedBlockReward)
+    CAmount actualBlockReward = block.vtx[0]->GetValueOut();
+    if ((actualBlockReward > expectedBlockReward))
     {
         return state.DoS(100, error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)", actualBlockReward, expectedBlockReward), REJECT_INVALID, "bad-cb-amount");
     }
+    // fixme: (PHASE4) Forbid block reward that under pays as well
+    
+    if (nSubsidyDev > 0)
+    {
+        //fixme: (PHASE4) Ensure this check right for phase4 as well.
+        if ((nPoW2PhaseGrandParent >= 3 && block.vtx[0]->vout.size() != 4) || (nPoW2PhaseGrandParent < 3 && block.vtx[0]->vout.size() != 2))
+        {
+            return state.DoS(100, error("ConnectBlock(): coinbase has incorrect number of outputs (actual=%d vs limit=%d)", block.vtx[0]->vout.size(), (nPoW2PhaseGrandParent >= 3)?4:2), REJECT_INVALID, "bad-cb-amount");
+        }
+        
+        //fixme: (PHASE4)- handle other vout types
+        static std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
+        static CPubKey pubKeyDevSubsidyCheck(data.begin(), data.end());
+        static CScript scriptDevSubsidyCheck = (CScript() << ToByteVector(pubKeyDevSubsidyCheck) << OP_CHECKSIG);
+        if (block.vtx[0]->vout[1].output.scriptPubKey != scriptDevSubsidyCheck)
+        {
+            return state.DoS(100, error("ConnectBlock(): coinbase lacks dev subsidy output"), REJECT_INVALID, "bad-cb-amount");
+        }
+        if (block.vtx[0]->vout[1].nValue != nSubsidyDev)
+        {
+            return state.DoS(100, error("ConnectBlock(): coinbase has invalid dev subsidy (actual=%d vs limit=%d)", block.vtx[0]->vout[1].nValue, nSubsidyDev), REJECT_INVALID, "bad-cb-amount");
+        }
+    }
+    
     // From phase 3 onward we forbid miners from not claiming the full reward.
     if (nPoW2PhaseParent >= 3 && expectedBlockReward < actualBlockReward)
     {

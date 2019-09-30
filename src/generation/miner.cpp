@@ -308,6 +308,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // This block is treated special. (but special casing can dissapear for PHASE5 release.
     if (nGrandParentPoW2Phase == 3 && nParentPoW2Phase == 4)
         nSubsidy -= GetBlockSubsidyWitness(nHeight);
+    
+    CAmount nSubsidyDev = GetBlockSubsidyDev(nHeight);
+    nSubsidy -= nSubsidyDev;
 
     // PoW mining on top of a PoS block during phase 3 indicates an error of some kind.
     if (nParentPoW2Phase <= 3)
@@ -389,7 +392,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     CMutableTransaction coinbaseTx( bSegSigIsEnabled ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION );
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
-    coinbaseTx.vout.resize(1);
+    coinbaseTx.vout.resize((nSubsidyDev>0)?2:1);
     #ifdef ENABLE_WALLET
     if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
     {
@@ -409,6 +412,16 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         coinbaseTx.vout[0].output.scriptPubKey = coinbaseReservedKey->reserveScript;
     }
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
+    
+    //fixme: (PHASE4)- handle other vout types
+    if (nSubsidyDev > 0)
+    {
+        std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
+        CPubKey pubKey(data.begin(), data.end());
+        coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
+        coinbaseTx.vout[1].output.scriptPubKey = (CScript() << ToByteVector(pubKey) << OP_CHECKSIG);
+        coinbaseTx.vout[1].nValue = nSubsidyDev;
+    }
 
     // Insert the height into the coinbase (to ensure all coinbase transactions have a unique hash)
     // Further, also insert any optional 'signature' data (identifier of miner or other private miner data etc.)

@@ -67,8 +67,8 @@ static UniValue GetNetworkHashPS(uint32_t lookup, int height)
         return 0;
 
     // If lookup is larger than chain, then set it to chain length.
-    if (lookup > pb->nHeight)
-        lookup = pb->nHeight;
+    if (lookup > (uint32_t)pb->nHeight)
+        lookup = (uint32_t)pb->nHeight;
     
     bool sigmaActive=false;
     if (pb->nTime >= defaultSigmaSettings.activationDate)
@@ -80,7 +80,7 @@ static UniValue GetNetworkHashPS(uint32_t lookup, int height)
     CBlockIndex *pb0 = pb;
     int64_t minTime = pb0->GetBlockTime();
     int64_t maxTime = minTime;
-    for (int i = 0; i < lookup; i++)
+    for (uint32_t i = 0; i < lookup; i++)
     {
         if (sigmaActive && pb0->pprev->nTime < defaultSigmaSettings.activationDate)
             break;
