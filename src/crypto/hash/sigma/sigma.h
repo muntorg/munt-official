@@ -100,7 +100,7 @@ public:
     // Calculated from other values in constructor.
     uint64_t arenaChunkSizeBytes=0;
     // Affects program behaviour (SIGMA activation block) not SIGMA itself.
-    uint64_t activationDate=2524611661;
+    uint64_t activationDate=1571234400;
 };
 // Consensus level SIGMA defaults.
 extern sigma_settings defaultSigmaSettings;
