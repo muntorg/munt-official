@@ -1,10 +1,10 @@
-packages:=boost openssl libcryptopp
+packages:=boost openssl
 
 ifneq ($(host_os),ios)
-packages += libevent zeromq
+packages += libevent zeromq libcryptopp
 endif
 
-ios_packages = qrencode djinni
+ios_packages = qrencode djinni libcryptoppunity
 
 qt_native_packages = native_protobuf
 qt_packages = qrencode protobuf zlib
