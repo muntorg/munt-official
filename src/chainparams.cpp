@@ -383,7 +383,7 @@ public:
             if (sTestnetParams == "C1534687770:60")
             {
                 defaultSigmaSettings.activationDate = 1569510000;
-                defaultSigmaSettings.deltaChangeActivationDate = 1569859200;
+                defaultSigmaSettings.deltaChangeActivationDate = 1569924000;
             }
             else
             {
