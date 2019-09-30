@@ -19,6 +19,10 @@
 
 #include <boost/scope_exit.hpp>
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 sigma_settings defaultSigmaSettings;
 
 inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
@@ -236,7 +240,11 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
             LogPrintf("[%d] Running in hybrid mode.\n", sAlgoName); break;
     }
 }
+
+#ifndef __APPLE__
 #include <sys/auxv.h>
+#endif
+
 #endif
 
 void selectOptimisedImplementations()
@@ -409,6 +417,10 @@ void selectOptimisedImplementations()
     }
     #elif defined (ARCH_CPU_ARM_FAMILY)
     {
+        #if defined(__APPLE__) && TARGET_OS_IPHONE == 1
+        // All iOS hardware running iOS 5 or later supports Neon
+        bool haveAES=true;
+        #else
         bool haveAES=false;
         #if defined HWCAP_AES
         long hwcaps2 = getauxval(AT_HWCAP);
@@ -422,6 +434,7 @@ void selectOptimisedImplementations()
         {
             haveAES=true;
         }
+        #endif
         #endif
         #ifdef COMPILER_HAS_CORTEX53
         SELECT_OPTIMISED_SHAVITE(arm_cortex_a53, 1);
