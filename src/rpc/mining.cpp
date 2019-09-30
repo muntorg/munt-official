@@ -271,31 +271,6 @@ static uint64_t GetMemLimitInBytesFromFormattedStringSpecifier(std::string forma
         nMultiplier = 1024*1024*1024;
         formattedLockPeriodSpecifier.pop_back();
     }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "T") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "t"))
-    {
-        nMultiplier = 1024*1024*1024*1024;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "P") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "p"))
-    {
-        nMultiplier = 1024*1024*1024*1024*1024;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "E") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "e"))
-    {
-        nMultiplier = 1024*1024*1024*1024*1024*1024;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "Z") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "z"))
-    {
-        nMultiplier = 1024*1024*1024*1024*1024*1024*1024;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "Y") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "y"))
-    {
-        nMultiplier = 1024*1024*1024*1024*1024*1024*1024*1024;
-        formattedLockPeriodSpecifier.pop_back();
-    }
     if (!ParseUInt64(formattedLockPeriodSpecifier, &memLimitInBytes))
         return 0;
     memLimitInBytes *=  nMultiplier;

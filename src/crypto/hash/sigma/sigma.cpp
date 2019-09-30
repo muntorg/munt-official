@@ -904,7 +904,7 @@ sigma_verify_context::sigma_verify_context(sigma_settings settings_, uint64_t nu
     //This should provide speed benefits when verifying multiple headers in a row.
 }
 
-bool sigma_verify_context::verifyHeader(CBlockHeader headerData)
+template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader headerData)
 {
     arith_uint256 hashTarget = arith_uint256().SetCompact(headerData.nBits);
     
@@ -961,37 +961,53 @@ bool sigma_verify_context::verifyHeader(CBlockHeader headerData)
     
     // 5. Generate the part(s) of the arena we need as we don't have the whole arena like a miner would.
     {
-        headerData.nNonce = nBaseNonce+nArenaMemoryIndex1;
+        uint256 fastHash;
         argonContext.t_cost = settings.argonArenaRoundCost;    
         
-        if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
-            assert(0);
+        // For each fast hash, set the pre and post nonce to the final values the miner claims he was using
+        // Then calculate the fast hash and compare against the hash target to see if it meets it or not
+        // NB!!! As a special optimisation we allow the caller to execute discretion and skip the check for one of the two fast hashes
+        // This is fine if used sparingly and with other precautions in place but caution should be exercised as if used carelessly it can make it easier to split the chain
+        // NB!!! Do not make use of this unless you fully understand the repercussions
         
-        uint256 fastHash;
-        // 6. For each fast hash, set the pre and post nonce to the final values the miner claims he was using.
-        headerData.nPreNonce = nPreNonce;
-        headerData.nPostNonce = nPostNonce;
-        sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
-
-        if (UintToArith256(fastHash) <= hashTarget)
+        // 6. Verify first fast hash
+        if constexpr (verifyLevel == 0 || verifyLevel == 1)
         {
-            // 7. First fast nonce checks out, repeat process for second fast hash
+            headerData.nNonce = nBaseNonce+nArenaMemoryIndex1;
+            if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
+                assert(0);        
+            headerData.nPreNonce = nPreNonce;
+            headerData.nPostNonce = nPostNonce;
+            sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
+            if (UintToArith256(fastHash) > hashTarget)
+            {
+                return false;
+            }
+        }
+        
+        // 7. First fast hash checks out, repeat process for second fast hash
+        if constexpr (verifyLevel == 0 || verifyLevel == 2)
+        {
             headerData.nNonce = nBaseNonce+nArenaMemoryIndex2;
             if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
                 assert(0);
             headerData.nPreNonce = nPreNonce;
             headerData.nPostNonce = nPostNonce;
             sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset2+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
-            
-            if (UintToArith256(fastHash) <= hashTarget)
+            if (UintToArith256(fastHash) > hashTarget)
             {
-                // 8. Hooray! the block is valid.
-                return true;
+                return false;
             }
         }
+
+        // 8. Hooray! the block is valid.
+        return true;
     }
     return false;
 }
+template bool sigma_verify_context::verifyHeader<0>(CBlockHeader);
+template bool sigma_verify_context::verifyHeader<1>(CBlockHeader);
+template bool sigma_verify_context::verifyHeader<2>(CBlockHeader);
 
 sigma_verify_context::~sigma_verify_context()
 {

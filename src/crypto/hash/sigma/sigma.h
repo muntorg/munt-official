@@ -150,7 +150,13 @@ class sigma_verify_context
 {
 public:
     sigma_verify_context(sigma_settings settings_, uint64_t numUserVerifyThreads_);
-    bool verifyHeader(CBlockHeader headerData);
+    // Use verifyLevel to determine which of the fast hashes to check
+    // 0 = Check both
+    // 1 = Check first hash
+    // 2 = Check second hash
+    // NB! Do not use 1 or 2 unless you fully understand the repercussions; If in doubt stick to the default 0
+    // Careless use of 1/2 can allow for carefully crafted attacks to split the chain.
+    template<int verifyLevel=0> bool verifyHeader(CBlockHeader headerData);
     virtual ~sigma_verify_context();
     sigma_verify_context(const sigma_verify_context&) = delete;
     sigma_verify_context& operator=(const sigma_verify_context&) = delete;
