@@ -2645,13 +2645,17 @@ FORCE_INLINE __m128i _mm_unpackhi_epi64(__m128i a, __m128i b)
     return vreinterpretq_m128i_s64(vcombine_s64(a_h, b_h));
 }
 
+// REMARK: this is not used in the current neon code and is commented our here
+// because it chokes the compiler (Xcode 11)
+// the parameter to vextq_s8 needs to be a compile-time constant because
+// the value is encoded in the generated arm instruction
 // shift to right
 // https://msdn.microsoft.com/en-us/library/bb514041(v=vs.120).aspx
 // http://blog.csdn.net/hemmingway/article/details/44828303
-FORCE_INLINE __m128i _mm_alignr_epi8(__m128i a, __m128i b, const int c)
-{
-    return (__m128i) vextq_s8((int8x16_t) a, (int8x16_t) b, c);
-}
+//FORCE_INLINE __m128i _mm_alignr_epi8(__m128i a, __m128i b, const int c)
+//{
+//    return (__m128i) vextq_s8((int8x16_t) a, (int8x16_t) b, c);
+//}
 
 // Extracts the selected signed or unsigned 16-bit integer from a and zero
 // extends.  https://msdn.microsoft.com/en-us/library/6dceta0c(v=vs.100).aspx
