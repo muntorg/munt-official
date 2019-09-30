@@ -295,10 +295,14 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     }
 
 
-    // Exception 2 - Reduce difficulty if current block generation time has already exceeded maximum time limit. (NB! nLongTimeLimit must exceed maximum possible drift in both positive and negative direction)
+    // Exception 2 - Reduce difficulty if current block generation time has already exceeded maximum time limit. (NB! nLongTimeLimit must exceed maximum possible drift in both positive and negative direction)        
     if ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) > nLongTimeLimit)
     {
-        // Fixed reduction for each missed step. (10%)
+        // Fixed reduction for each missed step. 10% pre-SIGMA, 30% after SIGMA
+        int32_t nDeltaDropPerStep=110;
+        if (BLOCK_TIME(block) > defaultSigmaSettings.deltaChangeActivationDate)
+            nDeltaDropPerStep=130;
+        
         int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
         for(int i=0;i < nNumMissedSteps; ++i)
         {
@@ -309,7 +313,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
         #ifndef __JAVA__
         #ifndef BUILD_IOS
         if (debugLogging && (nPrevHeight != INDEX_HEIGHT(pindexLast) ||  GET_COMPACT(bnNew) != nPrevDifficulty) )
-            sLogInfo +=  strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
+            sLogInfo +=  strprintf("<DELTA> Maximum block time hit - dropping difficulty %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
         #endif
         #endif
     }

@@ -101,6 +101,7 @@ public:
     uint64_t arenaChunkSizeBytes=0;
     // Affects program behaviour (SIGMA activation block) not SIGMA itself.
     uint64_t activationDate=1571234400;
+    uint64_t deltaChangeActivationDate=1571234400;
 };
 // Consensus level SIGMA defaults.
 extern sigma_settings defaultSigmaSettings;
