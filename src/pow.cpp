@@ -17,6 +17,8 @@
 #include "primitives/block.h"
 #include "uint256.h"
 #include "crypto/hash/sigma/sigma.h"
+#include "random.h"
+
 /*GULDEN - We  use our own calculation from elsewhere in the source
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
@@ -98,7 +100,21 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
     {
         //fixme: (SIGMA) Consider keeping a single context always available - with a mutex to protect it that way memory allocation is constant.
         sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
-        return verify.verifyHeader(*block);
+        
+        //fixme: (SIGMA) - Detect faster machines and disable this optimisation for them, this will further increase network security.
+        // We speed up verification by doing a half verify 40% of the time instead of a full verify
+        // As a half verify has a 50% chance of detecting a 'half valid' hash an attacker has only a 20% chance of a node accepting his header without banning him
+        // This should provide a ~20% speed up for slow machines
+        int verifyLevel = GetRand(100);
+        if (verifyLevel < 20)
+        {
+            return verify.verifyHeader<1>(*block);
+        }
+        else if (verifyLevel < 40)
+        {
+            return verify.verifyHeader<2>(*block);
+        }
+        return verify.verifyHeader<0>(*block);
     }
     else
     {

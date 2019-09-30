@@ -102,9 +102,23 @@ CAmount GetBlockSubsidy(int nHeight)
     {
         nSubsidy = 1000 * COIN; 
     }
-    else if(nHeight <= 12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - to continue until original coin target is met.
+    else if(nHeight <= 1030000) // Switch to fixed reward of 100 Gulden per block (no halving)
     {
         nSubsidy = 100 * COIN; 
+    }
+    else if (nHeight <= 10880000) // 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness.
+    {
+        nSubsidy = 120 * COIN;
+    }
+    return nSubsidy;
+}
+
+CAmount GetBlockSubsidyDev(int nHeight)
+{
+    CAmount nSubsidy = 0;
+    if(nHeight >= 1030000) // 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness.
+    {
+        nSubsidy = 40 * COIN;
     }
     return nSubsidy;
 }

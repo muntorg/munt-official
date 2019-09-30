@@ -739,9 +739,14 @@ extern std::string getStaticFundingAddress(std::string sLookupAddress, uint64_t 
 CAmount GetBlockSubsidyWitness(int nHeight)
 {
     CAmount nSubsidy = 0;
-    if (nHeight <= 12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - continue until original coin target is met.
+    //fixme: (PHASE5) After SIGMA activation we can hardcode this to a specific block instead.
+    if (nHeight < 1030000) // Switch to fixed reward of 100 Gulden per block (no halving)
     {
         nSubsidy = 20 * COIN;
+    }
+    else if (nHeight <= 10880000)// Switch to fixed reward of 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness - continue until original coin target is met.
+    {
+        nSubsidy = 30 * COIN;
     }
     return nSubsidy;
 }

@@ -24,6 +24,25 @@
 #define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS     0x20000000
 #define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG 0x40000000
 
+inline double GetHumanDifficultyFromBits(uint64_t nBits)
+{
+    int nShift = (nBits >> 24) & 0xff;
+
+    double dDiff =(double)0x0000ffff / (double)(nBits & 0x00ffffff);
+
+    while (nShift < 29)
+    {
+        dDiff *= 256.0;
+        nShift++;
+    }
+    while (nShift > 29)
+    {
+        dDiff /= 256.0;
+        nShift--;
+    }
+
+    return dDiff;
+}
 
 /** Nodes collect new transactions into a block, hash them into a hash tree,
  * and scan through nonce values to make the block's hash satisfy proof-of-work

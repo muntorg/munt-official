@@ -1664,8 +1664,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
 
     // Generate coins in the background
-    //fixme: (SIGMA) - Better handle memory selection here
-    PoWMineGulden(GetBoolArg("-gen", DEFAULT_GENERATE), GetArg("-genproclimit", DEFAULT_GENERATE_THREADS), 4*1024*1024, chainparams);
+    PoWMineGulden(GetBoolArg("-gen", DEFAULT_GENERATE), GetArg("-genproclimit", DEFAULT_GENERATE_THREADS), GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb*1024), chainparams);
     // ********************************************************* Step 12: finished
 
     SetRPCWarmupFinished();

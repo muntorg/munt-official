@@ -68,7 +68,6 @@
 // transactions in the memory pool. When we select transactions from the
 // pool, we select by highest fee rate of a transaction combined with all
 // its ancestors.
-
 uint64_t nLastBlockTx = 0;
 uint64_t nLastBlockSize = 0;
 uint64_t nLastBlockWeight = 0;
@@ -259,6 +258,8 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     return true;
 }
 
+
+
 std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
 {
     fMineSegSig = true;
@@ -287,14 +288,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     nHeight = pParent->nHeight + 1;
 
-    if (pWitnessBlockToEmbed)
-    {
-        LogPrintf("CreateNewBlock: parent height [%d]; embedded witness height [%d]; our height [%d]\n", pParent->nHeight, pWitnessBlockToEmbed->nHeight, nHeight);
-        assert(pParent->nHeight == pWitnessBlockToEmbed->nHeight);
-    }
-    else
-        LogPrintf("CreateNewBlock: parent height [%d]; our height [%d]\n", pParent->nHeight, nHeight);
-
     int nParentPoW2Phase = GetPoW2Phase(pParent, chainparams, chainActive);
     int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev, chainparams, chainActive);
     bool bSegSigIsEnabled = IsSegSigEnabled(pParent);
@@ -315,6 +308,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // This block is treated special. (but special casing can dissapear for PHASE5 release.
     if (nGrandParentPoW2Phase == 3 && nParentPoW2Phase == 4)
         nSubsidy -= GetBlockSubsidyWitness(nHeight);
+    
+    CAmount nSubsidyDev = GetBlockSubsidyDev(nHeight);
+    nSubsidy -= nSubsidyDev;
 
     // PoW mining on top of a PoS block during phase 3 indicates an error of some kind.
     if (nParentPoW2Phase <= 3)
@@ -396,7 +392,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     CMutableTransaction coinbaseTx( bSegSigIsEnabled ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION );
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
-    coinbaseTx.vout.resize(1);
+    coinbaseTx.vout.resize((nSubsidyDev>0)?2:1);
     #ifdef ENABLE_WALLET
     if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
     {
@@ -416,6 +412,16 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         coinbaseTx.vout[0].output.scriptPubKey = coinbaseReservedKey->reserveScript;
     }
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
+    
+    //fixme: (PHASE4)- handle other vout types
+    if (nSubsidyDev > 0)
+    {
+        std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
+        CPubKey pubKey(data.begin(), data.end());
+        coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
+        coinbaseTx.vout[1].output.scriptPubKey = (CScript() << ToByteVector(pubKey) << OP_CHECKSIG);
+        coinbaseTx.vout[1].nValue = nSubsidyDev;
+    }
 
     // Insert the height into the coinbase (to ensure all coinbase transactions have a unique hash)
     // Further, also insert any optional 'signature' data (identifier of miner or other private miner data etc.)
@@ -462,6 +468,17 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     //LogPrintf("CreateNewBlock(): total size: %u block weight: %u txs: %u fees: %ld sigops %d\n", nSerializeSize, GetBlockWeight(*pblock), nBlockTx, nFees, nBlockSigOpsCost);
 
     UpdateTime(pblock, consensusParams, pParent);
+    
+    if (pWitnessBlockToEmbed)
+    {
+        LogPrintf("CreateNewBlock: parent height [%d]; embedded witness height [%d]; our height [%d]; Difficulty [%d]\n", pParent->nHeight, pWitnessBlockToEmbed->nHeight, nHeight, GetHumanDifficultyFromBits(pblock->nBits));
+        assert(pParent->nHeight == pWitnessBlockToEmbed->nHeight);
+    }
+    else
+    {
+        LogPrintf("CreateNewBlock: parent height [%d]; our height [%d; Difficulty [%d]\n", pParent->nHeight, nHeight, GetHumanDifficultyFromBits(pblock->nBits));
+    }
+
     // (GULDEN) Already done inside UpdateTime - don't need to do it again.
     //pblock->nBits          = GetNextWorkRequired(pParent, pblock, consensusParams);
     pblock->nNonce         = 0;
@@ -1011,7 +1028,7 @@ static CCriticalSection timerCS;
 
 static const unsigned int hashPSTimerInterval = 200;
 
-void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemory)
+void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
 {
     LogPrintf("GuldenGenerate started\n");
     RenameThread("gulden-generate");
@@ -1112,9 +1129,9 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                 uint64_t nMemoryAllocatedKb=0;
                 
                 
-                while (nMemoryAllocatedKb < nMemory)
+                while (nMemoryAllocatedKb < nMemoryKb)
                 {
-                    uint64_t nMemoryChunkKb = std::min((nMemory-nMemoryAllocatedKb), defaultSigmaSettings.arenaSizeKb);
+                    uint64_t nMemoryChunkKb = std::min((nMemoryKb-nMemoryAllocatedKb), defaultSigmaSettings.arenaSizeKb);
                     nMemoryAllocatedKb += nMemoryChunkKb;
                     sigmaMemorySizes.emplace_back(nMemoryChunkKb);
                 }
@@ -1122,18 +1139,21 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                 //And we don't even attempt to account for swap, so if the user sets a memory size too large for system memory we will just happily swap and perform worse than if the user picked a more reasonable size.
                 for (auto instanceMemorySizeKb : sigmaMemorySizes)
                 {
-                    int64_t trySizeKb = instanceMemorySizeKb;
-                    while (trySizeKb > 0)
+                    uint64_t trySizeBytes = instanceMemorySizeKb*1024;
+                    while (trySizeBytes > 0)
                     {
+                        normaliseBufferSize(trySizeBytes);
                         try
                         {
-                            sigmaContexts.push_back(std::unique_ptr<sigma_context>(new sigma_context(defaultSigmaSettings, trySizeKb, nThreads/sigmaMemorySizes.size())));
+                            sigmaContexts.push_back(std::unique_ptr<sigma_context>(new sigma_context(defaultSigmaSettings, trySizeBytes/1024, nThreads/sigmaMemorySizes.size())));
                             break;
                         }
                         catch (...)
                         {
                             // reduce by 256mb and try again.
-                            trySizeKb -= 256*1024*1024;
+                            if (trySizeBytes < 256*1024*1024)
+                                break;
+                            trySizeBytes -= 256*1024*1024;
                         }
                     }
                 }

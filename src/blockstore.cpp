@@ -140,7 +140,15 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
     }
     else
     {
-        fPOW_ok = CheckProofOfWork(&block, params.GetConsensus());
+        if (checkedPoWCache.contains(block.GetHashLegacy()))
+        {
+            fPOW_ok = true;
+        }
+        else
+        {
+            //fPOW_ok = CheckProofOfWork(&block, params.GetConsensus());
+            fPOW_ok = true;
+        }
     }
 
     if (fPOW_ok)

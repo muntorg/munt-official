@@ -40,6 +40,8 @@
 
 #include "uint256.h"
 
+#include <LRUCache/LRUCache11.hpp>
+
 #if defined(__APPLE__) && defined(__MACH__)
 #include <TargetConditionals.h>
 #endif
@@ -253,6 +255,9 @@ extern bool fEnableReplacement;
 /** Block hash whose ancestors we will assume to have valid scripts without checking them. */
 extern uint256 hashAssumeValid;
 
+/** Cache to prevent repeated calls of same expensive CheckProofOfWork in certain situations */
+inline lru11::Cache<uint256, bool, lru11::NullLock, std::unordered_map<uint256, typename std::list<lru11::KeyValuePair<uint256, bool>>::iterator, BlockHasher>> checkedPoWCache(800, 100);
+
 /** Best header we've seen so far (used for getheaders queries' starting points). */
 extern CBlockIndex *pindexBestHeader;
 
@@ -344,7 +349,11 @@ bool IsInitialBlockDownload();
 bool GetTransaction(const uint256 &hash, CTransactionRef &tx, const CChainParams& params, uint256 &hashBlock, bool fAllowSlow = false);
 /** Find the best known block, and make it the tip of the block chain */
 bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams, std::shared_ptr<const CBlock> pblock = std::shared_ptr<const CBlock>());
+
+/** The reward that must be paid out per block */
 CAmount GetBlockSubsidy(int nHeight);
+CAmount GetBlockSubsidyDev(int nHeight);
+inline std::string devSubsidyAddress = "025a8fff4981266a057b38f3a68f99dd543021f7f43be88aec898a62f9f0115d49";
 
 /** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
 double GuessVerificationProgress(const ChainTxData& data, CBlockIndex* pindex);
