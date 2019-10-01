@@ -16,6 +16,7 @@
 #include "chain.h"
 #include "primitives/block.h"
 #include "crypto/hash/sigma/sigma.h"
+#include <boost/thread.hpp>
 #include "uint256.h"
 #include "random.h"
 
@@ -92,7 +93,7 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
     if (block->nTime > defaultSigmaSettings.activationDate)
     {
         //fixme: (SIGMA) Consider keeping a single context always available - with a mutex to protect it that way memory allocation is constant.
-        sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
+        sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)boost::thread::hardware_concurrency()));
         
         //fixme: (SIGMA) - Detect faster machines and disable this optimisation for them, this will further increase network security.
         // We speed up verification by doing a half verify 40% of the time instead of a full verify

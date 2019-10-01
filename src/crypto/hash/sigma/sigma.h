@@ -15,7 +15,6 @@
 // Standard library support for std::string_view.
 #define BOOST_ASIO_DISABLE_STD_STRING_VIEW 1
 #include <boost/asio.hpp>
-#include <boost/asio/thread_pool.hpp>
 
 #include <crypto/hash/sigma/argon_echo/argon_echo.h>
 #include <crypto/hash/sigma/echo256/sphlib/sph_echo.h>
