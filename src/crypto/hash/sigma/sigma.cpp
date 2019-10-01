@@ -259,8 +259,6 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
     }
 }
 
-#ifndef __APPLE__
-#include <sys/auxv.h>
 #else
 void LogSelection(uint64_t nSel, std::string sAlgoName)
 {
@@ -268,6 +266,8 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
 }
 #endif
 
+#ifndef __APPLE__
+#include <sys/auxv.h>
 #endif
 
 void selectOptimisedImplementations()
