@@ -90,7 +90,7 @@ struct modifiedentry_iter {
 };
 
 struct CompareModifiedEntry {
-    bool operator()(const CTxMemPoolModifiedEntry& a, const CTxMemPoolModifiedEntry& b)
+    bool operator()(const CTxMemPoolModifiedEntry& a, const CTxMemPoolModifiedEntry& b) const
     {
         double f1 = (double)a.nModFeesWithAncestors * b.nSizeWithAncestors;
         double f2 = (double)b.nModFeesWithAncestors * a.nSizeWithAncestors;
@@ -102,7 +102,7 @@ struct CompareModifiedEntry {
 };
 
 struct CompareTxIterByAncestorCount {
-    bool operator()(const CTxMemPool::txiter& a, const CTxMemPool::txiter& b)
+    bool operator()(const CTxMemPool::txiter& a, const CTxMemPool::txiter& b) const
     {
         if (a->GetCountWithAncestors() != b->GetCountWithAncestors())
             return a->GetCountWithAncestors() < b->GetCountWithAncestors();

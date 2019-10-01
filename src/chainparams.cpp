@@ -23,6 +23,7 @@
 
 #include <cstdio>
 #include "chainparamsseeds.h"
+#include "crypto/hash/sigma/sigma.h"
 
 static CBlock CreateGenesisBlock(const std::vector<unsigned char>& timestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
@@ -173,6 +174,17 @@ public:
 
             int targetInterval = atoi(sTestnetParams.substr(sTestnetParams.find(":") + 1));
             int64_t seedTimestamp = atoi64(sTestnetParams.substr(1, sTestnetParams.find(":")));
+
+            if (sTestnetParams == "C1534687770:60")
+            {
+                defaultSigmaSettings.activationDate = 1569510000;
+                defaultSigmaSettings.deltaChangeActivationDate = 1569924000;
+            }
+            else
+            {
+                defaultSigmaSettings.activationDate = seedTimestamp+300;
+                defaultSigmaSettings.deltaChangeActivationDate = seedTimestamp+300;
+            }
 
             consensus.nPowTargetSpacing = targetInterval;
             consensus.fPowAllowMinDifficultyBlocks = false;

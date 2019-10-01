@@ -23,6 +23,7 @@
 #endif
 #include <stdint.h>
 #endif
+#include "crypto/hash/sigma/sigma.h"
 
 #ifdef __JAVA__
 package org.bitcoinj.core;
@@ -227,8 +228,14 @@ public
 
             if ((BLOCK_TIME(block) - INDEX_TIME(pindexLast)) > nLongTimeLimit) {
 
+                // Fixed reduction for each missed step. 10% pre-SIGMA, 30% after SIGMA
+                int32_t nDeltaDropPerStep=110;
+                if (BLOCK_TIME(block) > defaultSigmaSettings.deltaChangeActivationDate)
+                    nDeltaDropPerStep=130;
+        
                 int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
-                for (int i = 0; i < nNumMissedSteps; ++i) {
+                for(int i=0;i < nNumMissedSteps; ++i)
+                {
                     bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(110));
                     bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
                 }
@@ -236,7 +243,7 @@ public
 #ifndef __JAVA__
 #ifndef BUILD_IOS
                 if (fDebug && (nPrevHeight != INDEX_HEIGHT(pindexLast) || GET_COMPACT(bnNew) != nPrevDifficulty))
-                    sLogInfo += strprintf("<DELTA> Maximum block time hit - halving difficulty %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
+                    sLogInfo += strprintf("<DELTA> Maximum block time hit - dropping difficulty %08x %s\n", GET_COMPACT(bnNew), bnNew.ToString().c_str());
 #endif
 #endif
             }

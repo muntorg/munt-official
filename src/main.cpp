@@ -1442,7 +1442,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
 
-    if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
+    if (!CheckProofOfWork(&block, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 
     return true;
@@ -1461,17 +1461,22 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
     CAmount nSubsidy = 0;
-    if (nHeight == 1) //First block premine
+    if(nHeight == 1) //First block premine
     {
         nSubsidy = 170000000 * COIN;
-    } else if (nHeight <= 250000) // 1000 Gulden per block for first 250k blocks
-    {
-        nSubsidy = 1000 * COIN;
-    } else if (nHeight <= 12850000) // Switch to fixed reward of 100 Gulden per block (no halving) - to continue until original coin target is met.
-    {
-        nSubsidy = 100 * COIN;
     }
-
+    else if(nHeight <= 250000) // 1000 Gulden per block for first 250k blocks
+    {
+        nSubsidy = 1000 * COIN; 
+    }
+    else if(nHeight <= 1030000) // Switch to fixed reward of 100 Gulden per block (no halving)
+    {
+        nSubsidy = 100 * COIN; 
+    }
+    else if (nHeight <= 10880000) // 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness.
+    {
+        nSubsidy = 120 * COIN;
+    }
     return nSubsidy;
 }
 
@@ -2988,7 +2993,7 @@ bool FindUndoPos(CValidationState& state, int nFile, CDiskBlockPos& pos, unsigne
 bool CheckBlockHeader(const CBlock& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
 {
 
-    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
+    if (fCheckPOW && !CheckProofOfWork(&block, consensusParams))
         return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
 
     return true;

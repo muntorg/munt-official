@@ -3,9 +3,9 @@ AC_PREREQ([2.60])
 define(_CLIENT_VERSION_MAJOR,       1)
 define(_CLIENT_VERSION_MINOR,       6)
 define(_CLIENT_VERSION_REVISION, 4)
-define(_CLIENT_VERSION_BUILD,       10)
+define(_CLIENT_VERSION_BUILD,       11)
 define(_CLIENT_VERSION_IS_RELEASE, false)
-define(_COPYRIGHT_YEAR, 2016)
+define(_COPYRIGHT_YEAR, 2019)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
 define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Gulden]])
 AC_INIT([Gulden],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@gulden.com],[Gulden])
@@ -59,6 +59,9 @@ dnl Require C++11 compiler (no GNU extensions)
 AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
 dnl Check if -latomic is required for <std::atomic>
 CHECK_ATOMIC
+
+dnl Check for compiler (not cpu/runtime) intrinsic support.
+INTRINSIC_FLAG_CHECK
 
 dnl Libtool init checks.
 LT_INIT([pic-only])
@@ -775,6 +778,7 @@ if test x$use_pkgconfig = xyes; then
   m4_ifdef(
     [PKG_CHECK_MODULES],
     [
+      PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, PKG_CHECK_MODULES([CRYPTOPP], [libcrypto++],, [AC_MSG_ERROR(libcryptopp not found.)]))
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
       GULDEN_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [GULDEN_QT_FAIL(libprotobuf not found)])])
@@ -800,6 +804,8 @@ if test x$use_pkgconfig = xyes; then
     ]
   )
 else
+  AC_CHECK_HEADER([cryptopp/config.h],,AC_MSG_ERROR(libcryptopp headers missing))
+  AC_CHECK_LIB([cryptopp],    [main],CRYPTOPP_LIBS=-lcryptopp, AC_MSG_ERROR(libcryptopp missing))
   AC_CHECK_HEADER([openssl/crypto.h],,AC_MSG_ERROR(libcrypto headers missing))
   AC_CHECK_LIB([crypto],      [main],CRYPTO_LIBS=-lcrypto, AC_MSG_ERROR(libcrypto missing))
 

@@ -70,6 +70,8 @@
 #include "zmq/zmqnotificationinterface.h"
 #endif
 
+#include "crypto/hash/sigma/sigma.h"
+
 using namespace std;
 
 bool fFeeEstimatesInitialized = false;
@@ -924,6 +926,11 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         return InitError(strprintf(_("Initialization sanity check failed. %s is shutting down."), _(PACKAGE_NAME)));
 
     std::string strDataDir = GetDataDir().string();
+
+    //fixme: (SIGMA) Improve.
+    // Select optimised algorithms for SIGMA
+    selected_argon2_echo_hash = argon2_echo_ctx_ref;
+    selectOptimisedImplementations();
 
 #ifndef WIN32
     CreatePidFile(GetPidFile(), getpid());

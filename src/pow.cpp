@@ -15,7 +15,10 @@
 #include "arith_uint256.h"
 #include "chain.h"
 #include "primitives/block.h"
+#include "crypto/hash/sigma/sigma.h"
 #include "uint256.h"
+#include "random.h"
+
 
 unsigned int GetNextWorkRequired_original(const CBlockIndex* pindexLast, const CBlockHeader* pblock, const Consensus::Params& params)
 {
@@ -72,19 +75,45 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     return bnNew.GetCompact();
 }
 
-bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
-{
+bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
+{    
     bool fNegative;
     bool fOverflow;
     arith_uint256 bnTarget;
 
-    bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
+    bnTarget.SetCompact(block->nBits, &fNegative, &fOverflow);
 
+    // Check range
     if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
         return false;
 
-    if (UintToArith256(hash) > bnTarget)
-        return false;
+    //fixme: (SIGMA) - Post activation we can simplify this.
+    // Check proof of work matches claimed amount
+    if (block->nTime > defaultSigmaSettings.activationDate)
+    {
+        //fixme: (SIGMA) Consider keeping a single context always available - with a mutex to protect it that way memory allocation is constant.
+        sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
+        
+        //fixme: (SIGMA) - Detect faster machines and disable this optimisation for them, this will further increase network security.
+        // We speed up verification by doing a half verify 40% of the time instead of a full verify
+        // As a half verify has a 50% chance of detecting a 'half valid' hash an attacker has only a 20% chance of a node accepting his header without banning him
+        // This should provide a ~20% speed up for slow machines
+        int verifyLevel = GetRand(100);
+        if (verifyLevel < 20)
+        {
+            return verify.verifyHeader<1>(*block);
+        }
+        else if (verifyLevel < 40)
+        {
+            return verify.verifyHeader<2>(*block);
+        }
+        return verify.verifyHeader<0>(*block);
+    }
+    else
+    {
+        if (UintToArith256(block->GetPoWHash()) > bnTarget)
+            return false;
+    }
 
     return true;
 }
