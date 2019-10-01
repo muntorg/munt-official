@@ -13,7 +13,7 @@ $(package)_cxxflags_release += -DNDEBUG -O3 -fPIC
 $(package)_cxxflags += -std=c++17
 
 $(package)_cross_target_aarch64_ios=arm64
-$(package)_cross_target_x86_64_ios=simulator
+$(package)_cross_target_x86_64_ios=x86_64
 $(package)_cross_target=$($(package)_cross_target_$(host_arch)_$(host_os))
 
 define $(package)_preprocess_cmds
