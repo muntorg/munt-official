@@ -177,6 +177,26 @@ uint64_t nNumArgonTrials=10;
         nSelArgon=IDX;\
     }\
 }
+#define FORCE_SELECT_OPTIMISED_SHAVITE(CPU, IDX) \
+{\
+    selected_shavite3_256_opt_Init   = shavite3_256_opt_##CPU##_Init;\
+    selected_shavite3_256_opt_Update = shavite3_256_opt_##CPU##_Update;\
+    selected_shavite3_256_opt_Final  = shavite3_256_opt_##CPU##_Final;\
+    nSelShavite=IDX;\
+}
+#define FORCE_SELECT_OPTIMISED_ECHO(CPU, IDX) \
+{\
+    selected_echo256_opt_Init        = echo256_opt_##CPU##_Init;\
+    selected_echo256_opt_Update      = echo256_opt_##CPU##_Update;\
+    selected_echo256_opt_Final       = echo256_opt_##CPU##_Final;\
+    selected_echo256_opt_UpdateFinal = echo256_opt_##CPU##_UpdateFinal;\
+    nSelEcho=IDX;\
+}      
+#define FORCE_SELECT_OPTIMISED_ARGON(CPU, IDX) \
+{\
+    selected_argon2_echo_hash = argon2_echo_ctx_##CPU;\
+    nSelArgon=IDX;\
+}
 
 #ifdef ARCH_CPU_X86_FAMILY
 void LogSelection(uint64_t nSel, std::string sAlgoName)
@@ -213,9 +233,7 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
             LogPrintf("[%d] Selected hybrid implementation as fastest\n", sAlgoName); break;
     }
 }
-#endif
-
-#ifdef ARCH_CPU_ARM_FAMILY
+#elif defined(ARCH_CPU_ARM_FAMILY)
 void LogSelection(uint64_t nSel, std::string sAlgoName)
 {
     switch (nSel)
@@ -243,12 +261,22 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
 
 #ifndef __APPLE__
 #include <sys/auxv.h>
+#else
+void LogSelection(uint64_t nSel, std::string sAlgoName)
+{
+    //fixme: (SIGMA) Implement for riscv
+}
 #endif
 
 #endif
 
 void selectOptimisedImplementations()
 {
+    uint64_t nSelShavite=0;
+    uint64_t nSelEcho=0;
+    uint64_t nSelArgon=0;
+
+    #ifndef ARCH_CPU_X86_FAMILY
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
     shavite3_256_opt_hashState ctx_shavite;
@@ -257,9 +285,6 @@ void selectOptimisedImplementations()
     uint64_t nBestTimeShavite = std::numeric_limits<uint64_t>::max();
     uint64_t nBestTimeEcho = std::numeric_limits<uint64_t>::max();
     uint64_t nBestTimeArgon = std::numeric_limits<uint64_t>::max();
-    uint64_t nSelShavite=0;
-    uint64_t nSelEcho=0;
-    uint64_t nSelArgon=0;
     
     {
         uint64_t nStart = GetTimeMicros();
@@ -301,6 +326,7 @@ void selectOptimisedImplementations()
         }
         nBestTimeArgon = GetTimeMicros() - nStart;
     }
+    #endif
   
     #ifdef ARCH_CPU_X86_FAMILY
     {
@@ -310,41 +336,46 @@ void selectOptimisedImplementations()
             #if defined(COMPILER_HAS_AVX512F)
             if (__builtin_cpu_supports("avx512f"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
-                SELECT_OPTIMISED_ECHO   (avx512f_aes, 1);
-                SELECT_OPTIMISED_ARGON  (avx512f_aes, 1);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx512f_aes, 1);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx512f_aes, 1);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_AVX2)
             if (__builtin_cpu_supports("avx2"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx2_aes, 2);
-                SELECT_OPTIMISED_ECHO   (avx2_aes, 2);
-                SELECT_OPTIMISED_ARGON  (avx2_aes, 2);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx2_aes, 2);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx2_aes, 2);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx2_aes, 2);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_AVX)
             if (__builtin_cpu_supports("avx"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx_aes, 3);
-                SELECT_OPTIMISED_ECHO   (avx_aes, 3);
-                SELECT_OPTIMISED_ARGON  (avx_aes, 3);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx_aes, 3);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx_aes, 3);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx_aes, 3);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE4)
             if (__builtin_cpu_supports("sse4.2"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse4_aes, 4);
-                SELECT_OPTIMISED_ECHO   (sse4_aes, 4);
-                SELECT_OPTIMISED_ARGON  (sse4_aes, 4);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse4_aes, 4);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse4_aes, 4);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse4_aes, 4);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
             if (__builtin_cpu_supports("sse3"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
-                SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
-                SELECT_OPTIMISED_ARGON  (sse3_aes, 5);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse3_aes, 5);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE2)
@@ -352,9 +383,10 @@ void selectOptimisedImplementations()
             //fixme: (SIGMA)
             if (__builtin_cpu_supports("sse2"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse2_aes, 6);
-                SELECT_OPTIMISED_ECHO   (sse2_aes, 6);
-                SELECT_OPTIMISED_ARGON  (sse2_aes, 6);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse2_aes, 6);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse2_aes, 6);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse2_aes, 6);
+                goto logselection;
             }
             #endif
             #endif
@@ -365,41 +397,46 @@ void selectOptimisedImplementations()
             #if defined(COMPILER_HAS_AVX512F)
             if (__builtin_cpu_supports("avx512f"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx512f, 7);
-                SELECT_OPTIMISED_ECHO   (avx512f, 7);
-                SELECT_OPTIMISED_ARGON  (avx512f, 7);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx512f, 7);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx512f, 7);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx512f, 7);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_AVX2)
             if (__builtin_cpu_supports("avx2"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx2, 8);
-                SELECT_OPTIMISED_ECHO   (avx2, 8);
-                SELECT_OPTIMISED_ARGON  (avx2, 8);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx2, 8);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx2, 8);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx2, 8);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_AVX)
             if (__builtin_cpu_supports("avx"))
             {
-                SELECT_OPTIMISED_SHAVITE(avx, 9);
-                SELECT_OPTIMISED_ECHO   (avx, 9);
-                SELECT_OPTIMISED_ARGON  (avx, 9);
+                FORCE_SELECT_OPTIMISED_SHAVITE(avx, 9);
+                FORCE_SELECT_OPTIMISED_ECHO   (avx, 9);
+                FORCE_SELECT_OPTIMISED_ARGON  (avx, 9);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE4)
             if (__builtin_cpu_supports("sse4.2"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse4, 10);
-                SELECT_OPTIMISED_ECHO   (sse4, 10);
-                SELECT_OPTIMISED_ARGON  (sse4, 10);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse4, 10);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse4, 10);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse4, 10);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
             if (__builtin_cpu_supports("sse3"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse3, 11);
-                SELECT_OPTIMISED_ECHO   (sse3, 11);
-                SELECT_OPTIMISED_ARGON  (sse3, 11);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse3, 11);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse3, 11);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse3, 11);
+                goto logselection;
             }
             #endif
             #if defined(COMPILER_HAS_SSE2)
@@ -407,9 +444,10 @@ void selectOptimisedImplementations()
             //fixme: (SIGMA)
             else if (__builtin_cpu_supports("sse2"))
             {
-                SELECT_OPTIMISED_SHAVITE(sse2, 12);
-                SELECT_OPTIMISED_ECHO   (sse2, 12);
-                SELECT_OPTIMISED_ARGON  (sse2, 12);
+                FORCE_SELECT_OPTIMISED_SHAVITE(sse2, 12);
+                FORCE_SELECT_OPTIMISED_ECHO   (sse2, 12);
+                FORCE_SELECT_OPTIMISED_ARGON  (sse2, 12);
+                goto logselection;
             }
             #endif
             #endif
@@ -475,15 +513,21 @@ void selectOptimisedImplementations()
             #endif
         }
     }
-    #endif
     
     // Finally (only after we have fastest echo implementation) give the hybrid echo a go
     // Just in case it happens to be faster.
     SELECT_OPTIMISED_ARGON(hybrid, 9999);
+    #endif
     
+logselection:
     LogSelection(nSelShavite, "shavite");
     LogSelection(nSelEcho, "echo");
     LogSelection(nSelArgon, "argon");
+}
+
+void normaliseBufferSize(uint64_t& nBufferSizeBytes)
+{
+    nBufferSizeBytes = (nBufferSizeBytes / (defaultSigmaSettings.argonMemoryCostKb*1024)) * (defaultSigmaSettings.argonMemoryCostKb*1024);
 }
 
 sigma_settings::sigma_settings()
@@ -833,7 +877,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
                         // 4.5 See if we have a valid block
                         if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
                         {
-                            #define LOG_VALID_BLOCK
+                            //#define LOG_VALID_BLOCK
                             #ifdef LOG_VALID_BLOCK
                             LogPrintf("Found block [%s]\n", HexStr((uint8_t*)&headerData.nVersion, (uint8_t*)&headerData.nVersion+80).c_str());
                             LogPrintf("pseudorandomnonce1[%d] pseudorandomalg1[%d] fasthashoffset1[%d] arenaoffset1[%d]\n", nPseudoRandomNonce1, nPseudoRandomAlg1, nFastHashOffset1, (nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1);
@@ -873,7 +917,7 @@ sigma_verify_context::sigma_verify_context(sigma_settings settings_, uint64_t nu
     //This should provide speed benefits when verifying multiple headers in a row.
 }
 
-bool sigma_verify_context::verifyHeader(CBlockHeader headerData)
+template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader headerData)
 {
     arith_uint256 hashTarget = arith_uint256().SetCompact(headerData.nBits);
     
@@ -930,37 +974,53 @@ bool sigma_verify_context::verifyHeader(CBlockHeader headerData)
     
     // 5. Generate the part(s) of the arena we need as we don't have the whole arena like a miner would.
     {
-        headerData.nNonce = nBaseNonce+nArenaMemoryIndex1;
+        uint256 fastHash;
         argonContext.t_cost = settings.argonArenaRoundCost;    
         
-        if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
-            assert(0);
+        // For each fast hash, set the pre and post nonce to the final values the miner claims he was using
+        // Then calculate the fast hash and compare against the hash target to see if it meets it or not
+        // NB!!! As a special optimisation we allow the caller to execute discretion and skip the check for one of the two fast hashes
+        // This is fine if used sparingly and with other precautions in place but caution should be exercised as if used carelessly it can make it easier to split the chain
+        // NB!!! Do not make use of this unless you fully understand the repercussions
         
-        uint256 fastHash;
-        // 6. For each fast hash, set the pre and post nonce to the final values the miner claims he was using.
-        headerData.nPreNonce = nPreNonce;
-        headerData.nPostNonce = nPostNonce;
-        sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
-
-        if (UintToArith256(fastHash) <= hashTarget)
+        // 6. Verify first fast hash
+        if constexpr (verifyLevel == 0 || verifyLevel == 1)
         {
-            // 7. First fast nonce checks out, repeat process for second fast hash
+            headerData.nNonce = nBaseNonce+nArenaMemoryIndex1;
+            if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
+                assert(0);        
+            headerData.nPreNonce = nPreNonce;
+            headerData.nPostNonce = nPostNonce;
+            sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
+            if (UintToArith256(fastHash) > hashTarget)
+            {
+                return false;
+            }
+        }
+        
+        // 7. First fast hash checks out, repeat process for second fast hash
+        if constexpr (verifyLevel == 0 || verifyLevel == 2)
+        {
             headerData.nNonce = nBaseNonce+nArenaMemoryIndex2;
             if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
                 assert(0);
             headerData.nPreNonce = nPreNonce;
             headerData.nPostNonce = nPostNonce;
             sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset2+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
-            
-            if (UintToArith256(fastHash) <= hashTarget)
+            if (UintToArith256(fastHash) > hashTarget)
             {
-                // 8. Hooray! the block is valid.
-                return true;
+                return false;
             }
         }
+
+        // 8. Hooray! the block is valid.
+        return true;
     }
     return false;
 }
+template bool sigma_verify_context::verifyHeader<0>(CBlockHeader);
+template bool sigma_verify_context::verifyHeader<1>(CBlockHeader);
+template bool sigma_verify_context::verifyHeader<2>(CBlockHeader);
 
 sigma_verify_context::~sigma_verify_context()
 {

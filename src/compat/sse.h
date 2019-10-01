@@ -39,12 +39,17 @@
     #else
         #ifdef ARCH_CPU_ARM64_FAMILY
             // In the absence of crypto extensions, implement aesenc using regular neon intrinsics instead.
+            #define SOFTWARE_AES
             #define SOFTWARE_AES_NEON
         #else
             // As a last resort use a complete software implementation
             #define SOFTWARE_AES
         #endif
     #endif
+#else
+    //fixme: (SIGMA) riscv
+    #include <array>
+    typedef std::array<uint8_t, 16> __m128i;
 #endif
 
 #if defined(SOFTWARE_AES) || defined(SOFTWARE_AES_NEON)
