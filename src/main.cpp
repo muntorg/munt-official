@@ -3231,9 +3231,10 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
         // CheckBlockHeader can take long so temporarily relinquish the lock to avoid freezing the UI
         LEAVE_CRITICAL_SECTION(cs_main);
-        if (!CheckBlockHeader(block, state, chainparams.GetConsensus()))
+        bool blockHeaderIsValid = CheckBlockHeader(block, state, chainparams.GetConsensus());
+        ENTER_CRITICAL_SECTION(cs_main);
+        if (!blockHeaderIsValid)
             return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
-        ENTER_CRITICIAL_SECTION(cs_main);
 
         CBlockIndex* pindexPrev = NULL;
         BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
