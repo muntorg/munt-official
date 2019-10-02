@@ -1,4 +1,4 @@
-2.1.0.9
+2.1.0.10
 
 This release introduces the new SIGMA PoW algorithm, a 'CPU friendly' algorithm designed to better suit Guldens needs than the previous algorithm scrypt that was used before.
 
