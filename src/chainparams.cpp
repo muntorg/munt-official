@@ -177,13 +177,11 @@ public:
 
             if (sTestnetParams == "C1534687770:60")
             {
-                defaultSigmaSettings.activationDate = 1569510000;
-                defaultSigmaSettings.deltaChangeActivationDate = 1569924000;
+                defaultSigmaSettings.activationDate = 1570032000;
             }
             else
             {
                 defaultSigmaSettings.activationDate = seedTimestamp+300;
-                defaultSigmaSettings.deltaChangeActivationDate = seedTimestamp+300;
             }
 
             consensus.nPowTargetSpacing = targetInterval;

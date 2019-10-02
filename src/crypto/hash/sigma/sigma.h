@@ -46,7 +46,7 @@
 // * Assuming 'T(S) >= (T(F)*Y)' it can be shown that when N=2 hashing with G/2 memory instead of the full memory will result in a slowdown such that only 1/4 of the hashes can be generated in the same time, for greater N the slow down would be greater..
 // * Validation speed is also limited by 'F' however so 'F' should not be too slow either, a balance is required.
 // * Y can also be reduced to balance this equation
-// * Increasing N also increases the time penalty, but every extra N also means slower (full) validation. In some cases nodes could potentially randomly validate only parts of the hash bypassing this penalty.
+// * Increasing N also increases the time penalty, but every extra N also means slower (full) validation. In some cases nodes could potentially randomly validate only parts of the hash bypassing part of this penalty.
 //
 // Gulden specific details:
 // Some extra details apply that are specific to our current implementation of SIGMA but could also be done differently:
@@ -60,7 +60,7 @@
 // Arena size (currently 4gb):
 // * The overall memory required by the algorithm for optimal generation performance.
 // * The larger this is the less likely GPUs can perform the algorithm, and the more expensive and dominated by RAM price ASIC implementations are thus making them less competitive with CPUs.
-// Argon memory cost (currently 16mb):
+// Argon memory cost (currently 4mb):
 // * How much memory each individual argon hash uses.
 // * Increasing this increases GPU resistance, but also increases verification requirements.
 // Argon arena round cost (currently 8):
@@ -88,7 +88,7 @@ public:
 public:
     uint64_t numVerifyThreads=4;         // Allow verification with 4 threads
     uint64_t arenaSizeKb=4*1024*1024;    // 4gb overall arena size
-    uint64_t argonMemoryCostKb=16*1024;  // 16mb per arena/slow hash
+    uint64_t argonMemoryCostKb=4*1024;   // 4mb per arena/slow hash
     uint64_t argonArenaRoundCost=8;      // 8 rounds per arena hash
     uint64_t argonSlowHashRoundCost=12;  // 12 rounds per slow hash
     uint64_t numHashesPre=65536;         // 65536 pre-hashes
@@ -99,7 +99,6 @@ public:
     uint64_t arenaChunkSizeBytes=0;
     // Affects program behaviour (SIGMA activation block) not SIGMA itself.
     uint64_t activationDate=1571234400;
-    uint64_t deltaChangeActivationDate=1571234400;
 };
 // Consensus level SIGMA defaults.
 extern sigma_settings defaultSigmaSettings;
