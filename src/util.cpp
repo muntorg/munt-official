@@ -435,7 +435,7 @@ void ArgsManager::ParseParameters(int argc, const char* const argv[])
                 fs::rename((newPath/"Guldencoin.conf").string(), (newPath/"Gulden.conf").string());
             }
         }
-        catch(fs::filesystem_error){}
+        catch(...){}
         try
         {
             std::string newPathString = newPath.string();
@@ -448,7 +448,7 @@ void ArgsManager::ParseParameters(int argc, const char* const argv[])
                 fs::rename((newPath/"Guldencoin.conf").string(), (newPath/"Gulden.conf").string());
             }
         }
-        catch(fs::filesystem_error){}
+        catch(...){}
     }
 
     mapArgs.clear();

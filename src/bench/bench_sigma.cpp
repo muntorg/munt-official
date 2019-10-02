@@ -3,7 +3,6 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "util.h"
 #include <crypto/hash/sigma/sigma.h>
 #include <iostream>
 #include <boost/program_options.hpp>
@@ -27,12 +26,6 @@ uint64_t numFullHashesTarget = 50000;
 bool mineOnly=false;
     
 using namespace boost::program_options;
-int LogPrintStr(const std::string &str)
-{
-    std::cout << str;
-    return 1;
-}
-
 std::vector<std::string> hashTestVector = {
     "A",
     "AA",
@@ -102,16 +95,16 @@ void testShaviteReference(uint64_t& nTestFailCount)
         std::string compare(shaviteTestVectorOut[i]);
         if (outHashHex == compare)
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
             ++nTestFailCount;
-            LogPrintf("✘");
-            LogPrintf("%s\n", outHashHex);
+            printf("✘");
+            printf("%s\n", outHashHex.c_str());
         }
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 void testShaviteOptimised(uint64_t& nTestFailCount)
@@ -130,16 +123,16 @@ void testShaviteOptimised(uint64_t& nTestFailCount)
         std::string compare(shaviteTestVectorOut[i]);
         if (outHashHex == compare)
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
             ++nTestFailCount;
-            LogPrintf("✘");
-            LogPrintf("%s\n", outHashHex);
+            printf("✘");
+            printf("%s\n", outHashHex.c_str());
         }
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 void testEchoReference(uint64_t& nTestFailCount)
@@ -156,16 +149,16 @@ void testEchoReference(uint64_t& nTestFailCount)
         std::string compare(echo256TestVectorOut[i]);
         if (outHashHex == compare)
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
             ++nTestFailCount;
-            LogPrintf("✘");
-            LogPrintf("%s\n", outHashHex);
+            printf("✘");
+            printf("%s\n", outHashHex.c_str());
         }
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 void testEchoOptimised(uint64_t& nTestFailCount)
@@ -184,16 +177,16 @@ void testEchoOptimised(uint64_t& nTestFailCount)
         std::string compare(echo256TestVectorOut[i]);
         if (outHashHex == compare)
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
             ++nTestFailCount;
-            LogPrintf("✘");
-            LogPrintf("%s\n", outHashHex);
+            printf("✘");
+            printf("%s\n", outHashHex.c_str());
         }
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 void testArgonReference(uint64_t& nTestFailCount)
@@ -218,16 +211,16 @@ void testArgonReference(uint64_t& nTestFailCount)
         std::string compare(argonTestVectorOut[i]);
         if (outHashHex == compare)
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
             ++nTestFailCount;
-            LogPrintf("✘");
-            LogPrintf("%s\n", outHashHex);
+            printf("✘");
+            printf("%s\n", outHashHex.c_str());
         }
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 void testArgonOptimised(uint64_t& nTestFailCount)
@@ -252,16 +245,16 @@ void testArgonOptimised(uint64_t& nTestFailCount)
         std::string compare(argonTestVectorOut[i]);
         if (outHashHex == compare)
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
             ++nTestFailCount;
-            LogPrintf("✘");
-            LogPrintf("%s\n", outHashHex);
+            printf("✘");
+            printf("%s\n", outHashHex.c_str());
         }
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 void testPRNG(uint64_t& nTestFailCount)
@@ -290,16 +283,16 @@ void testPRNG(uint64_t& nTestFailCount)
         std::string compare(prngTestVectorOut[i]);
         if (outHashHex == compare)
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
             ++nTestFailCount;
-            LogPrintf("✘");
-            LogPrintf("%s\n", outHashHex);
+            printf("✘");
+            printf("%s\n", outHashHex.c_str());
         }
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 
@@ -321,16 +314,16 @@ void testValidateValidHeaders(sigma_settings settings, uint64_t& nTestFailCount)
         sigma_verify_context verify(settings, numUserVerifyThreads);
         if (verify.verifyHeader(header))
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
-            LogPrintf("✘");
+            printf("✘");
             ++nTestFailCount;
         }
         
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 std::vector<std::string>
@@ -351,15 +344,15 @@ void testValidateInvalidHeaders(sigma_settings settings, uint64_t& nTestFailCoun
         sigma_verify_context verify(settings, numUserVerifyThreads);
         if (!verify.verifyHeader(header))
         {
-            LogPrintf("✔");
+            printf("✔");
         }
         else
         {
-            LogPrintf("✘");
+            printf("✘");
             ++nTestFailCount;
         }
     }
-    LogPrintf("\n");
+    printf("\n");
 }
 
 double calculateSustainedHashrateForTimePeriod(uint64_t maxHashesPre, uint64_t maxHashesPost, double nHalfHashAverage, uint64_t nArenaSetuptime, uint64_t nTimePeriodSeconds)
@@ -415,23 +408,23 @@ int main(int argc, char** argv)
     }
     catch (std::exception& e)
     {
-        LogPrintf("%s\n", e.what());
-        LogPrintf("%s", desc);
+        printf("%s\n", e.what());
+        std::cout << desc << "\n";
         return 1;
     }
 
     if (vm.size() == 0)
     {
-        LogPrintf("Using default options use '--help' to see a list of possible options.\n\n");
+        printf("Using default options use '--help' to see a list of possible options.\n\n");
     }
     else
     {
-        LogPrintf("Using non default options use '--help' to see a list of possible options.\n\n");
+        printf("Using non default options use '--help' to see a list of possible options.\n\n");
     }
     
     if (vm.count("help"))
     {
-        LogPrintf("%s", desc);
+        std::cout << desc << "\n";
         return 1;
     }
 
@@ -501,13 +494,13 @@ int main(int argc, char** argv)
     
     if (numUserVerifyThreads > defaultSigmaSettings.numVerifyThreads)
     {
-        LogPrintf("Number of user verify threads may not exceed number of sigma verify threads");
+        printf("Number of user verify threads may not exceed number of sigma verify threads");
         return 1;
     }
     
-    LogPrintf("Configuration=====================================================\n\n");
-    LogPrintf("NETWORK:\nGlobal memory cost [%dgb]\nArgon_echo cpu cost for arenas [%d rounds]\nArgon_echo cpu cost for slow hash [%d rounds]\nArgon_echo mem cost [%dMb]\nEcho/Shavite digest size [%d bytes]\nNumber of fast hashes per slow hash [%d]\nNumber of slow hashes per global arena [%d]\nNumber of verify threads [%d]\n\n", defaultSigmaSettings.arenaSizeKb/1024/1024, defaultSigmaSettings.argonArenaRoundCost ,defaultSigmaSettings.argonSlowHashRoundCost, defaultSigmaSettings.argonMemoryCostKb/1024, defaultSigmaSettings.fastHashSizeBytes, defaultSigmaSettings.numHashesPost, defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numVerifyThreads);
-    LogPrintf("USER:\nMining with [%d] threads\nMining with [%d gb] memory.\nVerifying with [%s] threads.\n\n", numThreads, memAllowGb, numUserVerifyThreads);
+    printf("Configuration=====================================================\n\n");
+    printf("NETWORK:\nGlobal memory cost [%lugb]\nArgon_echo cpu cost for arenas [%lu rounds]\nArgon_echo cpu cost for slow hash [%lu rounds]\nArgon_echo mem cost [%luMb]\nEcho/Shavite digest size [%lu bytes]\nNumber of fast hashes per slow hash [%lu]\nNumber of slow hashes per global arena [%lu]\nNumber of verify threads [%lu]\n\n", defaultSigmaSettings.arenaSizeKb/1024/1024, defaultSigmaSettings.argonArenaRoundCost ,defaultSigmaSettings.argonSlowHashRoundCost, defaultSigmaSettings.argonMemoryCostKb/1024, defaultSigmaSettings.fastHashSizeBytes, defaultSigmaSettings.numHashesPost, defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numVerifyThreads);
+    printf("USER:\nMining with [%lu] threads\nMining with [%lu gb] memory.\nVerifying with [%lu] threads.\n\n", numThreads, memAllowGb, numUserVerifyThreads);
     
     uint64_t memAllowKb = memAllowGb*1024*1024;
     if (memAllowKb == 0)
@@ -522,51 +515,51 @@ int main(int argc, char** argv)
     }
     else
     {
-        LogPrintf("Tests=============================================================\n\n");
+        printf("Tests=============================================================\n\n");
         uint64_t nTestFailCount=0;
         
-        LogPrintf("Verify shavite reference operation\n");
+        printf("Verify shavite reference operation\n");
         testShaviteReference(nTestFailCount);
         
         if (selected_shavite3_256_opt_Final)
         {
-            LogPrintf("Verify shavite optimised operation\n");
+            printf("Verify shavite optimised operation\n");
             testShaviteOptimised(nTestFailCount);
         }
         
-        LogPrintf("Verify echo reference operation\n");
+        printf("Verify echo reference operation\n");
         testEchoReference(nTestFailCount);
         
         if (selected_echo256_opt_Final)
         {
-            LogPrintf("Verify echo optimised operation\n");
+            printf("Verify echo optimised operation\n");
             testEchoOptimised(nTestFailCount);
         }
         
-        LogPrintf("Verify argon reference operation\n");
+        printf("Verify argon reference operation\n");
         testArgonReference(nTestFailCount);
         
         if (selected_argon2_echo_hash)
         {
-            LogPrintf("Verify argon optimised operation\n");
+            printf("Verify argon optimised operation\n");
             testArgonOptimised(nTestFailCount);
         }
         
-        LogPrintf("Verify PRNG\n");
+        printf("Verify PRNG\n");
         testPRNG(nTestFailCount);
         
-        LogPrintf("Verify validation of valid headers\n");
+        printf("Verify validation of valid headers\n");
         testValidateValidHeaders(defaultSigmaSettings, nTestFailCount);
         
-        LogPrintf("Verify validation of invalid headers\n");
+        printf("Verify validation of invalid headers\n");
         testValidateInvalidHeaders(defaultSigmaSettings, nTestFailCount);
         
         if (nTestFailCount > 0)
         {
-            LogPrintf("Aborting due to [%d] failed tests.\n", nTestFailCount);
+            printf("Aborting due to [%lu] failed tests.\n", nTestFailCount);
             exit(EXIT_FAILURE);
         }
-        LogPrintf("\n");
+        printf("\n");
     }
     
     //Random header to benchmark with, we will randomly change it more throughout the tests.
@@ -580,10 +573,10 @@ int main(int argc, char** argv)
     
     if (!mineOnly)
     {
-        LogPrintf("Scrypt============================================================\n\n");
+        printf("Scrypt============================================================\n\n");
         uint256 hash;    
         {
-            LogPrintf("Bench cost [single thread]:\n");
+            printf("Bench cost [single thread]:\n");
             uint64_t nStart = GetTimeMicros(); 
             uint64_t numHashes = 20;
             char scratchpad[SCRYPT_SCRATCHPAD_SIZE];
@@ -592,11 +585,11 @@ int main(int argc, char** argv)
                 header.nNonce = i;
                 scrypt_1024_1_1_256_sp(BEGIN(header.nVersion), BEGIN(hash), scratchpad);
             }
-            LogPrintf("total [%.2f micros] per hash: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numHashes);
+            printf("total [%lu micros] per hash: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numHashes);
         }
         
         {
-            LogPrintf("Bench cost [%d threads]:\n", numThreads);
+            printf("Bench cost [%lu threads]:\n", numThreads);
             uint64_t nStart = GetTimeMicros();
             uint64_t numHashes = 100;
             auto workerThreads = new boost::asio::thread_pool(numThreads);
@@ -610,21 +603,21 @@ int main(int argc, char** argv)
                 });
             }
             workerThreads->join();
-            LogPrintf("total [%.2f micros] per hash [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numHashes);
+            printf("total [%lu micros] per hash [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numHashes);
         }
         
-        LogPrintf("SIGMA=============================================================\n\n");
+        printf("SIGMA=============================================================\n\n");
         {
             sigma_context sigmaContext(defaultSigmaSettings, std::min(memAllowKb, defaultSigmaSettings.arenaSizeKb), numThreads);
             if (!sigmaContext.arenaIsValid())
             {
-                LogPrintf("Failed to allocate arena memory, try again with lower memory settings.\n");
+                printf("Failed to allocate arena memory, try again with lower memory settings.\n");
                 exit(EXIT_FAILURE);
             }
             
             #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY)
             {
-                LogPrintf("Bench fast hashes optimised [single thread]:\n");
+                printf("Bench fast hashes optimised [single thread]:\n");
                 uint8_t hashData1[80];
                 for (int i=0;i<80;++i)
                 {
@@ -643,11 +636,11 @@ int main(int argc, char** argv)
                 uint64_t nStart = GetTimeMicros();
                 uint64_t numFastHashes = 20000;
                 sigmaContext.benchmarkFastHashes(hashData1, hashData2, &hashData3[0], numFastHashes);
-                LogPrintf("total [%.2f micros] per hash [%.4f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numFastHashes);
+                printf("total [%lu micros] per hash [%.4f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numFastHashes);
             }
             #endif
             {
-                LogPrintf("Bench fast hashes reference [single thread]:\n");
+                printf("Bench fast hashes reference [single thread]:\n");
                 uint8_t hashData1[80];
                 for (int i=0;i<80;++i)
                 {
@@ -666,11 +659,11 @@ int main(int argc, char** argv)
                 uint64_t nStart = GetTimeMicros();
                 uint64_t numFastHashes = 20000;
                 sigmaContext.benchmarkFastHashesRef(hashData1, hashData2, &hashData3[0], numFastHashes);
-                LogPrintf("total [%.2f micros] per hash [%.4f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numFastHashes);
+                printf("total [%lu micros] per hash [%.4f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numFastHashes);
             }
             
             {
-                LogPrintf("Bench slow hashes [single thread]:\n");
+                printf("Bench slow hashes [single thread]:\n");
                 uint8_t hashData[80];
                 for (int i=0;i<80;++i)
                 {
@@ -680,24 +673,24 @@ int main(int argc, char** argv)
                 uint64_t nStart = GetTimeMicros();
                 uint64_t numSlowHashes = 100;
                 sigmaContext.benchmarkSlowHashes(hashData, numSlowHashes);
-                LogPrintf("total [%.2f micros] per hash [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numSlowHashes);
+                printf("total [%lu micros] per hash [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numSlowHashes);
             }
             
             {
-                LogPrintf("Bench global arena priming [cpu_cost %drounds] [mem_cost %dmb]:\n", defaultSigmaSettings.argonArenaRoundCost, defaultSigmaSettings.argonMemoryCostKb/1024 );
+                printf("Bench global arena priming [cpu_cost %lurounds] [mem_cost %lumb]:\n", defaultSigmaSettings.argonArenaRoundCost, defaultSigmaSettings.argonMemoryCostKb/1024 );
                 uint64_t nStart = GetTimeMicros(); 
                 uint64_t numArenas=4;
                 for (uint64_t i=0; i<numArenas; ++i)
                 {
                     sigmaContext.prepareArenas(header);
                 }
-                LogPrintf("total [%.2f micros] per round: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numArenas);
+                printf("total [%lu micros] per round: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numArenas);
             }  
         }
         {
             {
                 sigma_verify_context verify(defaultSigmaSettings, numUserVerifyThreads);
-                LogPrintf("Bench verify [single thread]\n");
+                printf("Bench verify [single thread]\n");
                 uint64_t nVerifyNumber=100;
                 uint64_t nCountValid=0;
                 uint64_t nStart = GetTimeMicros();
@@ -711,7 +704,7 @@ int main(int argc, char** argv)
                         ++nCountValid;
                     }
                 }
-                LogPrintf("total [%.2f micros] per verification [%.2f micros] found [%d] valid random hashes\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)nVerifyNumber, nCountValid);
+                printf("total [%lu micros] per verification [%.2f micros] found [%lu] valid random hashes\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)nVerifyNumber, nCountValid);
             }
         }
     }
@@ -721,7 +714,7 @@ int main(int argc, char** argv)
     {
         if (mineOnly)
         {
-            LogPrintf("SIGMA=============================================================\n\n");
+            printf("SIGMA=============================================================\n\n");
         }
         header.nTime = GetTime();
         header.nVersion = rand();
@@ -742,7 +735,7 @@ int main(int argc, char** argv)
             sigmaContexts.push_back(new sigma_context(defaultSigmaSettings, instanceMemorySizeKb, numThreads/sigmaMemorySizes.size()));
         }
         
-        LogPrintf("Bench mining for low difficulty target\n");
+        printf("Bench mining for low difficulty target\n");
         uint64_t nStart = GetTimeMicros();
         std::atomic<uint64_t> slowHashCounter = 0;
         std::atomic<uint64_t> halfHashCounter = 0;
@@ -762,7 +755,7 @@ int main(int argc, char** argv)
         }
         double nHalfHashAverage=0;
         nArenaSetuptime = (GetTimeMicros() - nStart);
-        LogPrintf("Arena setup time [%.2f micros]\n", nArenaSetuptime);
+        printf("Arena setup time [%lu micros]\n", nArenaSetuptime);
         nStart = GetTimeMicros();
         {
             auto workerThreads = new boost::asio::thread_pool(numThreads);
@@ -776,7 +769,7 @@ int main(int argc, char** argv)
             workerThreads->join();
         }
         nHalfHashAverage = ((GetTimeMicros() - nStart)) / (double)halfHashCounter;
-        LogPrintf("slow-hashes [%d] half-hashes[%d] skipped-hashes [%d] full-hashes [%d] blocks [%d] total [%.2f micros] per half-hash[%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter, halfHashCounter, skippedHashCounter, hashCounter, blockCounter, (GetTimeMicros() - nStart), nHalfHashAverage, ((GetTimeMicros() - nStart)) / (double)hashCounter);
+        printf("slow-hashes [%lu] half-hashes[%lu] skipped-hashes [%lu] full-hashes [%lu] blocks [%lu] total [%lu micros] per half-hash[%.2f micros] per hash [%.2f micros]\n\n", slowHashCounter.load(), halfHashCounter.load(), skippedHashCounter.load(), hashCounter.load(), blockCounter.load(), (GetTimeMicros() - nStart), nHalfHashAverage, ((GetTimeMicros() - nStart)) / (double)hashCounter);
         
         //Extrapolate sustained hashing speed for various time intervals
         double nSustainedHashesPerSecond30s  = calculateSustainedHashrateForTimePeriod(defaultSigmaSettings.numHashesPre, defaultSigmaSettings.numHashesPost, nHalfHashAverage, nArenaSetuptime, 30);
@@ -801,21 +794,21 @@ int main(int argc, char** argv)
         selectLargesHashUnit(nSustainedHashesPerSecond480s, labelSustained480s);
         
         // Log extrapolated speeds
-        LogPrintf("Extrapolate sustained hashrates for block timings\n");
-        LogPrintf("Estimated 30s hashrate %.2f %s/s\n", nSustainedHashesPerSecond30s, labelSustained30s);
-        LogPrintf("Estimated 1m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond60s, labelSustained60s);
-        LogPrintf("Estimated 2m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond120s, labelSustained120s);
-        LogPrintf("Estimated 4m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond240s, labelSustained240s);
-        LogPrintf("Estimated 8m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond480s, labelSustained480s);
+        printf("Extrapolate sustained hashrates for block timings\n");
+        printf("Estimated 30s hashrate %.2f %s/s\n", nSustainedHashesPerSecond30s, labelSustained30s.c_str());
+        printf("Estimated 1m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond60s, labelSustained60s.c_str());
+        printf("Estimated 2m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond120s, labelSustained120s.c_str());
+        printf("Estimated 4m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond240s, labelSustained240s.c_str());
+        printf("Estimated 8m hashrate  %.2f %s/s\n", nSustainedHashesPerSecond480s, labelSustained480s.c_str());
         
         // Log a highly noticeable number for users who just want a number to compare without all the gritty details.
-        LogPrintf("\n===========================================================");
-        LogPrintf("\n* Estimated continuous sustained hashrate %10.2f %s/s *", nSustainedHashesPerSecond, labelSustained);
-        LogPrintf("\n===========================================================\n");
+        printf("\n===========================================================");
+        printf("\n* Estimated continuous sustained hashrate %10.2f %s/s *", nSustainedHashesPerSecond, labelSustained.c_str());
+        printf("\n===========================================================\n");
     }
     
     uint64_t nMineEnd = GetTimeMicros();
-    LogPrintf("\nBenchmarks finished in [%d seconds]\n", (nMineEnd-nMineStart)*0.000001);
+    printf("\nBenchmarks finished in [%.2f seconds]\n", (nMineEnd-nMineStart)*0.000001);
     
     if ((nMineEnd-nMineStart)*0.000001<30)
     {
@@ -824,7 +817,7 @@ int main(int argc, char** argv)
         uint64_t nTimeSpentMining = (nMineEnd - (nArenaSetuptime+nMineStart));
         double nMultiplier = ((40*1000000) / nTimeSpentMining);
         
-        LogPrintf("Mining benchmark too fast to be accurate recommend running with `--mine-num-hashes=%d` or larger for at least 30 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*nMultiplier));
+        printf("Mining benchmark too fast to be accurate recommend running with `--mine-num-hashes=%lu` or larger for at least 30 seconds of benchmarking.\n", (uint64_t)(numFullHashesTarget*nMultiplier));
     }
     //NB! We leak sigmaContexts here, we don't really care because this is a trivial benchmark program its faster for the user to just exit than to actually free them.
 }
