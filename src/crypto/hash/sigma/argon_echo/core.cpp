@@ -65,12 +65,45 @@ static void load_block(argon2_echo_block* dst, const void* input)
     }
 }
 
+static void store_block(void *output, const argon2_echo_block *src) {
+    unsigned i;
+    for (i = 0; i < ARGON2_QWORDS_IN_BLOCK; ++i) {
+        store64((uint8_t *)output + i * sizeof(src->v[i]), src->v[i]);
+    }
+}
+
+constexpr int sigma_version=1;
 void finalize(const argon2_echo_context* context, argon2_echo_instance_t* instance)
 {
     if (context != NULL && instance != NULL)
     {
-        /* Hash the entire memory to produce our final output hash */
-        ECHO_HASH_256(instance->memory, instance->memory_blocks * ARGON2_BLOCK_SIZE, (unsigned char*)context->outHash.begin());
+        //fixme: (SIGMA2) - Consider switching back to this once we can assume slightly faster 'slowest' machines (the pi3's can't handle this)
+        if constexpr(sigma_version==2)
+        {
+            /* Hash the entire memory to produce our final output hash */
+            ECHO_HASH_256(instance->memory, instance->memory_blocks * ARGON2_BLOCK_SIZE, (unsigned char*)context->outHash.begin());
+        }
+        else
+        {
+            argon2_echo_block blockhash;
+            uint32_t l;
+            
+            copy_block(&blockhash, instance->memory + instance->lane_length - 1);
+
+            /* XOR the last blocks */
+            for (l = 1; l < instance->lanes; ++l) {
+                uint32_t last_block_in_lane =
+                    l * instance->lane_length + (instance->lane_length - 1);
+                xor_block(&blockhash, instance->memory + last_block_in_lane);
+            }
+
+            /* Hash the result */
+            {
+                uint8_t blockhash_bytes[ARGON2_BLOCK_SIZE];
+                store_block(blockhash_bytes, &blockhash);
+                blake2b_long((unsigned char*)context->outHash.begin(), 32, blockhash_bytes, ARGON2_BLOCK_SIZE);
+            }
+        }
     }
 }
 

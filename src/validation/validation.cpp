@@ -2934,8 +2934,12 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
         // So this is not really a major weakening of security in any way and still more than sufficient.
         if (!fAssumePOWGood && IsPartialSyncActive() && pindexPrev->nHeight < Checkpoints::LastCheckPointHeight() && (GetRandInt(400) != 10))
             fAssumePOWGood = true;
+
+        // CheckBlockHeader can take long so temporarily relinquish the lock to avoid freezing the UI
+        LEAVE_CRITICAL_SECTION(cs_main);
         if (!CheckBlockHeader(block, state, chainparams.GetConsensus(), !fAssumePOWGood))
             return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
+        ENTER_CRITICAL_SECTION(cs_main);
 
         if (pindexPrev->nStatus & BLOCK_FAILED_MASK)
             return state.DoS(100, error("%s: prev block invalid", __func__), REJECT_INVALID, "bad-prevblk");

@@ -353,7 +353,7 @@ bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams,
 /** The reward that must be paid out per block */
 CAmount GetBlockSubsidy(int nHeight);
 CAmount GetBlockSubsidyDev(int nHeight);
-inline std::string devSubsidyAddress = "025a8fff4981266a057b38f3a68f99dd543021f7f43be88aec898a62f9f0115d49";
+inline std::string devSubsidyAddress = "03ae258dc3463de883e9fbda5239353fe9dc98805cf31800d5a6eeaa3ed4afcc70";
 
 /** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
 double GuessVerificationProgress(const ChainTxData& data, CBlockIndex* pindex);
