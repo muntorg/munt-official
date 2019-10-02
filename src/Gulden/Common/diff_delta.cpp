@@ -300,7 +300,7 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     {
         // Fixed reduction for each missed step. 10% pre-SIGMA, 30% after SIGMA
         int32_t nDeltaDropPerStep=110;
-        if (BLOCK_TIME(block) > defaultSigmaSettings.deltaChangeActivationDate)
+        if (BLOCK_TIME(block) > defaultSigmaSettings.activationDate)
             nDeltaDropPerStep=130;
         
         int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
