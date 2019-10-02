@@ -195,7 +195,7 @@ void testArgonReference(uint64_t& nTestFailCount)
     {
         std::string data = hashTestVector[i];
         
-        uint8_t argonScratch[1024*32];
+        __attribute__ ((aligned (16))) uint8_t argonScratch[1024*32];
         argon2_echo_context context;
         context.t_cost = 5;
         context.m_cost = 32;
@@ -229,7 +229,7 @@ void testArgonOptimised(uint64_t& nTestFailCount)
     {
         std::string data = hashTestVector[i];
         
-        uint8_t argonScratch[1024*32];
+        __attribute__ ((aligned (16))) uint8_t argonScratch[1024*32];
         argon2_echo_context context;
         context.t_cost = 5;
         context.m_cost = 32;
