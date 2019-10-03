@@ -261,6 +261,7 @@ static UniValue generate(const JSONRPCRequest& request)
     return generateBlocks(coinbaseScript, nGenerate, nMaxTries, true);
 }
 
+#ifdef ENABLE_WALLET
 //! Given a string specifier, calculate a memory size in bytes to match it e.g. 1K -> 1024; 2M -> 2097152;
 //! Returns 0 if specifier is invalid.
 static uint64_t GetMemLimitInBytesFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)
@@ -294,6 +295,7 @@ static uint64_t GetMemLimitInBytesFromFormattedStringSpecifier(std::string forma
     memLimitInBytes *=  nMultiplier;
     return memLimitInBytes;
 }
+#endif
 
 static UniValue setgenerate(const JSONRPCRequest& request)
 {

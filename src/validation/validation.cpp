@@ -2937,9 +2937,10 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
         // CheckBlockHeader can take long so temporarily relinquish the lock to avoid freezing the UI
         LEAVE_CRITICAL_SECTION(cs_main);
-        if (!CheckBlockHeader(block, state, chainparams.GetConsensus(), !fAssumePOWGood))
-            return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
+        bool blockHeaderIsValid = CheckBlockHeader(block, state, chainparams.GetConsensus(), !fAssumePOWGood);
         ENTER_CRITICAL_SECTION(cs_main);
+        if (!blockHeaderIsValid)
+            return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
 
         if (pindexPrev->nStatus & BLOCK_FAILED_MASK)
             return state.DoS(100, error("%s: prev block invalid", __func__), REJECT_INVALID, "bad-prevblk");
