@@ -15,6 +15,14 @@
 #include <cryptopp/modes.h>
 #include <random.h>
 
+#ifndef WIN32
+int LogPrintStr(const std::string &str)
+{
+    std::cout << str;
+    return 1;
+}
+#endif
+
 // Are we running with all options at default or are any overriden by user.
 bool defaultSigma = true;
 
