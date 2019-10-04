@@ -566,10 +566,17 @@ public:
                 { 405000, { uint256S("0x71a7d1e8196ad368a56822a44c49e2e67d283864dae8fecedc7f0def17476e5d")} },
                 { 410000, { uint256S("0x3a46851a8adce01bc3b6e84bb2b32eb6b7e57b4afa165992420fa0b64ae98830")} },
                 { 410717, { uint256S("0x19d8fb6d8f5eb1002f1c04be6d160cff994e00502f2174011ff26de667187d8b")} },
-                { 411869, { uint256S("0xd1ba704682d89ad457301c203a4221cdbaca074965ed65e5a685528d6151462f")} }
+                { 411869, { uint256S("0xd1ba704682d89ad457301c203a4221cdbaca074965ed65e5a685528d6151462f")} },
+                { 412790, { uint256S("0x6b4382be1387491324ceb995a65aca06bb02ef23da70ae6134e3decacfae63b8")} },
+                { 412791, { uint256S("0xa937c5877996937b226c3c1cb362560f3fb11a4ae73236a1520458f5a870f5f5")} },
+                { 412792, { uint256S("0x96d75ac421fabdbf567a2bfca75689bae80af01236f30ef8eebd3b6f6f1a500d")} },
+                { 412793, { uint256S("0xfb7da9fd2ec4a72707ec47aefb957a7b6e46901b501b4c25dbae7267b05ac829")} },
+                { 412794, { uint256S("0xd78bb6f5e34df29c0fad0edc7cdc47fa16793bca587160ea2f75fae6473f8100")} },
+                { 412900, { uint256S("0xcda0945be144ae23ff1e4d5e1d64407ea3aed10cbbb58b504fb5287b472ee93d")} },
+                { 413000, { uint256S("0xc0462ee968b9c35cca36971190fbdb143cf1f9d2e1bea5fb94ff9770c12ba776")} }
                 }
             };
-            consensus.defaultAssumeValid = uint256S("0xd1ba704682d89ad457301c203a4221cdbaca074965ed65e5a685528d6151462f");
+            consensus.defaultAssumeValid = uint256S("0xc0462ee968b9c35cca36971190fbdb143cf1f9d2e1bea5fb94ff9770c12ba776");
         }
         
 
