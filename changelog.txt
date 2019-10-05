@@ -9,6 +9,8 @@ CORE - Minor improve to Delta difficulty adjustment algorithm to work better wit
 CORE - Introduce new/modified reward schedule for development funding and slight increase in witness rewards (as per GAB decision)
 RPC - Modify 'setgenerate' command to take a memory paramater for SIGMA
 RPC - Improve output of 'getnetworkhashps' command
+RPC - Drop support for 'getblocktemplate' - it is not required for CPU mining and we can simplify the codebase without it.
+
 
 
 
