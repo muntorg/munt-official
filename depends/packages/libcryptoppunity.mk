@@ -48,6 +48,16 @@ $(package)_env+=AOSP_STL_INC="$(NDK_ROOT)/sources/cxx-stl/llvm-libc++/include"
 $(package)_env+=$($(package)_env_arch_$(host_arch))
 endif
 
+ifeq ($(host_os),ios)
+$(package)_env_arch_aarch64=IOS_FLAGS=
+$(package)_env_arch_x86_64=IOS_FLAGS=-DCRYPTOPP_DISABLE_ASM
+
+$(package)_env=IS_IOS=1
+$(package)_env+=IOS_SYSROOT=$(ios_SDK)
+$(package)_env+=IOS_ARCH=$($(package)_cross_target)
+$(package)_env+=$($(package)_env_arch_$(host_arch))
+endif
+
 define $(package)_preprocess_cmds
 endef
 
