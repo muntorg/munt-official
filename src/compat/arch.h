@@ -22,14 +22,14 @@
     #define ARCH_CPU_X86_FAMILY 1
 #elif defined(__ia64__) || defined(__itanium__) || defined(_M_IA64)
     #define ARCH_ITANIUM 1
-#elif defined(__ARMEL__)
-    #define ARCH_ARM 1
-    #define ARCH_CPU_ARM_FAMILY 1
 #elif defined(__aarch64__)
     #define ARCH_ARM64 1
     #define ARCH_CPU_ARM_FAMILY 1
     #define ARCH_CPU_ARM64_FAMILY 1
     #define __ARM_ARCH 8
+#elif defined(__ARMEL__) || defined(__arm__)
+    #define ARCH_ARM 1
+    #define ARCH_CPU_ARM_FAMILY 1
 #elif defined(__ppc__) || defined(__powerpc__) || defined(_M_PPC)
     #define ARCH_PPC 1
     #define ARCH_CPU_PPC_FAMILY 1

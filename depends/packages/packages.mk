@@ -1,10 +1,15 @@
 packages:=boost openssl
 
 ifneq ($(host_os),ios)
+ifneq ($(host_flavor),android)
 packages += libevent zeromq libcryptopp
+endif
 endif
 
 ios_packages = qrencode djinni libcryptoppunity
+ifeq ($(host_flavor),android)
+packages += libcryptoppunity
+endif
 
 qt_native_packages = native_protobuf
 qt_packages = qrencode protobuf zlib

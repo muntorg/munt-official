@@ -702,6 +702,12 @@ libgulden_cli_a_SOURCES = \
 nodist_libgulden_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
+if TARGET_INTEL
+LIBGULDEN_UNITY_CRYPTO_OBJ=$(LIBGULDEN_CRYPTO_INTEL)
+else
+LIBGULDEN_UNITY_CRYPTO_OBJ=$(LIBGULDEN_CRYPTO_ARM)
+endif
+
 # Gulden-unity library (for node.js)#
 if BUILD_GULDEN_LIBS_NODE_JS
 
@@ -823,17 +829,11 @@ libgulden_unity_jni_la_SOURCES = \
 
 
 libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) -llog
-libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode
+libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBGULDEN_UNITY_CRYPTO_OBJ) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
 libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 endif
 #
-
-if TARGET_INTEL
-LIBGULDEN_UNITY_CRYPTO_OBJ=$(LIBGULDEN_CRYPTO_INTEL)
-else
-LIBGULDEN_UNITY_CRYPTO_OBJ=$(LIBGULDEN_CRYPTO_ARM)
-endif
 
 # Gulden-unity library #
 if BUILD_GULDEN_LIBS_OBJC
