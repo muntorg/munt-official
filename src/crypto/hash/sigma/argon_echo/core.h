@@ -83,6 +83,8 @@ struct argon2_echo_instance_t
  */
 struct argon2_echo_position_t
 {
+    argon2_echo_position_t(uint32_t pass_, uint32_t lane_, uint8_t slice_, uint32_t index_): pass(pass_), lane(lane_), slice(slice_), index(index_){};
+    argon2_echo_position_t(){};
     uint32_t pass=0;
     uint32_t lane;
     uint8_t slice;

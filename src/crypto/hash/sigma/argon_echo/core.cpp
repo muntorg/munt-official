@@ -72,18 +72,10 @@ static void store_block(void *output, const argon2_echo_block *src) {
     }
 }
 
-constexpr int sigma_version=1;
 void finalize(const argon2_echo_context* context, argon2_echo_instance_t* instance)
 {
     if (context != NULL && instance != NULL)
     {
-        //fixme: (SIGMA2) - Consider switching back to this once we can assume slightly faster 'slowest' machines (the pi3's can't handle this)
-        if constexpr(sigma_version==2)
-        {
-            /* Hash the entire memory to produce our final output hash */
-            ECHO_HASH_256(instance->memory, instance->memory_blocks * ARGON2_BLOCK_SIZE, (unsigned char*)context->outHash.begin());
-        }
-        else
         {
             argon2_echo_block blockhash;
             uint32_t l;
@@ -182,7 +174,7 @@ static int fill_memory_blocks_st(argon2_echo_instance_t* instance)
         {
             for (l = 0; l < instance->lanes; ++l)
             {
-                argon2_echo_position_t position = {r, l, (uint8_t)s, 0};
+                argon2_echo_position_t position(r, l, (uint8_t)s, 0);
                 fill_segment(instance, position);
             }
         }

@@ -330,69 +330,6 @@ void selectOptimisedImplementations()
   
     #ifdef ARCH_CPU_X86_FAMILY
     {
-        #if defined(COMPILER_HAS_AES)
-        if (__builtin_cpu_supports("aes"))
-        {
-            #if defined(COMPILER_HAS_AVX512F)
-            if (__builtin_cpu_supports("avx512f"))
-            {
-                FORCE_SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
-                FORCE_SELECT_OPTIMISED_ECHO   (avx512f_aes, 1);
-                FORCE_SELECT_OPTIMISED_ARGON  (avx512f_aes, 1);
-                goto logselection;
-            }
-            #endif
-            #if defined(COMPILER_HAS_AVX2)
-            if (__builtin_cpu_supports("avx2"))
-            {
-                FORCE_SELECT_OPTIMISED_SHAVITE(avx2_aes, 2);
-                FORCE_SELECT_OPTIMISED_ECHO   (avx2_aes, 2);
-                FORCE_SELECT_OPTIMISED_ARGON  (avx2_aes, 2);
-                goto logselection;
-            }
-            #endif
-            #if defined(COMPILER_HAS_AVX)
-            if (__builtin_cpu_supports("avx"))
-            {
-                FORCE_SELECT_OPTIMISED_SHAVITE(avx_aes, 3);
-                FORCE_SELECT_OPTIMISED_ECHO   (avx_aes, 3);
-                FORCE_SELECT_OPTIMISED_ARGON  (avx_aes, 3);
-                goto logselection;
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE4)
-            if (__builtin_cpu_supports("sse4.2"))
-            {
-                FORCE_SELECT_OPTIMISED_SHAVITE(sse4_aes, 4);
-                FORCE_SELECT_OPTIMISED_ECHO   (sse4_aes, 4);
-                FORCE_SELECT_OPTIMISED_ARGON  (sse4_aes, 4);
-                goto logselection;
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("sse3"))
-            {
-                FORCE_SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
-                FORCE_SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
-                FORCE_SELECT_OPTIMISED_ARGON  (sse3_aes, 5);
-                goto logselection;
-            }
-            #endif
-            #if defined(COMPILER_HAS_SSE2)
-            #if 0
-            //fixme: (SIGMA)
-            if (__builtin_cpu_supports("sse2"))
-            {
-                FORCE_SELECT_OPTIMISED_SHAVITE(sse2_aes, 6);
-                FORCE_SELECT_OPTIMISED_ECHO   (sse2_aes, 6);
-                FORCE_SELECT_OPTIMISED_ARGON  (sse2_aes, 6);
-                goto logselection;
-            }
-            #endif
-            #endif
-        }
-        else
-        #endif
         {
             #if defined(COMPILER_HAS_AVX512F)
             if (__builtin_cpu_supports("avx512f"))
@@ -618,7 +555,7 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
         // NB!!! Do not make use of this unless you fully understand the repercussions
         
         // 6. Verify first fast hash
-        if constexpr (verifyLevel == 0 || verifyLevel == 1)
+        if (verifyLevel == 0 || verifyLevel == 1)
         {
             headerData.nNonce = nBaseNonce+nArenaMemoryIndex1;
             if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
@@ -633,7 +570,7 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
         }
         
         // 7. First fast hash checks out, repeat process for second fast hash
-        if constexpr (verifyLevel == 0 || verifyLevel == 2)
+        if (verifyLevel == 0 || verifyLevel == 2)
         {
             headerData.nNonce = nBaseNonce+nArenaMemoryIndex2;
             if (selected_argon2_echo_hash(&argonContext, false) != ARGON2_OK)
