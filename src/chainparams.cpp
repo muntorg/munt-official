@@ -519,7 +519,12 @@ public:
                 { 125000, { uint256S("0xc65b792dd1c918fd05596eccc93795ecd429fb30bcabe80a0e081ded13356059"), 1548870842 } },
                 { 130000, { uint256S("0xe6526b88456142631c17ad01346363345cd7fe150273a5de7cb57d3a53f952c9"), 1549190172 } },
                 { 131527, { uint256S("0xfd25ff32810f02cc803601fe29b0b3a9f39f417bfdb68fa5e4d452b3b2b4cb2a"), 1549288854 } },
-                { 132679, { uint256S("0x5c9de9c540a722ceeed12b86705fb760d2b50d1c26d1ecb60261ecfbfc42bf2e"), 1549361917 } }
+                { 132679, { uint256S("0x5c9de9c540a722ceeed12b86705fb760d2b50d1c26d1ecb60261ecfbfc42bf2e"), 1549361917 } },
+                { 412790, { uint256S("0x6b4382be1387491324ceb995a65aca06bb02ef23da70ae6134e3decacfae63b8"), 1569509607 } },
+                { 412791, { uint256S("0xa937c5877996937b226c3c1cb362560f3fb11a4ae73236a1520458f5a870f5f5"), 1569509607 } },
+                { 412792, { uint256S("0x96d75ac421fabdbf567a2bfca75689bae80af01236f30ef8eebd3b6f6f1a500d"), 1569810113 } },
+                { 412793, { uint256S("0xfb7da9fd2ec4a72707ec47aefb957a7b6e46901b501b4c25dbae7267b05ac829"), 1570050130 } },
+                { 412794, { uint256S("0xd78bb6f5e34df29c0fad0edc7cdc47fa16793bca587160ea2f75fae6473f8100"), 1570050170 } }
             };
             consensus.defaultAssumeValid = uint256S("0x5c9de9c540a722ceeed12b86705fb760d2b50d1c26d1ecb60261ecfbfc42bf2e");
         }
