@@ -71,7 +71,6 @@ If you are thinking about contributing toward the development of Gulden in some 
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
 * [Accelerated testnet](./technical_documentation/accelerated_testnet.md)
-* [Information for mining pools](./mining_documentation/mining_Gulden.md); [PoW² upgrade for mining pools](./mining_documentation/ensuring_pow2_compatibility.md); [List of identified mining pools](./mining_documentation/list_of_mining_pools.md)
 
 
 ### Community

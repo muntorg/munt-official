@@ -9,10 +9,17 @@ RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fi
 
 
 
-2.1.0.8
+2.1.0.11
 
+This release introduces the new SIGMA PoW algorithm, a 'CPU friendly' algorithm designed to better suit Guldens needs than the previous algorithm scrypt that was used before.
+
+CORE - Introduce new utility 'bench_sigma' for testing/benchmarking SIGMA outside of the Gulden app itself.
 CORE - Fix DOS vulnerability (crash) in witness bundle input checking
 CORE - Introduce SIGMA as the new PoW algorithm in testnet builds.
+CORE - Minor improve to Delta difficulty adjustment algorithm to work better with SIGMA
+CORE - Introduce new/modified reward schedule for development funding and slight increase in witness rewards (as per GAB decision)
+RPC - Modify 'setgenerate' command to take a memory paramater for SIGMA
+RPC - Improve output of 'getnetworkhashps' command
 
 
 

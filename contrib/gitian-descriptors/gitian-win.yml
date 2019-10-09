@@ -34,13 +34,12 @@ remotes:
 - "url": https://github.com/Gulden/gulden-official.git
   "dir": "Gulden"
 files:
-- "osslsigncode-1.7.1.tar.gz" #Optional; Only needed for official builds.
-- "0001-Make-code-work-with-OpenSSL-1.1.patch" #Optional - only needed for official builds - https://sourceforge.net/p/osslsigncode/patches/10/attachment/0001-Make-code-work-with-OpenSSL-1.1.patch
+- "osslsigncode-2.0.tar.gz" #Optional; Only needed for official builds.
 - "codesign.tar.gz" #Optional; only needed for official builds.
 script: |
   WRAP_DIR=$HOME/wrapped
   HOSTS="i686-w64-mingw32 x86_64-w64-mingw32"
-  CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests"
+  CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests"
   FAKETIME_HOST_PROGS="ar ranlib nm windres strip objcopy"
   FAKETIME_PROGS="date makensis zip"
   HOST_CFLAGS="-O2 -g"
@@ -130,13 +129,13 @@ script: |
   create_per-host_linker_wrapper "2000-01-01 12:00:00"
   export PATH=${WRAP_DIR}:${PATH}
 
-  tar xf osslsigncode-1.7.1.tar.gz || true
+  tar xf osslsigncode-2.0.tar.gz || true
   # Make the directory (for cases where the tar does not exist and fails)
-  mkdir osslsigncode-1.7.1 || true
-  cd osslsigncode-1.7.1
-      patch < ../0001-Make-code-work-with-OpenSSL-1.1.patch
+  mkdir osslsigncode-2.0 || true
+  cd osslsigncode-2.0
+      ./autogen.sh || true
       ./configure --without-gsf --without-curl --disable-dependency-tracking || true
-      make || true
+      make ${MAKEOPTS} || true
   cd ..
 
   tar -xf codesign.tar.gz || true
@@ -214,7 +213,7 @@ script: |
 
     # Sign executables
     if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
-        find release -name "*.exe" | xargs --max-procs 32 -i sh -c "(${BUILD_DIR}/osslsigncode-1.7.1/osslsigncode -spc \"${BUILD_DIR}/codesign/codesign.spc\" -key \"${BUILD_DIR}/codesign/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
+        find release -name "*.exe" | xargs --max-procs 32 -i sh -c "(${BUILD_DIR}/osslsigncode-2.0/osslsigncode -spc \"${BUILD_DIR}/codesign/codesign.spc\" -key \"${BUILD_DIR}/codesign/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
     fi
 
     # Tarball of signed executables and debug info - direct to build host
@@ -230,7 +229,7 @@ script: |
     
     # Sign installer
     if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
-        find . -name "*setup*.exe" | xargs --max-procs 32 -i sh -c "(${BUILD_DIR}/osslsigncode-1.7.1/osslsigncode -spc \"${BUILD_DIR}/codesign/codesign.spc\" -key \"${BUILD_DIR}/codesign/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
+        find . -name "*setup*.exe" | xargs --max-procs 32 -i sh -c "(${BUILD_DIR}/osslsigncode-2.0/osslsigncode -spc \"${BUILD_DIR}/codesign/codesign.spc\" -key \"${BUILD_DIR}/codesign/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
         rename 's/-setup-unsigned\.exe$/-setup.exe/' *-setup-unsigned.exe
     fi
 

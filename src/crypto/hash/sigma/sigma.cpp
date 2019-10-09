@@ -204,33 +204,33 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
     switch (nSel)
     {
         case 0:
-            LogPrintf("[%d] Selected reference implementation as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected reference implementation \n", sAlgoName); break;
         case 1:
-            LogPrintf("[%d] Selected avx512f-aes as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected avx512f-aes\n", sAlgoName); break;
         case 2:
-            LogPrintf("[%d] Selected avx2-aes as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected avx2-aes\n", sAlgoName); break;
         case 3:
-            LogPrintf("[%d] Selected avx-aes as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected avx-aes\n", sAlgoName); break;
         case 4:
-            LogPrintf("[%d] Selected sse4-aes as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected sse4-aes\n", sAlgoName); break;
         case 5:
-            LogPrintf("[%d] Selected sse3-aes as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected sse3-aes\n", sAlgoName); break;
         case 6:
-            LogPrintf("[%d] Selected sse2-aes as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected sse2-aes\n", sAlgoName); break;
         case 7:
-            LogPrintf("[%d] Selected avx512f as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected avx512f\n", sAlgoName); break;
         case 8:
-            LogPrintf("[%d] Selected avx2 as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected avx2\n", sAlgoName); break;
         case 9:
-            LogPrintf("[%d] Selected avx as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected avx\n", sAlgoName); break;
         case 10:
-            LogPrintf("[%d] Selected sse4 as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected sse4\n", sAlgoName); break;
         case 11:
-            LogPrintf("[%d] Selected sse3 as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected sse3\n", sAlgoName); break;
         case 12:
-            LogPrintf("[%d] Selected sse2 as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected sse2\n", sAlgoName); break;
         case 9999:
-            LogPrintf("[%d] Selected hybrid implementation as fastest\n", sAlgoName); break;
+            LogPrintf("[%d] Selected hybrid implementation\n", sAlgoName); break;
     }
 }
 #elif defined(ARCH_CPU_ARM_FAMILY)
@@ -239,23 +239,23 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
     switch (nSel)
     {
         case 0:
-            LogPrintf("[%d] Selected reference implementation as fastest (no NEON support)\n", sAlgoName); break;
+            LogPrintf("[%d] Selected reference implementation (no NEON support)\n", sAlgoName); break;
         case 1:
-            LogPrintf("[%d] Running with Cortex-A53 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+            LogPrintf("[%d] Selected Cortex-A53 optimised NEON support (no hardware AES)\n", sAlgoName); break;
         case 2:
-            LogPrintf("[%d] Running with Cortex-A57 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+            LogPrintf("[%d] Selected Cortex-A57 optimised NEON support (no hardware AES)\n", sAlgoName); break;
         case 3:
-            LogPrintf("[%d] Running with Cortex-A72 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+            LogPrintf("[%d] Selected Cortex-A72 optimised NEON support (no hardware AES)\n", sAlgoName); break;
         case 4:
-            LogPrintf("[%d] Running with Cortex-A53 optimised NEON+AES support\n", sAlgoName); break;
+            LogPrintf("[%d] Selected Cortex-A53 optimised NEON+AES support\n", sAlgoName); break;
         case 5:
-            LogPrintf("[%d] Running with Cortex-A57 optimised NEON+AES support\n", sAlgoName); break;
+            LogPrintf("[%d] Selected Cortex-A57 optimised NEON+AES support\n", sAlgoName); break;
         case 6:
-            LogPrintf("[%d] Running with Cortex-A72 optimised NEON+AES support\n", sAlgoName); break;
+            LogPrintf("[%d] Selected Cortex-A72 optimised NEON+AES support\n", sAlgoName); break;
         case 7:
-            LogPrintf("[%d] Running with Thunderx optimised NEON+AES support\n", sAlgoName); break;
+            LogPrintf("[%d] Selected Thunderx optimised NEON+AES support\n", sAlgoName); break;
         case 9999:
-            LogPrintf("[%d] Running in hybrid mode.\n", sAlgoName); break;
+            LogPrintf("[%d] Selected hybrid implementation\n", sAlgoName); break;
     }
 }
 
@@ -959,18 +959,18 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
         ++headerData.nPostNonce;
     }
     
-    uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
-    uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
-    uint64_t nPseudoRandomAlg1   = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
-    uint64_t nPseudoRandomAlg2   = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
-    uint64_t nFastHashOffset1    = (argonContext.outHash[0] ^ argonContext.outHash[2]) % (settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
-    uint64_t nFastHashOffset2    = (argonContext.outHash[1] ^ argonContext.outHash[3]) % (settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+    [[maybe_unused]] uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
+    [[maybe_unused]] uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
+    [[maybe_unused]] uint64_t nPseudoRandomAlg1   = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
+    [[maybe_unused]] uint64_t nPseudoRandomAlg2   = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
+    [[maybe_unused]] uint64_t nFastHashOffset1    = (argonContext.outHash[0] ^ argonContext.outHash[2]) % (settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+    [[maybe_unused]] uint64_t nFastHashOffset2    = (argonContext.outHash[1] ^ argonContext.outHash[3]) % (settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
     std::array<uint64_t, 4> slowHash = std::move(argonContext.outHash);
 
-    uint64_t nArenaMemoryIndex1  = (settings.arenaChunkSizeBytes*nPseudoRandomNonce1) / (settings.argonMemoryCostKb*1024);
-    uint64_t nArenaMemoryOffset1 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce1) % (settings.argonMemoryCostKb*1024);
-    uint64_t nArenaMemoryIndex2  = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) / (settings.argonMemoryCostKb*1024);
-    uint64_t nArenaMemoryOffset2 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) % (settings.argonMemoryCostKb*1024);
+    [[maybe_unused]] uint64_t nArenaMemoryIndex1  = (settings.arenaChunkSizeBytes*nPseudoRandomNonce1) / (settings.argonMemoryCostKb*1024);
+    [[maybe_unused]] uint64_t nArenaMemoryOffset1 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce1) % (settings.argonMemoryCostKb*1024);
+    [[maybe_unused]] uint64_t nArenaMemoryIndex2  = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) / (settings.argonMemoryCostKb*1024);
+    [[maybe_unused]] uint64_t nArenaMemoryOffset2 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) % (settings.argonMemoryCostKb*1024);
     
     // 5. Generate the part(s) of the arena we need as we don't have the whole arena like a miner would.
     {

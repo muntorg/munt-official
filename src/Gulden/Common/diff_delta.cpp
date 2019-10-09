@@ -254,13 +254,13 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
     {
         // Fixed reduction for each missed step. 10% pre-SIGMA, 30% after SIGMA
         int32_t nDeltaDropPerStep=110;
-        if (BLOCK_TIME(block) > defaultSigmaSettings.deltaChangeActivationDate)
+        if (BLOCK_TIME(block) > defaultSigmaSettings.activationDate)
             nDeltaDropPerStep=130;
         
         int64_t nNumMissedSteps = ((BLOCK_TIME(block) - INDEX_TIME(pindexLast) - nLongTimeLimit) / nLongTimeStep) + 1;
         for(int i=0;i < nNumMissedSteps; ++i)
         {
-            bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(110));
+            bnNew = BIGINT_MULTIPLY(bnNew, arith_uint256(nDeltaDropPerStep));
             bnNew = BIGINT_DIVIDE(bnNew, arith_uint256(PERCENT_FACTOR));
         }
 

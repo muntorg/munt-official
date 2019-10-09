@@ -1,7 +1,9 @@
-The below is a best attempt non exhaustive list of identifiers for mining pools that have mined or are mining Gulden. Block explorers can use this to prettify the information they display.
-If you are a mining pool operator and not on this list submit your information to get better advertised via the block explorers.
 
-Active:
+The below is a historical list of Scrypt mining pools that mined Gulden in the past before the switch to SIGMA CPU mining. It is kept as a convenience for block explorers and other sites that want to look at statistics of the old chain.
+Most of these identifiers were 'sluethed' out by the developers/community after inspecting the chain and doin some detective work. Block explorers can use this to prettify the information they display.
+If you are/were a mining pool operator and not on this list submit your information to be added.
+
+Active in 2019:
 ----
 
 |Suspected pool name|Website|Coinbase tag|Addresses|Confirmation URL|Contact details|
