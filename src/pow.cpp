@@ -84,7 +84,7 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
 }
 */
 
-extern uint64_t verifyFactor=200;
+uint64_t verifyFactor=200;
 
 bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
 {    
