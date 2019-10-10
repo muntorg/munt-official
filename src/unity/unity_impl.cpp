@@ -49,6 +49,10 @@
 #include <qrencode.h>
 #include <memory>
 
+#include "pow.h"
+#include <crypto/hash/sigma/sigma.h>
+#include <algorithm>
+
 std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 
 CCriticalSection cs_monitoringListeners;
@@ -232,6 +236,33 @@ void terminateUnityFrontend()
 
 void handlePostInitMain()
 {
+    //fixme: (SIGMA) (PHASE4) Remove this once we have witness-header-sync
+    // Select appropriate verification factor based on devices performance.
+    std::thread([=]
+    {
+        uint64_t nStart = GetTimeMicros();
+        CBlockHeader header;
+        sigma_verify_context verify(defaultSigmaSettings, std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
+        verify.verifyHeader<1>(header);
+        
+        // We want at least 1000 blocks per second.
+        uint64_t nTotal = GetTimeMicros() - nStart;
+        uint64_t nPerSec = 1000000/nTotal;
+        if (nPerSec > 1000) // Fast enough to do most the blocks
+        {
+            verifyFactor = 5;
+        }
+        else if(nPerSec > 0) // Slower so reduce the number of blocks
+        {
+            // 2 in verifyFactor chance of verifying.
+            // We verify 2 in verifyFactor blocks - or target_speed/(num_per_sec/2)
+            verifyFactor = 1000/(nPerSec/2.0);
+            verifyFactor = std::max((uint64_t)5, verifyFactor);
+            verifyFactor = std::min((uint64_t)200, verifyFactor);
+        }
+        LogPrintf("unity: selected verification factor %d", verifyFactor);
+    }).detach();
+
     if (signalHandler)
     {
         signalHandler->notifyCoreReady();
