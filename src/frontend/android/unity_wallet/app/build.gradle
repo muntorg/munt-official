@@ -57,8 +57,8 @@ android {
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 300377
-            versionName = "2.0.1"
+            versionCode 300378
+            versionName = "2.1.11"
             resValue "string", "about_text_app_name", "Gulden testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
         }
@@ -70,7 +70,7 @@ android {
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
             versionCode 374
-            versionName = "2.0.1"
+            versionName = "2.1.11"
             resValue "string", "about_text_app_name", "Gulden $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2019 Gulden.com BV"
         }
