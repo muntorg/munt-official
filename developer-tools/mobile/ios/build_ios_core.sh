@@ -4,6 +4,9 @@ set -x
 
 NPROC=`sysctl -n hw.physicalcpu`
 
+export CXXFLAGS="-O3"
+export CFLAGS=${CXXFLAGS}
+
 for i in $( dirname ${BASH_SOURCE[0]} )/build_targets/*
 do
   source ${i}
