@@ -511,7 +511,7 @@ static UniValue dumpfiltercheckpoints(const JSONRPCRequest& request)
     int nStart = IsArgSet("-testnet") ? 0 : 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
     int nInterval1 = 500;
     int nInterval2 = 100;
-    int nCrossOver = 500000;
+    int nCrossOver = IsArgSet("-testnet") ? 200000 : 500000;
     if (chainActive.Tip() != NULL)
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet); // cs_main required for ReadBlockFromDisk.
@@ -519,9 +519,9 @@ static UniValue dumpfiltercheckpoints(const JSONRPCRequest& request)
         std::vector<unsigned char> allFilters;
         allFilters.reserve(3000000);
         int nMaxHeight = chainActive.Height();
-        for (int i=nStart; i+nInterval2 < nMaxHeight;)
+        int nInterval = nInterval1;
+        for (int i=nStart; i+nInterval < nMaxHeight;)
         {
-            int nInterval = nInterval1;
             if (i >= nCrossOver)
                 nInterval = nInterval2;
 
