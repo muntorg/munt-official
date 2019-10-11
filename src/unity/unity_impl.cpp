@@ -242,7 +242,7 @@ void handlePostInitMain()
     {
         uint64_t nStart = GetTimeMicros();
         CBlockHeader header;
-        sigma_verify_context verify(defaultSigmaSettings, std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
+        sigma_verify_context verify(defaultSigmaSettings, std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::max((unsigned int)1, std::thread::hardware_concurrency())));
         verify.verifyHeader<1>(header);
         
         // We want at least 1000 blocks per second.

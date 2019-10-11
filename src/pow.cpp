@@ -104,7 +104,7 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
     {
         #ifdef VALIDATION_MOBILE
             //fixme: (SIGMA) (PHASE4) (HIGH) Remove/improve this once we have witness-header-sync; this is a temporary measure to keep SPV performance adequate on low power devices for now.
-            static sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
+            static sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::max((unsigned int)1, std::thread::hardware_concurrency())));
             static CCriticalSection csPOW;
             LOCK(csPOW);
 
