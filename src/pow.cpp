@@ -104,7 +104,14 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
     {
         #ifdef VALIDATION_MOBILE
             //fixme: (SIGMA) (PHASE4) (HIGH) Remove/improve this once we have witness-header-sync; this is a temporary measure to keep SPV performance adequate on low power devices for now.
-            static sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
+            // Benchmarking on 6 core mobile device showed roughly double performance when using 2 threads instead of 1
+            // when further increasing the number of threads (3 and 4) performance stayed roughly the same though at the cost of
+            // higher cpu and energy consumption and overall app/device responsiveness.
+            // As such the number of threads is limited to 2 (if reported by the OS). Further research and benchmarking on a wider range of devices
+            // would be needed to create a solution that gets the most out of a wide range of OS and devices. This might not be worth it though
+            // as for mobile/SPV the witness-header-sync will probably completely skip the pow check in the future.
+            static sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads,
+                                                                              (uint64_t)std::max(1, std::min(2, (int)std::thread::hardware_concurrency()))));
             static CCriticalSection csPOW;
             LOCK(csPOW);
 
