@@ -117,13 +117,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].type = Consensus::DEPLOYMENT_POW;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].protoVersion = 70015;
         consensus.vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].requiredProtoUpgradePercent = 75;
-
-        // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000fad1c7f4818beec6");
-
-        // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0xa107e2c619a693015d5cd897ff181ddadedb4ebe09d9b6d774166386f5f765f6"); //98500
-
+        
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
@@ -358,11 +352,26 @@ public:
             { 975000, { uint256S("0x570071efb5f68bb16f14af8ad9150d67b5d9940243aa1ca60dc0697f91881318"), 1562776125 } },
             { 980000, { uint256S("0xc7d52ea351c8def62d52f3f102d1b68d1d420a6b62a2cb6cacb1a57ccab447e0"), 1563573643 } },
             { 985000, { uint256S("0xa107e2c619a693015d5cd897ff181ddadedb4ebe09d9b6d774166386f5f765f6"), 1564371268 } },
+            { 990000, { uint256S("0xe69a5eb05ec6c09019275eb57c9d95cb955128024592cba5fb7ffc5e82c3b736"), 1565184825 } },
+            { 995000, { uint256S("0xabfefe12298e0f690767e341b2092517afd6745116ea2cd03a5c292a73668f77"), 1566037355 } },
+            { 1000000, { uint256S("0x738a101e6024f9f4715793dbf684a0aa6328526fca068254ad6a56191acb5be2"), 1566810491 } },
+            { 1005000, { uint256S("0x90d54954a253d456c1815982adc19af4161d3ed18403a9e8bc80d0943165ad58"), 1567588577 } },
+            { 1010000, { uint256S("0x82b509dfce9edc470801e725e701530720e6badbbdfdf472b3c9379c0545f3e7"), 1568363651 } },
+            { 1015000, { uint256S("0x6499eda9640f312cb9959df4f41182829d9b8ca271566cb4b232f490e9cdda02"), 1569129744 } },
+            { 1020000, { uint256S("0x2a923cbf76079c29f2c181842531f903bb59bbd666dab4e048daa46d7548cdae"), 1569894326 } },
+            { 1023558, { uint256S("0xa9de39eb20ff042bc0e98ebd8b526b8f6fbc735ebdbdc7588a67a69a6431fb54"), 1570441435 } },
+            { 1024710, { uint256S("0xcb965dcb4a36b960127bbde4a2f13100abc132eb59994e6ece2d36aa7a6751ab"), 1570621913 } },
         };
+        
+        // By default assume that the signatures in ancestors of this block are valid.
+        consensus.defaultAssumeValid = uint256S("0xcb965dcb4a36b960127bbde4a2f13100abc132eb59994e6ece2d36aa7a6751ab"); //1024710
+        
+        // The best chain should have at least this much work.
+        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000fad1c7f4818beec6");
 
         chainTxData = ChainTxData{
-            1565997157, // * UNIX timestamp of last checkpoint block
-            2550653,    // * total number of transactions between genesis and last checkpoint
+            1570621913, // * UNIX timestamp of last checkpoint block
+            2623089,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
@@ -518,15 +527,71 @@ public:
                 { 120000, { uint256S("0x86896682580a544aac0987c8a30037bed1bfb81d1b9370e9a0fb32fce0645293"), 1548550481 } },
                 { 125000, { uint256S("0xc65b792dd1c918fd05596eccc93795ecd429fb30bcabe80a0e081ded13356059"), 1548870842 } },
                 { 130000, { uint256S("0xe6526b88456142631c17ad01346363345cd7fe150273a5de7cb57d3a53f952c9"), 1549190172 } },
-                { 131527, { uint256S("0xfd25ff32810f02cc803601fe29b0b3a9f39f417bfdb68fa5e4d452b3b2b4cb2a"), 1549288854 } },
-                { 132679, { uint256S("0x5c9de9c540a722ceeed12b86705fb760d2b50d1c26d1ecb60261ecfbfc42bf2e"), 1549361917 } },
+                { 135000, { uint256S("0xdc86f6fb66c27740c83fd5a87101f3fd3ced6ce4297f709eb5be60de0d8f04bf"), 1549509647 } },
+                { 140000, { uint256S("0x113cf18699d3292a4b0993ce752f398dfb9475e46ceff54d2fa73ddcf2c6ccda"), 1549844797 } },
+                { 145000, { uint256S("0xcb9b469c1c38601c2f565a2435afbd94081b1d45dfc1820da6f3d1e4809c5897"), 1550162868 } },
+                { 150000, { uint256S("0xd640d2adce20d43a40e54cdb4ebae8bb681fa112dcf76c89514fdefc9aa34bd0"), 1550482186 } },
+                { 155000, { uint256S("0xb341a4f33b3676857cfea50b62ef757f675dc6261b1ff4a976651a93dd521bae"), 1550803917 } },
+                { 160000, { uint256S("0x116470792af525b47b4273fe7d593ce997d8fc1494e42e7d67c263f763258cae"), 1551122931 } },
+                { 165000, { uint256S("0x12955f55f3b8fbd4f39c3444098ec6d1a9584b51217bbe35e595d54d81dcfeda"), 1551442048 } },
+                { 170000, { uint256S("0xcb374f60e2da4a797d9db14617e67ffb765f18e0bbb8980d715b055e1debe2d6"), 1551760272 } },
+                { 175000, { uint256S("0xe3b8377d3cea2cec0dee485fb9069b114a095c7d8ad212ff5fa43c9992e82ef4"), 1552077583 } },
+                { 180000, { uint256S("0x6e74ba2f8895a87ba7f7a1d4edbbf6b99182d80a7cf3b9081174128c3d6ae913"), 1552396405 } },
+                { 185000, { uint256S("0x6bd91f7b2473b2c660e89c7fb078fcd861295813267851dccd0228585476fa0f"), 1552714091 } },
+                { 190000, { uint256S("0x434fa4bd1511b775239b6a6d31e86c4f42ef4356c4cb9ee6b8208c38d416a49a"), 1553032006 } },
+                { 195000, { uint256S("0xb27ba8314fc5cc23c1ed9939c14b8d650b814767a8be651a8a9ceed8ff68abd0"), 1553350349 } },
+                { 200000, { uint256S("0x8814374e1e5f2b802c10cb75e3670e8d07441bbd59fda5d22df4ac9f781752db"), 1553682205 } },
+                { 205000, { uint256S("0x2f5270824d6bbe31af77b48d7dc322c54ebab40b119abd096a0481abb4bf9000"), 1554001000 } },
+                { 210000, { uint256S("0x40fb5ad3d69e77b69fece6a60a28fe667a8e4dec1a37891e47373e9b17e4a06f"), 1554314065 } },
+                { 215000, { uint256S("0x1077c47fa07e969273b242e6b3cfa4e2cac4eb8cda5af5ff86eaa763d86d3784"), 1554623067 } },
+                { 220000, { uint256S("0x6beb4a1495bea7a9f531595a1bc6a824151d5f75b55d755d51197f0ddbade472"), 1554932858 } },
+                { 225000, { uint256S("0xa0315944181689e1b1b6c2c6835915b83c880386130e0ef5be6d80e1e7d23ac7"), 1555253165 } },
+                { 230000, { uint256S("0x896fc3850540bf20fbed8308237c7b2862f95d64bae8c28d5e70836f675383b1"), 1555572596 } },
+                { 235000, { uint256S("0xb8f59feb778fefe2c46095f03cc986913abacda7f45c96db9abc42dd7a1295a9"), 1555890777 } },
+                { 240000, { uint256S("0x86e24c45f7b2931319f9de33394c5e37153a24825b5ea3583c301c5bf32f223e"), 1556207255 } },
+                { 245000, { uint256S("0x0196498daec7385b82c283ed54bb26af09a82772a27c4a2c239ecfb147c41e03"), 1556518460 } },
+                { 250000, { uint256S("0x5a0b1ac37c5e4f5e0534357d004df3bb5d1140da60c145fd8bc149b3d2710ecd"), 1556834442 } },
+                { 255000, { uint256S("0x85c55474d6ffe32a94ed5dea52f360b4e776274352643ae2229bfa57383fc9f2"), 1557150137 } },
+                { 260000, { uint256S("0x39bea0ae604813398dadf406fecd8b405aeda61ffc93ecb9b6fa5c2e1721a7d8"), 1557466875 } },
+                { 265000, { uint256S("0xfc168cf4a3aa40302c6cab1fd27f93a3f0ab8b1e36f92ff6329084c287fdd0de"), 1557780808 } },
+                { 270000, { uint256S("0xb5f69145c1d271cf7e1576984d41061ab1e3db93d6a284ecbb76856c50d0728d"), 1558096233 } },
+                { 275000, { uint256S("0xb32c8f39d2e3257f912b2a2af4ebbbcdd806d8e417b4c999ea711c528e36cfdf"), 1558412157 } },
+                { 280000, { uint256S("0xd805dab30f0c305e00938b7254dbb3a1d5bacd11919f69ce26ef8f948c7324ca"), 1558727676 } },
+                { 285000, { uint256S("0xeb1af295ffd6f00a79b620da2e4a28bfa5ed22b0e40484688101842f08fa1e17"), 1560381936 } },
+                { 290000, { uint256S("0x269aa74631ca3c7c07c2da598907aac926392d55a9d648537f2681c9d376a35f"), 1560702992 } },
+                { 295000, { uint256S("0x3b70b6e10de508ff0014476415e23e105b30adaf980f70a1ca2a11bdd761b0c2"), 1561022834 } },
+                { 300000, { uint256S("0xbaa0d3762a8b7eb0059e77196f71704b0614bc6652d040a1e3c7e9cf1364cb84"), 1561342034 } },
+                { 305000, { uint256S("0xe8fcdf9ece8fc930de3bb1bd0d32c459511fb84c64164a1abfd8fd783ca453e8"), 1561663114 } },
+                { 310000, { uint256S("0xd5786f475a7493ddc5aa1340a77ee5580018902848f2009764b20e093ec4291d"), 1561991193 } },
+                { 315000, { uint256S("0xf5ea7cf54c682f7d2d5cbb6137270a914b39f1d92247b7da2b942de2b72bb95f"), 1562567363 } },
+                { 320000, { uint256S("0xb93f4994f3b2e3ad3bea5c7bb1e14be25c46f80adca4918df9c5e128f0b28724"), 1563537469 } },
+                { 325000, { uint256S("0xe49f33e1fa2df1e21b5d7b0d65a88a6222280b0fdf02411b64fd357050028ef5"), 1563858985 } },
+                { 330000, { uint256S("0x98abce8d58f89ccde016cb733165339126c96c3146892c20773a63ec197cd20e"), 1564179171 } },
+                { 335000, { uint256S("0x1808465e3caa98b99519c49a4a806995c32f862207bbc1d03b37911dbbc44649"), 1564501068 } },
+                { 340000, { uint256S("0x335d480f03eab72d885e08392ba465ca850260dc354364c5d3ed987968674ae8"), 1564820788 } },
+                { 345000, { uint256S("0x7c3c824842ee3a984a832f9a7b38b2cbdcf545f6c35a2e9d1ba63327d755e8e0"), 1565142367 } },
+                { 350000, { uint256S("0x4efbd8ccfd3ee233416491f724e763621836079ebbcb6cbb9578a34e78b814f2"), 1565462921 } },
+                { 355000, { uint256S("0x0f32cc3de754cc073d49130fed0391e4db9bbc0b11920a00f42d8c0bc90ac439"), 1565782781 } },
+                { 360000, { uint256S("0x2b63ac00062b68a87f669e2486297e5a4e49c86d9b6f5158a2edf2065c4f94bf"), 1566102666 } },
+                { 365000, { uint256S("0x3ac0ce33f4e4940408586787c6cda6013fdcd454d7c5c29557f62dedfa71d645"), 1566424897 } },
+                { 370000, { uint256S("0x3165432192cc1db1ab57e9eb8551a05d9171f5cd985049c5e826b7f5999235f1"), 1566745486 } },
+                { 375000, { uint256S("0x1d79ed6fbb36db34ecebcf34501aced0fc5f619824ea14249c03545b379b531d"), 1567066520 } },
+                { 380000, { uint256S("0xce497faeb41ddde322a2dfacdae430ca0271f42c2fd9c653b12ce2b33f43a2fc"), 1567386770 } },
+                { 385000, { uint256S("0xd1c4251311b95d3d37f617bc6c097bfb7cd565f321192569175011143dc6dd69"), 1567707724 } },
+                { 390000, { uint256S("0x69d6540523bdf059aeb7ca8299a4afa0ea9ba7cfc69a4d2dace902b57676c946"), 1568030288 } },
+                { 395000, { uint256S("0x9cd43399097d7fad2b4596e3e921c342b43fdd3203b66c53bec808b4dca20f95"), 1568351003 } },
+                { 400000, { uint256S("0x7f4b627481fe3deb93014d0b8b950416b98124ac1d2c55fef752881c6dc3e1d0"), 1568671529 } },
+                { 405000, { uint256S("0x71a7d1e8196ad368a56822a44c49e2e67d283864dae8fecedc7f0def17476e5d"), 1568993383 } },
+                { 410000, { uint256S("0x3a46851a8adce01bc3b6e84bb2b32eb6b7e57b4afa165992420fa0b64ae98830"), 1569313959 } },
+                { 415000, { uint256S("0xc4146aa89e2baa264bc46f86fb63fba3f6e08c46aa627d4848531c411eb25d7a"), 1570205159 } },
+                { 420000, { uint256S("0xa2da448100b52df36c903c01eb3e8e5b70d1ca88560b027259e21c1ed821ca40"), 1570522428 } },
                 { 412790, { uint256S("0x6b4382be1387491324ceb995a65aca06bb02ef23da70ae6134e3decacfae63b8"), 1569509607 } },
                 { 412791, { uint256S("0xa937c5877996937b226c3c1cb362560f3fb11a4ae73236a1520458f5a870f5f5"), 1569509607 } },
                 { 412792, { uint256S("0x96d75ac421fabdbf567a2bfca75689bae80af01236f30ef8eebd3b6f6f1a500d"), 1569810113 } },
                 { 412793, { uint256S("0xfb7da9fd2ec4a72707ec47aefb957a7b6e46901b501b4c25dbae7267b05ac829"), 1570050130 } },
-                { 412794, { uint256S("0xd78bb6f5e34df29c0fad0edc7cdc47fa16793bca587160ea2f75fae6473f8100"), 1570050170 } }
+                { 412794, { uint256S("0xd78bb6f5e34df29c0fad0edc7cdc47fa16793bca587160ea2f75fae6473f8100"), 1570050170 } },
             };
-            consensus.defaultAssumeValid = uint256S("0x5c9de9c540a722ceeed12b86705fb760d2b50d1c26d1ecb60261ecfbfc42bf2e");
+            consensus.defaultAssumeValid = uint256S("0xd78bb6f5e34df29c0fad0edc7cdc47fa16793bca587160ea2f75fae6473f8100");
         }
 
         chainTxData = ChainTxData{
@@ -654,3 +719,4 @@ void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime,
 {
     globalChainParams->UpdateVersionBitsParameters(d, nStartTime, nTimeout);
 }
+

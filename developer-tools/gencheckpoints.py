@@ -9,6 +9,7 @@
 from bitcoinrpc.authproxy import AuthServiceProxy
 import sys
 import string
+import os
 
 __copyright__ = 'Copyright (c) 2018 The Gulden developers'
 __license__   = 'Distributed under the GULDEN software license, see the accompanying file COPYING'
@@ -16,14 +17,18 @@ __author__    = 'Willem de Jonge'
 __email__     = 'willem@isnapp.nl'
 
 # ===== BEGIN USER SETTINGS =====
-rpcuser='gdgdsgdshdhs'
-rpcpass='ghdshdsfhsdsd'
+rpcuser=os.environ["CHECKPOINT_RPC_USER"]
+rpcpass=os.environ["CHECKPOINT_RPC_PASSWORD"]
+rpcport=os.environ["CHECKPOINT_RPC_PORT"]
+rpcip=os.environ["CHECKPOINT_RPC_IP"]
+
+
 # ====== END USER SETTINGS ======
 
 # code format example:
 # {  50000, { uint256S("0x5baeb5a5c3d5fefbb094623e85e3e16a1ea47875b5ffd1ff5a200e639908a059"), 1400560264 } },
 
-access = AuthServiceProxy("http://"+rpcuser+":"+rpcpass+"@192.168.88.5:9232")
+access = AuthServiceProxy("http://"+rpcuser+":"+rpcpass+"@"+rpcip+":"+rpcport)
 
 def print_checkpoint(height):
     hash = access.getblockhash(height)
