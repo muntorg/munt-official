@@ -234,19 +234,35 @@ void terminateUnityFrontend()
     }
 }
 
+#include <boost/chrono/thread_clock.hpp>
+
 void handlePostInitMain()
 {
     //fixme: (SIGMA) (PHASE4) Remove this once we have witness-header-sync
     // Select appropriate verification factor based on devices performance.
     std::thread([=]
     {
+// When available measure thread relative cpu time to avoid effects of thread suspension
+// which occur when observing system time.
+#if false && defined(BOOST_CHRONO_HAS_THREAD_CLOCK) && BOOST_CHRONO_THREAD_CLOCK_IS_STEADY
+        boost::chrono::time_point tpStart = boost::chrono::thread_clock::now();
+#else
         uint64_t nStart = GetTimeMicros();
+#endif
+
+        // note that measurement is on single thread, which makes the measurement more stable
+        // actual verification might use more threads which helps overall app performance
+        sigma_verify_context verify(defaultSigmaSettings, 1);
         CBlockHeader header;
-        sigma_verify_context verify(defaultSigmaSettings, std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::max((unsigned int)1, std::thread::hardware_concurrency())));
         verify.verifyHeader<1>(header);
-        
-        // We want at least 1000 blocks per second.
+
+        // We want at least 1000 blocks per second
+#if false && defined(BOOST_CHRONO_HAS_THREAD_CLOCK) && BOOST_CHRONO_THREAD_CLOCK_IS_STEADY
+        boost::chrono::microseconds ms  = boost::chrono::duration_cast<boost::chrono::microseconds>(boost::chrono::thread_clock::now() - tpStart);
+        uint64_t nTotal = ms.count();
+#else
         uint64_t nTotal = GetTimeMicros() - nStart;
+#endif
         uint64_t nPerSec = 1000000/nTotal;
         if (nPerSec > 1000) // Fast enough to do most the blocks
         {
