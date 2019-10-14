@@ -111,9 +111,6 @@ Build the framework library:
 Troubleshooting
 -----
 
-Gulden dynamically links qt by default as a licensing requirement for distribution. If you have trouble running Gulden after building it you may need to tell it where to find the libraries:
-> LD_LIBRARY_PATH=<path>/lib ./src/Gulden
-
 If your distro is missing Berkley DB 4.8 (error: Found Berkeley DB other than 4.8, required for portable wallets)
 Either compile your own BDB, or configure with an incompatible bdb (Your wallet may not be portable to machines using older versions in this case):
 > ./configure --with-incompatible-bdb <otherconfigureflagshere>
