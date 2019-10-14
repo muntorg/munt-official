@@ -514,9 +514,12 @@ void selectOptimisedImplementations()
         }
     }
     
-    // Finally (only after we have fastest echo implementation) give the hybrid echo a go
+    // Finally (only after we have fastest echo implementation) give the hybrid argon_echo a go
     // Just in case it happens to be faster.
-    SELECT_OPTIMISED_ARGON(hybrid, 9999);
+    if (selected_echo256_opt_Init && selected_shavite3_256_opt_Init)
+    {
+        SELECT_OPTIMISED_ARGON(hybrid, 9999);
+    }
     #endif
     
 logselection:
