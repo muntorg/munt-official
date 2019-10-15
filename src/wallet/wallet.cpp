@@ -329,9 +329,28 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
         {
             if(!crypter.SetKeyFromPassphrase(strOldWalletPassphrase, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod))
                 return false;
+            std::vector<unsigned char> cryptedKeyCopy = pMasterKey.second.vchCryptedKey;
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 return false;
-            if (UnlockWithMasterKey(_vMasterKey))
+            
+            //fixme: (PHASE5) Remove - Temporary fix for a very small limited subset of wallets that got exposed to a password change bug.
+            //We can just leave this fix in for a while and then remove it.
+            bool unlocked = false;
+            unlocked = UnlockWithMasterKey(_vMasterKey);
+            while (!unlocked)
+            {
+                if (unlocked)
+                    break;
+                if (cryptedKeyCopy.size() < 2)
+                    break;
+                cryptedKeyCopy = std::vector<unsigned char>(cryptedKeyCopy.begin()+1, cryptedKeyCopy.end());
+                _vMasterKey.clear();
+                if (crypter.Decrypt(cryptedKeyCopy, _vMasterKey))
+                {
+                    unlocked = UnlockWithMasterKey(_vMasterKey);
+                }
+            }
+            if (unlocked)
             {
                 int64_t nStartTime = GetTimeMillis();
                 crypter.SetKeyFromPassphrase(strNewWalletPassphrase, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod);
