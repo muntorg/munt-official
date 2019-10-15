@@ -20,7 +20,7 @@
 #include <QPushButton>
 #include "_Gulden/GuldenGUI.h"
 
-EditAddressDialog::EditAddressDialog(Mode _mode, QWidget *parent):
+EditAddressDialog::EditAddressDialog(Mode _mode, QWidget *parent, QString labelHint):
     QDialog(parent),
     ui(new Ui::EditAddressDialog),
     mapper(0),
@@ -45,6 +45,12 @@ EditAddressDialog::EditAddressDialog(Mode _mode, QWidget *parent):
     horizontalLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     horizontalLine->setStyleSheet(GULDEN_DIALOG_HLINE_STYLE_NOMARGIN);
     ui->verticalLayout->insertWidget(1, horizontalLine);
+    
+    if (labelHint.size() > 0)
+    {
+        ui->labelEdit->setText(labelHint);
+        ui->addressEdit->setFocus();
+    }
 
     //Need a minimum height otherwise our horizontal line gets hidden.
     setMinimumSize(400,200);
@@ -57,6 +63,9 @@ EditAddressDialog::EditAddressDialog(Mode _mode, QWidget *parent):
             break;
         case NewSendingAddress:
             setWindowTitle(tr("New sending address"));
+            break;
+        case NewMiningAddress:
+            setWindowTitle(tr("New mining address"));
             break;
         case EditReceivingAddress:
             setWindowTitle(tr("Edit receiving address"));
@@ -102,9 +111,10 @@ bool EditAddressDialog::saveCurrentRow()
         case NewReceivingAddress:
         case NewSendingAddress:
             address = model->addRow(
-                    mode == NewSendingAddress ? AddressTableModel::Send : AddressTableModel::Receive,
-                    ui->labelEdit->text(),
-                    ui->addressEdit->text());
+                    (mode == NewSendingAddress) ? AddressTableModel::Send : AddressTableModel::Receive, ui->labelEdit->text(), ui->addressEdit->text());
+            break;
+        case NewMiningAddress:
+            address = model->addRow(AddressTableModel::Send, ui->labelEdit->text(), ui->addressEdit->text());
             break;
         case EditReceivingAddress:
         case EditSendingAddress:

@@ -64,6 +64,8 @@ std::string GetAccountTypeString(AccountType type)
             return "Witness-only witness";
         case ImportedPrivateKeyAccount:
             return "Imported private key";
+        case MiningAccount:
+            return "Mining";
     }
     return "Regular";
 }
@@ -181,12 +183,20 @@ CAccountHD* CHDSeed::GenerateAccount(AccountType type, CWalletDB* Db)
             ++m_nAccountIndexMobi;
             break;
         case PoW2Witness:
-            assert(m_nAccountIndexWitness < HDFutureReservedStartIndex);
+            assert(m_nAccountIndexWitness < HDMiningStartIndex);
             account = GenerateAccount(m_nAccountIndexWitness, type);
             if (!account)
                 return nullptr;
             ++m_nAccountIndexWitness;
             break;
+        case MiningAccount:
+            assert(m_nAccountIndexMining < HDFutureReservedStartIndex);
+            account = GenerateAccount(m_nAccountIndexMining, type);
+            if (!account)
+                return nullptr;
+            ++m_nAccountIndexMining;
+            break;
+            
         default:
             ; // fall through on purpose with null account
     }
@@ -700,7 +710,7 @@ void CAccount::SetNull()
 CPubKey CAccount::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int keyChain)
 {
     if (IsFixedKeyPool())
-        throw std::runtime_error(strprintf("GenerateNewKey called on a \"%sy\" witness account - this is invalid", GetAccountTypeString(m_Type).c_str()));
+        throw std::runtime_error(strprintf("GenerateNewKey called on a \"%s\" witness account - this is invalid", GetAccountTypeString(m_Type).c_str()));
 
     CKey secret;
     secret.MakeNewKey(true);
@@ -800,7 +810,7 @@ bool CAccount::Lock()
 {
     // NB! We don't encrypt the keystores for witness-only accounts - as they only contain keys for witnessing.
     // So we don't need to unlock the underlying keystore..
-    if (IsFixedKeyPool() && IsPoW2Witness())
+    if (IsWitnessOnly())
     {
         return true;
     }
@@ -815,7 +825,7 @@ bool CAccount::Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDis
 {
     // NB! We don't encrypt the keystores for witness-only accounts - as they only contain keys for witnessing.
     // So we don't need to unlock the underlying keystore..
-    if (IsFixedKeyPool() && IsPoW2Witness())
+    if (IsWitnessOnly())
     {
         return true;
     }
@@ -912,7 +922,7 @@ bool CAccount::Encrypt(const CKeyingMaterial& vMasterKeyIn)
 {
     // NB! We don't encrypt the keystores for witness-only accounts - as they only contain keys for witnessing.
     // So we don't need to unlock the underlying keystore..
-    if (IsFixedKeyPool() && IsPoW2Witness())
+    if (IsWitnessOnly())
     {
         return true;
     }

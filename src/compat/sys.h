@@ -16,7 +16,7 @@
 
 #if defined(WIN32)
 #include <windows.h>
-uint64_t systemPhysicalMemoryInBytes()
+inline uint64_t systemPhysicalMemoryInBytes()
 {
     MEMORYSTATUS status;
     status.dwLength = sizeof(status);
@@ -26,7 +26,7 @@ uint64_t systemPhysicalMemoryInBytes()
 #elif defined(MAC_OSX)
 #include <sys/types.h>
 #include <sys/sysctl.h>
-uint64_t systemPhysicalMemoryInBytes()
+inline uint64_t systemPhysicalMemoryInBytes()
 {
     int dataRequest[2];
     dataRequest[0] = CTL_HW;
@@ -39,7 +39,7 @@ uint64_t systemPhysicalMemoryInBytes()
 }
 #else
 #include <sys/sysinfo.h>
-uint64_t systemPhysicalMemoryInBytes()
+inline uint64_t systemPhysicalMemoryInBytes()
 {
     struct sysinfo info;
     sysinfo(&info);

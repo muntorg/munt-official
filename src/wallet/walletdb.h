@@ -170,13 +170,16 @@ public:
 
     bool WriteBestBlock(const CBlockLocator& locator);
     bool ReadBestBlock(CBlockLocator& locator);
+    
+    bool WriteMiningAddressString(const std::string& miningAddress);
+    bool ReadMiningAddressString(std::string& miningAddress);
 
     bool WriteOrderPosNext(int64_t nOrderPosNext);
     bool ReadPool(int64_t nPool, CKeyPool& keypool);
     bool WritePool(int64_t nPool, const CKeyPool& keypool);
 
     //! Erase a keypool AddAccountingEntry
-    //! Pass forceErase=true to bypass keypool "protection" that is applied for IsFixedKeyPool() accounts
+    //! Pass forceErase=true to bypass keypool "protection" that is applied for IsFixedKeyPool() and IsMinimalKeyPool() accounts
     bool ErasePool(CWallet* pwallet, int64_t nPool, bool forceErase=false);
     bool ErasePool(CWallet* pwallet, const CKeyID& id, bool forceErase=false);
     bool HasPool(CWallet* pwallet, const CKeyID& id);

@@ -333,7 +333,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                         ret = reservekey.GetReservedKey(vchPubKey);
                         if (!ret)
                         {
-                            if (reservekey.account && reservekey.account->IsFixedKeyPool())
+                            if (reservekey.account && (reservekey.account->IsFixedKeyPool() || reservekey.account->IsMinimalKeyPool()))
                             {
                                 std::string strFailReason = _("This type of account only supports emptying the entire balance in one go, no partial transactions.");
                                 CAlert::Notify(strFailReason, true, true);
@@ -376,7 +376,7 @@ bool CWallet::CreateTransaction(CAccount* forAccount, const std::vector<CRecipie
                             ret = reservekey.GetReservedKey(vchPubKey);
                             if (!ret)
                             {
-                                if (reservekey.account && reservekey.account->IsFixedKeyPool())
+                                if (reservekey.account && (reservekey.account->IsFixedKeyPool() || reservekey.account->IsMinimalKeyPool()))
                                 {
                                     std::string strFailReason = _("This type of account only supports emptying the entire balance in one go, no partial transactions.");
                                     CAlert::Notify(strFailReason, true, true);

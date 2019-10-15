@@ -378,12 +378,14 @@ void static GuldenWitness()
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do
                 {
-                    if (hashCity)
-                        break;
                     if (pactiveWallet && g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
                     {
                         if(!IsInitialBlockDownload())
                             break;
+                    }
+                    else if (hashCity)
+                    {
+                        break;
                     }
                     MilliSleep(5000);
                 } while (true);

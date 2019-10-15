@@ -60,7 +60,8 @@ enum AccountType
     PoW2Witness = 2,                 // PoW2 witness account.
     WitnessOnlyWitnessAccount = 3,   // non-HD witness account without spending keys only witness keys.
     ImportedPrivateKeyAccount = 4,   // non-HD account contains one or more imported private keys.
-    AccountTypeMax = ImportedPrivateKeyAccount
+    MiningAccount = 5,               // HD account for mining - special key treatment, re-uses the same key instead of generating new ones repeatedly.
+    AccountTypeMax = MiningAccount
 };
 
 std::string GetAccountStateString(AccountState state);
@@ -71,7 +72,8 @@ std::string GetAccountTypeString(AccountType type);
 const int HDDesktopStartIndex = 0;
 const int HDMobileStartIndex  = 100000;
 const int HDWitnessStartIndex = 200000;
-const int HDFutureReservedStartIndex = 300000;
+const int HDMiningStartIndex = 300000;
+const int HDFutureReservedStartIndex = 400000;
 
 enum AccountStatus
 {
@@ -113,9 +115,9 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
-        int nVersion = 2;
+        int nVersion = 3;
         READWRITE(nVersion);
-        //fixme: (2.1) - Remove the below in future if we need to upgrade versions; but delay as long as possible to purge all ald wallets that may have had a corrupted version.
+        //fixme: (2.1) - Remove the below in future if we need to upgrade versions; but delay as long as possible to purge all old wallets that may have had a corrupted version.
         if (nVersion > 3)
             nVersion = 1;
 
@@ -141,6 +143,10 @@ public:
         if (nVersion >= 2)
         {
             READWRITE(m_nAccountIndexWitness);
+        }
+        if (nVersion >= 3)
+        {
+            READWRITE(m_nAccountIndexMining);
         }
 
         READWRITE(masterKeyPub);
@@ -202,6 +208,8 @@ protected:
     int m_nAccountIndexMobi = HDMobileStartIndex;
     // Index of next account to generate (witness accounts)
     int m_nAccountIndexWitness = HDWitnessStartIndex;
+    // Index of next account to generate (mining accounts)
+    int m_nAccountIndexMining = HDMiningStartIndex;
 
     //Always available
     CExtPubKey masterKeyPub;  //hd master key (m)      - BIP32 and BIP44
@@ -249,9 +257,18 @@ public:
 
     //! Account is capable of performing witness operations.
     virtual bool IsPoW2Witness() const { return m_Type == PoW2Witness || m_Type == WitnessOnlyWitnessAccount; }
-
+   
     //! Account has a fixed keypool that should not remove the keys on use.
     virtual bool IsFixedKeyPool() const { return m_Type == WitnessOnlyWitnessAccount || m_Type == ImportedPrivateKeyAccount; }
+    
+    //! Account has a minimal keypool that should attempt to grow as little as possible (only mark keys used if explicitely requested to do so)
+    virtual bool IsMinimalKeyPool() const { return m_Type == MiningAccount; }
+    
+    //! Account is a witness-only account.
+    virtual bool IsWitnessOnly() const { return (IsPoW2Witness() && IsFixedKeyPool()); }
+    
+    //! Account is for mining
+    virtual bool IsMiningAccount() const { return m_Type == MiningAccount; }
 
     ADD_SERIALIZE_METHODS;
 

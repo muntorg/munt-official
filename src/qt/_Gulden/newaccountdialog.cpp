@@ -52,24 +52,28 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
     ui->labelMobileAccount->setCursor(Qt::PointingHandCursor);
     ui->labelTransactionAccount->setCursor(Qt::PointingHandCursor);
     ui->labelWitnessAccount->setCursor(Qt::PointingHandCursor);
+    ui->labelMiningAccount->setCursor(Qt::PointingHandCursor);
     ui->labelImportWitnessOnlyAccount->setCursor(Qt::PointingHandCursor);
     ui->labelImportPrivateKey->setCursor(Qt::PointingHandCursor);
 
     ui->labelMobileAccount->setObjectName("add_account_type_label_mobile");
     ui->labelTransactionAccount->setObjectName("add_account_type_label_transactional");
     ui->labelWitnessAccount->setObjectName("add_account_type_label_witness");
+    ui->labelMiningAccount->setObjectName("add_account_type_label_generation");
     ui->labelImportWitnessOnlyAccount->setObjectName("add_account_type_label_witnessonly");
     ui->labelImportPrivateKey->setObjectName("add_account_type_label_privkey");
 
     toolTipTransactionalAccount = tr("<li>Day to day fund management</li><li>Send and receive Gulden</li><li>Send funds to any elligible IBAN account</li>");
     toolTipMobileAccount = tr("<li>Top up, manage and control your mobile funds from the desktop</li><li>Empty your mobile funds with ease if phone is broken or stolen</li>");
     toolTipWitnessAccount = tr("<li>Grow your money</li><li>Flexible period of 1 month to 3 years</li><li>Help secure the network with minimal hardware equirements</li>");
+    toolTipMiningAccount = tr("<li>Compete against other miners to create Gulden with your idle CPU time</li><li>Help secure the network</li>");
     toolTipImportWitnessAccount = tr("<li>Import a witness account from another device</li><li>Let this device act as a backup witness device so that you are always available to witness</li>");
     toolTipImportPrivKey = tr("<li>Import a private key from cold storage</li><li>Not backed up as part of your recovery phrase</li>");
 
     ui->labelTransactionAccount->setToolTip(toolTipTransactionalAccount);
     ui->labelMobileAccount->setToolTip(toolTipMobileAccount);
     ui->labelWitnessAccount->setToolTip(toolTipWitnessAccount);
+    ui->labelMiningAccount->setToolTip(toolTipMiningAccount);
     ui->labelImportWitnessOnlyAccount->setToolTip(toolTipImportWitnessAccount);
     ui->labelImportPrivateKey->setToolTip(toolTipImportPrivKey);
 
@@ -86,6 +90,7 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
     // Connect signals.
     connect(ui->labelTransactionAccount, SIGNAL(clicked()), this, SLOT(addAccount()));
     connect(ui->labelWitnessAccount, SIGNAL(clicked()), this, SLOT(addWitnessAccount()));
+    connect(ui->labelMiningAccount, SIGNAL(clicked()), this, SLOT(addMiningAccount()));
     connect(ui->doneButton2, SIGNAL(clicked()), this, SIGNAL(addAccountMobile()));
     connect(ui->labelImportWitnessOnlyAccount, SIGNAL(clicked()), this, SLOT(importWitnessOnly()));
     connect(ui->labelImportPrivateKey, SIGNAL(clicked()), this, SLOT(importPrivateKey()));
@@ -98,6 +103,7 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
     ui->labelMobileAccount->forceStyleRefresh();
     ui->labelTransactionAccount->forceStyleRefresh();
     ui->labelWitnessAccount->forceStyleRefresh();
+    ui->labelMiningAccount->forceStyleRefresh();
     ui->labelImportWitnessOnlyAccount->forceStyleRefresh();
     ui->labelImportPrivateKey->forceStyleRefresh();
 }
@@ -151,9 +157,8 @@ void NewAccountDialog::showSyncQr()
     }
 }
 
-void NewAccountDialog::addAccount()
+void NewAccountDialog::signalAddAccount()
 {
-    m_Type = Transactional;
     if (!ui->newAccountName->text().simplified().isEmpty())
     {
         Q_EMIT accountAdded();
@@ -163,48 +168,36 @@ void NewAccountDialog::addAccount()
         ui->newAccountName->setFocus();
         setValid(ui->newAccountName, false);
     }
+}
+
+void NewAccountDialog::addAccount()
+{
+    m_Type = Transactional;
+    signalAddAccount();
 }
 
 void NewAccountDialog::addWitnessAccount()
 {
     m_Type = FixedDeposit;
-    if (!ui->newAccountName->text().simplified().isEmpty())
-    {
-        Q_EMIT accountAdded();
-    }
-    else
-    {
-        ui->newAccountName->setFocus();
-        setValid(ui->newAccountName, false);
-    }
+    signalAddAccount();
+}
+
+void NewAccountDialog::addMiningAccount()
+{
+    m_Type = Mining;
+    signalAddAccount();
 }
 
 void NewAccountDialog::importWitnessOnly()
 {
     m_Type = WitnessOnly;
-    if (!ui->newAccountName->text().simplified().isEmpty())
-    {
-        Q_EMIT accountAdded();
-    }
-    else
-    {
-        ui->newAccountName->setFocus();
-        setValid(ui->newAccountName, false);
-    }
+    signalAddAccount();
 }
 
 void NewAccountDialog::importPrivateKey()
 {
     m_Type = ImportKey;
-    if (!ui->newAccountName->text().simplified().isEmpty())
-    {
-        Q_EMIT accountAdded();
-    }
-    else
-    {
-        ui->newAccountName->setFocus();
-        setValid(ui->newAccountName, false);
-    }
+    signalAddAccount();
 }
 
 void NewAccountDialog::cancelMobile()
@@ -295,6 +288,7 @@ void NewAccountDialog::updateTextForSize(const QSize& size)
     QString textTransactionalAccount = accountTemplateNewAccounts.arg(GUIUtil::fontAwesomeLight("\uf09d")).arg(tr("Standard")).arg(toolTipTransactionalAccount+padding);
     QString textMobileAccount = accountTemplateNewAccounts.arg(GUIUtil::fontAwesomeLight("\uf10b")).arg(tr("Linked mobile")).arg(toolTipMobileAccount+padding);
     QString textWitnessAccount = accountTemplateNewAccounts.arg(GUIUtil::fontAwesomeLight("\uf19c")).arg(tr("Witness")).arg(toolTipWitnessAccount+padding);
+    QString textMiningAccount = accountTemplateNewAccounts.arg(GUIUtil::fontAwesomeLight("\uf3a5")).arg(tr("Mining")).arg(toolTipMiningAccount+padding);
     QString textImportWitnessAccount = accountTemplateImportAccounts.arg(GUIUtil::fontAwesomeLight("\uf06e")).arg(tr("Witness-only")).arg(toolTipImportWitnessAccount+padding);
     QString textImportPrivKey = accountTemplateImportAccounts.arg(GUIUtil::fontAwesomeLight("\uf084")).arg(tr("Private key")).arg(toolTipImportPrivKey+padding);
 
@@ -304,6 +298,8 @@ void NewAccountDialog::updateTextForSize(const QSize& size)
     ui->labelMobileAccount->setFixedSize(nWidth, nHeightAdd);
     ui->labelWitnessAccount->setText(textWitnessAccount);
     ui->labelWitnessAccount->setFixedSize(nWidth, nHeightAdd);
+    ui->labelMiningAccount->setText(textMiningAccount);
+    ui->labelMiningAccount->setFixedSize(nWidth, nHeightAdd);
     ui->labelImportWitnessOnlyAccount->setText(textImportWitnessAccount);
     ui->labelImportWitnessOnlyAccount->setFixedSize(nWidth, nHeightImport);
     ui->labelImportPrivateKey->setText(textImportPrivKey);

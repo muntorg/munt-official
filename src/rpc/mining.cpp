@@ -204,7 +204,7 @@ static UniValue getgenerate(const JSONRPCRequest& request)
         );
 
     LOCK(cs_main);
-    return GetBoolArg("-gen", DEFAULT_GENERATE);
+    return PoWGenerationIsActive();
 }
 
 static UniValue generate(const JSONRPCRequest& request)
@@ -378,10 +378,9 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     // Normalise for SIGMA arena expectations (arena size must be a multiple of 16mb)
     normaliseBufferSize(nGenMemoryLimitBytes);
     
-    SoftSetBoolArg("-gen", fGenerate);
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
     SoftSetArg("-genmemlimit", i64tostr(nGenMemoryLimitBytes/1024));
-    PoWMineGulden(fGenerate, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount);
+    PoWGenerateGulden(fGenerate, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount);
 
     if (!fGenerate)
     {

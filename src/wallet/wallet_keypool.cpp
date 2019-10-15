@@ -61,7 +61,7 @@ bool CWallet::NewKeyPool()
 int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewAllocations, CAccount* forAccount)
 {
     // Return -1 if we fail to allocate any -and- one of the accounts is not HD -and- it is locked.
-    unsigned int nNew = 0;
+    uint32_t nNew = 0;
     bool bAnyNonHDAccountsLockedAndRequireKeys = false;
 
     LOCK2(cs_main, cs_wallet);
@@ -69,7 +69,7 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
     CWalletDB walletdb(*dbw);
 
     // Top up key pool
-    unsigned int nAccountTargetSize;
+    uint32_t nAccountTargetSize;
     if (nTargetKeypoolSize > 0)
         nAccountTargetSize = nTargetKeypoolSize;
     else
@@ -94,13 +94,20 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
         if ( (forAccount == nullptr) || (forAccount->getUUID() == accountUUID) )
         {
             // If account uses a fixed keypool then never generate new keys to add to it.
+            // NB! This is one of the few places where IsMinimalKeyPool differed from IsFixedKeyPool - we do still generate new addresses for IsMinimalKeyPool (though we keep the size at 1)
             if (account->IsFixedKeyPool())
                 continue;
+            
+            uint32_t nFinalAccountTargetSize = nAccountTargetSize;
+            if (account->IsMinimalKeyPool())
+            {
+                nFinalAccountTargetSize = 1;
+            }
 
             for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
             {
                 auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? account->setKeyPoolExternal : account->setKeyPoolInternal );
-                while (keyPool.size() < nAccountTargetSize)
+                while (keyPool.size() < nFinalAccountTargetSize)
                 {
                     // We can't allocate any keys here if we are a non HD account that is locked - so don't and instead just signal to caller that there is an issue.
                     if (!account->IsHD() && account->IsLocked())
@@ -148,8 +155,8 @@ void CWallet::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypoolentry, CAc
         CWalletDB walletdb(*dbw);
 
         nIndex = *(keyPool.begin());
-        // If account uses a fixed keypool then never remove keys from it.
-        if (!forAccount->IsFixedKeyPool())
+        // If account uses a fixed or minimal keypool then never remove keys from it.
+        if (!forAccount->IsFixedKeyPool() && !forAccount->IsMinimalKeyPool())
         {
             keyPool.erase(keyPool.begin());
         }
@@ -201,8 +208,9 @@ bool CWallet::GetKeyFromPool(CPubKey& result, CAccount* forAccount, int64_t keyC
         ReserveKeyFromKeyPool(nIndex, keypool, forAccount, keyChain);
         if (nIndex == -1 )
         {
-            // If account uses a fixed keypool then never generate keys for it.
-            if (!forAccount->IsFixedKeyPool())
+            // If account uses a fixed or minimal keypool then never generate new keys for it here
+            // In the case of minimal keypools we do allow generation, but only when explicitely requested by the user
+            if (!forAccount->IsFixedKeyPool() && !forAccount->IsMinimalKeyPool())
             {
                 if (IsLocked()) return false;
                 result = GenerateNewKey(*forAccount, keyChain);

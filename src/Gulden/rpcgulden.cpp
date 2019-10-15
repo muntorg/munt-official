@@ -57,10 +57,19 @@ static UniValue gethashps(const JSONRPCRequest& request)
     double dHashPerSecLog = dHashesPerSec;
     std::string sHashPerSecLogLabel = " h";
     selectLargesHashUnit(dHashPerSecLog, sHashPerSecLogLabel);
+    double dRollingHashPerSecLog = dRollingHashesPerSec;
+    std::string sRollingHashPerSecLogLabel = " h";
+    selectLargesHashUnit(dRollingHashPerSecLog, sRollingHashPerSecLogLabel);
     double dBestHashPerSecLog = dBestHashesPerSec;
     std::string sBestHashPerSecLogLabel = " h";
     selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
+    
+    UniValue rec(UniValue::VOBJ);
+    rec.push_back(Pair("last_reported", strprintf("%lf %s", dHashPerSecLog, sHashPerSecLogLabel)));
+    rec.push_back(Pair("rolling_average", strprintf("%lf %s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel)));
+    rec.push_back(Pair("best_reported", strprintf("%lf %s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
 
+    return rec;
     return strprintf("%lf %s/s (best %lf %s/s)", dHashPerSecLog, sHashPerSecLogLabel, dBestHashPerSecLog, sBestHashPerSecLogLabel);
 }
 
@@ -766,13 +775,13 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
 
     bool forcePurge = false;
-    if (account->IsPoW2Witness() && account->IsFixedKeyPool())
+    if (account->IsWitnessOnly())
         forcePurge = true;
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
         boost::uuids::uuid accountUUID = account->getUUID();
         CAmount balance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
-        if (account->IsPoW2Witness() && account->IsFixedKeyPool())
+        if (account->IsWitnessOnly())
         {
             balance = pwallet->GetBalance(account, true, false, true);
         }

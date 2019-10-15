@@ -171,7 +171,7 @@ static CCoinsViewErrorCatcher *ppow2witcatcher = NULL;
 void CoreInterrupt(boost::thread_group& threadGroup)
 {
     LogPrintf("Core interrupt: commence core interrupt\n");
-    PoWMineGulden(false, 0, 0, Params());
+    PoWGenerateGulden(false, 0, 0, Params());
     if (g_connman)
         g_connman->Interrupt();
     InterruptHTTPServer();
@@ -1896,7 +1896,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
 
     // Generate coins in the background
-    PoWMineGulden(GetBoolArg("-gen", DEFAULT_GENERATE), GetArg("-genproclimit", DEFAULT_GENERATE_THREADS), GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb*1024), chainparams);
+    PoWGenerateGulden(GetBoolArg("-gen", DEFAULT_GENERATE), GetArg("-genproclimit", DEFAULT_GENERATE_THREADS), GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb*1024), chainparams);
     // ********************************************************* Step 12: finished
 
     SetRPCWarmupFinished();

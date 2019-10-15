@@ -154,6 +154,7 @@ private:
 
     QMenuBar* appMenuBar = nullptr;
     QAction* witnessDialogAction = nullptr;
+    QAction* miningDialogAction = nullptr;
     QAction* overviewAction = nullptr;
     QAction* historyAction = nullptr;
     QAction* quitAction = nullptr;
@@ -318,6 +319,8 @@ private Q_SLOTS:
 #ifdef ENABLE_WALLET
     /** Switch to witness overview page */
     void showWitnessDialog();
+    /** Switch to mining overview page */
+    void showMiningDialog();
     /** Switch to overview (home) page */
     void gotoOverviewPage();
     /** Switch to history (transactions) page */

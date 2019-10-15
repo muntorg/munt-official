@@ -141,6 +141,30 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("fMinimizeOnClose", false);
     }
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
+    
+    if (!settings.contains("fKeepOpenWhenMining"))
+    {
+        settings.setValue("fKeepOpenWhenMining", false);
+    }
+    fKeepOpenWhenMining = settings.value("fKeepOpenWhenMining").toBool();
+    
+    if (!settings.contains("fMineAtStartup"))
+    {
+        settings.setValue("fMineAtStartup", false);
+    }
+    fMineAtStartup = settings.value("fMineAtStartup").toBool();
+    
+    if (!settings.contains("nMineMemory"))
+    {
+        settings.setValue("nMineMemory", 0);
+    }
+    nMineMemory = settings.value("nMineMemory").toLongLong();
+   
+    if (!settings.contains("nMineThreadCount"))
+    {
+        settings.setValue("nMineThreadCount", 0);
+    }
+    nMineThreadCount = settings.value("nMineThreadCount").toLongLong();
 
     // Display
     if (!settings.contains("nDisplayUnit"))
@@ -278,6 +302,14 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
 #endif
         case MinimizeOnClose:
             return fMinimizeOnClose;
+        case KeepOpenWhenMining:
+            return fKeepOpenWhenMining;
+        case MineAtStartup:
+            return fMineAtStartup;
+        case MineMemory:
+            return (qulonglong)nMineMemory;
+        case MineThreadCount:
+            return (qulonglong)nMineThreadCount;
         case DockOnClose:
             return fDockOnClose;
         case AutoUpdateCheck:
@@ -342,157 +374,200 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
     bool successful = true; /* set to false on parse error */
     if(role == Qt::EditRole)
     {
-        QSettings settings;
-        switch(index.row())
-        {
-        case StartAtStartup:
-            successful = GUIUtil::SetStartOnSystemStartup(value.toBool());
-            break;
-        case HideTrayIcon:
-            fHideTrayIcon = value.toBool();
-            settings.setValue("fHideTrayIcon", fHideTrayIcon);
-            Q_EMIT hideTrayIconChanged(fHideTrayIcon);
-            break;
-        case MinimizeToTray:
-            fMinimizeToTray = value.toBool();
-            settings.setValue("fMinimizeToTray", fMinimizeToTray);
-            break;
-        case MapPortUPnP: // core option - can be changed on-the-fly
-            settings.setValue("fUseUPnP", value.toBool());
-            MapPort(value.toBool());
-            break;
-        case MinimizeOnClose:
-            fMinimizeOnClose = value.toBool();
-            settings.setValue("fMinimizeOnClose", fMinimizeOnClose);
-            break;
-        case DockOnClose:
-            fDockOnClose = value.toBool();
-            settings.setValue("fDockOnClose", fDockOnClose);
-            break;
-        case AutoUpdateCheck:
-            fAutoUpdateCheck = value.toBool();
-            settings.setValue("fAutoUpdateCheck", fAutoUpdateCheck);
-            break;
-
-        // default proxy
-        case ProxyUse:
-            if (settings.value("fUseProxy") != value) {
-                settings.setValue("fUseProxy", value.toBool());
-                setRestartRequired(true);
-            }
-            break;
-        case ProxyIP: {
-            // contains current IP at index 0 and current port at index 1
-            QStringList strlIpPort = settings.value("addrProxy").toString().split(":", QString::SkipEmptyParts);
-            // if that key doesn't exist or has a changed IP
-            if (!settings.contains("addrProxy") || strlIpPort.at(0) != value.toString()) {
-                // construct new value from new IP and current port
-                QString strNewValue = value.toString() + ":" + strlIpPort.at(1);
-                settings.setValue("addrProxy", strNewValue);
-                setRestartRequired(true);
-            }
-        }
-        break;
-        case ProxyPort: {
-            // contains current IP at index 0 and current port at index 1
-            QStringList strlIpPort = settings.value("addrProxy").toString().split(":", QString::SkipEmptyParts);
-            // if that key doesn't exist or has a changed port
-            if (!settings.contains("addrProxy") || strlIpPort.at(1) != value.toString()) {
-                // construct new value from current IP and new port
-                QString strNewValue = strlIpPort.at(0) + ":" + value.toString();
-                settings.setValue("addrProxy", strNewValue);
-                setRestartRequired(true);
-            }
-        }
-        break;
-
-        // separate Tor proxy
-        case ProxyUseTor:
-            if (settings.value("fUseSeparateProxyTor") != value) {
-                settings.setValue("fUseSeparateProxyTor", value.toBool());
-                setRestartRequired(true);
-            }
-            break;
-        case ProxyIPTor: {
-            // contains current IP at index 0 and current port at index 1
-            QStringList strlIpPort = settings.value("addrSeparateProxyTor").toString().split(":", QString::SkipEmptyParts);
-            // if that key doesn't exist or has a changed IP
-            if (!settings.contains("addrSeparateProxyTor") || strlIpPort.at(0) != value.toString()) {
-                // construct new value from new IP and current port
-                QString strNewValue = value.toString() + ":" + strlIpPort.at(1);
-                settings.setValue("addrSeparateProxyTor", strNewValue);
-                setRestartRequired(true);
-            }
-        }
-        break;
-        case ProxyPortTor: {
-            // contains current IP at index 0 and current port at index 1
-            QStringList strlIpPort = settings.value("addrSeparateProxyTor").toString().split(":", QString::SkipEmptyParts);
-            // if that key doesn't exist or has a changed port
-            if (!settings.contains("addrSeparateProxyTor") || strlIpPort.at(1) != value.toString()) {
-                // construct new value from current IP and new port
-                QString strNewValue = strlIpPort.at(0) + ":" + value.toString();
-                settings.setValue("addrSeparateProxyTor", strNewValue);
-                setRestartRequired(true);
-            }
-        }
-        break;
-
-#ifdef ENABLE_WALLET
-        case SpendZeroConfChange:
-            if (settings.value("bSpendZeroConfChange") != value) {
-                settings.setValue("bSpendZeroConfChange", value);
-                setRestartRequired(true);
-            }
-            break;
-#endif
-        case DisplayUnit:
-            setDisplayUnit(value);
-            break;
-        case ThirdPartyTxUrls:
-            if (strThirdPartyTxUrls != value.toString()) {
-                strThirdPartyTxUrls = value.toString();
-                settings.setValue("strThirdPartyTxUrls", strThirdPartyTxUrls);
-                setRestartRequired(true);
-            }
-            break;
-        case Language:
-            if (settings.value("language") != value) {
-                settings.setValue("language", value);
-                setRestartRequired(true);
-            }
-            break;
-        case CoinControlFeatures:
-            fCoinControlFeatures = value.toBool();
-            settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
-            Q_EMIT coinControlFeaturesChanged(fCoinControlFeatures);
-            break;
-        case DatabaseCache:
-            if (settings.value("nDatabaseCache") != value) {
-                settings.setValue("nDatabaseCache", value);
-                setRestartRequired(true);
-            }
-            break;
-        case ThreadsScriptVerif:
-            if (settings.value("nThreadsScriptVerif") != value) {
-                settings.setValue("nThreadsScriptVerif", value);
-                setRestartRequired(true);
-            }
-            break;
-        case Listen:
-            if (settings.value("fListen") != value) {
-                settings.setValue("fListen", value);
-                setRestartRequired(true);
-            }
-            break;
-        default:
-            break;
-        }
+        successful = setData(index.row(), value);
     }
 
     Q_EMIT dataChanged(index, index);
 
     return successful;
+}
+
+bool OptionsModel::setData(int index, const QVariant & value)
+{
+    bool successful = true; /* set to false on parse error */
+    QSettings settings;
+    switch(index)
+    {
+    case StartAtStartup:
+        successful = GUIUtil::SetStartOnSystemStartup(value.toBool());
+        break;
+    case HideTrayIcon:
+        fHideTrayIcon = value.toBool();
+        settings.setValue("fHideTrayIcon", fHideTrayIcon);
+        Q_EMIT hideTrayIconChanged(fHideTrayIcon);
+        break;
+    case MinimizeToTray:
+        fMinimizeToTray = value.toBool();
+        settings.setValue("fMinimizeToTray", fMinimizeToTray);
+        break;
+    case MapPortUPnP: // core option - can be changed on-the-fly
+        settings.setValue("fUseUPnP", value.toBool());
+        MapPort(value.toBool());
+        break;
+    case MinimizeOnClose:
+        fMinimizeOnClose = value.toBool();
+        settings.setValue("fMinimizeOnClose", fMinimizeOnClose);
+        break;
+    case KeepOpenWhenMining:
+        fKeepOpenWhenMining = value.toBool();
+        settings.setValue("fKeepOpenWhenMining", fKeepOpenWhenMining);
+        break;
+    case MineAtStartup:
+        fMineAtStartup = value.toBool();
+        settings.setValue("fMineAtStartup", fMineAtStartup);
+        break;
+    case MineMemory:
+        nMineMemory = value.toLongLong();
+        settings.setValue("nMineMemory", (qulonglong)nMineMemory);
+        break;
+    case MineThreadCount:
+        nMineThreadCount = value.toLongLong();
+        settings.setValue("nMineThreadCount", (qulonglong)nMineThreadCount);
+        break;
+    case DockOnClose:
+        fDockOnClose = value.toBool();
+        settings.setValue("fDockOnClose", fDockOnClose);
+        break;
+    case AutoUpdateCheck:
+        fAutoUpdateCheck = value.toBool();
+        settings.setValue("fAutoUpdateCheck", fAutoUpdateCheck);
+        break;
+
+    // default proxy
+    case ProxyUse:
+        if (settings.value("fUseProxy") != value) {
+            settings.setValue("fUseProxy", value.toBool());
+            setRestartRequired(true);
+        }
+        break;
+    case ProxyIP: {
+        // contains current IP at index 0 and current port at index 1
+        QStringList strlIpPort = settings.value("addrProxy").toString().split(":", QString::SkipEmptyParts);
+        // if that key doesn't exist or has a changed IP
+        if (!settings.contains("addrProxy") || strlIpPort.at(0) != value.toString()) {
+            // construct new value from new IP and current port
+            QString strNewValue = value.toString() + ":" + strlIpPort.at(1);
+            settings.setValue("addrProxy", strNewValue);
+            setRestartRequired(true);
+        }
+    }
+    break;
+    case ProxyPort: {
+        // contains current IP at index 0 and current port at index 1
+        QStringList strlIpPort = settings.value("addrProxy").toString().split(":", QString::SkipEmptyParts);
+        // if that key doesn't exist or has a changed port
+        if (!settings.contains("addrProxy") || strlIpPort.at(1) != value.toString()) {
+            // construct new value from current IP and new port
+            QString strNewValue = strlIpPort.at(0) + ":" + value.toString();
+            settings.setValue("addrProxy", strNewValue);
+            setRestartRequired(true);
+        }
+    }
+    break;
+
+    // separate Tor proxy
+    case ProxyUseTor:
+        if (settings.value("fUseSeparateProxyTor") != value) {
+            settings.setValue("fUseSeparateProxyTor", value.toBool());
+            setRestartRequired(true);
+        }
+        break;
+    case ProxyIPTor: {
+        // contains current IP at index 0 and current port at index 1
+        QStringList strlIpPort = settings.value("addrSeparateProxyTor").toString().split(":", QString::SkipEmptyParts);
+        // if that key doesn't exist or has a changed IP
+        if (!settings.contains("addrSeparateProxyTor") || strlIpPort.at(0) != value.toString()) {
+            // construct new value from new IP and current port
+            QString strNewValue = value.toString() + ":" + strlIpPort.at(1);
+            settings.setValue("addrSeparateProxyTor", strNewValue);
+            setRestartRequired(true);
+        }
+    }
+    break;
+    case ProxyPortTor: {
+        // contains current IP at index 0 and current port at index 1
+        QStringList strlIpPort = settings.value("addrSeparateProxyTor").toString().split(":", QString::SkipEmptyParts);
+        // if that key doesn't exist or has a changed port
+        if (!settings.contains("addrSeparateProxyTor") || strlIpPort.at(1) != value.toString()) {
+            // construct new value from current IP and new port
+            QString strNewValue = strlIpPort.at(0) + ":" + value.toString();
+            settings.setValue("addrSeparateProxyTor", strNewValue);
+            setRestartRequired(true);
+        }
+    }
+    break;
+
+#ifdef ENABLE_WALLET
+    case SpendZeroConfChange:
+        if (settings.value("bSpendZeroConfChange") != value) {
+            settings.setValue("bSpendZeroConfChange", value);
+            setRestartRequired(true);
+        }
+        break;
+#endif
+    case DisplayUnit:
+        setDisplayUnit(value);
+        break;
+    case ThirdPartyTxUrls:
+        if (strThirdPartyTxUrls != value.toString()) {
+            strThirdPartyTxUrls = value.toString();
+            settings.setValue("strThirdPartyTxUrls", strThirdPartyTxUrls);
+            setRestartRequired(true);
+        }
+        break;
+    case Language:
+        if (settings.value("language") != value) {
+            settings.setValue("language", value);
+            setRestartRequired(true);
+        }
+        break;
+    case CoinControlFeatures:
+        fCoinControlFeatures = value.toBool();
+        settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
+        Q_EMIT coinControlFeaturesChanged(fCoinControlFeatures);
+        break;
+    case DatabaseCache:
+        if (settings.value("nDatabaseCache") != value) {
+            settings.setValue("nDatabaseCache", value);
+            setRestartRequired(true);
+        }
+        break;
+    case ThreadsScriptVerif:
+        if (settings.value("nThreadsScriptVerif") != value) {
+            settings.setValue("nThreadsScriptVerif", value);
+            setRestartRequired(true);
+        }
+        break;
+    case Listen:
+        if (settings.value("fListen") != value) {
+            settings.setValue("fListen", value);
+            setRestartRequired(true);
+        }
+        break;
+    default:
+        break;
+    }
+    return successful;
+}
+
+void OptionsModel::setKeepOpenWhenMining(bool val)
+{
+    setData(KeepOpenWhenMining, val);
+}
+
+void OptionsModel::setMineAtStartup(bool val)
+{
+    setData(MineAtStartup, val);
+}
+
+void OptionsModel::setMineMemory(uint64_t val)
+{
+    setData(MineMemory, (qulonglong)val);
+}
+
+void OptionsModel::setMineThreadCount(uint64_t val)
+{
+    setData(MineThreadCount, (qulonglong)val);
 }
 
 /** Updates current unit in memory, settings and emits displayUnitChanged(newUnit) signal */

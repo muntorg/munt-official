@@ -177,6 +177,16 @@ bool CWalletDB::ReadBestBlock(CBlockLocator& locator)
     return batch.Read(std::string("bestblock_nomerkle"), locator);
 }
 
+bool CWalletDB::WriteMiningAddressString(const std::string& miningAddress)
+{
+    return WriteIC(std::string("mining_address_string"), miningAddress);
+}
+
+bool CWalletDB::ReadMiningAddressString(std::string& miningAddress)
+{
+    return batch.Read(std::string("mining_address_string"), miningAddress);
+}
+
 bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)
 {
     return WriteIC(std::string("orderposnext"), nOrderPosNext);
@@ -205,7 +215,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool, bool forceErase)
     {
         for (auto iter : pwallet->mapAccounts)
         {
-            if (iter.second->IsFixedKeyPool() && (iter.second->setKeyPoolExternal.find(nPool) != iter.second->setKeyPoolExternal.end()))
+            if ((iter.second->IsFixedKeyPool() || iter.second->IsMinimalKeyPool()) && (iter.second->setKeyPoolExternal.find(nPool) != iter.second->setKeyPoolExternal.end()))
             {
                 return true;
             }
@@ -224,7 +234,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id, bool forceErase)
     {
         for (auto iter : pwallet->mapAccounts)
         {
-            if (iter.second->IsFixedKeyPool() && (iter.second->setKeyPoolExternal.find(keyIndex) != iter.second->setKeyPoolExternal.end()))
+            if ((iter.second->IsFixedKeyPool() || iter.second->IsMinimalKeyPool()) && (iter.second->setKeyPoolExternal.find(keyIndex) != iter.second->setKeyPoolExternal.end()))
             {
                 allowErase = false;
                 break;
@@ -236,7 +246,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id, bool forceErase)
     //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
     for (auto iter : pwallet->mapAccounts)
     {
-        if (forceErase || !iter.second->IsFixedKeyPool())
+        if (forceErase || (!iter.second->IsFixedKeyPool() && !iter.second->IsMinimalKeyPool()))
         {
             iter.second->setKeyPoolExternal.erase(keyIndex);
             iter.second->setKeyPoolInternal.erase(keyIndex);

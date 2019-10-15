@@ -21,6 +21,7 @@
 #include "qt/_Gulden/viewaddressdialog.h"
 #include "qt/_Gulden/receivecoinsdialog.h"
 #include "qt/_Gulden/witnessdialog.h"
+#include "qt/_Gulden/miningaccountdialog.h"
 #include "sendcoinsdialog.h"
 #include "transactiontablemodel.h"
 #include "transactionview.h"
@@ -84,6 +85,7 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
     receiveCoinsPage = new ReceiveCoinsDialog(platformStyle);
     sendCoinsPage = new SendCoinsDialog(platformStyle);
     witnessDialogPage = new WitnessDialog(platformStyle);
+    miningDialogPage = new MiningAccountDialog(platformStyle);
 
     usedSendingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::SendingTab, this);
     usedReceivingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::ReceivingTab, this);
@@ -94,6 +96,7 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(witnessDialogPage);
+    addWidget(miningDialogPage);
 
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -110,6 +113,10 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
 
     // Pass through messages from witnessDialogPage
     connect(witnessDialogPage, SIGNAL(message(QString,QString,unsigned int)), this, SIGNAL(message(QString,QString,unsigned int)));
+    
+    // Pass through messages from miningDialogPage
+    connect(miningDialogPage, SIGNAL(message(QString,QString,unsigned int)), this, SIGNAL(message(QString,QString,unsigned int)));
+    
 
     // Pass through messages from transactionView
     connect(transactionView, SIGNAL(message(QString,QString,unsigned int)), this, SIGNAL(message(QString,QString,unsigned int)));
@@ -145,6 +152,7 @@ void WalletView::setClientModel(ClientModel *_clientModel)
     overviewPage->setClientModel(_clientModel);
     sendCoinsPage->setClientModel(_clientModel);
     witnessDialogPage->setClientModel(_clientModel);
+    miningDialogPage->setClientModel(_clientModel);
 }
 
 void WalletView::setWalletModel(WalletModel *_walletModel)
@@ -157,6 +165,7 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
     receiveCoinsPage->setModel(_walletModel);
     sendCoinsPage->setModel(_walletModel);
     witnessDialogPage->setModel(_walletModel);
+    miningDialogPage->setModel(_walletModel);
     usedReceivingAddressesPage->setModel(_walletModel->getAddressTableModel());
     usedSendingAddressesPage->setModel(_walletModel->getAddressTableModel());
 
@@ -248,6 +257,11 @@ void WalletView::gotoReceiveCoinsPage()
 void WalletView::gotoWitnessPage()
 {
     setCurrentWidget(witnessDialogPage);
+}
+
+void WalletView::gotoMiningPage()
+{
+    setCurrentWidget(miningDialogPage);
 }
 
 void WalletView::gotoSendCoinsPage(QString addr)
