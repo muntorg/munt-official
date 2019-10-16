@@ -86,7 +86,7 @@ GDN_QT_H = qt/_Gulden/guldensendcoinsentry.h \
 qt/_Gulden/accountsummarywidget.h \
 qt/_Gulden/viewaddressdialog.h \
 qt/_Gulden/receivecoinsdialog.h \
-qt/_Gulden/miningaccountddialog.h \
+qt/_Gulden/miningaccountdialog.h \
 qt/_Gulden/GuldenGUI.h \
 qt/_Gulden/ticker.h \
 qt/_Gulden/nockssettings.h \
