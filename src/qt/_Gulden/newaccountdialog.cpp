@@ -106,6 +106,28 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
     ui->labelMiningAccount->forceStyleRefresh();
     ui->labelImportWitnessOnlyAccount->forceStyleRefresh();
     ui->labelImportPrivateKey->forceStyleRefresh();
+    
+    // Only allow user to create one mining account.
+    if (pactiveWallet)
+    {
+        CAccount* miningAccount = nullptr;
+
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+        {
+            (unused) accountUUID;
+            if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+            {
+                miningAccount = account;
+                break;
+            }
+        }
+        if (miningAccount)
+        {
+            ui->labelMiningAccount->setVisible(false);
+        }
+    }
+    
 }
 
 

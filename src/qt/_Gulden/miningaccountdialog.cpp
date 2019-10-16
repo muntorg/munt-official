@@ -110,18 +110,6 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     {
         slotUpdateMiningStats();
     }
-    
-    connect(ui->miningCopyToClipboardButton, SIGNAL(clicked()),         this, SLOT(slotCopyAddressToClipboard()));
-    connect(ui->miningEditAddressButton,     SIGNAL(clicked()),         this, SLOT(slotEditMiningAddress()));
-    connect(ui->miningResetAddressButton,    SIGNAL(clicked()),         this, SLOT(slotResetMiningAddress()));
-    connect(ui->miningStartminingButton,     SIGNAL(clicked()),         this, SLOT(slotStartMining()));
-    connect(ui->miningStopminingButton,      SIGNAL(clicked()),         this, SLOT(slotStopMining()));
-    connect(ui->miningCheckBoxKeepOpen,      SIGNAL(clicked()),         this, SLOT(slotKeepOpenWhenMining()));
-    connect(ui->miningCheckBoxMineAtStartup, SIGNAL(clicked()),         this, SLOT(slotMineAtStartup()));
-    connect(ui->miningMemorySlider,          SIGNAL(sliderMoved(int)),  this, SLOT(slotMiningMemorySettingChanging(int)));
-    connect(ui->miningThreadSlider,          SIGNAL(sliderMoved(int)),  this, SLOT(slotMiningThreadSettingChanging(int)));
-    connect(ui->miningMemorySlider,          SIGNAL(valueChanged(int)), this, SLOT(slotMiningMemorySettingChanged())); //Emitted only when user releases mouse at end of slider movement, not for every change
-    connect(ui->miningThreadSlider,          SIGNAL(valueChanged(int)), this, SLOT(slotMiningThreadSettingChanged())); //Emitted only when user releases mouse at end of slider movement, not for every change
 }
 
 void MiningAccountDialog::updateSliderLabels()
@@ -132,6 +120,8 @@ void MiningAccountDialog::updateSliderLabels()
 
 void MiningAccountDialog::startMining()
 {
+    LogPrintf("MiningAccountDialog::startMining\n");
+
     uint64_t nGenProcLimit = ui->miningThreadSlider->value();
     uint64_t nGenMemoryLimitKilobytes = ((uint64_t)ui->miningMemorySlider->value())*1024;
     
@@ -226,6 +216,23 @@ void MiningAccountDialog::setModel(WalletModel *_model)
     CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(readOverrideAddress);
     overrideAddress = QString::fromStdString(readOverrideAddress);
     updateAddress(accountAddress);
+    
+    static bool init=true;
+    if (init)
+    {
+        init=false;
+        connect(ui->miningCopyToClipboardButton, SIGNAL(clicked()),         this, SLOT(slotCopyAddressToClipboard()));
+        connect(ui->miningEditAddressButton,     SIGNAL(clicked()),         this, SLOT(slotEditMiningAddress()));
+        connect(ui->miningResetAddressButton,    SIGNAL(clicked()),         this, SLOT(slotResetMiningAddress()));
+        connect(ui->miningStartminingButton,     SIGNAL(clicked()),         this, SLOT(slotStartMining()));
+        connect(ui->miningStopminingButton,      SIGNAL(clicked()),         this, SLOT(slotStopMining()));
+        connect(ui->miningCheckBoxKeepOpen,      SIGNAL(clicked()),         this, SLOT(slotKeepOpenWhenMining()));
+        connect(ui->miningCheckBoxMineAtStartup, SIGNAL(clicked()),         this, SLOT(slotMineAtStartup()));
+        connect(ui->miningMemorySlider,          SIGNAL(sliderMoved(int)),  this, SLOT(slotMiningMemorySettingChanging(int)));
+        connect(ui->miningThreadSlider,          SIGNAL(sliderMoved(int)),  this, SLOT(slotMiningThreadSettingChanging(int)));
+        connect(ui->miningMemorySlider,          SIGNAL(valueChanged(int)), this, SLOT(slotMiningMemorySettingChanged())); //Emitted only when user releases mouse at end of slider movement, not for every change
+        connect(ui->miningThreadSlider,          SIGNAL(valueChanged(int)), this, SLOT(slotMiningThreadSettingChanged())); //Emitted only when user releases mouse at end of slider movement, not for every change
+    }
 }
 
 void MiningAccountDialog::setClientModel(ClientModel* clientModel_)
@@ -260,6 +267,7 @@ void MiningAccountDialog::slotCopyAddressToClipboard()
 
 void MiningAccountDialog::slotEditMiningAddress()
 {
+    LogPrintf("MiningAccountDialog::slotEditMiningAddress\n");
     if (model)
     {
         EditAddressDialog dlg(EditAddressDialog::NewMiningAddress, this, tr("Mining address"));
@@ -277,6 +285,8 @@ void MiningAccountDialog::slotEditMiningAddress()
 
 void MiningAccountDialog::slotResetMiningAddress()
 {
+    LogPrintf("MiningAccountDialog::slotResetMiningAddress\n");
+
     if(pactiveWallet)
     {
         overrideAddress = "";
@@ -288,11 +298,13 @@ void MiningAccountDialog::slotResetMiningAddress()
 
 void MiningAccountDialog::slotStartMining()
 {
+    LogPrintf("MiningAccountDialog::slotStartMining\n");
     startMining();
 }
 
 void MiningAccountDialog::slotStopMining()
 {
+    LogPrintf("MiningAccountDialog::slotStopMining\n");
     std::thread([=]
     {
         PoWStopGeneration();

@@ -1352,9 +1352,11 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
 }
 
 boost::thread* minerThread = nullptr;
+CCriticalSection miningCS;
 
 void PoWStopGeneration()
 {
+    LOCK(miningCS);
     fixedGenerateAddress="";
     if (minerThread != nullptr)
     {
@@ -1368,6 +1370,7 @@ void PoWStopGeneration()
 
 void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
 {
+    LOCK(miningCS);
     if (nThreads < 0)
         nThreads = GetNumCores();
 

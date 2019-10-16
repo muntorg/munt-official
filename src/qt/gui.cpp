@@ -681,8 +681,10 @@ void GUI::setClientModel(ClientModel *_clientModel)
             setOptionsModel(optionsModel);
             
             //fixme: (SIGMA) (DEDUP) - Move this all to a helper function that can share it with RPC (and -gen) etc.
-            if (pactiveWallet && optionsModel->getMineAtStartup())
+            static bool runOnce=true;
+            if (runOnce && pactiveWallet && optionsModel->getMineAtStartup())
             {
+                runOnce = false;
                 CAccount* miningAccount = nullptr;
 
                 LOCK2(cs_main, pactiveWallet->cs_wallet);
@@ -714,6 +716,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
                     }
                     if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
                     {
+                        LogPrintf("MiningAccountDialog::startMiningAtStartup\n");
                         MiningAccountDialog::startMining(miningAccount, nGenProcLimit, nGenMemoryLimitKilobytes, readOverrideAddress);
                     }
                 }

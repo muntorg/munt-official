@@ -1,3 +1,12 @@
+2.1.0.12
+
+UI - Introduce new basic user interface for mining
+UI - Fix a bug on windows where closing the debug dialog with main app hidden could cause the entire app to close
+CORE - Introduce new 'mining' account type
+
+
+
+
 2.1.0.11
 
 This release introduces the new SIGMA PoW algorithm, a 'CPU friendly' algorithm designed to better suit Guldens needs than the previous algorithm scrypt that was used before.
