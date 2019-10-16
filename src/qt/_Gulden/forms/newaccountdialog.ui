@@ -233,7 +233,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="accButtonHSpacer2_2">
+          <spacer name="accButtonHSpacer3">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -344,7 +344,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="accButtonHSpacer3">
+          <spacer name="accButtonHSpacer4">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>

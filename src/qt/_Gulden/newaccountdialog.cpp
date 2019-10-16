@@ -124,6 +124,7 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
         }
         if (miningAccount)
         {
+            ui->accButtonHSpacer3->changeSize(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
             ui->labelMiningAccount->setVisible(false);
         }
     }
@@ -149,7 +150,6 @@ void NewAccountDialog::connectToMobile()
     }
     else
     {
-        ui->newAccountName->setFocus();
         setValid(ui->newAccountName, false);
     }
 }
@@ -296,13 +296,17 @@ void NewAccountDialog::updateTextForSize(const QSize& size)
         nWidth = 130;
         ui->accButtonHSpacer1->changeSize(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
         ui->accButtonHSpacer2->changeSize(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
-        ui->accButtonHSpacer3->changeSize(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        if (ui->labelMiningAccount->isVisible())
+            ui->accButtonHSpacer3->changeSize(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        ui->accButtonHSpacer4->changeSize(20, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
     else
     {
         ui->accButtonHSpacer1->changeSize(40, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
         ui->accButtonHSpacer2->changeSize(40, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
-        ui->accButtonHSpacer3->changeSize(40, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        if (ui->labelMiningAccount->isVisible())
+            ui->accButtonHSpacer3->changeSize(40, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        ui->accButtonHSpacer4->changeSize(40, 20, QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
 
     // Padding necessary to force table to full height.
