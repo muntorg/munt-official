@@ -902,6 +902,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Finestra di debug</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Utilizzo memoria</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>User Agent</translation>
     </message>
@@ -964,10 +968,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Current number of transactions</source>
         <translation>Numero attuale di transazioni</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Utilizzo memoria</translation>
     </message>
     <message>
         <source>Debug log file</source>

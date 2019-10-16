@@ -1319,6 +1319,10 @@
         <translation>デバッグ ウインドウ</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>メモリ使用量</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>ユーザエージェント</translation>
     </message>
@@ -1381,10 +1385,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>現在のトランザクション数</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>メモリ使用量</translation>
     </message>
     <message>
         <source>Debug log file</source>

@@ -15,7 +15,7 @@
     </message>
     <message>
         <location line="+119"/>
-        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="+241"/>
+        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="+242"/>
         <source>Delete account</source>
         <translation>Delete account</translation>
     </message>
@@ -30,7 +30,7 @@
         <translation>Done</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="-152"/>
+        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="-153"/>
         <source>Scan QR to connect to your mobile Gulden app</source>
         <translation>Scan QR to connect to your mobile Gulden app</translation>
     </message>
@@ -54,7 +54,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</translation>
     </message>
     <message>
-        <location line="+74"/>
+        <location line="+75"/>
         <source>Please fund the witness account first.</source>
         <translation>Please fund the witness account first.</translation>
     </message>
@@ -718,6 +718,11 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Ok</translation>
     </message>
     <message>
+        <location line="+34"/>
+        <source>New mining address</source>
+        <translation>New mining address</translation>
+    </message>
+    <message>
         <location filename="../../forms/editaddressdialog.ui" line="+14"/>
         <source>Edit Address</source>
         <translation>Edit Address</translation>
@@ -743,7 +748,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The address associated with this address list entry. This can only be modified for sending addresses.</translation>
     </message>
     <message>
-        <location filename="../../editaddressdialog.cpp" line="+27"/>
+        <location filename="../../editaddressdialog.cpp" line="-7"/>
         <source>New receiving address</source>
         <translation>New receiving address</translation>
     </message>
@@ -753,12 +758,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>New sending address</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>New mining address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+6"/>
         <source>Edit receiving address</source>
         <translation>Edit receiving address</translation>
     </message>
@@ -1006,7 +1006,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location line="-35"/>
         <source>Control and view information for mining account.</source>
-        <translation type="unfinished"></translation>
+        <translation>Control and view information for mining account.</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -1771,116 +1771,116 @@ Witness weight: %5</translation>
 <context>
     <name>MiningAccountDialog</name>
     <message>
-        <location filename="../../_Gulden/forms/miningaccountdialog.ui" line="+73"/>
-        <source>My mining address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+31"/>
-        <source>Copy address to clipboard</source>
-        <translation type="unfinished">Copy address to clipboard</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Edit mining address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Reset mining address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+38"/>
-        <source>My mining settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+28"/>
-        <source>Memory usage</source>
-        <translation type="unfinished">Memory usage</translation>
-    </message>
-    <message>
-        <location line="+17"/>
-        <source>Processor usage</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>#</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+22"/>
-        <source>Automatically mine at startup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Keep application open when mining</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>My mining statistics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+21"/>
-        <source>Best reported speed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Moving average</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Last reported speed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+165"/>
-        <source>Stop mining</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Start mining</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../_Gulden/miningaccountdialog.cpp" line="+74"/>
         <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
-        <translation type="unfinished"></translation>
+        <translation>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
-        <translation type="unfinished"></translation>
+        <translation>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</translation>
     </message>
     <message>
         <location line="+39"/>
         <location line="+230"/>
         <source>%1 Mb</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Mb</translation>
     </message>
     <message>
         <location line="-229"/>
         <location line="+234"/>
         <source>%1 threads</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 threads</translation>
     </message>
     <message>
         <location line="-87"/>
         <source>Address copied to clipboard</source>
-        <translation type="unfinished">Address copied to clipboard</translation>
+        <translation>Address copied to clipboard</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Mining address</source>
-        <translation type="unfinished"></translation>
+        <translation>Mining address</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/miningaccountdialog.ui" line="+73"/>
+        <source>My mining address</source>
+        <translation>My mining address</translation>
+    </message>
+    <message>
+        <location line="+31"/>
+        <source>Copy address to clipboard</source>
+        <translation>Copy address to clipboard</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Edit mining address</source>
+        <translation>Edit mining address</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Reset mining address</source>
+        <translation>Reset mining address</translation>
+    </message>
+    <message>
+        <location line="+38"/>
+        <source>My mining settings</source>
+        <translation>My mining settings</translation>
+    </message>
+    <message>
+        <location line="+28"/>
+        <source>Memory usage</source>
+        <translation>Memory usage</translation>
+    </message>
+    <message>
+        <location line="+17"/>
+        <source>Processor usage</source>
+        <translation>Processor usage</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>#</source>
+        <translation>#</translation>
+    </message>
+    <message>
+        <location line="+22"/>
+        <source>Automatically mine at startup</source>
+        <translation>Automatically mine at startup</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Keep application open when mining</source>
+        <translation>Keep application open when mining</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>My mining statistics</source>
+        <translation>My mining statistics</translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <source>Best reported speed</source>
+        <translation>Best reported speed</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Moving average</source>
+        <translation>Moving average</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Last reported speed</source>
+        <translation>Last reported speed</translation>
+    </message>
+    <message>
+        <location line="+165"/>
+        <source>Stop mining</source>
+        <translation>Stop mining</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Start mining</source>
+        <translation>Start mining</translation>
     </message>
 </context>
 <context>
@@ -1909,7 +1909,17 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-499"/>
+        <location filename="../../_Gulden/newaccountdialog.cpp" line="-78"/>
+        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <location line="+248"/>
+        <source>Mining</source>
+        <translation>Mining</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/newaccountdialog.ui" line="-499"/>
         <source>Account name</source>
         <translation>Account name</translation>
     </message>
@@ -1924,7 +1934,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Import account type</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/newaccountdialog.cpp" line="-81"/>
+        <location filename="../../_Gulden/newaccountdialog.cpp" line="-251"/>
         <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
         <translation>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</translation>
     </message>
@@ -1939,12 +1949,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
         <translation>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</translation>
     </message>
@@ -1969,12 +1974,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Witness</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Mining</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>Witness-only</source>
         <translation>Witness-only</translation>
     </message>
@@ -2794,7 +2794,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Debug window</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+310"/>
+        <source>Memory usage</source>
+        <translation>Memory usage</translation>
+    </message>
+    <message>
+        <location line="-255"/>
         <location line="+958"/>
         <source>User Agent</source>
         <translation>User Agent</translation>
@@ -2904,12 +2909,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Current number of transactions</translation>
     </message>
     <message>
-        <location line="+23"/>
-        <source>Memory usage</source>
-        <translation>Memory usage</translation>
-    </message>
-    <message>
-        <location line="+41"/>
+        <location line="+64"/>
         <source>Debug log file</source>
         <translation>Debug log file</translation>
     </message>
@@ -3208,7 +3208,18 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Enter label</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-55"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+156"/>
+        <source>Address copied to clipboard</source>
+        <translation>Address copied to clipboard</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-156"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+125"/>
+        <source>Copy address to clipboard</source>
+        <translation>Copy address to clipboard</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="-180"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
@@ -3218,17 +3229,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-169"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog.ui" line="-13"/>
         <source>address</source>
         <translation>address</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+156"/>
-        <source>Address copied to clipboard</source>
-        <translation>Address copied to clipboard</translation>
-    </message>
-    <message>
-        <location line="+5"/>
+        <location filename="../../_Gulden/receivecoinsdialog.cpp" line="+5"/>
         <source>Request copied to clipboard</source>
         <translation>Request copied to clipboard</translation>
     </message>
@@ -3267,14 +3273,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Close</translation>
     </message>
     <message>
-        <location line="-372"/>
-        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+62"/>
-        <source>Copy address to clipboard</source>
-        <translation>Copy address to clipboard</translation>
-    </message>
-    <message>
-        <location line="+404"/>
-        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+7"/>
+        <location line="+32"/>
+        <location filename="../../_Gulden/forms/receivecoinsdialog_backupwithbuypage.ui" line="+69"/>
         <source>Save QR as image</source>
         <translation>Save QR as image</translation>
     </message>
@@ -4737,19 +4737,19 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>ViewAddressDialog</name>
     <message>
-        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="+86"/>
-        <source>address</source>
-        <translation>address</translation>
-    </message>
-    <message>
         <location filename="../../_Gulden/viewaddressdialog.cpp" line="+122"/>
         <source>Address copied to clipboard</source>
         <translation>Address copied to clipboard</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="+13"/>
+        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="+99"/>
         <source>Copy address to clipboard</source>
         <translation>Copy address to clipboard</translation>
+    </message>
+    <message>
+        <location line="-13"/>
+        <source>address</source>
+        <translation>address</translation>
     </message>
     <message>
         <location filename="../../_Gulden/viewaddressdialog.cpp" line="-29"/>
@@ -4757,7 +4757,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Resulting URI too long, try to reduce the text for label / message.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="-31"/>
+        <location filename="../../_Gulden/forms/viewaddressdialog.ui" line="-18"/>
         <source>My witness address</source>
         <translation>My witness address</translation>
     </message>

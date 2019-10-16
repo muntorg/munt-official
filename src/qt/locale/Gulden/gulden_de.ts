@@ -1019,6 +1019,14 @@ Witness Gewicht: %5</translation>
         <translation>Label eingeben</translation>
     </message>
     <message>
+        <source>Address copied to clipboard</source>
+        <translation>Anforderung in die Zwischenablage kopiert</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Adresse in Zwischenablage kopieren</translation>
+    </message>
+    <message>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
@@ -1029,10 +1037,6 @@ Witness Gewicht: %5</translation>
     <message>
         <source>address</source>
         <translation>adresse</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Anforderung in die Zwischenablage kopiert</translation>
     </message>
     <message>
         <source>Request copied to clipboard</source>
@@ -1061,10 +1065,6 @@ Witness Gewicht: %5</translation>
     <message>
         <source>Close</source>
         <translation>Schließen</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Adresse in Zwischenablage kopieren</translation>
     </message>
     <message>
         <source>Save QR as image</source>
@@ -2714,6 +2714,10 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
         <translation>Debugfenster</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Speichernutzung</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>User-Agent</translation>
     </message>
@@ -2776,10 +2780,6 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     <message>
         <source>Current number of transactions</source>
         <translation>Aktuelle Anzahl der Transaktionen</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Speichernutzung</translation>
     </message>
     <message>
         <source>Debug log file</source>
@@ -3641,6 +3641,33 @@ In zukünftigen Versionen von Gulden wird es möglich sein, dieses Konto wieder 
     </message>
 </context>
 <context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse in die Zwischenablage kopiert</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopiere Adresse in Zwischenablage</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>adresse</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resultierende URI ist zu lang, bitte den Text für Bezeichnung/Nachricht kürzen.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Meine Witnessadresse</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Für dieses Konto wurde keine gültige Witnessadresse generiert</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -3913,33 +3940,6 @@ In zukünftigen Versionen von Gulden wird es möglich sein, dieses Konto wieder 
     <message>
         <source>Yes</source>
         <translation>Ja</translation>
-    </message>
-</context>
-<context>
-    <name>ViewAddressDialog</name>
-    <message>
-        <source>address</source>
-        <translation>adresse</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adresse in die Zwischenablage kopiert</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Kopiere Adresse in Zwischenablage</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resultierende URI ist zu lang, bitte den Text für Bezeichnung/Nachricht kürzen.</translation>
-    </message>
-    <message>
-        <source>My witness address</source>
-        <translation>Meine Witnessadresse</translation>
-    </message>
-    <message>
-        <source>No valid witness address has been generated for this account</source>
-        <translation>Für dieses Konto wurde keine gültige Witnessadresse generiert</translation>
     </message>
 </context>
 <context>

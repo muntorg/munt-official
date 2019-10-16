@@ -876,6 +876,10 @@
         <translation>디버그 창</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>메모리 사용량</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>유저 에이전트</translation>
     </message>
@@ -938,10 +942,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>현재 트랜잭션 수</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>메모리 사용량</translation>
     </message>
     <message>
         <source>Debug log file</source>

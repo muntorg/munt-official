@@ -1313,6 +1313,10 @@
         <translation>除錯視窗</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>記憶體使用量</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>使用者代理</translation>
     </message>
@@ -1375,10 +1379,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>目前交易數目</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>記憶體使用量</translation>
     </message>
     <message>
         <source>Debug log file</source>

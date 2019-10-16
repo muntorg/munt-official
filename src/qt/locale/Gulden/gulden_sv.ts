@@ -765,6 +765,10 @@ Var vänlig och försök igen.</translation>
         <translation>Debug fönster</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Minnesåtgång</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Användaragent</translation>
     </message>
@@ -827,10 +831,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Current number of transactions</source>
         <translation>Nuvarande antal transaktioner</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Minnesåtgång</translation>
     </message>
     <message>
         <source>Debug log file</source>

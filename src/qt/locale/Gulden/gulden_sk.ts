@@ -471,6 +471,10 @@
         <translation>Okno pre ladenie</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Využitie pamäte</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Aplikácia</translation>
     </message>
@@ -533,10 +537,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Aktuálny počet tranzakcií</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Využitie pamäte</translation>
     </message>
     <message>
         <source>Debug log file</source>

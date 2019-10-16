@@ -611,6 +611,10 @@
         <translation>پنجرهٔ اشکالزدایی</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>مصرف حافظه</translation>
+    </message>
+    <message>
         <source>N/A</source>
         <translation>ناموجود</translation>
     </message>
@@ -657,10 +661,6 @@
     <message>
         <source>Memory Pool</source>
         <translation>استخر حافظه</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>مصرف حافظه</translation>
     </message>
     <message>
         <source>Debug log file</source>

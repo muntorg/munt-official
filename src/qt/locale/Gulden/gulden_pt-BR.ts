@@ -1342,6 +1342,10 @@
         <translation>Janela de depuração</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Uso de memória</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>User Agent</translation>
     </message>
@@ -1404,10 +1408,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Número atual de transações</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Uso de memória</translation>
     </message>
     <message>
         <source>Debug log file</source>

@@ -1451,6 +1451,10 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>Janela de depuração</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Utilização de memória</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Agente Usuário</translation>
     </message>
@@ -1509,10 +1513,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>Current number of transactions</source>
         <translation>Número actual de transacções</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Utilização de memória</translation>
     </message>
     <message>
         <source>Debug log file</source>
