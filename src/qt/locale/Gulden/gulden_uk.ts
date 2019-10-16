@@ -448,6 +448,10 @@
         <translation>Вікно зневадження</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Використання пам&apos;яті</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Клієнт користувача</translation>
     </message>
@@ -506,10 +510,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Поточне число транзакцій</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Використання пам&apos;яті</translation>
     </message>
     <message>
         <source>Debug log file</source>

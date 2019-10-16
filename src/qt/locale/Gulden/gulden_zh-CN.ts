@@ -1307,6 +1307,10 @@
         <translation>调试窗口</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>内存使用</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>用户代理</translation>
     </message>
@@ -1369,10 +1373,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>当前交易数量</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>内存使用</translation>
     </message>
     <message>
         <source>Debug log file</source>

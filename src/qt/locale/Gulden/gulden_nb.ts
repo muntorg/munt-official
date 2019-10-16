@@ -448,6 +448,10 @@
         <translation>Feilsøkingsvindu</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Minnebruk</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Brukeragent</translation>
     </message>
@@ -506,10 +510,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Nåværende antall transaksjoner</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Minnebruk</translation>
     </message>
     <message>
         <source>Debug log file</source>

@@ -419,22 +419,11 @@
     </message>
 </context>
 <context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Total:</source>
-        <translation>Kokku:</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Ootel:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Hiljutised transaktsioonid</translation>
-    </message>
-</context>
-<context>
     <name>RPCConsole</name>
+    <message>
+        <source>Memory usage</source>
+        <translation>Mälu kasutus</translation>
+    </message>
     <message>
         <source>&amp;Information</source>
         <translation>&amp;Informatsioon</translation>
@@ -458,10 +447,6 @@
     <message>
         <source>Block chain</source>
         <translation>Blokiahel</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Mälu kasutus</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -510,6 +495,21 @@
     <message>
         <source>No</source>
         <translation>Ei</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Total:</source>
+        <translation>Kokku:</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Ootel:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Hiljutised transaktsioonid</translation>
     </message>
 </context>
 <context>

@@ -1343,6 +1343,10 @@
         <translation>Ladicí okno</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Obsazenost paměti</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Typ klienta</translation>
     </message>
@@ -1405,10 +1409,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Aktuální množství transakcí</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Obsazenost paměti</translation>
     </message>
     <message>
         <source>Debug log file</source>

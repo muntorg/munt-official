@@ -269,10 +269,20 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
     }
 
 
-    // Exception 3 - Difficulty should never go below (human view) the starting difficulty, so if it has we force it back to the limit.
-    bnComp.SetCompact(nProofOfWorkLimit);
-    if (bnNew > bnComp)
-        bnNew.SetCompact(nProofOfWorkLimit);
+    // Exception 3 - Difficulty should never go below (human view) the starting difficulty, so if it has we force it back to the limit.    
+    if (block->nTime > 1571320800)
+    {
+        const unsigned int newProofOfWorkLimit = UintToArith256(uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")).GetCompact();
+        bnComp.SetCompact(newProofOfWorkLimit);
+        if (bnNew > bnComp)
+            bnNew.SetCompact(newProofOfWorkLimit);
+    }
+    else
+    {
+        bnComp.SetCompact(nProofOfWorkLimit);
+        if (bnNew > bnComp)
+            bnNew.SetCompact(nProofOfWorkLimit);
+    }
 
     if (debugLogging)
     {

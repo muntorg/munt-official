@@ -5,10 +5,18 @@ UI - Option to hide status bar when synchronized (default enabled). Disable to a
 RPC - Implement new 'importlinkedaccount' command.
 RPC - Add an optional purge option to 'deleteseed' command.
 RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fields to 'getblockchaininfo' results
+
+
+
+
+2.1.0.14
+
+CORE - Reduce mainnet proof of work limit to be lower as SIGMA works at a much lower difficulty, and is causing blocks to take very long to solve.
+
+
+
+
 2.1.0.12
-
-
-
 
 UI - Introduce new basic user interface for mining
 UI - Fix a bug on windows where closing the debug dialog with main app hidden could cause the entire app to close

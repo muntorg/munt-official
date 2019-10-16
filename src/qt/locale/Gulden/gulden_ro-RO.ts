@@ -432,6 +432,10 @@
         <translation>Fereastra de depanare</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Memorie folosită</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Agent utilizator</translation>
     </message>
@@ -486,10 +490,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Numărul curent de tranzacţii</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Memorie folosită</translation>
     </message>
     <message>
         <source>Debug log file</source>

@@ -795,6 +795,10 @@
         <translation>Debugimise aken</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Mälu kasutus</translation>
+    </message>
+    <message>
         <source>&amp;Information</source>
         <translation>&amp;Informatsioon</translation>
     </message>
@@ -837,10 +841,6 @@
     <message>
         <source>Last block time</source>
         <translation>Viimane ploki aeg</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Mälu kasutus</translation>
     </message>
     <message>
         <source>Debug log file</source>

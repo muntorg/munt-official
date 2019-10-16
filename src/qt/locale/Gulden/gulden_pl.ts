@@ -1021,6 +1021,14 @@ Witness waga: %5</translation>
         <translation>Wpisz etykietę</translation>
     </message>
     <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres skopiowany do schowka</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Skopiuj adres do schowka</translation>
+    </message>
+    <message>
         <source>Yes</source>
         <translation>Tak</translation>
     </message>
@@ -1031,10 +1039,6 @@ Witness waga: %5</translation>
     <message>
         <source>address</source>
         <translation>Adres</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adres skopiowany do schowka</translation>
     </message>
     <message>
         <source>Request copied to clipboard</source>
@@ -1063,10 +1067,6 @@ Witness waga: %5</translation>
     <message>
         <source>Close</source>
         <translation>Zamknij</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Skopiuj adres do schowka</translation>
     </message>
     <message>
         <source>Save QR as image</source>
@@ -2728,6 +2728,10 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Okno debugowania</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Zużycie pamięci</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Aplikacja kliencka</translation>
     </message>
@@ -2790,10 +2794,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Current number of transactions</source>
         <translation>Obecna liczba transakcji</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Zużycie pamięci</translation>
     </message>
     <message>
         <source>Debug log file</source>
@@ -3657,6 +3657,33 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     </message>
 </context>
 <context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres skopiowany do schowka</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Skopiuj adres do schowka</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Wynikowy URI jest zbyt długi, spróbuj zmniejszyć tekst etykiety / wiadomości.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Mój adres witness</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Dla tego konta nie został wygenerowany prawidłowy adres witness</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -3929,33 +3956,6 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Yes</source>
         <translation>Tak</translation>
-    </message>
-</context>
-<context>
-    <name>ViewAddressDialog</name>
-    <message>
-        <source>address</source>
-        <translation>Adres</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adres skopiowany do schowka</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Skopiuj adres do schowka</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Wynikowy URI jest zbyt długi, spróbuj zmniejszyć tekst etykiety / wiadomości.</translation>
-    </message>
-    <message>
-        <source>My witness address</source>
-        <translation>Mój adres witness</translation>
-    </message>
-    <message>
-        <source>No valid witness address has been generated for this account</source>
-        <translation>Dla tego konta nie został wygenerowany prawidłowy adres witness</translation>
     </message>
 </context>
 <context>

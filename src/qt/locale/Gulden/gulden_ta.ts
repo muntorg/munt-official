@@ -344,52 +344,11 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>URI-ஐ திற</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>படிவம்</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>மீதி</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>மொத்தம்:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>முதிராத:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>கிடைக்ககூடிய:</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>நிலுவையில்:</translation>
-    </message>
-</context>
-<context>
-    <name>PeerTableModel</name>
-    <message>
-        <source>User Agent</source>
-        <translation>பயனர் முகவர்</translation>
-    </message>
-</context>
-<context>
     <name>RPCConsole</name>
+    <message>
+        <source>Memory usage</source>
+        <translation>நினைவக பயன்பாடு</translation>
+    </message>
     <message>
         <source>User Agent</source>
         <translation>பயனர் முகவர்</translation>
@@ -417,10 +376,6 @@
     <message>
         <source>Memory Pool</source>
         <translation>நினைவக குளம்</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>நினைவக பயன்பாடு</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -513,6 +468,51 @@
     <message>
         <source>Unknown</source>
         <translation>அறியப்படாத</translation>
+    </message>
+</context>
+<context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation>URI-ஐ திற</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>படிவம்</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>மீதி</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>மொத்தம்:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>முதிராத:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>கிடைக்ககூடிய:</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>நிலுவையில்:</translation>
+    </message>
+</context>
+<context>
+    <name>PeerTableModel</name>
+    <message>
+        <source>User Agent</source>
+        <translation>பயனர் முகவர்</translation>
     </message>
 </context>
 <context>
