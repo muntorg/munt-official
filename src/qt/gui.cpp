@@ -688,6 +688,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
                 LOCK2(cs_main, pactiveWallet->cs_wallet);
                 for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
                 {
+                    (unused) accountUUID;
                     if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
                     {
                         miningAccount = account;
