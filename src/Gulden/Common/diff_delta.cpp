@@ -319,10 +319,20 @@ unsigned int GetNextWorkRequired_DELTA (const INDEX_TYPE pindexLast, const BLOCK
     }
 
 
-    // Exception 3 - Difficulty should never go below (human view) the starting difficulty, so if it has we force it back to the limit.
-    SET_COMPACT(bnComp, nProofOfWorkLimit);
-    if (BIGINT_GREATER_THAN(bnNew, bnComp))
-        SET_COMPACT(bnNew, nProofOfWorkLimit);
+    // Exception 3 - Difficulty should never go below (human view) the starting difficulty, so if it has we force it back to the limit.    
+    if (BLOCK_TIME(block) > 1571320800)
+    {
+        const unsigned int newProofOfWorkLimit = UintToArith256(uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")).GetCompact();
+        SET_COMPACT(bnComp, newProofOfWorkLimit);
+        if (BIGINT_GREATER_THAN(bnNew, bnComp))
+            SET_COMPACT(bnNew, newProofOfWorkLimit);
+    }
+    else
+    {
+        SET_COMPACT(bnComp, nProofOfWorkLimit);
+        if (BIGINT_GREATER_THAN(bnNew, bnComp))
+            SET_COMPACT(bnNew, nProofOfWorkLimit);
+    }
 
 
     #ifndef BUILD_IOS

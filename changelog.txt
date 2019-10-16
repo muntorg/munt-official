@@ -1,3 +1,10 @@
+2.1.0.14
+
+CORE - Reduce mainnet proof of work limit to be lower as SIGMA works at a much lower difficulty, and is causing blocks to take very long to solve.
+
+
+
+
 2.1.0.12
 
 UI - Introduce new basic user interface for mining
