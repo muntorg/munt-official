@@ -3,6 +3,9 @@
 UI - Introduce new basic user interface for mining
 UI - Fix a bug on windows where closing the debug dialog with main app hidden could cause the entire app to close
 CORE - Introduce new 'mining' account type
+RPC - New command 'createminingaccount'
+RPC - New command 'setminingrewardaddress'
+RPC - Modify 'setgenerate' behaviour to work with mining accounts when present, a regular account can still be used by explicitely passing an account name when calling 'setgenerate'
 
 
 

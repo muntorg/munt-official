@@ -281,6 +281,13 @@ static uint64_t GetMemLimitInBytesFromFormattedStringSpecifier(std::string forma
 
 static UniValue setgenerate(const JSONRPCRequest& request)
 {
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 4)
         throw std::runtime_error(
             "setgenerate generate ( gen_proc_limit )\n"
@@ -307,37 +314,17 @@ static UniValue setgenerate(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Use the generate method instead of setgenerate on this network");
 
     #ifdef ENABLE_WALLET
-    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
     if (!pwallet)
     {
         throw std::runtime_error("Cannot use command without an active wallet");
     }
-
+    
     bool fGenerate = true;
     if (request.params.size() > 0)
     {
         fGenerate = request.params[0].get_bool();
     }
-
-    CAccount* forAccount = nullptr;
-    if (request.params.size() > 3)
-    {
-        forAccount = AccountFromValue(pactiveWallet, request.params[3], false);
-    }
-    else
-    {
-        if (!pactiveWallet->activeAccount)
-        {
-            throw std::runtime_error("No active account selected, first select an active account.");
-        }
-        forAccount = pactiveWallet->activeAccount;
-    }
-
-    if (fGenerate && forAccount->IsPoW2Witness())
-    {
-        throw std::runtime_error("Witness account selected, first select a regular account as the active account or specify a regular account.");
-    }
-
+    
     int nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
     if (request.params.size() > 1)
     {
@@ -346,6 +333,43 @@ static UniValue setgenerate(const JSONRPCRequest& request)
         {
             fGenerate = false;
         }
+    }
+    
+    if (!fGenerate)
+    {
+        PoWStopGeneration();
+        return "Block generation disabled.";
+    }
+
+    
+    CAccount* forAccount = nullptr;
+    if (request.params.size() > 3 && request.params[3].get_str().length()>0)
+    {
+        forAccount = AccountFromValue(pactiveWallet, request.params[3], false);
+        if (forAccount && forAccount->IsPoW2Witness())
+        {
+            throw std::runtime_error("Witness account selected, first select a regular account as the active account or specify a regular account.");
+        }
+    }
+    
+    std::string overrideAccountAddress;
+    if (!forAccount)
+    {
+        for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+        {
+            (unused) accountUUID;
+            if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+            {
+                forAccount = account;
+                break;
+            }
+        }
+        CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(overrideAccountAddress);
+    }
+    
+    if (!forAccount)
+    {
+        throw std::runtime_error("No mining account present in wallet. Create a mining account using `createminingaccount` or pass an explicit target account to yout `setgenerate` call.");
     }
 
     // Try to avoid swap by never using more than sysmem-1gb or on machines with only 1gb of memory sysmem-512mb.
@@ -380,11 +404,10 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
     SoftSetArg("-genmemlimit", i64tostr(nGenMemoryLimitBytes/1024));
-    PoWGenerateGulden(fGenerate, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount);
-
-    if (!fGenerate)
+    PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+    if (overrideAccountAddress.length() > 0)
     {
-        return "Block generation disabled.";
+        return strprintf("Block generation enabled into account [%s] using target address [%s], thread limit: [%d threads], memory: [%d Mb].", pwallet->mapAccountLabels[forAccount->getUUID()], overrideAccountAddress ,nGenProcLimit, nGenMemoryLimitBytes/1024/1024);
     }
     else
     {
