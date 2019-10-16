@@ -33,6 +33,7 @@ class CWallet;
 class CAccount;
 
 extern double dBestHashesPerSec;
+extern double dRollingHashesPerSec;
 extern double dHashesPerSec;
 extern int64_t nHPSTimerStart;
 extern std::atomic<int64_t> nHashThrottle;
@@ -155,8 +156,15 @@ struct update_for_parent_inclusion
 //! This is no longer necessarily the tip, as the tip could be unwitnessed.
 CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainparams, std::string& strError, CBlockIndex*& pWitnessBlockToEmbed);
 
-/** Run the miner threads */
-void PoWMineGulden(bool fGenerate, int64_t nThreads, int64_t nMemoryKb, const CChainParams& chainparams, CAccount* forAccount = nullptr);
+inline std::string fixedGenerateAddress="";
+//! Run the block generation threads
+void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemoryKb, const CChainParams& chainparams, CAccount* forAccount = nullptr, std::string generateAddress="");
+
+//! Stop the block generation threads if they are currently active
+void PoWStopGeneration();
+
+//! Determine whether block generation is currently active or not.
+bool PoWGenerationIsActive();
 
 /** Generate a new block, without valid proof-of-work */
 class BlockAssembler

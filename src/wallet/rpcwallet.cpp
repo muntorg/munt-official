@@ -393,7 +393,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
 
     UniValue ret(UniValue::VARR);
     // Enumerate witness addresses first
-    if (fromAccount->IsPoW2Witness() && !fromAccount->IsFixedKeyPool())
+    if (fromAccount->IsPoW2Witness() && !fromAccount->IsWitnessOnly())
     {
         for (const auto& externalKey : setAddressExternal)
         {

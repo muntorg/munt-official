@@ -96,11 +96,16 @@ bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned
     if (!fKeySet)
         return false;
 
+    //NB! Some of our calling code (wallet password change) relies on us clearing the cipher text for it (i.e. passes in a non cleared variable) so don't remove this.
+    vchCiphertext.clear();
+
     CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enc;
     enc.SetKeyWithIV(vchKey.data(), vchKey.size(), vchIV.data());
     try
     {
         CryptoPP::ArraySource s(&vchPlaintext[0], vchPlaintext.size(), true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(vchCiphertext)));
+        if (vchCiphertext.size() < vchPlaintext.size())
+            return false;
     }
     catch(...)
     {
@@ -124,7 +129,11 @@ bool CCrypter::Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingM
     try
     {
         auto sink = new CryptoPP::ArraySink(&vchPlaintext[0], vchPlaintext.size());
-        CryptoPP::VectorSource s(vchCiphertext, true, new CryptoPP::StreamTransformationFilter(dec, sink));
+        {
+            CryptoPP::VectorSource s(vchCiphertext, true, new CryptoPP::StreamTransformationFilter(dec, sink));
+        }
+        if (sink->TotalPutLength() == 0)
+            return false;
         // Trim plaintext to original length
         vchPlaintext.resize(sink->TotalPutLength());
     }

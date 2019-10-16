@@ -169,7 +169,7 @@ extern void ServerInterrupt(boost::thread_group& threadGroup);
 void CoreInterrupt(boost::thread_group& threadGroup)
 {
     LogPrintf("Core interrupt: commence core interrupt\n");
-    PoWMineGulden(false, 0, 0, Params());
+    PoWGenerateGulden(false, 0, 0, Params());
     if (g_connman)
         g_connman->Interrupt();
     ServerInterrupt(threadGroup);
@@ -1641,7 +1641,61 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
 
     // Generate coins in the background
-    PoWMineGulden(GetBoolArg("-gen", DEFAULT_GENERATE), GetArg("-genproclimit", DEFAULT_GENERATE_THREADS), GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb*1024), chainparams);
+    if (GetBoolArg("-gen", DEFAULT_GENERATE))
+    {
+        uint64_t nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
+        uint64_t nGenMemoryLimitKilobytes = GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb*1024);
+        
+        //fixme: (SIGMA) (DEDUP) - Move this all to a helper function that can share it with RPC (and -gen) etc.
+        #ifdef ENABLE_WALLET
+        if (pactiveWallet)
+        {
+            CAccount* miningAccount = nullptr;
+
+            LOCK2(cs_main, pactiveWallet->cs_wallet);
+            for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+            {
+                (unused) accountUUID;
+                if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+                {
+                    miningAccount = account;
+                    break;
+                }
+            }
+
+            if (miningAccount)
+            {
+                std::string readOverrideAddress;
+                CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(readOverrideAddress);
+                if (readOverrideAddress.size() == 0)
+                {
+                    CReserveKeyOrScript* miningAddress = new CReserveKeyOrScript(pactiveWallet, miningAccount, KEYCHAIN_EXTERNAL);
+                    CPubKey pubKey;
+                    if (miningAddress->GetReservedKey(pubKey))
+                    {
+                        CKeyID keyID = pubKey.GetID();
+                        readOverrideAddress = CGuldenAddress(keyID).ToString();
+                    }
+                }
+                if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
+                {
+                    LogPrintf("Mine at startup using -gen into mining account\n");
+                    PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams, miningAccount, readOverrideAddress);
+                }
+            }
+            else
+            {
+                LogPrintf("Mine at startup using -gen into regular account\n");
+                PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
+            }
+        }
+        else
+        #endif
+        {
+            LogPrintf("Mine at startup using -gen into regular account\n");
+            PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
+        }
+    }
     // ********************************************************* Step 12: finished
 
     SetRPCWarmupFinished();

@@ -5,6 +5,17 @@ UI - Option to hide status bar when synchronized (default enabled). Disable to a
 RPC - Implement new 'importlinkedaccount' command.
 RPC - Add an optional purge option to 'deleteseed' command.
 RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fields to 'getblockchaininfo' results
+2.1.0.12
+
+
+
+
+UI - Introduce new basic user interface for mining
+UI - Fix a bug on windows where closing the debug dialog with main app hidden could cause the entire app to close
+CORE - Introduce new 'mining' account type
+RPC - New command 'createminingaccount'
+RPC - New command 'setminingrewardaddress'
+RPC - Modify 'setgenerate' behaviour to work with mining accounts when present, a regular account can still be used by explicitely passing an account name when calling 'setgenerate'
 
 
 
@@ -57,7 +68,6 @@ MISC - Update to newer version of Qt which should improve various minor UI aspec
 
 2.1.0.4
 
-UI - Fix a small display update issue when switching between witness and normal accounts in some instances.
 MISC - Minor maintenance release, update checkpoints and other minor changes
 CORE - Introduce some code to automatically detect and clear the failed verification status of blocks in certain situations where it is safe to do so. This will make it easier for users who fail to update before a fork to update after the fork without having to issue any manual commands.
 CORE - Add some additional logging of error conditions to the witness loop.

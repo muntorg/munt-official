@@ -88,7 +88,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="hLayout1" stretch="0,0,0,0,0,1">
+        <layout class="QHBoxLayout" name="hLayout1" stretch="0,0,0,0,0,0,0,1">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -199,6 +199,56 @@
           </spacer>
          </item>
          <item>
+          <widget class="ClickableLabel" name="labelMiningAccount">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>1</width>
+             <height>1</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>400</width>
+             <height>400</height>
+            </size>
+           </property>
+           <property name="text">
+            <string notr="true">Mining</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="indent">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="accButtonHSpacer3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="ClickableLabel" name="labelMobileAccount">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -294,7 +344,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="accButtonHSpacer3">
+          <spacer name="accButtonHSpacer4">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>

@@ -29,6 +29,7 @@ enum NewAccountType
 {
     Transactional,
     FixedDeposit,
+    Mining,
     WitnessOnly,
     ImportKey
 };
@@ -66,17 +67,21 @@ private:
     QString toolTipTransactionalAccount;
     QString toolTipMobileAccount;
     QString toolTipWitnessAccount;
+    QString toolTipMiningAccount;
     QString toolTipImportWitnessAccount;
     QString toolTipImportPrivKey;
     int verticalCachedDisplayType=0;
     int horizontalCachedDisplayType=0;
 
+    // Helper function called by addAccount/addWitnessAccount etc.
+    void signalAddAccount();
 private Q_SLOTS:
     void connectToMobile();
     void cancelMobile();
     void valueChanged();
     void addAccount();
     void addWitnessAccount();
+    void addMiningAccount();
     void importWitnessOnly();
     void importPrivateKey();
     void showSyncQr();

@@ -58,10 +58,19 @@ static UniValue gethashps(const JSONRPCRequest& request)
     double dHashPerSecLog = dHashesPerSec;
     std::string sHashPerSecLogLabel = " h";
     selectLargesHashUnit(dHashPerSecLog, sHashPerSecLogLabel);
+    double dRollingHashPerSecLog = dRollingHashesPerSec;
+    std::string sRollingHashPerSecLogLabel = " h";
+    selectLargesHashUnit(dRollingHashPerSecLog, sRollingHashPerSecLogLabel);
     double dBestHashPerSecLog = dBestHashesPerSec;
     std::string sBestHashPerSecLogLabel = " h";
     selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
+    
+    UniValue rec(UniValue::VOBJ);
+    rec.push_back(Pair("last_reported", strprintf("%lf %s", dHashPerSecLog, sHashPerSecLogLabel)));
+    rec.push_back(Pair("rolling_average", strprintf("%lf %s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel)));
+    rec.push_back(Pair("best_reported", strprintf("%lf %s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
 
+    return rec;
     return strprintf("%lf %s/s (best %lf %s/s)", dHashPerSecLog, sHashPerSecLogLabel, dBestHashPerSecLog, sBestHashPerSecLogLabel);
 }
 
@@ -820,13 +829,13 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
 
     bool forcePurge = false;
-    if (account->IsPoW2Witness() && account->IsFixedKeyPool())
+    if (account->IsWitnessOnly())
         forcePurge = true;
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
         boost::uuids::uuid accountUUID = account->getUUID();
         CAmount balance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
-        if (account->IsPoW2Witness() && account->IsFixedKeyPool())
+        if (account->IsWitnessOnly())
         {
             balance = pwallet->GetBalance(account, true, false, true);
         }
@@ -859,6 +868,10 @@ static UniValue createaccounthelper(CWallet* pwallet, std::string accountName, s
     else if (accountType == "Witness")
     {
         account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::PoW2Witness, bMakeActive);
+    }
+    else if (accountType == "Mining")
+    {
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::MiningAccount, bMakeActive);
     }
     else if (accountType == "Legacy")
     {
@@ -941,6 +954,80 @@ static UniValue createwitnessaccount(const JSONRPCRequest& request)
         throw std::runtime_error("Cannot create witness accounts before phase 2 activates.");
 
     return createaccounthelper(pwallet, request.params[0].get_str(), "Witness", false);
+}
+
+static UniValue createminingaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "createminingaccount \"name\"\n"
+            "Create an account, the currently active seed will be used to create the account.\n"
+            "\nArguments:\n"
+            "1. \"name\"       (string) Specify the label for the account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("createminingaccount \"My 3y savings\"", "")
+            + HelpExampleRpc("createminingaccount \"My 3y savings\"", ""));
+
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+    
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+        {
+            throw std::runtime_error("Wallet already contains a mining account");
+        }
+    }
+
+    return createaccounthelper(pwallet, request.params[0].get_str(), "Mining", false);
+}
+
+
+static UniValue setminingrewardaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1 )
+        throw std::runtime_error(
+            "setminingrewardaddress \"reward_address\"\n"
+            "\nSet an output address into which mining rewards from a mining account will be paid.\n"
+            "\nWhen set `reward_address` overrides the default address that would otherwise be assigned by the wallet.\n"
+            "\nPass \"\" as the reward_address to restore default behaviour of using a wallet allocated address.\n"
+            "\nIt is necessary to manually call `setgenerate` again before changes made by this command will take effect.\n"
+            "1. \"reward_address\"        (required) The unique UUID or label for the account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("setminingrewardaddress \"G6sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\"", "")
+            + HelpExampleRpc("setminingrewardaddress \"G6sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\"", ""));
+
+    std::string strWriteOverrideAddress = request.params[0].get_str();
+    if (!strWriteOverrideAddress.empty())
+    {
+        CGuldenAddress address(strWriteOverrideAddress);
+        if (!address.IsValid())
+        {
+            throw std::runtime_error("Invalid mining address.");
+        }
+    }
+    return CWalletDB(*pactiveWallet->dbw).WriteMiningAddressString(strWriteOverrideAddress);
 }
 
 static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
@@ -3272,6 +3359,8 @@ static const CRPCCommand commands[] =
   //  ---------------------      ------------------------           -----------------------          ----------
     { "mining",                  "gethashps",                       &gethashps,                      true,    {} },
     { "mining",                  "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
+    { "mining",                  "createminingaccount",             &createminingaccount,            true,    {"name"} },
+    { "mining",                  "setminingrewardaddress",          &setminingrewardaddress,         true,    {"reward_address"} },
 
     //fixme: (2.1) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.

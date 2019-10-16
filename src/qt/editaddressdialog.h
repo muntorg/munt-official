@@ -27,11 +27,12 @@ public:
     enum Mode {
         NewReceivingAddress,
         NewSendingAddress,
+        NewMiningAddress,
         EditReceivingAddress,
         EditSendingAddress
     };
 
-    explicit EditAddressDialog(Mode mode, QWidget *parent);
+    explicit EditAddressDialog(Mode mode, QWidget *parent, QString labelHint="");
     ~EditAddressDialog();
 
     void setModel(AddressTableModel *model);

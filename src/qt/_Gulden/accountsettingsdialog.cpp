@@ -82,7 +82,7 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
         ui->lineEditChangeAccountName->setVisible(true);
     }
 
-    if (account->m_Type == AccountType::Mobi)
+    if (account->m_Type == AccountType::Mobi || account->m_Type == AccountType::MiningAccount)
     {
         ui->frameSyncWithMobile->setVisible(true);
 
@@ -127,7 +127,7 @@ void AccountSettingsDialog::showSyncQr()
     if (ctx.isValid())
     {
         QString qrString = "";
-        if (activeAccount->IsMobi())
+        if (activeAccount->IsMobi() || activeAccount->m_Type == AccountType::MiningAccount)
         {
             CReserveKeyOrScript reservekey(pactiveWallet, activeAccount, KEYCHAIN_CHANGE);
             CPubKey vchPubKey;

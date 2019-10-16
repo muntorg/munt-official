@@ -207,6 +207,16 @@ bool CWalletDB::ReadLastSPVBlockProcessed(CBlockLocator& locator, int64_t& time)
     return false;
 }
 
+bool CWalletDB::WriteMiningAddressString(const std::string& miningAddress)
+{
+    return WriteIC(std::string("mining_address_string"), miningAddress);
+}
+
+bool CWalletDB::ReadMiningAddressString(std::string& miningAddress)
+{
+    return batch.Read(std::string("mining_address_string"), miningAddress);
+}
+
 bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)
 {
     return WriteIC(std::string("orderposnext"), nOrderPosNext);
@@ -235,7 +245,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool, bool forceErase)
     {
         for (auto iter : pwallet->mapAccounts)
         {
-            if (iter.second->IsFixedKeyPool() && (iter.second->setKeyPoolExternal.find(nPool) != iter.second->setKeyPoolExternal.end()))
+            if ((iter.second->IsFixedKeyPool() || iter.second->IsMinimalKeyPool()) && (iter.second->setKeyPoolExternal.find(nPool) != iter.second->setKeyPoolExternal.end()))
             {
                 return true;
             }
@@ -262,7 +272,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id, bool forceErase)
         }
     }
 
-    //fixme: (FUT) (ACCOUNTS) (CBSU)
+    //fixme: (Post-2.1) (CBSU)
     //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
     for (auto iter : pwallet->mapAccounts)
     {
@@ -604,7 +614,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 {
                     if ( pwallet->mapAccounts.count(getUUIDFromString(forAccount)) == 0 )
                     {
-                        strErr = "Wallet contains key for non existent account: " + forAccount;
+                        strErr = "Wallet contains key for non existent account";
                         return false;
                     }
                     CAccount* targetAccount = pwallet->mapAccounts[getUUIDFromString(forAccount)];
@@ -713,7 +723,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             {
                 if ( pwallet->mapAccounts.count(getUUIDFromString(accountUUID)) == 0 )
                 {
-                    strErr = "Wallet pool contains key for non existent account";
+                    strErr = "Wallet contains key for non existent account";
                     return false;
                 }
                 forAccount = pwallet->mapAccounts[getUUIDFromString(accountUUID)];
@@ -1077,7 +1087,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
     {
         if (pwallet->mapSeeds.count(getUUIDFromString(primarySeedString)) == 0)
         {
-            //fixme: (FUT) (ACCOUNTS) Treat this more severely?
+            //fixme: (2.1) Treat this more severely?
             LogPrintf("Error - missing primary seed for UUID [%s]\n", primarySeedString);
             fNoncriticalErrors = true;
         }

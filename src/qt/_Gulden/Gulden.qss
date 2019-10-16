@@ -541,7 +541,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
 }
 
 /* The special 'focus' buttons*/
-#accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #withdrawEarningsButton, #fundWitnessButton, #renewWitnessButton
+#miningStartminingButton, #miningStopminingButton, #accountBuyGuldenButton, #doneButton, #doneButton2, #accountBuyButton, #generateRequestButton, #saveButton, #buttonShowBackupPhrase, #buttonSave, #buttonRecoverWallet, #buttonNewWallet, #buttonRestoreWallet, #okButton, #sendButton, #emptyWitnessButton, #withdrawEarningsButton, #fundWitnessButton, #renewWitnessButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -554,7 +554,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     padding-right: 20px;
     margin-bottom: 10px;
 }
-#accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #withdrawEarningsButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed, #maxButton[pressed=true]
+#miningStartminingButton:pressed, #miningStopminingButton:pressed, #accountBuyGuldenButton:pressed, #doneButton:pressed, #doneButton2:pressed, #accountBuyButton:pressed, #generateRequestButton:pressed, #saveButton:pressed, #buttonShowBackupPhrase:pressed, #buttonSave:pressed, #buttonRecoverWallet:pressed, #buttonNewWallet:pressed, #buttonRestoreWallet:pressed, #okButton:pressed, #sendButton:pressed, #emptyWitnessButton:pressed, #withdrawEarningsButton:pressed, #fundWitnessButton:pressed, #renewWitnessButton:pressed, #maxButton[pressed=true]
 {
     background-color: ACCENT_COLOR_2;
 }
@@ -1087,7 +1087,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     padding-top: 10px;
 }
 
-#viewAddressLabel, #accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading
+#viewAddressLabel, #miningAddressLabel, #miningSettingsLabel, #miningStatisticsLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading
 {
     margin: 0px;
     padding: 0px;
@@ -1102,9 +1102,14 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin-top: 6px;
 }
 
-#viewAddressLabel
+#viewAddressLabel, #miningAddressLabel, #miningSettingsLabel, #miningStatisticsLabel
 {
     margin-top: 16px;
+}
+
+#miningSettingsLabel, #miningStatisticsLabel
+{
+    margin-bottom: 6px;
 }
 
 #labelInactiveWitnessAccountInfo, #labelPendingWitnessAccountInfo, #labelUsedAccountInfo
@@ -1140,7 +1145,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin-top: 20px;
 }
 
-#accountAddress, #addressQRContents, #accountCopyToClipboardButton, #requestCopyToClipboardButton, #labelPaymentRequest
+#accountAddress, #addressQRContents, #accountCopyToClipboardButton, #requestCopyToClipboardButton, #labelPaymentRequest, #miningCopyToClipboardButton, #miningEditAddressButton, #miningResetAddressButton
 {
     margin: 0px;
     padding: 0px;
@@ -1150,7 +1155,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     color: black;
 }
 
-#accountCopyToClipboardButton, #requestCopyToClipboardButton
+#accountCopyToClipboardButton, #requestCopyToClipboardButton, #miningEditAddressButton, #miningResetAddressButton
 {
     margin-left: 10px;
 }
@@ -1305,7 +1310,7 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     color: COLOR_VALIDATION_FAILED;
 }
 
-#add_account_type_label_mobile, #add_account_type_label_transactional, #add_account_type_label_witness, #add_account_type_label_witnessonly, #add_account_type_label_privkey
+#add_account_type_label_mobile, #add_account_type_label_transactional, #add_account_type_label_witness, #add_account_type_label_generation, #add_account_type_label_witnessonly, #add_account_type_label_privkey
 {
     border: 1px solid #ebebeb;
     color: TEXT_COLOR_1;
@@ -1313,23 +1318,23 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     background-color: white;
 }
 
-#add_account_type_label_mobile[hover=true], #add_account_type_label_transactional[hover=true], #add_account_type_label_witness[hover=true], #add_account_type_label_witnessonly[hover=true], #add_account_type_label_privkey[hover=true]
+#add_account_type_label_mobile[hover=true], #add_account_type_label_transactional[hover=true], #add_account_type_label_witness[hover=true], #add_account_type_label_generation[hover=true], #add_account_type_label_witnessonly[hover=true], #add_account_type_label_privkey[hover=true]
 {
     border: 1px solid ACCENT_COLOR_1;
     color: ACCENT_COLOR_1;
 }
 
-#accountCopyToClipboardButton[hover=true], #requestCopyToClipboardButton[hover=true]
+#accountCopyToClipboardButton[hover=true], #requestCopyToClipboardButton[hover=true], #miningCopyToClipboardButton[hover=true], #miningEditAddressButton[hover=true], #miningResetAddressButton[hover=true]
 {
     color: ACCENT_COLOR_1;
 }
 
-#accountCopyToClipboardButton[pressed=true], #requestCopyToClipboardButton[pressed=true]
+#accountCopyToClipboardButton[pressed=true], #requestCopyToClipboardButton[pressed=true], #miningCopyToClipboardButton[pressed=true], #miningEditAddressButton[pressed=true], #miningResetAddressButton[pressed=true]
 {
     color: ACCENT_COLOR_2;
 }
 
-#add_account_type_label_mobile[pressed=true], #add_account_type_label_transactional[pressed=true], #add_account_type_label_witness[pressed=true], #add_account_type_label_witnessonly[pressed=true], #add_account_type_label_privkey[pressed=true]
+#add_account_type_label_mobile[pressed=true], #add_account_type_label_transactional[pressed=true], #add_account_type_label_witness[pressed=true], #add_account_type_label_generation[pressed=true], #add_account_type_label_witnessonly[pressed=true], #add_account_type_label_privkey[pressed=true]
 {
     border: 1px solid ACCENT_COLOR_2;
 }
