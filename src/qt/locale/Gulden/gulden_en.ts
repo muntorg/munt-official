@@ -15,7 +15,7 @@
     </message>
     <message>
         <location line="+119"/>
-        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="+250"/>
+        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="+241"/>
         <source>Delete account</source>
         <translation>Delete account</translation>
     </message>
@@ -30,7 +30,7 @@
         <translation>Done</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="-161"/>
+        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="-152"/>
         <source>Scan QR to connect to your mobile Gulden app</source>
         <translation>Scan QR to connect to your mobile Gulden app</translation>
     </message>
@@ -54,12 +54,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</translation>
     </message>
     <message>
-        <location line="+78"/>
+        <location line="+74"/>
         <source>Please fund the witness account first.</source>
         <translation>Please fund the witness account first.</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+50"/>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
         <translation>Account not empty, please first empty your account before trying to delete it.</translation>
     </message>
@@ -311,7 +311,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location line="+3"/>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>This operation needs your wallet passphrase to unlock the wallet.</translation>
+        <translation>This operation needs your wallet password to unlock the wallet.</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -321,7 +321,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location line="+3"/>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>This operation needs your wallet passphrase to decrypt the wallet.</translation>
+        <translation>This operation needs your wallet password to decrypt the wallet.</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -888,7 +888,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Check for software updates</translation>
     </message>
     <message>
-        <location line="+1183"/>
+        <location line="+1187"/>
         <source>Software update warning</source>
         <translation>Software update warning</translation>
     </message>
@@ -964,7 +964,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Imported witness</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="-1336"/>
+        <location filename="../../gui.cpp" line="-1340"/>
         <location line="+6"/>
         <location line="+6"/>
         <source>&amp;Overview</source>
@@ -1209,7 +1209,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location line="+219"/>
+        <location line="+223"/>
         <source>%1 client</source>
         <translation>%1 client</translation>
     </message>
@@ -1388,7 +1388,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../gulden.cpp" line="+558"/>
+        <location filename="../../gulden.cpp" line="+562"/>
         <source>A fatal error occurred. Gulden can no longer continue safely and will quit.</source>
         <translation>A fatal error occurred. Gulden can no longer continue safely and will quit.</translation>
     </message>
@@ -1861,24 +1861,24 @@ Witness weight: %5</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+51"/>
-        <location line="+206"/>
+        <location line="+39"/>
+        <location line="+230"/>
         <source>%1 Mb</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-205"/>
-        <location line="+210"/>
+        <location line="-229"/>
+        <location line="+234"/>
         <source>%1 threads</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-82"/>
+        <location line="-87"/>
         <source>Address copied to clipboard</source>
         <translation type="unfinished">Address copied to clipboard</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+8"/>
         <source>Mining address</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1896,7 +1896,7 @@ Witness weight: %5</translation>
         <translation>Done</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/newaccountdialog.cpp" line="+124"/>
+        <location filename="../../_Gulden/newaccountdialog.cpp" line="+147"/>
         <source>Click here to make QR code visible.
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
         <translation>Click here to make QR code visible.
@@ -1924,7 +1924,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Import account type</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/newaccountdialog.cpp" line="-58"/>
+        <location filename="../../_Gulden/newaccountdialog.cpp" line="-81"/>
         <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
         <translation>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</translation>
     </message>
@@ -1954,7 +1954,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</translation>
     </message>
     <message>
-        <location line="+217"/>
+        <location line="+243"/>
         <source>Standard</source>
         <translation>Standard</translation>
     </message>
