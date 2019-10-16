@@ -9,192 +9,78 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>AccountSettingsDialog</name>
+    <name>EditAddressDialog</name>
     <message>
-        <source>Change name of account</source>
-        <translation>Wijzig rekeningnaam</translation>
-    </message>
-    <message>
-        <source>Enter name of account.</source>
-        <translation>Voer rekeningnaam in </translation>
-    </message>
-    <message>
-        <source>Delete account</source>
-        <translation>Verwijder rekening</translation>
-    </message>
-    <message>
-        <source>Copy sync code</source>
-        <translation>Kopieer sync-code</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
-    </message>
-    <message>
-        <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation>Scan QR-code om te linken met uw mobiele Gulden-app</translation>
-    </message>
-    <message>
-        <source>Click here to make QR code visible.
-WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Klik hier om uw QR-code zichtbaar te maken. WAARSCHUWING: Houdt deze QR-code voor uzelf om te voorkomen dat iemand anders toegang krijgt tot uw Guldens.</translation>
-    </message>
-    <message>
-        <source>Scan QR with a witnessing device to link the device to your wallet</source>
-        <translation>Scan QR-code met een witness-apparaat om het apparaat aan uw portemonnee te koppelen</translation>
-    </message>
-    <message>
-        <source>Click here to make QR code visible.
-WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
-        <translation>Klik hier om de QR-code zichtbaar te maken.
-WAARSCHUWING: zorg dat u de enige persoon bent die deze QR-code kan zien omdat anders een ander persoon tot uw verdiensten toegang heeft en de witness-inkomsten kan stelen.</translation>
-    </message>
-    <message>
-        <source>Please fund the witness account first.</source>
-        <translation>Vul eerst uw witness-rekening aan</translation>
-    </message>
-    <message>
-        <source>Account not empty, please first empty your account before trying to delete it.</source>
-        <translation>Account is niet leeg. Maak eerst uw Guldens over alvorens u dit account verwijdert.</translation>
-    </message>
-    <message>
-        <source>Okay</source>
-        <translation>Oké</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %1 from your account list?
-</source>
-        <translation>Weet u zeker dat u %1 wil verwijderen uit het adresboek?
-</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %1 from your account list?
-The account will continue to be monitored and will be restored should it receive new funds in future.</source>
-        <translation>Weet u zeker dat u %1 van uw accountlijst wilt verwijderen? De adressen van dit account blijven actief.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleren</translation>
-    </message>
-</context>
-<context>
-    <name>NewAccountDialog</name>
-    <message>
-        <source>Enter name of account.</source>
-        <translation>Voer naam in van rekening</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
-    </message>
-    <message>
-        <source>Click here to make QR code visible.
-WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Klik hier om uw QR code zichtbaar te maken. 
-WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot uw Guldens.</translation>
+        <source>New mining address</source>
+        <translation>Nieuw mining adres</translation>
     </message>
     <message>
         <source>Cancel</source>
         <translation>Annuleer</translation>
     </message>
     <message>
-        <source>Account name</source>
-        <translation>Rekening naam</translation>
+        <source>Ok</source>
+        <translation>Oké</translation>
     </message>
     <message>
-        <source>Create account type</source>
-        <translation>Kies een rekening type</translation>
+        <source>Edit Address</source>
+        <translation>Adres bewerken</translation>
     </message>
     <message>
-        <source>Import account type</source>
-        <translation>Importeer een rekening type</translation>
+        <source>&amp;Label</source>
+        <translation>&amp;Label</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;&lt;li&gt;Verstuur geld naar een IBAN bankrekening&lt;/li&gt;</translation>
+        <source>The label associated with this address list entry</source>
+        <translation>Het label dat bij dit adres item hoort</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Mobiele portemonnee beheren en aanvullen vanuit uw desktop&lt;/li&gt;&lt;li&gt;Leeg eenvoudig uw mobiele wallet mocht deze gestolen worden of defect raken&lt;/li&gt;</translation>
+        <source>&amp;Address</source>
+        <translation>&amp;Adres</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;Flexibele periodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation>Het adres dat bij dit adres item hoort. Dit kan alleen bewerkt worden voor verstuuradressen.</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importeer een witness rekening van een ander apparaat&lt;/li&gt;&lt;li&gt;Laat dit apparaat fungeren als uw backup van uw witness rekening zodat hij altijd beschikbaar is om te kunnen witnessen&lt;/li&gt;</translation>
+        <source>New receiving address</source>
+        <translation>Nieuw ontvangstadres</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importeer een private key vanuit een &quot;cold storage&quot;&lt;/li&gt;&lt;li&gt;Wordt niet beschermd door uw herstelzin&lt;/li&gt;</translation>
+        <source>New sending address</source>
+        <translation>Nieuw adres om naar te verzenden</translation>
     </message>
     <message>
-        <source>Standard</source>
-        <translation>Standaard</translation>
+        <source>Edit receiving address</source>
+        <translation>Ontvangstadres bewerken</translation>
     </message>
     <message>
-        <source>Linked mobile</source>
-        <translation>Gelinkte mobiel</translation>
+        <source>Edit sending address</source>
+        <translation>Bewerk adres om naar te verzenden</translation>
     </message>
     <message>
-        <source>Witness</source>
-        <translation>Witness</translation>
+        <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
+        <translation>Het ingevoerde adres &quot;%1&quot; is een niet geldig Gulden-adres.</translation>
     </message>
     <message>
-        <source>Witness-only</source>
-        <translation>Alleen witness</translation>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>Het opgegeven adres &quot;%1&quot; bestaat al in uw adresboek.</translation>
     </message>
     <message>
-        <source>Private key</source>
-        <translation>Private key</translation>
+        <source>Could not unlock wallet.</source>
+        <translation>Kon de portemonnee niet openen.</translation>
     </message>
     <message>
-        <source>Scan QR to connect your mobile Gulden app</source>
-        <translation>Scan QR om met uw mobiele Gulden-app te verbinden</translation>
-    </message>
-</context>
-<context>
-    <name>BackupDialog</name>
-    <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
-    </message>
-    <message>
-        <source>Backup phrase</source>
-        <translation>Herstelzin</translation>
-    </message>
-    <message>
-        <source>Show backup phrase</source>
-        <translation>Toon herstelzin</translation>
-    </message>
-    <message>
-        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation>Het wordt aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
-    </message>
-    <message>
-        <source>Save to file</source>
-        <translation>Bewaar als bestand</translation>
-    </message>
-    <message>
-        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit is uw herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
-    </message>
-    <message>
-        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit zijn uw herstelzinnen, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
-    </message>
-    <message>
-        <source>No recovery phrases present for this wallet.</source>
-        <translation>Geen herstelzin aanwezig voor deze portemonnee</translation>
-    </message>
-    <message>
-        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation>Uw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
+        <source>New key generation failed.</source>
+        <translation>Genereren nieuwe sleutel mislukt.</translation>
     </message>
 </context>
 <context>
     <name>GUI</name>
+    <message>
+        <source>Control and view information for mining account.</source>
+        <translation>Beheer en bekijk informatie over mining account</translation>
+    </message>
     <message>
         <source>Okay</source>
         <translation>Ok</translation>
@@ -639,6 +525,771 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
 </context>
 <context>
+    <name>MiningAccountDialog</name>
+    <message>
+        <source>My mining address</source>
+        <translation>Mijn mining adres</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopiëer adres naar klembord</translation>
+    </message>
+    <message>
+        <source>Edit mining address</source>
+        <translation>Mining adres wijzigen</translation>
+    </message>
+    <message>
+        <source>Reset mining address</source>
+        <translation>Mining adres herstellen</translation>
+    </message>
+    <message>
+        <source>My mining settings</source>
+        <translation>Mijn mining instellingen</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>Processor usage</source>
+        <translation>Processorgebruik</translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation>#</translation>
+    </message>
+    <message>
+        <source>Automatically mine at startup</source>
+        <translation>Automatisch minen bij opstarten</translation>
+    </message>
+    <message>
+        <source>Keep application open when mining</source>
+        <translation>Laat applicatie open tijdens minen</translation>
+    </message>
+    <message>
+        <source>My mining statistics</source>
+        <translation>Mijn mining statistieken</translation>
+    </message>
+    <message>
+        <source>Best reported speed</source>
+        <translation>Beste geregistreerde snelheid</translation>
+    </message>
+    <message>
+        <source>Moving average</source>
+        <translation>Voortschrijdend gemiddelde</translation>
+    </message>
+    <message>
+        <source>Last reported speed</source>
+        <translation>Laatst geregistreerde snelheid</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Mining stoppen</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Mining starten</translation>
+    </message>
+    <message>
+        <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
+        <translation>Het verhogen van het aantal threads zal je mining snelheid verhogen, maar het verhoogt ook je energie verbruik en kan andere applicaties die je gebruikt vertragen.</translation>
+    </message>
+    <message>
+        <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
+        <translation>Het verlagen van het geheugengebruik is niet aanbevolen. Het vertraagt je mining operatie terwijl het evenveel cpu kracht en energie gebruikt. Alleen gebruiken als laatste optie op machines met een laag geheugen.</translation>
+    </message>
+    <message>
+        <source>%1 Mb</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>%1 threads</source>
+        <translation>%1 threads</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres naar klembord gekopiëerd</translation>
+    </message>
+    <message>
+        <source>Mining address</source>
+        <translation>Mining adres</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopieer adres naar klembord</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleer</translation>
+    </message>
+    <message>
+        <source>Enter label</source>
+        <translation>Voer beschrijving in</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nee</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Request copied to clipboard</source>
+        <translation>Verzoek gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>My receiving address</source>
+        <translation>Mijn ontvangstadres</translation>
+    </message>
+    <message>
+        <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
+        <translation>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
+    </message>
+    <message>
+        <source>Request %1 Gulden</source>
+        <translation>Aanvraag voor %1 Gulden</translation>
+    </message>
+    <message>
+        <source>Payment request URI</source>
+        <translation>Betaalverzoek URI</translation>
+    </message>
+    <message>
+        <source>QR code</source>
+        <translation>QR-code</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Sluiten</translation>
+    </message>
+    <message>
+        <source>Save QR as image</source>
+        <translation>Bewaar QR als afbeelding</translation>
+    </message>
+    <message>
+        <source>Request payment</source>
+        <translation>Verzoek betaling</translation>
+    </message>
+    <message>
+        <source>Generate request</source>
+        <translation>Genereer verzoek</translation>
+    </message>
+    <message>
+        <source>New request</source>
+        <translation>Nieuwe aanvraag</translation>
+    </message>
+    <message>
+        <source>Buy Gulden</source>
+        <translation>Koop Gulden</translation>
+    </message>
+    <message>
+        <source>Buy</source>
+        <translation>Koop</translation>
+    </message>
+    <message>
+        <source>Choose amount</source>
+        <translation>Kies bedrag</translation>
+    </message>
+    <message>
+        <source>1000</source>
+        <translation>1000</translation>
+    </message>
+    <message>
+        <source>€ 10.00</source>
+        <translation>€ 10,00</translation>
+    </message>
+    <message>
+        <source></source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>2500</source>
+        <translation>2500</translation>
+    </message>
+    <message>
+        <source>€ 25.00</source>
+        <translation>€ 25,00</translation>
+    </message>
+    <message>
+        <source>5000</source>
+        <translation>5000</translation>
+    </message>
+    <message>
+        <source>€ 50.00</source>
+        <translation>€ 50.00</translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>Meer</translation>
+    </message>
+    <message>
+        <source>Your details</source>
+        <translation>Uw gegevens</translation>
+    </message>
+    <message>
+        <source>Enter email address</source>
+        <translation>Voer e-mailadres in</translation>
+    </message>
+    <message>
+        <source>Did you buy for more than 40 Gulden in the past week?</source>
+        <translation>Heeft u in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
+    </message>
+    <message>
+        <source>Request 10 000 Gulden</source>
+        <translation>Verzoek 10 000 Gulden</translation>
+    </message>
+    <message>
+        <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
+        <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulterende URI te lang, probeer de tekst korter te maken voor het label/bericht.</translation>
+    </message>
+    <message>
+        <source>Copy request to clipboard</source>
+        <translation>Kopieer aanvraag naar klembord</translation>
+    </message>
+    <message>
+        <source>Request Gulden</source>
+        <translation>betalingsaanvraag</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for the label.</source>
+        <translation>Resulterende URI te lang, Kort de text in voor dit label</translation>
+    </message>
+    <message>
+        <source>Error loading the buy page, please check your connection and try again later.</source>
+        <translation>Error tijdens het laden van de betaal pagina, controleer uw verbinding en probeer het (op een later moment) opnieuw</translation>
+    </message>
+</context>
+<context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Adres naar klembord kopiëren</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>adres</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulterend URI te lang, probeer de tekst voor het etiket / bericht te verkleinen.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Mijn Witness adres</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Er is geen geldig Witness adres voor deze account aangemaakt</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Memory usage</source>
+        <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Debugvenster</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Useragent</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N.v.t.</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informatie</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Algemeen</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Clientversie</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Gebruikt BerkeleyDB versie</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Datamap</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Opstarttijd</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Netwerk</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Naam</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Aantal verbindingen</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Blokketen</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Huidig aantal blokken</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Tijd laatste blok</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Geheugen Poel</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Huidig aantal transacties</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Debuglogbestand</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Open het %1 logboekbestand voor foutopsporing in de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Open</translation>
+    </message>
+    <message>
+        <source>Current PoW² phase</source>
+        <translation>Huidige PoW²-fase</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Console</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Netwerkverkeer</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Reset</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Totalen</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Ontvangen</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Verstuurd</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Peers</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Verbannen peers</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Selecteer een peer om gedetailleerde informatie te bekijken.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Whitelisted</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Richting</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Versie</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Services</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Start Blok</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Gesynchroniseerde Headers</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Gesynchroniseerde Blokken</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Ban score</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Verbindingsduur</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Laatst verstuurd</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Laatst ontvangen</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Pingtijd</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>De duur van een momenteel openstaande ping.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping Wacht</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Minimale Ping</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Tijdsverschuiving</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Loskoppelen</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Verban voor</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;uur</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;dag</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;week</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;jaar</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Ontban</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Welkom bij de %1 RPC-console.</translation>
+    </message>
+    <message>
+        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
+        <translation>Gebruik de omhoog en omlaag pijltoetsen om door de geschiedenis te bladeren en %1 om het scherm te legen.</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Voer &lt;b&gt;help&lt;/b&gt; in voor een overzicht van de beschikbare commando&apos;s.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>WAARSCHUWING: Er zijn oplichters actief geweest, die gebruikers hebben verteld om hier opdrachten in te voeren en zo hun portemonnee te stelen. Gebruik deze console niet zonder de implicaties van een commando volledig te begrijpen.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>In:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Uit:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netwerkactiviteit uitgeschakeld</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 Kb</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 Gb</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(knooppunt-ID: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>nooit</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Inkomend</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Uitgaand</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nee</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Onbekend</translation>
+    </message>
+</context>
+<context>
+    <name>NewAccountDialog</name>
+    <message>
+        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Concurreer met andere miners door Gulden te creëren met jouw vrije CPU kracht&lt;/li&gt;&lt;li&gt;Help het netwerk beveiligen&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Mining</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Voer naam in van rekening</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Klaar</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation>Klik hier om uw QR code zichtbaar te maken. 
+WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot uw Guldens.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleer</translation>
+    </message>
+    <message>
+        <source>Account name</source>
+        <translation>Rekening naam</translation>
+    </message>
+    <message>
+        <source>Create account type</source>
+        <translation>Kies een rekening type</translation>
+    </message>
+    <message>
+        <source>Import account type</source>
+        <translation>Importeer een rekening type</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;&lt;li&gt;Verstuur geld naar een IBAN bankrekening&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Mobiele portemonnee beheren en aanvullen vanuit uw desktop&lt;/li&gt;&lt;li&gt;Leeg eenvoudig uw mobiele wallet mocht deze gestolen worden of defect raken&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;Flexibele periodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importeer een witness rekening van een ander apparaat&lt;/li&gt;&lt;li&gt;Laat dit apparaat fungeren als uw backup van uw witness rekening zodat hij altijd beschikbaar is om te kunnen witnessen&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importeer een private key vanuit een &quot;cold storage&quot;&lt;/li&gt;&lt;li&gt;Wordt niet beschermd door uw herstelzin&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Standard</source>
+        <translation>Standaard</translation>
+    </message>
+    <message>
+        <source>Linked mobile</source>
+        <translation>Gelinkte mobiel</translation>
+    </message>
+    <message>
+        <source>Witness</source>
+        <translation>Witness</translation>
+    </message>
+    <message>
+        <source>Witness-only</source>
+        <translation>Alleen witness</translation>
+    </message>
+    <message>
+        <source>Private key</source>
+        <translation>Private key</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect your mobile Gulden app</source>
+        <translation>Scan QR om met uw mobiele Gulden-app te verbinden</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSettingsDialog</name>
+    <message>
+        <source>Change name of account</source>
+        <translation>Wijzig rekeningnaam</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Voer rekeningnaam in </translation>
+    </message>
+    <message>
+        <source>Delete account</source>
+        <translation>Verwijder rekening</translation>
+    </message>
+    <message>
+        <source>Copy sync code</source>
+        <translation>Kopieer sync-code</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Klaar</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation>Scan QR-code om te linken met uw mobiele Gulden-app</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation>Klik hier om uw QR-code zichtbaar te maken. WAARSCHUWING: Houdt deze QR-code voor uzelf om te voorkomen dat iemand anders toegang krijgt tot uw Guldens.</translation>
+    </message>
+    <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation>Scan QR-code met een witness-apparaat om het apparaat aan uw portemonnee te koppelen</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
+        <translation>Klik hier om de QR-code zichtbaar te maken.
+WAARSCHUWING: zorg dat u de enige persoon bent die deze QR-code kan zien omdat anders een ander persoon tot uw verdiensten toegang heeft en de witness-inkomsten kan stelen.</translation>
+    </message>
+    <message>
+        <source>Please fund the witness account first.</source>
+        <translation>Vul eerst uw witness-rekening aan</translation>
+    </message>
+    <message>
+        <source>Account not empty, please first empty your account before trying to delete it.</source>
+        <translation>Account is niet leeg. Maak eerst uw Guldens over alvorens u dit account verwijdert.</translation>
+    </message>
+    <message>
+        <source>Okay</source>
+        <translation>Oké</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation>Weet u zeker dat u %1 wil verwijderen uit het adresboek?
+</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+The account will continue to be monitored and will be restored should it receive new funds in future.</source>
+        <translation>Weet u zeker dat u %1 van uw accountlijst wilt verwijderen? De adressen van dit account blijven actief.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleren</translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Klaar</translation>
+    </message>
+    <message>
+        <source>Backup phrase</source>
+        <translation>Herstelzin</translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation>Toon herstelzin</translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>Het wordt aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation>Bewaar als bestand</translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Dit is uw herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Dit zijn uw herstelzinnen, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation>Geen herstelzin aanwezig voor deze portemonnee</translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>Uw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
+    </message>
+</context>
+<context>
     <name>GuldenSendCoinsEntry</name>
     <message>
         <source>Okay</source>
@@ -872,69 +1523,6 @@ Witness-gewicht: %5</translation>
     </message>
 </context>
 <context>
-    <name>EditAddressDialog</name>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Oké</translation>
-    </message>
-    <message>
-        <source>Edit Address</source>
-        <translation>Adres bewerken</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;Label</translation>
-    </message>
-    <message>
-        <source>The label associated with this address list entry</source>
-        <translation>Het label dat bij dit adres item hoort</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>&amp;Adres</translation>
-    </message>
-    <message>
-        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation>Het adres dat bij dit adres item hoort. Dit kan alleen bewerkt worden voor verstuuradressen.</translation>
-    </message>
-    <message>
-        <source>New receiving address</source>
-        <translation>Nieuw ontvangstadres</translation>
-    </message>
-    <message>
-        <source>New sending address</source>
-        <translation>Nieuw adres om naar te verzenden</translation>
-    </message>
-    <message>
-        <source>Edit receiving address</source>
-        <translation>Ontvangstadres bewerken</translation>
-    </message>
-    <message>
-        <source>Edit sending address</source>
-        <translation>Bewerk adres om naar te verzenden</translation>
-    </message>
-    <message>
-        <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
-        <translation>Het ingevoerde adres &quot;%1&quot; is een niet geldig Gulden-adres.</translation>
-    </message>
-    <message>
-        <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation>Het opgegeven adres &quot;%1&quot; bestaat al in uw adresboek.</translation>
-    </message>
-    <message>
-        <source>Could not unlock wallet.</source>
-        <translation>Kon de portemonnee niet openen.</translation>
-    </message>
-    <message>
-        <source>New key generation failed.</source>
-        <translation>Genereren nieuwe sleutel mislukt.</translation>
-    </message>
-</context>
-<context>
     <name>ImportPrivKeyDialog</name>
     <message>
         <source>Cancel</source>
@@ -1005,165 +1593,6 @@ Witness-gewicht: %5</translation>
     <message>
         <source>Repeat new password.</source>
         <translation>Herhaal het nieuwe wachtwoord</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source>Enter label</source>
-        <translation>Voer beschrijving in</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nee</translation>
-    </message>
-    <message>
-        <source>address</source>
-        <translation>Adres</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adres gekopieerd naar klembord</translation>
-    </message>
-    <message>
-        <source>Request copied to clipboard</source>
-        <translation>Verzoek gekopieerd naar klembord</translation>
-    </message>
-    <message>
-        <source>My receiving address</source>
-        <translation>Mijn ontvangstadres</translation>
-    </message>
-    <message>
-        <source>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</source>
-        <translation>GSZAFrTk92iErjAka55BhmN42nN7hXVJef</translation>
-    </message>
-    <message>
-        <source>Request %1 Gulden</source>
-        <translation>Aanvraag voor %1 Gulden</translation>
-    </message>
-    <message>
-        <source>Payment request URI</source>
-        <translation>Betaalverzoek URI</translation>
-    </message>
-    <message>
-        <source>QR code</source>
-        <translation>QR-code</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation>Sluiten</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Kopieer adres naar klembord</translation>
-    </message>
-    <message>
-        <source>Save QR as image</source>
-        <translation>Bewaar QR als afbeelding</translation>
-    </message>
-    <message>
-        <source>Request payment</source>
-        <translation>Verzoek betaling</translation>
-    </message>
-    <message>
-        <source>Generate request</source>
-        <translation>Genereer verzoek</translation>
-    </message>
-    <message>
-        <source>New request</source>
-        <translation>Nieuwe aanvraag</translation>
-    </message>
-    <message>
-        <source>Buy Gulden</source>
-        <translation>Koop Gulden</translation>
-    </message>
-    <message>
-        <source>Buy</source>
-        <translation>Koop</translation>
-    </message>
-    <message>
-        <source>Choose amount</source>
-        <translation>Kies bedrag</translation>
-    </message>
-    <message>
-        <source>1000</source>
-        <translation>1000</translation>
-    </message>
-    <message>
-        <source>€ 10.00</source>
-        <translation>€ 10,00</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>2500</source>
-        <translation>2500</translation>
-    </message>
-    <message>
-        <source>€ 25.00</source>
-        <translation>€ 25,00</translation>
-    </message>
-    <message>
-        <source>5000</source>
-        <translation>5000</translation>
-    </message>
-    <message>
-        <source>€ 50.00</source>
-        <translation>€ 50.00</translation>
-    </message>
-    <message>
-        <source>More</source>
-        <translation>Meer</translation>
-    </message>
-    <message>
-        <source>Your details</source>
-        <translation>Uw gegevens</translation>
-    </message>
-    <message>
-        <source>Enter email address</source>
-        <translation>Voer e-mailadres in</translation>
-    </message>
-    <message>
-        <source>Did you buy for more than 40 Gulden in the past week?</source>
-        <translation>Heeft u in de afgelopen week voor meer dan 40 Gulden gekocht?</translation>
-    </message>
-    <message>
-        <source>Request 10 000 Gulden</source>
-        <translation>Verzoek 10 000 Gulden</translation>
-    </message>
-    <message>
-        <source>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</source>
-        <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resulterende URI te lang, probeer de tekst korter te maken voor het label/bericht.</translation>
-    </message>
-    <message>
-        <source>Copy request to clipboard</source>
-        <translation>Kopieer aanvraag naar klembord</translation>
-    </message>
-    <message>
-        <source>Request Gulden</source>
-        <translation>betalingsaanvraag</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for the label.</source>
-        <translation>Resulterende URI te lang, Kort de text in voor dit label</translation>
-    </message>
-    <message>
-        <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation>Error tijdens het laden van de betaal pagina, controleer uw verbinding en probeer het (op een later moment) opnieuw</translation>
     </message>
 </context>
 <context>
@@ -2708,301 +3137,6 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     </message>
 </context>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Debugvenster</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Useragent</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N.v.t.</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informatie</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Algemeen</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Clientversie</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Gebruikt BerkeleyDB versie</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Datamap</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Opstarttijd</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Netwerk</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Naam</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Aantal verbindingen</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Blokketen</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Huidig aantal blokken</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Tijd laatste blok</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Geheugen Poel</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Huidig aantal transacties</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Geheugengebruik</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Debuglogbestand</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Open het %1 logboekbestand voor foutopsporing in de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation>Open</translation>
-    </message>
-    <message>
-        <source>Current PoW² phase</source>
-        <translation>Huidige PoW²-fase</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Console</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Netwerkverkeer</translation>
-    </message>
-    <message>
-        <source>&amp;Reset</source>
-        <translation>&amp;Reset</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Totalen</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Ontvangen</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Verstuurd</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Peers</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Verbannen peers</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Selecteer een peer om gedetailleerde informatie te bekijken.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Whitelisted</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Richting</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Versie</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Services</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Start Blok</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Gesynchroniseerde Headers</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Gesynchroniseerde Blokken</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Ban score</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Verbindingsduur</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Laatst verstuurd</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Laatst ontvangen</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Pingtijd</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>De duur van een momenteel openstaande ping.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Ping Wacht</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Minimale Ping</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Tijdsverschuiving</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>&amp;Loskoppelen</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Verban voor</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;uur</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;dag</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;week</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;jaar</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>&amp;Ontban</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>Welkom bij de %1 RPC-console.</translation>
-    </message>
-    <message>
-        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
-        <translation>Gebruik de omhoog en omlaag pijltoetsen om door de geschiedenis te bladeren en %1 om het scherm te legen.</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Voer &lt;b&gt;help&lt;/b&gt; in voor een overzicht van de beschikbare commando&apos;s.</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>WAARSCHUWING: Er zijn oplichters actief geweest, die gebruikers hebben verteld om hier opdrachten in te voeren en zo hun portemonnee te stelen. Gebruik deze console niet zonder de implicaties van een commando volledig te begrijpen.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>In:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Uit:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>Netwerkactiviteit uitgeschakeld</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 Kb</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 Mb</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 Gb</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(knooppunt-ID: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>nooit</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Inkomend</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Uitgaand</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nee</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Onbekend</translation>
-    </message>
-</context>
-<context>
     <name>Intro</name>
     <message>
         <source>Error</source>
@@ -3913,33 +4047,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Yes</source>
         <translation>Ja</translation>
-    </message>
-</context>
-<context>
-    <name>ViewAddressDialog</name>
-    <message>
-        <source>address</source>
-        <translation>adres</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adres gekopieerd naar klembord</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Adres naar klembord kopiëren</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resulterend URI te lang, probeer de tekst voor het etiket / bericht te verkleinen.</translation>
-    </message>
-    <message>
-        <source>My witness address</source>
-        <translation>Mijn Witness adres</translation>
-    </message>
-    <message>
-        <source>No valid witness address has been generated for this account</source>
-        <translation>Er is geen geldig Witness adres voor deze account aangemaakt</translation>
     </message>
 </context>
 <context>
