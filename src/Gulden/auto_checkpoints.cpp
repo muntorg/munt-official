@@ -781,7 +781,7 @@ bool CSyncCheckpointInvalidate::RelayTo(CNode* pnode) const
     if (pnode->hashInvalidateKnown != hashInvalidate)
     {
         pnode->hashInvalidateKnown = hashInvalidate;
-        g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::CHECKPOINT_INVALIDATE, *this));
+        //g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::CHECKPOINT_INVALIDATE, *this));
         return true;
     }
     return false;

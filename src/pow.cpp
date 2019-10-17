@@ -94,9 +94,19 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
 
     bnTarget.SetCompact(block->nBits, &fNegative, &fOverflow);
 
-    // Check range
-    if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
-        return false;
+    if (block->nTime > 1571320800)
+    {
+        uint256 newProofOfWorkLimit = uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        // Check range
+        if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(newProofOfWorkLimit))
+            return false;
+    }
+    else
+    {
+        // Check range
+        if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
+            return false;
+    }
 
     //fixme: (SIGMA) - Post activation we can simplify this.
     // Check proof of work matches claimed amount
