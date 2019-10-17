@@ -98,8 +98,9 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
     // Check proof of work matches claimed amount
     if (block->nTime > defaultSigmaSettings.activationDate)
     {
-        //fixme: (SIGMA) Consider keeping a single context always available - with a mutex to protect it that way memory allocation is constant.
-        sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
+        static sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
+        static CCriticalSection csPOW;
+        LOCK(csPOW);
         
         //fixme: (SIGMA) - Detect faster machines and disable this optimisation for them, this will further increase network security.
         // We speed up verification by doing a half verify 40% of the time instead of a full verify
