@@ -523,6 +523,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-debugexclude=<category>", strprintf(helptr("Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.")));
     strUsage += HelpMessageOpt("-gen", strprintf(helptr("Generate coins (default: %u)"), DEFAULT_GENERATE));
     strUsage += HelpMessageOpt("-genproclimit=<n>", strprintf(helptr("Set the number of threads for coin generation if enabled (-1 = all cores, default: %d)"), DEFAULT_GENERATE_THREADS));
+    strUsage += HelpMessageOpt("-genmemlimit=<n>", strprintf(helptr("Set the memory limit for coin generation (in Kilobytes) if enabled (default: 4194304 (4Gb))")));
     strUsage += HelpMessageOpt("-help-debug", helptr("Show all debugging options (usage: --help -help-debug)"));
     strUsage += HelpMessageOpt("-logips", strprintf(helptr("Include IP addresses in debug output (default: %u)"), DEFAULT_LOGIPS));
     strUsage += HelpMessageOpt("-logtimestamps", strprintf(helptr("Prepend debug output with timestamp (default: %u)"), DEFAULT_LOGTIMESTAMPS));
@@ -1899,7 +1900,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (GetBoolArg("-gen", DEFAULT_GENERATE))
     {
         uint64_t nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
-        uint64_t nGenMemoryLimitKilobytes = GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb*1024);
+        uint64_t nGenMemoryLimitKilobytes = GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb);
         
         //fixme: (SIGMA) (DEDUP) - Move this all to a helper function that can share it with RPC (and -gen) etc.
         #ifdef ENABLE_WALLET
