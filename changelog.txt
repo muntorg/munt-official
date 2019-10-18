@@ -13,6 +13,7 @@ CORE - Introduce new 'mining' account type
 RPC - New command 'createminingaccount'
 RPC - New command 'setminingrewardaddress'
 RPC - Modify 'setgenerate' behaviour to work with mining accounts when present, a regular account can still be used by explicitely passing an account name when calling 'setgenerate'
+CMDFLAG - New flag '-genmemlimit' to go with existing '-gen' and '-genproclimit'
 
 
 
