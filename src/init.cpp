@@ -1644,7 +1644,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (GetBoolArg("-gen", DEFAULT_GENERATE))
     {
         uint64_t nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
-        uint64_t nGenMemoryLimitKilobytes = GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb*1024);
+        uint64_t nGenMemoryLimitKilobytes = GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb);
         
         //fixme: (SIGMA) (DEDUP) - Move this all to a helper function that can share it with RPC (and -gen) etc.
         #ifdef ENABLE_WALLET

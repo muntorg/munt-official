@@ -252,6 +252,7 @@ void MiningAccountDialog::setClientModel(ClientModel* clientModel_)
         if (nGenMemoryLimitKilobytes > 0)
             ui->miningMemorySlider->setValue(nGenMemoryLimitKilobytes/1024);
     }
+    updateSliderLabels();
 }
 
 MiningAccountDialog::~MiningAccountDialog()
