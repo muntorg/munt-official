@@ -370,7 +370,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("sse3"))
+            if (__builtin_cpu_supports("ssse3"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
@@ -431,7 +431,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("sse3"))
+            if (__builtin_cpu_supports("ssse3"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse3, 11);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse3, 11);
