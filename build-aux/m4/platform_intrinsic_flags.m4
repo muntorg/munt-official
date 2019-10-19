@@ -21,32 +21,32 @@ AC_DEFUN([INTRINSIC_FLAG_CHECK],
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_SSE2_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_SSE2 ")
   
-  INTRINSICFLAGS="-O3 -mmmx -msse -msse2 -msse3 -DCOMPILER_HAS_SSE3"
+  INTRINSICFLAGS="-O3 -mmmx -msse -msse2 -msse3 -mssse3 -DCOMPILER_HAS_SSE3"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_SSE3_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_SSE3 ")
   
   dnl fixme: We should handle also -msse4.1  -msse4.2  -msse4 -msse4a - however these are a complicated mess.
-  INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -msse4.1 -msse4.2 -DCOMPILER_HAS_SSE4"
+  INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -mssse3 -msse4.1 -msse4.2 -DCOMPILER_HAS_SSE4"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_SSE4_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_SSE4 ")
   
-  INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -msse4.1 -msse4.2 -mavx -DCOMPILER_HAS_AVX"
+  INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -mssse3 -msse4.1 -msse4.2 -mavx -DCOMPILER_HAS_AVX"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_AVX_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_AVX ")
   
-  INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -msse4.1 -msse4.2 -mavx -mavx2 -DCOMPILER_HAS_AVX2"
+  INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -DCOMPILER_HAS_AVX2"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_AVX2_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_AVX2 ")
   
-  INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -msse4.1 -msse4.2 -mavx -mavx2 -mavx512f -DCOMPILER_HAS_AVX512F"
+  INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -mssse3 -msse4.1 -msse4.2 -mavx -mavx2 -mavx512f -DCOMPILER_HAS_AVX512F"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_AVX512F_FLAGS, $INTRINSICFLAGS)])
