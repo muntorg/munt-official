@@ -104,7 +104,7 @@ CAmount GetBlockSubsidy(int nHeight)
     }
     else if (nHeight <= 10880000) // 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness.
     {
-        nSubsidy = 120 * COIN;
+        nSubsidy = 110 * COIN;
     }
     return nSubsidy;
 }
