@@ -361,6 +361,8 @@ public:
         { 1020000, { uint256S("0x2a923cbf76079c29f2c181842531f903bb59bbd666dab4e048daa46d7548cdae")} },
         { 1023558, { uint256S("0xa9de39eb20ff042bc0e98ebd8b526b8f6fbc735ebdbdc7588a67a69a6431fb54")} },
         { 1024710, { uint256S("0xcb965dcb4a36b960127bbde4a2f13100abc132eb59994e6ece2d36aa7a6751ab")} },
+        { 1030001, { uint256S("0x3d6439a8c762b6843846a50c43b6c105ce38fa8f01df2d43475db62d2175fe66")} },
+        { 1030010, { uint256S("0x2a646da573e60f11de586fbc44d3b737a24af0a2b88372d4ab60d382e6cb38eb")} },
         }
         };
 
@@ -371,8 +373,8 @@ public:
         consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000fad1c7f4818beec6");
         
         chainTxData = ChainTxData{
-            1570621913, // * UNIX timestamp of last checkpoint block
-            2623089,    // * total number of transactions between genesis and last checkpoint
+            1571526183, // * UNIX timestamp of last checkpoint block
+            2635602,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
