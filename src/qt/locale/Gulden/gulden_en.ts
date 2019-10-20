@@ -1782,13 +1782,13 @@ Witness weight: %5</translation>
     </message>
     <message>
         <location line="+39"/>
-        <location line="+230"/>
+        <location line="+231"/>
         <source>%1 Mb</source>
         <translation>%1 Mb</translation>
     </message>
     <message>
-        <location line="-229"/>
-        <location line="+234"/>
+        <location line="-230"/>
+        <location line="+235"/>
         <source>%1 threads</source>
         <translation>%1 threads</translation>
     </message>
