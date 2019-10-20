@@ -366,9 +366,9 @@ void MiningAccountDialog::slotUpdateMiningStats()
     std::string sBestHashPerSecLogLabel = " h";
     selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
        
-    ui->labelLastMiningSpeed->setText(QString::fromStdString(strprintf("%lf %s", dHashPerSecLog, sHashPerSecLogLabel)));
-    ui->labelAverageMiningSpeed->setText(QString::fromStdString(strprintf("%lf %s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel)));
-    ui->labelBestMiningSpeed->setText(QString::fromStdString(strprintf("%lf %s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
+    ui->labelLastMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf %s/s", dHashPerSecLog, sHashPerSecLogLabel)));
+    ui->labelAverageMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf %s/s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel)));
+    ui->labelBestMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf %s/s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
     
     if (PoWGenerationIsActive())
     {

@@ -9,6 +9,30 @@ RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fi
 
 
 
+2.1.0.17
+
+MISC - Update checkpoints
+CORE - Improve upgrade procedure for any users who failed to upgrade for previous releases in time and were temporarily stuck on a fork.
+UI - Minor improvements to information display in mining dialog.
+
+
+
+
+2.1.0.16
+
+CORE - Temporarily reduce witness reward back to 20, due to unexpected complications with adjusting witness rewards during phase3. Reward will be restored to 30 at a future date after further discussion on how to proceed.
+
+
+
+
+2.1.0.15
+
+CORE - Adjust minimum PoW limit; as with delta hashrate is much slower than regular PoW algorithms.
+
+
+
+
+
 2.1.0.14
 
 CORE - Reduce mainnet proof of work limit to be lower as SIGMA works at a much lower difficulty, and is causing blocks to take very long to solve.
