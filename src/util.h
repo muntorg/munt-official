@@ -338,7 +338,8 @@ inline static void selectLargesHashUnit(double& dHashes, std::string& sLabel)
 {
     if (dHashes > 1000)
     {
-        sLabel = "Kh";
+        //NB! k=1000 K=1024 (however all other prefix are uppercase)
+        sLabel = "kh";
         dHashes /= 1000.0;
     }
     if (dHashes > 1000)
