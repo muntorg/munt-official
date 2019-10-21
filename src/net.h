@@ -237,7 +237,7 @@ public:
     // new code.
     void Ban(const CNetAddr& netAddr, const BanReason& reason, int64_t bantimeoffset = 0, bool sinceUnixEpoch = false);
     void Ban(const CSubNet& subNet, const BanReason& reason, int64_t bantimeoffset = 0, bool sinceUnixEpoch = false);
-    void ClearBanned(); // needed for unit testing
+    void ClearBanned();
     bool IsBanned(CNetAddr ip);
     bool IsBanned(CSubNet subnet);
     bool Unban(const CNetAddr &ip);
