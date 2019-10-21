@@ -41,7 +41,9 @@ inline double GetHumanDifficultyFromBits(uint64_t nBits)
         nShift--;
     }
 
-    return dDiff;
+    // SIGMA - We multiply by 1'000'000'000 to get a better human readable difficulty.
+    // Otherwise the SIGMA difficulty will always be fractional and look strange.
+    return dDiff * 1'000'000'000;
 }
 
 /** Nodes collect new transactions into a block, hash them into a hash tree,
