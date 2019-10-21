@@ -963,6 +963,21 @@ static UniValue setminingrewardaddress(const JSONRPCRequest& request)
             + HelpExampleCli("setminingrewardaddress \"G6sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\"", "")
             + HelpExampleRpc("setminingrewardaddress \"G6sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\"", ""));
 
+    bool haveMiningAccount = false;
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+        {
+            haveMiningAccount = true;
+            break;
+        }
+    }
+    if (!haveMiningAccount)
+    {
+        throw std::runtime_error("Wallet does not contain a mining account. First create a mining account using `createminingaccount` before using this command.");
+    }
+    
     std::string strWriteOverrideAddress = request.params[0].get_str();
     if (!strWriteOverrideAddress.empty())
     {
@@ -973,6 +988,75 @@ static UniValue setminingrewardaddress(const JSONRPCRequest& request)
         }
     }
     return CWalletDB(*pactiveWallet->dbw).WriteMiningAddressString(strWriteOverrideAddress);
+}
+
+static UniValue getminingrewardaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 0 )
+        throw std::runtime_error(
+            "getminingrewardaddress\n"
+            "\nGet the output address into which `setgenerate`, `-gen` or the mining UI will pay the output of generated blocks.\n"
+            "\nIf `getminingrewardaddress` has been called then the address set by this will be returned.\n"
+            "\nOtherwise the default mining account address will be returned.\n"
+            "\nIf there is no mining account then an error will be returned.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"address\":\"address\", (string) The address if one is found. \n"
+            "     \"is_default\",        (boolean) true if the address is from the mining account, false if it is one that has been manually set via `setminingrewardaddress`\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getminingrewardaddress", "")
+            + HelpExampleRpc("getminingrewardaddress", ""));
+        
+    bool haveMiningAccount = false;
+    CAccount* miningAccount = nullptr;
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+        {
+            haveMiningAccount = true;
+            miningAccount = account;
+            break;
+        }
+    }
+    if (!haveMiningAccount)
+    {
+        throw std::runtime_error("Wallet does not contain a mining account. First create a mining account using `createminingaccount` before using this command.");
+    }
+
+    std::string strMiningAddress;
+    CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(strMiningAddress);
+    UniValue result(UniValue::VOBJ);
+    if (strMiningAddress.size() == 0)
+    {
+        CReserveKeyOrScript* miningAddress = new CReserveKeyOrScript(pactiveWallet, miningAccount, KEYCHAIN_EXTERNAL);
+        CPubKey pubKey;
+        if (miningAddress->GetReservedKey(pubKey))
+        {
+            CKeyID keyID = pubKey.GetID();
+            strMiningAddress = CGuldenAddress(keyID).ToString();
+        }
+        result.push_back(Pair("address",strMiningAddress));
+        result.push_back(Pair("is_default", true));
+    }
+    else
+    {
+        result.push_back(Pair("address",strMiningAddress));
+        result.push_back(Pair("is_default", false));
+    }
+    
+    return result;
 }
 
 static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
@@ -3250,6 +3334,7 @@ static const CRPCCommand commands[] =
     { "mining",                  "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
     { "mining",                  "createminingaccount",             &createminingaccount,            true,    {"name"} },
     { "mining",                  "setminingrewardaddress",          &setminingrewardaddress,         true,    {"reward_address"} },
+    { "mining",                  "getminingrewardaddress",          &getminingrewardaddress,         true,    {""} },
 
     //fixme: (2.1) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
