@@ -330,11 +330,11 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Scegli l&apos;indirizzo a cui inviare bitcoin</translation>
+        <translation>Scegli l&apos;indirizzo a cui inviare le monete</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Scegli l&apos;indirizzo con cui ricevere bitcoin</translation>
+        <translation>Scegli l&apos;indirizzo con cui ricevere le monete</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>

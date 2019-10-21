@@ -1783,8 +1783,8 @@ Witness weight: %5</translation>
     <message>
         <location line="+39"/>
         <location line="+231"/>
-        <source>%1 Mb</source>
-        <translation>%1 Mb</translation>
+        <source>%1 MB</source>
+        <translation type="unfinished">%1 MB</translation>
     </message>
     <message>
         <location line="-230"/>
