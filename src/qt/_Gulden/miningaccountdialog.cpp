@@ -92,6 +92,17 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     
     uint64_t systemMemoryInMb = systemPhysicalMemoryInBytes()/1024/1024;
     uint64_t nMaxMemoryInMb = std::min(systemMemoryInMb, defaultSigmaSettings.arenaSizeKb/1024);
+    // 32 bit windows can only address 2gb of memory per process (3gb if /largeaddressaware)
+    // 32 bit linux is 4gb per process.
+    // Limit both accordingly
+    #ifdef ARCH_X86
+        #ifdef WIN32
+            nMaxMemoryInMb = std::min(nMaxMemoryInMb, 1*1024);
+        #else
+            nMaxMemoryInMb = std::min(nMaxMemoryInMb, 2*1024);
+        #endif
+    #endif
+
     ui->miningMemorySlider->setMinimum(128);
     ui->miningMemorySlider->setMaximum(nMaxMemoryInMb);
     ui->miningMemorySlider->setTickInterval(16);
