@@ -114,7 +114,7 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
 
 void MiningAccountDialog::updateSliderLabels()
 {
-    ui->miningMemorySliderLabel->setText(tr("%1 Mb").arg(ui->miningMemorySlider->value()));
+    ui->miningMemorySliderLabel->setText(tr("%1 MB").arg(ui->miningMemorySlider->value()));
     ui->miningThreadSliderLabel->setText(tr("%1 threads").arg(ui->miningThreadSlider->value()));
 }
 
@@ -345,7 +345,7 @@ void MiningAccountDialog::slotMiningThreadSettingChanged()
 
 void MiningAccountDialog::slotMiningMemorySettingChanging(int val)
 {
-    ui->miningMemorySliderLabel->setText(tr("%1 Mb").arg(val));
+    ui->miningMemorySliderLabel->setText(tr("%1 MB").arg(val));
 }
 
 void MiningAccountDialog::slotMiningThreadSettingChanging(int val)
