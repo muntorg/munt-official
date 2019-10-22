@@ -1,3 +1,16 @@
+2.1.0.18
+
+MISC - Introduce small new feature to help update users who got stuck on a fork
+UI - Automatically lower the mining memory limits on 32 bit systems that can't handle 4GB of process memory
+UI - Various minor improvements to mining UI
+CORE - Fix an issue with autodetection of mining accounts when recovering from phrase
+CORE - Improve the way total network hashrate is estimated (RPC: getnetworkhashps)
+RPC - New RPC command 'getminingrewardaddress'
+RPC - Improve the way human difficulty is displayed for SIGMA so that its more human friendly (not fractional)
+
+
+
+
 2.1.0.17
 
 MISC - Update checkpoints
