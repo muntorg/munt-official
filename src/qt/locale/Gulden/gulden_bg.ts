@@ -9,6 +9,177 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 Мегабайт</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Прозорец с грешки</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Клиент на потребителя</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Несъществуващ</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>Данни</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Основни</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Версия на клиента</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Използване на база данни BerkeleyDB </translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Време за стартиране</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Мрежа</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Име</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Брой връзки</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Текущ брой блокове</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Време на последния блок</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Лог файл,съдържащ грешките</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Конзола</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Мрежов Трафик</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Общо:</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Получени</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Изпратени</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Пиъри</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Избери пиър за детайлна информация.</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Посока</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Версия</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Услуги</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Продължителност на връзката</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Изпратени за последно</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Получени за последно</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Време за отговор</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Въведeте &lt;/b&gt;помощ&lt;/b&gt; за да видите наличните команди.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Входящи:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Изходящи</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 Байт</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 Килобайт</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 Гигабайт</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>посредством %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>Никога</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Входящи</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Изходящи</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Не</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Неизвестен</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1094,177 +1265,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Не може да се създаде директория тук.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Прозорец с грешки</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Клиент на потребителя</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Несъществуващ</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>Данни</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Основни</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Версия на клиента</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Използване на база данни BerkeleyDB </translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Време за стартиране</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Мрежа</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Име</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Брой връзки</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Текущ брой блокове</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Време на последния блок</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Лог файл,съдържащ грешките</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Конзола</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Мрежов Трафик</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Общо:</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Получени</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Изпратени</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Пиъри</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Избери пиър за детайлна информация.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Посока</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Версия</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Услуги</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Продължителност на връзката</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Изпратени за последно</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Получени за последно</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Време за отговор</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Въведeте &lt;/b&gt;помощ&lt;/b&gt; за да видите наличните команди.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Входящи:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Изходящи</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 Байт</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 Килобайт</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 Мегабайт</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 Гигабайт</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>посредством %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>Никога</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Входящи</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Изходящи</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Да</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Не</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Неизвестен</translation>
     </message>
 </context>
 <context>

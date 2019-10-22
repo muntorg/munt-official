@@ -9,6 +9,189 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MO</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Fenêtre de débogage </translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Usage de la mémoire</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Agent Utilisateur</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A </translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Général</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Version du client</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Version BerkeleyDButilisée </translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Le temps de démarrage</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Réseau</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Nombre de connexions</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Chaîne de bloc </translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Nombre courant de blocs</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Mémoire du pool</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Nombre courant de transactions</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Fichier du journal de débogage</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Trafic réseau</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Totaux</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Reçu </translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Envoyé</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Pairs</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Pairs bannis</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Autorisé par la liste</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Bloc de départ</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Blocs Synchronisés </translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Score de ban</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Temps de connexion</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Dernier envoyé</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Dernier reçu</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Temps du ping</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Attente du ping</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;heure</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;jour</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;semaine</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;an</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Entrée:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Sortie:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 O</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KO</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GO</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>jamais</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Oui</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Non</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Inconnu</translation>
+    </message>
+</context>
+<context>
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
@@ -368,189 +551,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Impossible de créer un répertoire ici.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Fenêtre de débogage </translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Usage de la mémoire</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Agent Utilisateur</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A </translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Général</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Version du client</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Version BerkeleyDButilisée </translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Le temps de démarrage</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Réseau</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Nom</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Nombre de connexions</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Chaîne de bloc </translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Nombre courant de blocs</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Mémoire du pool</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Nombre courant de transactions</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Fichier du journal de débogage</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Trafic réseau</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Totaux</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Reçu </translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Envoyé</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Pairs</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Pairs bannis</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Autorisé par la liste</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Bloc de départ</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Blocs Synchronisés </translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Score de ban</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Temps de connexion</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Dernier envoyé</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Dernier reçu</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Temps du ping</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Attente du ping</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;heure</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;jour</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;semaine</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;an</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Entrée:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Sortie:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 O</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KO</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MO</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GO</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>jamais</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Oui</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Non</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Inconnu</translation>
     </message>
 </context>
 <context>

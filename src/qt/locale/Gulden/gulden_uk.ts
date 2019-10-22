@@ -9,6 +9,249 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 МБ</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Вікно зневадження</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Використання пам&apos;яті</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Клієнт користувача</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Інформація</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Загальна</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Версія клієнту</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Використовується BerkeleyDB версії</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Час запуску</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Мережа</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Ім’я</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Кількість підключень</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Ланцюг блоків</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Поточне число блоків</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Час останнього блоку</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Пул пам&apos;яті</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Поточне число транзакцій</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Файл звіту зневадження</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Консоль</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Мережевий трафік</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Всього</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Отримано</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Відправлено</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Учасники</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Заблоковані вузли</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Виберіть учасника для перегляду детальнішої інформації</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>В білому списку</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Напрямок</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Версія</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Сервіси</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Початковий Блок</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Синхронізовані Заголовки</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Синхронізовані Блоки</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Очки бану</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Час з&apos;єднання</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Востаннє відправлено</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Востаннє отримано</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Затримка</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Тривалість поточної затримки.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Поточна Затримка</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Різниця часу</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;годину</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;день</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;тиждень</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;рік</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Наберіть &lt;b&gt;help&lt;/b&gt; для перегляду доступних команд.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Вхідних:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Вихідних:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 Б</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 КБ</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 ГБ</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(ІД вузла: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>через %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>ніколи</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Вхідний</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Вихідний</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Так</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ні</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Невідома</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -439,249 +682,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Тут неможливо створити каталог даних.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Вікно зневадження</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Використання пам&apos;яті</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Клієнт користувача</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Н/Д</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Інформація</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Загальна</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Версія клієнту</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Використовується BerkeleyDB версії</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Час запуску</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Мережа</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Ім’я</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Кількість підключень</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Ланцюг блоків</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Поточне число блоків</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Час останнього блоку</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Пул пам&apos;яті</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Поточне число транзакцій</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Файл звіту зневадження</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Консоль</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Мережевий трафік</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Всього</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Отримано</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Відправлено</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Учасники</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Заблоковані вузли</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Виберіть учасника для перегляду детальнішої інформації</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>В білому списку</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Напрямок</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Версія</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Сервіси</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Початковий Блок</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Синхронізовані Заголовки</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Синхронізовані Блоки</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Очки бану</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Час з&apos;єднання</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Востаннє відправлено</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Востаннє отримано</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Затримка</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>Тривалість поточної затримки.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Поточна Затримка</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Різниця часу</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;годину</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;день</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;тиждень</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;рік</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Наберіть &lt;b&gt;help&lt;/b&gt; для перегляду доступних команд.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Вхідних:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Вихідних:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 Б</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 КБ</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 МБ</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 ГБ</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(ІД вузла: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>через %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>ніколи</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Вхідний</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Вихідний</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Так</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ні</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Невідома</translation>
     </message>
 </context>
 <context>

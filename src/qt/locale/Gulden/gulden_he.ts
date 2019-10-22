@@ -9,6 +9,233 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 מ״ב</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>חלון ניפוי</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>שימוש בזכרון</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>סוכן משתמש</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>לא זמין</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>מי&amp;דע</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>כללי</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>גרסת מנשק</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>שימוש ב־BerkeleyDB גרסה</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>זמן עלייה</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>רשת</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>שם</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>מספר חיבורים</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>שרשרת מקטעים</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>מספר המקטעים הנוכחי</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>זמן המקטע האחרון</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>מאגר זכרון</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>מספר הפעולה הנוכחי</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>קובץ יומן ניפוי</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>מ&amp;סוף בקרה</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;תעבורת רשת</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>סכומים</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>התקבלו</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>נשלחו</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;עמיתים</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>משתמשים חסומים</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>נא לבחור בעמית כדי להציג מידע מפורט.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>ברשימה הלבנה</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>כיוון</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>גרסה</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>שירותים</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>בלוק התחלה</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>בלוקים מסונכרנים</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>דירוג חסימה</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>זמן החיבור</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>שליחה אחרונה</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>קבלה אחרונה</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>זמן המענה</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>הפרש זמן</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 שעה</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1&amp; יום</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp; שבוע</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp; שנה</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>ניתן להקליד &lt;b&gt;help&lt;/b&gt; לקבלת סקירה של הפקודות הזמינות.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>נכנס:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>יוצא:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 ב׳</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 ק״ב</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 ג״ב</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>דרך %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>לעולם לא</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>תעבורה נכנסת</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>תעבורה יוצאת</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>כן</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>לא</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>לא ידוע</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -514,233 +741,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>לא ניתן ליצור כאן תיקיית נתונים.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>חלון ניפוי</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>שימוש בזכרון</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>סוכן משתמש</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>לא זמין</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>מי&amp;דע</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>כללי</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>גרסת מנשק</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>שימוש ב־BerkeleyDB גרסה</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>זמן עלייה</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>רשת</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>שם</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>מספר חיבורים</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>שרשרת מקטעים</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>מספר המקטעים הנוכחי</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>זמן המקטע האחרון</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>מאגר זכרון</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>מספר הפעולה הנוכחי</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>קובץ יומן ניפוי</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>מ&amp;סוף בקרה</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;תעבורת רשת</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>סכומים</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>התקבלו</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>נשלחו</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;עמיתים</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>משתמשים חסומים</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>נא לבחור בעמית כדי להציג מידע מפורט.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>ברשימה הלבנה</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>כיוון</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>גרסה</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>שירותים</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>בלוק התחלה</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>בלוקים מסונכרנים</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>דירוג חסימה</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>זמן החיבור</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>שליחה אחרונה</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>קבלה אחרונה</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>זמן המענה</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>הפרש זמן</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 שעה</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1&amp; יום</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp; שבוע</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp; שנה</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>ניתן להקליד &lt;b&gt;help&lt;/b&gt; לקבלת סקירה של הפקודות הזמינות.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>נכנס:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>יוצא:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 ב׳</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 ק״ב</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 מ״ב</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 ג״ב</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>דרך %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>לעולם לא</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>תעבורה נכנסת</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>תעבורה יוצאת</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>כן</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>לא</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>לא ידוע</translation>
     </message>
 </context>
 <context>

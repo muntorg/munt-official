@@ -9,6 +9,153 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 مگابایت</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>پنجرهٔ اشکالزدایی</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>مصرف حافظه</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>ناموجود</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;اطلاعات</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>عمومی</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>نسخهٔ کلاینت</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>زمان آغاز به کار</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>شبکه</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>اسم</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>تعداد ارتباطات</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>زنجیرهٔ بلوک‌ها</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>تعداد فعلی بلوک‌ها</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>زمان آخرین بلوک</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>استخر حافظه</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>فایلِ لاگِ اشکال زدایی</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;کنسول</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>جمع کل:</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>دریافتی</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>ارسال شده</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>نسخه</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>سرویس ها</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>مدت اتصال</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>ارسال شده آخرین بار</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>آخرین دریافتی</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>زمان پینگ</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>انتظار پینگ</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>برای نمایش یک مرور کلی از دستورات ممکن، عبارت &lt;b&gt;help&lt;/b&gt; را بنویسید.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>در:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 بایت</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 کیلوبایت</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 گیگابایت</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>هرگز</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>بله</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>خیر</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>ناشناخته</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -602,153 +749,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>نمی‌توان پوشهٔ داده در این‌جا ایجاد کرد.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>پنجرهٔ اشکالزدایی</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>مصرف حافظه</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>ناموجود</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;اطلاعات</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>عمومی</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>نسخهٔ کلاینت</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>زمان آغاز به کار</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>شبکه</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>اسم</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>تعداد ارتباطات</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>زنجیرهٔ بلوک‌ها</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>تعداد فعلی بلوک‌ها</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>زمان آخرین بلوک</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>استخر حافظه</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>فایلِ لاگِ اشکال زدایی</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;کنسول</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>جمع کل:</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>دریافتی</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>ارسال شده</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>نسخه</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>سرویس ها</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>مدت اتصال</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>ارسال شده آخرین بار</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>آخرین دریافتی</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>زمان پینگ</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>انتظار پینگ</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>برای نمایش یک مرور کلی از دستورات ممکن، عبارت &lt;b&gt;help&lt;/b&gt; را بنویسید.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>در:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 بایت</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 کیلوبایت</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 مگابایت</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 گیگابایت</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>هرگز</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>بله</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>خیر</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>ناشناخته</translation>
     </message>
 </context>
 <context>

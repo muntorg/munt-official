@@ -9,6 +9,277 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Fejlsøgningsvindue</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Hukommelsesforbrug</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Brugeragent</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Information</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Generelt</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Klientversion</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Bruger BerkeleyDB version</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Datamappe</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Opstartstidspunkt</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Netværk</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Navn</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Antal forbindelser</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Blokkæde</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Nuværende antal blokke</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Tidsstempel for seneste blok</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Hukommelsespulje</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Aktuelt antal transaktioner</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Fejlsøgningslogfil</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konsol</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Netværkstrafik</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Totaler</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Modtaget</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Sendt</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>Andre &amp;knuder</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Bandlyste knuder</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Vælg en anden knude for at se detaljeret information.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>På hvidliste</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Retning</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Version</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Tjenester</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Startblok</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Synkroniserede headers</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Synkroniserede blokke</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Bandlysningsscore</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Forbindelsestid</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Seneste afsendelse</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Seneste modtagelse</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Ping-tid</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Varigheden af den aktuelt igangværende ping.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping-ventetid</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Minimum ping</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Tidsforskydning</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Afbryd forbindelse</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Bandlys i</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;time</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;dag</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;uge</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;år</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Fjern bandlysning</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Tast &lt;b&gt;help&lt;/b&gt; for en oversigt over de tilgængelige kommandoer.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>ADVARSEL: Svindlere har tidligere forsøgt at få folk til at indtaste kommandoer her og derved stjæle indholdet af deres tegnebog. Brug ikke denne konsol uden fuldt ud at forstå følgerne for en kommando.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Indkommende:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Udgående:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netværksaktivitet deaktiveret</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(knude-id: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>aldrig</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Indkommende</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Udgående</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nej</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Ukendt</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1322,277 +1593,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Kan ikke oprette en mappe her.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Fejlsøgningsvindue</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Hukommelsesforbrug</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Brugeragent</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Information</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Generelt</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Klientversion</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Bruger BerkeleyDB version</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Datamappe</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Opstartstidspunkt</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Netværk</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Navn</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Antal forbindelser</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Blokkæde</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Nuværende antal blokke</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Tidsstempel for seneste blok</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Hukommelsespulje</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Aktuelt antal transaktioner</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Fejlsøgningslogfil</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konsol</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Netværkstrafik</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Totaler</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Modtaget</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Sendt</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>Andre &amp;knuder</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Bandlyste knuder</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Vælg en anden knude for at se detaljeret information.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>På hvidliste</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Retning</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Version</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Tjenester</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Startblok</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Synkroniserede headers</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Synkroniserede blokke</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Bandlysningsscore</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Forbindelsestid</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Seneste afsendelse</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Seneste modtagelse</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Ping-tid</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>Varigheden af den aktuelt igangværende ping.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Ping-ventetid</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Minimum ping</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Tidsforskydning</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>&amp;Afbryd forbindelse</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Bandlys i</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;time</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;dag</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;uge</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;år</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>&amp;Fjern bandlysning</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Tast &lt;b&gt;help&lt;/b&gt; for en oversigt over de tilgængelige kommandoer.</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>ADVARSEL: Svindlere har tidligere forsøgt at få folk til at indtaste kommandoer her og derved stjæle indholdet af deres tegnebog. Brug ikke denne konsol uden fuldt ud at forstå følgerne for en kommando.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Indkommende:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Udgående:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>Netværksaktivitet deaktiveret</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(knude-id: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>aldrig</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Indkommende</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Udgående</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nej</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Ukendt</translation>
     </message>
 </context>
 <context>

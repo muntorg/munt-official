@@ -9,6 +9,396 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>MiningAccountDialog</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
+        <translation>Het verhogen van het aantal threads zal je mining snelheid verhogen, maar het verhoogt ook je energie verbruik en kan andere applicaties die je gebruikt vertragen.</translation>
+    </message>
+    <message>
+        <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
+        <translation>Het verlagen van het geheugengebruik is niet aanbevolen. Het vertraagt je mining operatie terwijl het evenveel cpu kracht en energie gebruikt. Alleen gebruiken als laatste optie op machines met een laag geheugen.</translation>
+    </message>
+    <message>
+        <source>%1 Mb</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>%1 threads</source>
+        <translation>%1 threads</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres naar klembord gekopiëerd</translation>
+    </message>
+    <message>
+        <source>Mining address</source>
+        <translation>Mining adres</translation>
+    </message>
+    <message>
+        <source>My mining address</source>
+        <translation>Mijn mining adres</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopiëer adres naar klembord</translation>
+    </message>
+    <message>
+        <source>Edit mining address</source>
+        <translation>Mining adres wijzigen</translation>
+    </message>
+    <message>
+        <source>Reset mining address</source>
+        <translation>Mining adres herstellen</translation>
+    </message>
+    <message>
+        <source>My mining settings</source>
+        <translation>Mijn mining instellingen</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>Processor usage</source>
+        <translation>Processorgebruik</translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation>#</translation>
+    </message>
+    <message>
+        <source>Automatically mine at startup</source>
+        <translation>Automatisch minen bij opstarten</translation>
+    </message>
+    <message>
+        <source>Keep application open when mining</source>
+        <translation>Laat applicatie open tijdens minen</translation>
+    </message>
+    <message>
+        <source>My mining statistics</source>
+        <translation>Mijn mining statistieken</translation>
+    </message>
+    <message>
+        <source>Best reported speed</source>
+        <translation>Beste geregistreerde snelheid</translation>
+    </message>
+    <message>
+        <source>Moving average</source>
+        <translation>Voortschrijdend gemiddelde</translation>
+    </message>
+    <message>
+        <source>Last reported speed</source>
+        <translation>Laatst geregistreerde snelheid</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Mining stoppen</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Mining starten</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Debugvenster</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Useragent</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N.v.t.</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informatie</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Algemeen</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Clientversie</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Gebruikt BerkeleyDB versie</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Datamap</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Opstarttijd</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Netwerk</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Naam</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Aantal verbindingen</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Blokketen</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Huidig aantal blokken</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Tijd laatste blok</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Geheugen Poel</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Huidig aantal transacties</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Debuglogbestand</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Open het %1 logboekbestand voor foutopsporing in de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Open</translation>
+    </message>
+    <message>
+        <source>Current PoW² phase</source>
+        <translation>Huidige PoW²-fase</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Console</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Netwerkverkeer</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Reset</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Totalen</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Ontvangen</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Verstuurd</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Peers</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Verbannen peers</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Selecteer een peer om gedetailleerde informatie te bekijken.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Whitelisted</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Richting</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Versie</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Services</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Start Blok</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Gesynchroniseerde Headers</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Gesynchroniseerde Blokken</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Ban score</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Verbindingsduur</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Laatst verstuurd</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Laatst ontvangen</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Pingtijd</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>De duur van een momenteel openstaande ping.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping Wacht</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Minimale Ping</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Tijdsverschuiving</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Loskoppelen</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Verban voor</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;uur</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;dag</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;week</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;jaar</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Ontban</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Welkom bij de %1 RPC-console.</translation>
+    </message>
+    <message>
+        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
+        <translation>Gebruik de omhoog en omlaag pijltoetsen om door de geschiedenis te bladeren en %1 om het scherm te legen.</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Voer &lt;b&gt;help&lt;/b&gt; in voor een overzicht van de beschikbare commando&apos;s.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>WAARSCHUWING: Er zijn oplichters actief geweest, die gebruikers hebben verteld om hier opdrachten in te voeren en zo hun portemonnee te stelen. Gebruik deze console niet zonder de implicaties van een commando volledig te begrijpen.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>In:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Uit:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netwerkactiviteit uitgeschakeld</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 Kb</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 Gb</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(knooppunt-ID: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>nooit</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Inkomend</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Uitgaand</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nee</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Onbekend</translation>
+    </message>
+</context>
+<context>
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
@@ -2724,301 +3114,6 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     </message>
 </context>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Debugvenster</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Geheugengebruik</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Useragent</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N.v.t.</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informatie</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Algemeen</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Clientversie</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Gebruikt BerkeleyDB versie</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Datamap</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Opstarttijd</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Netwerk</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Naam</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Aantal verbindingen</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Blokketen</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Huidig aantal blokken</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Tijd laatste blok</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Geheugen Poel</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Huidig aantal transacties</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Debuglogbestand</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Open het %1 logboekbestand voor foutopsporing in de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation>Open</translation>
-    </message>
-    <message>
-        <source>Current PoW² phase</source>
-        <translation>Huidige PoW²-fase</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Console</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Netwerkverkeer</translation>
-    </message>
-    <message>
-        <source>&amp;Reset</source>
-        <translation>&amp;Reset</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Totalen</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Ontvangen</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Verstuurd</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Peers</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Verbannen peers</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Selecteer een peer om gedetailleerde informatie te bekijken.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Whitelisted</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Richting</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Versie</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Services</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Start Blok</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Gesynchroniseerde Headers</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Gesynchroniseerde Blokken</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Ban score</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Verbindingsduur</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Laatst verstuurd</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Laatst ontvangen</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Pingtijd</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>De duur van een momenteel openstaande ping.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Ping Wacht</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Minimale Ping</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Tijdsverschuiving</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>&amp;Loskoppelen</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Verban voor</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;uur</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;dag</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;week</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;jaar</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>&amp;Ontban</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>Welkom bij de %1 RPC-console.</translation>
-    </message>
-    <message>
-        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
-        <translation>Gebruik de omhoog en omlaag pijltoetsen om door de geschiedenis te bladeren en %1 om het scherm te legen.</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Voer &lt;b&gt;help&lt;/b&gt; in voor een overzicht van de beschikbare commando&apos;s.</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>WAARSCHUWING: Er zijn oplichters actief geweest, die gebruikers hebben verteld om hier opdrachten in te voeren en zo hun portemonnee te stelen. Gebruik deze console niet zonder de implicaties van een commando volledig te begrijpen.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>In:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Uit:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>Netwerkactiviteit uitgeschakeld</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 Kb</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 Mb</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 Gb</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(knooppunt-ID: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>nooit</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Inkomend</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Uitgaand</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nee</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Onbekend</translation>
-    </message>
-</context>
-<context>
     <name>Intro</name>
     <message>
         <source>Error</source>
@@ -3654,97 +3749,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Reset all settings changed in the GUI</source>
         <translation>Herstel alle instellingen van de interface</translation>
-    </message>
-</context>
-<context>
-    <name>MiningAccountDialog</name>
-    <message>
-        <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
-        <translation>Het verhogen van het aantal threads zal je mining snelheid verhogen, maar het verhoogt ook je energie verbruik en kan andere applicaties die je gebruikt vertragen.</translation>
-    </message>
-    <message>
-        <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
-        <translation>Het verlagen van het geheugengebruik is niet aanbevolen. Het vertraagt je mining operatie terwijl het evenveel cpu kracht en energie gebruikt. Alleen gebruiken als laatste optie op machines met een laag geheugen.</translation>
-    </message>
-    <message>
-        <source>%1 Mb</source>
-        <translation>%1 Mb</translation>
-    </message>
-    <message>
-        <source>%1 threads</source>
-        <translation>%1 threads</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adres naar klembord gekopiëerd</translation>
-    </message>
-    <message>
-        <source>Mining address</source>
-        <translation>Mining adres</translation>
-    </message>
-    <message>
-        <source>My mining address</source>
-        <translation>Mijn mining adres</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Kopiëer adres naar klembord</translation>
-    </message>
-    <message>
-        <source>Edit mining address</source>
-        <translation>Mining adres wijzigen</translation>
-    </message>
-    <message>
-        <source>Reset mining address</source>
-        <translation>Mining adres herstellen</translation>
-    </message>
-    <message>
-        <source>My mining settings</source>
-        <translation>Mijn mining instellingen</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Geheugengebruik</translation>
-    </message>
-    <message>
-        <source>Processor usage</source>
-        <translation>Processorgebruik</translation>
-    </message>
-    <message>
-        <source>#</source>
-        <translation>#</translation>
-    </message>
-    <message>
-        <source>Automatically mine at startup</source>
-        <translation>Automatisch minen bij opstarten</translation>
-    </message>
-    <message>
-        <source>Keep application open when mining</source>
-        <translation>Laat applicatie open tijdens minen</translation>
-    </message>
-    <message>
-        <source>My mining statistics</source>
-        <translation>Mijn mining statistieken</translation>
-    </message>
-    <message>
-        <source>Best reported speed</source>
-        <translation>Beste geregistreerde snelheid</translation>
-    </message>
-    <message>
-        <source>Moving average</source>
-        <translation>Voortschrijdend gemiddelde</translation>
-    </message>
-    <message>
-        <source>Last reported speed</source>
-        <translation>Laatst geregistreerde snelheid</translation>
-    </message>
-    <message>
-        <source>Stop mining</source>
-        <translation>Mining stoppen</translation>
-    </message>
-    <message>
-        <source>Start mining</source>
-        <translation>Mining starten</translation>
     </message>
 </context>
 <context>

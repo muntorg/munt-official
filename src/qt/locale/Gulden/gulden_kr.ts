@@ -10,6 +10,261 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 메가바이트</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>디버그 창</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>메모리 사용량</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>유저 에이전트</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>없음</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>정보(&amp;I)</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>일반</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>클라이언트 버전</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>사용 중인 BerkeleyDB 버전</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>데이터 폴더</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>시작 시간</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>네트워크</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>이름</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>연결 수</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>블럭 체인</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>현재 블럭 수</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>최종 블럭 시각</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>메모리 풀</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>현재 트랜잭션 수</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>로그 파일 디버그</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>%1 디버그 로그파일을 현재 데이터 폴더에서 엽니다. 용량이 큰 로그 파일들은 몇 초가 걸릴 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>콘솔(&amp;C)</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>네트워크 트래픽(&amp;N)</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>총액</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>받음</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>보냄</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>피어(&amp;P)</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>차단된 피어</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>자세한 정보를 보려면 피어를 선택하세요.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>화이트리스트에 포함</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>방향</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>버전</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>서비스</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>시작된 블록</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>동기화된 헤더</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>동기화된 블록</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>밴 스코어</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>접속 시간</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>마지막으로 보낸 시간</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>마지막으로 받은 시간</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Ping 시간</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>현재 진행중인 PING에 걸린 시간.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping 대기</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>시간 오프셋</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1시간(&amp;H)</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1일(&amp;D)</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1주(&amp;W)</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1년(&amp;Y)</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>%1 RPC 콘솔에 오신걸 환영합니다</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>사용할 수 있는 명령을 둘러보려면 &lt;b&gt;help&lt;/b&gt;를 입력하십시오.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>In:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Out:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 바이트</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 킬로바이트</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 기가바이트</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(노드 ID: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>%1 경유</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>없음</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>인바운드</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>아웃바운드</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>예</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>아니오</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>알수없음</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -867,261 +1122,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>데이터 폴더를 여기 생성할 수 없습니다.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>디버그 창</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>메모리 사용량</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>유저 에이전트</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>없음</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>정보(&amp;I)</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>일반</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>클라이언트 버전</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>사용 중인 BerkeleyDB 버전</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>데이터 폴더</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>시작 시간</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>네트워크</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>이름</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>연결 수</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>블럭 체인</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>현재 블럭 수</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>최종 블럭 시각</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>메모리 풀</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>현재 트랜잭션 수</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>로그 파일 디버그</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>%1 디버그 로그파일을 현재 데이터 폴더에서 엽니다. 용량이 큰 로그 파일들은 몇 초가 걸릴 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>콘솔(&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>네트워크 트래픽(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>총액</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>받음</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>보냄</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>피어(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>차단된 피어</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>자세한 정보를 보려면 피어를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>화이트리스트에 포함</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>방향</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>버전</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>서비스</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>시작된 블록</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>동기화된 헤더</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>동기화된 블록</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>밴 스코어</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>접속 시간</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>마지막으로 보낸 시간</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>마지막으로 받은 시간</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Ping 시간</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>현재 진행중인 PING에 걸린 시간.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Ping 대기</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>시간 오프셋</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1시간(&amp;H)</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1일(&amp;D)</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1주(&amp;W)</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1년(&amp;Y)</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>%1 RPC 콘솔에 오신걸 환영합니다</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>사용할 수 있는 명령을 둘러보려면 &lt;b&gt;help&lt;/b&gt;를 입력하십시오.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>In:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Out:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 바이트</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 킬로바이트</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 메가바이트</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 기가바이트</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(노드 ID: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>%1 경유</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>없음</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>인바운드</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>아웃바운드</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>예</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>아니오</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>알수없음</translation>
     </message>
 </context>
 <context>

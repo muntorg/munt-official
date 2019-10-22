@@ -9,6 +9,285 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>デバッグ ウインドウ</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>メモリ使用量</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>ユーザエージェント</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>情報 (&amp;I)</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>一般</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>クライアントのバージョン</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>使用中のBerkleyDBバージョン</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>データディレクトリ</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>起動した日時</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>ネットワーク</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>名前</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>接続数</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>ブロック チェーン</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>現在のブロック数</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>最終ブロックの日時</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>メモリ・プール</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>現在のトランザクション数</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>デバッグ用ログファイル</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>現在のデータディレクトリから %1 のデバッグ用ログファイルを開きます。ログファイルが巨大な場合、数秒かかることがあります。</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>コンソール (&amp;C)</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>ネットワーク (&amp;N)</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>合計</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>受取</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>送金</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>ピア (&amp;P)</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Banされたピア</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>詳しい情報を見たいピアを選択してください。</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>ホワイトリスト</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>方向</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>バージョン</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>サービス</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>開始ブロック</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>同期済みヘッダ</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>同期済みブロック</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Banスコア</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>接続時間</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>最終送信</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>最終受信</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Ping時間</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>現在実行中のpingにかかっている時間。</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping待ち</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>最小 Ping</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>時間オフセット</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>切断 (&amp;D)</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Banする:</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1時間 (&amp;H)</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1日 (&amp;D)</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1週間 (&amp;W)</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1年 (&amp;Y)</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>Banを解除する (&amp;U)</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>%1 のRPCコンソールへようこそ。</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>使用可能なコマンドを見るには &lt;b&gt;help&lt;/b&gt; と入力します。</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>警告: 詐欺師が活動しており、ユーザに対してここにコマンドを入力させることでウォレットの中身を盗もうとしています。コマンドの結果を完全に理解していない限り、このコンソールは利用しないでください。</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>入力:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>出力:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>ネットワーク活動は無効化されました</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(ノードID: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>%1経由</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>一度もなし</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>内向き</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>外向き</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>はい</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>いいえ</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>未知</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1310,285 +1589,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>ここにデータ ディレクトリを作成することはできません。</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>デバッグ ウインドウ</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>メモリ使用量</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>ユーザエージェント</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>情報 (&amp;I)</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>一般</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>クライアントのバージョン</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>使用中のBerkleyDBバージョン</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>データディレクトリ</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>起動した日時</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>ネットワーク</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>名前</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>接続数</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>ブロック チェーン</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>現在のブロック数</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>最終ブロックの日時</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>メモリ・プール</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>現在のトランザクション数</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>デバッグ用ログファイル</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>現在のデータディレクトリから %1 のデバッグ用ログファイルを開きます。ログファイルが巨大な場合、数秒かかることがあります。</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>コンソール (&amp;C)</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>ネットワーク (&amp;N)</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>合計</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>受取</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>送金</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>ピア (&amp;P)</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Banされたピア</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>詳しい情報を見たいピアを選択してください。</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>ホワイトリスト</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>方向</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>バージョン</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>サービス</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>開始ブロック</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>同期済みヘッダ</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>同期済みブロック</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Banスコア</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>接続時間</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>最終送信</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>最終受信</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Ping時間</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>現在実行中のpingにかかっている時間。</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Ping待ち</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>最小 Ping</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>時間オフセット</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>切断 (&amp;D)</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Banする:</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1時間 (&amp;H)</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1日 (&amp;D)</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1週間 (&amp;W)</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1年 (&amp;Y)</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>Banを解除する (&amp;U)</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>%1 のRPCコンソールへようこそ。</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>使用可能なコマンドを見るには &lt;b&gt;help&lt;/b&gt; と入力します。</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>警告: 詐欺師が活動しており、ユーザに対してここにコマンドを入力させることでウォレットの中身を盗もうとしています。コマンドの結果を完全に理解していない限り、このコンソールは利用しないでください。</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>入力:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>出力:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>ネットワーク活動は無効化されました</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(ノードID: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>%1経由</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>一度もなし</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>内向き</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>外向き</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>はい</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>いいえ</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>未知</translation>
     </message>
 </context>
 <context>

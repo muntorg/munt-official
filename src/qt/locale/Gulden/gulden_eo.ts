@@ -9,6 +9,129 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Sencimiga fenestro</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Uzanto Agento</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>neaplikebla</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informoj</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Ĝenerala</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Versio de kliento</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Horo de lanĉo</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Reto</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nomo</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Nombro de konektoj</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Blokĉeno</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Aktuala nombro de blokoj</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Horo de la lasta bloko</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Sencimiga protokoldosiero</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konzolo</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Reta Trafiko</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Totaloj</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Ricevita</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Sendita</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Samuloj</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Malpermesita samuloj.</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Versio</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Servoj</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Tajpu &lt;b&gt;help&lt;/b&gt; por superrigardo de la disponeblaj komandoj.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>En:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>El:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -356,129 +479,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Ne eblas krei dosierujon por datumoj ĉi tie.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Sencimiga fenestro</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Uzanto Agento</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>neaplikebla</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informoj</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Ĝenerala</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Versio de kliento</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Horo de lanĉo</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Reto</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Nomo</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Nombro de konektoj</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Blokĉeno</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Aktuala nombro de blokoj</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Horo de la lasta bloko</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Sencimiga protokoldosiero</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konzolo</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Reta Trafiko</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Totaloj</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Ricevita</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Sendita</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Samuloj</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Malpermesita samuloj.</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Versio</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Servoj</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Tajpu &lt;b&gt;help&lt;/b&gt; por superrigardo de la disponeblaj komandoj.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>En:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>El:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
     </message>
 </context>
 <context>

@@ -385,7 +385,7 @@ void MiningAccountDialog::slotUpdateMiningStats()
     
     if (PoWGenerationIsActive())
     {
-        // Call again every 5 seconds as long as mining is active
-        QTimer::singleShot( 5000, this, SLOT(slotUpdateMiningStats()) );
+        // Call again every 2 seconds as long as mining is active
+        QTimer::singleShot( 2000, this, SLOT(slotUpdateMiningStats()) );
     }
 }

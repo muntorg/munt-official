@@ -9,6 +9,285 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB (百萬位元組)</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>除錯視窗</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>記憶體使用量</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>使用者代理</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>未知</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>資訊</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>普通</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>客戶端軟體版本</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>使用 BerkeleyDB 版本</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>資料目錄</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>啓動時間</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>網路</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>名稱</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>連線數</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>區塊鏈</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>目前區塊數</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>最近區塊時間</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>記憶體暫存池</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>目前交易數目</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>除錯紀錄檔</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>從目前的資料目錄下開啓 %1 的除錯紀錄檔。當紀錄檔很大時，可能會花好幾秒的時間。</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>主控台</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>網路流量</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>總計</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>收到</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>送出</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>節點</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>被禁節點</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>選一個節點來看詳細資訊</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>列在白名單</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>方向</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>版本</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>服務</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>起始區塊</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>已同步前導資料</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>已同步區塊</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>惡劣分數</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>連線時間</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>最近送出</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>最近收到</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Ping 時間</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>目前這一次 ping 已經過去的時間。</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping 等待時間</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Ping 最短時間</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>時間差</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>斷線</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>禁止連線</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 小時</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 天</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 星期</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 年</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>連線解禁</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>歡迎使用 %1 的 RPC 主控台。</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>請打 &lt;b&gt;help&lt;/b&gt; 來看可用指令的簡介。</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>警告:  已知有詐騙集團會叫人在這個畫面輸入指令，以偷取他們錢包的內容物。請不要在沒有充分理解指令可能造成後果的情況下使用主控台。</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>來:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>去:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>網路活動已關閉</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B (位元組)</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB (千位元組)</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB (十億位元組)</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(節點識別碼: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>經由 %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>沒有過</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>進來</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>出去</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>否</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>不明</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1304,285 +1583,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>沒辦法在這裡造出資料目錄。</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>除錯視窗</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>記憶體使用量</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>使用者代理</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>未知</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>普通</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>客戶端軟體版本</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>使用 BerkeleyDB 版本</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>資料目錄</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>啓動時間</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>網路</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>名稱</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>連線數</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>區塊鏈</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>目前區塊數</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>最近區塊時間</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>記憶體暫存池</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>目前交易數目</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>除錯紀錄檔</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>從目前的資料目錄下開啓 %1 的除錯紀錄檔。當紀錄檔很大時，可能會花好幾秒的時間。</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>主控台</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>網路流量</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>總計</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>收到</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>送出</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>節點</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>被禁節點</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>選一個節點來看詳細資訊</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>列在白名單</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>方向</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>版本</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>服務</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>起始區塊</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>已同步前導資料</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>已同步區塊</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>惡劣分數</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>連線時間</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>最近送出</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>最近收到</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Ping 時間</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>目前這一次 ping 已經過去的時間。</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Ping 等待時間</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Ping 最短時間</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>時間差</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>斷線</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>禁止連線</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 小時</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 天</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 星期</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 年</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>連線解禁</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>歡迎使用 %1 的 RPC 主控台。</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>請打 &lt;b&gt;help&lt;/b&gt; 來看可用指令的簡介。</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>警告:  已知有詐騙集團會叫人在這個畫面輸入指令，以偷取他們錢包的內容物。請不要在沒有充分理解指令可能造成後果的情況下使用主控台。</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>來:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>去:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>網路活動已關閉</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B (位元組)</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB (千位元組)</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB (百萬位元組)</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB (十億位元組)</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(節點識別碼: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>經由 %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>沒有過</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>進來</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>出去</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>是</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>否</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>不明</translation>
     </message>
 </context>
 <context>

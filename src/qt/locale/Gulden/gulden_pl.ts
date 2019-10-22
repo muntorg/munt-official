@@ -9,6 +9,301 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Okno debugowania</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Zużycie pamięci</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Aplikacja kliencka</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>NIEDOSTĘPNE</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informacje</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Ogólne</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Wersja klienta</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Używana wersja BerkeleyDB </translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Katalog danych</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Czas uruchomienia</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Sieć</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nazwa</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Liczba połączeń</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Łańcuch bloków</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Aktualna liczba bloków</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Czas ostatniego bloku</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Memory Pool (obszar pamięci)</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Obecna liczba transakcji</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Plik logowania debugowania</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Otwórz plik dziennika debugowania %1 z obecnego katalogu z danymi. Może to potrwać kilka sekund przy większych plikach.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Otwórz</translation>
+    </message>
+    <message>
+        <source>Current PoW² phase</source>
+        <translation>Obecny okres PoW²</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konsola</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>$Ruch sieci</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Resetuj</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Kwota ogólna</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Otrzymane</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Wysłane</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Węzły</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Blokowane węzły</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Wybierz węzeł żeby zobaczyć szczegóły.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Biała lista</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Kierunek</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Wersja</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Usługi</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Blok startowy</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Zsynchronizowane nagłówki</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Zsynchronizowane bloki</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Punkty karne</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Czas połączenia</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Ostatnio wysłano</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Ostatnio odebrano</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Czas odpowiedzi</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Czas trwania nadmiarowego pingu</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Czas odpowiedzi</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Minimalny czas odpowiedzi</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Przesunięcie czasu</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Rozłącz</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Zbanuj na</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;godzina</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;dzień</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;tydzień</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;rok</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Odblokuj</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Witaj w konsoli %1 RPC.</translation>
+    </message>
+    <message>
+        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
+        <translation>Użyj strzałek w górę iw dół, aby poruszać się po historii, i %1 aby wyczyścić ekran.</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Wpisz &lt;b&gt;help&lt;/b&gt; aby uzyskać listę dostępnych komend</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>OSTRZEŻENIE: Scammers (oszuści) są aktywni, mówiąc użytkownikom aby wpisywali tutaj polecenia, kradnąc zawartość portfela. Nie używaj tej konsoli bez pełnego zrozumienia rozgałęzienia poleceń.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Wejście:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Wyjście:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Aktywność sieci wyłączona</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(id węzła: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>przez %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>nigdy</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Wejściowy</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Wyjściowy</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Tak</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nie</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Nieznany</translation>
+    </message>
+</context>
+<context>
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
@@ -2735,301 +3030,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Nie można było tutaj utworzyć folderu.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Okno debugowania</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Zużycie pamięci</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Aplikacja kliencka</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>NIEDOSTĘPNE</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informacje</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Ogólne</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Wersja klienta</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Używana wersja BerkeleyDB </translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Katalog danych</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Czas uruchomienia</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Sieć</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Nazwa</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Liczba połączeń</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Łańcuch bloków</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Aktualna liczba bloków</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Czas ostatniego bloku</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Memory Pool (obszar pamięci)</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Obecna liczba transakcji</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Plik logowania debugowania</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Otwórz plik dziennika debugowania %1 z obecnego katalogu z danymi. Może to potrwać kilka sekund przy większych plikach.</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation>Otwórz</translation>
-    </message>
-    <message>
-        <source>Current PoW² phase</source>
-        <translation>Obecny okres PoW²</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konsola</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>$Ruch sieci</translation>
-    </message>
-    <message>
-        <source>&amp;Reset</source>
-        <translation>&amp;Resetuj</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Kwota ogólna</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Otrzymane</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Wysłane</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Węzły</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Blokowane węzły</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Wybierz węzeł żeby zobaczyć szczegóły.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Biała lista</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Kierunek</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Wersja</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Usługi</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Blok startowy</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Zsynchronizowane nagłówki</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Zsynchronizowane bloki</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Punkty karne</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Czas połączenia</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Ostatnio wysłano</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Ostatnio odebrano</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Czas odpowiedzi</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>Czas trwania nadmiarowego pingu</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Czas odpowiedzi</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Minimalny czas odpowiedzi</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Przesunięcie czasu</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>&amp;Rozłącz</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Zbanuj na</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;godzina</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;dzień</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;tydzień</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;rok</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>&amp;Odblokuj</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>Witaj w konsoli %1 RPC.</translation>
-    </message>
-    <message>
-        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
-        <translation>Użyj strzałek w górę iw dół, aby poruszać się po historii, i %1 aby wyczyścić ekran.</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Wpisz &lt;b&gt;help&lt;/b&gt; aby uzyskać listę dostępnych komend</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>OSTRZEŻENIE: Scammers (oszuści) są aktywni, mówiąc użytkownikom aby wpisywali tutaj polecenia, kradnąc zawartość portfela. Nie używaj tej konsoli bez pełnego zrozumienia rozgałęzienia poleceń.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Wejście:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Wyjście:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>Aktywność sieci wyłączona</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(id węzła: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>przez %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>nigdy</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Wejściowy</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Wyjściowy</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Tak</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nie</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Nieznany</translation>
     </message>
 </context>
 <context>

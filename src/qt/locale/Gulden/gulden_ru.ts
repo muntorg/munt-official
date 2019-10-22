@@ -9,6 +9,285 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 МБ</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Окно отладки</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Использование памяти</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Юзер-агент</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Информация</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Общие</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Версия клиента</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Используется версия BerkeleyDB</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Каталог для данных</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Время запуска</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Сеть</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Имя</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Число подключений</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Цепь блоков</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Текущее число блоков</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Время последнего блока</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Пул памяти</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Текущее число транзакций</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Отладочный лог-файл</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Открыть отладочный лог-файл %1 из текущего каталога данных. Это может занять несколько секунд для больших лог-файлов.</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>Консоль</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>Сетевой &amp;трафик</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Всего</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Получено</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Отправлено</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Участники</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Заблокированные участники</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Выберите участника для просмотра подробностей.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Доверенный</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Направление</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Версия</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Сервисы</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Начальный блок</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Синхронизировано заголовков</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Синхронизировано блоков</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Очков бана</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Время соединения</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Последняя отправка</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Последний раз получено</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Время задержки</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Длительность текущего пинга.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Время задержки</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Мин. пинг</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Смещение времени</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Отключиться</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Бан на</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;час</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;день</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;неделю</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;год</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Разбанить</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Добро пожаловать в консоль RPC %1.</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Напишите &lt;b&gt;help&lt;/b&gt; для просмотра доступных команд.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>ВНИМАНИЕ: мошенники предлагали пользователям вводить сюда команды, похищая таким образом содержимое их бумажников. Не используйте эту консоль без полного понимания смысла команд.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Вход:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Выход:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Сетевая активность запрещена</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 Б</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 КБ</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 ГБ</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(номер узла: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>через %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>никогда</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Входящие</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Исходящие</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Нет</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Неизвестно</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1334,285 +1613,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Не удаётся создать здесь каталог данных.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Окно отладки</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Использование памяти</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Юзер-агент</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Н/Д</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Информация</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Общие</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Версия клиента</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Используется версия BerkeleyDB</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Каталог для данных</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Время запуска</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Сеть</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Имя</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Число подключений</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Цепь блоков</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Текущее число блоков</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Время последнего блока</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Пул памяти</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Текущее число транзакций</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Отладочный лог-файл</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Открыть отладочный лог-файл %1 из текущего каталога данных. Это может занять несколько секунд для больших лог-файлов.</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>Консоль</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>Сетевой &amp;трафик</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Всего</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Получено</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Отправлено</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Участники</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Заблокированные участники</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Выберите участника для просмотра подробностей.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Доверенный</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Направление</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Версия</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Сервисы</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Начальный блок</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Синхронизировано заголовков</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Синхронизировано блоков</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Очков бана</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Время соединения</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Последняя отправка</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Последний раз получено</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Время задержки</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>Длительность текущего пинга.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Время задержки</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Мин. пинг</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Смещение времени</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>&amp;Отключиться</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Бан на</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;час</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;день</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;неделю</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;год</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>&amp;Разбанить</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>Добро пожаловать в консоль RPC %1.</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Напишите &lt;b&gt;help&lt;/b&gt; для просмотра доступных команд.</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>ВНИМАНИЕ: мошенники предлагали пользователям вводить сюда команды, похищая таким образом содержимое их бумажников. Не используйте эту консоль без полного понимания смысла команд.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Вход:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Выход:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>Сетевая активность запрещена</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 Б</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 КБ</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 МБ</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 ГБ</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(номер узла: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>через %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>никогда</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Входящие</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Исходящие</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Да</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Нет</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Неизвестно</translation>
     </message>
 </context>
 <context>

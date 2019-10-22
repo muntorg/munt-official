@@ -773,12 +773,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The entered address &quot;%1&quot; is not a valid Gulden address.</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+13"/>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
         <translation>The entered address &quot;%1&quot; is already in the address book.</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+6"/>
         <source>Could not unlock wallet.</source>
         <translation>Could not unlock wallet.</translation>
     </message>
@@ -1771,7 +1771,13 @@ Witness weight: %5</translation>
 <context>
     <name>MiningAccountDialog</name>
     <message>
-        <location filename="../../_Gulden/miningaccountdialog.cpp" line="+74"/>
+        <location filename="../../_Gulden/miningaccountdialog.cpp" line="+130"/>
+        <location line="+231"/>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <location line="-285"/>
         <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
         <translation>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</translation>
     </message>
@@ -1781,13 +1787,7 @@ Witness weight: %5</translation>
         <translation>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</translation>
     </message>
     <message>
-        <location line="+39"/>
-        <location line="+231"/>
-        <source>%1 MB</source>
-        <translation type="unfinished">%1 MB</translation>
-    </message>
-    <message>
-        <location line="-230"/>
+        <location line="+51"/>
         <location line="+235"/>
         <source>%1 threads</source>
         <translation>%1 threads</translation>
@@ -1843,17 +1843,17 @@ Witness weight: %5</translation>
         <translation>#</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+40"/>
         <source>Automatically mine at startup</source>
         <translation>Automatically mine at startup</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+40"/>
         <source>Keep application open when mining</source>
         <translation>Keep application open when mining</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+25"/>
         <source>My mining statistics</source>
         <translation>My mining statistics</translation>
     </message>
@@ -2789,6 +2789,11 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>RPCConsole</name>
     <message>
+        <location filename="../../rpcconsole.cpp" line="+972"/>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <location filename="../../forms/debugwindow.ui" line="+14"/>
         <source>Debug window</source>
         <translation>Debug window</translation>
@@ -2972,7 +2977,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <location line="+60"/>
-        <location filename="../../rpcconsole.cpp" line="+468"/>
+        <location filename="../../rpcconsole.cpp" line="-504"/>
         <location line="+763"/>
         <source>Select a peer to view detailed information.</source>
         <translation>Select a peer to view detailed information.</translation>
@@ -3141,12 +3146,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>%1 KB</translation>
     </message>
     <message>
-        <location line="+2"/>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="+4"/>
         <source>%1 GB</source>
         <translation>%1 GB</translation>
     </message>

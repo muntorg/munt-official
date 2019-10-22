@@ -9,6 +9,147 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>Jendela debug</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Agen Pengguna
+
+</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>T/S</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informasi</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Umum</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Versi Klien</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Waktu nyala</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Jaringan</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nama</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Jumlah hubungan</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Rantai blok</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Jumlah blok terkini</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Waktu blok terakhir</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Berkas catatan debug</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konsol</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>Kemacetan &amp;Jaringan </translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Total</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Terkirim</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Versi</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Layanan</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;jam</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;hari</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;minggu</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;tahun</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Ketik &lt;b&gt;help&lt;/b&gt; untuk menampilkan perintah tersedia.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Masuk:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Keluar:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ya</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Tidak</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Tidak diketahui</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -387,147 +528,6 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Tidak bisa membuat direktori data disini.</translation>
-    </message>
-</context>
-<context>
-    <name>RPCConsole</name>
-    <message>
-        <source>Debug window</source>
-        <translation>Jendela debug</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Agen Pengguna
-
-</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>T/S</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informasi</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Umum</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Versi Klien</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Waktu nyala</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Jaringan</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Nama</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Jumlah hubungan</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Rantai blok</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Jumlah blok terkini</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Waktu blok terakhir</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Berkas catatan debug</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konsol</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>Kemacetan &amp;Jaringan </translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Total</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Terkirim</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Versi</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Layanan</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;jam</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;hari</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;minggu</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;tahun</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Ketik &lt;b&gt;help&lt;/b&gt; untuk menampilkan perintah tersedia.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Masuk:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Keluar:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ya</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Tidak</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Tidak diketahui</translation>
     </message>
 </context>
 <context>
