@@ -68,6 +68,8 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     ui->miningResetAddressButton->setTextFormat( Qt::RichText );
     ui->miningResetAddressButton->setText( GUIUtil::fontAwesomeRegular("\uf12d") );
     ui->miningResetAddressButton->setContentsMargins(0, 0, 0, 0);
+    ui->miningCheckBoxKeepOpen->setCursor(Qt::PointingHandCursor);
+    ui->miningCheckBoxMineAtStartup->setCursor(Qt::PointingHandCursor);
     
     ui->miningThreadSlider->setCursor(Qt::PointingHandCursor);
     ui->miningThreadSlider->setContentsMargins(0, 0, 0, 0);

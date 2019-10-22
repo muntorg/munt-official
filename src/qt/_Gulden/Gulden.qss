@@ -1155,7 +1155,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     color: black;
 }
 
-#accountCopyToClipboardButton, #requestCopyToClipboardButton, #miningEditAddressButton, #miningResetAddressButton
+#accountCopyToClipboardButton, #requestCopyToClipboardButton, #miningCopyToClipboardButton, #miningEditAddressButton, #miningResetAddressButton
 {
     margin-left: 10px;
 }
@@ -1337,4 +1337,49 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 #add_account_type_label_mobile[pressed=true], #add_account_type_label_transactional[pressed=true], #add_account_type_label_witness[pressed=true], #add_account_type_label_generation[pressed=true], #add_account_type_label_witnessonly[pressed=true], #add_account_type_label_privkey[pressed=true]
 {
     border: 1px solid ACCENT_COLOR_2;
+}
+
+
+/* Improve checkbox look and feel */
+QCheckBox::indicator
+{
+    width: 10px;
+    height: 10px;
+    border: 1px solid #ebebeb;
+    padding: 2px;
+}
+
+QCheckBox::indicator:checked
+{
+    image: url(':/Gulden/checkbox_checked_normal');
+}
+QCheckBox::indicator:unchecked
+{
+    image: url(none.jpg);
+}
+QCheckBox::indicator:checked:hover
+{
+    image: url(':/Gulden/checkbox_checked_normal');
+}
+QCheckBox::indicator:unchecked:hover
+{
+    image: url(none.jpg);
+}
+QCheckBox::indicator:checked:pressed
+{
+    image: url(':/Gulden/checkbox_checked_normal');
+}
+QCheckBox::indicator:unchecked:pressed
+{
+    image: url(none.jpg);
+}
+QCheckBox::indicator:checked:disabled
+{
+    background-color: #ebebeb;
+    image: url(':/Gulden/checkbox_checked_disabled');
+}
+QCheckBox::indicator:unchecked:disabled
+{
+    background-color: #ebebeb;
+    image: url(none.jpg);
 }
