@@ -1030,6 +1030,23 @@ int64_t nHashCounter=0;
 std::atomic<int64_t> nHashThrottle(-1);
 static CCriticalSection timerCS;
 
+inline void updateHashesPerSec(uint64_t nStart, uint64_t nStop, uint64_t nCount)
+{
+    if (nCount > 0)
+    {
+        dHashesPerSec = (nCount*1000) / (nStop-nStart);
+        dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
+        if (dRollingHashesPerSec == 0 && dHashesPerSec > 0)
+        {
+            dRollingHashesPerSec = dHashesPerSec;
+        }
+        else
+        {
+            dRollingHashesPerSec = ((dRollingHashesPerSec*99) + dHashesPerSec)/100;
+        }
+    }
+}
+
 static const unsigned int hashPSTimerInterval = 200;
 
 void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
@@ -1246,22 +1263,15 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                                     break;
                             }
                             
+                            updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
+                            
                             // Allow opportunity for user to terminate mining.
                             boost::this_thread::interruption_point();
                         }
                     }
                     
-                    uint64_t nStop = GetTimeMillis();
-                    dHashesPerSec = (halfHashCounter*1000) / (nStop-nStart);
-                    dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
-                    if (dRollingHashesPerSec == 0 && dHashesPerSec > 0)
-                    {
-                        dRollingHashesPerSec = dHashesPerSec;
-                    }
-                    else
-                    {
-                        dRollingHashesPerSec = ((dRollingHashesPerSec*9) + dHashesPerSec)/10;
-                    }
+                    updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
+
                     if (foundBlockHash != uint256())
                     {
                         TRY_LOCK(processBlockCS, lockProcessBlock);
