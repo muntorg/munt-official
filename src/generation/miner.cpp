@@ -1030,7 +1030,7 @@ int64_t nHashCounter=0;
 std::atomic<int64_t> nHashThrottle(-1);
 static CCriticalSection timerCS;
 
-inline void updateHashesPerSec(uint64_t nStart, uint64_t nStop, uint64_t nCount)
+inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount)
 {
     if (nCount > 0)
     {
@@ -1042,7 +1042,7 @@ inline void updateHashesPerSec(uint64_t nStart, uint64_t nStop, uint64_t nCount)
         }
         else
         {
-            dRollingHashesPerSec = ((dRollingHashesPerSec*99) + dHashesPerSec)/100;
+            dRollingHashesPerSec = ((dRollingHashesPerSec*19) + dHashesPerSec)/20;
         }
     }
 }
@@ -1155,6 +1155,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             // Search
             //
             uint64_t nStart = GetTimeMillis();
+            uint64_t nHashPSStart = nStart;
             std::uint64_t nTimeout =  120000 + GetRand(60000);
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             if (pblock->nTime > defaultSigmaSettings.activationDate)
@@ -1229,6 +1230,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                     {
                         // If this thread gets interrupted then terminate mining
                         BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); } BOOST_SCOPE_EXIT_END
+                        int nCount = 0;
                         while (true)
                         {    
                             //fixme: (SIGMA) - Instead of busy polling it would be better if we could wait here on various signals, we would need to wait on several signals
@@ -1263,7 +1265,11 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                                     break;
                             }
                             
-                            updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
+                            if (++nCount>5)
+                            {
+                                updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
+                                nCount=0;
+                            }
                             
                             // Allow opportunity for user to terminate mining.
                             boost::this_thread::interruption_point();
