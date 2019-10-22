@@ -99,9 +99,9 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     // Limit both accordingly
     #ifdef ARCH_X86
         #ifdef WIN32
-            nMaxMemoryInMb = std::min(nMaxMemoryInMb, 1*1024);
+            nMaxMemoryInMb = std::min((uint64_t)nMaxMemoryInMb, (uint64_t)1*1024);
         #else
-            nMaxMemoryInMb = std::min(nMaxMemoryInMb, 2*1024);
+            nMaxMemoryInMb = std::min((uint64_t)nMaxMemoryInMb, (uint64_t)2*1024);
         #endif
     #endif
 

@@ -1155,7 +1155,6 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             // Search
             //
             uint64_t nStart = GetTimeMillis();
-            uint64_t nHashPSStart = nStart;
             std::uint64_t nTimeout =  120000 + GetRand(60000);
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             if (pblock->nTime > defaultSigmaSettings.activationDate)
