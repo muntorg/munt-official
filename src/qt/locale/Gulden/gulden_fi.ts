@@ -424,6 +424,10 @@
         <translation>&amp;Debug-ikkuna</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Muistin käyttö</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Käyttöliittymä</translation>
     </message>
@@ -486,10 +490,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Tämänhetkinen rahansiirtojen määrä</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Muistin käyttö</translation>
     </message>
     <message>
         <source>Debug log file</source>

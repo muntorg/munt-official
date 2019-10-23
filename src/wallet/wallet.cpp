@@ -342,9 +342,28 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
         {
             if(!crypter.SetKeyFromPassphrase(strOldWalletPassphrase, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod))
                 return false;
+            std::vector<unsigned char> cryptedKeyCopy = pMasterKey.second.vchCryptedKey;
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 return false;
-            if (UnlockWithMasterKey(_vMasterKey))
+            
+            //fixme: (PHASE5) Remove - Temporary fix for a very small limited subset of wallets that got exposed to a password change bug.
+            //We can just leave this fix in for a while and then remove it.
+            bool unlocked = false;
+            unlocked = UnlockWithMasterKey(_vMasterKey);
+            while (!unlocked)
+            {
+                if (unlocked)
+                    break;
+                if (cryptedKeyCopy.size() < 2)
+                    break;
+                cryptedKeyCopy = std::vector<unsigned char>(cryptedKeyCopy.begin()+1, cryptedKeyCopy.end());
+                _vMasterKey.clear();
+                if (crypter.Decrypt(cryptedKeyCopy, _vMasterKey))
+                {
+                    unlocked = UnlockWithMasterKey(_vMasterKey);
+                }
+            }
+            if (unlocked)
             {
                 int64_t nStartTime = GetTimeMillis();
                 crypter.SetKeyFromPassphrase(strNewWalletPassphrase, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod);
@@ -1546,10 +1565,17 @@ void CWallet::ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman
  * @{
  */
 
-extern bool IsMine(const CAccount* forAccount, const CWalletTx& tx);
+extern bool IsMine(const CKeyStore* forAccount, const CWalletTx& tx);
 
 
 void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins, bool fOnlySafe, const CCoinControl *coinControl, const CAmount &nMinimumAmount, const CAmount &nMaximumAmount, const CAmount &nMinimumSumAmount, const uint64_t &nMaximumCount, const int &nMinDepth, const int &nMaxDepth) const
+{
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(forAccount);
+    return AvailableCoins(accountsToTry, vCoins, fOnlySafe, coinControl, nMinimumAmount, nMaximumAmount, nMinimumSumAmount, nMaximumCount, nMinDepth, nMaxDepth);
+}
+
+void CWallet::AvailableCoins(std::vector<CKeyStore*>& accountsToTry, std::vector<COutput> &vCoins, bool fOnlySafe, const CCoinControl *coinControl, const CAmount &nMinimumAmount, const CAmount &nMaximumAmount, const CAmount &nMinimumSumAmount, const uint64_t &nMaximumCount, const int &nMinDepth, const int &nMaxDepth) const
 {
     vCoins.clear();
 
@@ -1563,7 +1589,15 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins,
             const uint256& wtxid = it->first;
             const CWalletTx* pcoin = &(*it).second;
 
-            if (!::IsMine(forAccount, *pcoin))
+            bool isMineAny=false;
+            for (const auto& forAccount : accountsToTry)
+            {
+                if (::IsMine(forAccount, *pcoin))
+                {
+                    isMineAny = true;
+                }
+            }
+            if (!isMineAny)
                 continue;
 
             if (!CheckFinalTx(*pcoin, IsPartialSyncActive() ? partialChain : chainActive))
@@ -1638,7 +1672,13 @@ void CWallet::AvailableCoins(CAccount* forAccount, std::vector<COutput> &vCoins,
                 if (IsSpent(COutPoint(wtxid, i)) || IsSpent(COutPoint(pcoin->nHeight, pcoin->nIndex, i)))
                     continue;
 
-                isminetype mine = ::IsMine(*forAccount, pcoin->tx->vout[i]);
+                isminetype mine = ISMINE_NO;
+                for (const auto& forAccount : accountsToTry)
+                {
+                    isminetype temp = ::IsMine(*forAccount, pcoin->tx->vout[i]);
+                    if (mine < temp)
+                        mine = temp;
+                }
 
                 if (mine == ISMINE_NO) {
                     continue;

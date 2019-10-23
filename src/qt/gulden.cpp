@@ -345,8 +345,9 @@ GuldenApplication::GuldenApplication(int &argc, char **argv)
 : QApplication(argc, argv)
 , platformStyle(new GuldenProxyStyle())
 {
-    // We quit instead when main GUI window is destroyed.
-    setQuitOnLastWindowClosed(true);
+    // Don't automatically close, this will exit the application early without proper shutdown on Windows
+    // when "Minimize to tray" is enabled and the Debug windows is closed (https://github.com/Gulden/gulden-official/issues/142)
+    setQuitOnLastWindowClosed(false);
 
     // Use the same style on all platforms to simplify skinning
     setStyle(dynamic_cast<QStyle*>(const_cast<GuldenProxyStyle*>(platformStyle)));
@@ -548,9 +549,12 @@ void GuldenApplication::shutdown_TerminateApp()
 
 void GuldenApplication::shutdown_MainWindowDestroyed()
 {
-    //Close the final window (shutdown indicator) - which in turn should cause qt to destroy this app instance.
+    // Close the final window (shutdown indicator), which will NOT automatically exit the Qt application
     LogPrintf("shutdown UI: GUI exited cleanly, closing shutdown indicator\n");
     ShutdownWindow::destroyInstance();
+
+    // And finally explicitly exit Qt application
+    quit();
 }
 
 void GuldenApplication::handleRunawayException(const QString &message)

@@ -39,6 +39,7 @@
 #include "walletframe.h"
 #include "walletmodel.h"
 #include "qt/_Gulden/witnessdialog.h"
+#include "qt/_Gulden/miningaccountdialog.h"
 #endif // ENABLE_WALLET
 
 #ifdef Q_OS_MAC
@@ -82,6 +83,8 @@
 #include <Gulden/util.h>
 #include <_Gulden/accountsummarywidget.h>
 #include "_Gulden/receivecoinsdialog.h"
+
+#include "generation/miner.h"
 
 #if QT_VERSION < 0x050000
 #include <QTextDocument>
@@ -384,6 +387,12 @@ void GUI::createActions()
     witnessDialogAction->setStatusTip(tr("View statistics and information for witness account."));
     witnessDialogAction->setCheckable(true);
     tabGroup->addAction(witnessDialogAction);
+    
+    miningDialogAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf1fe), tr("&Overview"), this);
+    miningDialogAction->setObjectName("action_mining_dialog");
+    miningDialogAction->setStatusTip(tr("Control and view information for mining account."));
+    miningDialogAction->setCheckable(true);
+    tabGroup->addAction(miningDialogAction);
 
     overviewAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf1fe), tr("&Overview"), this);
     overviewAction->setObjectName("action_overview");
@@ -440,20 +449,22 @@ void GUI::createActions()
     // can be triggered from the tray menu, and need to show the GUI to be useful.
     connect(witnessDialogAction, SIGNAL(triggered()), this, SLOT(showWitnessDialog()));
     connect(witnessDialogAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(miningDialogAction, SIGNAL(triggered()), this, SLOT(showMiningDialog()));
+    connect(miningDialogAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
-    connect(viewAddressAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(viewAddressAction, SIGNAL(triggered()), this, SLOT(gotoViewAddressPage()));
-    connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(viewAddressAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
-    connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
-    connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(sendCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
-    connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
-    connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
+    connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
 #endif // ENABLE_WALLET
 
     toggleHideAction = new QAction(GUIUtil::getIconFromFontAwesomeRegularGlyph(0xf070), tr("&Show / Hide"), this);
@@ -665,6 +676,48 @@ void GUI::setClientModel(ClientModel *_clientModel)
             setTrayIconVisible(optionsModel->getHideTrayIcon());
 
             setOptionsModel(optionsModel);
+
+            //fixme: (SIGMA) (DEDUP) - Move this all to a helper function that can share it with RPC (and -gen) etc.
+            static bool runOnce=true;
+            if (runOnce && pactiveWallet && optionsModel->getMineAtStartup())
+            {
+                runOnce = false;
+                CAccount* miningAccount = nullptr;
+
+                LOCK2(cs_main, pactiveWallet->cs_wallet);
+                for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+                {
+                    (unused) accountUUID;
+                    if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+                    {
+                        miningAccount = account;
+                        break;
+                    }
+                }
+    
+                if (miningAccount)
+                {
+                    uint64_t nGenProcLimit = clientModel->getOptionsModel()->getMineThreadCount();
+                    uint64_t nGenMemoryLimitKilobytes = clientModel->getOptionsModel()->getMineMemory();
+                    std::string readOverrideAddress;
+                    CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(readOverrideAddress);
+                    if (readOverrideAddress.size() == 0)
+                    {
+                        CReserveKeyOrScript* miningAddress = new CReserveKeyOrScript(pactiveWallet, miningAccount, KEYCHAIN_EXTERNAL);
+                        CPubKey pubKey;
+                        if (miningAddress->GetReservedKey(pubKey))
+                        {
+                            CKeyID keyID = pubKey.GetID();
+                            readOverrideAddress = CGuldenAddress(keyID).ToString();
+                        }
+                    }
+                    if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
+                    {
+                        LogPrintf("MiningAccountDialog::startMiningAtStartup\n");
+                        MiningAccountDialog::startMining(miningAccount, nGenProcLimit, nGenMemoryLimitKilobytes, readOverrideAddress);
+                    }
+                }
+            }
         }
 
         // Keep up to date with client
@@ -793,6 +846,7 @@ void GUI::setWalletActionsEnabled(bool enabled)
     LogPrint(BCLog::QT, "GUI::setWalletActionsEnabled\n");
 
     witnessDialogAction->setEnabled(enabled);
+    miningDialogAction->setEnabled(enabled);
     overviewAction->setEnabled(enabled);
     viewAddressAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
@@ -988,6 +1042,18 @@ void GUI::showWitnessDialog()
     {
         walletFrame->currentWalletView()->witnessDialogPage->activeAccountChanged(nullptr);
         walletFrame->currentWalletView()->setCurrentWidget(walletFrame->currentWalletView()->witnessDialogPage);
+    }
+}
+
+void GUI::showMiningDialog()
+{
+    LogPrint(BCLog::QT, "GUI::showMiningDialog\n");
+
+    miningDialogAction->setChecked(true);
+    if (walletFrame)
+    {
+        walletFrame->currentWalletView()->miningDialogPage->update();
+        walletFrame->currentWalletView()->setCurrentWidget(walletFrame->currentWalletView()->miningDialogPage);
     }
 }
 
@@ -1407,6 +1473,13 @@ void GUI::closeEvent(QCloseEvent *event)
             return;
         }
         else if(clientModel->getOptionsModel()->getMinimizeOnClose())
+        {
+            if (rpcConsole)
+                rpcConsole->close();
+            QMainWindow::showMinimized();
+            return;
+        }
+        else if(clientModel->getOptionsModel()->getKeepOpenWhenMining() && PoWGenerationIsActive())
         {
             if (rpcConsole)
                 rpcConsole->close();

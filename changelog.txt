@@ -12,6 +12,50 @@ RPC - Add 'fail_count' and 'action_nonce' data to 'getwitnessinfo' command.
 
 
 
+2.1.0.17
+
+MISC - Update checkpoints
+CORE - Improve upgrade procedure for any users who failed to upgrade for previous releases in time and were temporarily stuck on a fork.
+UI - Minor improvements to information display in mining dialog.
+
+
+
+
+2.1.0.16
+
+CORE - Temporarily reduce witness reward back to 20, due to unexpected complications with adjusting witness rewards during phase3. Reward will be restored to 30 at a future date after further discussion on how to proceed.
+
+
+
+
+2.1.0.15
+
+CORE - Adjust minimum PoW limit; as with delta hashrate is much slower than regular PoW algorithms.
+
+
+
+
+
+2.1.0.14
+
+CORE - Reduce mainnet proof of work limit to be lower as SIGMA works at a much lower difficulty, and is causing blocks to take very long to solve.
+
+
+
+
+2.1.0.12
+
+UI - Introduce new basic user interface for mining
+UI - Fix a bug on windows where closing the debug dialog with main app hidden could cause the entire app to close
+CORE - Introduce new 'mining' account type
+RPC - New command 'createminingaccount'
+RPC - New command 'setminingrewardaddress'
+RPC - Modify 'setgenerate' behaviour to work with mining accounts when present, a regular account can still be used by explicitely passing an account name when calling 'setgenerate'
+CMDFLAG - New flag '-genmemlimit' to go with existing '-gen' and '-genproclimit'
+
+
+
+
 2.1.0.11
 
 This release introduces the new SIGMA PoW algorithm, a 'CPU friendly' algorithm designed to better suit Guldens needs than the previous algorithm scrypt that was used before.
@@ -23,6 +67,7 @@ CORE - Minor improve to Delta difficulty adjustment algorithm to work better wit
 CORE - Introduce new/modified reward schedule for development funding and slight increase in witness rewards (as per GAB decision)
 RPC - Modify 'setgenerate' command to take a memory paramater for SIGMA
 RPC - Improve output of 'getnetworkhashps' command
+RPC - Drop support for 'getblocktemplate' - it is not required for CPU mining and we can simplify the codebase without it.
 
 
 
@@ -59,7 +104,6 @@ MISC - Update to newer version of Qt which should improve various minor UI aspec
 
 2.1.0.4
 
-UI - Fix a small display update issue when switching between witness and normal accounts in some instances.
 MISC - Minor maintenance release, update checkpoints and other minor changes
 CORE - Introduce some code to automatically detect and clear the failed verification status of blocks in certain situations where it is safe to do so. This will make it easier for users who fail to update before a fork to update after the fork without having to issue any manual commands.
 CORE - Add some additional logging of error conditions to the witness loop.

@@ -63,6 +63,7 @@ qt/_Gulden/moc_passwordmodifydialog.cpp \
 qt/_Gulden/moc_backupdialog.cpp \
 qt/_Gulden/moc_welcomedialog.cpp \
 qt/_Gulden/moc_witnessdialog.cpp \
+qt/_Gulden/moc_miningaccountdialog.cpp \
 qt/_Gulden/moc_fundwitnessdialog.cpp \
 qt/_Gulden/moc_upgradewitnessdialog.cpp \
 qt/_Gulden/moc_rotatewitnessdialog.cpp \
@@ -78,6 +79,7 @@ qt/_Gulden/forms/accountselectionwidget.ui \
 qt/_Gulden/forms/witnessdurationwidget.ui \
 qt/_Gulden/forms/viewaddressdialog.ui \
 qt/_Gulden/forms/receivecoinsdialog.ui \
+qt/_Gulden/forms/miningaccountdialog.ui \
 qt/_Gulden/forms/newaccountdialog.ui \
 qt/_Gulden/forms/accountsettingsdialog.ui \
 qt/_Gulden/forms/passwordmodifydialog.ui \
@@ -98,6 +100,7 @@ qt/_Gulden/accountselectionwidget.h \
 qt/_Gulden/witnessdurationwidget.h \
 qt/_Gulden/viewaddressdialog.h \
 qt/_Gulden/receivecoinsdialog.h \
+qt/_Gulden/miningaccountdialog.h \
 qt/_Gulden/GuldenGUI.h \
 qt/_Gulden/ticker.h \
 qt/_Gulden/nockssettings.h \
@@ -125,6 +128,7 @@ qt/_Gulden/accountselectionwidget.cpp \
 qt/_Gulden/witnessdurationwidget.cpp \
 qt/_Gulden/viewaddressdialog.cpp \
 qt/_Gulden/receivecoinsdialog.cpp \
+qt/_Gulden/miningaccountdialog.cpp \
 qt/_Gulden/GuldenGUI.cpp \
 qt/_Gulden/ticker.cpp \
 qt/_Gulden/nockssettings.cpp \

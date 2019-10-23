@@ -412,6 +412,10 @@
         <translation>Debug ablak</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Memóriahasználat</translation>
+    </message>
+    <message>
         <source>N/A</source>
         <translation>Nem elérhető</translation>
     </message>
@@ -458,10 +462,6 @@
     <message>
         <source>Last block time</source>
         <translation>Utolsó blokk ideje</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Memóriahasználat</translation>
     </message>
     <message>
         <source>Debug log file</source>

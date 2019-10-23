@@ -2497,11 +2497,14 @@ static bool CheckBlockHeader(const CBlock& block, CValidationState& state, const
         //fixme: (PHASE5) We can probably remove this after phase4
         //Avoid unnecessary extra checkpow computation on witness blocks as they contain the exact same pow as their non-witness counterparts.
         if (checkedPoWCache.contains(blockHash))
-            return true;
+            return checkedPoWCache.get(blockHash);
 
         // Nested if statement for easier breakpoint management
         if (!CheckProofOfWork(&block, consensusParams))
+        {
+            checkedPoWCache.insert(blockHash, false);
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+        }
         
         checkedPoWCache.insert(blockHash, true);
     }
@@ -4350,6 +4353,7 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
 void StopPartialHeaders(const std::function<void(const CBlockIndex*)>& notifyCallback)
 {
     headerTipSignal.disconnect_all_slots();
+    ResetPartialSync();
 }
 
 bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockIndex*)>& notifyCallback)

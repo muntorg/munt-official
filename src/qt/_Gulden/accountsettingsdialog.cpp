@@ -90,6 +90,7 @@ void AccountSettingsDialog::activeAccountChanged(CAccount* account)
         ui->frameSyncWithMobile->setVisible(false);
     }
 
+
     if (!ui->lineEditChangeAccountName->text().isEmpty())
     {
         //fixme: (FUT) - prompt user to save changes?

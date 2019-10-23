@@ -269,7 +269,7 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     return ret;
 }
 
-bool IsMine(const CAccount* forAccount, const CWalletTx& tx)
+bool IsMine(const CKeyStore* forAccount, const CWalletTx& tx)
 {
     for (const auto& txout : tx.tx->vout)
     {
@@ -545,7 +545,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
         mapAccounts.erase(mapAccounts.find(account->getUUID()));
 
         // Make sure we are no longer the active account
-        if(getActiveAccount()->getUUID() == account->getUUID())
+        if(!getActiveAccount() || (getActiveAccount()->getUUID() == account->getUUID()))
         {
             if (mapAccounts.size() > 0)
             {
@@ -690,14 +690,20 @@ void CGuldenWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool sh
     }
 
     //fixme: (FUT) (ACCOUNTS) purge accounts completely if empty?
-    LogPrintf("CGuldenWallet::DeleteSeed - delete accounts");
+    LogPrintf("CGuldenWallet::DeleteSeed - testing which accounts to delete [%d]", pactiveWallet->mapAccounts.size());
+    std::vector<CAccount*> deleteAccounts;
     for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
         if (accountPair.second->IsHD() && ((CAccountHD*)accountPair.second)->getSeedUUID() == deleteSeed->getUUID())
         {
-            //fixme: (FUT) (ACCOUNTS) check balance
-            deleteAccount(walletDB, accountPair.second, shouldPurgeAccounts);
+            deleteAccounts.push_back(accountPair.second);
         }
+    }
+    LogPrintf("CGuldenWallet::DeleteSeed - Deleting  accounts [%d]", deleteAccounts.size());
+    for (const auto& accountForDeletion : deleteAccounts)
+    {
+        //fixme: (FUT) (ACCOUNTS) check balance
+        deleteAccount(walletDB, accountForDeletion, shouldPurgeAccounts);
     }
     LogPrintf("CGuldenWallet::DeleteSeed - done deleting accounts");
 

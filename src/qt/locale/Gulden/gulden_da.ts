@@ -1331,6 +1331,10 @@
         <translation>Fejlsøgningsvindue</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Hukommelsesforbrug</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Brugeragent</translation>
     </message>
@@ -1393,10 +1397,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Aktuelt antal transaktioner</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Hukommelsesforbrug</translation>
     </message>
     <message>
         <source>Debug log file</source>

@@ -71,7 +71,6 @@ If you are thinking about contributing toward the development of Gulden in some 
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
 * [Accelerated testnet](./technical_documentation/accelerated_testnet.md)
-* [Information for mining pools](./mining_documentation/mining_Gulden.md); [PoW² upgrade for mining pools](./mining_documentation/ensuring_pow2_compatibility.md); [List of identified mining pools](./mining_documentation/list_of_mining_pools.md)
 
 
 ### Community
@@ -96,10 +95,10 @@ If you are sure you need to build the software yourself, please read the [build 
 
 |Technical specifications|Main network|Testnet|
 |:-----------|:---------|:---------|
-|Consensus algorithm:|PoW² Scrypt/Witness|PoW² Scrypt/Witness|
+|Consensus algorithm:|PoW² SIGMA/Witness|PoW² SIGMA/Witness|
 |Recommended transaction confirmations:|2|2|
-|Block reward scrypt:|80 NLG|1000 NLG|
-|Block reward witness:|20 NLG|20 NLG|
+|Block reward SIGMA:|50 NLG|1000 NLG|
+|Block reward witness:|30 NLG|20 NLG|
 |Block interval target:|150 seconds (2.5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|

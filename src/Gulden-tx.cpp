@@ -626,7 +626,8 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         }
     }
 
-    const CKeyStore& keystore = tempKeystore;
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(&tempKeystore);
 
     bool fHashSingle = ((nHashType & ~SIGHASH_ANYONECANPAY) == SIGHASH_SINGLE);
 
@@ -648,7 +649,7 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, &keystore, &mergedTx, i, amount, nHashType), coin.out, sigdata, Spend, mergedTx.nVersion);
+            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, accountsToTry, &mergedTx, i, amount, nHashType), coin.out, sigdata, Spend, mergedTx.nVersion);
 
         // ... and merge in other signatures:
         for(const CTransaction& txv : txVariants)

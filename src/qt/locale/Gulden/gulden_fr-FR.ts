@@ -377,6 +377,10 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation>Fenêtre de débogage </translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Usage de la mémoire</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Agent Utilisateur</translation>
     </message>
@@ -427,10 +431,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Current number of transactions</source>
         <translation>Nombre courant de transactions</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Usage de la mémoire</translation>
     </message>
     <message>
         <source>Debug log file</source>

@@ -19,6 +19,10 @@
 
 #include <boost/scope_exit.hpp>
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 sigma_settings defaultSigmaSettings;
 
 inline void sigmaRandomFastHash(uint64_t nPseudoRandomAlg, uint8_t* data1, uint64_t data1Size, uint8_t* data2, uint64_t data2Size, uint8_t* data3, uint64_t data3Size, uint256& outHash)
@@ -254,12 +258,16 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
             LogPrintf("[%d] Selected hybrid implementation\n", sAlgoName); break;
     }
 }
-#include <sys/auxv.h>
+
 #else
 void LogSelection(uint64_t nSel, std::string sAlgoName)
 {
     //fixme: (SIGMA) Implement for riscv
 }
+#endif
+
+#ifndef __APPLE__
+#include <sys/auxv.h>
 #endif
 
 void selectOptimisedImplementations()
@@ -362,7 +370,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("sse3"))
+            if (__builtin_cpu_supports("ssse3"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
@@ -423,7 +431,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("sse3"))
+            if (__builtin_cpu_supports("ssse3"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse3, 11);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse3, 11);
@@ -447,6 +455,10 @@ void selectOptimisedImplementations()
     }
     #elif defined (ARCH_CPU_ARM_FAMILY)
     {
+        #if defined(__APPLE__) && TARGET_OS_IPHONE == 1
+        // All iOS hardware running iOS 5 or later supports Neon
+        bool haveAES=true;
+        #else
         bool haveAES=false;
         #if defined HWCAP_AES
         long hwcaps2 = getauxval(AT_HWCAP);
@@ -460,6 +472,7 @@ void selectOptimisedImplementations()
         {
             haveAES=true;
         }
+        #endif
         #endif
         #ifdef COMPILER_HAS_CORTEX53
         SELECT_OPTIMISED_SHAVITE(arm_cortex_a53, 1);
@@ -501,9 +514,12 @@ void selectOptimisedImplementations()
         }
     }
     
-    // Finally (only after we have fastest echo implementation) give the hybrid echo a go
+    // Finally (only after we have fastest echo implementation) give the hybrid argon_echo a go
     // Just in case it happens to be faster.
-    SELECT_OPTIMISED_ARGON(hybrid, 9999);
+    if (selected_echo256_opt_Init && selected_shavite3_256_opt_Init)
+    {
+        SELECT_OPTIMISED_ARGON(hybrid, 9999);
+    }
     #endif
     
 logselection:

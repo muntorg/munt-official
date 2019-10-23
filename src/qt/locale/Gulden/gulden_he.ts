@@ -523,6 +523,10 @@
         <translation>חלון ניפוי</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>שימוש בזכרון</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>סוכן משתמש</translation>
     </message>
@@ -581,10 +585,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>מספר הפעולה הנוכחי</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>שימוש בזכרון</translation>
     </message>
     <message>
         <source>Debug log file</source>

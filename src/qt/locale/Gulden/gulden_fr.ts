@@ -99,6 +99,14 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Annuler</translation>
     </message>
     <message>
+        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Compétition avec d&apos;autres mineurs pour créer Gulden avec le temps CPU inactif&lt;/li&gt;&lt;li&gt;Aider à sécuriser le réseau&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Exploitation minière</translation>
+    </message>
+    <message>
         <source>Account name</source>
         <translation>Nom du compte</translation>
     </message>
@@ -794,7 +802,7 @@ Poids du Witness : %5</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Cette opération nécessite votre phrase de passe pour déverrouiller le porte-monnaie.</translation>
+        <translation>Cette opération nécessite le mot de passe de votre portefeuille pour le déverrouiller.</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
@@ -802,7 +810,7 @@ Poids du Witness : %5</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Cette opération nécessite votre phrase de passe pour déchiffrer le porte-monnaie.</translation>
+        <translation>Cette opération nécessite le mot de passe de votre portefeuille pour le déchiffrer.</translation>
     </message>
     <message>
         <source>Decrypt wallet</source>
@@ -882,6 +890,10 @@ Poids du Witness : %5</translation>
     <message>
         <source>Ok</source>
         <translation>Ok</translation>
+    </message>
+    <message>
+        <source>New mining address</source>
+        <translation>Nouvelle adresse minière</translation>
     </message>
     <message>
         <source>Edit Address</source>
@@ -1020,6 +1032,14 @@ Poids du Witness : %5</translation>
         <translation>Entrez l&apos;étiquette</translation>
     </message>
     <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse copiée dans le presse-papiers</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Copier l&apos;adresse au clipboard</translation>
+    </message>
+    <message>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
@@ -1030,10 +1050,6 @@ Poids du Witness : %5</translation>
     <message>
         <source>address</source>
         <translation>adresse</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adresse copiée dans le presse-papiers</translation>
     </message>
     <message>
         <source>Request copied to clipboard</source>
@@ -1062,10 +1078,6 @@ Poids du Witness : %5</translation>
     <message>
         <source>Close</source>
         <translation>Fermer</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Copier l&apos;adresse au clipboard</translation>
     </message>
     <message>
         <source>Save QR as image</source>
@@ -2715,6 +2727,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation>Fenêtre de débogage</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Utilisation de la mémoire</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Agent utilisateur</translation>
     </message>
@@ -2777,10 +2793,6 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Current number of transactions</source>
         <translation>Nombre actuel de transactions</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Utilisation de la mémoire</translation>
     </message>
     <message>
         <source>Debug log file</source>
@@ -3642,6 +3654,40 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     </message>
 </context>
 <context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse copiée dans le presse-papiers</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Copier l&apos;adresse au presse-papier</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>adresse</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI résultant trop longue, essayez de réduire le texte pour l&apos;étiquette / message.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Mon compte Witness</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Aucune adresse de witness valide n&apos;a été générée pour ce compte.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningAccountDialog</name>
+    <message>
+        <source>Mining address</source>
+        <translation>Adresse minière</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -3914,33 +3960,6 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>Yes</source>
         <translation>Oui</translation>
-    </message>
-</context>
-<context>
-    <name>ViewAddressDialog</name>
-    <message>
-        <source>address</source>
-        <translation>adresse</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adresse copiée dans le presse-papiers</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Copier l&apos;adresse au presse-papier</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI résultant trop longue, essayez de réduire le texte pour l&apos;étiquette / message.</translation>
-    </message>
-    <message>
-        <source>My witness address</source>
-        <translation>Mon compte Witness</translation>
-    </message>
-    <message>
-        <source>No valid witness address has been generated for this account</source>
-        <translation>Aucune adresse de witness valide n&apos;a été générée pour ce compte.</translation>
     </message>
 </context>
 <context>

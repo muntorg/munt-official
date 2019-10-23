@@ -1343,6 +1343,10 @@
         <translation>Окно отладки</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Использование памяти</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Юзер-агент</translation>
     </message>
@@ -1405,10 +1409,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Текущее число транзакций</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Использование памяти</translation>
     </message>
     <message>
         <source>Debug log file</source>

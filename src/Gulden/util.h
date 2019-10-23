@@ -123,4 +123,8 @@ int DailyBlocksTarget();
 uint64_t MinimumWitnessLockLength();
 uint64_t MaximumWitnessLockLength();
 
+int timeToBirthNumber(const int64_t time);
+
+int64_t birthNumberToTime(int number);
+
 #endif

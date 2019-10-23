@@ -4,8 +4,8 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2018-08-29 15:43+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2018-08-29 15:43+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2019-08-09 13:25+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2019-08-09 13:25+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
@@ -151,7 +151,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>Scan QR to connect your mobile Gulden app</source>
-        <translation>Scan QR om met uw mobiele Gulden app te verbinden</translation>
+        <translation>Scan QR om met uw mobiele Gulden-app te verbinden</translation>
     </message>
 </context>
 <context>
@@ -317,7 +317,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>Send coins to a Gulden address</source>
-        <translation>Verstuur Guldens naar een Guldenadres</translation>
+        <translation>Verstuur Guldens naar een Gulden-adres</translation>
     </message>
     <message>
         <source>&amp;Receive</source>
@@ -325,7 +325,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
-        <translation>Betaalverzoek (genereert QR codes en Gulden URI&apos;s)</translation>
+        <translation>Betaalverzoek (genereert QR-codes en Gulden-URI&apos;s)</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -369,7 +369,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>Open &amp;URI...</source>
-        <translation>Open &amp;URI</translation>
+        <translation>Open &amp;URI...</translation>
     </message>
     <message>
         <source>Open a gulden: URI or payment request</source>
@@ -385,7 +385,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>&amp;Sending addresses...</source>
-        <translation>&amp;Verzendadressen</translation>
+        <translation>&amp;Verzendadressen...</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -393,7 +393,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Ontvangstadressen</translation>
+        <translation>&amp;Ontvangstadressen...</translation>
     </message>
     <message>
         <source>Show the list of used receiving addresses and labels</source>
@@ -449,7 +449,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Wijzig wachtwoord</translation>
+        <translation>&amp;Wijzig wachtwoord...</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -457,7 +457,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>&amp;Options...</source>
-        <translation>&amp;Opties</translation>
+        <translation>&amp;Opties...</translation>
     </message>
     <message>
         <source>Modify configuration options for %1</source>
@@ -498,8 +498,8 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message numerus="yes">
         <source>%n active connection(s) to Gulden network</source>
         <translation>
-            <numerusform>%n actieve verbinding(en) met het Gulden netwerk</numerusform>
-            <numerusform>%n actieve verbinding(en) met het Gulden netwerk</numerusform>
+            <numerusform>%n actieve verbinding(en) met het Gulden-netwerk</numerusform>
+            <numerusform>%n actieve verbinding(en) met het Gulden-netwerk</numerusform>
         </translation>
     </message>
     <message>
@@ -642,7 +642,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <name>GuldenSendCoinsEntry</name>
     <message>
         <source>Okay</source>
-        <translation>Ok</translation>
+        <translation>Oké</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -650,7 +650,7 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     </message>
     <message>
         <source>My accounts</source>
-        <translation>Mijn accounts</translation>
+        <translation>Mijn rekeningen</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -919,7 +919,7 @@ Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
-        <translation>Het ingevoerde adres &quot;%1&quot; is een niet geldig Guldenadres.</translation>
+        <translation>Het ingevoerde adres &quot;%1&quot; is een niet geldig Gulden-adres.</translation>
     </message>
     <message>
         <source>The entered address &quot;%1&quot; is already in the address book.</source>
@@ -1454,7 +1454,7 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     </message>
     <message>
         <source>Warning: Invalid Gulden address</source>
-        <translation>Waarschuwing: Ongeldig Guldenadres</translation>
+        <translation>Waarschuwing: Ongeldig Gulden-adres</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -1623,11 +1623,11 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     </message>
     <message>
         <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Dit zijn uw Guldenadressen om betalingen naar te versturen. Controleer altijd het bedrag en adres voordat u de Guldens verstuurd.</translation>
+        <translation>Dit zijn uw Gulden-adressen om betalingen naar te versturen. Controleer altijd het bedrag en adres voordat u de Guldens verstuurd.</translation>
     </message>
     <message>
         <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Dit zijn uw Guldenadressen om betalingen te ontvangen. Het wordt aanbevolen om voor iedere ontvangst een nieuw ontvangstadres te gebruiken.</translation>
+        <translation>Dit zijn uw Gulden-adressen om betalingen te ontvangen. Het wordt aanbevolen om voor iedere ontvangst een nieuw ontvangstadres te gebruiken.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -2365,7 +2365,7 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     <name>ClickableQRImage</name>
     <message>
         <source>&amp;Save Image...</source>
-        <translation>Bewaar afbeelding</translation>
+        <translation>Bewaar afbeelding...</translation>
     </message>
     <message>
         <source>&amp;Copy Image</source>
@@ -3215,7 +3215,7 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     </message>
     <message>
         <source>Connect to the Gulden network through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation>Maak verbinding met het Gulden netwerk via een aparte SOCKS5 proxy voor Tor verborgen diensten.</translation>
+        <translation>Maak verbinding met het Gulden-netwerk via een aparte SOCKS5 proxy voor Tor verborgen diensten.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
@@ -3503,11 +3503,11 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <name>Gulden</name>
     <message>
         <source>Done loading</source>
-        <translation>Laden gereed</translation>
+        <translation>Laden is gereed</translation>
     </message>
     <message>
         <source>Erasing block index...</source>
-        <translation>Blokindex legen</translation>
+        <translation>Blokindex legen...</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3515,27 +3515,27 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation>Ongeldige of geen genesis blok gevonden. Verkeerde datadirectory voor netwerk?</translation>
+        <translation>Ongeldige of geen genesisblok gevonden. Verkeerde datadirectory voor netwerk?</translation>
     </message>
     <message>
         <source>Legacy account</source>
-        <translation>Legacy account</translation>
+        <translation>Legacy-rekening</translation>
     </message>
     <message>
         <source>Loading P2P addresses...</source>
-        <translation>P2P adressen laden...</translation>
+        <translation>P2P-adressen worden geladen...</translation>
     </message>
     <message>
         <source>Loading banlist...</source>
-        <translation>Banlijst laden...</translation>
+        <translation>Banlijst wordt geladen...</translation>
     </message>
     <message>
         <source>Loading block index...</source>
-        <translation>Blokindex laden...</translation>
+        <translation>Blokindex wordt geladen...</translation>
     </message>
     <message>
         <source>Loading wallet...</source>
-        <translation>Laden portemonnee...</translation>
+        <translation>Portemonnee wordt geladen...</translation>
     </message>
     <message>
         <source>My account</source>

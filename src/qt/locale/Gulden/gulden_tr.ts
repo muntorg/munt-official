@@ -1313,6 +1313,10 @@
         <translation>Hata ayıklama penceresi</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Bellek kullanımı</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Kullanıcı Yazılımı</translation>
     </message>
@@ -1375,10 +1379,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Güncel işlem sayısı</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Bellek kullanımı</translation>
     </message>
     <message>
         <source>Debug log file</source>

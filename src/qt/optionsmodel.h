@@ -76,6 +76,10 @@ public:
         MapPortUPnP,            // bool
         MinimizeOnClose,        // bool
         DockOnClose,            // bool
+        KeepOpenWhenMining,     // bool
+        MineAtStartup,          // bool
+        MineMemory,             // int
+        MineThreadCount,        // int
         ProxyUse,               // bool
         ProxyIP,                // QString
         ProxyPort,              // int
@@ -101,6 +105,7 @@ public:
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
+    bool setData(int index, const QVariant & value);
     /** Updates current unit in memory, settings and emits displayUnitChanged(newUnit) signal */
     void setDisplayUnit(const QVariant &value);
 
@@ -110,6 +115,14 @@ public:
     bool getDockOnClose() { return fDockOnClose; }
     bool getAutoUpdateCheck() { return fAutoUpdateCheck; }
     bool getMinimizeOnClose() { return fMinimizeOnClose; }
+    bool getKeepOpenWhenMining() { return fKeepOpenWhenMining; }
+    void setKeepOpenWhenMining(bool val);
+    bool getMineAtStartup() { return fMineAtStartup; }
+    void setMineAtStartup(bool val);
+    uint64_t getMineMemory() { return nMineMemory; }
+    void setMineMemory(uint64_t val);
+    uint64_t getMineThreadCount() { return nMineThreadCount; }
+    void setMineThreadCount(uint64_t val);
     int getDisplayUnit() { return nDisplayUnit; }
     bool getAutoHideStatusBar() const { return fAutoHideStatusBar; }
     QString getThirdPartyTxUrls() { return strThirdPartyTxUrls; }
@@ -149,6 +162,10 @@ private:
     bool fDockOnClose;
     bool fAutoUpdateCheck;
     bool fMinimizeOnClose;
+    bool fKeepOpenWhenMining;
+    bool fMineAtStartup;
+    uint64_t nMineMemory;
+    uint64_t nMineThreadCount;
     QString language;
     int nDisplayUnit;
     bool fAutoHideStatusBar;

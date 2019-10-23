@@ -545,7 +545,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
    TODO: Preferably there would only be the QPushButton[class=focus] selection rule, however some other
    other qss rules are still interfering.
 */
-QPushButton[class=focus], GUI QPushButton[class="focus"], GUI QDialog:window QPushButton[class="focus"], #okButton
+QPushButton[class=focus], GUI QPushButton[class="focus"], GUI QDialog:window QPushButton[class="focus"], #okButton, #miningStartminingButton, #miningStopminingButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -559,7 +559,7 @@ QPushButton[class=focus], GUI QPushButton[class="focus"], GUI QDialog:window QPu
     margin-bottom: 10px;
 }
 
-QPushButton:pressed[class=focus], GUI QPushButton:pressed[class=focus], GUI QDialog:window QPushButton:pressed[class="focus"], #maxButton[pressed=true]
+QPushButton:pressed[class=focus], GUI QPushButton:pressed[class=focus], GUI QDialog:window QPushButton:pressed[class="focus"], #maxButton[pressed=true], #miningStartminingButton:pressed, #miningStopminingButton:pressed
 {
     background-color: ACCENT_COLOR_2;
 }
@@ -1146,7 +1146,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     padding-top: 10px;
 }
 
-FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelErrorHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading
+FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, #labelChooseAmount, #labelYourDetails, #labelIsMaxExceeded, #labelChangeAccountName, #labelScanAccountQR, #labelChangePassword, #labelBackupPhraseHeading, #witnessEarningsGraphHeader, #witnessInformationHeader, #labelEmptyWitnessAccount, #labelInactiveWitnessAccount, #labelPendingWitnessAccount, #labelUsedAccountHeader, #labelErrorHeader, #labelAccountNameHeading, #labelAccountTypeHeading, #labelImportAccountTypeHeading, #labelPaymentRequestHeading, #miningAddressLabel, #miningSettingsLabel, #miningStatisticsLabel
 {
     margin: 0px;
     padding: 0px;
@@ -1161,7 +1161,7 @@ FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, 
     margin-top: 6px;
 }
 
-#viewAddressLabel, #titleLabel, #labelExtendDescription
+#viewAddressLabel, #titleLabel, #labelExtendDescription, #miningAddressLabel, #miningSettingsLabel, #miningStatisticsLabel
 {
     margin-top: 16px;
 }
@@ -1204,7 +1204,7 @@ FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, 
     margin-top: 20px;
 }
 
-#accountAddress, #addressQRContents, #accountCopyToClipboardButton, #requestCopyToClipboardButton, #labelPaymentRequest
+#accountAddress, #addressQRContents, #accountCopyToClipboardButton, #requestCopyToClipboardButton, #labelPaymentRequest, #miningCopyToClipboardButton, #miningEditAddressButton, #miningResetAddressButton
 {
     margin: 0px;
     padding: 0px;
@@ -1214,7 +1214,7 @@ FundWitnessDialog #title, #titleLabel, #viewAddressLabel, #accountAddressLabel, 
     color: black;
 }
 
-#accountCopyToClipboardButton, #requestCopyToClipboardButton
+#accountCopyToClipboardButton, #requestCopyToClipboardButton, #miningEditAddressButton, #miningResetAddressButton
 {
     margin-left: 10px;
 }
@@ -1374,7 +1374,7 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     color: COLOR_VALIDATION_FAILED;
 }
 
-#add_account_type_label_mobile, #add_account_type_label_transactional, #add_account_type_label_witness, #add_account_type_label_witnessonly, #add_account_type_label_privkey
+#add_account_type_label_mobile, #add_account_type_label_transactional, #add_account_type_label_witness, #add_account_type_label_generation, #add_account_type_label_witnessonly, #add_account_type_label_privkey
 {
     border: 1px solid #ebebeb;
     color: TEXT_COLOR_1;
@@ -1382,23 +1382,23 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     background-color: white;
 }
 
-#add_account_type_label_mobile[hover=true], #add_account_type_label_transactional[hover=true], #add_account_type_label_witness[hover=true], #add_account_type_label_witnessonly[hover=true], #add_account_type_label_privkey[hover=true]
+#add_account_type_label_mobile[hover=true], #add_account_type_label_transactional[hover=true], #add_account_type_label_witness[hover=true], #add_account_type_label_generation[hover=true], #add_account_type_label_witnessonly[hover=true], #add_account_type_label_privkey[hover=true]
 {
     border: 1px solid ACCENT_COLOR_1;
     color: ACCENT_COLOR_1;
 }
 
-#accountCopyToClipboardButton[hover=true], #requestCopyToClipboardButton[hover=true]
+#accountCopyToClipboardButton[hover=true], #requestCopyToClipboardButton[hover=true], #miningCopyToClipboardButton[hover=true], #miningEditAddressButton[hover=true], #miningResetAddressButton[hover=true]
 {
     color: ACCENT_COLOR_1;
 }
 
-#accountCopyToClipboardButton[pressed=true], #requestCopyToClipboardButton[pressed=true]
+#accountCopyToClipboardButton[pressed=true], #requestCopyToClipboardButton[pressed=true], #miningCopyToClipboardButton[pressed=true], #miningEditAddressButton[pressed=true], #miningResetAddressButton[pressed=true]
 {
     color: ACCENT_COLOR_2;
 }
 
-#add_account_type_label_mobile[pressed=true], #add_account_type_label_transactional[pressed=true], #add_account_type_label_witness[pressed=true], #add_account_type_label_witnessonly[pressed=true], #add_account_type_label_privkey[pressed=true]
+#add_account_type_label_mobile[pressed=true], #add_account_type_label_transactional[pressed=true], #add_account_type_label_witness[pressed=true], #add_account_type_label_generation[pressed=true], #add_account_type_label_witnessonly[pressed=true], #add_account_type_label_privkey[pressed=true]
 {
     border: 1px solid ACCENT_COLOR_2;
 }

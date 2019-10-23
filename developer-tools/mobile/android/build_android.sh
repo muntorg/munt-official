@@ -59,7 +59,7 @@ cp src/data/staticfiltercp ${ASSETS}Mainnet/staticfiltercp
 cp src/data/staticfiltercptestnet ${ASSETS}Testnet/staticfiltercp
 cp src/data/core-packages.licenses ${ASSETS}/core-packages.licenses
 
-NDK_ROOT=${NDK_ROOT:-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}}
+export NDK_ROOT=${NDK_ROOT:-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}}
 
 case "$OSTYPE" in
   darwin*)
@@ -92,7 +92,7 @@ do
   export STRIP=${TOOLS}/$target_host-strip
   export RANLIB=${TOOLS}/$target_host-ranlib
   export LIBTOOL=libtool
-  export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH -I${NDK_ROOT}/sources/android/cpufeatures ${target_opt_cflags}"
+  export CXXFLAGS="-O3 -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH"
   #visibility=hidden
   export CFLAGS=${CXXFLAGS}
   export LDFLAGS="-fPIC -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections $PWD/build_android_${target_host}/cpufeatures.o"

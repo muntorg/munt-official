@@ -1191,6 +1191,10 @@
         <translation>Finestra de depuració</translation>
     </message>
     <message>
+        <source>Memory usage</source>
+        <translation>Us de memoria</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Agent d&apos;usuari</translation>
     </message>
@@ -1253,10 +1257,6 @@
     <message>
         <source>Current number of transactions</source>
         <translation>Nombre actual de transaccions</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Us de memoria</translation>
     </message>
     <message>
         <source>Debug log file</source>

@@ -24,12 +24,21 @@
 
 typedef std::vector<unsigned char> valtype;
 
-TransactionSignatureCreator::TransactionSignatureCreator(CKeyID signingKeyID, const CKeyStore* keystoreIn, const CTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn) : BaseSignatureCreator(keystoreIn), txTo(txToIn), nIn(nInIn), nHashType(nHashTypeIn), amount(amountIn), checker(signingKeyID, CKeyID(), txTo, nIn, amountIn) {}
+TransactionSignatureCreator::TransactionSignatureCreator(CKeyID signingKeyID, const std::vector<CKeyStore*>& accountsToTryIn, const CTransaction* txToIn, unsigned int nInIn, const CAmount& amountIn, int nHashTypeIn) : BaseSignatureCreator(accountsToTryIn), txTo(txToIn), nIn(nInIn), nHashType(nHashTypeIn), amount(amountIn), checker(signingKeyID, CKeyID(), txTo, nIn, amountIn) {}
 
 bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, const CKeyID& address, const CScript& scriptCode, SigVersion sigversion) const
 {
     CKey key;
-    if (!keystore->GetKey(address, key))
+    bool gotKey = false;
+    for (const auto& forAccount : accountsToTry)
+    {
+        if (forAccount->GetKey(address, key))
+        {
+            gotKey = true;
+            break;
+        }
+    }
+    if (!gotKey)
         return false;
 
     // Signing with uncompressed keys is disabled for segsig transactions
@@ -108,14 +117,24 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
         else
         {
             CPubKey vch;
-            creator.KeyStore().GetPubKey(keyID, vch);
-            ret.push_back(ToByteVector(vch));
+            for (const auto& forAccount : creator.accounts())
+            {
+                if (forAccount->GetPubKey(keyID, vch))
+                {
+                    ret.push_back(ToByteVector(vch));
+                    break;
+                }
+            }
         }
         return true;
     case TX_SCRIPTHASH:
-        if (creator.KeyStore().GetCScript(uint160(vSolutions[0]), scriptRet)) {
-            ret.push_back(std::vector<unsigned char>(scriptRet.begin(), scriptRet.end()));
-            return true;
+        for (const auto& forAccount : creator.accounts())
+        {
+            if (forAccount->GetCScript(uint160(vSolutions[0]), scriptRet))
+            {
+                ret.push_back(std::vector<unsigned char>(scriptRet.begin(), scriptRet.end()));
+                return true;
+            }
         }
         return false;
 
@@ -137,16 +156,28 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
                 else
                 {
                     CPubKey vch;
-                    creator.KeyStore().GetPubKey(spendingKeyID, vch);
-                    ret.push_back(ToByteVector(vch));
+                    for (const auto& forAccount : creator.accounts())
+                    {
+                        if (forAccount->GetPubKey(spendingKeyID, vch))
+                        {
+                            ret.push_back(ToByteVector(vch));
+                            break;
+                        }
+                    }
                 }
                 if (!Sign1(witnessKeyID, creator, scriptPubKey, ret, sigversion))
                     return false;
                 else
                 {
                     CPubKey vch;
-                    creator.KeyStore().GetPubKey(witnessKeyID, vch);
-                    ret.push_back(ToByteVector(vch));
+                    for (const auto& forAccount : creator.accounts())
+                    {
+                        if (forAccount->GetPubKey(witnessKeyID, vch))
+                        {
+                            ret.push_back(ToByteVector(vch));
+                            break;
+                        }
+                    }
                 }
                 break;
             }
@@ -157,8 +188,14 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
                 else
                 {
                     CPubKey vch;
-                    creator.KeyStore().GetPubKey(witnessKeyID, vch);
-                    ret.push_back(ToByteVector(vch));
+                    for (const auto& forAccount : creator.accounts())
+                    {
+                        if (forAccount->GetPubKey(witnessKeyID, vch))
+                        {
+                            ret.push_back(ToByteVector(vch));
+                            break;
+                        }
+                    }
                 }
                 break;
             }
@@ -378,14 +415,14 @@ void UpdateTransaction(CMutableTransaction& tx, unsigned int nIn, const Signatur
     tx.vin[nIn].segregatedSignatureData = data.segregatedSignatureData;
 }
 
-bool SignSignature(const CKeyStore &keystore, const CTxOut& fromOutput, CMutableTransaction& txTo, unsigned int nIn, const CAmount& amount, int nHashType, SignType type)
+bool SignSignature(const std::vector<CKeyStore*>& accountsToTry, const CTxOut& fromOutput, CMutableTransaction& txTo, unsigned int nIn, const CAmount& amount, int nHashType, SignType type)
 {
     assert(nIn < txTo.vin.size());
 
     CTransaction txToConst(txTo);
     //fixme: (PHASE4) (SEGSIG) (sign type)
     CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(fromOutput, SignType::Spend);
-    TransactionSignatureCreator creator(signingKeyID, &keystore, &txToConst, nIn, amount, nHashType);
+    TransactionSignatureCreator creator(signingKeyID, accountsToTry, &txToConst, nIn, amount, nHashType);
 
     SignatureData sigdata;
     bool ret = ProduceSignature(creator, fromOutput, sigdata, type, txToConst.nVersion);
@@ -393,14 +430,14 @@ bool SignSignature(const CKeyStore &keystore, const CTxOut& fromOutput, CMutable
     return ret;
 }
 
-bool SignSignature(const CKeyStore &keystore, const CTransaction& txFrom, CMutableTransaction& txTo, unsigned int nIn, int nHashType, SignType type)
+bool SignSignature(const std::vector<CKeyStore*>& accountsToTry, const CTransaction& txFrom, CMutableTransaction& txTo, unsigned int nIn, int nHashType, SignType type)
 {
     assert(nIn < txTo.vin.size());
     CTxIn& txin = txTo.vin[nIn];
     assert(txin.prevout.n < txFrom.vout.size());
     const CTxOut& txout = txFrom.vout[txin.prevout.n];
 
-    return SignSignature(keystore, txout, txTo, nIn, txout.nValue, nHashType, type);
+    return SignSignature(accountsToTry, txout, txTo, nIn, txout.nValue, nHashType, type);
 }
 
 static std::vector<valtype> CombineMultisig(const CScript& scriptPubKey, const BaseSignatureChecker& checker,

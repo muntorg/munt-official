@@ -29,4 +29,6 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
 /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
 bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params);
 
+extern uint64_t verifyFactor;
+
 #endif // GULDEN_POW_H

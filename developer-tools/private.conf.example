@@ -12,3 +12,9 @@
 
 # Set this to 1 to skip running configure for android 
 #SKIP_CONFIG=1
+
+# Set for gencheckpoints.py usage
+#CHECKPOINT_RPC_USER=xxx
+#CHECKPOINT_RPC_PASSWORD=yyy
+#CHECKPOINT_RPC_PORT=9232
+#CHECKPOINT_RPC_IP=127.0.0.1

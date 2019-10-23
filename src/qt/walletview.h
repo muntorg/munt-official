@@ -24,6 +24,7 @@ class ViewAddressDialog;
 class ReceiveCoinsDialog;
 class SendCoinsDialog;
 class WitnessDialog;
+class MiningAccountDialog;
 class SendCoinsRecipient;
 class TransactionView;
 class WalletModel;
@@ -73,6 +74,7 @@ private:
     ReceiveCoinsDialog* receiveCoinsPage = nullptr;
     SendCoinsDialog* sendCoinsPage = nullptr;
     WitnessDialog* witnessDialogPage = nullptr;
+    MiningAccountDialog* miningDialogPage = nullptr;
     AddressBookPage* usedSendingAddressesPage = nullptr;
     AddressBookPage* usedReceivingAddressesPage = nullptr;
 
@@ -95,6 +97,8 @@ public Q_SLOTS:
     void gotoReceiveCoinsPage();
     /** Switch to witness information page */
     void gotoWitnessPage();
+    /** Switch to mining information page */
+    void gotoMiningPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
 

@@ -705,7 +705,6 @@ int main(int argc, char** argv)
                 for (uint64_t i =0; i< nVerifyNumber; ++i)
                 {
                     header.nNonce = rand();
-                    nStart = GetTimeMicros();
                     // Count and log number of successes to avoid possibility of compiler optimising the call out.
                     if (verify.verifyHeader(header))
                     {

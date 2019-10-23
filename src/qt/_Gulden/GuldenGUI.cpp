@@ -56,6 +56,7 @@
 #include <_Gulden/exchangeratedialog.h>
 #include <_Gulden/accountsettingsdialog.h>
 #include <_Gulden/witnessdialog.h>
+#include <_Gulden/miningaccountdialog.h>
 #include <Gulden/util.h>
 #include <consensus/consensus.h>
 #include "sendcoinsdialog.h"
@@ -455,6 +456,7 @@ void GUI::createToolBars()
     toolbar->setMovable(false);
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->addAction(witnessDialogAction);
+    toolbar->addAction(miningDialogAction);
     toolbar->addAction(overviewAction);
     toolbar->addAction(viewAddressAction);
     toolbar->addAction(sendCoinsAction);
@@ -666,8 +668,10 @@ void GUI::createToolBars()
     tabsBar->removeAction(receiveCoinsAction);
     tabsBar->removeAction(sendCoinsAction);
     tabsBar->removeAction(witnessDialogAction);
+    tabsBar->removeAction(miningDialogAction);
     //Setup the tab toolbar
     tabsBar->addAction(witnessDialogAction);
+    tabsBar->addAction(miningDialogAction);
     tabsBar->addAction(viewAddressAction);
     tabsBar->addAction(receiveCoinsAction);
     tabsBar->addAction(sendCoinsAction);
@@ -717,6 +721,9 @@ void GUI::createToolBars()
     tabsBar->widgetForAction( witnessDialogAction )->setObjectName( "witness_button" );
     tabsBar->widgetForAction( witnessDialogAction )->setContentsMargins( 0, 0, 0, 0 );
     tabsBar->widgetForAction( witnessDialogAction )->setCursor( Qt::PointingHandCursor );
+    tabsBar->widgetForAction( miningDialogAction )->setObjectName( "mining_button" );
+    tabsBar->widgetForAction( miningDialogAction )->setContentsMargins( 0, 0, 0, 0 );
+    tabsBar->widgetForAction( miningDialogAction )->setCursor( Qt::PointingHandCursor );
     tabsBar->setContentsMargins( 0, 0, 0, 0 );
 
     //Spacer to fill width
@@ -1204,6 +1211,10 @@ static QString getAccountLabel(CAccount* account)
     {
         accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf10b"); // Mobile phone
     }
+    else if (account->m_Type == MiningAccount)
+    {
+        accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf3a5"); // Shovel
+    }
     else if (account->m_Type == ImportedPrivateKeyAccount)
     {
         accountNamePrefixIndicator = GUIUtil::fontAwesomeLight("\uf084"); // Key
@@ -1248,9 +1259,22 @@ void GUI::refreshTabVisibilities()
         receiveCoinsAction->setVisible(false);
         sendCoinsAction->setVisible(false);
         witnessDialogAction->setVisible(true);
-        if ( currentWidget == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage )
+        miningDialogAction->setVisible(false);
+        if ( currentWidget == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->miningDialogPage )
         {
             showWitnessDialog();
+        }
+    }
+    else if (pactiveWallet->getActiveAccount()->IsMiningAccount())
+    {
+        viewAddressAction->setVisible(false);
+        receiveCoinsAction->setVisible(false);
+        sendCoinsAction->setVisible(true);
+        witnessDialogAction->setVisible(false);
+        miningDialogAction->setVisible(true);
+        if ( currentWidget == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage )
+        {
+            showMiningDialog();
         }
     }
     else
@@ -1259,6 +1283,7 @@ void GUI::refreshTabVisibilities()
         receiveCoinsAction->setVisible(true);
         sendCoinsAction->setVisible(true);
         witnessDialogAction->setVisible(false);
+        miningDialogAction->setVisible(false);
 
         //Required here because when we open wallet and it is already on a read only account restoreCachedWidgetIfNeeded is not called.
         if (pactiveWallet->getActiveAccount()->IsReadOnly())
@@ -1266,7 +1291,7 @@ void GUI::refreshTabVisibilities()
             sendCoinsAction->setVisible( false );
         }
 
-        if (currentWidget == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->viewAddressPage)
+        if (currentWidget == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->miningDialogPage || currentWidget == (QWidget*)walletFrame->currentWalletView()->viewAddressPage)
         {
             gotoReceiveCoinsPage();
         }
@@ -1433,6 +1458,24 @@ void GUI::updateAccount(CAccount* account)
                 return;
             }
         }
+    }
+    else if(account->IsMiningAccount())
+    {
+        CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, account, KEYCHAIN_EXTERNAL);
+        CPubKey pubKey;
+        if (receiveAddress->GetReservedKey(pubKey))
+        {
+            CKeyID keyID = pubKey.GetID();
+            walletFrame->currentWalletView()->miningDialogPage->updateAddress(QString::fromStdString(CGuldenAddress(keyID).ToString()));
+        }
+        else
+        {
+            LogPrint(BCLog::ALL, "Keypool exhausted for account.\n");
+            walletFrame->currentWalletView()->miningDialogPage->updateAddress("error");
+        }
+        walletFrame->currentWalletView()->receiveCoinsPage->setActiveAccount( account );
+        receiveAddress->ReturnKey();
+        delete receiveAddress;
     }
     else
     {
@@ -1703,6 +1746,8 @@ void GUI::restoreCachedWidgetIfNeeded()
     bool stateSendCoinsAction = true;
 
     walletFrame->currentWalletView()->sendCoinsPage->update();
+    walletFrame->currentWalletView()->witnessDialogPage->update();
+    walletFrame->currentWalletView()->miningDialogPage->update();
 
     if (pactiveWallet->getActiveAccount()->IsReadOnly())
     {
@@ -1722,9 +1767,19 @@ void GUI::restoreCachedWidgetIfNeeded()
             showWitnessDialog();
         }
     }
+    else if (pactiveWallet->getActiveAccount()->IsMiningAccount())
+    {
+        miningDialogAction->setVisible( true );
+        stateReceiveCoinsAction = false;
+        stateSendCoinsAction = false;
+        if ( walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage )
+        {
+            showMiningDialog();
+        }
+    }
     else
     {
-        if (cacheCurrentWidget && cacheCurrentWidget == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage)
+        if (cacheCurrentWidget && (cacheCurrentWidget == (QWidget*)walletFrame->currentWalletView()->witnessDialogPage || cacheCurrentWidget == (QWidget*)walletFrame->currentWalletView()->miningDialogPage))
             cacheCurrentWidget = nullptr;
 
         witnessDialogAction->setVisible( false );
@@ -1813,6 +1868,7 @@ void GUI::gotoPasswordDialog()
         historyAction->setVisible( false );
         overviewAction->setVisible( false );
         witnessDialogAction->setVisible( false );
+        miningDialogAction->setVisible( false );
 
         dialogPasswordModify = new PasswordModifyDialog( platformStyle, walletFrame->currentWalletView() );
         connect( dialogPasswordModify, SIGNAL( dismiss() ), this, SLOT( dismissPasswordDialog() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
@@ -1840,6 +1896,7 @@ void GUI::gotoBackupDialog()
         historyAction->setVisible( false );
         overviewAction->setVisible( false );
         witnessDialogAction->setVisible( false );
+        miningDialogAction->setVisible( false );
 
         dialogBackup = new BackupDialog( platformStyle, walletFrame->currentWalletView(), walletFrame->currentWalletView()->walletModel);
         connect( dialogBackup, SIGNAL( saveBackupFile() ), walletFrame, SLOT( backupWallet() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );
@@ -1901,6 +1958,10 @@ void GUI::acceptNewAccount()
             if (newAccountType == NewAccountType::FixedDeposit)
             {
                 newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::PoW2Witness);
+            }
+            else if (newAccountType == NewAccountType::Mining)
+            {
+                newAccount = pactiveWallet->GenerateNewAccount(dialogNewAccount->getAccountName().toStdString(), AccountState::Normal, AccountType::MiningAccount);
             }
             else
             {

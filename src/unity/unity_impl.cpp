@@ -49,6 +49,10 @@
 #include <qrencode.h>
 #include <memory>
 
+#include "pow.h"
+#include <crypto/hash/sigma/sigma.h>
+#include <algorithm>
+
 std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
 
 CCriticalSection cs_monitoringListeners;
@@ -120,6 +124,19 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 
     std::vector<InputRecord> inputs;
     std::vector<OutputRecord> outputs;
+    
+    
+    //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
+    std::vector<CKeyStore*> accountsToTry;
+    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    {
+        if(accountPair.second->getParentUUID() == pactiveWallet->activeAccount->getUUID())
+        {
+            accountsToTry.push_back(accountPair.second);
+        }
+        accountsToTry.push_back(pactiveWallet->activeAccount);
+    }
+    
 
     int64_t subtracted = wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
     int64_t added = wtx.GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
@@ -158,7 +175,13 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         std::string label;
         if (pwallet->mapAddressBook.count(address))
             label = pwallet->mapAddressBook[address].name;
-        inputs.push_back(InputRecord(address, label, static_cast<const CGuldenWallet*>(pwallet)->IsMine(*pactiveWallet->activeAccount, txin)));
+        bool isMine = false;
+        for (const auto& account : accountsToTry)
+        {
+            if (static_cast<const CGuldenWallet*>(pwallet)->IsMine(*account, txin))
+                isMine = true;
+        }
+        inputs.push_back(InputRecord(address, label, isMine));
     }
 
     for (const CTxOut& txout: tx.vout) {
@@ -176,7 +199,13 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         std::string label;
         if (pwallet->mapAddressBook.count(address))
             label = pwallet->mapAddressBook[address].name;
-        outputs.push_back(OutputRecord(txout.nValue, address, label, IsMine(*pactiveWallet->activeAccount, txout)));
+        bool isMine = false;
+        for (const auto& account : accountsToTry)
+        {
+            if (IsMine(*account, txout))
+                isMine = true;
+        }
+        outputs.push_back(OutputRecord(txout.nValue, address, label, isMine));
     }
 
     TransactionStatus status = getStatusForTransaction(&wtx);
@@ -205,8 +234,51 @@ void terminateUnityFrontend()
     }
 }
 
+#include <boost/chrono/thread_clock.hpp>
+
 void handlePostInitMain()
 {
+    //fixme: (SIGMA) (PHASE4) Remove this once we have witness-header-sync
+    // Select appropriate verification factor based on devices performance.
+    std::thread([=]
+    {
+// When available measure thread relative cpu time to avoid effects of thread suspension
+// which occur when observing system time.
+#if false && defined(BOOST_CHRONO_HAS_THREAD_CLOCK) && BOOST_CHRONO_THREAD_CLOCK_IS_STEADY
+        boost::chrono::time_point tpStart = boost::chrono::thread_clock::now();
+#else
+        uint64_t nStart = GetTimeMicros();
+#endif
+
+        // note that measurement is on single thread, which makes the measurement more stable
+        // actual verification might use more threads which helps overall app performance
+        sigma_verify_context verify(defaultSigmaSettings, 1);
+        CBlockHeader header;
+        verify.verifyHeader<1>(header);
+
+        // We want at least 1000 blocks per second
+#if false && defined(BOOST_CHRONO_HAS_THREAD_CLOCK) && BOOST_CHRONO_THREAD_CLOCK_IS_STEADY
+        boost::chrono::microseconds ms  = boost::chrono::duration_cast<boost::chrono::microseconds>(boost::chrono::thread_clock::now() - tpStart);
+        uint64_t nTotal = ms.count();
+#else
+        uint64_t nTotal = GetTimeMicros() - nStart;
+#endif
+        uint64_t nPerSec = 1000000/nTotal;
+        if (nPerSec > 1000) // Fast enough to do most the blocks
+        {
+            verifyFactor = 5;
+        }
+        else if(nPerSec > 0) // Slower so reduce the number of blocks
+        {
+            // 2 in verifyFactor chance of verifying.
+            // We verify 2 in verifyFactor blocks - or target_speed/(num_per_sec/2)
+            verifyFactor = 1000/(nPerSec/2.0);
+            verifyFactor = std::max((uint64_t)5, verifyFactor);
+            verifyFactor = std::min((uint64_t)200, verifyFactor);
+        }
+        LogPrintf("unity: selected verification factor %d", verifyFactor);
+    }).detach();
+
     if (signalHandler)
     {
         signalHandler->notifyCoreReady();
@@ -352,6 +424,11 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
         return false;
     }
 
+    // ensure that wallet is initialized with a starting time (else it will start from now and old tx will not be scanned)
+    // Use the hardcoded timestamp 1441212522 of block 250000, we didn't have any recovery phrase style wallets (using current phrase system) before that.
+    if (phraseBirthNumber == 0)
+        phraseBirthNumber = timeToBirthNumber(1441212522L);
+
     //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
     GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
@@ -378,6 +455,11 @@ bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& p
 
     if (!ValidateAndSplitRecoveryPhrase(phrase, phraseOnly, phraseBirthNumber))
         return false;
+
+    // ensure that wallet is initialized with a starting time (else it will start from now and old tx will not be scanned)
+    // Use the hardcoded timestamp 1441212522 of block 250000, we didn't have any recovery phrase style wallets (using current phrase system) before that.
+    if (phraseBirthNumber == 0)
+        phraseBirthNumber = timeToBirthNumber(1441212522L);
 
     if (!pactiveWallet)
     {
@@ -515,7 +597,16 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
             int nChangePosRet = -1;
             std::string strError;
             CReserveKeyOrScript* pReserveKey = new CReserveKeyOrScript(pactiveWallet, pAccount, KEYCHAIN_CHANGE);
-            if (!pactiveWallet->CreateTransaction(pAccount, vecSend, *pWallettx, *pReserveKey, nFeeRequired, nChangePosRet, strError))
+            std::vector<CKeyStore*> accountsToTry;
+            for ( const auto& accountPair : pactiveWallet->mapAccounts )
+            {
+                if(accountPair.second->getParentUUID() == pAccount->getUUID())
+                {
+                    accountsToTry.push_back(accountPair.second);
+                }
+                accountsToTry.push_back(pAccount);
+            }
+            if (!pactiveWallet->CreateTransaction(accountsToTry, vecSend, *pWallettx, *pReserveKey, nFeeRequired, nChangePosRet, strError))
             {
                 LogPrintf("ReplaceWalletLinkedFromURI: Failed to create transaction %s [%d]",strError.c_str(), nBalance);
                 return false;
@@ -891,7 +982,16 @@ int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
     int nChangePosRet = -1;
     std::string strError;
     CReserveKeyOrScript reservekey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_CHANGE);
-    if (!pactiveWallet->CreateTransaction(pactiveWallet->activeAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError, NULL, false))
+    std::vector<CKeyStore*> accountsToTry;
+    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    {
+        if(accountPair.second->getParentUUID() == pactiveWallet->activeAccount->getUUID())
+        {
+            accountsToTry.push_back(accountPair.second);
+        }
+        accountsToTry.push_back(pactiveWallet->activeAccount);
+    }
+    if (!pactiveWallet->CreateTransaction(accountsToTry, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError, NULL, false))
     {
         LogPrintf("feeForRecipient: failed to create transaction %s",strError.c_str());
         throw std::runtime_error(strprintf(_("Failed to calculate fee\n%s"), strError));
@@ -923,7 +1023,16 @@ PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRec
     int nChangePosRet = -1;
     std::string strError;
     CReserveKeyOrScript reservekey(pactiveWallet, pactiveWallet->activeAccount, KEYCHAIN_CHANGE);
-    if (!pactiveWallet->CreateTransaction(pactiveWallet->activeAccount, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
+    std::vector<CKeyStore*> accountsToTry;
+    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    {
+        if(accountPair.second->getParentUUID() == pactiveWallet->activeAccount->getUUID())
+        {
+            accountsToTry.push_back(accountPair.second);
+        }
+        accountsToTry.push_back(pactiveWallet->activeAccount);
+    }
+    if (!pactiveWallet->CreateTransaction(accountsToTry, vecSend, wtx, reservekey, nFeeRequired, nChangePosRet, strError))
     {
         if (!substract_fee && request.amount + nFeeRequired > GetBalance()) {
             return PaymentResultStatus::INSUFFICIENT_FUNDS;

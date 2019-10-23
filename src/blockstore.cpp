@@ -140,9 +140,10 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
     }
     else
     {
-        if (checkedPoWCache.contains(block.GetHashLegacy()))
+        uint256 hashLegacy = block.GetHashLegacy();
+        if (checkedPoWCache.contains(hashLegacy))
         {
-            fPOW_ok = true;
+            fPOW_ok = checkedPoWCache.get(hashLegacy);
         }
         else
         {

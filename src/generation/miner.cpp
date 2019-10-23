@@ -58,6 +58,9 @@
 #include "streams.h"
 #include <boost/scope_exit.hpp>
 
+#include "alert.h"
+#include "base58.h"
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // GuldenGenerate
@@ -1020,6 +1023,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
 }
 
 double dBestHashesPerSec = 0.0;
+double dRollingHashesPerSec = 0.0;
 double dHashesPerSec = 0.0;
 int64_t nHPSTimerStart = 0;
 int64_t nHashCounter=0;
@@ -1040,7 +1044,21 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
 
     unsigned int nExtraNonce = 0;
     std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
-    GetMainSignals().ScriptForMining(coinbaseScript, forAccount);
+    if (fixedGenerateAddress.size() > 0)
+    {
+        CGuldenAddress address(fixedGenerateAddress);
+        if (!address.IsValid())
+        {
+            CAlert::Notify("Invalid mining address", true, true);
+            return;
+        }
+        CScript outputScript = GetScriptForDestination(address.Get());
+        coinbaseScript = std::make_shared<CReserveKeyOrScript>(outputScript);
+    }
+    else
+    {
+        GetMainSignals().ScriptForMining(coinbaseScript, forAccount);
+    }
 
     try {
         // Throw an error if no script was provided.  This can happen
@@ -1236,6 +1254,14 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                     uint64_t nStop = GetTimeMillis();
                     dHashesPerSec = (halfHashCounter*1000) / (nStop-nStart);
                     dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
+                    if (dRollingHashesPerSec == 0 && dHashesPerSec > 0)
+                    {
+                        dRollingHashesPerSec = dHashesPerSec;
+                    }
+                    else
+                    {
+                        dRollingHashesPerSec = ((dRollingHashesPerSec*9) + dHashesPerSec)/10;
+                    }
                     if (foundBlockHash != uint256())
                     {
                         TRY_LOCK(processBlockCS, lockProcessBlock);
@@ -1325,24 +1351,39 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
     }
 }
 
-void PoWMineGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount)
+boost::thread* minerThread = nullptr;
+CCriticalSection miningCS;
+
+void PoWStopGeneration()
 {
-    static boost::thread* minerThread = NULL;
-
-    if (nThreads < 0)
-        nThreads = GetNumCores();
-
-    if (minerThread != NULL)
+    LOCK(miningCS);
+    fixedGenerateAddress="";
+    if (minerThread != nullptr)
     {
         //fixme: (SIGMA) - The interrupt here doesn't work fast enough.
         minerThread->interrupt();
         minerThread->join();
         delete minerThread;
-        minerThread = NULL;
+        minerThread = nullptr;
     }
+}
+
+void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
+{
+    LOCK(miningCS);
+    if (nThreads < 0)
+        nThreads = GetNumCores();
+
+    PoWStopGeneration();
 
     if (nThreads == 0 || !fGenerate)
         return;
 
+    fixedGenerateAddress = generateAddress;
     minerThread = new boost::thread(boost::bind(&GuldenGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
+}
+
+bool PoWGenerationIsActive()
+{
+    return minerThread != nullptr;
 }

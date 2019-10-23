@@ -10,6 +10,11 @@ $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib concurrent
 $(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch
 
+ifeq ($(build_os),mingw32)
+$(package)_qt_libs += xml
+$(package)_patches += fix_configure_win.patch
+endif
+
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=b36da7d93c3ab6fca56b32053bb73bc619c8b192bb89b74e3bcde2705f1c2a14
 
@@ -28,15 +33,19 @@ $(package)_extra_sources += $($(package)_qwt_file_name)
 #Work around for a mingw issue where the .pc files contain an incorrect path inside Libs.private
 $(package)_patch_qwt_pc_files = find $($(package)_staging_dir) -name *Qt*Qwt*.pc | xargs sed -ri 's|$($(package)_build_dir)/lib|$$$${libdir}|g' &&
 
+# Fix paths in pkgconfig .pc files
+$(package)_fix_pkgconfig_paths = find $($(package)_staging_dir) -name *Qt*.pc | xargs sed -ri 's|$($(package)_staging_prefix_dir)|$(host_prefix)|g'
+
+ifneq ($(build_os),mingw32)
+$(package)_install_root_arg = INSTALL_ROOT=$($(package)_staging_dir)
+endif
 
 define $(package)_set_vars
 $(package)_config_opts_release = -release
 $(package)_config_opts_debug = -debug
-$(package)_config_opts += -bindir $(build_prefix)/bin
 $(package)_config_opts += -c++std c++11
 $(package)_config_opts += -confirm-license
 $(package)_config_opts += -dbus-runtime
-$(package)_config_opts += -hostprefix $(build_prefix)
 $(package)_config_opts += -no-compile-examples
 $(package)_config_opts += -no-cups
 $(package)_config_opts += -no-egl
@@ -69,9 +78,12 @@ $(package)_config_opts += -nomake tests
 $(package)_config_opts += -opensource
 $(package)_config_opts += -openssl-linked
 $(package)_config_opts += -optimized-qmake
+ifeq ($(build_os),mingw32)
+$(package)_config_opts += -no-pch
+else
 $(package)_config_opts += -pch
+endif
 $(package)_config_opts += -pkg-config
-$(package)_config_opts += -prefix $(host_prefix)
 $(package)_config_opts += -qt-libpng
 $(package)_config_opts += -qt-libjpeg
 $(package)_config_opts += -qt-pcre
@@ -93,7 +105,10 @@ $(package)_config_opts += -no-feature-textbrowser
 $(package)_config_opts += -no-feature-textodfwriter
 $(package)_config_opts += -no-feature-udpsocket
 $(package)_config_opts += -no-feature-wizard
+ifneq ($(build_os),mingw32)
 $(package)_config_opts += -no-feature-xml
+endif
+
 
 ifneq ($(build_os),darwin)
 $(package)_config_opts_darwin = -xplatform macx-clang-linux
@@ -116,7 +131,20 @@ $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
 $(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
 $(package)_config_opts_riscv64_linux = -platform linux-g++ -xplatform gulden-linux-g++
-$(package)_config_opts_mingw32  = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
+
+ifeq ($(build_os),mingw32)
+$(package)_config_opts += -bindir $($(package)_staging_prefix_dir)/native/bin
+$(package)_config_opts += -hostprefix $($(package)_staging_prefix_dir)/native
+$(package)_config_opts += -prefix $($(package)_staging_prefix_dir)
+$(package)_config_opts += -extprefix $($(package)_staging_prefix_dir)
+$(package)_config_opts_mingw32 = -no-opengl -platform win32-g++
+else
+$(package)_config_opts += -bindir $(build_prefix)/bin
+$(package)_config_opts += -hostprefix $(build_prefix)
+$(package)_config_opts += -prefix $(host_prefix)
+$(package)_config_opts_mingw32 = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
+endif
+
 $(package)_build_env  = QT_RCC_TEST=1
 $(package)_build_env += QT_RCC_SOURCE_DATE_OVERRIDE=1
 endef
@@ -182,10 +210,18 @@ define $(package)_preprocess_cmds
   sed -i.old "s|QWT_CONFIG.*QwtDll||" qwt/qwtconfig.pri  && \
   sed -i.old "s|QWT_INSTALL_PREFIX.*=.*|QWT_INSTALL_PREFIX = $(host_prefix)|" qwt/qwtconfig.pri && \
   sed -i.old "s|CONFIG.*=.*debug_and_release|CONFIG+=release|" qwt/qwtbuild.pri && \
+  if [ "$(build_os)" == "mingw32" ]; then \
+    sed qtbase/include/QtFontDatabaseSupport/5.9.7/QtFontDatabaseSupport/private/qfreetypefontdatabase_p.h -i -re 's/..\/..\/..\/..\/..\/src/..\/..\/..\/..\/src/' && \
+    sed qtbase/src/plugins/platforms/windows/qwindowsmousehandler.cpp -i -re 's/\#if defined\(Q_CC_MINGW\) \|\| \!defined\(TOUCHEVENTF_MOVE\)/#if 0/' && \
+    patch -p1 -i $($(package)_patch_dir)/fix_configure_win.patch ;\
+  fi && \
   sed -i.old "s|CONFIG.*=.*build_all||" qwt/qwtbuild.pri && \
   echo "unix|mingw {QWT_CONFIG     += QwtPkgConfig }" >> qwt/qwtconfig.pri && \
   echo "unix|mingw {QMAKE_PKGCONFIG_VERSION = $($(package)_qwt_version) }" >> qwt/qwtconfig.pri
 endef
+#sed qttools/src/linguist/shared/formats.pri -i -re 's/QT \*= xml//' && \
+#sed qttools/src/linguist/shared/formats.pri -i -re 's/    .*xliff.cpp/    /' && \
+
 
 define $(package)_config_cmds
   export PKG_CONFIG_SYSROOT_DIR=/ && \
@@ -211,12 +247,13 @@ define $(package)_build_cmds
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
-  $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
+  $(MAKE) -C src $($(package)_install_root_arg) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
+  $(MAKE) -C qttools/src/linguist/lrelease $($(package)_install_root_arg) install_target && \
+  $(MAKE) -C qttools/src/linguist/lupdate $($(package)_install_root_arg) install_target && \
+  $(MAKE) -C qttranslations $($(package)_install_root_arg) install_subtargets && \
   $(MAKE) -C qwt INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $($(package)_patch_qwt_pc_files) \
+  $($(package)_fix_pkgconfig_paths) && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
     cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
   fi
