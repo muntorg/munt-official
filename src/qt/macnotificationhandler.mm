@@ -19,7 +19,7 @@
 - (NSString *)__bundleIdentifier
 {
     if (self == [NSBundle mainBundle]) {
-        return @"org.Gulden.Gulden";
+        return @"com.Gulden.Gulden.Desktop";
     } else {
         return [self __bundleIdentifier];
     }

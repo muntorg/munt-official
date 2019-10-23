@@ -38,7 +38,7 @@
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>org.Gulden.Gulden</string>
+  <string>com.Gulden.Gulden.Desktop</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -46,7 +46,7 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>org.Gulden.GuldenPayment</string>
+      <string>com.Gulden.GuldenPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
         <string>gulden</string>
@@ -60,7 +60,7 @@
   <array>
     <dict>
       <key>UTTypeIdentifier</key>
-      <string>org.Gulden.paymentrequest</string>
+      <string>com.Gulden.paymentrequest</string>
       <key>UTTypeDescription</key>
       <string>Gulden payment request</string>
       <key>UTTypeConformsTo</key>
@@ -86,7 +86,7 @@
       <string>Editor</string>
       <key>LSItemContentTypes</key>
       <array>
-        <string>org.Gulden.paymentrequest</string>
+        <string>com.Gulden.paymentrequest</string>
       </array>
       <key>LSHandlerRank</key>
       <string>Owner</string>
