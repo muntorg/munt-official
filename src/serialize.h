@@ -627,17 +627,30 @@ template<typename Stream, typename T> void Serialize(Stream& os, const std::uniq
 template<typename Stream, typename T> void Unserialize(Stream& os, std::unique_ptr<const T>& p);
 
 
+template<typename Stream, typename T, typename std::enable_if<std::is_enum<T>::value,int>::type =0>
+inline void Serialize(Stream& os, const T& a)
+{
+    Serialize(os, static_cast<typename std::underlying_type<T>::type>(a));
+}
+
+template<typename Stream, typename T, typename std::enable_if<std::is_enum<T>::value,int>::type =0>
+inline void Unserialize(Stream& os, T& a)
+{
+    typename std::underlying_type<T>::type value;
+    Unserialize(os, value);
+    a = static_cast<T>(value);
+}
 
 /**
  * If none of the specialized versions above matched, default to calling member function.
  */
-template<typename Stream, typename T>
+template<typename Stream, typename T, typename std::enable_if<!std::is_enum<T>::value,int>::type =0>
 inline void Serialize(Stream& os, const T& a)
 {
     a.Serialize(os);
 }
 
-template<typename Stream, typename T>
+template<typename Stream, typename T, typename std::enable_if<!std::is_enum<T>::value,int>::type =0>
 inline void Unserialize(Stream& is, T& a)
 {
     a.Unserialize(is);

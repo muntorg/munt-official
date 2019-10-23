@@ -17,12 +17,7 @@ struct CWitnessRewardDestination {
         Address
     };
 
-    union
-    {
-        DestType type;
-        uint16_t type_rw;
-    };
-
+    DestType type;
     CGuldenAddress address;
     CAmount amount;
     double percent;
@@ -38,7 +33,7 @@ struct CWitnessRewardDestination {
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
-        READWRITE(type_rw);
+        READWRITE(type);
         READWRITE(address);
         READWRITE(amount);
         READWRITE(percent);
