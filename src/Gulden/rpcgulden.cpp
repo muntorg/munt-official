@@ -1080,22 +1080,22 @@ static uint64_t GetLockPeriodInBlocksFromFormattedStringSpecifier(std::string fo
     int nMultiplier = 1;
     if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "y"))
     {
-        nMultiplier = 365 * 576;
+        nMultiplier = 365 * DailyBlocksTarget();
         formattedLockPeriodSpecifier.pop_back();
     }
     else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "m"))
     {
-        nMultiplier = 30 * 576;
+        nMultiplier = 30 * DailyBlocksTarget();
         formattedLockPeriodSpecifier.pop_back();
     }
     else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "w"))
     {
-        nMultiplier = 7 * 576;
+        nMultiplier = 7 * DailyBlocksTarget();
         formattedLockPeriodSpecifier.pop_back();
     }
     else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "d"))
     {
-        nMultiplier = 576;
+        nMultiplier = DailyBlocksTarget();
         formattedLockPeriodSpecifier.pop_back();
     }
     else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "b"))
