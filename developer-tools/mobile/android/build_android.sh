@@ -95,23 +95,19 @@ do
   export CXXFLAGS="-O3 -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH"
   #visibility=hidden
   export CFLAGS=${CXXFLAGS}
-  export LDFLAGS="-fPIC -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections $PWD/build_android_${target_host}/cpufeatures.o"
-
-  mkdir build_android_${target_host} | true
-  cd build_android_${target_host}
-  ${CC} ${NDK_ROOT}/sources/android/cpufeatures/cpu-features.c -c -o cpufeatures.o
-  cd ..
+  export LDFLAGS="-fPIC -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections"
 
   if [ -z "$SKIP_DEPENDS" ]
   then
     cd depends
-    make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode protobufunity libcryptopp' -j ${NUM_PROCS}
+    make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode protobufunity' -j ${NUM_PROCS}
     cd ..
     ${RANLIB} depends/$target_host/lib/*.a
   else
     echo Skipping depends
   fi
 
+  mkdir build_android_${target_host} | true
   cd build_android_${target_host}
   if [ -z "$SKIP_CONFIG" ]
   then
