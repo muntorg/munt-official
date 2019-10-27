@@ -474,6 +474,15 @@ void openDebugLogfile()
         QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathDebug)));
 }
 
+void openDataDirectory()
+{
+    fs::path pathDatadir = GetDataDir();
+
+    /* Open datadir with the associated application */
+    if (fs::exists(pathDatadir))
+        QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathDatadir)));
+}
+
 bool openGuldenConf()
 {
     boost::filesystem::path pathConfig = GetConfigFile(GULDEN_CONF_FILENAME);

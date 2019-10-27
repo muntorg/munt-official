@@ -125,6 +125,9 @@ namespace GUIUtil
 
     // Open debug.log
     void openDebugLogfile();
+    
+    // Open datadir
+    void openDataDirectory();
 
     // Open the config file
     bool openGuldenConf();
