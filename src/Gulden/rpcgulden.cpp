@@ -2492,6 +2492,121 @@ static UniValue checkpointinvalidate(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
+static UniValue resetdatadirfull(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetdatadirfull does not take arguments\n");
+    }
+
+    LogPrintf("Partial datadir wipe requested.\n");
+    LogPrintf("Turning off networking for datadir wipe.\n");
+    {
+        // Disable what we can so this is cleaner.
+        if (!g_connman)
+        {
+            g_connman->SetNetworkActive(false);
+        }
+        witnessingEnabled = false;
+    }
+    
+    // Grab the main locks - try stop the code from doing anything important while we are busy.
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    
+    fs::remove(GetDataDir() / "banlist.dat");
+    fs::remove(GetDataDir() / "peers.dat");
+    fs::remove(GetDataDir() / "db.log");
+    fs::remove(GetDataDir() / "mempool.dat");
+    fs::remove(GetDataDir() / "autocheckpoints");
+    fs::remove(GetDataDir() / "blocks");
+    fs::remove(GetDataDir() / "database");
+    fs::remove(GetDataDir() / "chainstate");
+    fs::remove(GetDataDir() / "witstate");
+    
+    // Forcefully close app
+    exit(EXIT_SUCCESS);
+
+    return NullUniValue;
+}
+
+static UniValue resetdatadirpartial(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetdatadirpartial does not take arguments\n");
+    }
+
+    LogPrintf("Partial datadir wipe requested.\n");
+    LogPrintf("Turning off networking for datadir wipe.\n");
+    {
+        // Disable what we can so this is cleaner.
+        if (!g_connman)
+        {
+            g_connman->SetNetworkActive(false);
+        }
+        witnessingEnabled = false;
+    }
+    
+    // Grab the main locks - try stop the code from doing anything important while we are busy.
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    
+    fs::remove(GetDataDir() / "autocheckpoints");
+    fs::remove(GetDataDir() / "banlist.dat");
+    fs::remove(GetDataDir() / "peers.dat");
+    
+    // Forcefully close app
+    exit(EXIT_SUCCESS);
+
+    return NullUniValue;
+}
+
+static UniValue getcheckpoint(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("getcheckpoint does not take arguments\n");
+    }
+
+    LogPrintf("getcheckpoint requested.\n");
+    
+    return Checkpoints::hashSyncCheckpoint.ToString();
+}
+
+static UniValue getlastblocks(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("getlastblocks does not take arguments\n");
+    }
+
+    LogPrintf("getlastblocks requested.\n");
+    UniValue result(UniValue::VOBJ);    
+    if (chainActive.Tip()->nHeight > 30)
+    {
+        CBlockIndex* pIndex = chainActive.Tip();
+        for (int i=0;i<30;++i)
+        {
+            result.push_back(Pair(pIndex->GetBlockHashPoW2().ToString(),pIndex->nHeight));
+        }
+    }
+    
+    return result;
+}
+
 static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -3363,6 +3478,11 @@ static const CRPCCommand commands[] =
     { "developer",               "dumpdiffarray",                   &dumpdiffarray,                  true,    {"height"} },
     { "developer",               "verifywitnessaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
     { "developer",               "checkpointinvalidate",            &checkpointinvalidate,           true,    {"block_hash" } },
+    
+    { "support",                 "resetdatadirpartial",             &resetdatadirpartial,            true,    {""} },
+    { "support",                 "resetdatadirfull",                &resetdatadirfull,               true,    {""} },
+    { "support",                 "getcheckpoint",                   &getcheckpoint,                  true,    {""} },
+    { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {""} },
 
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
     { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },
