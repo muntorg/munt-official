@@ -22,6 +22,9 @@ namespace Checkpoints
 //! Returns last CBlockIndex* in mapBlockIndex that is a checkpoint
 CBlockIndex* GetLastCheckpoint(const CCheckpointData& data);
 
+//! Height of last checkpoint in Params()
+unsigned int LastCheckPointHeight();
+
 } //namespace Checkpoints
 
 #endif // GULDEN_CHECKPOINTS_H
