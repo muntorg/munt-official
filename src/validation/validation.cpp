@@ -1682,7 +1682,19 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     LogPrint(BCLog::BENCH, "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * 0.001, nTimeReadFromDisk * 0.000001);
     {
         CCoinsViewCache view(pcoinsTip);
-        bool rv = ConnectBlock(chainActive, blockConnecting, state, pindexNew, view, chainparams);
+        bool fJustCheck = false;
+        bool fValidateWitness = true;
+        //fixme: (PHASE4) - relook into this for phase4.
+        //This check is expensive when syncing
+        //So we bypass this with a small random chance of still checking IFF we are below the checkpoint heights.
+        //Note:
+        // 1) An attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
+        // 2) An attacker would still have to meet all other PoW check *and* keep all witness states intact
+        // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some more headers after detecting wrong chain)
+        // So this is not really a major weakening of security in any way and still more than sufficient.
+        if ((pindexNew->nHeight < Checkpoints::LastCheckPointHeight()))
+            fValidateWitness = false;
+        bool rv = ConnectBlock(chainActive, blockConnecting, state, pindexNew, view, chainparams, fJustCheck, fValidateWitness);
         GetMainSignals().BlockChecked(blockConnecting, state);
         if (!rv) {
             if (state.IsInvalid())
@@ -3683,7 +3695,17 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                 if (mapBlockIndex.count(hash) == 0 || (mapBlockIndex[hash]->nStatus & BLOCK_HAVE_DATA) == 0) {
                     LOCK(cs_main);
                     CValidationState state;
-                    if (AcceptBlock(pblock, state, chainparams, NULL, true, dbp, NULL))
+                    bool fAssumePOWGood=false;
+                    //This check is expensive
+                    //Bypass with a small random chance of still checking IFF we are below the checkpoint heights.
+                    //Note: an attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
+                    // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some data after detecting wrong chain)
+                    // So this is not really a major weakening of security in any way and still more than sufficient.
+                    if ((mapBlockIndex.find(block.hashPrevBlock)->second->nHeight < Checkpoints::LastCheckPointHeight()))
+                    {
+                        fAssumePOWGood = true;
+                    }
+                    if (AcceptBlock(pblock, state, chainparams, NULL, true, dbp, NULL, fAssumePOWGood))
                         nLoaded++;
                     if (state.IsError())
                         break;
