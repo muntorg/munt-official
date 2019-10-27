@@ -120,12 +120,12 @@ namespace Checkpoints
 
     bool ReadCheckpointPubKey(std::string& strPubKey)
     {
-        if( !fs::exists(GetDataDir() / "checkpoints") )
+        if( !fs::exists(GetDataDir() / "autocheckpoints") )
             return false;
 
         try
         {
-            fs::ifstream checkpointFile( GetDataDir() / "checkpoints" / "curr_checkpoint_pubkey" );
+            fs::ifstream checkpointFile( GetDataDir() / "autocheckpoints" / "curr_checkpoint_pubkey" );
             checkpointFile >> strPubKey;
             checkpointFile.close();
         }
