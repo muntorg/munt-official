@@ -91,9 +91,12 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     static int64_t nLongTimeStep  = nDrift * 60;
 
     // Forbid diff drop when mining on a fork (stalled witness)
-    if (chainActive.Tip() && (pindexPrev->nHeight > chainActive.Tip()->nHeight))
     {
-        nMaxMissedSteps=0;
+        LOCK(cs_main);
+        if (chainActive.Tip() && (pindexPrev->nHeight > chainActive.Tip()->nHeight))
+        {
+            nMaxMissedSteps=0;
+        }
     }
 
     while (true && (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1))
@@ -854,8 +857,13 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 //
 bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams)
 {
-    int nPoW2PhaseTip = GetPoW2Phase(chainActive.Tip(), chainparams, chainActive);
-    int nPoW2PhasePrev = GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive);
+    CBlockIndex* pChainTip = nullptr;
+    {
+        LOCK(cs_main);
+        pChainTip = chainActive.Tip();
+    }
+    int nPoW2PhaseTip = GetPoW2Phase(pChainTip, chainparams, chainActive);
+    int nPoW2PhasePrev = GetPoW2Phase(pChainTip->pprev, chainparams, chainActive);
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("Generated: hash=%s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
 
@@ -1108,7 +1116,11 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             // Create new block
             //
             unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
-            CBlockIndex* pindexParent = chainActive.Tip();
+            CBlockIndex* pindexParent = nullptr;
+            {
+                LOCK(cs_main);
+                pindexParent = chainActive.Tip();
+            }
             CBlockIndex* pTipAtStartOfMining = pindexParent;
             uint64_t nOrphansAtStartOfMining = GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size();
 
@@ -1253,8 +1265,11 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                                 break;
                             
                             // Abort mining and start mining a new block instead if chain tip changed
-                            if (pTipAtStartOfMining != chainActive.Tip())
-                                break;
+                            {
+                                LOCK(cs_main);
+                                if (pTipAtStartOfMining != chainActive.Tip())
+                                    break;
+                            }
                             
                             // Abort mining and start mining a new block instead if alternative chain tip changed
                             if (nOrphansAtStartOfMining != GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size())
@@ -1348,8 +1363,11 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                         break;
                     if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
                         break;
-                    if (pTipAtStartOfMining != chainActive.Tip())
-                        break;
+                    {
+                        LOCK(cs_main);
+                        if (pTipAtStartOfMining != chainActive.Tip())
+                            break;
+                    }
                 }
             }
         }
@@ -1400,5 +1418,6 @@ void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const 
 
 bool PoWGenerationIsActive()
 {
+    LOCK(miningCS);
     return minerThread != nullptr;
 }
