@@ -343,7 +343,10 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     
     if (!fGenerate)
     {
-        PoWStopGeneration();
+        std::thread([=]
+        {
+            PoWStopGeneration();
+        }).detach();
         return "Block generation disabled.";
     }
 
@@ -410,7 +413,17 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
     SoftSetArg("-genmemlimit", i64tostr(nGenMemoryLimitBytes/1024));
-    PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+    std::thread([=]
+    {
+        try
+        {
+            PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+        }
+        catch(...)
+        {
+        }
+    }).detach();
+    
     if (overrideAccountAddress.length() > 0)
     {
         return strprintf("Block generation enabled into account [%s] using target address [%s], thread limit: [%d threads], memory: [%d Mb].", pwallet->mapAccountLabels[forAccount->getUUID()], overrideAccountAddress ,nGenProcLimit, nGenMemoryLimitBytes/1024/1024);
