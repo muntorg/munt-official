@@ -82,6 +82,7 @@
 #endif
 
 #include "util.h"
+#include <compat/sys.h>
 
 bool fFeeEstimatesInitialized = false;
 static const bool DEFAULT_PROXYRANDOMIZE = true;
@@ -1014,6 +1015,12 @@ bool AppInitParameterInteraction()
     if (nFD < MIN_CORE_FILEDESCRIPTORS)
         return InitError(errortr("Not enough file descriptors available."));
     nMaxConnections = std::min(nFD - MIN_CORE_FILEDESCRIPTORS - MAX_ADDNODE_CONNECTIONS, nMaxConnections);
+
+    // Limit peer count on low memory systems
+    if (systemPhysicalMemoryInBytes() <= 1*1024*1024*1024ULL)
+    {
+        nMaxConnections = std::min(nMaxConnections, 30);
+    }
 
     if (nMaxConnections < nUserMaxConnections)
         InitWarning(strprintf(warningtr("Reducing -maxconnections from %d to %d, because of system limitations."), nUserMaxConnections, nMaxConnections));
