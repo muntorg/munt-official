@@ -9,169 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>Παράθυρο αποσφαλμάτωσης</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Μη διαθέσιμο</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Πληροφορία</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Γενικά</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Έκδοση Πελάτη</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Χρήση BerkeleyDB έκδοσης</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Χρόνος εκκίνησης</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Δίκτυο</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Όνομα</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Αριθμός συνδέσεων</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Αλυσίδα μπλοκ</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Τρέχον αριθμός μπλοκ</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Χρόνος τελευταίου μπλοκ</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Αρχείο καταγραφής εντοπισμού σφαλμάτων </translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Κονσόλα</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Κίνηση δικτύου</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Σύνολα</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Παραλήφθησαν</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Αποστολή</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Χρήστες</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Επιλέξτε ένα χρήστη για να δείτε αναλυτικές πληροφορίες.</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Έκδοση</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Υπηρεσίες</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Σκορ αποκλησμού</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Χρόνος σύνδεσης</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Τελευταία αποστολή</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Τελευταία λήψη</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Χρόνος καθυστέρησης</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Γράψτε &lt;b&gt;help&lt;/b&gt; για μια επισκόπηση των διαθέσιμων εντολών</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Εισερχόμενα:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Εξερχόμενα:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>μέσω %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>ποτέ</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Εισερχόμενα</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Εξερχόμενα</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Άγνωστο(α)</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -575,6 +412,169 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Δεν μπορεί να δημιουργηθεί φάκελος δεδομένων εδώ.</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>Παράθυρο αποσφαλμάτωσης</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Μη διαθέσιμο</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Πληροφορία</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Γενικά</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Έκδοση Πελάτη</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Χρήση BerkeleyDB έκδοσης</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Χρόνος εκκίνησης</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Δίκτυο</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Όνομα</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Αριθμός συνδέσεων</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Αλυσίδα μπλοκ</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Τρέχον αριθμός μπλοκ</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Χρόνος τελευταίου μπλοκ</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Αρχείο καταγραφής εντοπισμού σφαλμάτων </translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Κονσόλα</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Κίνηση δικτύου</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Σύνολα</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Παραλήφθησαν</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Αποστολή</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Χρήστες</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Επιλέξτε ένα χρήστη για να δείτε αναλυτικές πληροφορίες.</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Έκδοση</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Υπηρεσίες</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Σκορ αποκλησμού</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Χρόνος σύνδεσης</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Τελευταία αποστολή</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Τελευταία λήψη</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Χρόνος καθυστέρησης</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Γράψτε &lt;b&gt;help&lt;/b&gt; για μια επισκόπηση των διαθέσιμων εντολών</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Εισερχόμενα:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Εξερχόμενα:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>μέσω %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>ποτέ</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Εισερχόμενα</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Εξερχόμενα</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Άγνωστο(α)</translation>
     </message>
 </context>
 <context>

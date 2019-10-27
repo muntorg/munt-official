@@ -9,285 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>Hata ayıklama penceresi</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Bellek kullanımı</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Kullanıcı Yazılımı</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Mevcut değil</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Bilgi</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Genel</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>İstemci sürümü</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Kullanılan BerkeleyDB sürümü</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Veri konumu</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Başlama zamanı</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Ağ</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>İsim</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Bağlantı sayısı</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Blok zinciri</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Güncel blok sayısı</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Son blok zamanı</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Bellek Alanı</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Güncel işlem sayısı</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Hata ayıklama kütük dosyası</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Güncel veri klasöründen %1 hata ayıklama kütük dosyasını açar. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konsol</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Ağ trafiği</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Toplamlar</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Alınan</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Yollanan</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Eşler</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Yasaklı eşler</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Ayrıntılı bilgi görmek için bir eş seçin.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Beyaz listedekiler</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Yön</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Sürüm</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Servisler</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Başlangıç Bloku</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Eşleşmiş Üstbilgiler</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Eşleşmiş Bloklar</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Yasaklama Skoru</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Bağlantı Süresi</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Son Gönderme</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Son Alma</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Ping Süresi</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>Güncel olarak göze çarpan bir ping&apos;in süresi.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Ping Beklemesi</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>En Düşük Ping</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Saat Farkı</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>&amp;Bağlantıyı Kes</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Yasakla</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;saat</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;gün</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;hafta</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;yıl</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>&amp;Yasaklamayı Kaldır</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>%1 RPC konsoluna hoş geldiniz.</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Mevcut komutların listesi için &lt;b&gt;help&lt;/b&gt; yazınız.</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>UYARI: Bitcoin dolandırıcılarının çok fazla etkin olduğu zamanlarda, dolandırıcılar bazı kullanıcılara buraya komutlar yazmalarını söylerek onların cüzdanlarındaki bitcoinleri çalmışlardır. Bir komutun sonuçlarını tam olarak anlamadan bu konsolu kullanmayın.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>İçeri:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Dışarı:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>Ağ etkinliği devre dışı bırakıldı</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(düğüm kimliği: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>%1 vasıtasıyla</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>asla</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Gelen</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Giden</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Evet</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Hayır</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Bilinmiyor</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1583,6 +1304,285 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Burada veri klasörü oluşturulamaz.</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>Hata ayıklama penceresi</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Bellek kullanımı</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Kullanıcı Yazılımı</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Mevcut değil</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Bilgi</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Genel</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>İstemci sürümü</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Kullanılan BerkeleyDB sürümü</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Veri konumu</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Başlama zamanı</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Ağ</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>İsim</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Bağlantı sayısı</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Blok zinciri</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Güncel blok sayısı</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Son blok zamanı</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Bellek Alanı</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Güncel işlem sayısı</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Hata ayıklama kütük dosyası</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Güncel veri klasöründen %1 hata ayıklama kütük dosyasını açar. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konsol</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Ağ trafiği</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Toplamlar</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Alınan</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Yollanan</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Eşler</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Yasaklı eşler</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Ayrıntılı bilgi görmek için bir eş seçin.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Beyaz listedekiler</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Yön</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Sürüm</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Servisler</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Başlangıç Bloku</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Eşleşmiş Üstbilgiler</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Eşleşmiş Bloklar</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Yasaklama Skoru</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Bağlantı Süresi</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Son Gönderme</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Son Alma</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Ping Süresi</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Güncel olarak göze çarpan bir ping&apos;in süresi.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping Beklemesi</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>En Düşük Ping</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Saat Farkı</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Bağlantıyı Kes</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Yasakla</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;saat</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;gün</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;hafta</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;yıl</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Yasaklamayı Kaldır</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>%1 RPC konsoluna hoş geldiniz.</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Mevcut komutların listesi için &lt;b&gt;help&lt;/b&gt; yazınız.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>UYARI: Bitcoin dolandırıcılarının çok fazla etkin olduğu zamanlarda, dolandırıcılar bazı kullanıcılara buraya komutlar yazmalarını söylerek onların cüzdanlarındaki bitcoinleri çalmışlardır. Bir komutun sonuçlarını tam olarak anlamadan bu konsolu kullanmayın.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>İçeri:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Dışarı:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Ağ etkinliği devre dışı bırakıldı</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(düğüm kimliği: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>%1 vasıtasıyla</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>asla</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Gelen</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Giden</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Evet</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Hayır</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Bilinmiyor</translation>
     </message>
 </context>
 <context>

@@ -9,221 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>Fereastra de depanare</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Memorie folosită</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Agent utilizator</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>indisponibil</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informaţii</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>General</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Versiune client</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Foloseşte BerkeleyDB versiunea</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Durata pornirii</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Reţea</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Nume</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Numărul de conexiuni</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Lanţ de blocuri</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Numărul curent de blocuri</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Data ultimului bloc</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Numărul curent de tranzacţii</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Fişier jurnal depanare</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Consolă</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>Trafic reţea</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Totaluri</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Recepţionat</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Trimis</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Parteneri</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Selectaţi un partener pentru a vedea informaţiile detaliate.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Whitelisted</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direcţie</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Versiune</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Servicii</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Bloc de început</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Headere Sincronizate</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Blocuri Sincronizate</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Timp conexiune</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Ultima trimitere</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Ultima primire</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Timp ping</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;oră</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;zi</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;săptămână</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;an</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Scrieţi &lt;b&gt;help&lt;/b&gt; pentru a vedea comenzile disponibile.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Intrare:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Ieşire:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>niciodată</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Intrare</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Ieşire</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Da</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nu</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Necunoscut</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -638,6 +423,221 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Nu se poate crea un dosar de date aici.</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>Fereastra de depanare</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Memorie folosită</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Agent utilizator</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>indisponibil</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informaţii</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>General</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Versiune client</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Foloseşte BerkeleyDB versiunea</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Durata pornirii</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Reţea</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nume</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Numărul de conexiuni</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Lanţ de blocuri</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Numărul curent de blocuri</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Data ultimului bloc</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Numărul curent de tranzacţii</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Fişier jurnal depanare</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Consolă</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>Trafic reţea</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Totaluri</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Recepţionat</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Trimis</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Parteneri</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Selectaţi un partener pentru a vedea informaţiile detaliate.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Whitelisted</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Direcţie</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Versiune</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Servicii</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Bloc de început</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Headere Sincronizate</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Blocuri Sincronizate</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Timp conexiune</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Ultima trimitere</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Ultima primire</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Timp ping</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;oră</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;zi</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;săptămână</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;an</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Scrieţi &lt;b&gt;help&lt;/b&gt; pentru a vedea comenzile disponibile.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Intrare:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Ieşire:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>niciodată</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Intrare</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Ieşire</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Da</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nu</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Necunoscut</translation>
     </message>
 </context>
 <context>

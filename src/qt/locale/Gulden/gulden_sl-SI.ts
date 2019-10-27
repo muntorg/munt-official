@@ -9,189 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MiB</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>Razhroščevalno okno</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Ime agenta</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Neznano</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informacije</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Splošno</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Različica odjemalca</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>BerkeleyDB različica v rabi</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Čas zagona</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Omrežje</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Ime</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Število povezav</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Veriga blokov</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Trenutno število blokov</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Čas zadnjega bloka</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Razhroščevalni dnevnik</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konzola</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Omrežni promet</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Promet</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Prejeto</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Oddano</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Soležniki</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Izberite soležnika, o katerem si želite ogledati podrobnejše informacije.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Smer povezave</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Različica</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Storitve</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Kazenske točke</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Trajanje povezave</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Nazadje oddano</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Nazadnje prejeto</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Odzivni čas</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Časovni odklon</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Vtipkajte &lt;b&gt;help&lt;/b&gt; za pregled razpoložljivih ukazov.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Dohodnih:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Odhodnih:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KiB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GiB</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>preko %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>nikoli</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Dohodna</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Odhodna</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Da</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ne</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Neznano</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -622,6 +439,189 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Na tem mestu ni mogoče ustvariti nove mape.</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>Razhroščevalno okno</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MiB</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Ime agenta</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Neznano</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informacije</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Splošno</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Različica odjemalca</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>BerkeleyDB različica v rabi</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Čas zagona</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Omrežje</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Ime</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Število povezav</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Veriga blokov</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Trenutno število blokov</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Čas zadnjega bloka</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Razhroščevalni dnevnik</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konzola</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Omrežni promet</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Promet</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Prejeto</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Oddano</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Soležniki</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Izberite soležnika, o katerem si želite ogledati podrobnejše informacije.</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Smer povezave</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Različica</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Storitve</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Kazenske točke</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Trajanje povezave</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Nazadje oddano</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Nazadnje prejeto</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Odzivni čas</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Časovni odklon</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Vtipkajte &lt;b&gt;help&lt;/b&gt; za pregled razpoložljivih ukazov.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Dohodnih:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Odhodnih:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KiB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GiB</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>preko %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>nikoli</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Dohodna</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Odhodna</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Da</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ne</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Neznano</translation>
     </message>
 </context>
 <context>

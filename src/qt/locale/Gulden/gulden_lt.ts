@@ -9,105 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>Derinimo langas</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>nėra</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informacija</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Kliento versija</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Paleidimo laikas</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Tinklas</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Pavadinimas</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Prisijungimų kiekis</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Blokų grandinė</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Dabartinis blokų skaičius</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Paskutinio bloko laikas</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Derinimo žurnalo failas</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konsolė</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Viso:</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Gauta</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Kryptis</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Versija</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>Niekada</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Taip</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ne</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -387,6 +288,105 @@
     <message>
         <source>name</source>
         <translation>pavadinimas</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>Derinimo langas</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>nėra</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informacija</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Kliento versija</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Paleidimo laikas</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Tinklas</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Pavadinimas</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Prisijungimų kiekis</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Blokų grandinė</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Dabartinis blokų skaičius</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Paskutinio bloko laikas</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Derinimo žurnalo failas</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konsolė</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Viso:</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Gauta</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Kryptis</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Versija</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>Niekada</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Taip</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ne</translation>
     </message>
 </context>
 <context>

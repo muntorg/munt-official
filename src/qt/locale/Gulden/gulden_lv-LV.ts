@@ -9,101 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>Atkļūdošanas logs</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informācija</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Vispārējs</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Klienta versija</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Sākuma laiks</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Tīkls</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Vārds</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Savienojumu skaits</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Bloku virkne</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Pašreizējais bloku skaits</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Pēdējā bloka laiks</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Atkļūdošanas žurnāla datne</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konsole</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Tīkla Satiksme</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Kopsummas</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Ierakstiet &lt;b&gt;help&lt;/b&gt; lai iegūtu pieejamo komandu sarakstu.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Ie.:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Iz.:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>C&amp;lose</source>
@@ -415,6 +320,101 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Šeit nevar izveidot datu mapi.</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>Atkļūdošanas logs</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informācija</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Vispārējs</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Klienta versija</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Sākuma laiks</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Tīkls</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Vārds</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Savienojumu skaits</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Bloku virkne</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Pašreizējais bloku skaits</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Pēdējā bloka laiks</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Atkļūdošanas žurnāla datne</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konsole</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Tīkla Satiksme</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Kopsummas</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Ierakstiet &lt;b&gt;help&lt;/b&gt; lai iegūtu pieejamo komandu sarakstu.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Ie.:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Iz.:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
     </message>
 </context>
 <context>

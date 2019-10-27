@@ -2673,7 +2673,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Enter a Gulden URL</translation>
     </message>
     <message>
-        <location line="+835"/>
+        <location line="+844"/>
         <source>%1 d</source>
         <translation>%1 d</translation>
     </message>
@@ -2789,40 +2789,41 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>RPCConsole</name>
     <message>
-        <location filename="../../rpcconsole.cpp" line="+972"/>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
         <location filename="../../forms/debugwindow.ui" line="+14"/>
         <source>Debug window</source>
         <translation>Debug window</translation>
     </message>
     <message>
-        <location line="+310"/>
+        <location filename="../../rpcconsole.cpp" line="+983"/>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <location filename="../../forms/debugwindow.ui" line="+349"/>
         <source>Memory usage</source>
         <translation>Memory usage</translation>
     </message>
     <message>
-        <location line="-255"/>
-        <location line="+958"/>
+        <location line="-96"/>
+        <location line="+819"/>
         <source>User Agent</source>
         <translation>User Agent</translation>
     </message>
     <message>
-        <location line="-971"/>
-        <location line="+26"/>
-        <location line="+26"/>
+        <location line="-1050"/>
+        <location line="+29"/>
         <location line="+23"/>
-        <location line="+26"/>
+        <location line="+16"/>
+        <location line="+16"/>
+        <location line="+52"/>
+        <location line="+17"/>
+        <location line="+16"/>
         <location line="+36"/>
-        <location line="+23"/>
-        <location line="+36"/>
-        <location line="+23"/>
-        <location line="+36"/>
-        <location line="+23"/>
-        <location line="+82"/>
-        <location line="+552"/>
+        <location line="+39"/>
+        <location line="+16"/>
+        <location line="+100"/>
+        <location line="+70"/>
+        <location line="+561"/>
         <location line="+23"/>
         <location line="+23"/>
         <location line="+23"/>
@@ -2844,37 +2845,37 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>N/A</translation>
     </message>
     <message>
-        <location line="-1338"/>
+        <location line="-1397"/>
         <source>&amp;Information</source>
         <translation>&amp;Information</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+311"/>
         <source>General</source>
         <translation>General</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+45"/>
         <source>Client version</source>
         <translation>Client version</translation>
     </message>
     <message>
-        <location line="+49"/>
+        <location line="-10"/>
         <source>Using BerkeleyDB version</source>
         <translation>Using BerkeleyDB version</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="-229"/>
         <source>Datadir</source>
         <translation>Datadir</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+215"/>
         <source>Startup time</source>
         <translation>Startup time</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="-41"/>
         <source>Network</source>
         <translation>Network</translation>
     </message>
@@ -2884,57 +2885,63 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Name</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="-143"/>
         <source>Number of connections</source>
         <translation>Number of connections</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+45"/>
         <source>Block chain</source>
         <translation>Block chain</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+118"/>
         <source>Current number of blocks</source>
         <translation>Current number of blocks</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+7"/>
         <source>Last block time</source>
         <translation>Last block time</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="-294"/>
         <source>Memory Pool</source>
         <translation>Memory Pool</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+23"/>
         <source>Current number of transactions</source>
         <translation>Current number of transactions</translation>
     </message>
     <message>
-        <location line="+64"/>
-        <source>Debug log file</source>
-        <translation>Debug log file</translation>
-    </message>
-    <message>
-        <location line="+13"/>
+        <location line="+355"/>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="-276"/>
+        <location line="+279"/>
         <source>Open</source>
         <translation>Open</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="-282"/>
+        <source>Open the %1 data directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+77"/>
         <source>Current PoW² phase</source>
         <translation>Current PoW² phase</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+189"/>
+        <source>Log file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+63"/>
         <source>&amp;Console</source>
         <translation>&amp;Console</translation>
     </message>
@@ -2977,8 +2984,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <location line="+60"/>
-        <location filename="../../rpcconsole.cpp" line="-504"/>
-        <location line="+763"/>
+        <location filename="../../rpcconsole.cpp" line="-511"/>
+        <location line="+770"/>
         <source>Select a peer to view detailed information.</source>
         <translation>Select a peer to view detailed information.</translation>
     </message>
@@ -3063,7 +3070,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Time Offset</translation>
     </message>
     <message>
-        <location filename="../../rpcconsole.cpp" line="-669"/>
+        <location filename="../../rpcconsole.cpp" line="-676"/>
         <source>&amp;Disconnect</source>
         <translation>&amp;Disconnect</translation>
     </message>
@@ -3101,7 +3108,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&amp;Unban</translation>
     </message>
     <message>
-        <location line="+139"/>
+        <location line="+141"/>
         <source>Welcome to the %1 RPC console.</source>
         <translation>Welcome to the %1 RPC console.</translation>
     </message>
@@ -3136,7 +3143,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Network activity disabled</translation>
     </message>
     <message>
-        <location line="+167"/>
+        <location line="+172"/>
         <source>%1 B</source>
         <translation>%1 B</translation>
     </message>

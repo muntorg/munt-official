@@ -9,133 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>நினைவக பயன்பாடு</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>பயனர் முகவர்</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;தகவல்</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>வாடிக்கையாளர் பதிப்பு</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>பிணையம்</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>பெயர்</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>நினைவக குளம்</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;பணியகம்</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>மொத்தம்</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>அனுப்பிய</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>திசை</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>பதிப்பு</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>பிங் நேரம்</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;மணி</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;நாள்</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;வாரம்</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;ஆண்டு</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>உள்ளே:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>வெளியே:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>ஒருபோதும்</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>உள்வரும்</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>வெளி செல்லும்</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>ஆம்</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>மறு</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>அறியப்படாத</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>C&amp;lose</source>
@@ -468,6 +341,133 @@
     <message>
         <source>Information</source>
         <translation>தகவல்</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>நினைவக பயன்பாடு</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>பயனர் முகவர்</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;தகவல்</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>வாடிக்கையாளர் பதிப்பு</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>பிணையம்</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>பெயர்</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>நினைவக குளம்</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;பணியகம்</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>மொத்தம்</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>அனுப்பிய</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>திசை</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>பதிப்பு</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>பிங் நேரம்</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;மணி</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;நாள்</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;வாரம்</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;ஆண்டு</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>உள்ளே:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>வெளியே:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>ஒருபோதும்</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>உள்வரும்</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>வெளி செல்லும்</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>ஆம்</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>மறு</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>அறியப்படாத</translation>
     </message>
 </context>
 <context>

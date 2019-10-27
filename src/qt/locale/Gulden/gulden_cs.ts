@@ -9,285 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>Ladicí okno</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Obsazenost paměti</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Typ klienta</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>nedostupná informace</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>&amp;Informace</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Obecné</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Verze klienta</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Používaná verze BerkeleyDB</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Adresář s daty</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Čas spuštění</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Síť</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Název</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Počet spojení</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Řetězec bloků</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Aktuální počet bloků</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Čas posledního bloku</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Transakční zásobník</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Aktuální množství transakcí</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Soubor s ladicími záznamy</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Otevři soubor s ladicími záznamy %1 z aktuálního datového adresáře. U velkých žurnálů to může pár vteřin zabrat.</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konzole</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Síťový provoz</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Součty</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Přijato</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Odesláno</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Protějšky</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Protějšky pod klatbou (blokované)</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Vyber protějšek a uvidíš jeho detailní informace.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Vždy vítán</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Směr</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Verze</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Služby</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Počáteční blok</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Aktuálně hlaviček</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Aktuálně bloků</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Skóre pro klatbu</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Doba spojení</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Poslední odeslání</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Poslední příjem</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Odezva</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>Jak dlouho už čekám na pong.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Doba čekání na odezvu</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Nejrychlejší odezva</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Časový posun</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>&amp;Odpoj</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Uval klatbu na</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;hodinu</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;den</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;týden</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;rok</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>&amp;Odblokuj</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>Vítej v RPC konzoli %1.</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Napsáním &lt;b&gt;help&lt;/b&gt; si vypíšeš přehled dostupných příkazů.</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>UPOZORNĚNÍ: Podvodníci jsou aktivní a říkají uživatelům, aby sem zadávali příkazy, kterými jim pak ale vykradou jejich peněženky. Nepoužívej tuhle konzoli, pokud úplně neznáš důsledky jednotlivých příkazů.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Sem:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>Ven:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>Síť je vypnutá</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 kB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(id uzlu: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>nikdy</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Sem</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Ven</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ano</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ne</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Neznámá</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1613,6 +1334,285 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>Tady nemůžu vytvořit adresář pro data.</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>Ladicí okno</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Obsazenost paměti</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Typ klienta</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>nedostupná informace</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informace</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Obecné</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Verze klienta</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Používaná verze BerkeleyDB</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Adresář s daty</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Čas spuštění</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Síť</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Název</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Počet spojení</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Řetězec bloků</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Aktuální počet bloků</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Čas posledního bloku</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Transakční zásobník</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Aktuální množství transakcí</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Soubor s ladicími záznamy</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Otevři soubor s ladicími záznamy %1 z aktuálního datového adresáře. U velkých žurnálů to může pár vteřin zabrat.</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konzole</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Síťový provoz</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Součty</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Přijato</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Odesláno</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Protějšky</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Protějšky pod klatbou (blokované)</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Vyber protějšek a uvidíš jeho detailní informace.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Vždy vítán</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Směr</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Verze</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Služby</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Počáteční blok</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Aktuálně hlaviček</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Aktuálně bloků</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Skóre pro klatbu</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Doba spojení</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Poslední odeslání</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Poslední příjem</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Odezva</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Jak dlouho už čekám na pong.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Doba čekání na odezvu</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Nejrychlejší odezva</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Časový posun</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Odpoj</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Uval klatbu na</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;hodinu</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;den</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;týden</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;rok</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Odblokuj</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Vítej v RPC konzoli %1.</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Napsáním &lt;b&gt;help&lt;/b&gt; si vypíšeš přehled dostupných příkazů.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>UPOZORNĚNÍ: Podvodníci jsou aktivní a říkají uživatelům, aby sem zadávali příkazy, kterými jim pak ale vykradou jejich peněženky. Nepoužívej tuhle konzoli, pokud úplně neznáš důsledky jednotlivých příkazů.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Sem:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Ven:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Síť je vypnutá</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(id uzlu: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>nikdy</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Sem</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>Ven</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ano</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ne</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Neznámá</translation>
     </message>
 </context>
 <context>

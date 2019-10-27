@@ -9,301 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>Debugfenster</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Speichernutzung</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>User-Agent</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>k.A.</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>Hinweis</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>Allgemein</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Clientversion</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Verwendete BerkeleyDB-Version</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Datenverzeichnis</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Startzeit</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Netzwerk</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>Name</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>Anzahl Verbindungen</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Blockkette</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Aktuelle Anzahl Blöcke</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Letzte Blockzeit</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Speicherpool</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Aktuelle Anzahl der Transaktionen</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Debugprotokolldatei</translation>
-    </message>
-    <message>
-        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Öffnet die %1-Debugprotokolldatei aus dem aktuellen Datenverzeichnis. Dies kann bei großen Protokolldateien einige Sekunden dauern.</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation>Öffnen</translation>
-    </message>
-    <message>
-        <source>Current PoW² phase</source>
-        <translation>Aktuelle PoW² Phase</translation>
-    </message>
-    <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Konsole</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;Netzwerkauslastung</translation>
-    </message>
-    <message>
-        <source>&amp;Reset</source>
-        <translation>&amp;Zurücksetzen</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Gesamtmenge:</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Empfangen</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Übertragen</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Gegenstellen</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Gesperrte Peers</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Gegenstelle auswählen, um detaillierte Informationen zu erhalten.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Zugelassene</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Richtung</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Version</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Dienste</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Start Block</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Synchronisierte Kopfdaten</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Synchronisierte Blöcke</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Sperrpunktzahl</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Verbindungsdauer</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Letzte Übertragung</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Letzter Empfang</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Pingzeit</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>Die Laufzeit eines aktuell ausstehenden Ping.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Ping Wartezeit</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Minimaler Ping</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Zeitversatz</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect</source>
-        <translation>&amp;Trennen</translation>
-    </message>
-    <message>
-        <source>Ban for</source>
-        <translation>Banne für</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;Stunde</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;Tag</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;Woche</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;Jahr</translation>
-    </message>
-    <message>
-        <source>&amp;Unban</source>
-        <translation>&amp;Node entsperren</translation>
-    </message>
-    <message>
-        <source>Welcome to the %1 RPC console.</source>
-        <translation>Willkommen in der %1 RPC Konsole.</translation>
-    </message>
-    <message>
-        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
-        <translation>Pfeiltaste hoch und runter, um den Verlauf durchzublättern und %1, um die Konsole zurückzusetzen.</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Bitte &lt;b&gt;help&lt;/b&gt; eingeben, um eine Übersicht verfügbarer Befehle zu erhalten.</translation>
-    </message>
-    <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
-        <translation>WARNUNG: Betrüger versuchen aktiv Nutzer dazu zu bringen Kommandos hier auszuführen um die Wallet Inhalte zu stehlen. Diese Konsole sollte nicht benutzt werden ausser man kennt die möglichen Folgen des Kommandos.</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>eingehend:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>ausgehend:</translation>
-    </message>
-    <message>
-        <source>Network activity disabled</source>
-        <translation>Netzwerkaktivität deaktiviert</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(Knotenkennung: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>über %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>nie</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>eingehend</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>ausgehend</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nein</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Unbekannt</translation>
-    </message>
-</context>
-<context>
     <name>AccountSettingsDialog</name>
     <message>
         <source>Change name of account</source>
@@ -391,6 +96,14 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
     <message>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Messe dich mit anderen Minern, um Gulden mit deiner CPU-Leerlaufzeit zu erstellen&lt;/li&gt;&lt;li&gt; Unterstütze das Netzwerk&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Mining</translation>
     </message>
     <message>
         <source>Account name</source>
@@ -1907,7 +1620,7 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Wählen Sie die Adresse aus, an die Sie Guldencoins überweisen möchten</translation>
+        <translation>Wählen Sie die Adresse aus, an die Sie die digitalen Münzen schicken möchten </translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
@@ -3011,6 +2724,301 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     </message>
 </context>
 <context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>Debugfenster</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Speichernutzung</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>User-Agent</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>k.A.</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>Hinweis</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Allgemein</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>Clientversion</translation>
+    </message>
+    <message>
+        <source>Using BerkeleyDB version</source>
+        <translation>Verwendete BerkeleyDB-Version</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Datenverzeichnis</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>Startzeit</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Netzwerk</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>Anzahl Verbindungen</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Blockkette</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Aktuelle Anzahl Blöcke</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Letzte Blockzeit</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Speicherpool</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Aktuelle Anzahl der Transaktionen</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>Debugprotokolldatei</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Öffnet die %1-Debugprotokolldatei aus dem aktuellen Datenverzeichnis. Dies kann bei großen Protokolldateien einige Sekunden dauern.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Öffnen</translation>
+    </message>
+    <message>
+        <source>Current PoW² phase</source>
+        <translation>Aktuelle PoW² Phase</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Konsole</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Netzwerkauslastung</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Zurücksetzen</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>Gesamtmenge:</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Empfangen</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Übertragen</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Gegenstellen</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Gesperrte Peers</translation>
+    </message>
+    <message>
+        <source>Select a peer to view detailed information.</source>
+        <translation>Gegenstelle auswählen, um detaillierte Informationen zu erhalten.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>Zugelassene</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Richtung</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Version</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Dienste</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Start Block</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Synchronisierte Kopfdaten</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Synchronisierte Blöcke</translation>
+    </message>
+    <message>
+        <source>Ban Score</source>
+        <translation>Sperrpunktzahl</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Verbindungsdauer</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Letzte Übertragung</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Letzter Empfang</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Pingzeit</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Die Laufzeit eines aktuell ausstehenden Ping.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping Wartezeit</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Minimaler Ping</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Zeitversatz</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Trennen</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Banne für</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;Stunde</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;Tag</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;Woche</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;Jahr</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Node entsperren</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Willkommen in der %1 RPC Konsole.</translation>
+    </message>
+    <message>
+        <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
+        <translation>Pfeiltaste hoch und runter, um den Verlauf durchzublättern und %1, um die Konsole zurückzusetzen.</translation>
+    </message>
+    <message>
+        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
+        <translation>Bitte &lt;b&gt;help&lt;/b&gt; eingeben, um eine Übersicht verfügbarer Befehle zu erhalten.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <translation>WARNUNG: Betrüger versuchen aktiv Nutzer dazu zu bringen Kommandos hier auszuführen um die Wallet Inhalte zu stehlen. Diese Konsole sollte nicht benutzt werden ausser man kennt die möglichen Folgen des Kommandos.</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>eingehend:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>ausgehend:</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netzwerkaktivität deaktiviert</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 KB</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(Knotenkennung: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>über %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>nie</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>eingehend</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>ausgehend</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nein</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Unbekannt</translation>
+    </message>
+</context>
+<context>
     <name>Intro</name>
     <message>
         <source>Error</source>
@@ -3651,8 +3659,96 @@ In zukünftigen Versionen von Gulden wird es möglich sein, dieses Konto wieder 
 <context>
     <name>MiningAccountDialog</name>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
         <translation>Durch Erhöhen der Anzahl der Threads wird die Mining-Geschwindigkeit erhöht, aber auch der Energieverbrauch und andere Anwendungen, die möglicherweise ausgeführt werden, werden verlangsamt.</translation>
+    </message>
+    <message>
+        <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
+        <translation>Eine Reduzierung der Speichernutzung wird nicht empfohlen. Dadurch wird das Mining verlangsamt, während dieselbe Menge an Prozessorleistung und Energie wie zuvor verwendet wird. Verwenden Sie diese Option nur als letzte Möglichkeit für Computer mit geringer Speicherverfügbarkeit.</translation>
+    </message>
+    <message>
+        <source>%1 Mb</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>%1 threads</source>
+        <translation>%1 Prozesse</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse in Zwischenablage kopiert</translation>
+    </message>
+    <message>
+        <source>Mining address</source>
+        <translation>Mining-Adresse</translation>
+    </message>
+    <message>
+        <source>My mining address</source>
+        <translation>Meine Mining-Adresse</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopiere Adresse in Zwischenablage</translation>
+    </message>
+    <message>
+        <source>Edit mining address</source>
+        <translation>Mining-Adresse editieren</translation>
+    </message>
+    <message>
+        <source>Reset mining address</source>
+        <translation>Mining-Adresse zurücksetzen</translation>
+    </message>
+    <message>
+        <source>My mining settings</source>
+        <translation>Meine Mining-Einstellungen</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Speichernutzung</translation>
+    </message>
+    <message>
+        <source>Processor usage</source>
+        <translation>Prozessorauslastung</translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation>#</translation>
+    </message>
+    <message>
+        <source>Automatically mine at startup</source>
+        <translation>Mine automatisch beim Start</translation>
+    </message>
+    <message>
+        <source>Keep application open when mining</source>
+        <translation>Halte die Anwendung beim Mining offen</translation>
+    </message>
+    <message>
+        <source>My mining statistics</source>
+        <translation>Meine Mining-Statistiken</translation>
+    </message>
+    <message>
+        <source>Best reported speed</source>
+        <translation>Beste gemeldete Geschwindigkeit</translation>
+    </message>
+    <message>
+        <source>Moving average</source>
+        <translation>Durchschnittsgeschwindigkeit</translation>
+    </message>
+    <message>
+        <source>Last reported speed</source>
+        <translation>Letzte gemeldete Geschwindigkeit</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Stoppe Mining</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Starte Mining</translation>
     </message>
 </context>
 <context>

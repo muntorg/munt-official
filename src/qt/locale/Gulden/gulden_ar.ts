@@ -9,145 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>RPCConsole</name>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 ميقا بايت</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>نافذة المعالجة</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>غير معروف</translation>
-    </message>
-    <message>
-        <source>&amp;Information</source>
-        <translation>المعلومات</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation>عام</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>نسخه العميل</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>وقت البدء</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>الشبكه</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>الاسم</translation>
-    </message>
-    <message>
-        <source>Number of connections</source>
-        <translation>عدد الاتصالات</translation>
-    </message>
-    <message>
-        <source>&amp;Network Traffic</source>
-        <translation>&amp;حركة مرور الشبكة</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>المجاميع</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>إستقبل</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>تم الإرسال</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;اصدقاء</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>جهة</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>خدمات</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>آخر استقبال</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>آخر إرسال</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;ساعة</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp; يوم</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp; اسبوع</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp; سنة</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>داخل:</translation>
-    </message>
-    <message>
-        <source>Out:</source>
-        <translation>خارج:</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 بايت</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 كيلو بايت</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 قيقا بايت</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>ابدا</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>داخل</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>خارجي</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>نعم</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>لا</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>غير معرف</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -1073,6 +934,145 @@
     <message>
         <source>Cannot create data directory here.</source>
         <translation>لا يمكن انشاء دليل بيانات هنا .</translation>
+    </message>
+</context>
+<context>
+    <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation>نافذة المعالجة</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 ميقا بايت</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>غير معروف</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>المعلومات</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>عام</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>نسخه العميل</translation>
+    </message>
+    <message>
+        <source>Startup time</source>
+        <translation>وقت البدء</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>الشبكه</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>الاسم</translation>
+    </message>
+    <message>
+        <source>Number of connections</source>
+        <translation>عدد الاتصالات</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;حركة مرور الشبكة</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>المجاميع</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>إستقبل</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>تم الإرسال</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;اصدقاء</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>جهة</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>خدمات</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>آخر استقبال</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>آخر إرسال</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;ساعة</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp; يوم</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp; اسبوع</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp; سنة</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>داخل:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>خارج:</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 بايت</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 كيلو بايت</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 قيقا بايت</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>ابدا</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>داخل</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>خارجي</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>نعم</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>لا</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>غير معرف</translation>
     </message>
 </context>
 <context>
