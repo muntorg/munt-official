@@ -68,10 +68,13 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
                     // New shadow account
                     CAccountHD* newShadow = seedIter.second->GenerateAccount(shadowSubType, &db);
 
-                    // Only explicitely ask for an unlock if really low on shadow accounts
-                    if (newShadow == NULL && numShadow < std::max(nFinalAccountPoolTargetSize, 2))
+                    if (newShadow == NULL)
                     {
-                        tryLockWallet = false;
+                        // Only explicitely ask for an unlock if really low on shadow accounts
+                        if ((shadowSubType != AccountType::MiningAccount) && (numShadow < std::max(nFinalAccountPoolTargetSize, 2)))
+                        {
+                            tryLockWallet = false;
+                        }
                         return;
                     }
 
