@@ -1692,7 +1692,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         // 2) An attacker would still have to meet all other PoW check *and* keep all witness states intact
         // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some more headers after detecting wrong chain)
         // So this is not really a major weakening of security in any way and still more than sufficient.
-        if ((pindexNew->nHeight < Checkpoints::LastCheckPointHeight()))
+        if (((unsigned int)pindexNew->nHeight < Checkpoints::LastCheckPointHeight()))
             fValidateWitness = false;
         bool rv = ConnectBlock(chainActive, blockConnecting, state, pindexNew, view, chainparams, fJustCheck, fValidateWitness);
         GetMainSignals().BlockChecked(blockConnecting, state);
@@ -3701,7 +3701,7 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                     //Note: an attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
                     // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some data after detecting wrong chain)
                     // So this is not really a major weakening of security in any way and still more than sufficient.
-                    if ((mapBlockIndex.find(block.hashPrevBlock)->second->nHeight < Checkpoints::LastCheckPointHeight()))
+                    if (((unsigned int)mapBlockIndex.find(block.hashPrevBlock)->second->nHeight < Checkpoints::LastCheckPointHeight()))
                     {
                         fAssumePOWGood = true;
                     }
