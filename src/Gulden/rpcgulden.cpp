@@ -3616,8 +3616,8 @@ static const CRPCCommand commands[] =
     { "support",                 "resetdatadirpartial",             &resetdatadirpartial,            true,    {""} },
     { "support",                 "resetdatadirfull",                &resetdatadirfull,               true,    {""} },
     { "support",                 "resetconfig",                     &resetconfig,                    true,    {""} },
-    { "support",                 "resetconfig_pi_lowmem",           &resetconfig_pi_lowmem,           true,    {""} },
-    { "support",                 "resetconfig_pi_medmem",           &resetconfig_pi_medmem,           true,    {""} },
+    { "support",                 "resetconfig_pi_lowmem",           &resetconfig_pi_lowmem,          true,    {""} },
+    { "support",                 "resetconfig_pi_medmem",           &resetconfig_pi_medmem,          true,    {""} },
     { "support",                 "getcheckpoint",                   &getcheckpoint,                  true,    {""} },
     { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {""} },
 
