@@ -2524,11 +2524,11 @@ static UniValue resetdatadirfull(const JSONRPCRequest& request)
     fs::remove(GetDataDir() / "peers.dat");
     fs::remove(GetDataDir() / "db.log");
     fs::remove(GetDataDir() / "mempool.dat");
-    fs::remove(GetDataDir() / "autocheckpoints");
-    fs::remove(GetDataDir() / "blocks");
-    fs::remove(GetDataDir() / "database");
-    fs::remove(GetDataDir() / "chainstate");
-    fs::remove(GetDataDir() / "witstate");
+    fs::remove_all(GetDataDir() / "autocheckpoints");
+    fs::remove_all(GetDataDir() / "blocks");
+    fs::remove_all(GetDataDir() / "database");
+    fs::remove_all(GetDataDir() / "chainstate");
+    fs::remove_all(GetDataDir() / "witstate");
     
     // Forcefully close app
     exit(EXIT_SUCCESS);
@@ -2564,7 +2564,7 @@ static UniValue resetdatadirpartial(const JSONRPCRequest& request)
     LOCK(cs_main);
     #endif
     
-    fs::remove(GetDataDir() / "autocheckpoints");
+    fs::remove_all(GetDataDir() / "autocheckpoints");
     fs::remove(GetDataDir() / "banlist.dat");
     fs::remove(GetDataDir() / "peers.dat");
     
