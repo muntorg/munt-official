@@ -1,3 +1,16 @@
+2.1.0.19
+
+UI - Introduce an 'open datadir' button to debug info window
+UI - Fix a small bug with sending funds from mining account
+CORE - Fix various minor race conditions in code
+CORE - Minor improvements to default settings for low memory machines
+RPC - New support specific RPC commands to aid support staff in assisting users: resetdatadirpartial, resetdatadirfull, getcheckpoint, getlastblocks, resetconfig, resetconfig_pi_lowmem, resetconfig_pi_medmem
+RPC - Improve responsiveness of 'setgenerate' and 'getgenerate' commands
+RPC - Update output of getblock and other commands to include pre/post nonce 
+
+
+
+
 2.1.0.18
 
 MISC - Introduce small new feature to help update users who got stuck on a fork
