@@ -2495,6 +2495,7 @@ static UniValue checkpointinvalidate(const JSONRPCRequest& request)
 static UniValue resetdatadirfull(const JSONRPCRequest& request)
 {
     // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
     if (request.params.size() != 0)
     {
         throw std::runtime_error("resetdatadirfull does not take arguments\n");
@@ -2538,6 +2539,7 @@ static UniValue resetdatadirfull(const JSONRPCRequest& request)
 static UniValue resetdatadirpartial(const JSONRPCRequest& request)
 {
     // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
     if (request.params.size() != 0)
     {
         throw std::runtime_error("resetdatadirpartial does not take arguments\n");
@@ -2572,9 +2574,140 @@ static UniValue resetdatadirpartial(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
+static UniValue resetconfig(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetconfig does not take arguments\n");
+    }
+
+    LogPrintf("Config wipe requested.\n");
+
+    std::vector<std::string> asKeep;    
+    {
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        if (!streamConfig.good())
+            throw std::runtime_error("No config file to reset\n");
+
+        std::string configLine;
+        while (!streamConfig.eof())
+        {
+            std::getline(streamConfig, configLine);
+            if (boost::starts_with(configLine, "rpc") && !boost::starts_with(configLine, "rpcthreads"))
+            {
+                asKeep.push_back(configLine);
+            }
+        }
+    }
+    
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    if (!streamConfig.good())
+        throw std::runtime_error("No config file to reset\n");
+    
+    for (const auto& keepLine : asKeep)
+    {
+        streamConfig << keepLine << "\n";
+    }
+
+    return NullUniValue;
+}
+
+static UniValue resetconfig_pi_lowmem(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetconfig_pi_lowmem does not take arguments\n");
+    }
+
+    LogPrintf("Config wipe requested.\n");
+
+    std::vector<std::string> asKeep;    
+    {
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        if (!streamConfig.good())
+            throw std::runtime_error("No config file to reset\n");
+
+        std::string configLine;
+        while (!streamConfig.eof())
+        {
+            std::getline(streamConfig, configLine);
+            if (boost::starts_with(configLine, "rpc") && !boost::starts_with(configLine, "rpcthreads"))
+            {
+                asKeep.push_back(configLine);
+            }
+        }
+    }
+    
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    if (!streamConfig.good())
+        throw std::runtime_error("No config file to reset\n");
+    
+    for (const auto& keepLine : asKeep)
+    {
+        streamConfig << keepLine << "\n";
+    }
+    streamConfig << "maxconnections=10\n";
+    streamConfig << "maxmempool=50\n";
+    streamConfig << "dbcache=50\n";
+    streamConfig << "rpcthreads=1\n";
+    streamConfig << "par=1\n";
+    streamConfig << "reverseheaders=false\n";
+
+    return NullUniValue;
+}
+
+static UniValue resetconfig_pi_medmem(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetconfig_pi_medmem does not take arguments\n");
+    }
+
+    LogPrintf("Config wipe requested.\n");
+
+    std::vector<std::string> asKeep;    
+    {
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        if (!streamConfig.good())
+            throw std::runtime_error("No config file to reset\n");
+
+        std::string configLine;
+        while (!streamConfig.eof())
+        {
+            std::getline(streamConfig, configLine);
+            if (boost::starts_with(configLine, "rpc") && !boost::starts_with(configLine, "rpcthreads"))
+            {
+                asKeep.push_back(configLine);
+            }
+        }
+    }
+    
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    if (!streamConfig.good())
+        throw std::runtime_error("No config file to reset\n");
+    
+    for (const auto& keepLine : asKeep)
+    {
+        streamConfig << keepLine << "\n";
+    }
+    streamConfig << "maxmempool=100\n";
+    streamConfig << "dbcache=100\n";
+    streamConfig << "rpcthreads=1\n";
+    streamConfig << "reverseheaders=false\n";
+
+    return NullUniValue;
+}
+
 static UniValue getcheckpoint(const JSONRPCRequest& request)
 {
     // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
     if (request.params.size() != 0)
     {
         throw std::runtime_error("getcheckpoint does not take arguments\n");
@@ -2588,6 +2721,7 @@ static UniValue getcheckpoint(const JSONRPCRequest& request)
 static UniValue getlastblocks(const JSONRPCRequest& request)
 {
     // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
     if (request.params.size() != 0)
     {
         throw std::runtime_error("getlastblocks does not take arguments\n");
@@ -3481,6 +3615,9 @@ static const CRPCCommand commands[] =
     
     { "support",                 "resetdatadirpartial",             &resetdatadirpartial,            true,    {""} },
     { "support",                 "resetdatadirfull",                &resetdatadirfull,               true,    {""} },
+    { "support",                 "resetconfig",                     &resetconfig,                    true,    {""} },
+    { "support",                 "resetconfig_pi_lowmem",           &resetconfig_pi_lowmem,           true,    {""} },
+    { "support",                 "resetconfig_pi_medmem",           &resetconfig_pi_medmem,           true,    {""} },
     { "support",                 "getcheckpoint",                   &getcheckpoint,                  true,    {""} },
     { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {""} },
 
