@@ -771,9 +771,14 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     SoftSetArg("-maxmempool", "5");
     SoftSetArg("-maxconnections", "8");
 
-    //fixme: (UNITY) (iOS) - Temporarily hardcoding for android, set this on a per app basis.
     // Change client name
+#if defined(__APPLE__) && TARGET_OS_IPHONE == 1
+    SoftSetArg("-clientname", "Gulden ios");
+#elif defined(__ANDROID__)
     SoftSetArg("-clientname", "Gulden android");
+#else
+    SoftSetArg("-clientname", "Gulden unity");
+#endif
 
     // Testnet
     if (testnet)
