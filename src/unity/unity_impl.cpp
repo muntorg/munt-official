@@ -60,6 +60,7 @@ std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
 
 const int RECOMMENDED_CONFIRMATIONS = 3;
 const int BALANCE_NOTIFY_THRESHOLD_MS = 4000;
+const int NEW_MUTATIONS_NOTIFY_THRESHOLD_MS = 10000;
 
 boost::asio::io_context ioctx;
 boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work = boost::asio::make_work_guard(ioctx);
@@ -298,6 +299,28 @@ static CRateLimit<int> balanceChangeNotifier([](int){
 
 }, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
 
+// rate limited new mutations notifier
+static CRateLimit<std::pair<uint256, bool> > newMutationsNotifier([](const std::pair<uint256, bool>& txInfo){
+    if (pactiveWallet && signalHandler)
+    {
+        const uint256& txHash = txInfo.first;
+        const bool fSelfComitted = txInfo.second;
+
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (pactiveWallet->mapWallet.find(txHash) != pactiveWallet->mapWallet.end())
+        {
+            const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
+            std::vector<MutationRecord> mutations;
+            addMutationsForTransaction(&wtx, mutations);
+            for (auto& m: mutations) {
+                LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
+                signalHandler->notifyNewMutation(m, fSelfComitted);
+            }
+        }
+    }
+}, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
+
+
 void terminateUnityFrontend()
 {
     if (signalHandler)
@@ -410,39 +433,25 @@ void handlePostInitMain()
             }
         } );
         // Fire events for transaction status changes, or new transactions (this won't fire for simple depth changes)
-        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted)
-        {
+        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted) {
+            DS_LOCK2(cs_main, pwallet->cs_wallet);
+            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
             {
-                DS_LOCK2(cs_main, pwallet->cs_wallet);
-                if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
-                {
-                    const CWalletTx& wtx = pwallet->mapWallet[hash];
-                    if (status == CT_NEW || status == CT_UPDATED)
-                    {
-                        LogPrintf("unity: notify transaction changed [2] %s",hash.ToString().c_str());
-                        if (signalHandler)
-                        {
-                            if (status == CT_NEW) {
-                                std::vector<MutationRecord> mutations;
-                                addMutationsForTransaction(&wtx, mutations);
-                                for (auto& m: mutations) {
-                                    signalHandler->notifyNewMutation(m, fSelfComitted);
-                                }
-                            }
-                            else { // status == CT_UPDATED
-                                TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
-                                signalHandler->notifyUpdatedTransaction(walletTransaction);
-                            }
-                        }
-                    }
-                    else if (status == CT_DELETED)
-                    {
-                        //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
-                    }
+                if (status == CT_NEW) {
+                    newMutationsNotifier.trigger(std::make_pair(hash, fSelfComitted));
                 }
+                else if (status == CT_UPDATED && signalHandler)
+                {
+                    LogPrintf("unity: notify tx updated %s",hash.ToString().c_str());
+                    const CWalletTx& wtx = pwallet->mapWallet[hash];
+                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
+                    signalHandler->notifyUpdatedTransaction(walletTransaction);
+                }
+                //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
+                // else if (status == CT_DELETED)
             }
             balanceChangeNotifier.trigger(0);
-        } );
+        });
 
         // Fire once immediately to update with latest on load.
         balanceChangeNotifier.trigger(0);
