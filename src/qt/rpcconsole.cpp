@@ -449,8 +449,8 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
     connect(ui->fontBiggerButton, SIGNAL(clicked()), this, SLOT(fontBigger()));
     connect(ui->fontSmallerButton, SIGNAL(clicked()), this, SLOT(fontSmaller()));
-    connect(ui->openDebugLogfileButton, SIGNAL(clicked()), this, SLOT(on_openDebugLogfileButton_clicked()));
-    connect(ui->openDatadirButton, SIGNAL(clicked()), this, SLOT(on_openDatadirButton_clicked()));
+    connect(ui->openDebugLogfileButton, SIGNAL(clicked()), this, SLOT(openDebugLogfileButton_clicked()));
+    connect(ui->openDatadirButton, SIGNAL(clicked()), this, SLOT(openDatadirButton_clicked()));
     connect(ui->btnClearTrafficGraph, SIGNAL(clicked()), ui->trafficGraph, SLOT(clear()));
 
     // set library version labels
@@ -950,12 +950,12 @@ void RPCConsole::on_tabWidget_currentChanged(int index)
         clearSelectedNode();
 }
 
-void RPCConsole::on_openDebugLogfileButton_clicked()
+void RPCConsole::openDebugLogfileButton_clicked()
 {
     GUIUtil::openDebugLogfile();
 }
 
-void RPCConsole::on_openDatadirButton_clicked()
+void RPCConsole::openDatadirButton_clicked()
 {
     GUIUtil::openDataDirectory();
 }
