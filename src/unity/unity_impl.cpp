@@ -59,6 +59,77 @@ CCriticalSection cs_monitoringListeners;
 std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
 
 const int RECOMMENDED_CONFIRMATIONS = 3;
+const int BALANCE_NOTIFY_THRESHOLD_MS = 4000;
+
+boost::asio::io_context ioctx;
+boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work = boost::asio::make_work_guard(ioctx);
+boost::thread run_thread(boost::bind(&boost::asio::io_context::run, boost::ref(ioctx)));
+
+/* Helper for rate limiting notifications.
+ * This helper is agnostic of state like chain sync etc.
+ * It is limited by a minimum time that has to pass between notifications. Any updates that come in too fast will
+ * be absorbed. Finally the last update is guaranteed to be delivered and will take the latest data.
+ * So for example with a rate limit of 3 seconds we get this scenario:
+ * trigger(1)
+ * trigger(2)
+ * wait of 1 seconds
+ * trigger(3)
+ * trigger(4)
+ * wait of 4 seconds
+ * trigger(5)
+ * trigger(6)
+ * will see trigger 1 (or 2 depending on thread scheduling) delivered at t=0s, 4 at t=3s and finally 6 at t=6s.
+ */
+template <typename EventData>
+class CRateLimit
+{
+public:
+
+    CRateLimit(std::function<void (const EventData&)> _notifier, const std::chrono::milliseconds& _timeLimit):
+        notifier(_notifier),
+        timeLimit(_timeLimit),
+        pending(false),
+        lastTimeHandled(std::chrono::steady_clock::now() - timeLimit),
+        timer(ioctx) {}
+
+    virtual ~CRateLimit()
+    {
+        timer.cancel();
+    }
+
+    void trigger(const EventData& data)
+    {
+        std::scoped_lock lock(mtx);
+        mostRecentData = data;
+        if (!pending) {
+            pending = true;
+            timer.expires_at(lastTimeHandled + timeLimit);
+            timer.async_wait(boost::bind(&CRateLimit::handler, this));
+        }
+    }
+
+    void handler() {
+        EventData data;
+        {
+            std::scoped_lock lock(mtx);
+            data = mostRecentData;
+            pending = false;
+            lastTimeHandled = std::chrono::steady_clock::now();
+
+        }
+        notifier(data); // notify using a copy of event data such that the notifier will not block new triggers
+    }
+
+private:
+    std::function<void (const EventData&)> notifier;
+    boost::asio::steady_timer::duration timeLimit;
+
+    std::mutex mtx;
+    bool pending;
+    EventData mostRecentData;
+    std::chrono::time_point<std::chrono::steady_clock> lastTimeHandled;
+    boost::asio::steady_timer timer;
+};
 
 TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
 {
@@ -216,15 +287,16 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
                              inputs, outputs);
 }
 
-static void notifyBalanceChanged(CWallet* pwallet)
-{
-    if (pwallet && signalHandler)
+// rate limited balance change notifier
+static CRateLimit<int> balanceChangeNotifier([](int){
+    if (pactiveWallet && signalHandler)
     {
         WalletBalances balances;
-        pwallet->GetBalances(balances, pactiveWallet->activeAccount, true);
+        pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
         signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
     }
-}
+
+}, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
 
 void terminateUnityFrontend()
 {
@@ -369,11 +441,11 @@ void handlePostInitMain()
                     }
                 }
             }
-            notifyBalanceChanged(pwallet);
+            balanceChangeNotifier.trigger(0);
         } );
 
         // Fire once immediately to update with latest on load.
-        notifyBalanceChanged(pactiveWallet);
+        balanceChangeNotifier.trigger(0);
     }
 }
 
@@ -477,7 +549,7 @@ bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& p
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("%s: Update balance and rescan", __func__);
-    notifyBalanceChanged(pactiveWallet);
+    balanceChangeNotifier.trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -544,7 +616,7 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("%s: Update balance and rescan", __func__);
-    notifyBalanceChanged(pactiveWallet);
+    balanceChangeNotifier.trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -647,7 +719,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("ReplaceWalletLinkedFromURI: Update balance and rescan");
-    notifyBalanceChanged(pactiveWallet);
+    balanceChangeNotifier.trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -737,8 +809,11 @@ void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, cons
 
 void GuldenUnifiedBackend::TerminateUnityLib()
 {
+    work.reset();
+    ioctx.stop();
     GuldenAppManager::gApp->shutdown();
     GuldenAppManager::gApp->waitForShutDown();
+    run_thread.join();
 }
 
 QrCodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)
