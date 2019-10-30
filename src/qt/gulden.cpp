@@ -345,9 +345,13 @@ GuldenApplication::GuldenApplication(int &argc, char **argv)
 : QApplication(argc, argv)
 , platformStyle(new GuldenProxyStyle())
 {
+#ifdef Q_OS_MAC
+    setQuitOnLastWindowClosed(true);
+#else
     // Don't automatically close, this will exit the application early without proper shutdown on Windows
     // when "Minimize to tray" is enabled and the Debug windows is closed (https://github.com/Gulden/gulden-official/issues/142)
     setQuitOnLastWindowClosed(false);
+#endif
 
     // Use the same style on all platforms to simplify skinning
     setStyle(dynamic_cast<QStyle*>(const_cast<GuldenProxyStyle*>(platformStyle)));
