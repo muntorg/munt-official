@@ -59,6 +59,78 @@ CCriticalSection cs_monitoringListeners;
 std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
 
 const int RECOMMENDED_CONFIRMATIONS = 3;
+const int BALANCE_NOTIFY_THRESHOLD_MS = 4000;
+const int NEW_MUTATIONS_NOTIFY_THRESHOLD_MS = 10000;
+
+boost::asio::io_context ioctx;
+boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work = boost::asio::make_work_guard(ioctx);
+boost::thread run_thread(boost::bind(&boost::asio::io_context::run, boost::ref(ioctx)));
+
+/* Helper for rate limiting notifications.
+ * This helper is agnostic of state like chain sync etc.
+ * It is limited by a minimum time that has to pass between notifications. Any updates that come in too fast will
+ * be absorbed. Finally the last update is guaranteed to be delivered and will take the latest data.
+ * So for example with a rate limit of 3 seconds we get this scenario:
+ * trigger(1)
+ * trigger(2)
+ * wait of 1 seconds
+ * trigger(3)
+ * trigger(4)
+ * wait of 4 seconds
+ * trigger(5)
+ * trigger(6)
+ * will see trigger 1 (or 2 depending on thread scheduling) delivered at t=0s, 4 at t=3s and finally 6 at t=6s.
+ */
+template <typename EventData>
+class CRateLimit
+{
+public:
+
+    CRateLimit(std::function<void (const EventData&)> _notifier, const std::chrono::milliseconds& _timeLimit):
+        notifier(_notifier),
+        timeLimit(_timeLimit),
+        pending(false),
+        lastTimeHandled(std::chrono::steady_clock::now() - timeLimit),
+        timer(ioctx) {}
+
+    virtual ~CRateLimit()
+    {
+        timer.cancel();
+    }
+
+    void trigger(const EventData& data)
+    {
+        std::scoped_lock lock(mtx);
+        mostRecentData = data;
+        if (!pending) {
+            pending = true;
+            timer.expires_at(lastTimeHandled + timeLimit);
+            timer.async_wait(boost::bind(&CRateLimit::handler, this));
+        }
+    }
+
+    void handler() {
+        EventData data;
+        {
+            std::scoped_lock lock(mtx);
+            data = mostRecentData;
+            pending = false;
+            lastTimeHandled = std::chrono::steady_clock::now();
+
+        }
+        notifier(data); // notify using a copy of event data such that the notifier will not block new triggers
+    }
+
+private:
+    std::function<void (const EventData&)> notifier;
+    boost::asio::steady_timer::duration timeLimit;
+
+    std::mutex mtx;
+    bool pending;
+    EventData mostRecentData;
+    std::chrono::time_point<std::chrono::steady_clock> lastTimeHandled;
+    boost::asio::steady_timer timer;
+};
 
 TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
 {
@@ -216,15 +288,38 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
                              inputs, outputs);
 }
 
-static void notifyBalanceChanged(CWallet* pwallet)
-{
-    if (pwallet && signalHandler)
+// rate limited balance change notifier
+static CRateLimit<int> balanceChangeNotifier([](int){
+    if (pactiveWallet && signalHandler)
     {
         WalletBalances balances;
-        pwallet->GetBalances(balances, pactiveWallet->activeAccount, true);
+        pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
         signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
     }
-}
+
+}, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
+
+// rate limited new mutations notifier
+static CRateLimit<std::pair<uint256, bool> > newMutationsNotifier([](const std::pair<uint256, bool>& txInfo){
+    if (pactiveWallet && signalHandler)
+    {
+        const uint256& txHash = txInfo.first;
+        const bool fSelfComitted = txInfo.second;
+
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        if (pactiveWallet->mapWallet.find(txHash) != pactiveWallet->mapWallet.end())
+        {
+            const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
+            std::vector<MutationRecord> mutations;
+            addMutationsForTransaction(&wtx, mutations);
+            for (auto& m: mutations) {
+                LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
+                signalHandler->notifyNewMutation(m, fSelfComitted);
+            }
+        }
+    }
+}, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
+
 
 void terminateUnityFrontend()
 {
@@ -338,42 +433,28 @@ void handlePostInitMain()
             }
         } );
         // Fire events for transaction status changes, or new transactions (this won't fire for simple depth changes)
-        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted)
-        {
+        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted) {
+            DS_LOCK2(cs_main, pwallet->cs_wallet);
+            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
             {
-                DS_LOCK2(cs_main, pwallet->cs_wallet);
-                if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
-                {
-                    const CWalletTx& wtx = pwallet->mapWallet[hash];
-                    if (status == CT_NEW || status == CT_UPDATED)
-                    {
-                        LogPrintf("unity: notify transaction changed [2] %s",hash.ToString().c_str());
-                        if (signalHandler)
-                        {
-                            if (status == CT_NEW) {
-                                std::vector<MutationRecord> mutations;
-                                addMutationsForTransaction(&wtx, mutations);
-                                for (auto& m: mutations) {
-                                    signalHandler->notifyNewMutation(m, fSelfComitted);
-                                }
-                            }
-                            else { // status == CT_UPDATED
-                                TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
-                                signalHandler->notifyUpdatedTransaction(walletTransaction);
-                            }
-                        }
-                    }
-                    else if (status == CT_DELETED)
-                    {
-                        //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
-                    }
+                if (status == CT_NEW) {
+                    newMutationsNotifier.trigger(std::make_pair(hash, fSelfComitted));
                 }
+                else if (status == CT_UPDATED && signalHandler)
+                {
+                    LogPrintf("unity: notify tx updated %s",hash.ToString().c_str());
+                    const CWalletTx& wtx = pwallet->mapWallet[hash];
+                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
+                    signalHandler->notifyUpdatedTransaction(walletTransaction);
+                }
+                //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
+                // else if (status == CT_DELETED)
             }
-            notifyBalanceChanged(pwallet);
-        } );
+            balanceChangeNotifier.trigger(0);
+        });
 
         // Fire once immediately to update with latest on load.
-        notifyBalanceChanged(pactiveWallet);
+        balanceChangeNotifier.trigger(0);
     }
 }
 
@@ -477,7 +558,7 @@ bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& p
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("%s: Update balance and rescan", __func__);
-    notifyBalanceChanged(pactiveWallet);
+    balanceChangeNotifier.trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -544,7 +625,7 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("%s: Update balance and rescan", __func__);
-    notifyBalanceChanged(pactiveWallet);
+    balanceChangeNotifier.trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -647,7 +728,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("ReplaceWalletLinkedFromURI: Update balance and rescan");
-    notifyBalanceChanged(pactiveWallet);
+    balanceChangeNotifier.trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -699,9 +780,14 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     SoftSetArg("-maxmempool", "5");
     SoftSetArg("-maxconnections", "8");
 
-    //fixme: (UNITY) (iOS) - Temporarily hardcoding for android, set this on a per app basis.
     // Change client name
+#if defined(__APPLE__) && TARGET_OS_IPHONE == 1
+    SoftSetArg("-clientname", "Gulden ios");
+#elif defined(__ANDROID__)
     SoftSetArg("-clientname", "Gulden android");
+#else
+    SoftSetArg("-clientname", "Gulden unity");
+#endif
 
     // Testnet
     if (testnet)
@@ -737,8 +823,11 @@ void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, cons
 
 void GuldenUnifiedBackend::TerminateUnityLib()
 {
+    work.reset();
+    ioctx.stop();
     GuldenAppManager::gApp->shutdown();
     GuldenAppManager::gApp->waitForShutDown();
+    run_thread.join();
 }
 
 QrCodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)

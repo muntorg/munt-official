@@ -527,6 +527,7 @@ CAmount CWallet::GetLockedBalance(const CAccount* forAccount, bool includeChildr
 
 void CWallet::GetBalances(WalletBalances& balances, const CAccount* forAccount, bool includeChildren) const
 {
+    LOCK2(cs_main, cs_wallet);
     balances.availableIncludingLocked = GetBalance(forAccount, true, true, includeChildren);
     balances.availableExcludingLocked = GetBalance(forAccount, true, false, includeChildren);
     balances.availableLocked = balances.availableIncludingLocked - balances.availableExcludingLocked;
