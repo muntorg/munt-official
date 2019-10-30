@@ -2735,6 +2735,7 @@ static UniValue getlastblocks(const JSONRPCRequest& request)
         for (int i=0;i<30;++i)
         {
             result.push_back(Pair(pIndex->GetBlockHashPoW2().ToString(),pIndex->nHeight));
+            pIndex = pIndex->pprev;
         }
     }
     

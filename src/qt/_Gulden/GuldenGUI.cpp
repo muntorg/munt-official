@@ -1759,7 +1759,7 @@ void GUI::restoreCachedWidgetIfNeeded()
     {
         miningDialogAction->setVisible( true );
         stateReceiveCoinsAction = false;
-        stateSendCoinsAction = false;
+        stateSendCoinsAction = true;
         if ( walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage )
         {
             showMiningDialog();
