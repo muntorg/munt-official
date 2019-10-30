@@ -27,6 +27,7 @@
 
 //Gulden
 class CTxOutPoW2Witness;
+class CKeyID;
 
 // Maximum number of bytes pushable to the stack
 static const unsigned int MAX_SCRIPT_ELEMENT_SIZE = 520;
@@ -671,6 +672,7 @@ public:
      */
     unsigned int GetSigOpCount(const CScript& scriptSig) const;
 
+    bool IsPayToPubkeyHash(CKeyID &hash) const;
     bool IsPayToScriptHash() const;
 
     bool IsPoW2Witness() const;

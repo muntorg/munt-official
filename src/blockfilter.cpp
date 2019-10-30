@@ -255,7 +255,10 @@ static void BasicFilterElements(GCSFilter::ElementSet& elements, const CBlock& b
         for (const CTxOut& txout : tx->vout) {
             const CScript& script = txout.output.scriptPubKey;
             if (script.empty() || script[0] == OP_RETURN) continue;
-            elements.emplace(script.begin(), script.end());
+            CKeyID hash;
+            if (script.IsPayToPubkeyHash(hash)) {
+                elements.emplace(hash.begin(), hash.end());
+            }
         }
     }
 
@@ -263,7 +266,10 @@ static void BasicFilterElements(GCSFilter::ElementSet& elements, const CBlock& b
         for (const Coin& prevout : tx_undo.vprevout) {
             const CScript& script = prevout.out.output.scriptPubKey;
             if (script.empty()) continue;
-            elements.emplace(script.begin(), script.end());
+            CKeyID hash;
+            if (script.IsPayToPubkeyHash(hash)) {
+                elements.emplace(hash.begin(), hash.end());
+            }
         }
     }
 

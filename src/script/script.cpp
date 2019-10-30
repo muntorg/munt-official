@@ -210,6 +210,17 @@ unsigned int CScript::GetSigOpCount(const CScript& scriptSig) const
     return subscript.GetSigOpCount(true);
 }
 
+bool CScript::IsPayToPubkeyHash(CKeyID &hash) const
+{
+    if (this->size() == 25 && (*this)[0] == OP_DUP && (*this)[1] == OP_HASH160
+        && (*this)[2] == 20 && (*this)[23] == OP_EQUALVERIFY
+        && (*this)[24] == OP_CHECKSIG) {
+        memcpy(hash.begin(), &(*this)[3], 20);
+        return true;
+    }
+    return false;
+}
+
 bool CScript::IsPayToScriptHash() const
 {
     // Extra-fast test for pay-to-script-hash CScripts:

@@ -4328,13 +4328,7 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
             std::set<CKeyID> setAddresses;
             forAccount->GetKeys(setAddresses);
             for (const auto& key : setAddresses)
-            {
-                //fixme: (PHASE4) Alter the blockfilter to use just the keys instead of the full script
-                //This will be more efficient in terms of space and time and simplify code like this
-                CScript searchScript = CScript() << OP_DUP << OP_HASH160 << ToByteVector(key) << OP_EQUALVERIFY << OP_CHECKSIG;
-                std::vector<unsigned char> searchData(searchScript.begin(), searchScript.end());
-                elementSet.insert(searchData);
-            }
+                elementSet.insert(std::vector<unsigned char>(key.begin(), key.end()));
         }
         std::vector<std::tuple<uint64_t, uint64_t>> blockFilterRanges;
         getBlockFilterBirthAndRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft, elementSet, blockFilterRanges);
