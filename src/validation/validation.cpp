@@ -1760,7 +1760,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         if (!rv) {
             if (state.IsInvalid())
                 InvalidBlockFound(pindexNew, state);
-            return error("ConnectTip(): ConnectBlock %s failed", pindexNew->GetBlockHashPoW2().ToString());
+            return error("ConnectTip(): ConnectBlock %s failed (%s)", pindexNew->GetBlockHashPoW2().ToString(), state.GetRejectReason().c_str());
         }
         nTime3 = GetTimeMicros(); nTimeConnectTotal += nTime3 - nTime2;
         LogPrint(BCLog::BENCH, "  - Connect total: %.2fms [%.2fs]\n", (nTime3 - nTime2) * 0.001, nTimeConnectTotal * 0.000001);
