@@ -2177,7 +2177,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
         SetChainWorkForIndex(pindexNew, chainParams);
         if (pindexNew->nChainTx &&  (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
         {
-            if (!gbMinimalLogging)
+            if (!gbMinimalLogging || (pindexNew->nHeight%10000==0))
                 LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
             setBlockIndexCandidates.insert(pindexNew);
         }
@@ -2225,7 +2225,7 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
             }
             if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight))
             {
-                if (!gbMinimalLogging)
+                if (!gbMinimalLogging || (pindexNew->nHeight%10000==0))
                     LogPrintf("ReceivedBlockTransactions: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
                 setBlockIndexCandidates.insert(pindex);
             }
