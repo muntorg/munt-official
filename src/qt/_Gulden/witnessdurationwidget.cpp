@@ -27,7 +27,7 @@ WitnessDurationWidget::WitnessDurationWidget(QWidget *parent) :
     ui->pow2LockFundsSlider->setMinimum(gMinimumWitnessLockDays);
     ui->pow2LockFundsSlider->setMaximum(gMaximumWitnessLockDays);
     ui->pow2LockFundsSlider->setCursor(Qt::PointingHandCursor);
-    setDuration(gMinimumWitnessLockDays * DailyBlocksTarget());
+    setDuration(MinimumWitnessLockLength());
 
     connect(ui->pow2LockFundsSlider, SIGNAL(valueChanged(int)), this, SLOT(durationValueChanged(int)));
 }
@@ -58,8 +58,8 @@ int WitnessDurationWidget::duration()
 
 void WitnessDurationWidget::setDuration(int newDuration)
 {
-    int effectiveMinimumDuration = std::max(nMinDurationInBlocks, gMinimumWitnessLockDays * DailyBlocksTarget());
-    int effectiveMaximumDuration = gMaximumWitnessLockDays * DailyBlocksTarget();
+    int effectiveMinimumDuration = std::max(nMinDurationInBlocks, int(MinimumWitnessLockLength()));
+    int effectiveMaximumDuration = MaximumWitnessLockLength();
     nDuration = std::clamp(newDuration, effectiveMinimumDuration, effectiveMaximumDuration);
     ui->pow2LockFundsSlider->setValue(nDuration / DailyBlocksTarget());
     update();
@@ -68,8 +68,8 @@ void WitnessDurationWidget::setDuration(int newDuration)
 void WitnessDurationWidget::durationValueChanged(int newValueDays)
 {
     int newValue = newValueDays * DailyBlocksTarget();
-    int effectiveMinimumDuration = std::max(nMinDurationInBlocks, gMinimumWitnessLockDays * DailyBlocksTarget());
-    int effectiveMaximumDuration = gMaximumWitnessLockDays * DailyBlocksTarget();
+    int effectiveMinimumDuration = std::max(nMinDurationInBlocks, int(MinimumWitnessLockLength()));
+    int effectiveMaximumDuration = MaximumWitnessLockLength();
     if (std::clamp(newValue, effectiveMinimumDuration, effectiveMaximumDuration) != newValue)
         setDuration(std::clamp(newValue, effectiveMinimumDuration, effectiveMaximumDuration));
     else {
