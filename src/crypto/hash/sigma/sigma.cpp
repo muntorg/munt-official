@@ -586,27 +586,29 @@ void sigma_context::prepareArenas(CBlockHeader& headerData)
 void sigma_context::benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashes)
 {
     uint8_t* hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
-    BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
-
-    argon2_echo_context argonContext;
-    argonContext.t_cost = settings.argonSlowHashRoundCost;
-    argonContext.m_cost = settings.argonMemoryCostKb;
-    argonContext.allocated_memory = hashMem;
-    argonContext.pwd = (uint8_t*)&hashData[0];
-    argonContext.pwdlen = 80;
-    
-    argonContext.lanes = settings.numVerifyThreads;
-    argonContext.threads = 1;
-
-    for (uint64_t i=0;i<numSlowHashes;++i)
     {
-        hashData[rand()%80] = rand();
-        hashData[rand()%80] = rand();
-        hashData[rand()%80] = rand();
-        hashData[rand()%80] = rand();
+        BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
+
+        argon2_echo_context argonContext;
+        argonContext.t_cost = settings.argonSlowHashRoundCost;
+        argonContext.m_cost = settings.argonMemoryCostKb;
+        argonContext.allocated_memory = hashMem;
+        argonContext.pwd = (uint8_t*)&hashData[0];
+        argonContext.pwdlen = 80;
         
-        if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
-            assert(0);
+        argonContext.lanes = settings.numVerifyThreads;
+        argonContext.threads = 1;
+
+        for (uint64_t i=0;i<numSlowHashes;++i)
+        {
+            hashData[rand()%80] = rand();
+            hashData[rand()%80] = rand();
+            hashData[rand()%80] = rand();
+            hashData[rand()%80] = rand();
+            
+            if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
+                assert(0);
+        }
     }
 }
 
@@ -660,107 +662,111 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
     std::atomic<uint16_t> nGlobalPreNonce=0;
     
     workerThreads = new boost::asio::thread_pool(numThreads);
-    BOOST_SCOPE_EXIT(&workerThreads) { workerThreads->join(); delete workerThreads; } BOOST_SCOPE_EXIT_END
-    
-    for (uint64_t nIndex = 0; nIndex <= settings.numHashesPre;++nIndex)
     {
-        boost::asio::post(*workerThreads, [&,headerData]() mutable
+        BOOST_SCOPE_EXIT(&workerThreads) { workerThreads->join(); delete workerThreads; } BOOST_SCOPE_EXIT_END
+        
+        for (uint64_t nIndex = 0; nIndex <= settings.numHashesPre;++nIndex)
         {
-            if (UNLIKELY(interrupt))
-                return;
-
-            uint16_t nPreNonce = nGlobalPreNonce++;
-            uint32_t nBaseNonce = headerData.nBits ^ (uint32_t)(headerData.hashPrevBlock.GetCheapHash());
-
-            // 1. Reset nonce to base nonce and select the pre nonce.
-            // This leaves the post nonce in a 'default' but 'psuedo random' state.
-            // We do this instead of zeroing out the post-nonce to reduce the predictability of the data to be hashed and therefore make it harder to attack the hash functions.
-            uint8_t* hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
-            BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
-            headerData.nNonce = nBaseNonce;
-            headerData.nPreNonce = nPreNonce;
-            
-            // 2. Perform the "slow" (argon) hash of header with pre-nonce
-            argon2_echo_context argonContext;
-            argonContext.t_cost = settings.argonSlowHashRoundCost;
-            argonContext.m_cost = settings.argonMemoryCostKb;
-            argonContext.allocated_memory = hashMem;
-            argonContext.pwd = (uint8_t*)&headerData.nVersion;
-            argonContext.pwdlen = 80;
-            
-            argonContext.lanes = settings.numVerifyThreads;
-            argonContext.threads = 1;
-                       
-            if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
-                assert(0);
-            
-            // 3. Set the initial state of the seed for the 'pseudo random' nonces.
-            // PRNG notes:
-            // We specifically want a PRNG that does not allow jumping
-            // This forces linear instead of parallel PRNG generation which helps to penalise GPU implementations (which thrive on parallelism)
-            // Ideally we want something for which CPUs have special instructions so as to be comepetitive with ASICs and faster than GPUs in the PRNG phase.
-            // An AES based PRNG is therefore a good fit for this.
-            // We do not specifically care about the distribution being 100% perfectly random.
-            // Reasonable distribution and randomness are desirable so that certain portions of the memory buffer are not over/under utilised.
-            // Non predictability is also desirable to prevent any pre-fetch/order optimisations .
-            //
-            // We construct a simple PRNG by passing our seed data through AES in ECB mode and then repeatedly feeding it back in.
-            // This is possibly not the most high quality RNG ever; however should be perfect for our specific needs.
-            CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
-            prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
-            unsigned char ciphered[32];
-                            
-            // 4. Iterate through all 'post' nonce combinations, calculating 2 hashes from the global memory.
-            // The input of one is determined by the 'post' nonce, while the second is determined by the 'pseudo random' nonce, forcing random memory access.
-            headerData.nPostNonce = 0;
-            while(true)
+            boost::asio::post(*workerThreads, [&,headerData]() mutable
             {
                 if (UNLIKELY(interrupt))
                     return;
 
-                // 4.1. For each iteration advance the state of the pseudo random nonce
-                prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
-                memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
+                uint16_t nPreNonce = nGlobalPreNonce++;
+                uint32_t nBaseNonce = headerData.nBits ^ (uint32_t)(headerData.hashPrevBlock.GetCheapHash());
 
-                uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
-                uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
-                
-                if (bool skip = nPseudoRandomNonce1 >= numHashesPossibleWithAvailableMemory || nPseudoRandomNonce2 >= numHashesPossibleWithAvailableMemory; LIKELY(!skip))
+                // 1. Reset nonce to base nonce and select the pre nonce.
+                // This leaves the post nonce in a 'default' but 'psuedo random' state.
+                // We do this instead of zeroing out the post-nonce to reduce the predictability of the data to be hashed and therefore make it harder to attack the hash functions.
+                uint8_t* hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
                 {
-                    uint64_t nPseudoRandomAlg1 = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
-                    uint64_t nPseudoRandomAlg2 = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
+                    BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
+                    headerData.nNonce = nBaseNonce;
+                    headerData.nPreNonce = nPreNonce;
                     
-                    uint64_t nFastHashOffset1 = (argonContext.outHash[0] ^ argonContext.outHash[2])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
-                    uint64_t nFastHashOffset2 = (argonContext.outHash[1] ^ argonContext.outHash[3])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
-
-                    // 4.2 Calculate first hash
-                    uint256 fastHash;
-                    sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
-                    ++halfHashCounter;
+                    // 2. Perform the "slow" (argon) hash of header with pre-nonce
+                    argon2_echo_context argonContext;
+                    argonContext.t_cost = settings.argonSlowHashRoundCost;
+                    argonContext.m_cost = settings.argonMemoryCostKb;
+                    argonContext.allocated_memory = hashMem;
+                    argonContext.pwd = (uint8_t*)&headerData.nVersion;
+                    argonContext.pwdlen = 80;
                     
-                    // 4.3 Evaluate first hash (short circuit evaluation)
-                    if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
+                    argonContext.lanes = settings.numVerifyThreads;
+                    argonContext.threads = 1;
+                            
+                    if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
+                        assert(0);
+                    
+                    // 3. Set the initial state of the seed for the 'pseudo random' nonces.
+                    // PRNG notes:
+                    // We specifically want a PRNG that does not allow jumping
+                    // This forces linear instead of parallel PRNG generation which helps to penalise GPU implementations (which thrive on parallelism)
+                    // Ideally we want something for which CPUs have special instructions so as to be comepetitive with ASICs and faster than GPUs in the PRNG phase.
+                    // An AES based PRNG is therefore a good fit for this.
+                    // We do not specifically care about the distribution being 100% perfectly random.
+                    // Reasonable distribution and randomness are desirable so that certain portions of the memory buffer are not over/under utilised.
+                    // Non predictability is also desirable to prevent any pre-fetch/order optimisations .
+                    //
+                    // We construct a simple PRNG by passing our seed data through AES in ECB mode and then repeatedly feeding it back in.
+                    // This is possibly not the most high quality RNG ever; however should be perfect for our specific needs.
+                    CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
+                    prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
+                    unsigned char ciphered[32];
+                                    
+                    // 4. Iterate through all 'post' nonce combinations, calculating 2 hashes from the global memory.
+                    // The input of one is determined by the 'post' nonce, while the second is determined by the 'pseudo random' nonce, forcing random memory access.
+                    headerData.nPostNonce = 0;
+                    while(true)
                     {
-                        // 4.4 Calculate second hash
-                        sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
-
-                        // 4.5 See if we have a valid block
-                        if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
-                        {
-                            // Found a block, set it and exit.
-                            pBlock->nNonce = headerData.nNonce;
-                            foundBlockHash = fastHash;
-                            interrupt=true;
-                            workerThreads->stop();
+                        if (UNLIKELY(interrupt))
                             return;
+
+                        // 4.1. For each iteration advance the state of the pseudo random nonce
+                        prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
+                        memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
+
+                        uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
+                        uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
+                        
+                        if (bool skip = nPseudoRandomNonce1 >= numHashesPossibleWithAvailableMemory || nPseudoRandomNonce2 >= numHashesPossibleWithAvailableMemory; LIKELY(!skip))
+                        {
+                            uint64_t nPseudoRandomAlg1 = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
+                            uint64_t nPseudoRandomAlg2 = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
+                            
+                            uint64_t nFastHashOffset1 = (argonContext.outHash[0] ^ argonContext.outHash[2])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+                            uint64_t nFastHashOffset2 = (argonContext.outHash[1] ^ argonContext.outHash[3])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+
+                            // 4.2 Calculate first hash
+                            uint256 fastHash;
+                            sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
+                            ++halfHashCounter;
+                            
+                            // 4.3 Evaluate first hash (short circuit evaluation)
+                            if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
+                            {
+                                // 4.4 Calculate second hash
+                                sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
+
+                                // 4.5 See if we have a valid block
+                                if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
+                                {
+                                    // Found a block, set it and exit.
+                                    pBlock->nNonce = headerData.nNonce;
+                                    foundBlockHash = fastHash;
+                                    interrupt=true;
+                                    workerThreads->stop();
+                                    return;
+                                }
+                            }
                         }
+                        if (UNLIKELY(headerData.nPostNonce == settings.numHashesPost-1))
+                            break;
+                        ++headerData.nPostNonce;
                     }
                 }
-                if (UNLIKELY(headerData.nPostNonce == settings.numHashesPost-1))
-                    break;
-                ++headerData.nPostNonce;
-            }
-        });
+            });
+        }
     }
 }
 
@@ -770,121 +776,125 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
     std::atomic<uint16_t> nGlobalPreNonce=0;
     
     workerThreads = new boost::asio::thread_pool(numThreads);
-    BOOST_SCOPE_EXIT(&workerThreads) { delete workerThreads; } BOOST_SCOPE_EXIT_END
-    
-    for (uint64_t nIndex = 0; nIndex <= settings.numHashesPre;++nIndex)
     {
-        boost::asio::post(*workerThreads, [&,headerData]() mutable
+        BOOST_SCOPE_EXIT(&workerThreads) { delete workerThreads; } BOOST_SCOPE_EXIT_END
+    
+        for (uint64_t nIndex = 0; nIndex <= settings.numHashesPre;++nIndex)
         {
-            uint16_t nPreNonce = nGlobalPreNonce++;
-            uint32_t nBaseNonce = headerData.nBits ^ (uint32_t)(headerData.hashPrevBlock.GetCheapHash());
-
-            if (hashCounter >= nRoundsTarget)
-                return;
-
-            // 1. Reset nonce to base nonce and select the pre nonce.
-            // This leaves the post nonce in a 'default' but 'psuedo random' state.
-            // We do this instead of zeroing out the post-nonce to reduce the predictability of the data to be hashed and therefore make it harder to attack the hash functions.
-            uint8_t* hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
-            BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
-            headerData.nNonce = nBaseNonce;
-            headerData.nPreNonce = nPreNonce;
-            
-            // 2. Perform the "slow" (argon) hash of header with pre-nonce
-            argon2_echo_context argonContext;
-            argonContext.t_cost = settings.argonSlowHashRoundCost;
-            argonContext.m_cost = settings.argonMemoryCostKb;
-            argonContext.allocated_memory = hashMem;
-            argonContext.pwd = (uint8_t*)&headerData.nVersion;
-            argonContext.pwdlen = 80;
-            
-            argonContext.lanes = settings.numVerifyThreads;
-            argonContext.threads = 1;
-            
-            ++slowHashCounter;
-            
-            if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
-                assert(0);
-            
-            // 3. Set the initial state of the seed for the 'pseudo random' nonces.
-            // PRNG notes:
-            // We specifically want a PRNG that does not allow jumping
-            // This forces linear instead of parallel PRNG generation which helps to penalise GPU implementations (which thrive on parallelism)
-            // Ideally we want something for which CPUs have special instructions so as to be comepetitive with ASICs and faster than GPUs in the PRNG phase.
-            // An AES based PRNG is therefore a good fit for this.
-            // We do not specifically care about the distribution being 100% perfectly random.
-            // Reasonable distribution and randomness are desirable so that certain portions of the memory buffer are not over/under utilised.
-            // Non predictability is also desirable to prevent any pre-fetch/order optimisations .
-            //
-            // We construct a simple PRNG by passing our seed data through AES in ECB mode and then repeatedly feeding it back in.
-            // This is possibly not the most high quality RNG ever; however should be perfect for our specific needs.
-            CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
-            prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
-            unsigned char ciphered[32];
-                            
-            // 4. Iterate through all 'post' nonce combinations, calculating 2 hashes from the global memory.
-            // The input of one is determined by the 'post' nonce, while the second is determined by the 'pseudo random' nonce, forcing random memory access.
-            headerData.nPostNonce = 0;
-            while(true)
+            boost::asio::post(*workerThreads, [&,headerData]() mutable
             {
-                if (UNLIKELY(hashCounter >= nRoundsTarget))
-                    break;
-                
-                // 4.1. For each iteration advance the state of the pseudo random nonce
-                prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
-                memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
+                uint16_t nPreNonce = nGlobalPreNonce++;
+                uint32_t nBaseNonce = headerData.nBits ^ (uint32_t)(headerData.hashPrevBlock.GetCheapHash());
 
-                uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
-                uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
-                if (bool skip = nPseudoRandomNonce1 >= numHashesPossibleWithAvailableMemory || nPseudoRandomNonce2 >= numHashesPossibleWithAvailableMemory; UNLIKELY(skip))
-                {
-                    ++skippedHashCounter;
-                }
-                else
-                {
-                    uint64_t nPseudoRandomAlg1 = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
-                    uint64_t nPseudoRandomAlg2 = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
-                    uint64_t nFastHashOffset1 = (argonContext.outHash[0] ^ argonContext.outHash[2])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
-                    uint64_t nFastHashOffset2 = (argonContext.outHash[1] ^ argonContext.outHash[3])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
-                    
+                if (hashCounter >= nRoundsTarget)
+                    return;
 
-                    // 4.2 Calculate first hash
-                    uint256 fastHash;
-                    sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
-                    ++halfHashCounter;
+                // 1. Reset nonce to base nonce and select the pre nonce.
+                // This leaves the post nonce in a 'default' but 'psuedo random' state.
+                // We do this instead of zeroing out the post-nonce to reduce the predictability of the data to be hashed and therefore make it harder to attack the hash functions.
+                uint8_t* hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
+                {
+                    BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
+                    headerData.nNonce = nBaseNonce;
+                    headerData.nPreNonce = nPreNonce;
                     
+                    // 2. Perform the "slow" (argon) hash of header with pre-nonce
+                    argon2_echo_context argonContext;
+                    argonContext.t_cost = settings.argonSlowHashRoundCost;
+                    argonContext.m_cost = settings.argonMemoryCostKb;
+                    argonContext.allocated_memory = hashMem;
+                    argonContext.pwd = (uint8_t*)&headerData.nVersion;
+                    argonContext.pwdlen = 80;
                     
-                    // 4.3 Evaluate first hash (short circuit evaluation)
-                    if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
+                    argonContext.lanes = settings.numVerifyThreads;
+                    argonContext.threads = 1;
+                    
+                    ++slowHashCounter;
+                    
+                    if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
+                        assert(0);
+                    
+                    // 3. Set the initial state of the seed for the 'pseudo random' nonces.
+                    // PRNG notes:
+                    // We specifically want a PRNG that does not allow jumping
+                    // This forces linear instead of parallel PRNG generation which helps to penalise GPU implementations (which thrive on parallelism)
+                    // Ideally we want something for which CPUs have special instructions so as to be comepetitive with ASICs and faster than GPUs in the PRNG phase.
+                    // An AES based PRNG is therefore a good fit for this.
+                    // We do not specifically care about the distribution being 100% perfectly random.
+                    // Reasonable distribution and randomness are desirable so that certain portions of the memory buffer are not over/under utilised.
+                    // Non predictability is also desirable to prevent any pre-fetch/order optimisations .
+                    //
+                    // We construct a simple PRNG by passing our seed data through AES in ECB mode and then repeatedly feeding it back in.
+                    // This is possibly not the most high quality RNG ever; however should be perfect for our specific needs.
+                    CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
+                    prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
+                    unsigned char ciphered[32];
+                                    
+                    // 4. Iterate through all 'post' nonce combinations, calculating 2 hashes from the global memory.
+                    // The input of one is determined by the 'post' nonce, while the second is determined by the 'pseudo random' nonce, forcing random memory access.
+                    headerData.nPostNonce = 0;
+                    while(true)
                     {
-                        // 4.4 Calculate second hash
-                        sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
-                        ++hashCounter;
-
-                        // 4.5 See if we have a valid block
-                        if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
-                        {
-                            //#define LOG_VALID_BLOCK
-                            #ifdef LOG_VALID_BLOCK
-                            LogPrintf("Found block [%s]\n", HexStr((uint8_t*)&headerData.nVersion, (uint8_t*)&headerData.nVersion+80).c_str());
-                            LogPrintf("pseudorandomnonce1[%d] pseudorandomalg1[%d] fasthashoffset1[%d] arenaoffset1[%d]\n", nPseudoRandomNonce1, nPseudoRandomAlg1, nFastHashOffset1, (nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1);
-                            LogPrintf("pseudorandomnonce2[%d] pseudorandomalg2[%d] fasthashoffset2[%d] arenaoffset2[%d]\n", nPseudoRandomNonce2, nPseudoRandomAlg2, nFastHashOffset2, (nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2);
-                            LogPrintf("base [%d] pre [%d] post [%d] nversion [%d] nbits [%d] ntime [%d]\n", nBaseNonce, headerData.nPreNonce, headerData.nPostNonce, headerData.nVersion, headerData.nBits, headerData.nTime);
-                            #endif
-                            ++blockCounter;
-                        }
                         if (UNLIKELY(hashCounter >= nRoundsTarget))
                             break;
                         
+                        // 4.1. For each iteration advance the state of the pseudo random nonce
+                        prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
+                        memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
+
+                        uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
+                        uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
+                        if (bool skip = nPseudoRandomNonce1 >= numHashesPossibleWithAvailableMemory || nPseudoRandomNonce2 >= numHashesPossibleWithAvailableMemory; UNLIKELY(skip))
+                        {
+                            ++skippedHashCounter;
+                        }
+                        else
+                        {
+                            uint64_t nPseudoRandomAlg1 = (argonContext.outHash[0] ^ argonContext.outHash[3]) % 2;
+                            uint64_t nPseudoRandomAlg2 = (argonContext.outHash[1] ^ argonContext.outHash[2]) % 2;
+                            uint64_t nFastHashOffset1 = (argonContext.outHash[0] ^ argonContext.outHash[2])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+                            uint64_t nFastHashOffset2 = (argonContext.outHash[1] ^ argonContext.outHash[3])%(settings.arenaChunkSizeBytes-settings.fastHashSizeBytes);
+                            
+
+                            // 4.2 Calculate first hash
+                            uint256 fastHash;
+                            sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
+                            ++halfHashCounter;
+                            
+                            
+                            // 4.3 Evaluate first hash (short circuit evaluation)
+                            if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
+                            {
+                                // 4.4 Calculate second hash
+                                sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)&argonContext.outHash, 32,  &arena[(nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
+                                ++hashCounter;
+
+                                // 4.5 See if we have a valid block
+                                if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
+                                {
+                                    //#define LOG_VALID_BLOCK
+                                    #ifdef LOG_VALID_BLOCK
+                                    LogPrintf("Found block [%s]\n", HexStr((uint8_t*)&headerData.nVersion, (uint8_t*)&headerData.nVersion+80).c_str());
+                                    LogPrintf("pseudorandomnonce1[%d] pseudorandomalg1[%d] fasthashoffset1[%d] arenaoffset1[%d]\n", nPseudoRandomNonce1, nPseudoRandomAlg1, nFastHashOffset1, (nPseudoRandomNonce1*settings.arenaChunkSizeBytes)+nFastHashOffset1);
+                                    LogPrintf("pseudorandomnonce2[%d] pseudorandomalg2[%d] fasthashoffset2[%d] arenaoffset2[%d]\n", nPseudoRandomNonce2, nPseudoRandomAlg2, nFastHashOffset2, (nPseudoRandomNonce2*settings.arenaChunkSizeBytes)+nFastHashOffset2);
+                                    LogPrintf("base [%d] pre [%d] post [%d] nversion [%d] nbits [%d] ntime [%d]\n", nBaseNonce, headerData.nPreNonce, headerData.nPostNonce, headerData.nVersion, headerData.nBits, headerData.nTime);
+                                    #endif
+                                    ++blockCounter;
+                                }
+                                if (UNLIKELY(hashCounter >= nRoundsTarget))
+                                    break;
+                                
+                            }
+                        }
+                        if (UNLIKELY(headerData.nPostNonce == settings.numHashesPost-1))
+                            break;
+                        ++headerData.nPostNonce;
                     }
                 }
-                if (UNLIKELY(headerData.nPostNonce == settings.numHashesPost-1))
-                    break;
-                ++headerData.nPostNonce;
-            }
-        });
+            });
+        }
+        workerThreads->join();
     }
-    workerThreads->join();
 }
 
 sigma_context::~sigma_context()
