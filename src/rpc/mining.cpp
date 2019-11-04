@@ -82,10 +82,12 @@ static UniValue GetNetworkHashPS(uint32_t lookup, int height)
     CBlockIndex *pb0 = pb;
     int64_t minTime = pb0->GetBlockTime();
     int64_t maxTime = minTime;
+    uint64_t count = 0;
     for (uint32_t i = 0; i < lookup; i++)
     {
         if (sigmaActive && pb0->pprev->nTime < defaultSigmaSettings.activationDate)
             break;
+        count++;
         pb0 = pb0->pprev;
         int64_t time = pb0->GetBlockTime();
         minTime = std::min(time, minTime);
@@ -99,13 +101,17 @@ static UniValue GetNetworkHashPS(uint32_t lookup, int height)
     arith_uint256 workDiff = pb->nChainWork - pb0->nChainWork;
     int64_t timeDiff = maxTime - minTime;
 
-    //fixme: (SIGMA) Not 100% clear that this is exactly correct, but it seems to be a reasonable approximation for now.
-    //What we report to the user as 'hashes' are actually 'half hashes' (see sigma_bench to understand the distinction)
-    //So to match up we have to try approximate half hashes here as well.
     if (sigmaActive)
-        return (workDiff.getdouble() / timeDiff) * defaultSigmaSettings.numHashesPre;
-    else
-        return workDiff.getdouble() / timeDiff;
+    {
+        // SIGMA: Not 100% clear that this is the best we can do or if we can approximate a better estimate, this seems to be a reasonable approximation for now.
+        // What we report to the user as 'hashes' are actually 'half hashes' (see sigma_bench to understand the distinction)
+        // So to match up we have to try approximate half hashes here as well instead of hashes.
+        // We can achieve this by squaring the individual chain works.
+        workDiff = workDiff/count;
+        workDiff = workDiff*workDiff;
+        workDiff *= count;
+    }
+    return (workDiff.getdouble() / timeDiff);
 }
 
 static UniValue getnetworkhashps(const JSONRPCRequest& request)
@@ -355,7 +361,10 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     
     if (!fGenerate)
     {
-        PoWStopGeneration();
+        std::thread([=]
+        {
+            PoWStopGeneration();
+        }).detach();
         return "Block generation disabled.";
     }
 
@@ -422,7 +431,17 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
     SoftSetArg("-genmemlimit", i64tostr(nGenMemoryLimitBytes/1024));
-    PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+    std::thread([=]
+    {
+        try
+        {
+            PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+        }
+        catch(...)
+        {
+        }
+    }).detach();
+    
     if (overrideAccountAddress.length() > 0)
     {
         return strprintf("Block generation enabled into account [%s] using target address [%s], thread limit: [%d threads], memory: [%d Mb].", pwallet->mapAccountLabels[forAccount->getUUID()], overrideAccountAddress ,nGenProcLimit, nGenMemoryLimitBytes/1024/1024);

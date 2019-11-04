@@ -376,8 +376,15 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
 
                             // Reserve a new key pair from key pool
                             CPubKey vchPubKey;
-                            bool ret;
-                            ret = reservekey.GetReservedKey(vchPubKey);
+                            bool ret = false;
+                            try
+                            {
+                                ret = reservekey.GetReservedKey(vchPubKey);
+                            }
+                            catch(...)
+                            {
+                                
+                            }
                             if (!ret)
                             {
                                 if (reservekey.account && (reservekey.account->IsFixedKeyPool() || reservekey.account->IsMinimalKeyPool()))

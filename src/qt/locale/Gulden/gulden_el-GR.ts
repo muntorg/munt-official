@@ -421,6 +421,10 @@
         <translation>Παράθυρο αποσφαλμάτωσης</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <source>N/A</source>
         <translation>Μη διαθέσιμο</translation>
     </message>
@@ -547,10 +551,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
     </message>
     <message>
         <source>%1 GB</source>

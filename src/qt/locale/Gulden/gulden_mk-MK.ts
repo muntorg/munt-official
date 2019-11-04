@@ -308,25 +308,11 @@
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
-    <message>
-        <source>Open URI</source>
-        <translation>Отвори URI</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Total:</source>
-        <translation>Вкупно:</translation>
-    </message>
-</context>
-<context>
     <name>RPCConsole</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 МБ</translation>
+    </message>
     <message>
         <source>Network</source>
         <translation>Мрежа</translation>
@@ -364,12 +350,26 @@
         <translation>%1 КБ</translation>
     </message>
     <message>
-        <source>%1 MB</source>
-        <translation>%1 МБ</translation>
-    </message>
-    <message>
         <source>%1 GB</source>
         <translation>%1 ГБ</translation>
+    </message>
+</context>
+<context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation>Отвори URI</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Total:</source>
+        <translation>Вкупно:</translation>
     </message>
 </context>
 </TS>

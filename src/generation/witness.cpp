@@ -430,6 +430,7 @@ void static GuldenWitness()
                 {
                     if (pactiveWallet && g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
                     {
+                        LOCK(cs_main);
                         if(!IsInitialBlockDownload())
                             break;
                     }
@@ -446,7 +447,11 @@ void static GuldenWitness()
             }
             DO_BENCHMARK("WIT: GuldenWitness", BCLog::BENCH|BCLog::WITNESS);
 
-            CBlockIndex* pindexTip = chainActive.Tip();
+            CBlockIndex* pindexTip = nullptr;
+            {
+                LOCK(cs_main);
+                pindexTip = chainActive.Tip();
+            }
             Consensus::Params pParams = chainparams.GetConsensus();
 
             //We can only start witnessing from phase 3 onward.
@@ -528,14 +533,14 @@ void static GuldenWitness()
 
             if (candidateOrphans.size() > 0)
             {
-                LOCK(processBlockCS);
-
+                LOCK2(processBlockCS,cs_main); //cs_main lock for ReadBlockFromDisk and chainActive.Tip()
+                
                 if (chainActive.Tip() != pindexTip)
                 {
                     continue;
                 }
 
-                LOCK(cs_main); // For ReadBlockFromDisk
+                
                 for (const auto candidateIter : candidateOrphans)
                 {
                     boost::this_thread::interruption_point();

@@ -1103,6 +1103,10 @@
         <translation>Прозорец с грешки</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 Мегабайт</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Клиент на потребителя</translation>
     </message>
@@ -1229,10 +1233,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 Килобайт</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 Мегабайт</translation>
     </message>
     <message>
         <source>%1 GB</source>

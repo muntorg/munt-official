@@ -2714,6 +2714,14 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
         <translation>Debugvenster</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Geheugengebruik</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Useragent</translation>
     </message>
@@ -2960,10 +2968,6 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     <message>
         <source>%1 KB</source>
         <translation>%1 Kb</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 Mb</translation>
     </message>
     <message>
         <source>%1 GB</source>
@@ -3638,6 +3642,101 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Reset all settings changed in the GUI</source>
         <translation>Herstel alle instellingen van de interface</translation>
+    </message>
+</context>
+<context>
+    <name>MiningAccountDialog</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
+        <translation>Het verhogen van het aantal threads zal je mining snelheid verhogen, maar het verhoogt ook je energie verbruik en kan andere applicaties die je gebruikt vertragen.</translation>
+    </message>
+    <message>
+        <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
+        <translation>Het verlagen van het geheugengebruik is niet aanbevolen. Het vertraagt je mining operatie terwijl het evenveel cpu kracht en energie gebruikt. Alleen gebruiken als laatste optie op machines met een laag geheugen.</translation>
+    </message>
+    <message>
+        <source>%1 Mb</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>%1 threads</source>
+        <translation>%1 threads</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres naar klembord gekopiëerd</translation>
+    </message>
+    <message>
+        <source>Mining address</source>
+        <translation>Mining adres</translation>
+    </message>
+    <message>
+        <source>My mining address</source>
+        <translation>Mijn mining adres</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopiëer adres naar klembord</translation>
+    </message>
+    <message>
+        <source>Edit mining address</source>
+        <translation>Mining adres wijzigen</translation>
+    </message>
+    <message>
+        <source>Reset mining address</source>
+        <translation>Mining adres herstellen</translation>
+    </message>
+    <message>
+        <source>My mining settings</source>
+        <translation>Mijn mining instellingen</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>Processor usage</source>
+        <translation>Processorgebruik</translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation>#</translation>
+    </message>
+    <message>
+        <source>Automatically mine at startup</source>
+        <translation>Automatisch minen bij opstarten</translation>
+    </message>
+    <message>
+        <source>Keep application open when mining</source>
+        <translation>Laat applicatie open tijdens minen</translation>
+    </message>
+    <message>
+        <source>My mining statistics</source>
+        <translation>Mijn mining statistieken</translation>
+    </message>
+    <message>
+        <source>Best reported speed</source>
+        <translation>Beste geregistreerde snelheid</translation>
+    </message>
+    <message>
+        <source>Moving average</source>
+        <translation>Voortschrijdend gemiddelde</translation>
+    </message>
+    <message>
+        <source>Last reported speed</source>
+        <translation>Laatst geregistreerde snelheid</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Mining stoppen</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Mining starten</translation>
     </message>
 </context>
 <context>

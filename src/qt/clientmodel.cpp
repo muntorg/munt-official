@@ -281,6 +281,11 @@ QString ClientModel::dataDir() const
     return GUIUtil::boostPathToQString(GetDataDir());
 }
 
+QString ClientModel::logFile() const
+{
+    return GUIUtil::boostPathToQString(GetDataDir() / "debug.log");
+}
+
 void ClientModel::updateBanlist()
 {
     banTableModel->refresh();

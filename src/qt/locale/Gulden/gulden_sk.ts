@@ -471,6 +471,10 @@
         <translation>Okno pre ladenie</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>Využitie pamäte</translation>
     </message>
@@ -678,10 +682,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
     </message>
     <message>
         <source>%1 GB</source>

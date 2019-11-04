@@ -18,6 +18,7 @@
 
 #include <boost/range/adaptor/reversed.hpp>
 #include <stdint.h>
+#include <boost/range/rbegin.hpp>
 
 namespace Checkpoints {
 

@@ -1243,7 +1243,7 @@ static QString getAccountLabel(CAccount* account)
     }
 
     QString accountNamePrefix = QString("<table cellspacing=0 padding=0><tr><td>%1</td><td valign=top>%2</td><table>").arg(accountNamePrefixIndicator).arg(superscriptSpan(accountNamePrefixIndicatorQualifier));
-    accountName = QString("<table cellspacing=0 padding=0><tr><td width=28 align=left>%1</td><td width=2></td><td>%2</td></tr></table>").arg(accountNamePrefix).arg(accountName);
+    accountName = QString("<table cellspacing=0 padding=0><tr><td width=28 align=center>%1</td><td width=2></td><td>%2</td></tr></table>").arg(accountNamePrefix).arg(accountName);
 
     return accountName;
 }
@@ -1771,7 +1771,7 @@ void GUI::restoreCachedWidgetIfNeeded()
     {
         miningDialogAction->setVisible( true );
         stateReceiveCoinsAction = false;
-        stateSendCoinsAction = false;
+        stateSendCoinsAction = true;
         if ( walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->receiveCoinsPage || walletFrame->currentWalletView()->currentWidget() == (QWidget*)walletFrame->currentWalletView()->sendCoinsPage )
         {
             showMiningDialog();

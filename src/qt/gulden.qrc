@@ -5,6 +5,8 @@
         <file alias="angle_up_blue">_Gulden/res/AngleUpBlue.png</file>
         <file alias="angle_down_grey">_Gulden/res/AngleDownGrey.png</file>
         <file alias="angle_up_grey">_Gulden/res/AngleUpGrey.png</file>
+        <file alias="checkbox_checked_normal">_Gulden/res/check.png</file>
+        <file alias="checkbox_checked_normal_x2">_Gulden/res/check@2x.png</file>
         <file alias="dialog_background">_Gulden/res/DialogBackground.png</file>
         <file alias="fa5ps">_Gulden/fonts/fa5ps.ttf</file>
         <file alias="fa5pr">_Gulden/fonts/fa5pr.ttf</file>

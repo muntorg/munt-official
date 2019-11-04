@@ -30,12 +30,22 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
         if (seedIter.second->m_type != CHDSeed::CHDSeed::BIP44 && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44External && seedIter.second->m_type != CHDSeed::CHDSeed::BIP44NoHardening)
             continue;
 
-        for (const auto shadowSubType : { AccountType::Desktop, AccountType::Mobi, AccountType::PoW2Witness })
+        for (const auto shadowSubType : { AccountType::Desktop, AccountType::Mobi, AccountType::PoW2Witness, AccountType::MiningAccount })
         {
             int nFinalAccountPoolTargetSize = nAccountPoolTargetSize;
-            if (shadowSubType == AccountType::PoW2Witness)
+            switch (shadowSubType)
             {
-                nFinalAccountPoolTargetSize = nAccountPoolTargetSizeWitness;
+                case AccountType::MiningAccount:
+                    nFinalAccountPoolTargetSize = 1;
+                    break;
+                case AccountType::PoW2Witness:
+                    nFinalAccountPoolTargetSize = nAccountPoolTargetSizeWitness;
+                    break;
+                case AccountType::Desktop:
+                case AccountType::Mobi:
+                case AccountType::WitnessOnlyWitnessAccount:
+                case AccountType::ImportedPrivateKeyAccount:
+                    break;
             }
             int numShadow = 0;
             {
@@ -61,10 +71,13 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
                     // New shadow account
                     CAccountHD* newShadow = seedIter.second->GenerateAccount(shadowSubType, &db);
 
-                    // Only explicitely ask for an unlock if really low on shadow accounts
-                    if (newShadow == NULL && numShadow < std::max(nFinalAccountPoolTargetSize, 2))
+                    if (newShadow == NULL)
                     {
-                        tryLockWallet = false;
+                        // Only explicitely ask for an unlock if really low on shadow accounts
+                        if ((shadowSubType != AccountType::MiningAccount) && (numShadow < std::max(nFinalAccountPoolTargetSize, 2)))
+                        {
+                            tryLockWallet = false;
+                        }
                         return;
                     }
 

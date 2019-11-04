@@ -120,12 +120,12 @@ namespace Checkpoints
 
     bool ReadCheckpointPubKey(std::string& strPubKey)
     {
-        if( !fs::exists(GetDataDir() / "checkpoints") )
+        if( !fs::exists(GetDataDir() / "autocheckpoints") )
             return false;
 
         try
         {
-            fs::ifstream checkpointFile( GetDataDir() / "checkpoints" / "curr_checkpoint_pubkey" );
+            fs::ifstream checkpointFile( GetDataDir() / "autocheckpoints" / "curr_checkpoint_pubkey" );
             checkpointFile >> strPubKey;
             checkpointFile.close();
         }
@@ -164,6 +164,12 @@ namespace Checkpoints
         return true;
     }
 
+    std::set<uint256> badBlocks = {
+        uint256S("2674801bb0832b2c26716abcecdd78982ad884ae080c9d48c1629d70cbe7b40d"),
+        uint256S("9fce731f09091f1647bd6949e52cc7b376a566bf7d600f35bb2c91735608af9a"),
+        uint256S("e19c64287be89d5db036e54f00269071d21119d53ef972e77512032ef8f0660d")
+    };
+    
     // Read the current auto sync checkpoint from disk
     bool ReadSyncCheckpoint(uint256& hashCheckpoint)
     {
@@ -176,6 +182,33 @@ namespace Checkpoints
             std::string temp;
             checkpointFile >> temp;
             hashCheckpoint = uint256S(temp);
+            
+            // Some code to help peers that missed a fork recover.
+            if (badBlocks.find(hashCheckpoint) != badBlocks.end())
+            {
+                hashCheckpoint = uint256();
+            }
+            bool anyBad = false;
+            for (const auto& badHash : badBlocks)
+            {
+                if (mapBlockIndex.count(badHash))
+                {
+                    if (!(mapBlockIndex[badHash]->nStatus & BLOCK_FAILED_MASK))
+                    {
+                        anyBad = true;
+                        CValidationState state;
+                        CBlockIndex* pblockindex = mapBlockIndex[badHash];
+                        InvalidateBlock(state, Params(), pblockindex);
+                    }
+                }
+            }
+            if (anyBad)
+            {
+                hashCheckpoint = uint256();
+                fReverseHeaders = false;
+                // Clear all the bans so that we can find peers again.
+                g_connman->ClearBanned();
+            }
             checkpointFile.close();
         }
         catch (...)

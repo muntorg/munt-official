@@ -1740,18 +1740,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (IsChainNearPresent() || IsPartialNearPresent())
             SendMempool(pfrom, MAX_SEND_INIT_MEMPOOL);
 
-#pragma message("Ban 797017 peers. Remove for relase!")
-// it's annoying and slows down getting good peer connections
-// still it is doubltful if we want to keep a thing like this in a release
-// hopefully all those nodes stuck on 797017 are quickly fixed
-        if (pfrom->nStartingHeight == 797017)
-        {
-            LogPrintf("Ban peer stuck @ 797017, peer=%d\n", pfrom->GetId());
-            LOCK(cs_main);
-            Misbehaving(pfrom->GetId(), 100);
-            return false;
-        }
-
         return true;
     }
 

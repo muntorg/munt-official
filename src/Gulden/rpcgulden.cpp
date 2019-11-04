@@ -1023,6 +1023,21 @@ static UniValue setminingrewardaddress(const JSONRPCRequest& request)
             + HelpExampleCli("setminingrewardaddress \"G6sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\"", "")
             + HelpExampleRpc("setminingrewardaddress \"G6sSauSf5pF2UkUwvKGq4qjNRzBZYqgEL5\"", ""));
 
+    bool haveMiningAccount = false;
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+        {
+            haveMiningAccount = true;
+            break;
+        }
+    }
+    if (!haveMiningAccount)
+    {
+        throw std::runtime_error("Wallet does not contain a mining account. First create a mining account using `createminingaccount` before using this command.");
+    }
+    
     std::string strWriteOverrideAddress = request.params[0].get_str();
     if (!strWriteOverrideAddress.empty())
     {
@@ -1033,6 +1048,75 @@ static UniValue setminingrewardaddress(const JSONRPCRequest& request)
         }
     }
     return CWalletDB(*pactiveWallet->dbw).WriteMiningAddressString(strWriteOverrideAddress);
+}
+
+static UniValue getminingrewardaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 0 )
+        throw std::runtime_error(
+            "getminingrewardaddress\n"
+            "\nGet the output address into which `setgenerate`, `-gen` or the mining UI will pay the output of generated blocks.\n"
+            "\nIf `getminingrewardaddress` has been called then the address set by this will be returned.\n"
+            "\nOtherwise the default mining account address will be returned.\n"
+            "\nIf there is no mining account then an error will be returned.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"address\":\"address\", (string) The address if one is found. \n"
+            "     \"is_default\",        (boolean) true if the address is from the mining account, false if it is one that has been manually set via `setminingrewardaddress`\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getminingrewardaddress", "")
+            + HelpExampleRpc("getminingrewardaddress", ""));
+        
+    bool haveMiningAccount = false;
+    CAccount* miningAccount = nullptr;
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+        {
+            haveMiningAccount = true;
+            miningAccount = account;
+            break;
+        }
+    }
+    if (!haveMiningAccount)
+    {
+        throw std::runtime_error("Wallet does not contain a mining account. First create a mining account using `createminingaccount` before using this command.");
+    }
+
+    std::string strMiningAddress;
+    CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(strMiningAddress);
+    UniValue result(UniValue::VOBJ);
+    if (strMiningAddress.size() == 0)
+    {
+        CReserveKeyOrScript* miningAddress = new CReserveKeyOrScript(pactiveWallet, miningAccount, KEYCHAIN_EXTERNAL);
+        CPubKey pubKey;
+        if (miningAddress->GetReservedKey(pubKey))
+        {
+            CKeyID keyID = pubKey.GetID();
+            strMiningAddress = CGuldenAddress(keyID).ToString();
+        }
+        result.push_back(Pair("address",strMiningAddress));
+        result.push_back(Pair("is_default", true));
+    }
+    else
+    {
+        result.push_back(Pair("address",strMiningAddress));
+        result.push_back(Pair("is_default", false));
+    }
+    
+    return result;
 }
 
 static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
@@ -2274,6 +2358,256 @@ static UniValue checkpointinvalidate(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
+static UniValue resetdatadirfull(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetdatadirfull does not take arguments\n");
+    }
+
+    LogPrintf("Partial datadir wipe requested.\n");
+    LogPrintf("Turning off networking for datadir wipe.\n");
+    {
+        // Disable what we can so this is cleaner.
+        if (!g_connman)
+        {
+            g_connman->SetNetworkActive(false);
+        }
+        witnessingEnabled = false;
+    }
+    
+    // Grab the main locks - try stop the code from doing anything important while we are busy.
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    
+    fs::remove(GetDataDir() / "banlist.dat");
+    fs::remove(GetDataDir() / "peers.dat");
+    fs::remove(GetDataDir() / "db.log");
+    fs::remove(GetDataDir() / "mempool.dat");
+    fs::remove_all(GetDataDir() / "autocheckpoints");
+    fs::remove_all(GetDataDir() / "blocks");
+    fs::remove_all(GetDataDir() / "database");
+    fs::remove_all(GetDataDir() / "chainstate");
+    fs::remove_all(GetDataDir() / "witstate");
+    
+    // Forcefully close app
+    exit(EXIT_SUCCESS);
+
+    return NullUniValue;
+}
+
+static UniValue resetdatadirpartial(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetdatadirpartial does not take arguments\n");
+    }
+
+    LogPrintf("Partial datadir wipe requested.\n");
+    LogPrintf("Turning off networking for datadir wipe.\n");
+    {
+        // Disable what we can so this is cleaner.
+        if (!g_connman)
+        {
+            g_connman->SetNetworkActive(false);
+        }
+        witnessingEnabled = false;
+    }
+    
+    // Grab the main locks - try stop the code from doing anything important while we are busy.
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    
+    fs::remove_all(GetDataDir() / "autocheckpoints");
+    fs::remove(GetDataDir() / "banlist.dat");
+    fs::remove(GetDataDir() / "peers.dat");
+    
+    // Forcefully close app
+    exit(EXIT_SUCCESS);
+
+    return NullUniValue;
+}
+
+static UniValue resetconfig(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetconfig does not take arguments\n");
+    }
+
+    LogPrintf("Config wipe requested.\n");
+
+    std::vector<std::string> asKeep;    
+    {
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        if (!streamConfig.good())
+            throw std::runtime_error("No config file to reset\n");
+
+        std::string configLine;
+        while (!streamConfig.eof())
+        {
+            std::getline(streamConfig, configLine);
+            if (boost::starts_with(configLine, "rpc") && !boost::starts_with(configLine, "rpcthreads"))
+            {
+                asKeep.push_back(configLine);
+            }
+        }
+    }
+    
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    if (!streamConfig.good())
+        throw std::runtime_error("No config file to reset\n");
+    
+    for (const auto& keepLine : asKeep)
+    {
+        streamConfig << keepLine << "\n";
+    }
+
+    return NullUniValue;
+}
+
+static UniValue resetconfig_pi_lowmem(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetconfig_pi_lowmem does not take arguments\n");
+    }
+
+    LogPrintf("Config wipe requested.\n");
+
+    std::vector<std::string> asKeep;    
+    {
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        if (!streamConfig.good())
+            throw std::runtime_error("No config file to reset\n");
+
+        std::string configLine;
+        while (!streamConfig.eof())
+        {
+            std::getline(streamConfig, configLine);
+            if (boost::starts_with(configLine, "rpc") && !boost::starts_with(configLine, "rpcthreads"))
+            {
+                asKeep.push_back(configLine);
+            }
+        }
+    }
+    
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    if (!streamConfig.good())
+        throw std::runtime_error("No config file to reset\n");
+    
+    for (const auto& keepLine : asKeep)
+    {
+        streamConfig << keepLine << "\n";
+    }
+    streamConfig << "maxconnections=10\n";
+    streamConfig << "maxmempool=50\n";
+    streamConfig << "dbcache=50\n";
+    streamConfig << "rpcthreads=1\n";
+    streamConfig << "par=1\n";
+    streamConfig << "reverseheaders=false\n";
+
+    return NullUniValue;
+}
+
+static UniValue resetconfig_pi_medmem(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("resetconfig_pi_medmem does not take arguments\n");
+    }
+
+    LogPrintf("Config wipe requested.\n");
+
+    std::vector<std::string> asKeep;    
+    {
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        if (!streamConfig.good())
+            throw std::runtime_error("No config file to reset\n");
+
+        std::string configLine;
+        while (!streamConfig.eof())
+        {
+            std::getline(streamConfig, configLine);
+            if (boost::starts_with(configLine, "rpc") && !boost::starts_with(configLine, "rpcthreads"))
+            {
+                asKeep.push_back(configLine);
+            }
+        }
+    }
+    
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    if (!streamConfig.good())
+        throw std::runtime_error("No config file to reset\n");
+    
+    for (const auto& keepLine : asKeep)
+    {
+        streamConfig << keepLine << "\n";
+    }
+    streamConfig << "maxmempool=100\n";
+    streamConfig << "dbcache=100\n";
+    streamConfig << "rpcthreads=1\n";
+    streamConfig << "reverseheaders=false\n";
+
+    return NullUniValue;
+}
+
+static UniValue getcheckpoint(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("getcheckpoint does not take arguments\n");
+    }
+
+    LogPrintf("getcheckpoint requested.\n");
+    
+    return Checkpoints::hashSyncCheckpoint.ToString();
+}
+
+static UniValue getlastblocks(const JSONRPCRequest& request)
+{
+    // NB! Delibritely return no help, we don't want this command to be listed in the help.
+    if (request.fHelp) throw std::runtime_error("");
+    if (request.params.size() != 0)
+    {
+        throw std::runtime_error("getlastblocks does not take arguments\n");
+    }
+
+    LogPrintf("getlastblocks requested.\n");
+    UniValue result(UniValue::VOBJ);    
+    if (chainActive.Tip()->nHeight > 30)
+    {
+        CBlockIndex* pIndex = chainActive.Tip();
+        for (int i=0;i<30;++i)
+        {
+            result.push_back(Pair(pIndex->GetBlockHashPoW2().ToString(),pIndex->nHeight));
+            pIndex = pIndex->pprev;
+        }
+    }
+    
+    return result;
+}
+
 static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -3176,6 +3510,7 @@ static const CRPCCommand commands[] =
     { "mining",                  "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
     { "mining",                  "createminingaccount",             &createminingaccount,            true,    {"name"} },
     { "mining",                  "setminingrewardaddress",          &setminingrewardaddress,         true,    {"reward_address"} },
+    { "mining",                  "getminingrewardaddress",          &getminingrewardaddress,         true,    {""} },
 
     //fixme: (PHASE5) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
@@ -3207,6 +3542,14 @@ static const CRPCCommand commands[] =
     { "developer",               "dumpdiffarray",                   &dumpdiffarray,                  true,    {"height"} },
     { "developer",               "verifywitnessaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
     { "developer",               "checkpointinvalidate",            &checkpointinvalidate,           true,    {"block_hash" } },
+    
+    { "support",                 "resetdatadirpartial",             &resetdatadirpartial,            true,    {""} },
+    { "support",                 "resetdatadirfull",                &resetdatadirfull,               true,    {""} },
+    { "support",                 "resetconfig",                     &resetconfig,                    true,    {""} },
+    { "support",                 "resetconfig_pi_lowmem",           &resetconfig_pi_lowmem,          true,    {""} },
+    { "support",                 "resetconfig_pi_medmem",           &resetconfig_pi_medmem,          true,    {""} },
+    { "support",                 "getcheckpoint",                   &getcheckpoint,                  true,    {""} },
+    { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {""} },
 
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
     { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },

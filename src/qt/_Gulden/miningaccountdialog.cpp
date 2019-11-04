@@ -68,6 +68,8 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     ui->miningResetAddressButton->setTextFormat( Qt::RichText );
     ui->miningResetAddressButton->setText( GUIUtil::fontAwesomeRegular("\uf12d") );
     ui->miningResetAddressButton->setContentsMargins(0, 0, 0, 0);
+    ui->miningCheckBoxKeepOpen->setCursor(Qt::PointingHandCursor);
+    ui->miningCheckBoxMineAtStartup->setCursor(Qt::PointingHandCursor);
     
     ui->miningThreadSlider->setCursor(Qt::PointingHandCursor);
     ui->miningThreadSlider->setContentsMargins(0, 0, 0, 0);
@@ -92,6 +94,17 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     
     uint64_t systemMemoryInMb = systemPhysicalMemoryInBytes()/1024/1024;
     uint64_t nMaxMemoryInMb = std::min(systemMemoryInMb, defaultSigmaSettings.arenaSizeKb/1024);
+    // 32 bit windows can only address 2gb of memory per process (3gb if /largeaddressaware)
+    // 32 bit linux is 4gb per process.
+    // Limit both accordingly
+    #ifdef ARCH_X86
+        #ifdef WIN32
+            nMaxMemoryInMb = std::min((uint64_t)nMaxMemoryInMb, (uint64_t)1*1024);
+        #else
+            nMaxMemoryInMb = std::min((uint64_t)nMaxMemoryInMb, (uint64_t)2*1024);
+        #endif
+    #endif
+
     ui->miningMemorySlider->setMinimum(128);
     ui->miningMemorySlider->setMaximum(nMaxMemoryInMb);
     ui->miningMemorySlider->setTickInterval(16);
@@ -114,7 +127,7 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
 
 void MiningAccountDialog::updateSliderLabels()
 {
-    ui->miningMemorySliderLabel->setText(tr("%1 Mb").arg(ui->miningMemorySlider->value()));
+    ui->miningMemorySliderLabel->setText(tr("%1 MB").arg(ui->miningMemorySlider->value()));
     ui->miningThreadSliderLabel->setText(tr("%1 threads").arg(ui->miningThreadSlider->value()));
 }
 
@@ -345,7 +358,7 @@ void MiningAccountDialog::slotMiningThreadSettingChanged()
 
 void MiningAccountDialog::slotMiningMemorySettingChanging(int val)
 {
-    ui->miningMemorySliderLabel->setText(tr("%1 Mb").arg(val));
+    ui->miningMemorySliderLabel->setText(tr("%1 MB").arg(val));
 }
 
 void MiningAccountDialog::slotMiningThreadSettingChanging(int val)
@@ -372,7 +385,7 @@ void MiningAccountDialog::slotUpdateMiningStats()
     
     if (PoWGenerationIsActive())
     {
-        // Call again every 5 seconds as long as mining is active
-        QTimer::singleShot( 5000, this, SLOT(slotUpdateMiningStats()) );
+        // Call again every 2 seconds as long as mining is active
+        QTimer::singleShot( 2000, this, SLOT(slotUpdateMiningStats()) );
     }
 }

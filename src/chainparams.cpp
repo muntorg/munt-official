@@ -374,7 +374,7 @@ public:
         consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000fad1c7f4818beec6");
         
         chainTxData = ChainTxData{
-            1571526183, // * UNIX timestamp of last checkpoint block
+            1571695813, // * UNIX timestamp of last checkpoint block
             2635602,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp

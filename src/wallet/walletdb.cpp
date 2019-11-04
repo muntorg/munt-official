@@ -245,9 +245,12 @@ bool CWalletDB::ErasePool(CWallet* pwallet, int64_t nPool, bool forceErase)
     {
         for (auto iter : pwallet->mapAccounts)
         {
-            if ((iter.second->IsFixedKeyPool() || iter.second->IsMinimalKeyPool()) && (iter.second->setKeyPoolExternal.find(nPool) != iter.second->setKeyPoolExternal.end()))
+            if (iter.second->IsFixedKeyPool() || iter.second->IsMinimalKeyPool())
             {
-                return true;
+                if ((iter.second->setKeyPoolExternal.find(nPool) != iter.second->setKeyPoolExternal.end()) || (iter.second->setKeyPoolInternal.find(nPool) != iter.second->setKeyPoolInternal.end()))
+                {
+                    return true;
+                }
             }
         }
     }
@@ -264,10 +267,13 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id, bool forceErase)
     {
         for (auto iter : pwallet->mapAccounts)
         {
-            if (iter.second->IsFixedKeyPool() && (iter.second->setKeyPoolExternal.find(keyIndex) != iter.second->setKeyPoolExternal.end()))
+            if ((iter.second->IsFixedKeyPool() || iter.second->IsMinimalKeyPool()))
             {
-                allowErase = false;
-                break;
+                if ((iter.second->setKeyPoolExternal.find(keyIndex) != iter.second->setKeyPoolExternal.end()) || (iter.second->setKeyPoolInternal.find(keyIndex) != iter.second->setKeyPoolInternal.end()))
+                {
+                    allowErase = false;
+                    break;
+                }
             }
         }
     }

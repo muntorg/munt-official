@@ -148,9 +148,18 @@ void EditAddressDialog::accept()
                     QMessageBox::Ok, QMessageBox::Ok);
                 break;
             case AddressTableModel::DUPLICATE_ADDRESS:
-                QMessageBox::warning(this, windowTitle(),
-                    tr("The entered address \"%1\" is already in the address book.").arg(ui->addressEdit->text()),
-                    QMessageBox::Ok, QMessageBox::Ok);
+                // Special case, when called from the mining dialog we want to accept the address, even if its already in the address book with a different name.
+                if (mode == NewMiningAddress)
+                {
+                    address = ui->addressEdit->text();
+                    QDialog::accept();
+                }
+                else
+                {
+                    QMessageBox::warning(this, windowTitle(),
+                        tr("The entered address \"%1\" is already in the address book.").arg(ui->addressEdit->text()),
+                        QMessageBox::Ok, QMessageBox::Ok);
+                }
                 break;
             case AddressTableModel::WALLET_UNLOCK_FAILURE:
                 QMessageBox::critical(this, windowTitle(),

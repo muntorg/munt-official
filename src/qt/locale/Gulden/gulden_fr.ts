@@ -337,6 +337,10 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Demander des paiements (génère des QR codes et des URI&apos;s Gulden)</translation>
     </message>
     <message>
+        <source>Control and view information for mining account.</source>
+        <translation>Contrôlez et visualisez les informations du compte minier.</translation>
+    </message>
+    <message>
         <source>&amp;Transactions</source>
         <translation>&amp;Transactions</translation>
     </message>
@@ -2727,6 +2731,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation>Fenêtre de débogage</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 Mo</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>Utilisation de la mémoire</translation>
     </message>
@@ -2973,10 +2981,6 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>%1 KB</source>
         <translation>%1 Ko</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 Mo</translation>
     </message>
     <message>
         <source>%1 GB</source>
@@ -3654,6 +3658,101 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     </message>
 </context>
 <context>
+    <name>MiningAccountDialog</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
+        <translation>Augmenter le nombre de threads augmentera votre vitesse d&apos;extraction, mais aussi votre consommation d&apos;énergie et ralentira d&apos;autres applications qui pourraient fonctionner.</translation>
+    </message>
+    <message>
+        <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
+        <translation>Il n&apos;est pas recommandé de réduire l&apos;utilisation de la mémoire. Il ralentira votre exploitation minière tout en utilisant la même quantité de puissance et d&apos;énergie du processeur qu&apos;auparavant. Ne l&apos;utilisez qu&apos;en dernier recours sur les machines qui ont une faible disponibilité de mémoire.</translation>
+    </message>
+    <message>
+        <source>%1 Mb</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>%1 threads</source>
+        <translation>%1 threads</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse copiée dans le presse-papiers</translation>
+    </message>
+    <message>
+        <source>Mining address</source>
+        <translation>Adresse minière</translation>
+    </message>
+    <message>
+        <source>My mining address</source>
+        <translation>Mon adresse minière</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Copier l&apos;adresse dans le presse-papiers</translation>
+    </message>
+    <message>
+        <source>Edit mining address</source>
+        <translation>Modifier l&apos;adresse de l&apos;exploitation minière</translation>
+    </message>
+    <message>
+        <source>Reset mining address</source>
+        <translation>Réinitialiser l&apos;adresse d&apos;exploitation minière</translation>
+    </message>
+    <message>
+        <source>My mining settings</source>
+        <translation>Mes paramètres miniers</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Utilisation de la mémoire</translation>
+    </message>
+    <message>
+        <source>Processor usage</source>
+        <translation>Utilisation du processeur</translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation>#</translation>
+    </message>
+    <message>
+        <source>Automatically mine at startup</source>
+        <translation>Exploitation automatique au démarrage</translation>
+    </message>
+    <message>
+        <source>Keep application open when mining</source>
+        <translation>Garder l&apos;application ouverte lors de l&apos;exploitation minière</translation>
+    </message>
+    <message>
+        <source>My mining statistics</source>
+        <translation>Mes statistiques minières</translation>
+    </message>
+    <message>
+        <source>Best reported speed</source>
+        <translation>Vitesse la mieux signalée</translation>
+    </message>
+    <message>
+        <source>Moving average</source>
+        <translation>Moyenne mobile</translation>
+    </message>
+    <message>
+        <source>Last reported speed</source>
+        <translation>Dernière vitesse signalée</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Arrêter l&apos;exploitation minière</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Commencer l&apos;exploitation minière</translation>
+    </message>
+</context>
+<context>
     <name>ViewAddressDialog</name>
     <message>
         <source>Address copied to clipboard</source>
@@ -3678,13 +3777,6 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>No valid witness address has been generated for this account</source>
         <translation>Aucune adresse de witness valide n&apos;a été générée pour ce compte.</translation>
-    </message>
-</context>
-<context>
-    <name>MiningAccountDialog</name>
-    <message>
-        <source>Mining address</source>
-        <translation>Adresse minière</translation>
     </message>
 </context>
 <context>

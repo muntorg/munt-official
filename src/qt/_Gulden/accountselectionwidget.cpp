@@ -37,6 +37,9 @@ bool WitnessSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIn
         return false;
     if (sSubType == GetAccountTypeString(AccountType::WitnessOnlyWitnessAccount))
         return false;
+    // Or a mining account
+    if (sSubType == GetAccountTypeString(AccountType::MiningAccount))
+        return false;
 
     // Must have sufficient balance to fund the operation.
     uint64_t nCompare = sourceModel()->data(index0, AccountTableModel::AvailableBalanceRole).toLongLong();
