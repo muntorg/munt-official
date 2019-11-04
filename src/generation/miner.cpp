@@ -1240,7 +1240,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                     }
                     {
                         // If this thread gets interrupted then terminate mining
-                        BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); } BOOST_SCOPE_EXIT_END
+                        BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); delete workerThreads;} BOOST_SCOPE_EXIT_END
                         int nCount = 0;
                         while (true)
                         {    
