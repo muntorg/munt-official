@@ -91,8 +91,11 @@ public:
     const ChainTxData& TxData() const { return chainTxData; }
     bool UseSyncCheckpoints() const { return fUseSyncCheckpoints; }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
+
+    //fixme: (testnet) remove after official testnet restarted
+    bool IsOfficialTestnetV1() const { return fIsOfficialTestnetV1; }
 protected:
-    CChainParams() {}
+    CChainParams();
 
     Consensus::Params consensus;
     CMessageHeader::MessageStartChars pchMessageStart;
@@ -111,6 +114,7 @@ protected:
     bool fUseSyncCheckpoints;
     CCheckpointData checkpointData;
     ChainTxData chainTxData;
+    bool fIsOfficialTestnetV1;
 };
 
 /**
