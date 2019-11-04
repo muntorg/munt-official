@@ -1208,15 +1208,19 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                 // Prepare arenas
                 CBlockHeader header = pblock->GetBlockHeader();
                 {
+                    LogPrintf("pa1\n");
                     auto workerThreads = new boost::asio::thread_pool(nThreads);
                     for (const auto& sigmaContext : sigmaContexts)
                     {
+                        LogPrintf("pa2\n");
                         boost::asio::post(*workerThreads, [&, header]() mutable
                         {
+                            LogPrintf("pa3\n");
                             sigmaContext->prepareArenas(header);
                         });
                     }
                     workerThreads->join();
+                    LogPrintf("pa4\n");
                 }
                 
                 // Mine
@@ -1228,19 +1232,22 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                     std::atomic<uint64_t> nThreadCounter=0;
                     bool interrupt = false;
                     
+                    LogPrintf("m1\n");
                     auto workerThreads = new boost::asio::thread_pool(nThreads);
                     for (const auto& sigmaContext : sigmaContexts)
                     {
+                        LogPrintf("m2\n");
                         ++nThreadCounter;
                         boost::asio::post(*workerThreads, [&, header]() mutable
                         {
+                            LogPrintf("m3\n");
                             sigmaContext->mineBlock(pblock, halfHashCounter, foundBlockHash, interrupt);
                             --nThreadCounter;
                         });
                     }
                     {
                         // If this thread gets interrupted then terminate mining
-                        BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); delete workerThreads;} BOOST_SCOPE_EXIT_END
+                        BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { LogPrintf("mlse1\n"); interrupt=true; LogPrintf("mlse2\n"); workerThreads->stop(); LogPrintf("mlse3\n"); workerThreads->join(); LogPrintf("mlse4\n"); delete workerThreads; LogPrintf("mlse5\n"); } BOOST_SCOPE_EXIT_END
                         int nCount = 0;
                         while (true)
                         {    
@@ -1252,23 +1259,35 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
 
                             // If we have found a block then exit loop and process it immediately
                             if (foundBlockHash != uint256())
+                            {
+                                LogPrintf("b1\n");
                                 break;
+                            }
                             
                             //fixme: (SIGMA) - This can be improved in cases where we have 'uneven' contexts, one may still have lots of work when another is finished, we might want to only restart one of them and not both...
                             // If at least one of the threads is done working then abandon the rest of them, and then see if we have found a block or need to start again with a different block etc.
                             if (nThreadCounter < sigmaContexts.size())
+                            {
+                                LogPrintf("b2\n");
                                 break;
+                            }
                             
                             // Abort for timestamp update if its been longer than ~3 minutes.
                             // Randomly stagger the checks so that all miners perform slightly differently.
                             if (GetTimeMillis() - nStart > nTimeout)
+                            {
+                                LogPrintf("b3\n");
                                 break;
+                            }
                             
                             // Abort mining and start mining a new block instead if chain tip changed
                             {
                                 LOCK(cs_main);
                                 if (pTipAtStartOfMining != chainActive.Tip())
+                                {
+                                    LogPrintf("b4\n");
                                     break;
+                                }
                             }
                             
                             // Abort mining and start mining a new block instead if alternative chain tip changed
@@ -1276,7 +1295,10 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                             {
                                 nOrphansAtStartOfMining = GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size();
                                 if (pindexParent != FindMiningTip(pindexParent, chainparams, strError, pWitnessBlockToEmbed))
+                                {
+                                    LogPrintf("b5\n");
                                     break;
+                                }
                             }
                             
                             if (++nCount>5)
