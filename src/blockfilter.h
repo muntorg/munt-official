@@ -87,6 +87,7 @@ public:
      * efficient that checking Match on multiple elements separately.
      */
     bool MatchAny(const ElementSet& elements) const;
+    unsigned int NumElements() const;
 };
 
 constexpr uint8_t BASIC_FILTER_P = 19;

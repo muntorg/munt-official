@@ -212,6 +212,11 @@ bool GCSFilter::MatchAny(const ElementSet& elements) const
     return MatchInternal(queries.data(), queries.size());
 }
 
+unsigned int GCSFilter::NumElements() const
+{
+    return m_N;
+}
+
 const std::string& BlockFilterTypeName(BlockFilterType filter_type)
 {
     static std::string unknown_retval = "";

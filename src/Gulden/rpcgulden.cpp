@@ -534,6 +534,9 @@ static UniValue dumpfiltercheckpoints(const JSONRPCRequest& request)
         allFilters.reserve(3000000);
         int nMaxHeight = chainActive.Height();
         int nInterval = nInterval1;
+
+        unsigned int nTotalElements = 0;
+        unsigned int nTotalIntervals = 0;
         for (int i=nStart; i+nInterval < nMaxHeight;)
         {
             if (i >= nCrossOver)
@@ -550,8 +553,11 @@ static UniValue dumpfiltercheckpoints(const JSONRPCRequest& request)
             std::copy(filterData.cbegin(), filterData.cend(), std::back_inserter(allFilters));
 
             i += nInterval;
+
+            nTotalElements += filter.GetFilter().NumElements();
+            nTotalIntervals++;
         }
-        LogPrintf("size: %d\n", allFilters.size());
+        LogPrintf("size: %d elements: %u intervals: %u\n", allFilters.size(), nTotalElements, nTotalIntervals);
         file.write((const char*)&allFilters[0], allFilters.size());
     }
 
