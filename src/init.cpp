@@ -765,11 +765,13 @@ bool AppInitParameterInteraction()
         return InitError(errortr("Not enough file descriptors available."));
     nMaxConnections = std::min(nFD - MIN_CORE_FILEDESCRIPTORS - MAX_ADDNODE_CONNECTIONS, nMaxConnections);
 
+#if !((defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0) || defined(__ANDROID__))
     // Limit peer count on low memory systems
     if (systemPhysicalMemoryInBytes() <= 1*1024*1024*1024ULL)
     {
         nMaxConnections = std::min(nMaxConnections, 30);
     }
+#endif
 
     if (nMaxConnections < nUserMaxConnections)
         InitWarning(strprintf(warningtr("Reducing -maxconnections from %d to %d, because of system limitations."), nUserMaxConnections, nMaxConnections));

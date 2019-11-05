@@ -14,7 +14,12 @@
 
 #include <stdint.h>
 
-#if defined(WIN32)
+#if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0) || defined(__ANDROID__)
+inline uint64_t systemPhysicalMemoryInBytes()
+{
+    throw std::runtime_error("Don't call systemPhysicalMemoryInBytes() on mobile");
+}
+#elif defined(WIN32)
 #include <windows.h>
 inline uint64_t systemPhysicalMemoryInBytes()
 {
