@@ -156,7 +156,8 @@ TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
 void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations)
 {
     int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
-    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
+    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true) +
+                    wtx->GetImmatureCredit(false, pactiveWallet->activeAccount, true);
 
     uint64_t time = wtx->nTimeSmart;
     std::string hash = wtx->GetHash().ToString();
