@@ -679,8 +679,11 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
                 // This leaves the post nonce in a 'default' but 'psuedo random' state.
                 // We do this instead of zeroing out the post-nonce to reduce the predictability of the data to be hashed and therefore make it harder to attack the hash functions.
                 uint8_t* hashMem = new uint8_t[settings.argonMemoryCostKb*1024];
+                //fixme: (SIGMA) - Return false and handle this in the external mining loop.
+                if (!hashMem)
+                    return;
+                
                 {
-                    BOOST_SCOPE_EXIT(&hashMem) { delete[] hashMem; } BOOST_SCOPE_EXIT_END
                     headerData.nNonce = nBaseNonce;
                     headerData.nPreNonce = nPreNonce;
                     
@@ -696,7 +699,11 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
                     argonContext.threads = 1;
                             
                     if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
-                        assert(0);
+                    {
+                        delete[] hashMem;
+                        //fixme: (SIGMA) - Return false and handle this in the external mining loop.
+                        return;
+                    }
                     
                     // 3. Set the initial state of the seed for the 'pseudo random' nonces.
                     // PRNG notes:
@@ -720,7 +727,10 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
                     while(true)
                     {
                         if (UNLIKELY(interrupt))
+                        {
+                            delete[] hashMem;
                             return;
+                        }
 
                         // 4.1. For each iteration advance the state of the pseudo random nonce
                         prng.ProcessData((unsigned char*)&ciphered[0], (const unsigned char*)&argonContext.outHash[0], 32);
@@ -752,6 +762,7 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
                                 if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
                                 {
                                     // Found a block, set it and exit.
+                                    delete[] hashMem;
                                     pBlock->nNonce = headerData.nNonce;
                                     foundBlockHash = fastHash;
                                     interrupt=true;
@@ -761,7 +772,10 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
                             }
                         }
                         if (UNLIKELY(headerData.nPostNonce == settings.numHashesPost-1))
-                            break;
+                        {
+                            delete[] hashMem;
+                            return;
+                        }
                         ++headerData.nPostNonce;
                     }
                 }
