@@ -663,7 +663,7 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
     
     workerThreads = new boost::asio::thread_pool(numThreads);
     {
-        BOOST_SCOPE_EXIT(&workerThreads) { LogPrintf("mse1\n"); workerThreads->join(); LogPrintf("mse2\n"); delete workerThreads; LogPrintf("mse3\n"); } BOOST_SCOPE_EXIT_END
+        BOOST_SCOPE_EXIT(&workerThreads) { workerThreads->join(); delete workerThreads; } BOOST_SCOPE_EXIT_END
         
         for (uint64_t nIndex = 0; nIndex <= settings.numHashesPre;++nIndex)
         {
@@ -751,7 +751,6 @@ void sigma_context::mineBlock(CBlock* pBlock, std::atomic<uint64_t>& halfHashCou
                                 // 4.5 See if we have a valid block
                                 if (UNLIKELY(UintToArith256(fastHash) <= hashTarget))
                                 {
-                                    LogPrintf("SIGMA: Found block\n");
                                     // Found a block, set it and exit.
                                     pBlock->nNonce = headerData.nNonce;
                                     foundBlockHash = fastHash;
