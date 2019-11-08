@@ -155,6 +155,10 @@ TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
 
 void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations)
 {
+    // exclude generated that are orphaned
+    if (wtx->IsCoinBase() && wtx->GetDepthInMainChain() < 1)
+        return;
+
     int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
     int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true) +
                     wtx->GetImmatureCredit(false, pactiveWallet->activeAccount, true);
