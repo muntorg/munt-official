@@ -38,31 +38,36 @@ int CMerkleTx::GetDepthInMainChain(const CBlockIndex* &pindexRet) const
 
     AssertLockHeld(cs_main);
 
-
     // Find the block it claims to be in
     BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
     if (mi != mapBlockIndex.end())
     {
 
-        // It is in the index so it must be in one of the chains to have a depth > 0
         CBlockIndex* pindex = (*mi).second;
-        if (!pindex || (!chainActive.Contains(pindex) && !partialChain.Contains(pindex)))
+        if (pindex == nullptr)
             return 0;
 
         pindexRet = pindex;
-
-        CChain& chain = IsPartialSyncActive() ? partialChain : chainActive;
-        return ((nIndex == -1) ? (-1) : 1) * (chain.Height() - pindex->nHeight + 1);
+        bool conflicts = nIndex == -1 || !(chainActive.Contains(pindex) || partialChain.Contains(pindex));
+        CChain& chain = IsPartialSyncActive() && partialChain.Height() > chainActive.Height() ? partialChain : chainActive;
+        return (conflicts ? (-1) : 1) * (chain.Height() - pindex->nHeight + 1);
     }
     else
     {
         // fall back to using nHeight, only allowed in spv/partial sync
         if (IsPartialSyncActive() && nHeight >= 0)
         {
+
             pindexRet = nullptr;
 
-            CChain& chain = IsPartialSyncActive() ? partialChain : chainActive;
-            return ((nIndex == -1) ? (-1) : 1) * (chain.Height() - nHeight + 1);
+            // tx conflicts if it was abandoned or block is orphaned which is detected here if the tx height >= partial chain offset
+            // and the block is not in the index so it must have been purged by spv
+
+            //fixme: (HIGH) (spv) as soon as the partialChain HeightOffset surpasses the orphan height it cannot be determined anymore if the block of the tx is/was
+            // on the main chain or not. Until this happens tx in orhpaned blocks will be (correctly) marked as conflicting at the height of the orphan.
+
+            bool conflicts = nIndex == -1 || nHeight >= partialChain.HeightOffset();
+            return (conflicts ? (-1) : 1) * (partialChain.Height() - nHeight + 1);
         }
         else
             return 0;
