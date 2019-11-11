@@ -1447,12 +1447,20 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                         )
                         || index->nStatus & BLOCK_FAILED_MASK) // always prune invalid blocks (if it changes they will be dirty again)
                     {
+                        // blocks below partial sync pruning height that are not on the chain have to be marked as conflicting permanantly now
+                        // as after pruning this information will be lost and there it can not be determined any more if the block was part of the chain
+                        if (!partialChain.Contains(index))
+                        {
+                            GetMainSignals().PruningConflictingBlock(index->GetBlockHashPoW2());
+                        }
+
                         removals.push_back(index->GetBlockHashPoW2());
                         setDirtyBlockIndex.erase(index); // prevent pruned indexes to be rewritten
                     }
 #ifdef DEBUG_PARTIAL_SYNC
                     if (!partialChain.Contains(index)) {
                         numNotOnPartialChain++;
+                        // think about what to do, do we need to remove/mark the tx to be conflicting/abandon, and what about the block?
                         // it is normal to have forks (and blocks getting witnessed) at/near the tip, only log deeper ones
                         if (index->nHeight < partialChain.Height() - 20)
                             LogPrintf("Index not on partial chain during prune: [%s] height = %d\n", index->GetBlockHashPoW2().ToString(), index->nHeight);
@@ -4289,7 +4297,7 @@ void ResetPartialSync()
     {
         CBlockIndex* pindex = it->second;
 
-        if (pindex->IsPartialValid() && (!pindexBestPartial || pindex->nHeight > pindexBestPartial->nHeight)) {
+        if (pindex->IsPartialValid()) {
             if (pindex->IsValid(BLOCK_VALID_TREE)) {
                 // has some main tree validity, only remove partial sync reference
                 pindex->nStatus &= ~BLOCK_PARTIAL_MASK;

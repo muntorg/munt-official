@@ -62,10 +62,6 @@ int CMerkleTx::GetDepthInMainChain(const CBlockIndex* &pindexRet) const
 
             // tx conflicts if it was abandoned or block is orphaned which is detected here if the tx height >= partial chain offset
             // and the block is not in the index so it must have been purged by spv
-
-            //fixme: (HIGH) (spv) as soon as the partialChain HeightOffset surpasses the orphan height it cannot be determined anymore if the block of the tx is/was
-            // on the main chain or not. Until this happens tx in orhpaned blocks will be (correctly) marked as conflicting at the height of the orphan.
-
             bool conflicts = nIndex == -1 || nHeight >= partialChain.HeightOffset();
             return (conflicts ? (-1) : 1) * (partialChain.Height() - nHeight + 1);
         }
