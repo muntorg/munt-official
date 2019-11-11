@@ -60,6 +60,7 @@ protected:
     virtual void GetScriptForMining([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
     virtual void GetScriptForWitnessing([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
     virtual void NewPoWValidBlock([[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::shared_ptr<const CBlock>& block) {};
+    virtual void PruningConflictingBlock([[maybe_unused]] const uint256& blockHash) {}
     friend void ::RegisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
     friend void ::UnregisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
     friend void ::UnregisterAllValidationInterfaces();
@@ -103,6 +104,9 @@ struct CMainSignals {
      * Notifies listeners that a block which builds directly on our current tip
      * has been received and connected to the headers tree, though not validated yet */
     boost::signals2::signal<void (const CBlockIndex *, const std::shared_ptr<const CBlock>&)> NewPoWValidBlock;
+
+    /** Notifies listeners of a conflicting block being pruned */
+    boost::signals2::signal<void (const uint256& blockHash)> PruningConflictingBlock;
 };
 
 CMainSignals& GetMainSignals();

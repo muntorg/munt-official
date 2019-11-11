@@ -33,6 +33,7 @@ void RegisterValidationInterface(CValidationInterface* pwalletIn)
     g_signals.ScriptForMining.connect(boost::bind(&CValidationInterface::GetScriptForMining, pwalletIn, _1, _2));
     g_signals.ScriptForWitnessing.connect(boost::bind(&CValidationInterface::GetScriptForWitnessing, pwalletIn, _1, _2));
     g_signals.NewPoWValidBlock.connect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn, _1, _2));
+    g_signals.PruningConflictingBlock.connect(boost::bind(&CValidationInterface::PruningConflictingBlock, pwalletIn, _1));
 }
 
 void UnregisterValidationInterface(CValidationInterface* pwalletIn)
@@ -48,7 +49,8 @@ void UnregisterValidationInterface(CValidationInterface* pwalletIn)
     g_signals.TransactionAddedToMempool.disconnect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn, _1));
     g_signals.TransactionDeletedFromMempool.disconnect(boost::bind(&CValidationInterface::TransactionDeletedFromMempool, pwalletIn, _1, _2));
     g_signals.UpdatedBlockTip.disconnect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn, _1, _2, _3));
-    g_signals.StalledWitness.connect(boost::bind(&CValidationInterface::StalledWitness, pwalletIn, _1, _2));
+    g_signals.StalledWitness.disconnect(boost::bind(&CValidationInterface::StalledWitness, pwalletIn, _1, _2));
+    g_signals.PruningConflictingBlock.disconnect(boost::bind(&CValidationInterface::PruningConflictingBlock, pwalletIn, _1));
 }
 
 void UnregisterAllValidationInterfaces()
@@ -64,4 +66,6 @@ void UnregisterAllValidationInterfaces()
     g_signals.BlockDisconnected.disconnect_all_slots();
     g_signals.UpdatedBlockTip.disconnect_all_slots();
     g_signals.NewPoWValidBlock.disconnect_all_slots();
+    g_signals.StalledWitness.disconnect_all_slots();
+    g_signals.PruningConflictingBlock.disconnect_all_slots();
 }

@@ -1372,6 +1372,27 @@ void CWallet::BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) {
     }
 }
 
+void CWallet::PruningConflictingBlock(const uint256& blockHash)
+{
+    LOCK2(cs_main, cs_wallet);
+
+    if (!mapBlockIndex.count(blockHash))
+        return;
+
+    CBlockIndex* pIndex = mapBlockIndex[blockHash];
+
+    if (pIndex->nHeight < partialChain.HeightOffset() || pIndex->nHeight >partialChain.Height())
+        return;
+
+    CBlock block;
+    if (!ReadBlockFromDisk(block, pIndex, Params()))
+        return;
+
+    for (const CTransactionRef& ptx : block.vtx) {
+        MarkConflicted(partialChain[pIndex->nHeight]->GetBlockHashPoW2(), ptx->GetHash());
+    }
+}
+
 bool CWallet::IsChange(const CTxOut& txout) const
 {
     LOCK(cs_wallet);

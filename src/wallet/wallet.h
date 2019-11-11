@@ -939,6 +939,9 @@ public:
 
     void EraseWalletSeedsAndAccounts();
 
+protected:
+    void PruningConflictingBlock(const uint256& blockHash) override;
+
 private:
     int nTransactionScanProgressPercent;
 
