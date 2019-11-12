@@ -1494,6 +1494,16 @@ void GUI::hideForClose()
 {
     if (rpcConsole)
         rpcConsole->close();
+
+    // close open dialogs to which no references were kept (such as transaction details), else app shutdown will hang
+    const QWidgetList allWidgets = QApplication::allWidgets();
+    for (QWidget *widget : allWidgets) {
+        QDialog* dialog = dynamic_cast<QDialog*>(widget);
+        if (dialog && !dialog->isModal() && dialog->isVisible()) {
+            dialog->close();
+        }
+    }
+
     QMainWindow::hide();
 }
 
