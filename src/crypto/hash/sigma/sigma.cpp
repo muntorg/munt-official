@@ -330,7 +330,10 @@ void selectOptimisedImplementations()
         #if defined(COMPILER_HAS_AES)
         if (__builtin_cpu_supports("aes") && (forceSigmaAlgo.empty() || boost::algorithm::ends_with(forceSigmaAlgo, "aes")))
         {
-            forceSigmaAlgo.erase(forceSigmaAlgo.length()-3);
+            if (!forceSigmaAlgo.empty())
+            {
+                forceSigmaAlgo.erase(forceSigmaAlgo.length()-3);
+            }
             #if defined(COMPILER_HAS_AVX512F)
             if (SELECT_ALGO("avx512f"))
             {
