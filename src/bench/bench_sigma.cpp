@@ -15,6 +15,15 @@
 #include <cryptopp/modes.h>
 #include <random.h>
 
+// fixme: (BOOST) - Workaround for boost on macOS (when using newer clang) build issue (not detecting string_view properly)
+// Remove this when addressed by Boost's ASIO config.
+// https://www.boost.org/doc/libs/1_67_0/boost/asio/detail/config.hpp
+// Standard library support for std::string_view.
+#define BOOST_ASIO_HAS_STD_STRING_VIEW 1
+#define BOOST_ASIO_DISABLE_STD_STRING_VIEW 1
+#include <boost/asio.hpp>
+#include <boost/asio/thread_pool.hpp>
+
 // Are we running with all options at default or are any overriden by user.
 bool defaultSigma = true;
 

@@ -18,6 +18,7 @@
 #include "uint256.h"
 #include "crypto/hash/sigma/sigma.h"
 #include "random.h"
+#include <thread>
 
 /*GULDEN - We  use our own calculation from elsewhere in the source
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
