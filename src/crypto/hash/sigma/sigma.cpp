@@ -13,6 +13,8 @@
 #include <cryptopp/aes.h>
 #include <cryptopp/modes.h>
 
+#include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
+
 #include <stddef.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -323,11 +325,14 @@ void selectOptimisedImplementations()
   
     #ifdef ARCH_CPU_X86_FAMILY
     {
+        std::string forceSigmaAlgo = GetArg("-sigmaalgo", "");
+        #define SELECT_ALGO(x) ((__builtin_cpu_supports(x) && forceSigmaAlgo.empty()) || (forceSigmaAlgo==x))
         #if defined(COMPILER_HAS_AES)
-        if (__builtin_cpu_supports("aes"))
+        if (__builtin_cpu_supports("aes") && (forceSigmaAlgo.empty() || boost::algorithm::ends_with(forceSigmaAlgo, "aes")))
         {
+            forceSigmaAlgo.erase(forceSigmaAlgo.length()-3);
             #if defined(COMPILER_HAS_AVX512F)
-            if (__builtin_cpu_supports("avx512f"))
+            if (SELECT_ALGO("avx512f"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(avx512f_aes, 1);
                 FORCE_SELECT_OPTIMISED_ECHO   (avx512f_aes, 1);
@@ -336,7 +341,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_AVX2)
-            if (__builtin_cpu_supports("avx2"))
+            if (SELECT_ALGO("avx2"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(avx2_aes, 2);
                 FORCE_SELECT_OPTIMISED_ECHO   (avx2_aes, 2);
@@ -345,7 +350,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_AVX)
-            if (__builtin_cpu_supports("avx"))
+            if (SELECT_ALGO("avx"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(avx_aes, 3);
                 FORCE_SELECT_OPTIMISED_ECHO   (avx_aes, 3);
@@ -354,7 +359,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_SSE4)
-            if (__builtin_cpu_supports("sse4.2"))
+            if (SELECT_ALGO("sse4.2"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse4_aes, 4);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse4_aes, 4);
@@ -363,7 +368,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("ssse3"))
+            if (SELECT_ALGO("ssse3"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse3_aes, 5);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse3_aes, 5);
@@ -374,7 +379,7 @@ void selectOptimisedImplementations()
             #if defined(COMPILER_HAS_SSE2)
             #if 0
             //fixme: (SIGMA)
-            if (__builtin_cpu_supports("sse2"))
+            if (SELECT_ALGO("sse2"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse2_aes, 6);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse2_aes, 6);
@@ -388,7 +393,7 @@ void selectOptimisedImplementations()
         #endif
         {
             #if defined(COMPILER_HAS_AVX512F)
-            if (__builtin_cpu_supports("avx512f"))
+            if (SELECT_ALGO("avx512f"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(avx512f, 7);
                 FORCE_SELECT_OPTIMISED_ECHO   (avx512f, 7);
@@ -397,7 +402,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_AVX2)
-            if (__builtin_cpu_supports("avx2"))
+            if (SELECT_ALGO("avx2"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(avx2, 8);
                 FORCE_SELECT_OPTIMISED_ECHO   (avx2, 8);
@@ -406,7 +411,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_AVX)
-            if (__builtin_cpu_supports("avx"))
+            if (SELECT_ALGO("avx"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(avx, 9);
                 FORCE_SELECT_OPTIMISED_ECHO   (avx, 9);
@@ -415,7 +420,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_SSE4)
-            if (__builtin_cpu_supports("sse4.2"))
+            if (SELECT_ALGO("sse4.2"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse4, 10);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse4, 10);
@@ -424,7 +429,7 @@ void selectOptimisedImplementations()
             }
             #endif
             #if defined(COMPILER_HAS_SSE3)
-            if (__builtin_cpu_supports("ssse3"))
+            if (SELECT_ALGO("ssse3"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse3, 11);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse3, 11);
@@ -435,7 +440,7 @@ void selectOptimisedImplementations()
             #if defined(COMPILER_HAS_SSE2)
             #if 0
             //fixme: (SIGMA)
-            else if (__builtin_cpu_supports("sse2"))
+            else if (SELECT_ALGO("sse2"))
             {
                 FORCE_SELECT_OPTIMISED_SHAVITE(sse2, 12);
                 FORCE_SELECT_OPTIMISED_ECHO   (sse2, 12);
