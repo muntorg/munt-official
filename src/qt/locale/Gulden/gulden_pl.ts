@@ -2828,8 +2828,16 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Otwórz</translation>
     </message>
     <message>
+        <source>Open the %1 data directory.</source>
+        <translation>Otwórz katalog danych %1.</translation>
+    </message>
+    <message>
         <source>Current PoW² phase</source>
         <translation>Obecny okres PoW²</translation>
+    </message>
+    <message>
+        <source>Log file</source>
+        <translation>Plik dziennika</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -3674,6 +3682,10 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
 </context>
 <context>
     <name>MiningAccountDialog</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
     <message>
         <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
         <translation>Zwiększenie liczby wątków zwiększy prędkość kopania, ale także zwiększy zużycie energii i spowolni inne uruchomione aplikacje.</translation>
