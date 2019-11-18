@@ -940,7 +940,7 @@ public:
     void EraseWalletSeedsAndAccounts();
 
 protected:
-    void PruningConflictingBlock(const uint256& blockHash) override;
+    void PruningConflictingBlock(const uint256& orphanBlockHash) override;
 
 private:
     int nTransactionScanProgressPercent;
