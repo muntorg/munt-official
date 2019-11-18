@@ -1247,12 +1247,11 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
 {
     LOCK2(cs_main, cs_wallet);
 
-    auto& chain = IsPartialSyncActive() ? partialChain : chainActive;
     int conflictconfirms = 0;
     if (mapBlockIndex.count(hashBlock)) {
         CBlockIndex* pindex = mapBlockIndex[hashBlock];
-        if (chain.Contains(pindex)) {
-            conflictconfirms = -(chain.Height() - pindex->nHeight + 1);
+        if (partialChain.Contains(pindex) || chainActive.Contains(pindex)) {
+            conflictconfirms = -(std::max(partialChain.Height(), chainActive.Height()) - pindex->nHeight + 1);
         }
     }
     // If number of conflict confirms cannot be determined, this means
@@ -1278,8 +1277,8 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
         assert(it != mapWallet.end());
         CWalletTx& wtx = it->second;
         int currentconfirm = wtx.GetDepthInMainChain();
-        if (conflictconfirms < currentconfirm) {
-            // Block is 'more conflicted' than current confirm; update.
+        if (conflictconfirms < currentconfirm || (conflictconfirms == currentconfirm && wtx.nIndex >= 0)) {
+            // Block is 'more conflicted' than current confirm; update. Or tx not marked as conflicted yet.
             // Mark transaction as conflicted with this block.
             wtx.nIndex = -1;
             wtx.hashBlock = hashBlock;
@@ -1379,21 +1378,23 @@ void CWallet::BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) {
     }
 }
 
-void CWallet::PruningConflictingBlock(const uint256& blockHash)
+void CWallet::PruningConflictingBlock(const uint256& orphanBlockHash)
 {
     LOCK2(cs_main, cs_wallet);
 
-    if (!mapBlockIndex.count(blockHash))
+    if (!mapBlockIndex.count(orphanBlockHash))
         return;
 
-    CBlockIndex* pIndex = mapBlockIndex[blockHash];
+    CBlockIndex* pIndex = mapBlockIndex[orphanBlockHash];
 
     if (pIndex->nHeight < partialChain.HeightOffset() || pIndex->nHeight >partialChain.Height())
         return;
 
     CBlock block;
-    if (!ReadBlockFromDisk(block, pIndex, Params()))
+    if (!ReadBlockFromDisk(block, pIndex, Params())) {
+        LogPrintf("%s: Error reading block height=%d hash=%s\n", __func__, pIndex->nHeight, pIndex->GetBlockHashPoW2().ToString().c_str());
         return;
+    }
 
     for (const CTransactionRef& ptx : block.vtx) {
         MarkConflicted(partialChain[pIndex->nHeight]->GetBlockHashPoW2(), ptx->GetHash());

@@ -60,7 +60,7 @@ protected:
     virtual void GetScriptForMining([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
     virtual void GetScriptForWitnessing([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
     virtual void NewPoWValidBlock([[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::shared_ptr<const CBlock>& block) {};
-    virtual void PruningConflictingBlock([[maybe_unused]] const uint256& blockHash) {}
+    virtual void PruningConflictingBlock([[maybe_unused]] const uint256& orphanBlockHash) {}
     friend void ::RegisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
     friend void ::UnregisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
     friend void ::UnregisterAllValidationInterfaces();
