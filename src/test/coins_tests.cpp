@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
                 stack.back()->AddCoin(COutPoint(txid, 0), std::move(newcoin), !coin.IsSpent() || InsecureRand32() & 1);
             } else {
                 removed_an_entry = true;
-                coin.Clear();
+                coin.Spend();
                 stack.back()->SpendCoin(COutPoint(txid, 0));
             }
         }
