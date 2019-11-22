@@ -522,7 +522,7 @@ CService::CService(const boost::asio::ip::tcp::endpoint& endpoint) : CNetAddr(en
 bool CService::SetSockAddr(const boost::asio::ip::tcp::endpoint& endpoint)
 {
     auto protocol = endpoint.protocol();
-    if (protocol == boost::asio::ip::tcp::v4() || protocol == boost::asio::ip::tcp::v4()) {
+    if (protocol == boost::asio::ip::tcp::v4() || protocol == boost::asio::ip::tcp::v6()) {
         *this = CService(endpoint);
     }
     return true;
