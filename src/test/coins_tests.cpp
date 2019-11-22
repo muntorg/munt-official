@@ -143,6 +143,8 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
     stack.push_back(new CCoinsViewCacheTest(&base)); // Start with one cache.
 
     // Use a limited set of random transaction ids, so we do test overwriting entries.
+    // Each tx id has to be associated with a unique block height and transaction index combination because of the index based utxo.
+    // The transaction index used will simply be the index in the array of txids constructed below, and they will share the same block height.
     std::vector<uint256> txids;
     txids.resize(NUM_SIMULATION_ITERATIONS / 8);
     for (unsigned int i = 0; i < txids.size(); i++) {
@@ -152,7 +154,8 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
     for (unsigned int i = 0; i < NUM_SIMULATION_ITERATIONS; i++) {
         // Do a random modification.
         {
-            uint256 txid = txids[InsecureRandRange(txids.size())]; // txid we're going to modify in this iteration.
+            uint32_t nTxIndex = InsecureRandRange(txids.size());
+            uint256 txid = txids[nTxIndex]; // txid we're going to modify in this iteration.
             Coin& coin = result[COutPoint(txid, 0)];
             const Coin& entry = (InsecureRandRange(500) == 0) ? AccessByTxid(*stack.back(), txid) : stack.back()->AccessCoin(COutPoint(txid, 0));
             BOOST_CHECK(coin == entry);
@@ -160,7 +163,7 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
             if (InsecureRandRange(5) == 0 || coin.IsSpent()) {
                 Coin newcoin;
                 newcoin.out.nValue = InsecureRand32();
-                newcoin.nHeight = 1;
+                newcoin.nTxIndex = nTxIndex;
                 if (InsecureRandRange(16) == 0 && coin.IsSpent()) {
                     newcoin.out.output.scriptPubKey.assign(1 + InsecureRandBits(6), OP_RETURN);
                     BOOST_CHECK(newcoin.out.output.scriptPubKey.IsUnspendable());
