@@ -112,6 +112,10 @@ public:
         return out.IsNull();
     }
 
+    void Spend() {
+        out.SetNull();
+    }
+
     size_t DynamicMemoryUsage() const {
         return memusage::DynamicUsage(out.output.scriptPubKey);
     }

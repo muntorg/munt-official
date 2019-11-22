@@ -216,12 +216,12 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool n
     if (moveout) {
         *moveout = std::move(coinIter->second.coin);
     }
-    cacheCoinRefs.erase(coinRefIter);
     if (!nodeletefresh && coinIter->second.flags & CCoinsCacheEntry::FRESH) {
+        cacheCoinRefs.erase(coinRefIter);
         cacheCoins.erase(coinIter);
     } else {
         coinIter->second.flags |= CCoinsCacheEntry::DIRTY;
-        coinIter->second.coin.Clear();
+        coinIter->second.coin.Spend();
     }
 }
 
