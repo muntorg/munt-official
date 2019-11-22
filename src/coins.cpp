@@ -46,6 +46,7 @@ size_t CCoinsViewCache::DynamicMemoryUsage() const
     return memusage::DynamicUsage(cacheCoins) + cachedCoinsUsage;
 }
 
+#ifdef DEBUG
 void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const
 {
     // cacheCoins and cacheCoinRefs keep a 1:1 correspondence, so any difference in size is a bug for sure
@@ -80,6 +81,7 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
         assert(false); // case not handled yet
     }
 }
+#endif
 
 CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn) const
 {
