@@ -1919,11 +1919,13 @@ bool CConnman::BindListenPort(const CService &addrBind, std::string& strError, b
         acceptor.open(endpoint.protocol());
         acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
         // some systems don't have IPV6_V6ONLY but are always v6only; others do have the option
-        // and enable it by default or not. Try to enable it, if possible.
+        // and enable it by default or not.
+        // If an explicit ipv6 listen address is specified enable it (if available).
+        // If no explicit address is specified, ie. any, do not set it this way the scoket
+        // will accept both ipv4 and ipv6 connection on dual stack machines.
 #ifdef IPV6_V6ONLY
-        if (endpoint.protocol()==boost::asio::ip::tcp::v6()) {
+        if (endpoint.address().is_v6() && endpoint.address().to_v6() != boost::asio::ip::address_v6::any())
             acceptor.set_option(boost::asio::ip::v6_only(true));
-        }
 #endif
         acceptor.set_option(boost::asio::ip::tcp::no_delay(true));
         acceptor.bind(endpoint);
