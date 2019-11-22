@@ -359,6 +359,13 @@ public:
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn=nullptr) const;
 
+#ifdef DEBUG
+    void validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const;
+#else
+    // compiler can easily optimise it out in release
+    void validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const {}
+#endif
+
     /**
      * By making the copy constructor private, we prevent accidentally using it when one intends to create a cache on top of a base cache.
      */

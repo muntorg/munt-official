@@ -46,8 +46,44 @@ size_t CCoinsViewCache::DynamicMemoryUsage() const
     return memusage::DynamicUsage(cacheCoins) + cachedCoinsUsage;
 }
 
+void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const
+{
+    // cacheCoins and cacheCoinRefs keep a 1:1 correspondence, so any difference in size is a bug for sure
+    assert(cacheCoins.size() == cacheCoinRefs.size());
+
+    if (outpoint.isHash)
+    {
+        CCoinsRefMap::iterator refIt = cacheCoinRefs.find(COutPoint(block, txIndex, voutIndex));
+        if (refIt != cacheCoinRefs.end()) {
+            // entry present in cacheCoinRefs
+            const COutPoint& canonicalOutPoint = refIt->second;
+            CCoinsMap::iterator it = cacheCoins.find(canonicalOutPoint);
+            assert(it != cacheCoins.end());  // verify it is present in cacheCoins as well
+            const Coin& coin = it->second.coin;
+            // and that its properties are matching
+            assert(canonicalOutPoint.isHash);
+            assert(canonicalOutPoint.getHash() == outpoint.getHash());
+            assert(canonicalOutPoint.n == voutIndex);
+            assert(coin.nHeight == block);
+            assert(coin.nTxIndex == txIndex);
+        }
+        else
+        {
+            // no entry in cacheCoinRefs, so it should be either absent in cacheCoins or spent
+            CCoinsMap::iterator it = cacheCoins.find(outpoint);
+            if (it!=cacheCoins.end())
+                assert(it->second.coin.IsSpent());
+        }
+    }
+    else
+    {
+        assert(false); // case not handled yet
+    }
+}
+
 CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn) const
 {
+    // lookup outpoint in either map and return iterators to both maps for it
     if (outpoint.isHash)
     {
         CCoinsMap::iterator coinIter = cacheCoins.find(outpoint);
@@ -73,10 +109,23 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
             return coinIter;
         }
     }
+
+    // if outpoint not found, lookup in base view
     Coin tmp;
     COutPoint insertOutpoint(outpoint);
     if (!base->GetCoin(outpoint, tmp, &insertOutpoint))
         return cacheCoins.end();
+
+    // verify coin and outpoint consistency
+    if (!insertOutpoint.isHash)
+    {
+        assert(tmp.nHeight == insertOutpoint.getTransactionBlockNumber());
+        assert(tmp.nTxIndex == insertOutpoint.getTransactionIndex());
+    }
+
+    // have it in base view, auto-create copy in the cache
+
+    validateInsert(outpoint, tmp.nHeight, tmp.nTxIndex, outpoint.n);
 
     auto refRetIter = (cacheCoinRefs.emplace(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n), insertOutpoint)).first;
     auto retIter = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(insertOutpoint), std::forward_as_tuple(std::move(tmp))).first;
@@ -116,6 +165,8 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
 
     assert(!coin.IsSpent());
     if (coin.out.IsUnspendable()) return;
+
+    validateInsert(outpoint, coin.nHeight, coin.nTxIndex, outpoint.n);
 
     CTxOut out = coin.out;
 
