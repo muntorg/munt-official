@@ -317,7 +317,7 @@ boost::asio::ip::address_v6 CNetAddr::GetIn6Addr() const
 {
     boost::asio::ip::address_v6::bytes_type bytes;
     memcpy(bytes.data(), (const unsigned char*)ip, 16);
-    return boost::asio::ip::address_v6(bytes);
+    return boost::asio::ip::address_v6(bytes, scopeId);
 }
 
 bool CNetAddr::GetInAddr(struct in_addr* pipv4Addr) const
