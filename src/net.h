@@ -375,7 +375,7 @@ private:
     unsigned int nSendBufferMaxSize;
     unsigned int nReceiveFloodSize;
 
-    std::vector<ListenSocket> vhListenSocket;
+    std::list<ListenSocket> vhListenSocket;
     std::atomic<bool> fNetworkActive;
     banmap_t setBanned;
     CCriticalSection cs_setBanned;
