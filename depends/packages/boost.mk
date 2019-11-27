@@ -1,8 +1,8 @@
 package=boost
-$(package)_version=1_68_0
-$(package)_download_path=https://dl.bintray.com/boostorg/release/1.68.0/source/
+$(package)_version=1_71_0
+$(package)_download_path=https://dl.bintray.com/boostorg/release/1.71.0/source/
 $(package)_file_name=$(package)_$($(package)_version).tar.bz2
-$(package)_sha256_hash=7f6130bc3cf65f56a618888ce9d5ea704fa10b462be126ad053e80e553d6d8b7
+$(package)_sha256_hash=d73a8da01e8bf8c7eda40b4c84915071a8c8a0df4a6734537ddde4a8580524ee
 
 define $(package)_set_vars
 $(package)_config_opts_release=variant=release
