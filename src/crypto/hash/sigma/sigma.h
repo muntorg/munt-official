@@ -9,15 +9,6 @@
 #include <stdint.h>
 #include <primitives/block.h>
 
-// fixme: (BOOST) - Workaround for boost on macOS (when using newer clang) build issue (not detecting string_view properly)
-// Remove this when addressed by Boost's ASIO config.
-// https://www.boost.org/doc/libs/1_67_0/boost/asio/detail/config.hpp
-// Standard library support for std::string_view.
-#define BOOST_ASIO_HAS_STD_STRING_VIEW 1
-#define BOOST_ASIO_DISABLE_STD_STRING_VIEW 1
-#include <boost/asio.hpp>
-#include <boost/asio/thread_pool.hpp>
-
 #include <crypto/hash/sigma/argon_echo/argon_echo.h>
 #include <crypto/hash/sigma/echo256/sphlib/sph_echo.h>
 #include <crypto/hash/sigma/echo256/echo256_opt.h>
@@ -136,7 +127,6 @@ public:
     sigma_context(const sigma_context&) = delete;
     sigma_context& operator=(const sigma_context&) = delete;
 public:
-    boost::asio::thread_pool* workerThreads;
     uint64_t numThreads=0;
     uint64_t allocatedArenaSizeKb=0;
     uint8_t* arena=nullptr;

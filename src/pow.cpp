@@ -18,6 +18,7 @@
 #include "uint256.h"
 #include "crypto/hash/sigma/sigma.h"
 #include "random.h"
+#include <thread>
 
 #include <validation/validation.h> //For VALIDATION_MOBILE
 

@@ -929,6 +929,10 @@ void WitnessDialog::updateAccountIndicators()
 
     if(!filter || !model)
         return;
+    
+    // Don't do this during initial block sync i - it can be very slow on a wallet with lots of transactions.
+    if (IsInitialBlockDownload())
+        return;
 
     //Don't update for every single block change if we are on testnet and have them streaming in at a super fast speed.
     static uint64_t nUpdateTimerStart = 0;

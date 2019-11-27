@@ -12,6 +12,16 @@ RPC - Add 'fail_count' and 'action_nonce' data to 'getwitnessinfo' command.
 
 
 
+2.1.0.20
+
+UI - Various minor UI fixes.
+CORE - Minor enhancements to SIGMA mining performance.
+CORE - Fix some periodic crashes and minor stability issues with SIGMA mining.
+CMDFLAG - New config flag "sigmaalgo" which can be used to bypass automatic algorithm detection. (Valid options currently are: ref, avx512f, avx2, avx, sse4.2, ssse3, avx512faes, avx2aes, avxaes, sse4.2aes, ssse3aes)
+
+
+
+
 2.1.0.19
 
 UI - Introduce an 'open datadir' button to debug info window
