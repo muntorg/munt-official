@@ -829,9 +829,11 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
             {
                 //NB! We -must- check here that we have the spending key (2 items on stack) as when we later check the built up RearrangeType bundles we have no way to check it then.
                 //So this check is very important, must not be skipped and must come before the bundle creation for these bundle types.
+                //Exception for phase 3 inputs which use the ScriptLegacyOutput, not allowing this can get your witness "stuck", ie. not being able to empty it
                 if (!HasSpendKey(input, nSpendHeight))
                 {
-                    return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-missing-spend-key");
+                    if (prevOut.GetType() != CTxOutType::ScriptLegacyOutput) // accept phase 3 inputs
+                        return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-missing-spend-key");
                 }
 
                 bool matchedExistingBundle = false;
