@@ -155,6 +155,7 @@ public:
         checkpointData = (CCheckpointData){
         {
         {      0, { uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92") } },
+        {      0, { uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92") } },
         {   5000, { uint256S("0x07ba1142fe1c0f4514b8ef029a687e45d08f4f930e14c753b8b8131df6d33a5b") } },
         {  10000, { uint256S("0x25a619632ea07771156d61791245e7b3497ae987ef6be5348c41380291848974") } },
         {  15000, { uint256S("0x944e0468c38392c5f32818f8f50c10aa6deb5986d85a72e9aaddfe94acc74a5c") } },
@@ -361,20 +362,24 @@ public:
         { 1020000, { uint256S("0x2a923cbf76079c29f2c181842531f903bb59bbd666dab4e048daa46d7548cdae") } },
         { 1025000, { uint256S("0x46e4629e2a9d47c0cacdbd1ebfe1b337dd626263b8d18a297d707891927a21bb") } },
         { 1030000, { uint256S("0x2f0bb472a7b73e1c7d68e30b19bd1f7588f29abd7355c0ff6be8f7c7a139ba7c") } },
-        { 1030075, { uint256S("0xb848ab25ad4b590e944c3c5fd0e913ef4cf2fb510f47e798bc46b16ff34e695d") } },
-        { 1031227, { uint256S("0xb1b7ec21e183d64a31637144b3750dbb95ff86f74a5278b5db66a966b4edc889") } },
+        { 1035000, { uint256S("0xf61c183cb5a0f95cd088c9c55234b577954ae1456a7acd2aea6433daca3abd6b") } },
+        { 1040000, { uint256S("0xdd73c2ea83c105a92538f5b6048fb7aa92b4c6c81124e4902aa958488d685d6f") } },
+        { 1045000, { uint256S("0x6b5dfd02c66cea52b8d6f07adac8d6ec87149680975159204e806674ca3b9671") } },
+        { 1050000, { uint256S("0xc51e7082a3281c8e8cfd8276207790067570df6d13103a0fd19bafef1517490f") } },
+        { 1052091, { uint256S("0xaa963f1593ecb43fd23095afe9537abeb5e316863a8d383dcf52588aebe90b14") } },
+        { 1053243, { uint256S("0xe8603c67fc17825ca0567d5f2a7b81377f69e13b8fdbf29702ac62d47c47231e") } },
         }
         };
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0xb1b7ec21e183d64a31637144b3750dbb95ff86f74a5278b5db66a966b4edc889"); //1031227
+        consensus.defaultAssumeValid = uint256S("0xe8603c67fc17825ca0567d5f2a7b81377f69e13b8fdbf29702ac62d47c47231e"); //1053243
         
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000fad1c7f4818beec6");
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805bee182e23e8e");
         
         chainTxData = ChainTxData{
-            1571695813, // * UNIX timestamp of last checkpoint block
-            2638260,    // * total number of transactions between genesis and last checkpoint
+            1574892074, // * UNIX timestamp of last checkpoint block
+            2687213,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
