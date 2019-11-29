@@ -69,6 +69,7 @@ public:
         paymentType = copy.paymentType;
         forexPaymentType = copy.forexPaymentType;
         forexAddress = copy.forexAddress;
+        forexDescription = copy.forexDescription;
         forexAmount = copy.forexAmount;
         forexFailCode = copy.forexFailCode;
         expiry = copy.expiry;
@@ -104,6 +105,7 @@ public:
     PaymentType paymentType; //memory only
     PaymentType forexPaymentType; //memory only
     QString forexAddress; //memory only
+    QString forexDescription; //memory only
     CAmount forexAmount; //memory only
     std::string forexFailCode; //memory only
     int64_t expiry; //memory only

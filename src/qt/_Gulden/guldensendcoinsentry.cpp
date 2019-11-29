@@ -80,6 +80,9 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     ui->pow2LockFundsSlider->setMaximum(365*3);
     ui->pow2LockFundsSlider->setValue(30);
     ui->pow2LockFundsSlider->setCursor(Qt::PointingHandCursor);
+    
+    
+    ui->receivingAddressAccountName->setVisible(false);
 
 
     connect(ui->searchBox1, SIGNAL(textEdited(QString)), this, SLOT(searchChangedAddressBook(QString)));
@@ -88,6 +91,7 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     connect(ui->sendCoinsRecipientBook, SIGNAL(currentChanged(int)), this, SIGNAL(sendTabChanged()));
     connect(ui->sendCoinsRecipientBook, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     connect(ui->receivingAddress, SIGNAL(textEdited(QString)), this, SLOT(addressChanged()));
+    connect(ui->receivingAddressAccountName, SIGNAL(textEdited(QString)), this, SLOT(receivingAccountNameChanged()));
 
     connect(ui->pow2LockFundsSlider, SIGNAL(valueChanged(int)), this, SLOT(witnessSliderValueChanged(int)));
 
@@ -222,18 +226,29 @@ void GuldenSendCoinsEntry::addressChanged()
         if (val.paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
         {
             // ui->payAmount->setDisplayCurrency(GuldenAmountField::Currency::Bitcoin);
+            // ui->receivingAddressAccountName->setVisible(false);
         }
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
             ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Euro);
+            ui->receivingAddressAccountName->setVisible(true);
+            ui->receivingAddressAccountName->setFocus();
         }
         else
         {
             ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Gulden);
+            ui->receivingAddressAccountName->setVisible(false);
         }
     }
 
     payInfoUpdateRequired();
+}
+
+void GuldenSendCoinsEntry::receivingAccountNameChanged()
+{
+    // Clear the invalid flag if we enter some text now.
+    if (!ui->receivingAddressAccountName->text().isEmpty())
+        setValid(ui->receivingAddressAccountName, true);
 }
 
 void GuldenSendCoinsEntry::tabChanged()
@@ -331,6 +346,7 @@ bool GuldenSendCoinsEntry::validate()
         return retval;
 
     ui->payAmount->setValid(true);
+    setValid(ui->receivingAddressAccountName, true);
     clearPayInfo();
 
     if (isPoW2WitnessCreation())
@@ -381,6 +397,13 @@ bool GuldenSendCoinsEntry::validate()
             {
                 ui->payAmount->setValid(false);
                 setPayInfo(tr("Amount below minimum for IBAN payment."), true);
+                return false;
+            }
+            
+            if (ui->receivingAddressAccountName->text().isEmpty())
+            {
+                setValid(ui->receivingAddressAccountName, false);
+                setPayInfo(tr("A recipient name is required for IBAN payments."), true);
                 return false;
             }
         }
@@ -593,9 +616,12 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
     // Select payment type
     recipient.paymentType = getPaymentType(recipient.address);
 
-    // For IBAN transactions adjust the final amount to Euro
+    // For IBAN transactions adjust the final amount to Euro and set description
     if (recipient.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
+    {
         recipient.amount = ui->payAmount->amount(GuldenAmountField::Currency::Euro);
+        recipient.forexDescription = ui->receivingAddressAccountName->text();
+    }
 
     return recipient;
 }

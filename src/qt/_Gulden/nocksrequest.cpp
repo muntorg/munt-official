@@ -54,7 +54,7 @@ NocksRequest::~NocksRequest()
     delete netManager;
 }
 
-void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type, QString from, QString to, QString amount)
+void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type, QString from, QString to, QString amount, QString description)
 {
     assert(networkReply == nullptr);
 
@@ -76,16 +76,6 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
             originalAddress = m_recipient->address.toStdString();
         }
 
-        //fixme: (Post-2.1) (SEPA)
-        QString httpExtraParams = "";
-        /*
-        if (forexExtraName != null && !forexExtraName.isEmpty())
-            httpExtraParams = httpExtraParams + String.format(", \"name\": \"%s\"", forexExtraName);
-        if (forexExtraRemmitance1 != null && !forexExtraRemmitance1.isEmpty())
-            httpExtraParams = httpExtraParams + String.format(", \"text\": \"%s\"", forexExtraRemmitance1);
-        if (forexExtraRemmitance2 != null && !forexExtraRemmitance2.isEmpty())
-            httpExtraParams = httpExtraParams + String.format(", \"reference\": \"%s\"", forexExtraRemmitance2);*/
-
         QString forexCurrencyType;
         if (recipient->paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
             forexCurrencyType = "BTC";
@@ -98,7 +88,18 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
             m_recipient->forexPaymentType = m_recipient->paymentType;
             m_recipient->forexAmount = m_recipient->amount;
             m_recipient->paymentType = SendCoinsRecipient::PaymentType::NormalPayment;
+            description = m_recipient->forexDescription;
         }
+               
+        //fixme: (Post-2.1) (SEPA)
+        QString httpExtraParams = "";
+        /*
+        if (forexExtraName != null && !forexExtraName.isEmpty())
+            httpExtraParams = httpExtraParams + String.format(", \"name\": \"%s\"", forexExtraName);*/
+        if (!description.isEmpty())
+            httpExtraParams = httpExtraParams + ", \"text\": \"" + description + "\"";
+        /*if (forexExtraRemmitance2 != null && !forexExtraRemmitance2.isEmpty())
+            httpExtraParams = httpExtraParams + String.format(", \"reference\": \"%s\"", forexExtraRemmitance2);*/
 
         QString forexAmount = GuldenUnits::format(GuldenUnits::NLG, recipient->amount, false, GuldenUnits::separatorNever);
 
