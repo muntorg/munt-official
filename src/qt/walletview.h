@@ -17,6 +17,7 @@
 #include <QStackedWidget>
 
 class GUI;
+class CAccount;
 class ClientModel;
 class OverviewPage;
 class QStyle;
@@ -32,6 +33,7 @@ class AddressBookPage;
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
+class QCheckBox;
 class QProgressDialog;
 QT_END_NAMESPACE
 
@@ -77,6 +79,7 @@ private:
     MiningAccountDialog* miningDialogPage = nullptr;
     AddressBookPage* usedSendingAddressesPage = nullptr;
     AddressBookPage* usedReceivingAddressesPage = nullptr;
+    QCheckBox* orphanCheckbox = nullptr;
 
     TransactionView* transactionView = nullptr;
 
@@ -87,6 +90,7 @@ private:
     friend class GUI;
 
 public Q_SLOTS:
+    void activeAccountChanged(CAccount* account);
     /** Switch to overview (home) page */
     void gotoOverviewPage();
     /** Switch to history (transactions) page */

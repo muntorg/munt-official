@@ -59,6 +59,9 @@ public:
 
     /** Set whether to show conflicted transactions. */
     void setShowInactive(bool showInactive);
+    
+    /** Set whether to show orphaned transactions. */
+    void setShowOrphaned(bool showOrphaned);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
@@ -74,6 +77,7 @@ private:
     CAmount minAmount;
     int limitRows;
     bool showInactive;
+    bool showOrphaned;
     CAccount* account;
 };
 

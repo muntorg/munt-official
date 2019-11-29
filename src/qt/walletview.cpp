@@ -22,6 +22,7 @@
 #include "qt/_Gulden/receivecoinsdialog.h"
 #include "qt/_Gulden/witnessdialog.h"
 #include "qt/_Gulden/miningaccountdialog.h"
+#include "qt/_Gulden/GuldenGUI.h"
 #include "sendcoinsdialog.h"
 #include "transactiontablemodel.h"
 #include "transactionview.h"
@@ -33,6 +34,7 @@
 
 #include <QAction>
 #include <QActionGroup>
+#include <QCheckBox>
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include <QProgressDialog>
@@ -58,26 +60,40 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
 
     transactionsPage = new QWidget(this);
 
-    QVBoxLayout *vbox = new QVBoxLayout();
-    QHBoxLayout *hbox_buttons = new QHBoxLayout();
+    QVBoxLayout* vbox = new QVBoxLayout(this);
     transactionView = new TransactionView(this);
     transactionsPage->setObjectName("transactionView");
     transactionView->setObjectName("transactionViewTable");
     vbox->addWidget(transactionView,6);
-    QPushButton *exportButton = new QPushButton(tr("&Export"), this);
-    exportButton->setVisible(false);
-    /*exportButton->setToolTip(tr("Export the data in the current tab to a file"));
-    if (platformStyle->getImagesOnButtons()) {
-        exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
-    }*/
+     
+    QFrame* horizontalButtonFrame = new QFrame(this);
+    horizontalButtonFrame->setContentsMargins(0, 0, 0, 0);
+    horizontalButtonFrame->setObjectName("transactionHistoryButtonFrame");
+    QHBoxLayout* hbox_buttons = new QHBoxLayout();
+    hbox_buttons->setSpacing(0);
+    hbox_buttons->setContentsMargins(0, 0, 0, 0);
+    
+    orphanCheckbox = new QCheckBox(tr("Show orphaned rewards"), this);
+    orphanCheckbox->setToolTip(tr("Control display of orphaned rewards.\n\nOrphaned rewards naturally occur from time to time.\nGenerally when someone else generates a block at the same time as yours."));
+    orphanCheckbox->setObjectName("transactionShowOrphansCheckbox");
+    orphanCheckbox->setCursor( Qt::PointingHandCursor );
+    orphanCheckbox->setContentsMargins(0, 0, 0, 0);
+    hbox_buttons->addWidget(orphanCheckbox);
+    
     hbox_buttons->addStretch();
+
+    QPushButton* exportButton = new QPushButton(tr("&Export"), this);
+    exportButton->setObjectName("transactionExportButton");
+    exportButton->setCursor( Qt::PointingHandCursor );
+    exportButton->setToolTip(tr("Export the current list of transactions to a file."));
     hbox_buttons->addWidget(exportButton);
-    vbox->addLayout(hbox_buttons);
-    vbox->addStretch(1);
+    horizontalButtonFrame->setLayout(hbox_buttons);
+    vbox->addWidget(horizontalButtonFrame);
+    
 
     transactionsPage->setLayout(vbox);
-    transactionsPage->setContentsMargins( 0, 0, 0, 0);
-    vbox->setContentsMargins( 0, 0, 0, 0);
+    transactionsPage->setContentsMargins(0, 0, 0, 0);
+    vbox->setContentsMargins(0, 0, 0, 0);
     vbox->setSpacing(0);
 
 
@@ -117,9 +133,11 @@ WalletView::WalletView(const QStyle *_platformStyle, QWidget *parent)
     // Pass through messages from miningDialogPage
     connect(miningDialogPage, SIGNAL(message(QString,QString,unsigned int)), this, SIGNAL(message(QString,QString,unsigned int)));
     
-
     // Pass through messages from transactionView
     connect(transactionView, SIGNAL(message(QString,QString,unsigned int)), this, SIGNAL(message(QString,QString,unsigned int)));
+    
+    // Toggle orphan visibility in transaction view
+    connect(orphanCheckbox, SIGNAL(clicked(bool)), transactionView, SLOT(toggleShowOrphans(bool)));
 }
 
 WalletView::~WalletView()
@@ -171,6 +189,10 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
 
     if (_walletModel)
     {
+        // Handle active account changes.
+        connect(_walletModel, SIGNAL(activeAccountChanged(CAccount*)), this, SLOT(activeAccountChanged(CAccount*)));
+        activeAccountChanged(_walletModel->getActiveAccount());
+        
         // Receive and pass through messages from wallet model
         connect(_walletModel, SIGNAL(message(QString,QString,unsigned int)), this, SIGNAL(message(QString,QString,unsigned int)));
 
@@ -229,6 +251,18 @@ void WalletView::processNewTransaction(const QModelIndex& parent, int start, int
         }
 
         Q_EMIT incomingTransaction(date, walletModel->getOptionsModel()->getDisplayUnit(), amountReceived, amountSent, type, address, accountLabel, label);
+    }
+}
+
+void WalletView::activeAccountChanged(CAccount* account)
+{
+    if (!account || !(account->IsPoW2Witness() || account->IsMiningAccount()))
+    {
+        orphanCheckbox->setVisible(false);
+    }
+    else
+    {
+        orphanCheckbox->setVisible(true);
     }
 }
 
