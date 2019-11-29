@@ -1,3 +1,16 @@
+2.1.0.21
+
+UI - Performance improvement when syncing with a wallet that has a witness account and lots of transactions
+UI - Introduce a way to show/hide orphan transactions in account transaction list
+UI - Introduce a button for account transaction list export
+UI - Introduce a context menu item to remove all orphan transactions for an account
+CORE - Fix an issue with reporting of peer IPv6 addresses
+CORE - Fix an issue with dual IPv6/IPv4 binds
+CORE - Fix an issue when binding multiple listening sockets
+
+
+
+
 2.1.0.20
 
 UI - Various minor UI fixes.
