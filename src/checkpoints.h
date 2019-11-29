@@ -37,9 +37,6 @@ int LastCheckpointBeforeBlock(uint64_t blockHeight);
     Returns height of the checkpoint, or -1 iof there is none. */
 int LastCheckpointBeforeTime(uint64_t atTime);
 
-//! Height of last checkpoint in Params()
-unsigned int LastCheckPointHeight();
-
 } //namespace Checkpoints
 
 #endif // GULDEN_CHECKPOINTS_H

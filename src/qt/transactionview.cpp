@@ -531,7 +531,8 @@ void TransactionView::clearOrphanTransactions()
     {
         LogPrintf("TransactionView::clearOrphanTransactions - Purging [%d] transactions\n", transactionsToZap.size());
         
-        if (pactiveWallet->ZapSelectTx(transactionsToZap, transactionsZapped) != DB_LOAD_OK)
+        CWalletDB walletdb(*pactiveWallet->dbw);
+        if (pactiveWallet->ZapSelectTx(walletdb, transactionsToZap, transactionsZapped) != DB_LOAD_OK)
         {
             std::string strErrorMessage = "Failed to erase orphan transactions for account.\n";
             LogPrintf("%s", strErrorMessage.c_str());
