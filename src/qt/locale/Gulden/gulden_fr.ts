@@ -1683,6 +1683,24 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation>&amp;Exporter</translation>
     </message>
     <message>
+        <source>Show orphaned rewards</source>
+        <translation>Montrer les récompenses pour orphelins</translation>
+    </message>
+    <message>
+        <source>Control display of orphaned rewards.
+
+Orphaned rewards naturally occur from time to time.
+Generally when someone else generates a block at the same time as yours.</source>
+        <translation>Contrôle de l&apos;affichage des récompenses orphelines.
+
+Les récompenses orphelines se produisent naturellement de temps à autre.
+Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps que le vôtre.</translation>
+    </message>
+    <message>
+        <source>Export the current list of transactions to a file.</source>
+        <translation>Exporter la liste actuelle des transactions vers un fichier.</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>Sauvegarder le porte-monnaie</translation>
     </message>
@@ -1772,6 +1790,10 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
     <message>
         <source>Witness reward</source>
         <translation>Récompense de witness</translation>
+    </message>
+    <message>
+        <source>Clear orphan transactions</source>
+        <translation>Effacer les transactions orphelines</translation>
     </message>
     <message>
         <source>All dates</source>
@@ -2815,8 +2837,16 @@ Si vous avez récemment reçu des fonds, vous devrez attendre qu&apos;ils soient
         <translation>Ouvrir</translation>
     </message>
     <message>
+        <source>Open the %1 data directory.</source>
+        <translation>Ouvrez le répertoire de données %1.</translation>
+    </message>
+    <message>
         <source>Current PoW² phase</source>
         <translation>Phase PoW² actuelle</translation>
+    </message>
+    <message>
+        <source>Log file</source>
+        <translation>Fichier journal</translation>
     </message>
     <message>
         <source>&amp;Console</source>

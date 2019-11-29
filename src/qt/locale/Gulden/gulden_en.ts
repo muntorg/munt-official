@@ -1409,23 +1409,23 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+466"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+489"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="+255"/>
+        <location line="+258"/>
         <location line="+66"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+263"/>
+        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+270"/>
         <source>My accounts</source>
         <translation>My accounts</translation>
     </message>
     <message>
-        <location line="-160"/>
+        <location line="-167"/>
         <source>Receiving address</source>
         <translation>Receiving address</translation>
     </message>
@@ -1438,6 +1438,11 @@ The account will continue to be monitored and will be restored should it receive
         <location line="+7"/>
         <source>Enter label</source>
         <translation>Enter label</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Recipient account name</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1476,7 +1481,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-548"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-558"/>
         <source>Amount exceeds maximum for IBAN payment.</source>
         <translation>Amount exceeds maximum for IBAN payment.</translation>
     </message>
@@ -1484,6 +1489,11 @@ The account will continue to be monitored and will be restored should it receive
         <location line="+7"/>
         <source>Amount below minimum for IBAN payment.</source>
         <translation>Amount below minimum for IBAN payment.</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+80"/>
@@ -1496,7 +1506,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
     <message>
-        <location line="+256"/>
+        <location line="+259"/>
         <source>Are you sure you want to delete %1 from the address book?</source>
         <translation>Are you sure you want to delete %1 from the address book?</translation>
     </message>
@@ -2928,7 +2938,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <location line="-282"/>
         <source>Open the %1 data directory.</source>
-        <translation type="unfinished"></translation>
+        <translation>Open the %1 data directory.</translation>
     </message>
     <message>
         <location line="+77"/>
@@ -2938,7 +2948,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     <message>
         <location line="+189"/>
         <source>Log file</source>
-        <translation type="unfinished"></translation>
+        <translation>Log file</translation>
     </message>
     <message>
         <location line="+63"/>
@@ -4541,7 +4551,12 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionView</name>
     <message>
-        <location filename="../../transactionview.cpp" line="+376"/>
+        <location filename="../../transactionview.cpp" line="+150"/>
+        <source>Clear orphan transactions</source>
+        <translation>Clear orphan transactions</translation>
+    </message>
+    <message>
+        <location line="+236"/>
         <source>Comma separated file (*.csv)</source>
         <translation>Comma separated file (*.csv)</translation>
     </message>
@@ -4571,7 +4586,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Confirmed</translation>
     </message>
     <message>
-        <location line="-233"/>
+        <location line="-241"/>
         <source>Copy address</source>
         <translation>Copy address</translation>
     </message>
@@ -4591,17 +4606,17 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Copy transaction ID</translation>
     </message>
     <message>
-        <location line="-67"/>
+        <location line="-68"/>
         <source>Generated</source>
         <translation>Generated</translation>
     </message>
     <message>
-        <location line="+298"/>
+        <location line="+307"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location line="-304"/>
+        <location line="-313"/>
         <source>Received with</source>
         <translation>Received with</translation>
     </message>
@@ -4676,7 +4691,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Min amount</translation>
     </message>
     <message>
-        <location line="+35"/>
+        <location line="+36"/>
         <source>Abandon transaction</source>
         <translation>Abandon transaction</translation>
     </message>
@@ -4706,7 +4721,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Show transaction details</translation>
     </message>
     <message>
-        <location line="+209"/>
+        <location line="+217"/>
         <source>Export Transaction History</source>
         <translation>Export Transaction History</translation>
     </message>
@@ -4731,7 +4746,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>The transaction history was successfully saved to %1.</translation>
     </message>
     <message>
-        <location line="+207"/>
+        <location line="+258"/>
         <source>Range:</source>
         <translation>Range:</translation>
     </message>
@@ -4827,12 +4842,33 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletView</name>
     <message>
-        <location filename="../../walletview.cpp" line="+67"/>
+        <location filename="../../walletview.cpp" line="+76"/>
+        <source>Show orphaned rewards</source>
+        <translation>Show orphaned rewards</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Control display of orphaned rewards.
+
+Orphaned rewards naturally occur from time to time.
+Generally when someone else generates a block at the same time as yours.</source>
+        <translation>Control display of orphaned rewards.
+
+Orphaned rewards naturally occur from time to time.
+Generally when someone else generates a block at the same time as yours.</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Export the current list of transactions to a file.</source>
+        <translation>Export the current list of transactions to a file.</translation>
+    </message>
+    <message>
+        <location line="-3"/>
         <source>&amp;Export</source>
         <translation>&amp;Export</translation>
     </message>
     <message>
-        <location line="+237"/>
+        <location line="+253"/>
         <source>Backup Wallet</source>
         <translation>Backup Wallet</translation>
     </message>
