@@ -2,8 +2,9 @@
 
 UI - Performance improvement when syncing with a wallet that has a witness account and lots of transactions
 UI - Introduce a way to show/hide orphan transactions in account transaction list
-UI - Introduce a button for account transaction list export
-UI - Introduce a context menu item to remove all orphan transactions for an account
+UI - Transaction list export functionality, and button for account transaction list export
+UI - Add a context menu item to remove all orphan transactions for an account
+UI - New 'recipient' input field and related functionality for IBAN payments
 CORE - Fix an issue with reporting of peer IPv6 addresses
 CORE - Fix an issue with dual IPv6/IPv4 binds
 CORE - Fix an issue when binding multiple listening sockets
