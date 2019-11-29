@@ -1191,6 +1191,10 @@
         <translation>Finestra de depuració</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>Us de memoria</translation>
     </message>
@@ -1389,10 +1393,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
     </message>
     <message>
         <source>%1 GB</source>

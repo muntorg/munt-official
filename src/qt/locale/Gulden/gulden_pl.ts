@@ -98,6 +98,14 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Anuluj</translation>
     </message>
     <message>
+        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
+        <translation>&lt;li&gt; Rywalizuj z innymi górnikami, aby stworzyć Gulden z czasem bezczynności procesora &lt;/li&gt; &lt;li&gt; Pomóż zabezpieczyć sieć &lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Górnictwo</translation>
+    </message>
+    <message>
         <source>Account name</source>
         <translation>Nazwa konta</translation>
     </message>
@@ -326,6 +334,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
         <translation>Zapytaj o płatność (generuje kod QR oraz Gulden URI)</translation>
+    </message>
+    <message>
+        <source>Control and view information for mining account.</source>
+        <translation>Kontroluj i wyświetlaj informacje o koncie górniczym.</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -883,6 +895,10 @@ Witness waga: %5</translation>
     <message>
         <source>Ok</source>
         <translation>Ok</translation>
+    </message>
+    <message>
+        <source>New mining address</source>
+        <translation>Nowy adres górnika</translation>
     </message>
     <message>
         <source>Edit Address</source>
@@ -2728,6 +2744,10 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Okno debugowania</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>Zużycie pamięci</translation>
     </message>
@@ -2808,8 +2828,16 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Otwórz</translation>
     </message>
     <message>
+        <source>Open the %1 data directory.</source>
+        <translation>Otwórz katalog danych %1.</translation>
+    </message>
+    <message>
         <source>Current PoW² phase</source>
         <translation>Obecny okres PoW²</translation>
+    </message>
+    <message>
+        <source>Log file</source>
+        <translation>Plik dziennika</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -2974,10 +3002,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>%1 KB</source>
         <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
     </message>
     <message>
         <source>%1 GB</source>
@@ -3654,6 +3678,101 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Reset all settings changed in the GUI</source>
         <translation>Zresetuj wszystkie ustawienia zmienione w GUI</translation>
+    </message>
+</context>
+<context>
+    <name>MiningAccountDialog</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
+        <translation>Zwiększenie liczby wątków zwiększy prędkość kopania, ale także zwiększy zużycie energii i spowolni inne uruchomione aplikacje.</translation>
+    </message>
+    <message>
+        <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
+        <translation>Zmniejszenie zużycia pamięci nie jest zalecane. Spowolni wydobycie, zużywając tyle samo mocy procesora i energii, co wcześniej. Używaj tego tylko w ostateczności na komputerach o niskiej dostępności pamięci.</translation>
+    </message>
+    <message>
+        <source>%1 Mb</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>%1 threads</source>
+        <translation>% 1 wątków</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres skopiowany do schowka</translation>
+    </message>
+    <message>
+        <source>Mining address</source>
+        <translation>Adres kopalni</translation>
+    </message>
+    <message>
+        <source>My mining address</source>
+        <translation>Mój adres kopalni</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Skopiuj adres do schowka</translation>
+    </message>
+    <message>
+        <source>Edit mining address</source>
+        <translation>Edytuj adres kopalni</translation>
+    </message>
+    <message>
+        <source>Reset mining address</source>
+        <translation>Zresetuj adres kopalni</translation>
+    </message>
+    <message>
+        <source>My mining settings</source>
+        <translation>Moje ustawienia kopalni</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Zużycie pamięci</translation>
+    </message>
+    <message>
+        <source>Processor usage</source>
+        <translation>Wykorzystanie procesora</translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation>#</translation>
+    </message>
+    <message>
+        <source>Automatically mine at startup</source>
+        <translation>Automatycznie wydobywaj przy uruchomieniu</translation>
+    </message>
+    <message>
+        <source>Keep application open when mining</source>
+        <translation>Zachowaj otwartość aplikacji podczas wydobywania</translation>
+    </message>
+    <message>
+        <source>My mining statistics</source>
+        <translation>Moje statystyki wydobycia</translation>
+    </message>
+    <message>
+        <source>Best reported speed</source>
+        <translation>Najlepsza zgłoszona prędkość</translation>
+    </message>
+    <message>
+        <source>Moving average</source>
+        <translation>Średnia ruchoma</translation>
+    </message>
+    <message>
+        <source>Last reported speed</source>
+        <translation>Ostatnia zgłoszona prędkość</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Przestań wydobywać</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Rozpocznij wydobycie</translation>
     </message>
 </context>
 <context>

@@ -1451,6 +1451,10 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>Janela de depuração</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>Utilização de memória</translation>
     </message>
@@ -1649,10 +1653,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>%1 KB</source>
         <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
     </message>
     <message>
         <source>%1 GB</source>

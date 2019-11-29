@@ -27,8 +27,9 @@
 
 #include "ui_interface.h"
 
+#include "alert.h"
 
-
+#include <QCheckBox>
 #include <QComboBox>
 #include <QDateTimeEdit>
 #include <QDesktopServices>
@@ -146,6 +147,7 @@ TransactionView::TransactionView(QWidget *parent)
     transactionView->setObjectName("transactionView");
 
     // Actions
+    clearOrphansAction = new QAction(tr("Clear orphan transactions"), this);
     abandonAction = new QAction(tr("Abandon transaction"), this);
     bumpFeeAction = new QAction(tr("Increase transaction fee"), this);
     bumpFeeAction->setObjectName("bumpFeeAction");
@@ -178,6 +180,7 @@ TransactionView::TransactionView(QWidget *parent)
     contextMenu->addSeparator();
     contextMenu->addAction(bumpFeeAction);
     contextMenu->addAction(abandonAction);
+    contextMenu->addAction(clearOrphansAction);
     contextMenu->addAction(editLabelAction);
 
     mapperThirdPartyTxUrls = new QSignalMapper(this);
@@ -196,6 +199,7 @@ TransactionView::TransactionView(QWidget *parent)
 
     connect(bumpFeeAction, SIGNAL(triggered()), this, SLOT(bumpFee()));
     connect(abandonAction, SIGNAL(triggered()), this, SLOT(abandonTx()));
+    connect(clearOrphansAction, SIGNAL(triggered()), this, SLOT(clearOrphanTransactions()));
     connect(copyAddressAction, SIGNAL(triggered()), this, SLOT(copyAddress()));
     connect(copyLabelAction, SIGNAL(triggered()), this, SLOT(copyLabel()));
     connect(copyAmountAction, SIGNAL(triggered()), this, SLOT(copyAmount()));
@@ -335,8 +339,14 @@ void TransactionView::chooseType(int idx)
 {
     if(!transactionProxyModel)
         return;
-    transactionProxyModel->setTypeFilter(
-        typeWidget->itemData(idx).toInt());
+    transactionProxyModel->setTypeFilter(typeWidget->itemData(idx).toInt());
+}
+
+void TransactionView::toggleShowOrphans(bool showOrphans)
+{
+    if(!transactionProxyModel)
+        return;
+    transactionProxyModel->setShowOrphaned(showOrphans);
 }
 
 void TransactionView::chooseWatchonly(int idx)
@@ -421,6 +431,7 @@ void TransactionView::contextualMenu(const QPoint &point)
     //fixme: (FUT) relook at all right click items wholistically
     bool canEditLabel = true;
     int transactionType = selection.at(0).data(TransactionTableModel::TypeRole).toInt();
+    int transactionStatus = selection.at(0).data(TransactionTableModel::StatusRole).toInt();
     switch (transactionType)
     {
         case TransactionRecord::Other:
@@ -448,11 +459,21 @@ void TransactionView::contextualMenu(const QPoint &point)
     }
     editLabelAction->setEnabled(canEditLabel);
 
+    bool isOrphanTransaction = false;
+    if (transactionStatus == TransactionStatus::NotAccepted || transactionStatus == TransactionStatus::Abandoned)
+    {
+        if(transactionType == TransactionRecord::GeneratedWitness || transactionType == TransactionRecord::Generated)
+        {
+            isOrphanTransaction = true;
+        }
+    }
+                
     // check if transaction can be abandoned, disable context menu action in case it doesn't
     uint256 hash;
     hash.SetHex(selection.at(0).data(TransactionTableModel::TxHashRole).toString().toStdString());
     abandonAction->setEnabled(model->transactionCanBeAbandoned(hash));
     abandonAction->setVisible(model->transactionCanBeAbandoned(hash));
+    clearOrphansAction->setVisible(isOrphanTransaction);
     bumpFeeAction->setEnabled(model->transactionCanBeBumped(hash));
     bumpFeeAction->setVisible(model->transactionCanBeBumped(hash));
 
@@ -478,6 +499,46 @@ void TransactionView::abandonTx()
 
     // Update the table
     model->getTransactionTableModel()->updateTransaction(hashQStr, CT_UPDATED, false);
+}
+
+void TransactionView::clearOrphanTransactions()
+{
+    LogPrintf("TransactionView::clearOrphanTransactions - Purging orphan transactions for account\n");
+    if(!pactiveWallet || !transactionView || !transactionView->selectionModel())
+        return;
+    
+    LOCK(pactiveWallet->cs_wallet);
+    
+    std::vector<uint256> transactionsToZap;
+    std::vector<uint256> transactionsZapped;
+    int row = transactionProxyModel->rowCount();
+    for (int i = 0; i < row ; ++i)
+    {
+        int type = transactionProxyModel->data(transactionProxyModel->index(i, 0), TransactionTableModel::TypeRole).toInt();
+        int status = transactionProxyModel->data(transactionProxyModel->index(i, 0), TransactionTableModel::StatusRole).toInt();
+        if (status == TransactionStatus::NotAccepted || status == TransactionStatus::Abandoned)
+        {
+            if(type == TransactionRecord::GeneratedWitness || type == TransactionRecord::Generated)
+            {
+                uint256 hash;
+                QString hashQStr = transactionProxyModel->data(transactionProxyModel->index(i, 0), TransactionTableModel::TxHashRole).toString();
+                hash.SetHex(hashQStr.toStdString());
+                transactionsToZap.emplace_back(hash);
+            }
+        }
+    }
+    if (transactionsToZap.size() > 0)
+    {
+        LogPrintf("TransactionView::clearOrphanTransactions - Purging [%d] transactions\n", transactionsToZap.size());
+        
+        if (pactiveWallet->ZapSelectTx(transactionsToZap, transactionsZapped) != DB_LOAD_OK)
+        {
+            std::string strErrorMessage = "Failed to erase orphan transactions for account.\n";
+            LogPrintf("%s", strErrorMessage.c_str());
+            CAlert::Notify(strErrorMessage, true, true);
+        }
+        transactionProxyModel->invalidate();
+    }
 }
 
 void TransactionView::bumpFee()

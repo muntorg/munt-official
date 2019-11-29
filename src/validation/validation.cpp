@@ -1762,7 +1762,19 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     LogPrint(BCLog::BENCH, "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * 0.001, nTimeReadFromDisk * 0.000001);
     {
         CCoinsViewCache view(pcoinsTip);
-        bool rv = ConnectBlock(chainActive, blockConnecting, state, pindexNew, view, chainparams);
+        bool fJustCheck = false;
+        bool fValidateWitness = true;
+        //fixme: (PHASE4) - relook into this for phase4.
+        //This check is expensive when syncing
+        //So we bypass this with a small random chance of still checking IFF we are below the checkpoint heights.
+        //Note:
+        // 1) An attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
+        // 2) An attacker would still have to meet all other PoW check *and* keep all witness states intact
+        // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some more headers after detecting wrong chain)
+        // So this is not really a major weakening of security in any way and still more than sufficient.
+        if (((unsigned int)pindexNew->nHeight < Checkpoints::LastCheckPointHeight()))
+            fValidateWitness = false;
+        bool rv = ConnectBlock(chainActive, blockConnecting, state, pindexNew, view, chainparams, fJustCheck, fValidateWitness);
         GetMainSignals().BlockChecked(blockConnecting, state);
         if (!rv) {
             if (state.IsInvalid())
@@ -2271,7 +2283,7 @@ static CBlockIndex* AddToBlockIndex(const CChainParams& chainParams, const CBloc
         // block is extending the main tree
         if (pindexNew->nChainTx && (pindexNew->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindexNew->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight)))
         {
-            if (!gbMinimalLogging)
+            if (!gbMinimalLogging || (pindexNew->nHeight%10000==0))
                 LogPrintf("AddToBlockIndex: New index candidate: [%s] [%d]\n", pindexNew->GetBlockHashPoW2().ToString(), pindexNew->nHeight);
             setBlockIndexCandidates.insert(pindexNew);
         }
@@ -2388,7 +2400,7 @@ static bool ReceivedBlockTransactions(const CBlock &block, CValidationState& sta
             }
             if (pindex->nChainWork >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nChainWork) || pindex->nHeight >= (chainActive.Tip() == NULL ? 0 : chainActive.Tip()->nHeight))
             {
-                if (!gbMinimalLogging)
+                if (!gbMinimalLogging || (pindexNew->nHeight%10000==0))
                     LogPrintf("ReceivedBlockTransactions: New index candidate: [%s] [%d]\n", pindex->GetBlockHashPoW2().ToString(), pindex->nHeight);
                 setBlockIndexCandidates.insert(pindex);
             }
@@ -2941,7 +2953,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 
         assert(pindexPrev);
         if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, hash))
-            return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
+            return error("%s: CheckIndexAgainstCheckpoint(): %s, %s", __func__, hash.ToString(), state.GetRejectReason().c_str());
 
         // do context check if block header connects to the full tree or when we have at least the required amount of partial tree available
         bool doContextCheck = pindexPrev->IsValid(BLOCK_VALID_TREE) || ((pindexPrev->IsPartialValid(BLOCK_PARTIAL_TREE)) && pindexPrev->nHeight - partialChain.HeightOffset() > 576);

@@ -335,7 +335,7 @@ boost::asio::ip::address_v6 CNetAddr::GetIn6Addr() const
 {
     boost::asio::ip::address_v6::bytes_type bytes;
     memcpy(bytes.data(), (const unsigned char*)ip, 16);
-    return boost::asio::ip::address_v6(bytes);
+    return boost::asio::ip::address_v6(bytes, scopeId);
 }
 
 bool CNetAddr::GetInAddr(struct in_addr* pipv4Addr) const
@@ -540,7 +540,7 @@ CService::CService(const boost::asio::ip::tcp::endpoint& endpoint) : CNetAddr(en
 bool CService::SetSockAddr(const boost::asio::ip::tcp::endpoint& endpoint)
 {
     auto protocol = endpoint.protocol();
-    if (protocol == boost::asio::ip::tcp::v4() || protocol == boost::asio::ip::tcp::v4()) {
+    if (protocol == boost::asio::ip::tcp::v4() || protocol == boost::asio::ip::tcp::v6()) {
         *this = CService(endpoint);
     }
     return true;

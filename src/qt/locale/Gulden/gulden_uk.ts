@@ -448,6 +448,10 @@
         <translation>Вікно зневадження</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 МБ</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>Використання пам&apos;яті</translation>
     </message>
@@ -642,10 +646,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 КБ</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 МБ</translation>
     </message>
     <message>
         <source>%1 GB</source>

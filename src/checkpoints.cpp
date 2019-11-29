@@ -18,6 +18,7 @@
 
 #include <boost/range/adaptor/reversed.hpp>
 #include <stdint.h>
+#include <boost/range/rbegin.hpp>
 
 namespace Checkpoints {
 
@@ -75,4 +76,16 @@ namespace Checkpoints {
         return -1;
     }
 
+    unsigned int LastCheckPointHeight()
+    {
+        if (Params().Checkpoints().mapCheckpoints.size() > 0)
+        {
+            auto lastCheckpoint = Params().Checkpoints().mapCheckpoints.rbegin();
+            return lastCheckpoint->first;
+        }
+        else
+        {
+            return 0;
+        }
+    }
 } // namespace Checkpoints

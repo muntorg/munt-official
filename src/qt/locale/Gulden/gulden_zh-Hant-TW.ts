@@ -1313,6 +1313,10 @@
         <translation>除錯視窗</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB (百萬位元組)</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>記憶體使用量</translation>
     </message>
@@ -1543,10 +1547,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 KB (千位元組)</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB (百萬位元組)</translation>
     </message>
     <message>
         <source>%1 GB</source>

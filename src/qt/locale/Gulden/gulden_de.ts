@@ -98,6 +98,14 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
         <translation>Abbrechen</translation>
     </message>
     <message>
+        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Messe dich mit anderen Minern, um Gulden mit deiner CPU-Leerlaufzeit zu erstellen&lt;/li&gt;&lt;li&gt; Unterstütze das Netzwerk&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Mining</translation>
+    </message>
+    <message>
         <source>Account name</source>
         <translation>Kontoname</translation>
     </message>
@@ -326,6 +334,10 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
     <message>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
         <translation>Zahlungen anfordern (erzeugt QR-Codes und Gulden: URIs)</translation>
+    </message>
+    <message>
+        <source>Control and view information for mining account.</source>
+        <translation>Steuern und Anzeigen von Informationen für das Miningkonto</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -881,6 +893,10 @@ Witness Gewicht: %5</translation>
     <message>
         <source>Ok</source>
         <translation>Ok</translation>
+    </message>
+    <message>
+        <source>New mining address</source>
+        <translation>Neue Mining Adresse</translation>
     </message>
     <message>
         <source>Edit Address</source>
@@ -1604,7 +1620,7 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Wählen Sie die Adresse aus, an die Sie Guldencoins überweisen möchten</translation>
+        <translation>Wählen Sie die Adresse aus, an die Sie die digitalen Münzen schicken möchten </translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
@@ -2714,6 +2730,10 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
         <translation>Debugfenster</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>Speichernutzung</translation>
     </message>
@@ -2960,10 +2980,6 @@ Wenn Sie kürzlich Gulden erhalten haben, müssen Sie eine Weile warten, bevor S
     <message>
         <source>%1 KB</source>
         <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
     </message>
     <message>
         <source>%1 GB</source>
@@ -3638,6 +3654,101 @@ In zukünftigen Versionen von Gulden wird es möglich sein, dieses Konto wieder 
     <message>
         <source>Reset all settings changed in the GUI</source>
         <translation>Setze alle Einstellungen zurück, die über die grafische Oberfläche geändert wurden.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningAccountDialog</name>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
+        <translation>Durch Erhöhen der Anzahl der Threads wird die Mining-Geschwindigkeit erhöht, aber auch der Energieverbrauch und andere Anwendungen, die möglicherweise ausgeführt werden, werden verlangsamt.</translation>
+    </message>
+    <message>
+        <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
+        <translation>Eine Reduzierung der Speichernutzung wird nicht empfohlen. Dadurch wird das Mining verlangsamt, während dieselbe Menge an Prozessorleistung und Energie wie zuvor verwendet wird. Verwenden Sie diese Option nur als letzte Möglichkeit für Computer mit geringer Speicherverfügbarkeit.</translation>
+    </message>
+    <message>
+        <source>%1 Mb</source>
+        <translation>%1 Mb</translation>
+    </message>
+    <message>
+        <source>%1 threads</source>
+        <translation>%1 Prozesse</translation>
+    </message>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adresse in Zwischenablage kopiert</translation>
+    </message>
+    <message>
+        <source>Mining address</source>
+        <translation>Mining-Adresse</translation>
+    </message>
+    <message>
+        <source>My mining address</source>
+        <translation>Meine Mining-Adresse</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopiere Adresse in Zwischenablage</translation>
+    </message>
+    <message>
+        <source>Edit mining address</source>
+        <translation>Mining-Adresse editieren</translation>
+    </message>
+    <message>
+        <source>Reset mining address</source>
+        <translation>Mining-Adresse zurücksetzen</translation>
+    </message>
+    <message>
+        <source>My mining settings</source>
+        <translation>Meine Mining-Einstellungen</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Speichernutzung</translation>
+    </message>
+    <message>
+        <source>Processor usage</source>
+        <translation>Prozessorauslastung</translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation>#</translation>
+    </message>
+    <message>
+        <source>Automatically mine at startup</source>
+        <translation>Mine automatisch beim Start</translation>
+    </message>
+    <message>
+        <source>Keep application open when mining</source>
+        <translation>Halte die Anwendung beim Mining offen</translation>
+    </message>
+    <message>
+        <source>My mining statistics</source>
+        <translation>Meine Mining-Statistiken</translation>
+    </message>
+    <message>
+        <source>Best reported speed</source>
+        <translation>Beste gemeldete Geschwindigkeit</translation>
+    </message>
+    <message>
+        <source>Moving average</source>
+        <translation>Durchschnittsgeschwindigkeit</translation>
+    </message>
+    <message>
+        <source>Last reported speed</source>
+        <translation>Letzte gemeldete Geschwindigkeit</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Stoppe Mining</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Starte Mining</translation>
     </message>
 </context>
 <context>

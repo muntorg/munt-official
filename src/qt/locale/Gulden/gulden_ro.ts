@@ -276,6 +276,10 @@
         <translation>Fereastra pentru depanare</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
         <source>&amp;Information</source>
         <translation>&amp;Informații</translation>
     </message>
@@ -346,10 +350,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
     </message>
     <message>
         <source>%1 GB</source>

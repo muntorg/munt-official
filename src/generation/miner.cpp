@@ -91,9 +91,12 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     static int64_t nLongTimeStep  = nDrift * 60;
 
     // Forbid diff drop when mining on a fork (stalled witness)
-    if (chainActive.Tip() && (pindexPrev->nHeight > chainActive.Tip()->nHeight))
     {
-        nMaxMissedSteps=0;
+        LOCK(cs_main);
+        if (chainActive.Tip() && (pindexPrev->nHeight > chainActive.Tip()->nHeight))
+        {
+            nMaxMissedSteps=0;
+        }
     }
 
     while (true && (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1))
@@ -854,8 +857,13 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 //
 bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams)
 {
-    int nPoW2PhaseTip = GetPoW2Phase(chainActive.Tip(), chainparams, chainActive);
-    int nPoW2PhasePrev = GetPoW2Phase(chainActive.Tip()->pprev, chainparams, chainActive);
+    CBlockIndex* pChainTip = nullptr;
+    {
+        LOCK(cs_main);
+        pChainTip = chainActive.Tip();
+    }
+    int nPoW2PhaseTip = GetPoW2Phase(pChainTip, chainparams, chainActive);
+    int nPoW2PhasePrev = GetPoW2Phase(pChainTip->pprev, chainparams, chainActive);
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("Generated: hash=%s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
 
@@ -1030,6 +1038,23 @@ int64_t nHashCounter=0;
 std::atomic<int64_t> nHashThrottle(-1);
 static CCriticalSection timerCS;
 
+inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount)
+{
+    if (nCount > 0)
+    {
+        dHashesPerSec = (nCount*1000) / (nStop-nStart);
+        dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
+        if (dRollingHashesPerSec == 0 && dHashesPerSec > 0)
+        {
+            dRollingHashesPerSec = dHashesPerSec;
+        }
+        else
+        {
+            dRollingHashesPerSec = ((dRollingHashesPerSec*19) + dHashesPerSec)/20;
+        }
+    }
+}
+
 static const unsigned int hashPSTimerInterval = 200;
 
 void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
@@ -1091,7 +1116,11 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             // Create new block
             //
             unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
-            CBlockIndex* pindexParent = chainActive.Tip();
+            CBlockIndex* pindexParent = nullptr;
+            {
+                LOCK(cs_main);
+                pindexParent = chainActive.Tip();
+            }
             CBlockIndex* pTipAtStartOfMining = pindexParent;
             uint64_t nOrphansAtStartOfMining = GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size();
 
@@ -1211,7 +1240,8 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                     }
                     {
                         // If this thread gets interrupted then terminate mining
-                        BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); } BOOST_SCOPE_EXIT_END
+                        BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); delete workerThreads;} BOOST_SCOPE_EXIT_END
+                        int nCount = 0;
                         while (true)
                         {    
                             //fixme: (SIGMA) - Instead of busy polling it would be better if we could wait here on various signals, we would need to wait on several signals
@@ -1235,8 +1265,11 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                                 break;
                             
                             // Abort mining and start mining a new block instead if chain tip changed
-                            if (pTipAtStartOfMining != chainActive.Tip())
-                                break;
+                            {
+                                LOCK(cs_main);
+                                if (pTipAtStartOfMining != chainActive.Tip())
+                                    break;
+                            }
                             
                             // Abort mining and start mining a new block instead if alternative chain tip changed
                             if (nOrphansAtStartOfMining != GetTopLevelWitnessOrphans(pTipAtStartOfMining->nHeight).size())
@@ -1246,22 +1279,19 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                                     break;
                             }
                             
+                            if (++nCount>5)
+                            {
+                                updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
+                                nCount=0;
+                            }
+                            
                             // Allow opportunity for user to terminate mining.
                             boost::this_thread::interruption_point();
                         }
                     }
                     
-                    uint64_t nStop = GetTimeMillis();
-                    dHashesPerSec = (halfHashCounter*1000) / (nStop-nStart);
-                    dBestHashesPerSec = std::max(dBestHashesPerSec, dHashesPerSec);
-                    if (dRollingHashesPerSec == 0 && dHashesPerSec > 0)
-                    {
-                        dRollingHashesPerSec = dHashesPerSec;
-                    }
-                    else
-                    {
-                        dRollingHashesPerSec = ((dRollingHashesPerSec*9) + dHashesPerSec)/10;
-                    }
+                    updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
+
                     if (foundBlockHash != uint256())
                     {
                         TRY_LOCK(processBlockCS, lockProcessBlock);
@@ -1333,8 +1363,11 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                         break;
                     if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
                         break;
-                    if (pTipAtStartOfMining != chainActive.Tip())
-                        break;
+                    {
+                        LOCK(cs_main);
+                        if (pTipAtStartOfMining != chainActive.Tip())
+                            break;
+                    }
                 }
             }
         }
@@ -1385,5 +1418,6 @@ void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const 
 
 bool PoWGenerationIsActive()
 {
+    LOCK(miningCS);
     return minerThread != nullptr;
 }

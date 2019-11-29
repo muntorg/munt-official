@@ -90,6 +90,8 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("witness_time", (int64_t)blockindex->nTimePoW2Witness));
     result.push_back(Pair("witness_merkleroot", blockindex->hashMerkleRootPoW2Witness.GetHex()));
     result.push_back(Pair("nonce", (uint64_t)blockindex->nNonce));
+    result.push_back(Pair("pre_nonce", (uint64_t)blockindex->nPreNonce));
+    result.push_back(Pair("post_nonce", (uint64_t)blockindex->nPostNonce));
     result.push_back(Pair("bits", strprintf("%08x", blockindex->nBits)));
     result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
@@ -139,6 +141,8 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("time", block.GetBlockTime()));
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
     result.push_back(Pair("nonce", (uint64_t)block.nNonce));
+    result.push_back(Pair("pre_nonce", (uint64_t)block.nPreNonce));
+    result.push_back(Pair("post_nonce", (uint64_t)block.nPostNonce));
     result.push_back(Pair("bits", strprintf("%08x", block.nBits)));
     result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));

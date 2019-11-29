@@ -876,6 +876,10 @@
         <translation>디버그 창</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 메가바이트</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>메모리 사용량</translation>
     </message>
@@ -1082,10 +1086,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 킬로바이트</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 메가바이트</translation>
     </message>
     <message>
         <source>%1 GB</source>

@@ -448,6 +448,10 @@
         <translation>Razhroščevalno okno</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 MiB</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>Ime agenta</translation>
     </message>
@@ -586,10 +590,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 KiB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MiB</translation>
     </message>
     <message>
         <source>%1 GB</source>

@@ -230,11 +230,20 @@ public:
 
 
     //! block header
-    int nVersion;
+    int32_t nVersion;
     uint256 hashMerkleRoot;
-    unsigned int nTime;
-    unsigned int nBits;
-    unsigned int nNonce;
+    uint32_t nTime;
+    uint32_t nBits;
+    //fixme: (SIGMA) - Ensure this works on both big and little endian - if not we might have to drop the struct and just use bit manipulation instead.
+    union
+    {
+        struct
+        {
+            uint16_t nPreNonce;
+            uint16_t nPostNonce;
+        };
+        uint32_t nNonce;
+    };
 
     //! (memory only) Sequential id assigned to distinguish order in which blocks are received.
     int32_t nSequenceId;

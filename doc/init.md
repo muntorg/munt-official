@@ -109,13 +109,13 @@ setting the GULDEND and FLAGS environment variables in the file
 
 4e) Mac OS X
 
-Copy org.gulden.GuldenD.plist into ~/Library/LaunchAgents. Load the launch agent by
-running `launchctl load ~/Library/LaunchAgents/org.gulden.GuldenD.plist`.
+Copy com.gulden.GuldenD.plist into ~/Library/LaunchAgents. Load the launch agent by
+running `launchctl load ~/Library/LaunchAgents/com.gulden.GuldenD.plist`.
 
 This Launch Agent will cause GuldenD to start whenever the user logs in.
 
 NOTE: This approach is intended for those wanting to run GuldenD as the current user.
-You will need to modify org.gulden.GuldenD.plist if you intend to use it as a
+You will need to modify com.gulden.GuldenD.plist if you intend to use it as a
 Launch Daemon with a dedicated gulden user.
 
 5. Auto-respawn

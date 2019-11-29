@@ -420,12 +420,13 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     GUIUtil::restoreWindowGeometry("nRPCConsoleWindow", this->size(), this);
 
     ui->openDebugLogfileButton->setToolTip(ui->openDebugLogfileButton->toolTip().arg(tr(PACKAGE_NAME)));
-
-    if (GUIUtil::showImagesOnButtons())
-    {
-        ui->openDebugLogfileButton->setTextFormat( Qt::RichText );
-        ui->openDebugLogfileButton->setText(GUIUtil::fontAwesomeRegular("\uf064") + " " + ui->openDebugLogfileButton->text());
-    }
+    ui->openDebugLogfileButton->setTextFormat( Qt::RichText );
+    ui->openDebugLogfileButton->setText(GUIUtil::fontAwesomeRegular("\uf064"));
+    
+        
+    ui->openDatadirButton->setToolTip(ui->openDatadirButton->toolTip().arg(tr(PACKAGE_NAME)));
+    ui->openDatadirButton->setTextFormat( Qt::RichText );
+    ui->openDatadirButton->setText(GUIUtil::fontAwesomeRegular("\uf064"));
 
     ui->clearButton->setTextFormat( Qt::RichText );
     ui->clearButton->setText( GUIUtil::fontAwesomeRegular("\uf12d") );
@@ -439,6 +440,8 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     ui->clearButton->setCursor( Qt::PointingHandCursor );
     ui->fontBiggerButton->setCursor( Qt::PointingHandCursor );
     ui->fontSmallerButton->setCursor( Qt::PointingHandCursor );
+    ui->openDebugLogfileButton->setCursor( Qt::PointingHandCursor );
+    ui->openDatadirButton->setCursor( Qt::PointingHandCursor );
 
     // Install event filter for up and down arrow
     ui->lineEdit->installEventFilter(this);
@@ -447,7 +450,8 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
     connect(ui->fontBiggerButton, SIGNAL(clicked()), this, SLOT(fontBigger()));
     connect(ui->fontSmallerButton, SIGNAL(clicked()), this, SLOT(fontSmaller()));
-    connect(ui->openDebugLogfileButton, SIGNAL(clicked()), this, SLOT(on_openDebugLogfileButton_clicked()));
+    connect(ui->openDebugLogfileButton, SIGNAL(clicked()), this, SLOT(openDebugLogfileButton_clicked()));
+    connect(ui->openDatadirButton, SIGNAL(clicked()), this, SLOT(openDatadirButton_clicked()));
     connect(ui->btnClearTrafficGraph, SIGNAL(clicked()), ui->trafficGraph, SLOT(clear()));
 
     // set library version labels
@@ -640,8 +644,10 @@ void RPCConsole::setClientModel(ClientModel *model)
         ui->clientVersion->setText(model->formatFullVersion());
         ui->clientUserAgent->setText(model->formatSubVersion());
         ui->dataDir->setText(model->dataDir());
+        ui->logDir->setText(model->logFile());
         ui->startupTime->setText(model->formatClientStartupTime());
         ui->networkName->setText(QString::fromStdString(Params().NetworkIDString()));
+        ui->tab_info->layout();
 
         //Setup autocomplete and attach it
         QStringList wordList;
@@ -946,9 +952,14 @@ void RPCConsole::on_tabWidget_currentChanged(int index)
         clearSelectedNode();
 }
 
-void RPCConsole::on_openDebugLogfileButton_clicked()
+void RPCConsole::openDebugLogfileButton_clicked()
 {
     GUIUtil::openDebugLogfile();
+}
+
+void RPCConsole::openDatadirButton_clicked()
+{
+    GUIUtil::openDataDirectory();
 }
 
 void RPCConsole::scrollToEnd()

@@ -190,7 +190,7 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
     {
         const CRPCCommand *pcmd = command.second;
         std::string strMethod = pcmd->name;
-        if ((strCommand != "" || pcmd->category == "hidden") && strMethod != strCommand)
+        if ((strCommand != "" || pcmd->category == "hidden" || pcmd->category == "support") && strMethod != strCommand)
             continue;
         jreq.strMethod = strMethod;
         try

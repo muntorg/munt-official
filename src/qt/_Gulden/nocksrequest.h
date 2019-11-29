@@ -43,7 +43,7 @@ public:
         Connect to the requestProcessed() signal BEFORE starting the request. Though the request
         is asynchrounous it is possible that it finishes early and the signal would be missed.
     */
-    void startRequest(SendCoinsRecipient* recipient, RequestType type, QString from="", QString to="", QString amount="");
+    void startRequest(SendCoinsRecipient* recipient, RequestType type, QString from="", QString to="", QString amount="", QString description="");
 
     //! Cancel the request. The requestProcessed() signal will not be triggered.
     void cancel();

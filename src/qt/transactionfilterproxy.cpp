@@ -37,6 +37,7 @@ TransactionFilterProxy::TransactionFilterProxy(QObject *parent) :
     minAmount(0),
     limitRows(-1),
     showInactive(true),
+    showOrphaned(false),
     account(NULL)
 {
     setSortRole(TransactionTableModel::RoleIndex::SortRole);
@@ -58,10 +59,21 @@ bool TransactionFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &
 
     if(account && account->getUUID() != accountUUID && (fShowChildAccountsSeperately || account->getUUID() != accountParentUUID))
         return false;
+    
     //if(account && !fShowChildAccountsSeperately && )
         //return false;
-    if(!showInactive && status == TransactionStatus::Conflicted)
+    
+    // Show/hide conflicted transactions.
+    if (!showInactive && status == TransactionStatus::Conflicted)
         return false;
+    
+    // Show/hide orphaned transactions.
+    if (status == TransactionStatus::NotAccepted || status == TransactionStatus::Abandoned)
+    {
+        if(!showOrphaned && (type == TransactionRecord::GeneratedWitness || type == TransactionRecord::Generated))
+            return false;
+    }
+    
     if(!(TYPE(type) & typeFilter))
         return false;
     if (involvesWatchAddress && watchOnlyFilter == WatchOnlyFilter_No)
@@ -123,6 +135,12 @@ void TransactionFilterProxy::setLimit(int limit)
 void TransactionFilterProxy::setShowInactive(bool _showInactive)
 {
     this->showInactive = _showInactive;
+    invalidateFilter();
+}
+
+void TransactionFilterProxy::setShowOrphaned(bool _showOrphaned)
+{
+    this->showOrphaned = _showOrphaned;
     invalidateFilter();
 }
 

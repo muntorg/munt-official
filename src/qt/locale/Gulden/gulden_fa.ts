@@ -611,6 +611,10 @@
         <translation>پنجرهٔ اشکالزدایی</translation>
     </message>
     <message>
+        <source>%1 MB</source>
+        <translation>%1 مگابایت</translation>
+    </message>
+    <message>
         <source>Memory usage</source>
         <translation>مصرف حافظه</translation>
     </message>
@@ -725,10 +729,6 @@
     <message>
         <source>%1 KB</source>
         <translation>%1 کیلوبایت</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 مگابایت</translation>
     </message>
     <message>
         <source>%1 GB</source>
