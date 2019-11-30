@@ -232,7 +232,9 @@ void GuldenSendCoinsEntry::addressChanged()
         {
             ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Euro);
             ui->receivingAddressAccountName->setVisible(true);
-            ui->receivingAddressAccountName->setFocus();
+            //fixme: We don't set focus here because our matcher matches partial IBANs while people are typing
+            //Improve the matcher first (make use of check digits) and then implement this again.
+            //ui->receivingAddressAccountName->setFocus();
         }
         else
         {

@@ -1519,10 +1519,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>Número actual de transacções</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Ficheiro de registo de depuração</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Consola</translation>
     </message>

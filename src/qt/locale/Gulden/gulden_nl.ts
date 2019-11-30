@@ -677,6 +677,10 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
         <translation>Voer beschrijving in</translation>
     </message>
     <message>
+        <source>Recipient account name</source>
+        <translation>Naam van de begunstigde</translation>
+    </message>
+    <message>
         <source>Add to address book</source>
         <translation>Voeg toe aan adresboek</translation>
     </message>
@@ -711,6 +715,10 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>Amount below minimum for IBAN payment.</source>
         <translation>Bedrag is kleiner dan minimum voor een IBAN-betaling</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>De naam van de begunstigde is noodzakelijk voor een IBAN betaling</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -1176,10 +1184,6 @@ Witness-gewicht: %5</translation>
     <message>
         <source>Resulting URI too long, try to reduce the text for the label.</source>
         <translation>Resulterende URI te lang, Kort de text in voor dit label</translation>
-    </message>
-    <message>
-        <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation>Error tijdens het laden van de betaal pagina, controleer uw verbinding en probeer het (op een later moment) opnieuw</translation>
     </message>
 </context>
 <context>
@@ -2824,10 +2828,6 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
         <translation>Huidig aantal transacties</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Debuglogbestand</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Open het %1 logboekbestand voor foutopsporing in de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
     </message>
@@ -3546,85 +3546,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     </message>
 </context>
 <context>
-    <name>Gulden</name>
-    <message>
-        <source>Done loading</source>
-        <translation>Laden is gereed</translation>
-    </message>
-    <message>
-        <source>Erasing block index...</source>
-        <translation>Blokindex legen...</translation>
-    </message>
-    <message>
-        <source>Error reading from database, shutting down.</source>
-        <translation>Fout bij lezen database, app sluit af.</translation>
-    </message>
-    <message>
-        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation>Ongeldige of geen genesisblok gevonden. Verkeerde datadirectory voor netwerk?</translation>
-    </message>
-    <message>
-        <source>Legacy account</source>
-        <translation>Legacy-rekening</translation>
-    </message>
-    <message>
-        <source>Loading P2P addresses...</source>
-        <translation>P2P-adressen worden geladen...</translation>
-    </message>
-    <message>
-        <source>Loading banlist...</source>
-        <translation>Banlijst wordt geladen...</translation>
-    </message>
-    <message>
-        <source>Loading block index...</source>
-        <translation>Blokindex wordt geladen...</translation>
-    </message>
-    <message>
-        <source>Loading wallet...</source>
-        <translation>Portemonnee wordt geladen...</translation>
-    </message>
-    <message>
-        <source>My account</source>
-        <translation>Mijn account</translation>
-    </message>
-    <message>
-        <source>Wallet unlock required for wallet upgrade</source>
-        <translation>Ontgrendelen portemonnee noodzakelijk voor upgrade</translation>
-    </message>
-    <message>
-        <source>Zapping all transactions from wallet...</source>
-        <translation>Alle transacties worden uit de wallet verwijderd...</translation>
-    </message>
-    <message>
-        <source>Pruning blockstore...</source>
-        <translation>Opschonen blockstore...</translation>
-    </message>
-    <message>
-        <source>Reloading block index...</source>
-        <translation>Herladen blokindex...</translation>
-    </message>
-    <message>
-        <source>Rescanning...</source>
-        <translation>Herscannen...</translation>
-    </message>
-    <message>
-        <source>Rewinding blocks...</source>
-        <translation>Blokken terugspoelen...</translation>
-    </message>
-    <message>
-        <source>Starting network threads...</source>
-        <translation>Starten netwerk threads...</translation>
-    </message>
-    <message>
-        <source>Upgrading block index...</source>
-        <translation>Blokindex upgraden...</translation>
-    </message>
-    <message>
-        <source>Verifying blocks...</source>
-        <translation>Blokken verifiëren....</translation>
-    </message>
-</context>
-<context>
     <name>GuldenAmountField</name>
     <message>
         <source>Max</source>
@@ -3699,10 +3620,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
         <translation>Het verlagen van het geheugengebruik is niet aanbevolen. Het vertraagt je mining operatie terwijl het evenveel cpu kracht en energie gebruikt. Alleen gebruiken als laatste optie op machines met een laag geheugen.</translation>
-    </message>
-    <message>
-        <source>%1 Mb</source>
-        <translation>%1 Mb</translation>
     </message>
     <message>
         <source>%1 threads</source>

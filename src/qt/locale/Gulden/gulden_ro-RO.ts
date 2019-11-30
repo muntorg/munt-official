@@ -496,10 +496,6 @@
         <translation>Numărul curent de tranzacţii</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Fişier jurnal depanare</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Consolă</translation>
     </message>

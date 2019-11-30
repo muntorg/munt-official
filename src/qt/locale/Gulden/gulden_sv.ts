@@ -837,10 +837,6 @@ Var vänlig och försök igen.</translation>
         <translation>Nuvarande antal transaktioner</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Debugloggfil</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Öppna %1 debug-loggfilen från aktuell datakatalog. Detta kan ta några sekunder för stora loggfiler.</translation>
     </message>

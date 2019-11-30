@@ -678,6 +678,10 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Entrez l&apos;étiquette</translation>
     </message>
     <message>
+        <source>Recipient account name</source>
+        <translation>Nom du compte du destinataire</translation>
+    </message>
+    <message>
         <source>Add to address book</source>
         <translation>Ajouter au carnet d&apos;adresses</translation>
     </message>
@@ -712,6 +716,10 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
     <message>
         <source>Amount below minimum for IBAN payment.</source>
         <translation>Montant inférieur au minimum pour le paiement IBAN.</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>Un nom de destinataire est requis pour les paiements IBAN.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -1178,10 +1186,6 @@ Poids du Witness : %5</translation>
     <message>
         <source>Resulting URI too long, try to reduce the text for the label.</source>
         <translation>URI résultant trop longue, essayez de réduire le texte pour l&apos;étiquette.</translation>
-    </message>
-    <message>
-        <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation>Erreur lors du chargement de la page d&apos;achat, vérifiez votre connexion et réessayer plus tard.</translation>
     </message>
 </context>
 <context>
@@ -2825,10 +2829,6 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
         <translation>Nombre actuel de transactions</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Fichier journal de débogage</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Ouvrir le fichier journal de débogage de %1 à partir du répertoire de données actuel. Cela peut prendre quelques secondes pour les fichiers journaux de grande taille.</translation>
     </message>
@@ -3547,85 +3547,6 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     </message>
 </context>
 <context>
-    <name>Gulden</name>
-    <message>
-        <source>Done loading</source>
-        <translation>Chargement terminé</translation>
-    </message>
-    <message>
-        <source>Erasing block index...</source>
-        <translation>Effacer l&apos;index des blocs.....</translation>
-    </message>
-    <message>
-        <source>Error reading from database, shutting down.</source>
-        <translation>Erreur de lecture de la base de données, arrêt.</translation>
-    </message>
-    <message>
-        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation>Bloc de genèse incorrect ou aucun bloc de genèse trouvé. Mauvais répertoire de données pour le réseau ?</translation>
-    </message>
-    <message>
-        <source>Legacy account</source>
-        <translation>Compte de l&apos;héritage</translation>
-    </message>
-    <message>
-        <source>Loading P2P addresses...</source>
-        <translation>Chargement des adresses P2P.....</translation>
-    </message>
-    <message>
-        <source>Loading banlist...</source>
-        <translation>Chargement de la liste de bannissement.....</translation>
-    </message>
-    <message>
-        <source>Loading block index...</source>
-        <translation>Chargement de l&apos;index des blocs.....</translation>
-    </message>
-    <message>
-        <source>Loading wallet...</source>
-        <translation>Chargement du portefeuille.....</translation>
-    </message>
-    <message>
-        <source>My account</source>
-        <translation>Mon compte</translation>
-    </message>
-    <message>
-        <source>Wallet unlock required for wallet upgrade</source>
-        <translation>Déverrouillage du porte-monnaie requis pour la mise à niveau du porte-monnaie</translation>
-    </message>
-    <message>
-        <source>Zapping all transactions from wallet...</source>
-        <translation>Zapping toutes les transactions du portefeuille......</translation>
-    </message>
-    <message>
-        <source>Pruning blockstore...</source>
-        <translation>Blockstore d&apos;élagage.....</translation>
-    </message>
-    <message>
-        <source>Reloading block index...</source>
-        <translation>Rechargement de l&apos;index des blocs.....</translation>
-    </message>
-    <message>
-        <source>Rescanning...</source>
-        <translation>Refaire la numérisation.....</translation>
-    </message>
-    <message>
-        <source>Rewinding blocks...</source>
-        <translation>Enroulement des Blocs.....</translation>
-    </message>
-    <message>
-        <source>Starting network threads...</source>
-        <translation>Démarrer les fils de réseau.....</translation>
-    </message>
-    <message>
-        <source>Upgrading block index...</source>
-        <translation>Mise à jour de l&apos;index des blocs.....</translation>
-    </message>
-    <message>
-        <source>Verifying blocks...</source>
-        <translation>Vérification des blocs.....</translation>
-    </message>
-</context>
-<context>
     <name>GuldenAmountField</name>
     <message>
         <source>Max</source>
@@ -3700,10 +3621,6 @@ Dans les versions futures de Gulden, il sera possible de réutiliser ce compte p
     <message>
         <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
         <translation>Il n&apos;est pas recommandé de réduire l&apos;utilisation de la mémoire. Il ralentira votre exploitation minière tout en utilisant la même quantité de puissance et d&apos;énergie du processeur qu&apos;auparavant. Ne l&apos;utilisez qu&apos;en dernier recours sur les machines qui ont une faible disponibilité de mémoire.</translation>
-    </message>
-    <message>
-        <source>%1 Mb</source>
-        <translation>%1 Mb</translation>
     </message>
     <message>
         <source>%1 threads</source>

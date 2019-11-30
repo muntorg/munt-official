@@ -1409,7 +1409,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+489"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+491"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
@@ -1442,7 +1442,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location line="+7"/>
         <source>Recipient account name</source>
-        <translation type="unfinished"></translation>
+        <translation>Recipient account name</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1493,7 +1493,7 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <location line="+7"/>
         <source>A recipient name is required for IBAN payments.</source>
-        <translation type="unfinished"></translation>
+        <translation>A recipient name is required for IBAN payments.</translation>
     </message>
     <message>
         <location line="+80"/>
@@ -4551,12 +4551,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionView</name>
     <message>
-        <location filename="../../transactionview.cpp" line="+150"/>
-        <source>Clear orphan transactions</source>
-        <translation>Clear orphan transactions</translation>
-    </message>
-    <message>
-        <location line="+236"/>
+        <location filename="../../transactionview.cpp" line="+386"/>
         <source>Comma separated file (*.csv)</source>
         <translation>Comma separated file (*.csv)</translation>
     </message>
@@ -4636,7 +4631,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Witness reward</translation>
     </message>
     <message>
-        <location line="-19"/>
+        <location line="+57"/>
+        <source>Clear orphan transactions</source>
+        <translation>Clear orphan transactions</translation>
+    </message>
+    <message>
+        <location line="-76"/>
         <source>All dates</source>
         <translation>All dates</translation>
     </message>
@@ -4842,7 +4842,12 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletView</name>
     <message>
-        <location filename="../../walletview.cpp" line="+76"/>
+        <location filename="../../walletview.cpp" line="+85"/>
+        <source>&amp;Export</source>
+        <translation>&amp;Export</translation>
+    </message>
+    <message>
+        <location line="-9"/>
         <source>Show orphaned rewards</source>
         <translation>Show orphaned rewards</translation>
     </message>
@@ -4863,12 +4868,7 @@ Generally when someone else generates a block at the same time as yours.</transl
         <translation>Export the current list of transactions to a file.</translation>
     </message>
     <message>
-        <location line="-3"/>
-        <source>&amp;Export</source>
-        <translation>&amp;Export</translation>
-    </message>
-    <message>
-        <location line="+253"/>
+        <location line="+250"/>
         <source>Backup Wallet</source>
         <translation>Backup Wallet</translation>
     </message>

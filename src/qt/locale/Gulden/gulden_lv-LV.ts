@@ -377,10 +377,6 @@
         <translation>Pēdējā bloka laiks</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Atkļūdošanas žurnāla datne</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsole</translation>
     </message>

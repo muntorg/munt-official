@@ -473,10 +473,6 @@
         <translation>Χρόνος τελευταίου μπλοκ</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Αρχείο καταγραφής εντοπισμού σφαλμάτων </translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Κονσόλα</translation>
     </message>
