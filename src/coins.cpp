@@ -49,36 +49,33 @@ size_t CCoinsViewCache::DynamicMemoryUsage() const
 #ifdef DEBUG
 void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const
 {
+    // check args
+    assert(outpoint.isHash || (outpoint.getTransactionBlockNumber() == block && outpoint.getTransactionIndex() == txIndex));
+    assert(outpoint.n == voutIndex);
+
     // cacheCoins and cacheCoinRefs keep a 1:1 correspondence, so any difference in size is a bug for sure
     assert(cacheCoins.size() == cacheCoinRefs.size());
 
-    if (outpoint.isHash)
-    {
-        CCoinsRefMap::iterator refIt = cacheCoinRefs.find(COutPoint(block, txIndex, voutIndex));
-        if (refIt != cacheCoinRefs.end()) {
-            // entry present in cacheCoinRefs
-            const COutPoint& canonicalOutPoint = refIt->second;
-            CCoinsMap::iterator it = cacheCoins.find(canonicalOutPoint);
-            assert(it != cacheCoins.end());  // verify it is present in cacheCoins as well
-            const Coin& coin = it->second.coin;
-            // and that its properties are matching
-            assert(canonicalOutPoint.isHash);
-            assert(canonicalOutPoint.getHash() == outpoint.getHash());
-            assert(canonicalOutPoint.n == voutIndex);
-            assert(coin.nHeight == block);
-            assert(coin.nTxIndex == txIndex);
-        }
-        else
-        {
-            // no entry in cacheCoinRefs, so it should be either absent in cacheCoins or spent
-            CCoinsMap::iterator it = cacheCoins.find(outpoint);
-            if (it!=cacheCoins.end())
-                assert(it->second.coin.IsSpent());
-        }
+    CCoinsRefMap::iterator refIt = cacheCoinRefs.find(outpoint.isHash ? COutPoint(block, txIndex, voutIndex) : outpoint);
+    if (refIt != cacheCoinRefs.end()) {
+        // entry present in cacheCoinRefs
+        const COutPoint& canonicalOutPoint = refIt->second;
+        CCoinsMap::iterator it = cacheCoins.find(canonicalOutPoint);
+        assert(it != cacheCoins.end());  // verify it is present in cacheCoins as well
+        const Coin& coin = it->second.coin;
+
+        // and that its properties are matching
+        assert(!canonicalOutPoint.isHash || canonicalOutPoint.getHash() == outpoint.getHash());
+        assert(canonicalOutPoint.isHash || (canonicalOutPoint.getTransactionBlockNumber() == block && canonicalOutPoint.getTransactionIndex() == txIndex));
+        assert(canonicalOutPoint.n == voutIndex);
+        assert(coin.nHeight == block);
+        assert(coin.nTxIndex == txIndex);
     }
     else
     {
-        assert(false); // case not handled yet
+        // no entry in cacheCoinRefs, so it should be absent in cacheCoins also
+        assert(!outpoint.isHash || cacheCoins.find(outpoint) == cacheCoins.end());
+        assert(outpoint.isHash || cacheCoins.find(COutPoint(block, txIndex, voutIndex)) == cacheCoins.end());
     }
 }
 #endif
