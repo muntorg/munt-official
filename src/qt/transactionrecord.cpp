@@ -112,17 +112,36 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             if (prevout.IsNull() && wtx.tx->IsPoW2WitnessCoinBase())
                 continue;
 
-            const CWalletTx* txPrev = wallet->GetWalletTx(txInRef.prevout.getHash());
-            if (!txPrev || txPrev->tx->vout.size() == 0)
-                break;
+            CTransactionRef txRef;
+            int nInputHeight = -1;
+            LOCK(cs_main);
+            if (prevout.isHash) {
+                const CWalletTx* txPrev = wallet->GetWalletTx(txInRef.prevout.getHash());
+                if (!txPrev || txPrev->tx->vout.size() == 0)
+                    break;
 
-            int nInputHeight = nWalletTxBlockHeight;
-            const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
-            if (findIter != mapBlockIndex.end())
-                nInputHeight = findIter->second->nHeight;
+                const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
+                if (findIter != mapBlockIndex.end()) {
+                    nInputHeight = findIter->second->nHeight;
+                }
 
-            if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txPrev->tx->vout[txInRef.prevout.n], txInRef, nInputHeight, nWalletTxBlockHeight))
-                break;
+                txRef = txPrev->tx;
+            }
+            else
+            {
+                nInputHeight = prevout.getTransactionBlockNumber();
+                CBlock block;
+                if (ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
+                    txRef = block.vtx[prevout.getTransactionIndex()];
+                }
+                else
+                    break;
+            }
+
+            if (txRef && nInputHeight >= 0) {
+                if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txRef->vout[prevout.n], txInRef, nInputHeight, nWalletTxBlockHeight))
+                    break;
+            }
         }
     }
     std::vector<CTxOut> outputs = wtx.tx->vout;
@@ -295,15 +314,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 subSend.credit = 0;
                                 subSend.debit = nDebit;
                                 subSend.idx = parts.size(); // sequence number
-                                //Phase 3 earnings.
-                                if (subSend.fromAccountUUID == subSend.receiveAccountUUID)
-                                {
-                                    parts.pop_back();
-                                }
-                                else
-                                {
-                                    parts.append(subSend);
-                                }
+                                parts.append(subSend);
                                 break;
                             }
                         }
