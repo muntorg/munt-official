@@ -152,18 +152,17 @@ public:
         assert(!isHash);
         return prevBlock.transactionIndex;
     }
-    
+
+    // Hash suitable for bucketized containers such as std::unordered_map, do NOT assume this is the transaction hash!
+    uint256 getBucketHash() const;
+
+    // Transaction hash only for isHash outpoints
     uint256 getHash() const
     {
-        if (isHash)
-        {
-            return hash;
-        }
-        else
-        {
-            return prevBlock.getHash();
-        }
+        assert(isHash);
+        return hash;
     }
+
     void setHash(uint256 hash_)
     {
         hash = hash_;

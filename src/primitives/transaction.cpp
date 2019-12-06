@@ -16,6 +16,18 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 
+uint256 COutPoint::getBucketHash() const
+{
+    if (isHash)
+    {
+        return hash;
+    }
+    else
+    {
+        return prevBlock.getHash();
+    }
+}
+
 std::string COutPoint::ToString() const
 {
     if (isHash)
