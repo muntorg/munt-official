@@ -653,4 +653,7 @@ void SetMaxSPVPruneHeight(int height);
  */
 void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBirthBlockSoft);
 
+/** Transaction hash from outpoint. Even if it is index based. */
+bool GetTxHash(const COutPoint& outpoint, uint256& txHash);
+
 #endif // GULDEN_VALIDATION_H

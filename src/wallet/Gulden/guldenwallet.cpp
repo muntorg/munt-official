@@ -300,11 +300,15 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
 {
     {
         LOCK(cs_wallet);
-        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.getHash());
-        if (prev && prev->tx->vout.size() != 0)
+        uint256 txHash;
+        if (GetTxHash(txin.prevout, txHash))
         {
-            if (txin.prevout.n < prev->tx->vout.size())
-                return ::IsMine(keystore, prev->tx->vout[txin.prevout.n]);
+            const CWalletTx* prev = pactiveWallet->GetWalletTx(txHash);
+            if (prev && prev->tx->vout.size() != 0)
+            {
+                if (txin.prevout.n < prev->tx->vout.size())
+                    return ::IsMine(keystore, prev->tx->vout[txin.prevout.n]);
+            }
         }
     }
     return ISMINE_NO;
