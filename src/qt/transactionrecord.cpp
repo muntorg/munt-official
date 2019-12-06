@@ -40,6 +40,37 @@ bool TransactionRecord::showTransaction(const CWalletTx &wtx)
     return true;
 }
 
+bool AddAddressForOutPoint(const CWallet *wallet, const COutPoint& outpoint, std::string address)
+{
+    CTransactionRef tx;
+    if (outpoint.isHash) {
+        const CWalletTx* wtx = wallet->GetWalletTx(outpoint.getHash());
+        if (wtx) {
+            tx = wtx->tx;
+        }
+    }
+    else
+    {
+        CBlock block;
+        LOCK(cs_main);
+        if (ReadBlockFromDisk(block, chainActive[outpoint.getTransactionBlockNumber()], Params()) && block.vtx.size() > outpoint.getTransactionIndex()) {
+            tx = block.vtx[outpoint.getTransactionIndex()];
+        }
+    }
+
+    CTxDestination destination;
+
+    if (tx && tx->vout.size() > outpoint.n && ExtractDestination(tx->vout[outpoint.n], destination))
+    {
+        if (!address.empty())
+            address += ", ";
+        address += CGuldenAddress(destination).ToString();
+        return true;
+    }
+
+    return false;
+}
+
 /*
  * Decompose CWallet transaction to model transaction records.
  */
@@ -214,15 +245,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
                             if (mine)
                             {
-                                CTxDestination getAddress;
-                                const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
-                                if (parent && parent->tx->vout.size() != 0)
-                                {
-                                    if (ExtractDestination(parent->tx->vout[inputs[0].prevout.n], getAddress))
-                                    {
-                                        subSend.address = CGuldenAddress(getAddress).ToString();
-                                    }
-                                }
+                                AddAddressForOutPoint(wallet, inputs[0].prevout, subSend.address);
                                 subSend.type = TransactionRecord::WitnessFundSend;
                                 subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
@@ -296,15 +319,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
                             if (mine)
                             {
-                                const CWalletTx* parent = wallet->GetWalletTx(inputs[0].prevout.getHash());
-                                if (parent && parent->tx->vout.size() != 0)
-                                {
-                                    CTxDestination getAddress;
-                                    if (ExtractDestination(parent->tx->vout[inputs[0].prevout.n], getAddress))
-                                    {
-                                        subSend.address = CGuldenAddress(getAddress).ToString();
-                                    }
-                                }
+                                AddAddressForOutPoint(wallet, inputs[0].prevout, subSend.address);
                                 subSend.type = TransactionRecord::WitnessEmptySend;
                                 subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
@@ -452,15 +467,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             }
                             if (myInput)
                             {
-                                CTxDestination getAddress;
-                                const CWalletTx* parent = wallet->GetWalletTx(myInput->prevout.getHash());
-                                if (parent && myInput->prevout.n < parent->tx->vout.size())
-                                {
-                                    if (ExtractDestination(parent->tx->vout[myInput->prevout.n], getAddress))
-                                    {
-                                        subSend.address = CGuldenAddress(getAddress).ToString();
-                                    }
-                                }
+                                AddAddressForOutPoint(wallet, myInput->prevout, subSend.address);
                                 subSend.type = TransactionRecord::WitnessIncreaseSend;
                                 subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
@@ -631,22 +638,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             sub.credit -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
                             //fixme: (FUT) Add a 'payment to self' sub here as well.
                         }
-
-                        const CWalletTx* parent = wallet->GetWalletTx(txin.prevout.getHash());
-                        if (parent && parent->tx->vout.size() != 0)
-                        {
-                            CTxDestination senderAddress;
-                            if (ExtractDestination(parent->tx->vout[txin.prevout.n], senderAddress))
-                            {
-                                if (!addressIn.empty())
-                                    addressIn += ", ";
-                                addressIn += CGuldenAddress(senderAddress).ToString();
-                            }
-                        }
-                    }
-                    if (!addressIn.empty())
-                    {
-                        sub.address = addressIn;
+                        AddAddressForOutPoint(wallet, txin.prevout, sub.address);
                     }
                     sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                     std:: string addressOut;
