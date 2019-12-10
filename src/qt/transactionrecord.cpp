@@ -315,7 +315,9 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         CAccount* account = nullptr;
                         for (auto const& [txOut, txOutWitness]: witnessBundle.inputs) {
+                            (unused) txOutWitness;
                             for(const auto& [current_uuid, current_account] : wallet->mapAccounts) {
+                                (unused) current_uuid;
                                 isminetype mine = ::IsMine(*current_account, txOut);
                                 if (mine) {
                                     account = current_account;
