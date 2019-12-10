@@ -115,28 +115,7 @@ public:
         return 0;
     }*/
 
-    void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override
-    {
-        CCoinsViewCursor* cursor = Cursor();
-        if (cursor)
-        {
-            while (cursor->Valid())
-            {
-                COutPoint outPoint;
-                if (!cursor->GetKey(outPoint))
-                    throw std::runtime_error("Error fetching record from witness cache.");
-
-                Coin outCoin;
-                if (!cursor->GetValue(outCoin))
-                    throw std::runtime_error("Error fetching record from witness cache.");
-
-                allCoins.emplace(std::pair(outPoint, outCoin));
-
-                cursor->Next();
-            }
-            delete cursor;
-        }
-    }
+    void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override;
 };
 
 /** CWitViewDB backed by the witness database (witstate/) */

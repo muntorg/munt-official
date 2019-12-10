@@ -249,6 +249,29 @@ size_t CCoinsViewDB::EstimateSize() const
     return db.EstimateSize(DB_COIN, (char)(DB_COIN+1));
 }
 
+void CCoinsViewDB::GetAllCoins(std::map<COutPoint, Coin>& allCoins) const
+{
+    CCoinsViewCursor* cursor = Cursor();
+    if (cursor)
+    {
+        while (cursor->Valid())
+        {
+            COutPoint outPoint;
+            if (!cursor->GetKey(outPoint))
+                throw std::runtime_error("Error fetching record from witness cache.");
+
+            Coin outCoin;
+            if (!cursor->GetValue(outCoin))
+                throw std::runtime_error("Error fetching record from witness cache.");
+
+            allCoins.emplace(std::pair(outPoint, outCoin));
+
+            cursor->Next();
+        }
+        delete cursor;
+    }
+}
+
 CBlockTreeDB::CBlockTreeDB(size_t nCacheSize, bool fMemory, bool fWipe) : CDBWrapper(GetDataDir() / "blocks" / "index", nCacheSize, fMemory, fWipe) {
 }
 
