@@ -26,12 +26,11 @@ isminetype CWallet::IsMine(const CTxIn &txin) const
 {
     {
         LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
-        if (mi != mapWallet.end())
+        const CWalletTx* prev = GetWalletTx(txin.prevout);
+        if (prev)
         {
-            const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.tx->vout.size())
-                return IsMine(prev.tx->vout[txin.prevout.n]);
+            if (txin.prevout.n < prev->tx->vout.size())
+                return IsMine(prev->tx->vout[txin.prevout.n]);
         }
     }
     return ISMINE_NO;
@@ -61,16 +60,14 @@ bool CWallet::IsAllFromMe(const CTransaction& tx, const isminefilter& filter) co
 
     for(const CTxIn& txin : tx.vin)
     {
-        auto mi = mapWallet.find(txin.prevout.getHash());
-        if (mi == mapWallet.end())
+        const CWalletTx* prev = GetWalletTx(txin.prevout);
+        if (!prev)
             return false; // any unknown inputs can't be from us
 
-        const CWalletTx& prev = (*mi).second;
-
-        if (txin.prevout.n >= prev.tx->vout.size())
+        if (txin.prevout.n >= prev->tx->vout.size())
             return false; // invalid input!
 
-        if (!(IsMine(prev.tx->vout[txin.prevout.n]) & filter))
+        if (!(IsMine(prev->tx->vout[txin.prevout.n]) & filter))
             return false;
     }
     return true;

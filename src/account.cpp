@@ -769,7 +769,7 @@ bool CAccount::HaveWalletTx(const CTransaction& tx)
     for(const CTxIn& txin : tx.vin)
     {
         isminetype ret = isminetype::ISMINE_NO;
-        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout.getHash());
+        const CWalletTx* prev = pactiveWallet->GetWalletTx(txin.prevout);
         if (prev && prev->tx->vout.size() != 0)
         {
             if (txin.prevout.n < prev->tx->vout.size())

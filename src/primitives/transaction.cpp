@@ -28,6 +28,12 @@ uint256 COutPoint::getBucketHash() const
     }
 }
 
+uint256 COutPoint::getTransactionHash() const
+{
+    assert(isHash);
+    return hash;
+}
+
 std::string COutPoint::ToString() const
 {
     if (isHash)

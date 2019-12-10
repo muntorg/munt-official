@@ -42,21 +42,21 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             continue;
         }
 
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(input.prevout.getHash());
-        if(mi == mapWallet.end() || input.prevout.n >= mi->second.tx->vout.size()) {
+        const CWalletTx* prev = GetWalletTx(input.prevout);
+        if(!prev || input.prevout.n >= prev->tx->vout.size()) {
             return false;
         }
-        const CAmount& amount = mi->second.tx->vout[input.prevout.n].nValue;
-        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(mi->second.tx->vout[input.prevout.n], type);
+        const CAmount& amount = prev->tx->vout[input.prevout.n].nValue;
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(prev->tx->vout[input.prevout.n], type);
         SignatureData sigdata;
         CAccount *signAccount=fromAccount;
         if (!signAccount)
-            signAccount = FindAccountForTransaction(mi->second.tx->vout[input.prevout.n]);
+            signAccount = FindAccountForTransaction(prev->tx->vout[input.prevout.n]);
         if (!signAccount)
             return false;
         std::vector<CKeyStore*> accountsToTry;
         accountsToTry.push_back(signAccount);
-        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, amount, SIGHASH_ALL), mi->second.tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, amount, SIGHASH_ALL), prev->tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -1056,9 +1056,12 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservek
             // Notify that old coins are spent
             for(const CTxIn& txin : wtxNew.tx->vin)
             {
-                CWalletTx &coin = mapWallet[txin.prevout.getHash()];
-                coin.BindWallet(this);
-                NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED, false);
+                CWalletTx* prev = GetWalletTx(txin.prevout);
+                if (prev)
+                {
+                    prev->BindWallet(this);
+                    NotifyTransactionChanged(this, prev->GetHash(), CT_UPDATED, false);
+                }
             }
         }
 

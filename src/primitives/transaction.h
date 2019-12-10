@@ -157,11 +157,7 @@ public:
     uint256 getBucketHash() const;
 
     // Transaction hash only for isHash outpoints
-    uint256 getHash() const
-    {
-        assert(isHash);
-        return hash;
-    }
+    uint256 getTransactionHash() const;
 
     void setHash(uint256 hash_)
     {

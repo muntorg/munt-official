@@ -58,7 +58,7 @@ struct CoinEntry {
     template<typename Stream>
     void Serialize(Stream &s) const {
         s << key;
-        s << outpoint->getHash();
+        s << outpoint->getBucketHash();
         uint32_t nTemp = outpoint->n;
         s << VARINT(nTemp);
     }
@@ -228,7 +228,7 @@ bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
             else
             {
                 batch.Write(entry, it->second.coin);
-                batch.Write(entryRef, it->first.getHash());
+                batch.Write(entryRef, it->first.getBucketHash());
             }
             changed++;
         }

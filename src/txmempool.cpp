@@ -148,7 +148,7 @@ void CTxMemPool::UpdateTransactionsFromBlock(const std::vector<uint256> &vHashes
         auto iter = mapNextTx.lower_bound(COutPoint(hash, 0));
         // First calculate the children, and update setMemPoolChildren to
         // include them, and update their setMemPoolParents to include this tx.
-        for (; iter != mapNextTx.end() && iter->first->getHash() == hash; ++iter) {
+        for (; iter != mapNextTx.end() && iter->first->getTransactionHash() == hash; ++iter) {
             const uint256 &childHash = iter->second->GetHash();
             txiter childIter = mapTx.find(childHash);
             assert(childIter != mapTx.end());
@@ -175,12 +175,14 @@ bool CTxMemPool::CalculateMemPoolAncestors(const CTxMemPoolEntry &entry, setEntr
         // GetMemPoolParents() is only valid for entries in the mempool, so we
         // iterate mapTx to find parents.
         for (unsigned int i = 0; i < tx.vin.size(); i++) {
-            txiter piter = mapTx.find(tx.vin[i].prevout.getHash());
-            if (piter != mapTx.end()) {
-                parentHashes.insert(piter);
-                if (parentHashes.size() + 1 > limitAncestorCount) {
-                    errString = strprintf("too many unconfirmed parents [limit: %u]", limitAncestorCount);
-                    return false;
+            if (tx.vin[i].prevout.isHash) {
+                txiter piter = mapTx.find(tx.vin[i].prevout.getTransactionHash());
+                if (piter != mapTx.end()) {
+                    parentHashes.insert(piter);
+                    if (parentHashes.size() + 1 > limitAncestorCount) {
+                        errString = strprintf("too many unconfirmed parents [limit: %u]", limitAncestorCount);
+                        return false;
+                    }
                 }
             }
         }
@@ -401,7 +403,9 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
     std::set<uint256> setParentTransactions;
     for (unsigned int i = 0; i < tx.vin.size(); i++) {
         mapNextTx.insert(std::pair(&tx.vin[i].prevout, &tx));
-        setParentTransactions.insert(tx.vin[i].prevout.getHash());
+        uint256 txHash;
+        if (GetTxHash(tx.vin[i].prevout, txHash))
+            setParentTransactions.insert(txHash);
     }
     // Don't bother worrying about child transactions of this one.
     // Normal case of a new transaction arriving is that there can't be any
@@ -540,7 +544,10 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMem
             txToRemove.insert(it);
         } else if (it->GetSpendsCoinbase()) {
             for(const CTxIn& txin : tx.vin) {
-                indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.getHash());
+                uint256 txHash;
+                if (!GetTxHash(txin.prevout, txHash))
+                    continue;
+                indexed_transaction_set::const_iterator it2 = mapTx.find(txHash);
                 if (it2 != mapTx.end())
                     continue;
                 const Coin &coin = pcoins->AccessCoin(txin.prevout);
@@ -663,7 +670,10 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
         int64_t parentSigOpCost = 0;
         for(const CTxIn &txin : tx.vin) {
             // Check that every mempool transaction's inputs refer to available coins, or other mempool tx's.
-            indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.getHash());
+            uint256 txHash;
+            indexed_transaction_set::const_iterator it2 = GetTxHash(txin.prevout, txHash)
+                                                              ? mapTx.find(txHash)
+                                                              : mapTx.end();
             if (it2 != mapTx.end()) {
                 const CTransaction& tx2 = it2->GetTx();
                 assert(tx2.vout.size() > txin.prevout.n && !tx2.vout[txin.prevout.n].IsNull());
@@ -708,7 +718,10 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
         CTxMemPool::setEntries setChildrenCheck;
         auto iter = mapNextTx.lower_bound(COutPoint(it->GetTx().GetHash(), 0));
         int64_t childSizes = 0;
-        for (; iter != mapNextTx.end() && iter->first->getHash() == it->GetTx().GetHash(); ++iter) {
+        for (; iter != mapNextTx.end(); ++iter) {
+            uint256 txHash;
+            if (GetTxHash(*iter->first, txHash) && txHash != it->GetTx().GetHash())
+                break;
             txiter childit = mapTx.find(iter->second->GetHash());
             assert(childit != mapTx.end()); // mapNextTx points to in-mempool transactions
             if (setChildrenCheck.insert(childit).second) {
@@ -902,7 +915,7 @@ void CTxMemPool::ClearPrioritisation(const uint256 hash)
 bool CTxMemPool::HasNoInputsOf(const CTransaction &tx) const
 {
     for (unsigned int i = 0; i < tx.vin.size(); i++)
-        if (exists(tx.vin[i].prevout.getHash()))
+        if (tx.vin[i].prevout.isHash && exists(tx.vin[i].prevout.getTransactionHash()))
             return false;
     return true;
 }
@@ -913,7 +926,7 @@ bool CCoinsViewMemPool::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint
     // If an entry in the mempool exists, always return that one, as it's guaranteed to never
     // conflict with the underlying cache, and it cannot have pruned entries (as it contains full)
     // transactions. First checking the underlying cache risks returning a pruned entry instead.
-    CTransactionRef ptx = mempool.get(outpoint.getHash());
+    CTransactionRef ptx = outpoint.isHash ? mempool.get(outpoint.getTransactionHash()) : nullptr;
     if (pOutpointRet)
         *pOutpointRet = outpoint;
     if (ptx) {
@@ -1080,7 +1093,7 @@ void CTxMemPool::TrimToSize(size_t sizelimit, std::vector<COutPoint>* pvNoSpends
         if (pvNoSpendsRemaining) {
             for(const CTransaction& tx : txn) {
                 for(const CTxIn& txin : tx.vin) {
-                    if (exists(txin.prevout.getHash())) continue;
+                    if (txin.prevout.isHash && exists(txin.prevout.getTransactionHash())) continue;
                     if (!mapNextTx.count(txin.prevout)) {
                         pvNoSpendsRemaining->push_back(txin.prevout);
                     }

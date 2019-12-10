@@ -633,8 +633,12 @@ public:
 
     bool exists(const COutPoint& outpoint) const
     {
+        // an index based outpoint references a block, so by definition it cannot be in the mempool
+        // as that onlly holds tx that are NOT in a block (yet)
+        if (!outpoint.isHash)
+            return false;
         LOCK(cs);
-        auto it = mapTx.find(outpoint.getHash());
+        auto it = mapTx.find(outpoint.getTransactionHash());
         return (it != mapTx.end() && outpoint.n < it->GetTx().vout.size());
     }
 

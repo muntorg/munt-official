@@ -837,15 +837,12 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uin
 
 void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t time)
 {
+    LOCK(cs_wallet);
+    const CWalletTx* prev = static_cast<CWallet*>(this)->GetWalletTx(txin.prevout);
+    if (prev)
     {
-        LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
-        if (mi != mapWallet.end())
-        {
-            const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.tx->vout.size())
-                RemoveAddressFromKeypoolIfIsMine(prev.tx->vout[txin.prevout.n], time);
-        }
+        if (txin.prevout.n < prev->tx->vout.size())
+            RemoveAddressFromKeypoolIfIsMine(prev->tx->vout[txin.prevout.n], time);
     }
 }
 

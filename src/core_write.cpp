@@ -198,7 +198,7 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
             if (txin.prevout.isHash)
             {
                 in.pushKV("prevout_type", "hash");
-                in.pushKV("txid", txin.prevout.getHash().GetHex());
+                in.pushKV("txid", txin.prevout.getTransactionHash().GetHex());
                 in.pushKV("tx_height", "");
                 in.pushKV("tx_index", "");
             }

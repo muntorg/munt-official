@@ -659,7 +659,8 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
             {
                 for (const auto& thisTransactionInputs : cannabalisedTransaction->vin)
                 {
-                    if (thisTransactionInputs.prevout.getHash() == cannabalisedInputTransaction->GetHash())
+                    uint256 txHash;
+                    if (GetTxHash(thisTransactionInputs.prevout, txHash) && txHash == cannabalisedInputTransaction->GetHash())
                     {
                         nFee += cannabalisedInputTransaction->vout[thisTransactionInputs.prevout.n].nValue;
                     }

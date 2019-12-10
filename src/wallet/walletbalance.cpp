@@ -24,15 +24,14 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccoun
     CAmount ret = 0;
     {
         LOCK(cs_wallet);
-        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(txin.prevout.getHash());
-        if (mi != mapWallet.end())
+        const CWalletTx* prev = GetWalletTx(txin.prevout);
+        if (prev)
         {
-            const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.tx->vout.size())
+            if (txin.prevout.n < prev->tx->vout.size())
             {
-                if ( (forAccount && (::IsMine(*forAccount, prev.tx->vout[txin.prevout.n]) & filter)) || (!forAccount && (IsMine(prev.tx->vout[txin.prevout.n]) & filter)) )
+                if ( (forAccount && (::IsMine(*forAccount, prev->tx->vout[txin.prevout.n]) & filter)) || (!forAccount && (IsMine(prev->tx->vout[txin.prevout.n]) & filter)) )
                 {
-                    ret = prev.tx->vout[txin.prevout.n].nValue;
+                    ret = prev->tx->vout[txin.prevout.n].nValue;
                 }
             }
         }

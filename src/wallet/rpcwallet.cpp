@@ -2477,7 +2477,9 @@ UniValue listlockunspent(const JSONRPCRequest& request)
     for(COutPoint &outpt : vOutpts) {
         UniValue o(UniValue::VOBJ);
 
-        o.push_back(Pair("txid", outpt.getHash().GetHex()));
+        uint256 txHash;
+        if (GetTxHash(outpt, txHash))
+            o.push_back(Pair("txid", txHash.GetHex()));
         o.push_back(Pair("vout", (int)outpt.n));
         ret.push_back(o);
     }

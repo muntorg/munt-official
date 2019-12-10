@@ -44,7 +44,7 @@ bool AddAddressForOutPoint(const CWallet *wallet, const COutPoint& outpoint, std
 {
     CTransactionRef tx;
     if (outpoint.isHash) {
-        const CWalletTx* wtx = wallet->GetWalletTx(outpoint.getHash());
+        const CWalletTx* wtx = wallet->GetWalletTx(outpoint.getTransactionHash());
         if (wtx) {
             tx = wtx->tx;
         }
@@ -147,7 +147,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             int nInputHeight = -1;
             LOCK(cs_main);
             if (prevout.isHash) {
-                const CWalletTx* txPrev = wallet->GetWalletTx(txInRef.prevout.getHash());
+                const CWalletTx* txPrev = wallet->GetWalletTx(prevout.getTransactionHash());
                 if (!txPrev || txPrev->tx->vout.size() == 0)
                     break;
 

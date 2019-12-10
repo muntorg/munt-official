@@ -216,7 +216,7 @@ double GuessVerificationProgress(const ChainTxData& data, CBlockIndex *pindex) {
 bool GetTxHash(const COutPoint& outpoint, uint256& txHash)
 {
     if (outpoint.isHash) {
-        txHash = outpoint.getHash();
+        txHash = outpoint.getTransactionHash();
         return true;
     }
     else {

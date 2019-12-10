@@ -674,7 +674,10 @@ int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out)
         // Missing undo metadata (height and coinbase). Older versions included this
         // information only in undo records for the last spend of a transactions'
         // outputs. This implies that it must be present for some other output of the same tx.
-        const Coin& alternate = AccessByTxid(view, out.getHash());
+        uint256 txHash;
+        if (!GetTxHash(out, txHash))
+            return DISCONNECT_FAILED; // adding output for transaction without known metadata
+        const Coin& alternate = AccessByTxid(view, txHash);
         if (!alternate.IsSpent()) {
             undo.nHeight = alternate.nHeight;
             undo.fCoinBase = alternate.fCoinBase;

@@ -65,7 +65,7 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
         const Coin& coin = it->second.coin;
 
         // and that its properties are matching
-        assert(!canonicalOutPoint.isHash || canonicalOutPoint.getHash() == outpoint.getHash());
+        assert(!canonicalOutPoint.isHash || canonicalOutPoint.getTransactionHash() == outpoint.getTransactionHash());
         assert(canonicalOutPoint.isHash || (canonicalOutPoint.getTransactionBlockNumber() == block && canonicalOutPoint.getTransactionIndex() == txIndex));
         assert(canonicalOutPoint.n == voutIndex);
         assert(coin.nHeight == block);
