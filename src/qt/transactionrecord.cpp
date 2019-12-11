@@ -135,21 +135,16 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
     if (findIter != mapBlockIndex.end())
         nWalletTxBlockHeight = findIter->second->nHeight;
-    if (CheckTransactionContextual(*wtx.tx, state, nWalletTxBlockHeight, &witnessBundles))
-    {
-        for (const auto& txInRef : wtx.tx->vin)
-        {
-            const COutPoint &prevout = txInRef.prevout;
-            if (prevout.IsNull() && wtx.tx->IsPoW2WitnessCoinBase())
-                continue;
 
+    BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
+        [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
             CTransactionRef txRef;
             int nInputHeight = -1;
             LOCK(cs_main);
-            if (prevout.isHash) {
-                const CWalletTx* txPrev = wallet->GetWalletTx(prevout.getTransactionHash());
+            if (outpoint.isHash) {
+                const CWalletTx* txPrev = wallet->GetWalletTx(outpoint.getTransactionHash());
                 if (!txPrev || txPrev->tx->vout.size() == 0)
-                    break;
+                    return false;
 
                 const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
                 if (findIter != mapBlockIndex.end()) {
@@ -160,21 +155,20 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             }
             else
             {
-                nInputHeight = prevout.getTransactionBlockNumber();
+                nInputHeight = outpoint.getTransactionBlockNumber();
                 CBlock block;
                 if (ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
-                    txRef = block.vtx[prevout.getTransactionIndex()];
+                    txRef = block.vtx[outpoint.getTransactionIndex()];
                 }
                 else
-                    break;
+                    return false;
             }
+            txOut = txRef->vout[outpoint.n];
+            txHeight = nInputHeight;
+            return true;
+        },
+        witnessBundles);
 
-            if (txRef && nInputHeight >= 0) {
-                if (!CheckTxInputAgainstWitnessBundles(state, &witnessBundles, txRef->vout[prevout.n], txInRef, nInputHeight, nWalletTxBlockHeight))
-                    break;
-            }
-        }
-    }
     std::vector<CTxOut> outputs = wtx.tx->vout;
     std::vector<CTxIn> inputs = wtx.tx->vin;
     if (witnessBundles.size() > 0)

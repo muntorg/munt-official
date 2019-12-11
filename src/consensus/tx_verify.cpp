@@ -256,7 +256,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
 }
 
 
-bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state, int checkHeight, std::vector<CWitnessTxBundle>* pWitnessBundles)
+bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state, int checkHeight)
 {
     for (const CTxOut& txout : tx.vout)
     {
@@ -277,45 +277,6 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             if (nWeight < gMinimumWitnessWeight)
             {
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
-            }
-
-            if (pWitnessBundles)
-            {
-                if (tx.IsPoW2WitnessCoinBase())
-                {
-                    pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::WitnessType, std::pair(txout, std::move(witnessDetails))));
-                }
-                else
-                {
-                    bool matchedExistingBundle = false;
-                    for (auto& bundle: *pWitnessBundles)
-                    {
-                        if (bundle.bundleType == CWitnessTxBundle::WitnessTxType::CreationType &&
-                            witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0 &&
-                            bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID)
-                        {
-                            bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
-                            matchedExistingBundle = true;
-                        }
-                        else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID) && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID )
-                        {
-                            bundle.bundleType = CWitnessTxBundle::WitnessTxType::RearrangeType;
-                            bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
-                            matchedExistingBundle = true;
-                            break;
-                        }
-                    }
-                    if (!matchedExistingBundle)
-                    {
-                        if (witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0) {
-                            pWitnessBundles->push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::pair(txout,std::move(witnessDetails))));
-                        }
-                        else {
-                            CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType, std::pair(txout, std::move(witnessDetails)));
-                            pWitnessBundles->push_back(spendBundle);
-                        }
-                    }
-                }
             }
         }
     }
@@ -876,7 +837,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
     return true;
 }
 
-bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight, std::vector<CWitnessTxBundle>* pWitnessBundles)
+bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight, const std::vector<CWitnessTxBundle>* pWitnessBundles)
 {
         // This doesn't trigger the DoS code on purpose; if it did, it would make it easier
         // for an attacker to attempt to split the network.
@@ -942,42 +903,15 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
             nValueIn += coin.out.nValue;
             if (!MoneyRange(coin.out.nValue) || !MoneyRange(nValueIn))
                 return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputvalues-outofrange");
-
-            if (pWitnessBundles)
-            {
-                if (!CheckTxInputAgainstWitnessBundles(state, pWitnessBundles, coin.out, tx.vin[i], coin.nHeight, nSpendHeight))
-                    return false;
-            }
         }
+
         CAmount witnessPenaltyFee = 0;
         if (pWitnessBundles)
         {
             for (auto& bundle : *pWitnessBundles)
             {
-                if (bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType)
-                {
-                    if (!bundle.IsValidRearrangeBundle())
-                        return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-rearrange-bundle");
-                }
-                else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType)
-                {
-                    if (!bundle.IsValidSpendBundle(nSpendHeight, tx))
-                        return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-spend-bundle");
-                }
-                else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::IncreaseType)
-                {
-                    if (!bundle.IsValidIncreaseBundle())
-                        return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-increase-bundle");
-                }
-                else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType)
-                {
-                    if (!bundle.IsValidChangeWitnessKeyBundle())
-                        return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-changewitnesskey-bundle");
-                }
-                else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::RenewType)
-                {
+                if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::RenewType)
                     witnessPenaltyFee += CalculateWitnessPenaltyFee(bundle.outputs[0].first);
-                }
             }
         }
 

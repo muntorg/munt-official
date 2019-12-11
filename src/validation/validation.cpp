@@ -487,7 +487,7 @@ CScript GetScriptForNonScriptOutput(const CTxOut& out)
  * This does not modify the UTXO set. If pvChecks is not NULL, script checks are pushed onto it
  * instead of being performed inline.
  */
-bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, std::vector<CWitnessTxBundle>* pWitnessBundles, std::vector<CScriptCheck> *pvChecks)
+bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, const std::vector<CWitnessTxBundle>* pWitnessBundles, std::vector<CScriptCheck> *pvChecks)
 {
     if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase())
     {
@@ -875,11 +875,9 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     }
 
     // Check transactions
-    std::vector<std::vector<CWitnessTxBundle>> witnessBundles;
     for (const auto& tx : block.vtx)
     {
-        witnessBundles.push_back(std::vector<CWitnessTxBundle>());
-        if (!CheckTransactionContextual(*tx, state, pindex->nHeight, &witnessBundles.back()))
+        if (!CheckTransactionContextual(*tx, state, pindex->nHeight))
         {
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
         }
@@ -1087,9 +1085,12 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     blockundo.vtxundo.reserve(block.vtx.size() - 1);
     std::vector<PrecomputedTransactionData> txdata;
     txdata.reserve(block.vtx.size()); // Required so that pointers to individual PrecomputedTransactionData don't get invalidated
+    std::vector<std::vector<CWitnessTxBundle>> witnessBundles;
     for (unsigned int txIndex = 0; txIndex < block.vtx.size(); txIndex++)
     {
         const CTransaction &tx = *(block.vtx[txIndex]);
+
+        witnessBundles.push_back(std::vector<CWitnessTxBundle>());
 
         nInputs += tx.vin.size();
 
@@ -1158,6 +1159,18 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             {
                 nFees += view.GetValueIn(tx)-tx.GetValueOut();
             }
+
+            if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
+                    [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
+                        const Coin& coin = view.AccessCoin(outpoint);
+                        if (coin.IsSpent())
+                            return false;
+                        txOut = coin.out;
+                        txHeight = coin.nHeight;
+                        return true;
+                    },
+                    witnessBundles[txIndex]))
+                return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
 
             std::vector<CScriptCheck> vChecks;
             bool fCacheResults = fJustCheck; /* Don't cache results if we're actually connecting blocks (still consult the cache, though) */

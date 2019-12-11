@@ -142,8 +142,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     if (!CheckTransaction(tx, state))
         return false; // state filled in by CheckTransaction
 
-    std::vector<CWitnessTxBundle> witnessBundles;
-    if (!CheckTransactionContextual(tx, state, chain.Height(), &witnessBundles))
+    if (!CheckTransactionContextual(tx, state, chain.Height()))
         return false; // state filled in by CheckTransaction
 
     // Coinbase is only valid in a block, not as a loose transaction
@@ -503,6 +502,18 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         if (!chainparams.RequireStandard()) {
             scriptVerifyFlags = GetArg("-promiscuousmempoolflags", scriptVerifyFlags);
         }
+
+        std::vector<CWitnessTxBundle> witnessBundles;
+        if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
+                [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
+                    const Coin& coin = view.AccessCoin(outpoint);
+                    if (coin.IsSpent())
+                        return false;
+                    txOut = coin.out;
+                    txHeight = coin.nHeight;
+                    return true;
+                }, witnessBundles))
+            return false;
 
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.

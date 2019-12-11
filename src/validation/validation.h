@@ -571,7 +571,7 @@ bool FlushStateToDisk(const CChainParams& chainParams, CValidationState &state, 
 void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight);
 void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfterHeight);
 
-bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, std::vector<CWitnessTxBundle>* pWitnessBundles, std::vector<CScriptCheck> *pvChecks = NULL);
+bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& txdata, const std::vector<CWitnessTxBundle>* pWitnessBundles, std::vector<CScriptCheck> *pvChecks = NULL);
 
 /**
  * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and

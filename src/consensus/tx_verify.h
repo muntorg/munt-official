@@ -82,7 +82,7 @@ void IncrementWitnessFailCount(uint64_t& failCount);
 bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fCheckDuplicateInputs=true);
 
 /** Context-dependent validity checks */
-bool CheckTransactionContextual(const CTransaction& tx, CValidationState& state, int checkHeight, std::vector<CWitnessTxBundle>* pWitnessBundles);
+bool CheckTransactionContextual(const CTransaction& tx, CValidationState& state, int checkHeight);
 
 /** Build witness bundles and witness related validity checks */
 bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nSpendHeight, std::function<bool(const COutPoint&, CTxOut&, int&)> getTxOut, std::vector<CWitnessTxBundle>& bundles);
@@ -95,7 +95,7 @@ namespace Consensus {
  * witnessBundles should be prepopulated for outputs first by calling CheckTransactionContextual
  * Preconditions: tx.IsCoinBase() is false. witnessBundles is not null if witness transactions are to be verified.
  */
-bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight, std::vector<CWitnessTxBundle>* pWitnessBundles);
+bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight, const std::vector<CWitnessTxBundle>* pWitnessBundles);
 } // namespace Consensus
 
 /** Auxiliary functions for transaction validation (ideally should not be exposed) */
