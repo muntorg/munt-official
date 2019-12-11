@@ -84,6 +84,9 @@ bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fChe
 /** Context-dependent validity checks */
 bool CheckTransactionContextual(const CTransaction& tx, CValidationState& state, int checkHeight, std::vector<CWitnessTxBundle>* pWitnessBundles);
 
+/** Build witness bundles and witness related validity checks */
+bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nSpendHeight, std::function<bool(const COutPoint&, CTxOut&, int&)> getTxOut, std::vector<CWitnessTxBundle>& bundles);
+
 namespace Consensus {
 /**
  * Check whether all inputs of this transaction are valid (no double spends and amounts)

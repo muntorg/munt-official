@@ -996,3 +996,119 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-outofrange");
     return true;
 }
+
+bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nSpendHeight, std::function<bool(const COutPoint&, CTxOut&, int&)> getTxOut, std::vector<CWitnessTxBundle>& bundles)
+{
+    bundles.clear();
+
+    std::vector<CWitnessTxBundle> resultBundles;
+
+    for (const CTxOut& txout : tx.vout)
+    {
+        if (IsPow2WitnessOutput(txout))
+        {
+            if ( txout.nValue < (gMinimumWitnessAmount * COIN) )
+                return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+
+            CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
+            uint64_t nUnused1, nUnused2;
+            int64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, nSpendHeight, nUnused1, nUnused2);
+            if (nLockLengthInBlocks < int64_t(MinimumWitnessLockLength()))
+                return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
+            if (nLockLengthInBlocks - nSpendHeight > int64_t(MaximumWitnessLockLength()))
+                return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+
+            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
+            if (nWeight < gMinimumWitnessWeight)
+            {
+                return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+            }
+
+            if (tx.IsPoW2WitnessCoinBase())
+            {
+                resultBundles.push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::WitnessType, std::pair(txout, std::move(witnessDetails))));
+            }
+            else
+            {
+                bool matchedExistingBundle = false;
+                for (auto& bundle: resultBundles)
+                {
+                    if (bundle.bundleType == CWitnessTxBundle::WitnessTxType::CreationType &&
+                        witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0 &&
+                        bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID)
+                    {
+                        bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
+                        matchedExistingBundle = true;
+                    }
+                    else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID) && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID )
+                    {
+                        bundle.bundleType = CWitnessTxBundle::WitnessTxType::RearrangeType;
+                        bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
+                        matchedExistingBundle = true;
+                        break;
+                    }
+                }
+                if (!matchedExistingBundle)
+                {
+                    if (witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0) {
+                        resultBundles.push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::pair(txout,std::move(witnessDetails))));
+                    }
+                    else {
+                        // if not matched to an existing bundle and the output is a witness output, how can it ever be a spend bundle?? it has to be followed by input checking to correct this.
+                        // perhaps better to introduce new bundle type indicating "undetermined" or something similar.
+                        CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType, std::pair(txout, std::move(witnessDetails)));
+                        resultBundles.push_back(spendBundle);
+                    }
+                }
+            }
+        }
+    }
+
+    // match tx inputs to existing bundles or create new
+    for (unsigned int i = 0; i < tx.vin.size(); i++)
+    {
+        const COutPoint &prevout = tx.vin[i].prevout;
+        if (prevout.IsNull() && tx.IsPoW2WitnessCoinBase())
+            continue;
+
+        CTxOut inputTxOut;
+        int inputTxHeight;
+        if (!getTxOut(prevout, inputTxOut, inputTxHeight))
+            return false;
+
+        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, nSpendHeight))
+            return false;
+    }
+
+    for (auto& bundle: resultBundles)
+    {
+        if (bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType)
+        {
+            if (!bundle.IsValidRearrangeBundle())
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-rearrange-bundle");
+        }
+        else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType)
+        {
+            if (!bundle.IsValidSpendBundle(nSpendHeight, tx))
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-spend-bundle");
+        }
+        else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::IncreaseType)
+        {
+            if (!bundle.IsValidIncreaseBundle())
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-increase-bundle");
+        }
+        else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType)
+        {
+            if (!bundle.IsValidChangeWitnessKeyBundle())
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-changewitnesskey-bundle");
+        }
+        else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::RenewType)
+        {
+            // nop, this case already passed ::IsRenewalBundle()
+        }
+    }
+
+    bundles = std::move(resultBundles);
+    return true;
+}
+
