@@ -16,6 +16,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include <functional>
 
 class CBlockIndex;
 class CCoinsViewCache;
