@@ -1148,6 +1148,19 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                              REJECT_INVALID, "bad-blk-sigops");
 
         txdata.emplace_back(tx);
+
+        if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
+                [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
+                    const Coin& coin = view.AccessCoin(outpoint);
+                    if (coin.IsSpent())
+                        return false;
+                    txOut = coin.out;
+                    txHeight = coin.nHeight;
+                    return true;
+                },
+                witnessBundles[txIndex]))
+            return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
+
         //fixme: (PHASE4) (CODEBASE CLEANUP) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?) - we already test this elsewhere so it would only be a cleanness improvement.
         if (!tx.IsCoinBase())
         {
@@ -1160,17 +1173,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                 nFees += view.GetValueIn(tx)-tx.GetValueOut();
             }
 
-            if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
-                    [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
-                        const Coin& coin = view.AccessCoin(outpoint);
-                        if (coin.IsSpent())
-                            return false;
-                        txOut = coin.out;
-                        txHeight = coin.nHeight;
-                        return true;
-                    },
-                    witnessBundles[txIndex]))
-                return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
 
             std::vector<CScriptCheck> vChecks;
             bool fCacheResults = fJustCheck; /* Don't cache results if we're actually connecting blocks (still consult the cache, though) */

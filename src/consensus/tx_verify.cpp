@@ -1002,7 +1002,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
         const COutPoint &prevout = tx.vin[i].prevout;
-        if (prevout.IsNull() && tx.IsPoW2WitnessCoinBase())
+        if (prevout.IsNull() && tx.IsCoinBase())
             continue;
 
         CTxOut inputTxOut;
