@@ -127,47 +127,57 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         return parts;
     }
 
-    //fixme: (PHASE4) - This isn't very efficient, we do the same calculations already when verifying the inputs; Ideally we should just cache this information as part of the wtx to avoid recalc.
-    // Deal with special "complex" witness transaction types first.
-    std::vector<CWitnessTxBundle> witnessBundles;
-    CValidationState state;
-    int nWalletTxBlockHeight = chainActive.Tip()?chainActive.Tip()->nHeight:0;
-    const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
-    if (findIter != mapBlockIndex.end())
-        nWalletTxBlockHeight = findIter->second->nHeight;
+    // Get witness bundles from tx as computed by validation, or build them if not available.
+    CWitnessBundlesRef pWitnessBundles;
+    if (wtx.tx->witnessBundles)
+    {
+        pWitnessBundles = wtx.tx->witnessBundles;
+    }
+    else
+    {
+        pWitnessBundles = std::make_shared<CWitnessBundles>();
 
-    BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
-        [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
-            CTransactionRef txRef;
-            int nInputHeight = -1;
-            LOCK(cs_main);
-            if (outpoint.isHash) {
-                const CWalletTx* txPrev = wallet->GetWalletTx(outpoint.getTransactionHash());
-                if (!txPrev || txPrev->tx->vout.size() == 0)
-                    return false;
+        CValidationState state;
+        int nWalletTxBlockHeight = chainActive.Tip()?chainActive.Tip()->nHeight:0;
+        const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
+        if (findIter != mapBlockIndex.end())
+            nWalletTxBlockHeight = findIter->second->nHeight;
 
-                const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
-                if (findIter != mapBlockIndex.end()) {
-                    nInputHeight = findIter->second->nHeight;
-                }
+        BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
+            [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
+                CTransactionRef txRef;
+                int nInputHeight = -1;
+                LOCK(cs_main);
+                if (outpoint.isHash) {
+                    const CWalletTx* txPrev = wallet->GetWalletTx(outpoint.getTransactionHash());
+                    if (!txPrev || txPrev->tx->vout.size() == 0)
+                        return false;
 
-                txRef = txPrev->tx;
-            }
-            else
-            {
-                nInputHeight = outpoint.getTransactionBlockNumber();
-                CBlock block;
-                if (ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
-                    txRef = block.vtx[outpoint.getTransactionIndex()];
+                    const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
+                    if (findIter != mapBlockIndex.end()) {
+                        nInputHeight = findIter->second->nHeight;
+                    }
+
+                    txRef = txPrev->tx;
                 }
                 else
-                    return false;
-            }
-            txOut = txRef->vout[outpoint.n];
-            txHeight = nInputHeight;
-            return true;
-        },
-        witnessBundles);
+                {
+                    nInputHeight = outpoint.getTransactionBlockNumber();
+                    CBlock block;
+                    if (ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
+                        txRef = block.vtx[outpoint.getTransactionIndex()];
+                    }
+                    else
+                        return false;
+                }
+                txOut = txRef->vout[outpoint.n];
+                txHeight = nInputHeight;
+                return true;
+            },
+            *pWitnessBundles);
+    }
+
+    CWitnessBundles& witnessBundles = *pWitnessBundles;
 
     std::vector<CTxOut> outputs = wtx.tx->vout;
     std::vector<CTxIn> inputs = wtx.tx->vin;

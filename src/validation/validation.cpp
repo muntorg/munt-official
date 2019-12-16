@@ -1085,12 +1085,12 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     blockundo.vtxundo.reserve(block.vtx.size() - 1);
     std::vector<PrecomputedTransactionData> txdata;
     txdata.reserve(block.vtx.size()); // Required so that pointers to individual PrecomputedTransactionData don't get invalidated
-    std::vector<std::vector<CWitnessTxBundle>> witnessBundles;
+    std::vector<CWitnessBundlesRef> witnessBundles;
     for (unsigned int txIndex = 0; txIndex < block.vtx.size(); txIndex++)
     {
         const CTransaction &tx = *(block.vtx[txIndex]);
 
-        witnessBundles.push_back(std::vector<CWitnessTxBundle>());
+        witnessBundles.push_back(std::make_shared<CWitnessBundles>());
 
         nInputs += tx.vin.size();
 
@@ -1158,8 +1158,10 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     txHeight = coin.nHeight;
                     return true;
                 },
-                witnessBundles[txIndex]))
+                *witnessBundles[txIndex]))
             return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
+
+        tx.witnessBundles = witnessBundles[txIndex];
 
         //fixme: (PHASE4) (CODEBASE CLEANUP) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?) - we already test this elsewhere so it would only be a cleanness improvement.
         if (!tx.IsCoinBase())
@@ -1176,9 +1178,9 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
             std::vector<CScriptCheck> vChecks;
             bool fCacheResults = fJustCheck; /* Don't cache results if we're actually connecting blocks (still consult the cache, though) */
-            if (!CheckInputs(tx, state, view, fScriptChecks, flags, fCacheResults, txdata[txIndex], &witnessBundles[txIndex], nScriptCheckThreads ? &vChecks : NULL))
+            if (!CheckInputs(tx, state, view, fScriptChecks, flags, fCacheResults, txdata[txIndex], witnessBundles[txIndex].get(), nScriptCheckThreads ? &vChecks : NULL))
                 return error("ConnectBlock(): CheckInputs on %s failed with %s",
-                    tx.GetHash().ToString(), FormatStateMessage(state));
+                             tx.GetHash().ToString(), FormatStateMessage(state));
             control.Add(vChecks);
         }
 

@@ -503,7 +503,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             scriptVerifyFlags = GetArg("-promiscuousmempoolflags", scriptVerifyFlags);
         }
 
-        std::vector<CWitnessTxBundle> witnessBundles;
+        CWitnessBundlesRef pWitnessBundles = std::make_shared<CWitnessBundles>();
         if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
                 [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
                     const Coin& coin = view.AccessCoin(outpoint);
@@ -512,13 +512,15 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                     txOut = coin.out;
                     txHeight = coin.nHeight;
                     return true;
-                }, witnessBundles))
+                }, *pWitnessBundles))
             return false;
+
+        tx.witnessBundles = pWitnessBundles;
 
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.
         PrecomputedTransactionData txdata(tx);
-        if (!CheckInputs(tx, state, view, true, scriptVerifyFlags, true, txdata, &witnessBundles))
+        if (!CheckInputs(tx, state, view, true, scriptVerifyFlags, true, txdata, pWitnessBundles.get()))
         {
             //fixme: (PHASE4) (SEGSIG) removed cleanstack/witness check here - double check if it was necessary.
             return false; // state filled in by CheckInputs

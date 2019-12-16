@@ -1135,6 +1135,9 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
     }
 }
 
+struct CWitnessTxBundle;
+typedef std::vector<CWitnessTxBundle> CWitnessBundles;
+typedef std::shared_ptr<CWitnessBundles> CWitnessBundlesRef;
 
 //fixme: (PHASE4) Remove
 #define CURRENT_TX_VERSION_POW2 (IsSegSigEnabled(chainActive.TipPrev()) ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
@@ -1166,6 +1169,8 @@ public:
     const uint32_t nLockTime;
     mutable std::bitset<8> flags;
     mutable std::bitset<8> extraFlags;//Currently unused but present for forwards compat.
+
+    mutable CWitnessBundlesRef witnessBundles; // optional, memory only
 
 private:
     /** Memory only. */
