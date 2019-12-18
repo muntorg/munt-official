@@ -259,14 +259,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 subSend.credit = 0;
                                 subSend.debit = subReceive.credit;
                                 subSend.idx = parts.size(); // sequence number
-                                if (subSend.fromAccountUUID == subSend.receiveAccountUUID)
-                                {
-                                    parts.pop_back();
-                                }
-                                else
-                                {
-                                    parts.append(subSend);
-                                }
+                                parts.append(subSend);
                                 break;
                             }
                         }
@@ -349,47 +342,15 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 break;
                 case CWitnessTxBundle::WitnessTxType::RenewType:
                 {
-                    TransactionRecord sub(hash, nTime);
-                    CAmount totalAmountLocked = 0;
-                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
+                    TransactionRecord subReceive(hash, nTime);
+                    if (witnessOutputsToReceiveRecord(wallet, wtx, witnessBundle, subReceive, TransactionRecord::WitnessRenew, parts.size()))
                     {
-                        (unused)witnessDetails;
-                        for( const auto& [accountUUID, account] : wallet->mapAccounts )
-                        {
-                            (unused)accountUUID;
-                            isminetype mine = IsMine(*account, txOut);
-                            if (mine)
-                            {
-                                totalAmountLocked = txOut.nValue;
-                                CTxDestination getAddress;
-                                if (ExtractDestination(txOut, getAddress))
-                                {
-                                    sub.address = CGuldenAddress(getAddress).ToString();
-                                }
-                                sub.type = TransactionRecord::WitnessRenew;
-                                sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
-                                sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
-                                sub.actionAccountParentUUID = sub.receiveAccountParentUUID = account->getParentUUID();
-                                sub.idx = parts.size(); // sequence number
-                                sub.credit = totalAmountLocked;
-                                sub.debit = totalAmountLocked;
-                                parts.append(sub);
-
-                                // Remove the witness related outputs so that the remaining decomposition code can ignore it.
-                                const auto& txOutRef = txOut;
-                                outputs.erase(std::remove_if(outputs.begin(), outputs.end(),[&](CTxOut x){return x == txOutRef;}));
-                                //fixme: (PHASE4) - Remove the inputs as well.
-
-                                break;
-                            }
-                        }
+                        subReceive.debit = subReceive.credit;
+                        parts.append(subReceive);
                     }
-                    //fixme: (FUT) match inputs with outputs
-                    /*for (const auto& input : witnessBundle.inputs)
-                    {
-                        // Remove the witness related inputs so that the remaining decomposition code can ignore it.
-                        //inputs.erase(std::remove_if(inputs.begin(), inputs.end(),[&](CTxIn x){return x == input.first;}));
-                    }*/
+
+                    //fixme: (FUT) - Add fee transaction to sender account (we should relook an optional "display fee" button though.
+                    //It isn't 100% clear if/when we should show fees and when not.
                 }
                 break;
                 case CWitnessTxBundle::WitnessTxType::IncreaseType:
@@ -397,38 +358,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     TransactionRecord subSend(hash, nTime);
                     TransactionRecord subReceive(hash, nTime);
                     subReceive.idx = -1;
-                    CAmount totalAmountLocked = 0;
-                    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
-                    {
-                        (unused) witnessDetails;
-                        for( const auto& accountPair : wallet->mapAccounts )
-                        {
-                            CAccount* account = accountPair.second;
-                            isminetype mine = IsMine(*account, txOut);
-                            if (mine)
-                            {
-                                totalAmountLocked += txOut.nValue;
-                            }
-                        }
-                    }
-                    CAmount oldAmountLocked = 0;
-                    for (const auto& [txOut, witnessDetails] : witnessBundle.inputs)
-                    {
-                        (unused) witnessDetails;
-                        for( const auto& accountPair : wallet->mapAccounts )
-                        {
-                            CAccount* account = accountPair.second;
-                            isminetype mine = IsMine(*account, txOut);
-                            if (mine)
-                            {
-                                oldAmountLocked += txOut.nValue;
-                            }
-                        }
-                    }
 
                     if (witnessOutputsToReceiveRecord(wallet, wtx, witnessBundle, subReceive, TransactionRecord::WitnessIncreaseRecv, parts.size()))
                     {
-                        subReceive.debit = oldAmountLocked;
+                        subReceive.debit = std::accumulate(witnessBundle.inputs.begin(), witnessBundle.inputs.end(), CAmount(0), [](const CAmount acc, const auto& it){
+                            const CTxOut& txOut = std::get<0>(it);
+                            return acc + txOut.nValue;
+                        });
                         parts.append(subReceive);
                     }
 
