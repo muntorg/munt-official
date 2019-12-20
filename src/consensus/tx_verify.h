@@ -91,6 +91,28 @@ template<typename Stream> inline void Unserialize(Stream& s, std::pair<const CTx
     Unserialize(s, a.second);
 }
 
+struct CWitnessBundles: std::vector<CWitnessTxBundle>
+{
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
+        std::vector<CWitnessTxBundle>& vBundles = *this;
+        READWRITECOMPACTSIZEVECTOR(vBundles);
+    }
+
+    CWitnessBundles() {}
+
+    /** This deserializing constructor to support unserialize of const objects. */
+    template <typename Stream>
+    CWitnessBundles(deserialize_type, Stream& s)
+    {
+        Unserialize(s);
+    }
+
+};
+
 bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight);
 
 CAmount CalculateWitnessPenaltyFee(const CTxOut& output);

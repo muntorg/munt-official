@@ -195,6 +195,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             if (findIter != mapBlockIndex.end())
                 nWalletTxBlockHeight = findIter->second->nHeight;
 
+            CWitnessBundles bundles;
             haveBundles = BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
                 [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
                     CTransactionRef txRef;
@@ -226,7 +227,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     txHeight = nInputHeight;
                     return true;
                 },
-                *pWitnessBundles);
+                bundles);
+            pWitnessBundles = std::make_shared<CWitnessBundles>(bundles);
         }
 
         if (haveBundles)
@@ -238,7 +240,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         }
     }
 
-    CWitnessBundles& witnessBundles = *pWitnessBundles;
+    const CWitnessBundles& witnessBundles = *pWitnessBundles;
 
     std::vector<CTxOut> outputs = wtx.tx->vout;
     std::vector<CTxIn> inputs = wtx.tx->vin;

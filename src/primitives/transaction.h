@@ -1143,20 +1143,8 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
     }
 }
 
-struct CWitnessTxBundle;
-struct CWitnessBundles: std::vector<CWitnessTxBundle>
-{
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
-    {
-        std::vector<CWitnessTxBundle>& vBundles = *this;
-        READWRITECOMPACTSIZEVECTOR(vBundles);
-    }
-};
-
-typedef std::shared_ptr<CWitnessBundles> CWitnessBundlesRef;
+struct CWitnessBundles;
+typedef std::shared_ptr<const CWitnessBundles> CWitnessBundlesRef;
 
 //fixme: (PHASE4) Remove
 #define CURRENT_TX_VERSION_POW2 (IsSegSigEnabled(chainActive.TipPrev()) ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)

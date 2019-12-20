@@ -1089,9 +1089,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     for (unsigned int txIndex = 0; txIndex < block.vtx.size(); txIndex++)
     {
         const CTransaction &tx = *(block.vtx[txIndex]);
-
-        witnessBundles.push_back(std::make_shared<CWitnessBundles>());
-
         nInputs += tx.vin.size();
 
         if (tx.IsPoW2WitnessCoinBase())
@@ -1149,6 +1146,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
         txdata.emplace_back(tx);
 
+        CWitnessBundles bundles;
         if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
                 [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
                     const Coin& coin = view.AccessCoin(outpoint);
@@ -1158,9 +1156,10 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     txHeight = coin.nHeight;
                     return true;
                 },
-                *witnessBundles[txIndex]))
+                bundles))
             return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
 
+        witnessBundles.push_back(std::make_shared<CWitnessBundles>(bundles));
         tx.witnessBundles = witnessBundles[txIndex];
 
         //fixme: (PHASE4) (CODEBASE CLEANUP) - CheckInputs needs to run as well for witness coinbase (can we just run this whole block for witness coinbase?) - we already test this elsewhere so it would only be a cleanness improvement.
