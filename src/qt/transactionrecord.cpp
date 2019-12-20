@@ -180,46 +180,56 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     }
     else
     {
-        CValidationState state;
-        int nWalletTxBlockHeight = chainActive.Tip()?chainActive.Tip()->nHeight:0;
-        const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
-        if (findIter != mapBlockIndex.end())
-            nWalletTxBlockHeight = findIter->second->nHeight;
+        bool haveBundles = false;
 
-        bool bundlesBuild = BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
-            [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
-                CTransactionRef txRef;
-                int nInputHeight = -1;
-                LOCK(cs_main);
-                if (outpoint.isHash) {
-                    const CWalletTx* txPrev = wallet->GetWalletTx(outpoint.getTransactionHash());
-                    if (!txPrev || txPrev->tx->vout.size() == 0)
-                        return false;
+        if (wtx.tx->witnessBundles)
+        {
+            pWitnessBundles = wtx.tx->witnessBundles;
+            haveBundles = true;
+        }
+        else
+        {
+            CValidationState state;
+            int nWalletTxBlockHeight = chainActive.Tip()?chainActive.Tip()->nHeight:0;
+            const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
+            if (findIter != mapBlockIndex.end())
+                nWalletTxBlockHeight = findIter->second->nHeight;
 
-                    const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
-                    if (findIter != mapBlockIndex.end()) {
-                        nInputHeight = findIter->second->nHeight;
-                    }
+            haveBundles = BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
+                [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
+                    CTransactionRef txRef;
+                    int nInputHeight = -1;
+                    LOCK(cs_main);
+                    if (outpoint.isHash) {
+                        const CWalletTx* txPrev = wallet->GetWalletTx(outpoint.getTransactionHash());
+                        if (!txPrev || txPrev->tx->vout.size() == 0)
+                            return false;
 
-                    txRef = txPrev->tx;
-                }
-                else
-                {
-                    nInputHeight = outpoint.getTransactionBlockNumber();
-                    CBlock block;
-                    if (ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
-                        txRef = block.vtx[outpoint.getTransactionIndex()];
+                        const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
+                        if (findIter != mapBlockIndex.end()) {
+                            nInputHeight = findIter->second->nHeight;
+                        }
+
+                        txRef = txPrev->tx;
                     }
                     else
-                        return false;
-                }
-                txOut = txRef->vout[outpoint.n];
-                txHeight = nInputHeight;
-                return true;
-            },
-            *pWitnessBundles);
+                    {
+                        nInputHeight = outpoint.getTransactionBlockNumber();
+                        CBlock block;
+                        if (ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
+                            txRef = block.vtx[outpoint.getTransactionIndex()];
+                        }
+                        else
+                            return false;
+                    }
+                    txOut = txRef->vout[outpoint.n];
+                    txHeight = nInputHeight;
+                    return true;
+                },
+                *pWitnessBundles);
+        }
 
-        if (bundlesBuild)
+        if (haveBundles)
         {
             CWalletTx& w = REF(wtx);
             w.witnessBundles = pWitnessBundles;
