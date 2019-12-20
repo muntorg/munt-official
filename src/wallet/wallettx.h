@@ -126,6 +126,13 @@ public:
     mutable std::map<const CAccount*, CAmount> immatureWatchCreditCached;
     mutable std::map<const CAccount*, CAmount> availableWatchCreditCached;
 
+    /**
+     * Witness bundles (optional). These can be efficiently computed during sync/validation, optionally cached here to avoid re-doing this
+     * later. This can be either expensive because of required disk access, or even impossible because the required data
+     * is not available anymore.
+     */
+    CWitnessBundlesRef witnessBundles;
+
     CWalletTx()
     {
         Init(NULL);
@@ -188,6 +195,22 @@ public:
         READWRITE(nTimeReceived);
         READWRITE(fFromMe);
         READWRITE(fSpent);
+
+        // Optional extras.
+        unsigned char fEXTRA_WITNESS_BUNDLE = 1 << 0;
+        if (ser_action.ForRead() && s.size() > 0)
+        {
+            unsigned char fExtras;
+            READWRITE(fExtras);
+            if (fExtras & fEXTRA_WITNESS_BUNDLE) {
+                READWRITE(witnessBundles);
+            }
+        }
+        if (!ser_action.ForRead() && witnessBundles)
+        {
+            READWRITE(fEXTRA_WITNESS_BUNDLE);
+            READWRITE(witnessBundles);
+        }
 
         if (ser_action.ForRead())
         {

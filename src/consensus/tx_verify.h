@@ -58,6 +58,7 @@ struct CWitnessTxBundle
         outputs.push_back(output);
     }
     CWitnessTxBundle(WitnessTxType bundleType_) : bundleType(bundleType_) {}
+    CWitnessTxBundle() {}
 
     inline bool IsValidRearrangeBundle();
     inline bool IsValidSpendBundle(uint64_t nHeight, const CTransaction& transaction);
@@ -70,7 +71,25 @@ struct CWitnessTxBundle
     uint64_t inputsActualLockFromBlock = 0;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> inputs;
     std::vector<std::pair<const CTxOut, CTxOutPoW2Witness>> outputs;
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
+        READWRITE(bundleType);
+        READWRITE(inputsActualLockFromBlock);
+        READWRITECOMPACTSIZEVECTOR(inputs);
+        READWRITECOMPACTSIZEVECTOR(outputs);
+    }
 };
+
+template<typename Stream> inline void Unserialize(Stream& s, std::pair<const CTxOut, CTxOutPoW2Witness>& a )
+{
+    CTxOut& txOut = REF(a.first);
+    txOut.ReadFromStream(s, CTxOut::NEW_FORMAT_VERSION);
+    Unserialize(s, a.second);
+}
 
 bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight);
 

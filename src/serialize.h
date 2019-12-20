@@ -1290,6 +1290,18 @@ void Unserialize(Stream& is, std::shared_ptr<const T>& p)
     p = std::make_shared<const T>(deserialize, is);
 }
 
+template<typename Stream, typename T> void
+Serialize(Stream& os, const std::shared_ptr<T>& p)
+{
+    Serialize(os, *p);
+}
+
+template<typename Stream, typename T>
+void Unserialize(Stream& is, std::shared_ptr<T>& p)
+{
+    p = std::make_shared<T>();
+    Unserialize(is, *p);
+}
 
 
 /**

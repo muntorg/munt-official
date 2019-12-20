@@ -841,6 +841,14 @@ public:
         output.ReadFromStream(s);
     }
 
+    // trigger serializers used for witness bundle serializing to use the new format
+    static const int32_t NEW_FORMAT_VERSION = 5;
+
+    template <typename Stream> void Serialize(Stream& s) const
+    {
+        WriteToStream(s, CTxOut::NEW_FORMAT_VERSION);
+    }
+
     void SetNull()
     {
         SetType(ScriptLegacyOutput);
@@ -1136,7 +1144,18 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 }
 
 struct CWitnessTxBundle;
-typedef std::vector<CWitnessTxBundle> CWitnessBundles;
+struct CWitnessBundles: std::vector<CWitnessTxBundle>
+{
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
+        std::vector<CWitnessTxBundle>& vBundles = *this;
+        READWRITECOMPACTSIZEVECTOR(vBundles);
+    }
+};
+
 typedef std::shared_ptr<CWitnessBundles> CWitnessBundlesRef;
 
 //fixme: (PHASE4) Remove
