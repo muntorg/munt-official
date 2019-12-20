@@ -172,23 +172,21 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         return parts;
     }
 
-    // Get witness bundles from tx as computed by validation, or build them if not available.
-    CWitnessBundlesRef pWitnessBundles;
-    if (wtx.tx->witnessBundles)
+    // Get witness bundles from tx as computed by validation, or build and persist them if not available.
+    CWitnessBundlesRef pWitnessBundles = std::make_shared<CWitnessBundles>();
+    if (wtx.witnessBundles)
     {
-        pWitnessBundles = wtx.tx->witnessBundles;
+        pWitnessBundles = wtx.witnessBundles;
     }
     else
     {
-        pWitnessBundles = std::make_shared<CWitnessBundles>();
-
         CValidationState state;
         int nWalletTxBlockHeight = chainActive.Tip()?chainActive.Tip()->nHeight:0;
         const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
         if (findIter != mapBlockIndex.end())
             nWalletTxBlockHeight = findIter->second->nHeight;
 
-        BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
+        bool bundlesBuild = BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
             [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
                 CTransactionRef txRef;
                 int nInputHeight = -1;
@@ -220,6 +218,14 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 return true;
             },
             *pWitnessBundles);
+
+        if (bundlesBuild)
+        {
+            CWalletTx& w = REF(wtx);
+            w.witnessBundles = pWitnessBundles;
+            CWalletDB walletdb(*wallet->dbw);
+            walletdb.WriteTx(w);
+        }
     }
 
     CWitnessBundles& witnessBundles = *pWitnessBundles;
