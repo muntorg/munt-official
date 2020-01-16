@@ -324,7 +324,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         {
             nocksRequest = new NocksRequest(this);
             connect(nocksRequest, SIGNAL(requestProcessed()), this, SLOT(on_sendButton_clicked()));
-            nocksRequest->startRequest(&pendingRecipients[i], NocksRequest::RequestType::Order);
+            nocksRequest->startRequest(&pendingRecipients[i], NocksRequest::RequestType::Order, "NLG", "EUR");
             ui->sendButton->setEnabled(false);
             return;
         }
