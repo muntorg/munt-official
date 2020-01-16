@@ -79,7 +79,11 @@ public:
         TxPlainTextRole,
         /** Is transaction confirmed? */
         ConfirmedRole,
-        /** Formatted amount, without brackets when unconfirmed */
+        /** Formatted amount received, without brackets when unconfirmed */
+        FormattedAmountReceivedRole,
+        /** Formatted amount sent, without brackets when unconfirmed */
+        FormattedAmountSentRole,
+        /** Formatted amount sent or received, without brackets when unconfirmed */
         FormattedAmountRole,
         /** Transaction status (TransactionRecord::Status) */
         StatusRole,
@@ -117,6 +121,7 @@ private:
     QString formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const;
     QString formatTxAmountReceived(const TransactionRecord *wtx, bool showUnconfirmed=true, GuldenUnits::SeparatorStyle separators=GuldenUnits::separatorStandard) const;
     QString formatTxAmountSent(const TransactionRecord *wtx, bool showUnconfirmed=true, GuldenUnits::SeparatorStyle separators=GuldenUnits::separatorStandard) const;
+    QString formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed=true, GuldenUnits::SeparatorStyle separators=GuldenUnits::separatorStandard) const;
     QString formatTooltip(const TransactionRecord *rec) const;
     QString txStatusDecoration(const TransactionRecord *wtx) const;
     QVariant txWatchonlyDecoration(const TransactionRecord *wtx) const;
