@@ -75,6 +75,24 @@ uint64_t nLastBlockTx = 0;
 uint64_t nLastBlockSize = 0;
 uint64_t nLastBlockWeight = 0;
 
+uint64_t CalculateMissedTimeSteps(uint64_t nEnd, uint64_t nStart)
+{
+    static const uint64_t nDrift   = 1;
+    static uint64_t nLongTimeLimit = ((6 * nDrift)) * 60;
+    static uint64_t nLongTimeStep  = nDrift * 60;
+    uint64_t nNumMissedSteps = 0;
+    if ((nEnd - nStart) > nLongTimeLimit)
+    {
+        nNumMissedSteps = ((nEnd - nStart - nLongTimeLimit) / nLongTimeStep) + 1;
+    }
+    return nNumMissedSteps;
+}
+
+uint64_t GetAdjustedFutureTime()
+{
+    return GetAdjustedTime()+MAX_FUTURE_BLOCK_TIME-1;
+}
+
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
 {
     int64_t nOldTime = pblock->nTime;
@@ -86,10 +104,6 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     //fixme: (PHASE5) - We can likely remove this
     // Allow miners to control maximum diff drop to suit their hashrate (prevent sudden self-ddos from 100s of blocks being found per second)
     int64_t nMaxMissedSteps = GetArg("-limitdeltadiffdrop", 5000);
-    static const int64_t nDrift   = 1;
-    static int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
-    static int64_t nLongTimeStep  = nDrift * 60;
-
     // Forbid diff drop when mining on a fork (stalled witness)
     {
         LOCK(cs_main);
@@ -101,11 +115,7 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
 
     while (true && (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1))
     {
-        int64_t nNumMissedSteps = 0;
-        if ((pblock->nTime - pindexPrev->GetBlockTime()) > nLongTimeLimit)
-        {
-            nNumMissedSteps = ((pblock->nTime - pindexPrev->GetBlockTime() - nLongTimeLimit) / nLongTimeStep) + 1;
-        }
+        int64_t nNumMissedSteps = CalculateMissedTimeSteps(pblock->nTime, pindexPrev->GetBlockTime());        
         if (nNumMissedSteps <= nMaxMissedSteps)
             break;
         pblock->nTime -= 10;
