@@ -1379,10 +1379,6 @@
         <translation>当前交易数量</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>调试日志文件</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>控制台(&amp;C)</translation>
     </message>

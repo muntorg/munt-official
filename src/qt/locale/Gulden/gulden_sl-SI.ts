@@ -504,10 +504,6 @@
         <translation>Čas zadnjega bloka</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Razhroščevalni dnevnik</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konzola</translation>
     </message>

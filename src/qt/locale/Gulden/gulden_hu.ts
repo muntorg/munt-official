@@ -464,10 +464,6 @@
         <translation>Utolsó blokk ideje</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Debug naplófájl</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konzol</translation>
     </message>

@@ -228,10 +228,6 @@
         <translation>Hora postremi frusti</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Debug catalogi plica</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Terminale</translation>
     </message>

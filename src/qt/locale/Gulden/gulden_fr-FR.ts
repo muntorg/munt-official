@@ -437,10 +437,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation>Nombre courant de transactions</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Fichier du journal de débogage</translation>
-    </message>
-    <message>
         <source>&amp;Network Traffic</source>
         <translation>&amp;Trafic réseau</translation>
     </message>

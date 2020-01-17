@@ -679,6 +679,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Wpisz etykietę</translation>
     </message>
     <message>
+        <source>Recipient account name</source>
+        <translation>Nazwa konta odbiorcy</translation>
+    </message>
+    <message>
         <source>Add to address book</source>
         <translation>Dodaj do książki adresowej</translation>
     </message>
@@ -713,6 +717,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Amount below minimum for IBAN payment.</source>
         <translation>Kwota poniżej minimum dla płatności IBAN.</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>Nazwa odbiorcy jest wymagana do płatności IBAN.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -1179,10 +1187,6 @@ Witness waga: %5</translation>
     <message>
         <source>Resulting URI too long, try to reduce the text for the label.</source>
         <translation>Wynikowy identyfikator URI jest zbyt długi, spróbuj zmniejszyć tekst etykiety.</translation>
-    </message>
-    <message>
-        <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation>Podczas wczytywania strony kupowania wystąpił błąd. Sprawdź połączenie i spróbuj ponownie później.</translation>
     </message>
 </context>
 <context>
@@ -1686,6 +1690,24 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>&amp;Eksportuj</translation>
     </message>
     <message>
+        <source>Show orphaned rewards</source>
+        <translation>Pokaż osamotnione nagrody</translation>
+    </message>
+    <message>
+        <source>Control display of orphaned rewards.
+
+Orphaned rewards naturally occur from time to time.
+Generally when someone else generates a block at the same time as yours.</source>
+        <translation>Kontroluj wyświetlanie osamotnionych nagród.
+
+Osamotnione nagrody pojawiają się naturalnie od czasu do czasu.
+Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translation>
+    </message>
+    <message>
+        <source>Export the current list of transactions to a file.</source>
+        <translation>Wyeksportuj bieżącą listę transakcji do pliku.</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>&amp;Kopia zapasowa portfela</translation>
     </message>
@@ -1775,6 +1797,10 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Witness reward</source>
         <translation>Nagroda Witness</translation>
+    </message>
+    <message>
+        <source>Clear orphan transactions</source>
+        <translation>Wyczyść osamotnione transakcje</translation>
     </message>
     <message>
         <source>All dates</source>
@@ -2816,10 +2842,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Obecna liczba transakcji</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Plik logowania debugowania</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Otwórz plik dziennika debugowania %1 z obecnego katalogu z danymi. Może to potrwać kilka sekund przy większych plikach.</translation>
     </message>
@@ -3540,85 +3562,6 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     </message>
 </context>
 <context>
-    <name>Gulden</name>
-    <message>
-        <source>Done loading</source>
-        <translation>Wczytywanie zakończone</translation>
-    </message>
-    <message>
-        <source>Erasing block index...</source>
-        <translation>Usuwam indeks bloku ...</translation>
-    </message>
-    <message>
-        <source>Error reading from database, shutting down.</source>
-        <translation>Błąd odczytu z bazy danych, wyłączam się.</translation>
-    </message>
-    <message>
-        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation>Nieprawidłowy lub brak bloku genezy. Błędny folder_danych dla sieci?</translation>
-    </message>
-    <message>
-        <source>Legacy account</source>
-        <translation>Legacy account</translation>
-    </message>
-    <message>
-        <source>Loading P2P addresses...</source>
-        <translation>Wczytywanie P2P adresów...</translation>
-    </message>
-    <message>
-        <source>Loading banlist...</source>
-        <translation>Ładowanie listy zablokowanych...</translation>
-    </message>
-    <message>
-        <source>Loading block index...</source>
-        <translation>Ładowanie indeksu bloku...</translation>
-    </message>
-    <message>
-        <source>Loading wallet...</source>
-        <translation>Wczytywanie portfela...</translation>
-    </message>
-    <message>
-        <source>My account</source>
-        <translation>Moje konto</translation>
-    </message>
-    <message>
-        <source>Wallet unlock required for wallet upgrade</source>
-        <translation>Odblokowanie portfela jest wymagane do aktualizacji portfela</translation>
-    </message>
-    <message>
-        <source>Zapping all transactions from wallet...</source>
-        <translation>Usuwam wszystkie transakcje z portfela...</translation>
-    </message>
-    <message>
-        <source>Pruning blockstore...</source>
-        <translation>Przycinanie zapisu bloków...</translation>
-    </message>
-    <message>
-        <source>Reloading block index...</source>
-        <translation>Ponowne ładowanie indeksu bloku...</translation>
-    </message>
-    <message>
-        <source>Rescanning...</source>
-        <translation>Ponowne skanowanie...</translation>
-    </message>
-    <message>
-        <source>Rewinding blocks...</source>
-        <translation>Przewijanie bloków ...</translation>
-    </message>
-    <message>
-        <source>Starting network threads...</source>
-        <translation>Uruchamianie wątków sieci ...</translation>
-    </message>
-    <message>
-        <source>Upgrading block index...</source>
-        <translation>Aktualizowanie indeksu bloku ...</translation>
-    </message>
-    <message>
-        <source>Verifying blocks...</source>
-        <translation>Weryfikacja bloków...</translation>
-    </message>
-</context>
-<context>
     <name>GuldenAmountField</name>
     <message>
         <source>Max</source>
@@ -3695,12 +3638,8 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
         <translation>Zmniejszenie zużycia pamięci nie jest zalecane. Spowolni wydobycie, zużywając tyle samo mocy procesora i energii, co wcześniej. Używaj tego tylko w ostateczności na komputerach o niskiej dostępności pamięci.</translation>
     </message>
     <message>
-        <source>%1 Mb</source>
-        <translation>%1 Mb</translation>
-    </message>
-    <message>
         <source>%1 threads</source>
-        <translation>% 1 wątków</translation>
+        <translation>%1 wątków</translation>
     </message>
     <message>
         <source>Address copied to clipboard</source>

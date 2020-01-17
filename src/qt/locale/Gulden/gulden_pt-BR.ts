@@ -1414,10 +1414,6 @@
         <translation>Número atual de transações</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Arquivo de log de depuração</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Abrir o arquivo de log de depuração do %1 localizado no diretório atual de dados. Isso pode levar alguns segundos para arquivos de log grandes.</translation>
     </message>

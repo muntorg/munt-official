@@ -365,10 +365,6 @@
         <translation>Hora del último bloque</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Archivo de registro de depuración</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Consola</translation>
     </message>

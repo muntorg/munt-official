@@ -697,6 +697,19 @@ QString TransactionTableModel::formatTxAmountSent(const TransactionRecord *wtx, 
     return QString(str);
 }
 
+QString TransactionTableModel::formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed, GuldenUnits::SeparatorStyle separators) const
+{
+    QString str = GuldenUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit-wtx->debit, false, separators, 2);
+    if(showUnconfirmed)
+    {
+        if(!wtx->status.countsForBalance)
+        {
+            str = QString("[") + str + QString("]");
+        }
+    }
+    return QString(str);
+}
+
 QString TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx) const
 {
     switch(wtx->status.status)
@@ -905,9 +918,13 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         }
     case ConfirmedRole:
         return rec->status.countsForBalance;
-    case FormattedAmountRole:
-        // Used for copy/export, so don't include separators
+    // Used for copy/export, so don't include separators
+    case FormattedAmountReceivedRole:
         return formatTxAmountReceived(rec, false, GuldenUnits::separatorNever);
+    case FormattedAmountSentRole:
+        return formatTxAmountSent(rec, false, GuldenUnits::separatorNever);
+    case FormattedAmountRole:
+        return formatTxAmount(rec, false, GuldenUnits::separatorNever);
     case StatusRole:
         return rec->status.status;
     case DepthRole:

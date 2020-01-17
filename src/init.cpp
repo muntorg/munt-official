@@ -135,6 +135,8 @@ static const char* FEE_ESTIMATES_FILENAME="fee_estimates.dat";
 
 
 std::atomic<bool> fDumpMempoolLater(false);
+bool partiallyEraseDatadirOnShutdown=false;
+bool fullyEraseDatadirOnShutdown=false;
 
 /**
  * This is a minimally invasive approach to shutdown on LevelDB read errors from the
@@ -305,6 +307,23 @@ void CoreShutdown(boost::thread_group& threadGroup)
     ECC_Stop();
     LogPrintf("Core shutdown: done.\n");
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
+    
+    if (fullyEraseDatadirOnShutdown||partiallyEraseDatadirOnShutdown)
+    {
+        try { fs::remove_all(GetDataDir() / "autocheckpoints"); } catch(...){LogPrintf("Failed to delete autocheckpoints\n");}
+        try { fs::remove(GetDataDir() / "banlist.dat"); } catch(...){LogPrintf("Failed to delete banlist.dat\n");}
+        try { fs::remove(GetDataDir() / "peers.dat"); } catch(...){LogPrintf("Failed to delete peers.dat\n");}
+    }
+    if (fullyEraseDatadirOnShutdown)
+    {
+        try { fs::remove(GetDataDir() / "mempool.dat"); } catch(...){LogPrintf("Failed to delete mempool.dat\n");}
+        try { fs::remove(GetDataDir() / "FEE_ESTIMATES_FILENAME"); } catch(...){LogPrintf("Failed to delete fee estimates\n");}
+        try { fs::remove_all(GetDataDir() / "blocks"); } catch(...){LogPrintf("Failed to delete blocks folder\n");}
+        try { fs::remove_all(GetDataDir() / "chainstate"); } catch(...){LogPrintf("Failed to delete chainstate\n");}
+        try { fs::remove_all(GetDataDir() / "witstate"); } catch(...){LogPrintf("Failed to delete witstate\n");}
+        try { fs::remove_all(GetDataDir() / "database"); } catch(...){LogPrintf("Failed to delete database folder\n");}
+        try { fs::remove(GetDataDir() / "db.log"); } catch(...){LogPrintf("Failed to delete db.log\n");}
+    }
 }
 
 //Signal handlers should be written in a way that does not result in any unwanted side-effects

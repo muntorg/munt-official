@@ -450,10 +450,6 @@
         <translation>Waktu blok terakhir</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Berkas catatan debug</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsol</translation>
     </message>

@@ -9,25 +9,33 @@ RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fi
 
 
 
-2.1.0.21
+2.1.0.23
 
-UI - Performance improvement when syncing with a wallet that has a witness account and lots of transactions
-UI - Introduce a way to show/hide orphan transactions in account transaction list
-UI - Transaction list export functionality, and button for account transaction list export
-UI - Add a context menu item to remove all orphan transactions for an account
-UI - New 'recipient' input field and related functionality for IBAN payments
-CORE - Fix an issue with reporting of peer IPv6 addresses
-CORE - Fix an issue with dual IPv6/IPv4 binds
-CORE - Fix an issue when binding multiple listening sockets
+CORE    - Update to V2 nocks API for IBAN transactions.
+RPC     - Improve 'resetdatadirpartial' and 'resetdatadirfull' functionality.
+
+
+
+
+2.1.0.22
+
+UI      - Performance improvement when syncing with a wallet that has a witness account and lots of transactions
+UI      - Introduce a way to show/hide orphan transactions in account transaction list
+UI      - Transaction list export functionality, and button for account transaction list export
+UI      - Add a context menu item to remove all orphan transactions for an account
+UI      - New 'recipient' input field and related functionality for IBAN payments
+CORE    - Fix an issue with reporting of peer IPv6 addresses
+CORE    - Fix an issue with dual IPv6/IPv4 binds
+CORE    - Fix an issue when binding multiple listening sockets
 
 
 
 
 2.1.0.20
 
-UI - Various minor UI fixes.
-CORE - Minor enhancements to SIGMA mining performance.
-CORE - Fix some periodic crashes and minor stability issues with SIGMA mining.
+UI      - Various minor UI fixes.
+CORE    - Minor enhancements to SIGMA mining performance.
+CORE    - Fix some periodic crashes and minor stability issues with SIGMA mining.
 CMDFLAG - New config flag "sigmaalgo" which can be used to bypass automatic algorithm detection. (Valid options currently are: ref, avx512f, avx2, avx, sse4.2, ssse3, avx512faes, avx2aes, avxaes, sse4.2aes, ssse3aes)
 
 
@@ -35,49 +43,49 @@ CMDFLAG - New config flag "sigmaalgo" which can be used to bypass automatic algo
 
 2.1.0.19
 
-UI - Introduce an 'open datadir' button to debug info window
-UI - Fix a small bug with sending funds from mining account
-CORE - Fix various minor race conditions in code
-CORE - Minor improvements to default settings for low memory machines
-RPC - New support specific RPC commands to aid support staff in assisting users: resetdatadirpartial, resetdatadirfull, getcheckpoint, getlastblocks, resetconfig, resetconfig_pi_lowmem, resetconfig_pi_medmem
-RPC - Improve responsiveness of 'setgenerate' and 'getgenerate' commands
-RPC - Update output of getblock and other commands to include pre/post nonce 
+UI      - Introduce an 'open datadir' button to debug info window
+UI      - Fix a small bug with sending funds from mining account
+CORE    - Fix various minor race conditions in code
+CORE    - Minor improvements to default settings for low memory machines
+RPC     - New support specific RPC commands to aid support staff in assisting users: resetdatadirpartial, resetdatadirfull, getcheckpoint, getlastblocks, resetconfig, resetconfig_pi_lowmem, resetconfig_pi_medmem
+RPC     - Improve responsiveness of 'setgenerate' and 'getgenerate' commands
+RPC     - Update output of getblock and other commands to include pre/post nonce 
 
 
 
 
 2.1.0.18
 
-MISC - Introduce small new feature to help update users who got stuck on a fork
-UI - Automatically lower the mining memory limits on 32 bit systems that can't handle 4GB of process memory
-UI - Various minor improvements to mining UI
-CORE - Fix an issue with autodetection of mining accounts when recovering from phrase
-CORE - Improve the way total network hashrate is estimated (RPC: getnetworkhashps)
-RPC - New RPC command 'getminingrewardaddress'
-RPC - Improve the way human difficulty is displayed for SIGMA so that its more human friendly (not fractional)
+MISC    - Introduce small new feature to help update users who got stuck on a fork
+UI      - Automatically lower the mining memory limits on 32 bit systems that can't handle 4GB of process memory
+UI      - Various minor improvements to mining UI
+CORE    - Fix an issue with autodetection of mining accounts when recovering from phrase
+CORE    - Improve the way total network hashrate is estimated (RPC: getnetworkhashps)
+RPC     - New RPC command 'getminingrewardaddress'
+RPC     - Improve the way human difficulty is displayed for SIGMA so that its more human friendly (not fractional)
 
 
 
 
 2.1.0.17
 
-MISC - Update checkpoints
-CORE - Improve upgrade procedure for any users who failed to upgrade for previous releases in time and were temporarily stuck on a fork.
-UI - Minor improvements to information display in mining dialog.
+MISC    - Update checkpoints
+CORE    - Improve upgrade procedure for any users who failed to upgrade for previous releases in time and were temporarily stuck on a fork.
+UI      - Minor improvements to information display in mining dialog.
 
 
 
 
 2.1.0.16
 
-CORE - Temporarily reduce witness reward back to 20, due to unexpected complications with adjusting witness rewards during phase3. Reward will be restored to 30 at a future date after further discussion on how to proceed.
+CORE    - Temporarily reduce witness reward back to 20, due to unexpected complications with adjusting witness rewards during phase3. Reward will be restored to 30 at a future date after further discussion on how to proceed.
 
 
 
 
 2.1.0.15
 
-CORE - Adjust minimum PoW limit; as with delta hashrate is much slower than regular PoW algorithms.
+CORE    - Adjust minimum PoW limit; as with delta hashrate is much slower than regular PoW algorithms.
 
 
 
@@ -85,19 +93,19 @@ CORE - Adjust minimum PoW limit; as with delta hashrate is much slower than regu
 
 2.1.0.14
 
-CORE - Reduce mainnet proof of work limit to be lower as SIGMA works at a much lower difficulty, and is causing blocks to take very long to solve.
+CORE    - Reduce mainnet proof of work limit to be lower as SIGMA works at a much lower difficulty, and is causing blocks to take very long to solve.
 
 
 
 
 2.1.0.12
 
-UI - Introduce new basic user interface for mining
-UI - Fix a bug on windows where closing the debug dialog with main app hidden could cause the entire app to close
-CORE - Introduce new 'mining' account type
-RPC - New command 'createminingaccount'
-RPC - New command 'setminingrewardaddress'
-RPC - Modify 'setgenerate' behaviour to work with mining accounts when present, a regular account can still be used by explicitely passing an account name when calling 'setgenerate'
+UI      - Introduce new basic user interface for mining
+UI      - Fix a bug on windows where closing the debug dialog with main app hidden could cause the entire app to close
+CORE    - Introduce new 'mining' account type
+RPC     - New command 'createminingaccount'
+RPC     - New command 'setminingrewardaddress'
+RPC     - Modify 'setgenerate' behaviour to work with mining accounts when present, a regular account can still be used by explicitely passing an account name when calling 'setgenerate'
 CMDFLAG - New flag '-genmemlimit' to go with existing '-gen' and '-genproclimit'
 
 
@@ -106,161 +114,160 @@ CMDFLAG - New flag '-genmemlimit' to go with existing '-gen' and '-genproclimit'
 2.1.0.11
 
 This release introduces the new SIGMA PoW algorithm, a 'CPU friendly' algorithm designed to better suit Guldens needs than the previous algorithm scrypt that was used before.
-
-CORE - Introduce new utility 'bench_sigma' for testing/benchmarking SIGMA outside of the Gulden app itself.
-CORE - Fix DOS vulnerability (crash) in witness bundle input checking
-CORE - Introduce SIGMA as the new PoW algorithm in testnet builds.
-CORE - Minor improve to Delta difficulty adjustment algorithm to work better with SIGMA
-CORE - Introduce new/modified reward schedule for development funding and slight increase in witness rewards (as per GAB decision)
-RPC - Modify 'setgenerate' command to take a memory paramater for SIGMA
-RPC - Improve output of 'getnetworkhashps' command
-RPC - Drop support for 'getblocktemplate' - it is not required for CPU mining and we can simplify the codebase without it.
+CORE    - Introduce new utility 'bench_sigma' for testing/benchmarking SIGMA outside of the Gulden app itself.
+CORE    - Fix DOS vulnerability (crash) in witness bundle input checking
+CORE    - Introduce SIGMA as the new PoW algorithm in testnet builds.
+CORE    - Minor improve to Delta difficulty adjustment algorithm to work better with SIGMA
+CORE    - Introduce new/modified reward schedule for development funding and slight increase in witness rewards (as per GAB decision)
+RPC     - Modify 'setgenerate' command to take a memory paramater for SIGMA
+RPC     - Improve output of 'getnetworkhashps' command
+RPC     - Drop support for 'getblocktemplate' - it is not required for CPU mining and we can simplify the codebase without it.
 
 
 
 
 2.1.0.7
 
-RPC - Fix a bug in InvalidateBlock behaviour when called on a block that isn't currently in the main chain.
-CORE - Minor improvement to mining behaviour when an absent witness is present.
-UI - Fix a windows only issue with non-ASCII wallet paths. (Introduced by bdb upgrade)
+RPC     - Fix a bug in InvalidateBlock behaviour when called on a block that isn't currently in the main chain.
+CORE    - Minor improvement to mining behaviour when an absent witness is present.
+UI      - Fix a windows only issue with non-ASCII wallet paths. (Introduced by bdb upgrade)
 
 
 
 
 2.1.0.6
 
-MISC - Update checkpoints.
-CORE - Introduce an improvement to checkpoint server mechanism to temporarily help stabalise chain against mining instability. Mechanism will be removed once phase4 and/or SIGMA are active and is just a temporary measure.
+MISC    - Update checkpoints.
+CORE    - Introduce an improvement to checkpoint server mechanism to temporarily help stabalise chain against mining instability. Mechanism will be removed once phase4 and/or SIGMA are active and is just a temporary measure.
 
 
 
 
 2.1.0.5
 
-CORE - Fix a rare issue where witnessing devices would fail to witness due to not completing a proper rescan after importing a witness address.
-CORE - Improve transaction propagation speed by pushing mempool to new connections
-CORE - Introduce builds of the UI client for all architectures ("arm" and "aarch64" previously did not have)
-CORE - Introduce "riscv64" to the list of officially supported architectures.
-CORE - Introduce AppImage installers for "arm" and "aarch64"
-RPC - New command "getaccountaddress" to get current receiving address (as would be displayed in UI) for an account.
-MISC - Update to newer version of Qt which should improve various minor UI aspects.
+CORE    - Fix a rare issue where witnessing devices would fail to witness due to not completing a proper rescan after importing a witness address.
+CORE    - Improve transaction propagation speed by pushing mempool to new connections
+CORE    - Introduce builds of the UI client for all architectures ("arm" and "aarch64" previously did not have)
+CORE    - Introduce "riscv64" to the list of officially supported architectures.
+CORE    - Introduce AppImage installers for "arm" and "aarch64"
+RPC     - New command "getaccountaddress" to get current receiving address (as would be displayed in UI) for an account.
+MISC    - Update to newer version of Qt which should improve various minor UI aspects.
 
 
 
 
 2.1.0.4
 
-MISC - Minor maintenance release, update checkpoints and other minor changes
-CORE - Introduce some code to automatically detect and clear the failed verification status of blocks in certain situations where it is safe to do so. This will make it easier for users who fail to update before a fork to update after the fork without having to issue any manual commands.
-CORE - Add some additional logging of error conditions to the witness loop.
-CORE - Fix a potential race condition in networking code, that may have been the cause of very rare intermittent network related crashes. Detected on android as part of "unity" project.
-UI - Fix a display issue with "local currency" mouse-over tooltips.
-UI - Fix a small display update issue when switching between witness and normal accounts in some instances.
-UI - Clean up the language selection list in options dialog.
-ZMQ - Fix a bug in the NotifyStalledWitness ZMQ code.
+MISC    - Minor maintenance release, update checkpoints and other minor changes
+CORE    - Introduce some code to automatically detect and clear the failed verification status of blocks in certain situations where it is safe to do so. This will make it easier for users who fail to update before a fork to update after the fork without having to issue any manual commands.
+CORE    - Add some additional logging of error conditions to the witness loop.
+CORE    - Fix a potential race condition in networking code, that may have been the cause of very rare intermittent network related crashes. Detected on android as part of "unity" project.
+UI      - Fix a display issue with "local currency" mouse-over tooltips.
+UI      - Fix a small display update issue when switching between witness and normal accounts in some instances.
+UI      - Clean up the language selection list in options dialog.
+ZMQ     - Fix a bug in the NotifyStalledWitness ZMQ code.
 
 
 
 
 2.1.0.3
 
-UI - Modify witness QR for better interoperability with external apps.
-UI - Remove embedded webkit for buy page in favour of simply launching buy page in an external browser.
-RPC - Minor RPC fixes.
+UI      - Modify witness QR for better interoperability with external apps.
+UI      - Remove embedded webkit for buy page in favour of simply launching buy page in an external browser.
+RPC     - Minor RPC fixes.
 
 
 
 
 2.1.0.1
 
-UI - Implement an address tab for witness accounts, for easier access of the current active witness account address and for better integration with third party monitoring apps.
+UI      - Implement an address tab for witness accounts, for easier access of the current active witness account address and for better integration with third party monitoring apps.
 
 
 
 
 2.1.0.0
 
-CORE - Implement a few consensus level changes for witnessing, these are minor improvements but are better to make now before phase 4 activation for the sake of future code cleanliness.
-These changes will, these changes will activate at block 881000 (Estimated around 17-18th January 2019) all 2.0.x users should attempt to update before then, all 1.6.x users can remain on 1.6.x - contact developers for assistance if in doubt.
-UI - Minor UI fixes
+CORE    - Implement a few consensus level changes for witnessing, these are minor improvements but are better to make now before phase 4 activation for the sake of future code cleanliness.
+        These changes will, these changes will activate at block 881000 (Estimated around 17-18th January 2019) all 2.0.x users should attempt to update before then, all 1.6.x users can remain on 1.6.x - contact developers for assistance if in doubt.
+UI      - Minor UI fixes
 
 
 
 
 2.0.0.17
-RPC - Introduce new debug command verifywitnessaddress
-UI - Update styling and graphics
+RPC     - Introduce new debug command verifywitnessaddress
+UI      - Update styling and graphics
 
 
 
 
 2.0.0.15
-UI - Fix font issues with macOS mojave
+UI      - Fix font issues with macOS mojave
 
 
 
 
 2.0.0.14
-CORE - Fix for upstream critical vulnerability CVE-2018-17144
+CORE    - Fix for upstream critical vulnerability CVE-2018-17144
 
 
 
 
 2.0.0.12
-UI - Improve visual look of the "all" button in the send coins dialog.
-UI - Fix a problem with increasing memory consumption over time that was affecting some users.
-UI - Fix an issue where emptying an "unlocked" witness account first required restarting the wallet.
-UI - Fix an issue where an "unlocked" witness account would show incorrect statistical information.
-CORE - Reduce memory footprint and improve performance of witness validation.
+UI      - Improve visual look of the "all" button in the send coins dialog.
+UI      - Fix a problem with increasing memory consumption over time that was affecting some users.
+UI      - Fix an issue where emptying an "unlocked" witness account first required restarting the wallet.
+UI      - Fix an issue where an "unlocked" witness account would show incorrect statistical information.
+CORE    - Reduce memory footprint and improve performance of witness validation.
 
 
 
 
 2.0.0.11
-UI - Display full converted balance in upper left for forex (Euro or other currency) display instead of only available balance; Add a tooltip to break down the different amounts when hovered over.
-UI - Fix an issue where the transaction list would sometimes show confusing more recent timestamps when importing a witness-only key or recovering from phrase.
-RPC - New command "getaddress" as a way to easily get Gulden address(es) from a pubkey or script.
-RPC - New command "emptymempool" to temporarily empty the mempool of all transactions, useful for debugging as well as a last resort tool if mining pools ever find themselves in a situation where mempool is somehow misbehaving.
-RPC - Fix a crash when calling 'validateaddress' with no wallet.
-CORE - Fix a "CreateBlock" issue that was triggering in rare circumstances and affecting "getblocktemplate" RPC calls by miners when it did.
-CORE - Fix a crash that can occur during rescan when using zapwallettxes.
-CORE - Enable witness renewal and emptying of witness accounts whose lock period has expired - from block 797000 onwards.
+UI      - Display full converted balance in upper left for forex (Euro or other currency) display instead of only available balance; Add a tooltip to break down the different amounts when hovered over.
+UI      - Fix an issue where the transaction list would sometimes show confusing more recent timestamps when importing a witness-only key or recovering from phrase.
+RPC     - New command "getaddress" as a way to easily get Gulden address(es) from a pubkey or script.
+RPC     - New command "emptymempool" to temporarily empty the mempool of all transactions, useful for debugging as well as a last resort tool if mining pools ever find themselves in a situation where mempool is somehow misbehaving.
+RPC     - Fix a crash when calling 'validateaddress' with no wallet.
+CORE    - Fix a "CreateBlock" issue that was triggering in rare circumstances and affecting "getblocktemplate" RPC calls by miners when it did.
+CORE    - Fix a crash that can occur during rescan when using zapwallettxes.
+CORE    - Enable witness renewal and emptying of witness accounts whose lock period has expired - from block 797000 onwards.
 CMDFLAG - New command line flag "-disablenet" to start with networking disabled, useful in some debugging scenarios.
 CMDFLAG - New command line flag "-zmqpubstalledwitness=<address>" to turn on zmq monitoring for stalled witnesses.
-ZMQ - Add new message "stalledwitness" which can be used by services to monitor for slow and absent witnesses - enabled via CMDFLAG "zmqpubstalledwitness"
+ZMQ     - Add new message "stalledwitness" which can be used by services to monitor for slow and absent witnesses - enabled via CMDFLAG "zmqpubstalledwitness"
 
 
 
 
 2.0.0.10
-RPC - Make "getrescanprogress" command more responsive.
-UI - Fix an issue with "orphaned" witness earnings incorrectly showing as part of account balance.
-UI - Add a user alert message if number of witnesses on the network drops below 100 as a precaution to help keep the number of witnesses high.
-UI - Fix a bug with wallet rescan progress display.
-UI - Another fix to prevent "Failed to calculate witness info for candidate block" dialog from showing in situations where it isn't really harmful.
-UI - Fix an issue some users were having with unlocking wallet.
-UI - Fix an issue where the receive coins dialog would, when creating a new account, in certain instances temporarily show the address for a different account.
-UI - Allow emptying of non-witness funds if normal funds are somehow sent to a witness account address.
-UI - Fix a small glitch where empty wallet balance would occasionally display as -0.00
-UI - Fix a transaction view issue where "locked from" transactions were occasionally displayed as "received from" instead.
-RPC - Fix a small issue with one of the weights being output incorrectly in `getwitnessinfo` command.
-RPC - Add some additional PoW² related output to 'getblock' and 'getheader' calls.
-RPC - Fix an occasional/intermittent issue where getblocktemplate would fail when called by mining pools
+RPC     - Make "getrescanprogress" command more responsive.
+UI      - Fix an issue with "orphaned" witness earnings incorrectly showing as part of account balance.
+UI      - Add a user alert message if number of witnesses on the network drops below 100 as a precaution to help keep the number of witnesses high.
+UI      - Fix a bug with wallet rescan progress display.
+UI      - Another fix to prevent "Failed to calculate witness info for candidate block" dialog from showing in situations where it isn't really harmful.
+UI      - Fix an issue some users were having with unlocking wallet.
+UI      - Fix an issue where the receive coins dialog would, when creating a new account, in certain instances temporarily show the address for a different account.
+UI      - Allow emptying of non-witness funds if normal funds are somehow sent to a witness account address.
+UI      - Fix a small glitch where empty wallet balance would occasionally display as -0.00
+UI      - Fix a transaction view issue where "locked from" transactions were occasionally displayed as "received from" instead.
+RPC     - Fix a small issue with one of the weights being output incorrectly in `getwitnessinfo` command.
+RPC     - Add some additional PoW² related output to 'getblock' and 'getheader' calls.
+RPC     - Fix an occasional/intermittent issue where getblocktemplate would fail when called by mining pools
 CMDFLAG - Default "minimallogging" flag to on for arm and aarch64 architectures.
-CORE - Fix a block relay issue that combined with other factors was occasionally leading to temporary chain stalls.
+CORE    - Fix a block relay issue that combined with other factors was occasionally leading to temporary chain stalls.
 
 
 
 
 2.0.0.9
-CORE - Major witness validation performance improvement and memory usage reduction due to partial chain cloning
-CORE - Move some invalid block logic earlier in the block check process, this should help address some issues users have been experiencing as well as further stabalise the network.
-CORE - Simplify phase2/phase3 checks now that we know the final blocks where they activated; This will help performance in various ways and simplifies the code.
-CORE - Some minor performance improvements
-UI - Fix an underlying issue that was causing a "scary" looking message dialog to occasionally pop up and bother some users.
-UI - Fix an issue with witness earnings graph display for units other than "blocks"
-UI - Fix an occasional/random UI lockup when password dialog shows from backup page.
+CORE    - Major witness validation performance improvement and memory usage reduction due to partial chain cloning
+CORE    - Move some invalid block logic earlier in the block check process, this should help address some issues users have been experiencing as well as further stabalise the network.
+CORE    - Simplify phase2/phase3 checks now that we know the final blocks where they activated; This will help performance in various ways and simplifies the code.
+CORE    - Some minor performance improvements
+UI      - Fix an underlying issue that was causing a "scary" looking message dialog to occasionally pop up and bother some users.
+UI      - Fix an issue with witness earnings graph display for units other than "blocks"
+UI      - Fix an occasional/random UI lockup when password dialog shows from backup page.
 CMDFLAG - Add a new flag `limitdeltadiffdrop=n` for mining pools, larger mining pools should set this to 0. Medium pools 1-6, very small pools can leave it off.
 CMDFLAG - Add new "minimallogging" flag for the benefit of users with limited disk space e.g. pi users
 
@@ -268,44 +275,44 @@ CMDFLAG - Add new "minimallogging" flag for the benefit of users with limited di
 
 
 2.0.0.7
-CORE - Fix a crash for users who run with -disablewallet
+CORE    - Fix a crash for users who run with -disablewallet
 
 
 
 
 2.0.0.6
-CORE - Stability fix for a minor crash issue some users might otherwise experience in phase 3.
-UI - Some very minor localisation and UI cleanups
-UI - Fix a balance display issue
-WALLET - Implement detection for an issue with incorrect HD index counter incrementing that may have affected some users in past versions of the software. Users who are affected are in no immediate danger but should be warned to rectify the issue regardless.
-NET - No longer advertise or establish outgoing connections to outdated (1.6.x) peers but allow incoming connections from them.
+CORE    - Stability fix for a minor crash issue some users might otherwise experience in phase 3.
+UI      - Some very minor localisation and UI cleanups
+UI      - Fix a balance display issue
+WALLET  - Implement detection for an issue with incorrect HD index counter incrementing that may have affected some users in past versions of the software. Users who are affected are in no immediate danger but should be warned to rectify the issue regardless.
+NET     - No longer advertise or establish outgoing connections to outdated (1.6.x) peers but allow incoming connections from them.
 
 
 
 
 
 2.0.0.4
-UI - Fix a (phase 3 only) issue where the transaction list sometimes displaying unnecessary duplicate "rejected" earning messages for every valid earning message.
-RPC - Add two commands disablewitnessing/enablewitnessing - useful for various testing scenarios and some other fringe use cases.
-NET - Fix an annoying instability issue (crash) in the networking code that is triggered by the checkpoint system in some scenarios.
+UI      - Fix a (phase 3 only) issue where the transaction list sometimes displaying unnecessary duplicate "rejected" earning messages for every valid earning message.
+RPC     - Add two commands disablewitnessing/enablewitnessing - useful for various testing scenarios and some other fringe use cases.
+NET     - Fix an annoying instability issue (crash) in the networking code that is triggered by the checkpoint system in some scenarios.
 
 
 
 
 2.0.0.2
-UI - Implement an improved "new account" page; which makes witnessing more visible as well as better displays and advertizes various other capabilities of our wallets.
-UI - Resolve a minor issue where old Legacy accounts were incorrectly hidden by UI in some circumstances, due to an old already fixed issue that was in some older 1.6.x wallets.
+UI      - Implement an improved "new account" page; which makes witnessing more visible as well as better displays and advertizes various other capabilities of our wallets.
+UI      - Resolve a minor issue where old Legacy accounts were incorrectly hidden by UI in some circumstances, due to an old already fixed issue that was in some older 1.6.x wallets.
 CMDFLAG - Add a new command line flag "-resyncforblockindexupgrade" for the benefit of some devices that may be having trouble upgrading.
 CMDFLAG - Add a new command line flag "-reverseheaders" to allow control over whether to use reverse headers or not.
-CORE - Various code quality improvements; travis now running with '-Werror -Wall -Wextra' for first time.
+CORE    - Various code quality improvements; travis now running with '-Werror -Wall -Wextra' for first time.
 
 
 
 2.0.0.1
-RPC - Fix a small issue with rescan progress percentage
-CORE - Fix an issue with locked wallets and account indexes that was triggering assertions in some cases.
-UI - Fix a possible minor crash that some users may have been encountering during upgrade.
-UI - Fix an issue with GuldenD and repeated unlock requests, limit to a single unlock request.
+RPC     - Fix a small issue with rescan progress percentage
+CORE    - Fix an issue with locked wallets and account indexes that was triggering assertions in some cases.
+UI      - Fix a possible minor crash that some users may have been encountering during upgrade.
+UI      - Fix an issue with GuldenD and repeated unlock requests, limit to a single unlock request.
 
 
 
@@ -315,70 +322,66 @@ This release incorporates three new major feature branches, which combined invol
 * PoW² - See https://github.com/Gulden/gulden-official/raw/master/technical_documentation/Gulden_PoW2.pdf for technical information
 Highlights include: Ability to lock funds for a period of time and earn rewards while securing the network. Drastically enhanced network security.
 
-UI  - New "witness overview" dialog with info and statistics on witness accounts, complete with a graph showing current and predicted earnings.
-UI  - New "witness fund" dialog, with estimate to help pick the right weight when funding an account.
-CORE - New blockchain consensus rules for a PoW² driven blockchain with determistic witnessing.
-CORE - New address type for two key witness accounts
-CORE - New account types for witnessing, including special behaviour (hardening) of the witness key chain so that witness keys can be shared without compromising wallet security.
-CORE - New witness-only account types for linked witnessing between main wallet and a backup witness device.
-CORE - Automatic witnessing of incoming blocks in exchange for rewards
-RPC - New commands:
-View a statistical/informational snapshot of the witness system for any block in the blockchain - getwitnessinfo "block_specifier" verbose mine_only
-Create a new witness account - createwitnessaccount "name"
-Lock funds into a witness account - fundwitnessaccount "funding_account" "witness_account" "amount" "time" "force_multiple"
-Add funds to a witness account and/or extend the lock period - extendwitnessaccount "funding_account" "witness_account" "amount" "time" 
-Add funds to a witness address and/or extend the lock period - extendwitnessaddress "funding_account" "witness_address" "amount" "time" 
-Export a URL for creation of a linked "witness-only" account - getwitnessaccountkeys "witness_account" 
-Import a "witness-only" account from a URL that has previously been exported - importwitnesskeys "account_name" "encoded_key_url" "create_account"
-Split a witness account into multiple witness addresses; Lock period is not changed this exists for the benefit of users whose weight is too large for the network - splitwitnessaccount "funding_account" "witness_account" "amounts"
-Merge multiple identical witness addresses into a single one; Only works on identical accounts i.e. ones that have previously been split - mergewitnessaccount "funding_account" "witness_account"
-Renew a witness account that has expired due to failiure to witness - renewwitnessaccount "witness_account" 
-Change the witness key on an account where the key may have been compromised or as a periodic precaution - rotatewitnessaccount "funding_account" "witness_account"
-Change the witness key on an account where the key may have been compromised or as a periodic precaution  - rotatewitnessaddress "funding_account" "witness_address"
-Set a witness account to compound all or part of the earnings it receives (phase 4 only) - setwitnesscompound "witness_account" "amount"
-Check the compounding settings for a witness account - getwitnesscompound "witness_account"
-Set an address or script other than the default for witness reward payout - setwitnessrewardscript "witness_account" "address_or_script" force_pubkey 
-Get the current address or script that has been set for witness reward payout - getwitnessrewardscript "witness_account" 
-RPC - GetBlockTemplate support for mining in conjunction with phase 3 witnessing.
-
+UI      - New "witness overview" dialog with info and statistics on witness accounts, complete with a graph showing current and predicted earnings.
+UI      - New "witness fund" dialog, with estimate to help pick the right weight when funding an account.
+CORE    - New blockchain consensus rules for a PoW² driven blockchain with determistic witnessing.
+CORE    - New address type for two key witness accounts
+CORE    - New account types for witnessing, including special behaviour (hardening) of the witness key chain so that witness keys can be shared without compromising wallet security.
+CORE    - New witness-only account types for linked witnessing between main wallet and a backup witness device.
+CORE    - Automatic witnessing of incoming blocks in exchange for rewards
+RPC     - New commands:
+        View a statistical/informational snapshot of the witness system for any block in the blockchain - getwitnessinfo "block_specifier" verbose mine_only
+        Create a new witness account - createwitnessaccount "name"
+        Lock funds into a witness account - fundwitnessaccount "funding_account" "witness_account" "amount" "time" "force_multiple"
+        Add funds to a witness account and/or extend the lock period - extendwitnessaccount "funding_account" "witness_account" "amount" "time" 
+        Add funds to a witness address and/or extend the lock period - extendwitnessaddress "funding_account" "witness_address" "amount" "time" 
+        Export a URL for creation of a linked "witness-only" account - getwitnessaccountkeys "witness_account" 
+        Import a "witness-only" account from a URL that has previously been exported - importwitnesskeys "account_name" "encoded_key_url" "create_account"
+        Split a witness account into multiple witness addresses; Lock period is not changed this exists for the benefit of users whose weight is too large for the network - splitwitnessaccount "funding_account" "witness_account" "amounts"
+        Merge multiple identical witness addresses into a single one; Only works on identical accounts i.e. ones that have previously been split - mergewitnessaccount "funding_account" "witness_account"
+        Renew a witness account that has expired due to failiure to witness - renewwitnessaccount "witness_account" 
+        Change the witness key on an account where the key may have been compromised or as a periodic precaution - rotatewitnessaccount "funding_account" "witness_account"
+        Change the witness key on an account where the key may have been compromised or as a periodic precaution  - rotatewitnessaddress "funding_account" "witness_address"
+        Set a witness account to compound all or part of the earnings it receives (phase 4 only) - setwitnesscompound "witness_account" "amount"
+        Check the compounding settings for a witness account - getwitnesscompound "witness_account"
+        Set an address or script other than the default for witness reward payout - setwitnessrewardscript "witness_account" "address_or_script" force_pubkey 
+        Get the current address or script that has been set for witness reward payout - getwitnessrewardscript "witness_account" 
+RPC     - GetBlockTemplate support for mining in conjunction with phase 3 witnessing.
 
 * SegSig - A new transaction format. See https://github.com/Gulden/gulden-official/blob/master/technical_documentation/transaction_format.md for technical information.
 Highlights include: Solving of malleability issues; More compact transactions (over 50% in some cases) leading to increased network capacity for peak transaction periods; New transaction types (for PoW²); Extensible transaction types for future development.
 
-CORE - Implement fixes for transaction malleability
-CORE - Implement new more compact transaction format
-CORE - Implement two new transaction types "StandardKeyHash" and "PoW2_Witness"
-CORE - Implement version scheme allowing easy future creation of additional compact special purpose transactions
-CORE - Witness based version bit activation, for better control of future updates. Feature activation can now be controlled by "miner voting", "witness voting" or a combination at developer discretion.
-
+CORE    - Implement fixes for transaction malleability
+CORE    - Implement new more compact transaction format
+CORE    - Implement two new transaction types "StandardKeyHash" and "PoW2_Witness"
+CORE    - Implement version scheme allowing easy future creation of additional compact special purpose transactions
+CORE    - Witness based version bit activation, for better control of future updates. Feature activation can now be controlled by "miner voting", "witness voting" or a combination at developer discretion.
 
 * Sonic - The sonic project involves multiple changes to the p2p networking stack within Gulden.
 Highlights include: A switch to boost::asio for the networking stack to replace the old select() based networking code; Multiple improvements to the initial chain synchronisation process, including reverse header synchronisation, making it drastically faster; Removal of limitations to how many peers a server can handle, which helps solve scalability/congestion issues on the network in peak usage periods.
 
-
 * Non exhaustive list of additional general changes.
-UI - Gulden desktop client gains an automatic update check to alert users of updates. Update check is cryptographically secured to ensure that it cannot be tampered with.
-UI - Improved handling of wallet alerts/warnings through a new warning dialog.
-UI - New "all" button on send coin screen to send all funds.
-UI - Major reworking of send coin screen including improved Nocks integration and many other bug fixes.
-UI - Improve handling of small window sizes; hide some window elements on smaller windows when necessary.
-UI - Add localisation for the loading/splash screen when wallet first opens.
-CORE - Improved handling of "private key" imports.
-CORE - Major performance improvements for wallets with lots of transactions.
-CORE - Major performance improvements for wallets with lots of accounts.
-CORE - Performance improvements when creating new accounts.
-CORE - Numerous other performance improvements throughout the wallet.
-CORE - Major reworking of application life cycle management (open/close); so that it is faster and more consistent across applications. This forms the first step of our future "Unity" project, and fixes various crash at exit bugs and possible sources of wallet corruption.
+UI      - Gulden desktop client gains an automatic update check to alert users of updates. Update check is cryptographically secured to ensure that it cannot be tampered with.
+UI      - Improved handling of wallet alerts/warnings through a new warning dialog.
+UI      - New "all" button on send coin screen to send all funds.
+UI      - Major reworking of send coin screen including improved Nocks integration and many other bug fixes.
+UI      - Improve handling of small window sizes; hide some window elements on smaller windows when necessary.
+UI      - Add localisation for the loading/splash screen when wallet first opens.
+CORE    - Improved handling of "private key" imports.
+CORE    - Major performance improvements for wallets with lots of transactions.
+CORE    - Major performance improvements for wallets with lots of accounts.
+CORE    - Performance improvements when creating new accounts.
+CORE    - Numerous other performance improvements throughout the wallet.
+CORE    - Major reworking of application life cycle management (open/close); so that it is faster and more consistent across applications. This forms the first step of our future "Unity" project, and fixes various crash at exit bugs and possible sources of wallet corruption.
 CMDFLAG - Add a -windowtitle command flag, primarily intended to be used to assist with testing so that multiple program instances can be easily distinguished.
 CMDFLAG - Add a new -disableui flag to start with just a RPC console (and wallet); Useful for some types of debugging.
-RPC - New command 'getaccountbalances' return a list of individual balances for all accounts.
-RPC - New command 'listunspentforaccount' as account specific counterpart for listunspent.
-RPC - New command 'rescan' to trigger a wallet rescan (Same as Tools>rescan via UI).
-RPC - New command 'getrescanprogress' to view the progress percentageof an ongoing wallet rescan.
-RPC - New command 'getimmaturebalance' as conterpart to 'getunconfirmedbalance'
-RPC - Add account capability to 'sendmany' command.
-RPC - Modify 'listaccounts' command to take an optional second paramater to filter on account state. Add a new "state" field to the output and clarify better the difference between "type" and "HD_type"
-
+RPC     - New command 'getaccountbalances' return a list of individual balances for all accounts.
+RPC     - New command 'listunspentforaccount' as account specific counterpart for listunspent.
+RPC     - New command 'rescan' to trigger a wallet rescan (Same as Tools>rescan via UI).
+RPC     - New command 'getrescanprogress' to view the progress percentageof an ongoing wallet rescan.
+RPC     - New command 'getimmaturebalance' as conterpart to 'getunconfirmedbalance'
+RPC     - Add account capability to 'sendmany' command.
+RPC     - Modify 'listaccounts' command to take an optional second paramater to filter on account state. Add a new "state" field to the output and clarify better the difference between "type" and "HD_type"
 And many more changes and bug fixes, for a comprehensive list view the commit history on our github repository.
 
 
@@ -386,11 +389,11 @@ And many more changes and bug fixes, for a comprehensive list view the commit hi
 
 1.6.4.8
 Minor maintenence release.
-UI - Introduce a new informational widget and other minor UI improvements that make it move obvious to users that the wallet is not yet available during initial sync.
-UI - Add a new menu item for setting the currency.
-UI - Fix a crash in the send dialog on machines with no network connection.
-UI - Remove bitcoin payment option from send screen
-CORE - Update checkpoints, static difficulties, static seeds and other static information to help assist new users with better syncing experience.
+UI      - Introduce a new informational widget and other minor UI improvements that make it move obvious to users that the wallet is not yet available during initial sync.
+UI      - Add a new menu item for setting the currency.
+UI      - Fix a crash in the send dialog on machines with no network connection.
+UI      - Remove bitcoin payment option from send screen
+CORE    - Update checkpoints, static difficulties, static seeds and other static information to help assist new users with better syncing experience.
 
 
 
@@ -402,22 +405,22 @@ Minor testnet related release.
 
 
 1.6.4.6
-RPC - Fix an issue introduced in 1.6.4.3 which can cause users running with "-disablewallet" to experience RPC freezes when calling certain RPC commands.
+RPC     - Fix an issue introduced in 1.6.4.3 which can cause users running with "-disablewallet" to experience RPC freezes when calling certain RPC commands.
 
 
 
 
 1.6.4.5
-UI - Fix "run on boot" links that were broken by testnet changes and other minor "run on boot" corrections.
+UI      - Fix "run on boot" links that were broken by testnet changes and other minor "run on boot" corrections.
 
 
 
 
 1.6.4.1
 Minor bugfix release.
-UI - Some small translation changes
-RPC - Add an HDIndex flag to 'listaccounts' RPC output, useful for debugging HD wallet issues.
-CORE - Speed up address allocation when -keypool is set to a larger than default size.
+UI      - Some small translation changes
+RPC     - Add an HDIndex flag to 'listaccounts' RPC output, useful for debugging HD wallet issues.
+CORE    - Speed up address allocation when -keypool is set to a larger than default size.
 
 
 
@@ -425,36 +428,36 @@ CORE - Speed up address allocation when -keypool is set to a larger than default
 1.6.4
 CMDFLAG - Add new command line flag '-coinbasesignature' to make it easy to add coinbase signatures to generated blocks (predominantly meant for testnet)
 CMDFLAG - Add new command line flag '-accountpool' to increase the default account look ahead size. (Needed in some cases to find accounts on rescan when large account gaps are present)
-UI - Add a special warning if the users wallet.dat is readonly (instead of displaying a generic/scary 'corrupted wallet' message)
-UI - Improvements to send dialog, improve handling when user tries to send amounts equal too or larger than available balance.
-UI - New menu item for importing private keys.
-UI - New menu item to allow users to easily rescan without having to use command line flags or mess around in RPC console.
-UI - Improve the way rescan (and other actions that require progress) display in the program.
-UI - Fix a bug where transaction screen would sometimes show transactions for all accounts instead of just the active one.
-RPC - Modify createaccount command so that it can also create legacy accounts.
-RPC - New commands for read only (watch) HD accounts. getreadonlyaccount, importreadonlyaccount.
-RPC - New command for read only (watch) HD seeds, getreadonlyseed.
-RPC - New 'deleteaccount' command
-RPC - Modify 'move' command so that it can handle `-1` as input for the amount field, passing '-1' will calculate the available balance in the account for the confirmation level passed and transfer all of it.
-RPC - Merge a bug fix from user 'mezrin' for 'dumpwallet' command.
-RPC - Fix a bug in command 'gettransaction' where transaction would not show if 'rpconlylistsecuredtransactions' flag was set to false.
+UI      - Add a special warning if the users wallet.dat is readonly (instead of displaying a generic/scary 'corrupted wallet' message)
+UI      - Improvements to send dialog, improve handling when user tries to send amounts equal too or larger than available balance.
+UI      - New menu item for importing private keys.
+UI      - New menu item to allow users to easily rescan without having to use command line flags or mess around in RPC console.
+UI      - Improve the way rescan (and other actions that require progress) display in the program.
+UI      - Fix a bug where transaction screen would sometimes show transactions for all accounts instead of just the active one.
+RPC     - Modify createaccount command so that it can also create legacy accounts.
+RPC     - New commands for read only (watch) HD accounts. getreadonlyaccount, importreadonlyaccount.
+RPC     - New command for read only (watch) HD seeds, getreadonlyseed.
+RPC     - New 'deleteaccount' command
+RPC     - Modify 'move' command so that it can handle `-1` as input for the amount field, passing '-1' will calculate the available balance in the account for the confirmation level passed and transfer all of it.
+RPC     - Merge a bug fix from user 'mezrin' for 'dumpwallet' command.
+RPC     - Fix a bug in command 'gettransaction' where transaction would not show if 'rpconlylistsecuredtransactions' flag was set to false.
 CORE/RPC/UI - Support for read only (watch) HD accounts.
 CORE/RPC/UI - Support for read only (watch) HD seeds.
-CORE - Assorted other minor bug fixes.
+CORE    - Assorted other minor bug fixes.
 
 
 
 
 1.6.3
-RPC - Fix incorrect getaddressesbyaccount output.
-Fix a possible crash in the checkpoint system.
+RPC     - Fix incorrect getaddressesbyaccount output.
+CORE    - Fix a possible crash in the checkpoint system.
 
 
 
 
 1.6.2
-RPC - Bring back command that was removed in 1.6.0, adapted to the new account system - getaccount "Guldenaddress"
-RPC - Bring back command that was removed in 1.6.0, adapted to the new account system - getaddressesbyaccount "account"
+RPC     - Bring back command that was removed in 1.6.0, adapted to the new account system - getaccount "Guldenaddress"
+RPC     - Bring back command that was removed in 1.6.0, adapted to the new account system - getaddressesbyaccount "account"
 
 
 
@@ -466,24 +469,24 @@ Minor bugfix release.
 
 
 1.6.0
-UI - New user interface with drastic improvements over the old user interface.
-UI - Ticker/Exchange rate integration into app.
-UI - In wallet support for buying coins with euro via nocks.
+UI      - New user interface with drastic improvements over the old user interface.
+UI      - Ticker/Exchange rate integration into app.
+UI      - In wallet support for buying coins with euro via nocks.
 UI/RPC/CORE - New 'account based' wallet internals.
-UI - New in wallet buy support for bitcoin and IBAN via nocks API.
+UI      - New in wallet buy support for bitcoin and IBAN via nocks API.
 UI/RPC/CORE - Full support for BIP33 and BIP44 HD wallet standards with mnemonics.
 UI/CORE - Implement support for synchronised mobile accounts.
-CORE - Update to upstream bitcoin 0.13 codebase providing numerous bug fixes and improvements.
-Improve the checkpointing code, fix a checkpoint corruption issue that some users were experiencing.
-RPC - Change 'rpconlylistsecuredtransactions' to be on by default.
+CORE    - Update to upstream bitcoin 0.13 codebase providing numerous bug fixes and improvements.
+CORE    - Improve the checkpointing code, fix a checkpoint corruption issue that some users were experiencing.
+RPC     - Change 'rpconlylistsecuredtransactions' to be on by default.
 
 
 
 
 1.5.5
-CORE - Introduce a checkpoint system to protect against 50% attacks.
-UI - Update the UI so that only checkpointed transactions are marked as 'final'
-RPC - Update several commands so that exchanges can make use of the checkpoint system to be double spend proof.
+CORE    - Introduce a checkpoint system to protect against 50% attacks.
+UI      - Update the UI so that only checkpointed transactions are marked as 'final'
+RPC     - Update several commands so that exchanges can make use of the checkpoint system to be double spend proof.
 
 
 
@@ -502,20 +505,20 @@ Minor bugfix release.
 
 1.5.2
 Minor bugfix release.
-CORE - Updated to new seed nodes.
-UI - Fixed an issue with some external URIs not working on OSX machines.
-CORE - Add the KGW fix to all platforms.
+CORE    - Updated to new seed nodes.
+UI      - Fixed an issue with some external URIs not working on OSX machines.
+CORE    - Add the KGW fix to all platforms.
 
 
 
 
 1.5.1
-UI - Rebrand to Gulden, updated UI.
-CORE - Implement a fix for KGW difficulty algorithm on 32 bit systems - linux only.
+UI      - Rebrand to Gulden, updated UI.
+CORE    - Implement a fix for KGW difficulty algorithm on 32 bit systems - linux only.
 
 
 
 
 1.5.0
-CORE- New updated codebase based on bitcoin 0.10/0.11
-CORE - Impement a new difficulty adjustment algorithm named DELTA.
+CORE    - New updated codebase based on bitcoin 0.10/0.11
+CORE    - Impement a new difficulty adjustment algorithm named DELTA.

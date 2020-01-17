@@ -341,10 +341,6 @@
         <translation>Paskutinio bloko laikas</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Derinimo žurnalo failas</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsolė</translation>
     </message>
