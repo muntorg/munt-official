@@ -333,10 +333,10 @@ void CoreShutdown(boost::thread_group& threadGroup)
     {
         try { fs::remove(GetDataDir() / "mempool.dat"); } catch(...){LogPrintf("Failed to delete mempool.dat\n");}
         try { fs::remove(GetDataDir() / "FEE_ESTIMATES_FILENAME"); } catch(...){LogPrintf("Failed to delete fee estimates\n");}
-        try { fs::remove(GetDataDir() / "blocks"); } catch(...){LogPrintf("Failed to delete blocks folder\n");}
-        try { fs::remove(GetDataDir() / "chainstate"); } catch(...){LogPrintf("Failed to delete chainstate\n");}
-        try { fs::remove(GetDataDir() / "witstate"); } catch(...){LogPrintf("Failed to delete witstate\n");}
-        try { fs::remove(GetDataDir() / "database"); } catch(...){LogPrintf("Failed to delete database folder\n");}
+        try { fs::remove_all(GetDataDir() / "blocks"); } catch(...){LogPrintf("Failed to delete blocks folder\n");}
+        try { fs::remove_all(GetDataDir() / "chainstate"); } catch(...){LogPrintf("Failed to delete chainstate\n");}
+        try { fs::remove_all(GetDataDir() / "witstate"); } catch(...){LogPrintf("Failed to delete witstate\n");}
+        try { fs::remove_all(GetDataDir() / "database"); } catch(...){LogPrintf("Failed to delete database folder\n");}
         try { fs::remove(GetDataDir() / "db.log"); } catch(...){LogPrintf("Failed to delete db.log\n");}
     }
 }
