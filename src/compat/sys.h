@@ -23,7 +23,7 @@ inline uint64_t systemPhysicalMemoryInBytes()
     GlobalMemoryStatus(&status);
     return status.dwTotalPhys;
 }
-#elif defined(MAC_OSX)
+#elif defined(__APPLE__)
 #include <sys/types.h>
 #include <sys/sysctl.h>
 inline uint64_t systemPhysicalMemoryInBytes()
