@@ -332,11 +332,15 @@ void CoreShutdown(boost::thread_group& threadGroup)
     if (fullyEraseDatadirOnShutdown)
     {
         try { fs::remove(GetDataDir() / "mempool.dat"); } catch(...){LogPrintf("Failed to delete mempool.dat\n");}
-        try { fs::remove(GetDataDir() / "FEE_ESTIMATES_FILENAME"); } catch(...){LogPrintf("Failed to delete fee estimates\n");}
+        try { fs::remove(GetDataDir() / FEE_ESTIMATES_FILENAME); } catch(...){LogPrintf("Failed to delete fee estimates\n");}
         try { fs::remove_all(GetDataDir() / "blocks"); } catch(...){LogPrintf("Failed to delete blocks folder\n");}
         try { fs::remove_all(GetDataDir() / "chainstate"); } catch(...){LogPrintf("Failed to delete chainstate\n");}
         try { fs::remove_all(GetDataDir() / "witstate"); } catch(...){LogPrintf("Failed to delete witstate\n");}
         try { fs::remove_all(GetDataDir() / "database"); } catch(...){LogPrintf("Failed to delete database folder\n");}
+        //fixme: Windows
+        // This fails to delete on windows due to db.log still being open at program exit
+        // However with the rest of the data gone db.log is discarded anyway so this is 'okay'
+        // We should try get it working 100% anyway though in future when time allows
         try { fs::remove(GetDataDir() / "db.log"); } catch(...){LogPrintf("Failed to delete db.log\n");}
     }
 }
@@ -1016,6 +1020,35 @@ bool AppInitParameterInteraction()
     nUserMaxConnections = GetArg("-maxconnections", DEFAULT_MAX_PEER_CONNECTIONS);
     nMaxConnections = std::max(nUserMaxConnections, 0);
 
+    // Limit default memory usage on low memory systems, to try and prevent OOM on low spec pi devices and similar.
+    if (systemPhysicalMemoryInBytes() <= 1*1024*1024*1024ULL)
+    {
+        if (SoftSetArg("-maxconnections", i64tostr(40)))
+        {
+            InitWarning(strprintf(warningtr("Reducing -maxconnections to 40, because of system limitations, this can be overridden by explicitely setting -maxconnections to a larger amount.")));
+        }
+        if (SoftSetArg("-maxmempool", i64tostr(DEFAULT_MAX_MEMPOOL_SIZE_LOWMEM)))
+        {
+            InitWarning(strprintf(warningtr("Reducing -maxmempool to 100, because of system limitations, this can be overridden by explicitely setting -maxmempool to a larger amount.")));
+        }
+        if (SoftSetArg("-dbcache", i64tostr(200)))
+        {
+            InitWarning(strprintf(warningtr("Reducing -dbcache to 200, because of system limitations, this can be overridden by explicitely setting -dbcache to a larger amount.")));
+        }
+        if (SoftSetArg("-rpcthreads", i64tostr(1)))
+        {
+            InitWarning(strprintf(warningtr("Reducing -rpcthreads to 1, because of system limitations, this can be overridden by explicitely setting -rpcthreads to a larger amount.")));
+        }
+        if (SoftSetBoolArg("-reverseheaders", false))
+        {
+            InitWarning(strprintf(warningtr("Disabling reverse header sync, because of system limitations, this can be overridden by explicitely setting -reverseheaders to true.")));
+        }
+        //if (SoftSetArg("-maxreceivebuffer", DEFAULT_MAXRECEIVEBUFFER_LOWMEM))
+        //{
+            //InitWarning(strprintf(warningtr("Lowering receive buffer size from [%d] to [%d], because of system limitations, this can be overridden by explicitely setting -reverseheaders to true."), DEFAULT_MAXRECEIVEBUFFER, DEFAULT_MAXRECEIVEBUFFER_LOWMEM));
+        //}   
+    }
+        
     // Trim requested connection counts, to fit into system limitations
     int nSystemMaxConnections = FD_SETSIZE;
 #ifndef WIN32
@@ -1034,12 +1067,6 @@ bool AppInitParameterInteraction()
     if (nFD < MIN_CORE_FILEDESCRIPTORS)
         return InitError(errortr("Not enough file descriptors available."));
     nMaxConnections = std::min(nFD - MIN_CORE_FILEDESCRIPTORS - MAX_ADDNODE_CONNECTIONS, nMaxConnections);
-
-    // Limit peer count on low memory systems
-    if (systemPhysicalMemoryInBytes() <= 1*1024*1024*1024ULL)
-    {
-        nMaxConnections = std::min(nMaxConnections, 30);
-    }
 
     if (nMaxConnections < nUserMaxConnections)
         InitWarning(strprintf(warningtr("Reducing -maxconnections from %d to %d, because of system limitations."), nUserMaxConnections, nMaxConnections));
