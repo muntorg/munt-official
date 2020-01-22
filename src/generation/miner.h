@@ -35,6 +35,7 @@ class CAccount;
 extern double dBestHashesPerSec;
 extern double dRollingHashesPerSec;
 extern double dHashesPerSec;
+extern int64_t nArenaSetupTime;
 extern int64_t nHPSTimerStart;
 extern std::atomic<int64_t> nHashThrottle;
 

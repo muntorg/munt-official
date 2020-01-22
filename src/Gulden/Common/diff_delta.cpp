@@ -63,6 +63,7 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
     // NB!!! nLongTimeLimit MUST ALWAYS EXCEED THE THE MAXIMUM DRIFT ALLOWED (IN BOTH THE POSITIVE AND NEGATIVE DIRECTION)
     // SO AT LEAST DRIFT X2 OR MORE - OR ELSE CLIENTS CAN FORCE LOW DIFFICULTY BLOCKS BY MESSING WITH THE BLOCK TIMES.
     const int64_t nDrift   = 1;
+    //fixme: (2.1) Look at reducing this
     int64_t nLongTimeLimit = ((6 * nDrift)) * 60;
     int64_t nLongTimeStep  = nDrift * 60;
 

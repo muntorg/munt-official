@@ -378,10 +378,15 @@ void MiningAccountDialog::slotUpdateMiningStats()
     double dBestHashPerSecLog = dBestHashesPerSec;
     std::string sBestHashPerSecLogLabel = " h";
     selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
-       
-    ui->labelLastMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf %s/s", dHashPerSecLog, sHashPerSecLogLabel)));
-    ui->labelAverageMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf %s/s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel)));
-    ui->labelBestMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf %s/s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
+
+    
+    ui->labelLastMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dHashPerSecLog)));
+    ui->labelLastMiningSpeedUnits->setText(QString::fromStdString(" "+sHashPerSecLogLabel+"/s"));
+    ui->labelAverageMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dRollingHashPerSecLog)));
+    ui->labelAverageMiningSpeedUnits->setText(QString::fromStdString(" "+sRollingHashPerSecLogLabel+"/s"));
+    ui->labelBestMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dBestHashPerSecLog)));
+    ui->labelBestMiningSpeedUnits->setText(QString::fromStdString(" "+sBestHashPerSecLogLabel+"/s"));
+    ui->labelLastArenaSetupTime->setText(QString::fromStdString(strprintf("%.2lf", nArenaSetupTime/1000.0)));
     
     if (PoWGenerationIsActive())
     {

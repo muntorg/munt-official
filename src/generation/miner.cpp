@@ -96,7 +96,7 @@ uint64_t GetAdjustedFutureTime()
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
 {
     int64_t nOldTime = pblock->nTime;
-    int64_t nNewTime = std::max(pindexPrev->GetMedianTimePastWitness()+1, GetAdjustedTime());
+    int64_t nNewTime = std::max((uint64_t)pindexPrev->GetMedianTimePastWitness()+1, GetAdjustedFutureTime());
 
     if (nOldTime < nNewTime)
         pblock->nTime = nNewTime;
@@ -119,6 +119,11 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
         if (nNumMissedSteps <= nMaxMissedSteps)
             break;
         pblock->nTime -= 10;
+    }
+    
+    if (pblock->nTime <= pindexPrev->GetMedianTimePastWitness())
+    {
+        pblock->nTime = pindexPrev->GetMedianTimePastWitness()+1;
     }
 
     // Updating time can change work required (Delta)
@@ -338,7 +343,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     if (chainparams.MineBlocksOnDemand())
         pblock->nVersion = GetArg("-blockversion", pblock->nVersion);
 
-    pblock->nTime = GetAdjustedTime();
+    pblock->nTime = GetAdjustedFutureTime();
 
     const int64_t nMedianTimePast = pParent->GetMedianTimePastWitness();
 
@@ -1043,6 +1048,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
 double dBestHashesPerSec = 0.0;
 double dRollingHashesPerSec = 0.0;
 double dHashesPerSec = 0.0;
+int64_t nArenaSetupTime = 0;
 int64_t nHPSTimerStart = 0;
 int64_t nHashCounter=0;
 std::atomic<int64_t> nHashThrottle(-1);
@@ -1177,7 +1183,9 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             // Search
             //
             uint64_t nStart = GetTimeMillis();
+            //fixme: (2.1) Do away with this timeout once witness timestamps are available
             std::uint64_t nTimeout =  120000 + GetRand(60000);
+            std::uint64_t nMissedSteps = CalculateMissedTimeSteps(GetAdjustedFutureTime(), pindexParent->GetBlockTime());
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             if (pblock->nTime > defaultSigmaSettings.activationDate)
             {
@@ -1228,6 +1236,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                     }
                     workerThreads->join();
                 }
+                nArenaSetupTime = GetTimeMillis() - nStart;
                 
                 // Mine
                 {
@@ -1267,12 +1276,16 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                             //fixme: (SIGMA) - This can be improved in cases where we have 'uneven' contexts, one may still have lots of work when another is finished, we might want to only restart one of them and not both...
                             // If at least one of the threads is done working then abandon the rest of them, and then see if we have found a block or need to start again with a different block etc.
                             if (nThreadCounter < sigmaContexts.size())
+                            {
                                 break;
-                            
-                            // Abort for timestamp update if its been longer than ~3 minutes.
+                            }
+
+                            // Abort for timestamp update if its been longer than ~3 minutes; but only if difficulty reduction has not yet kicked in and we are on a machine that generated arenas 'quickly'
                             // Randomly stagger the checks so that all miners perform slightly differently.
-                            if (GetTimeMillis() - nStart > nTimeout)
+                            if (nMissedSteps == 0 && nArenaSetupTime < 5000.0 && (GetTimeMillis() - nStart > nTimeout))
+                            {
                                 break;
+                            }
                             
                             // Abort mining and start mining a new block instead if chain tip changed
                             {
@@ -1293,30 +1306,42 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                             {
                                 updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
                                 nCount=0;
+                                
+                                // Abort for timestamp update if difficulty has dropped
+                                std::uint64_t nUpdateMissedSteps = CalculateMissedTimeSteps(GetAdjustedFutureTime(), pindexParent->GetBlockTime());
+                                if (nMissedSteps != nUpdateMissedSteps)
+                                {
+                                    //fixme: (2.1) Calculate the optimal "break even" proportion here based on arena setup time and increased chance of block discovery instead of this hardcoded 'estimated' solution.
+                                    //For machines with really slow arena setup time we only apply this for every second missed step, but starting from the first one.
+                                    if (nUpdateMissedSteps % 2 == 1 || nArenaSetupTime < 30000.0)
+                                    {
+                                        break;
+                                    }
+                                }
                             }
                             
                             // Allow opportunity for user to terminate mining.
                             boost::this_thread::interruption_point();
                         }
-                    }
                     
-                    updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
+                        updateHashesPerSec(nStart, GetTimeMillis(), halfHashCounter);
 
-                    if (foundBlockHash != uint256())
-                    {
-                        TRY_LOCK(processBlockCS, lockProcessBlock);
-                        if(!lockProcessBlock)
-                            continue;
+                        if (foundBlockHash != uint256())
+                        {
+                            TRY_LOCK(processBlockCS, lockProcessBlock);
+                            if(!lockProcessBlock)
+                                continue;
 
-                        // Found a solution
-                        LogPrintf("generated PoW\n  hash: %s\n  diff: %s\n", foundBlockHash.GetHex(), hashTarget.GetHex());
-                        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
-                        ProcessBlockFound(shared_pblock, chainparams);
-                        coinbaseScript->keepScriptOnDestroy();
+                            // Found a solution
+                            LogPrintf("generated PoW\n  hash: %s\n  diff: %s\n", foundBlockHash.GetHex(), hashTarget.GetHex());
+                            std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+                            ProcessBlockFound(shared_pblock, chainparams);
+                            coinbaseScript->keepScriptOnDestroy();
 
-                        // In regression test mode, stop mining after a block is found.
-                        if (chainparams.MineBlocksOnDemand())
-                            throw boost::thread_interrupted();
+                            // In regression test mode, stop mining after a block is found.
+                            if (chainparams.MineBlocksOnDemand())
+                                throw boost::thread_interrupted();
+                        }
                     }
                     boost::this_thread::interruption_point();
                     // Try again with a new updated block header
