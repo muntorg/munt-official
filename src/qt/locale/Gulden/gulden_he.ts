@@ -591,10 +591,6 @@
         <translation>מספר הפעולה הנוכחי</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>קובץ יומן ניפוי</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>מ&amp;סוף בקרה</translation>
     </message>

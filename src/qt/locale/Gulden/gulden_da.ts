@@ -1403,10 +1403,6 @@
         <translation>Aktuelt antal transaktioner</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Fejlsøgningslogfil</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsol</translation>
     </message>

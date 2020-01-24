@@ -321,10 +321,6 @@
         <translation>Hora do último bloque</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Arquivo de log de depuración</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Consola</translation>
     </message>

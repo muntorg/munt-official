@@ -516,10 +516,6 @@
         <translation>Nåværende antall transaksjoner</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Loggfil for feilsøk</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsoll</translation>
     </message>

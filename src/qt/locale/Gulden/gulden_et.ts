@@ -843,10 +843,6 @@
         <translation>Viimane ploki aeg</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Silumise logifail</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsool</translation>
     </message>

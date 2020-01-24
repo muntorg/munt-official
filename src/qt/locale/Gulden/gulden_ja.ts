@@ -1391,10 +1391,6 @@
         <translation>現在のトランザクション数</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>デバッグ用ログファイル</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>現在のデータディレクトリから %1 のデバッグ用ログファイルを開きます。ログファイルが巨大な場合、数秒かかることがあります。</translation>
     </message>

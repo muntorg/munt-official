@@ -543,10 +543,6 @@
         <translation>Aktuálny počet tranzakcií</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Súbor záznamu ladenia</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Otvoriť %1 ladiaci výpis z aktuálnej zložky. Pre veľké súbory to môže chvíľu trvať.</translation>
     </message>

@@ -1155,10 +1155,6 @@
         <translation>Време на последния блок</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Лог файл,съдържащ грешките</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Конзола</translation>
     </message>

@@ -948,10 +948,6 @@
         <translation>현재 트랜잭션 수</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>로그 파일 디버그</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>%1 디버그 로그파일을 현재 데이터 폴더에서 엽니다. 용량이 큰 로그 파일들은 몇 초가 걸릴 수 있습니다.</translation>
     </message>

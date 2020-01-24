@@ -492,10 +492,6 @@
         <translation>Tämänhetkinen rahansiirtojen määrä</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Debug lokitiedosto</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Avaa %1 -debug-loki tämänhetkisestä data-hakemistosta. Tämä voi viedä muutaman sekunnin suurille lokitiedostoille.</translation>
     </message>

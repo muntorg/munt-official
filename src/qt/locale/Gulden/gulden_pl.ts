@@ -1180,10 +1180,6 @@ Witness waga: %5</translation>
         <source>Resulting URI too long, try to reduce the text for the label.</source>
         <translation>Wynikowy identyfikator URI jest zbyt długi, spróbuj zmniejszyć tekst etykiety.</translation>
     </message>
-    <message>
-        <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation>Podczas wczytywania strony kupowania wystąpił błąd. Sprawdź połączenie i spróbuj ponownie później.</translation>
-    </message>
 </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -2816,10 +2812,6 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>Obecna liczba transakcji</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Plik logowania debugowania</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Otwórz plik dziennika debugowania %1 z obecnego katalogu z danymi. Może to potrwać kilka sekund przy większych plikach.</translation>
     </message>
@@ -3540,85 +3532,6 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     </message>
 </context>
 <context>
-    <name>Gulden</name>
-    <message>
-        <source>Done loading</source>
-        <translation>Wczytywanie zakończone</translation>
-    </message>
-    <message>
-        <source>Erasing block index...</source>
-        <translation>Usuwam indeks bloku ...</translation>
-    </message>
-    <message>
-        <source>Error reading from database, shutting down.</source>
-        <translation>Błąd odczytu z bazy danych, wyłączam się.</translation>
-    </message>
-    <message>
-        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation>Nieprawidłowy lub brak bloku genezy. Błędny folder_danych dla sieci?</translation>
-    </message>
-    <message>
-        <source>Legacy account</source>
-        <translation>Legacy account</translation>
-    </message>
-    <message>
-        <source>Loading P2P addresses...</source>
-        <translation>Wczytywanie P2P adresów...</translation>
-    </message>
-    <message>
-        <source>Loading banlist...</source>
-        <translation>Ładowanie listy zablokowanych...</translation>
-    </message>
-    <message>
-        <source>Loading block index...</source>
-        <translation>Ładowanie indeksu bloku...</translation>
-    </message>
-    <message>
-        <source>Loading wallet...</source>
-        <translation>Wczytywanie portfela...</translation>
-    </message>
-    <message>
-        <source>My account</source>
-        <translation>Moje konto</translation>
-    </message>
-    <message>
-        <source>Wallet unlock required for wallet upgrade</source>
-        <translation>Odblokowanie portfela jest wymagane do aktualizacji portfela</translation>
-    </message>
-    <message>
-        <source>Zapping all transactions from wallet...</source>
-        <translation>Usuwam wszystkie transakcje z portfela...</translation>
-    </message>
-    <message>
-        <source>Pruning blockstore...</source>
-        <translation>Przycinanie zapisu bloków...</translation>
-    </message>
-    <message>
-        <source>Reloading block index...</source>
-        <translation>Ponowne ładowanie indeksu bloku...</translation>
-    </message>
-    <message>
-        <source>Rescanning...</source>
-        <translation>Ponowne skanowanie...</translation>
-    </message>
-    <message>
-        <source>Rewinding blocks...</source>
-        <translation>Przewijanie bloków ...</translation>
-    </message>
-    <message>
-        <source>Starting network threads...</source>
-        <translation>Uruchamianie wątków sieci ...</translation>
-    </message>
-    <message>
-        <source>Upgrading block index...</source>
-        <translation>Aktualizowanie indeksu bloku ...</translation>
-    </message>
-    <message>
-        <source>Verifying blocks...</source>
-        <translation>Weryfikacja bloków...</translation>
-    </message>
-</context>
-<context>
     <name>GuldenAmountField</name>
     <message>
         <source>Max</source>
@@ -3693,10 +3606,6 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
         <translation>Zmniejszenie zużycia pamięci nie jest zalecane. Spowolni wydobycie, zużywając tyle samo mocy procesora i energii, co wcześniej. Używaj tego tylko w ostateczności na komputerach o niskiej dostępności pamięci.</translation>
-    </message>
-    <message>
-        <source>%1 Mb</source>
-        <translation>%1 Mb</translation>
     </message>
     <message>
         <source>%1 threads</source>

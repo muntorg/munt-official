@@ -393,10 +393,6 @@
         <translation>ბოლო ბლოკის დრო</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>დახვეწის ლოგ-ფაილი</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;კონსოლი</translation>
     </message>

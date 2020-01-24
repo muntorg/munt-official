@@ -1263,10 +1263,6 @@
         <translation>Nombre actual de transaccions</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Fitxer de registre de depuració</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Consola</translation>
     </message>

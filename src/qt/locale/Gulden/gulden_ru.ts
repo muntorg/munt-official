@@ -1415,10 +1415,6 @@
         <translation>Текущее число транзакций</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Отладочный лог-файл</translation>
-    </message>
-    <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Открыть отладочный лог-файл %1 из текущего каталога данных. Это может занять несколько секунд для больших лог-файлов.</translation>
     </message>

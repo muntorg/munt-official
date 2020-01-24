@@ -417,10 +417,6 @@
         <translation>Horo de la lasta bloko</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Sencimiga protokoldosiero</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konzolo</translation>
     </message>

@@ -516,10 +516,6 @@
         <translation>Поточне число транзакцій</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>Файл звіту зневадження</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;Консоль</translation>
     </message>

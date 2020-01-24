@@ -667,10 +667,6 @@
         <translation>استخر حافظه</translation>
     </message>
     <message>
-        <source>Debug log file</source>
-        <translation>فایلِ لاگِ اشکال زدایی</translation>
-    </message>
-    <message>
         <source>&amp;Console</source>
         <translation>&amp;کنسول</translation>
     </message>
