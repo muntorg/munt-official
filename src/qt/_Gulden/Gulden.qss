@@ -489,7 +489,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
 
 
 /*Cancel buttons*/
-#clearButton, #deleteButton, #cancelButton, #cancelButton2, #deleteButton, GUI #closeButton, #buttonCancel
+#clearButton, #deleteButton, #cancelButton, #cancelButton2, #deleteButton, GUI #closeButton, #buttonDone, #buttonCancel
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -498,7 +498,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
     padding: 0px;
     margin-bottom: 10px;
 }
-#clearButton:pressed, #deleteButton:pressed, #cancelButton:pressed, #cancelButton2:pressed, #deleteButton:pressed, GUI #closeButton:pressed, #buttonCancel:pressed
+#clearButton:pressed, #deleteButton:pressed, #cancelButton:pressed, #cancelButton2:pressed, #deleteButton:pressed, GUI #closeButton:pressed, #buttonDone:pressed, #buttonCancel:pressed
 {
     color: #bf1b3a;
 }
@@ -545,7 +545,7 @@ GUI QDialog:window QPushButton:pressed, GUI QDialog:window ClickableLabel:presse
    TODO: Preferably there would only be the QPushButton[class=focus] selection rule, however some other
    other qss rules are still interfering.
 */
-QPushButton[class=focus], GUI QPushButton[class="focus"], GUI QDialog:window QPushButton[class="focus"], #okButton, #miningStartminingButton, #miningStopminingButton
+QPushButton[class=focus], GUI QPushButton[class="focus"], GUI QDialog:window QPushButton[class="focus"], #okButton, #miningStartminingButton, #miningStopminingButton, #transactionExportButton
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
     height: 34px;
@@ -994,6 +994,17 @@ OptionsDialog QSpinBox
     font-size: SMALL_BUTTON_FONT_SIZE;
 }
 
+#transactionShowOrphansCheckbox
+{
+    font-size: SMALL_BUTTON_FONT_SIZE;
+    height: 34px;
+    color: TEXT_COLOR_1;
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+}
+
 #checkboxConfirmRecoveryPhraseWrittenDown
 {
     font-size: SMALL_BUTTON_FONT_SIZE;
@@ -1140,7 +1151,7 @@ QToolTip, #gulden_bar #gulden_label_balance > QToolTip, #gulden_bar #gulden_labe
     margin-top: 10px;
 }
 
-#accountActionButtonFrame,	#accountActionButtonFrame2
+#accountActionButtonFrame,#accountActionButtonFrame2, #transactionHistoryButtonFrame
 {
     border-top: 1px solid #ebebeb;
     padding-top: 10px;

@@ -23,6 +23,7 @@ class WalletModel;
 class CAccount;
 
 QT_BEGIN_NAMESPACE
+class QCheckBox;
 class QComboBox;
 class QDateTimeEdit;
 class QFrame;
@@ -76,6 +77,7 @@ private:
     QComboBox *watchOnlyWidget;
     QLineEdit *addressWidget;
     QLineEdit *amountWidget;
+    QCheckBox *orphanWidget;
 
     QMenu *contextMenu;
     QSignalMapper *mapperThirdPartyTxUrls;
@@ -84,6 +86,7 @@ private:
     QDateTimeEdit *dateFrom;
     QDateTimeEdit *dateTo;
     QAction *abandonAction;
+    QAction* clearOrphansAction=nullptr;
     QAction *bumpFeeAction;
     QAction *editLabelAction;
 
@@ -110,6 +113,7 @@ private Q_SLOTS:
     void openThirdPartyTxUrl(QString url);
     void updateWatchOnlyColumn(bool fHaveWatchOnly);
     void abandonTx();
+    void clearOrphanTransactions();
     void bumpFee();
 
 Q_SIGNALS:
@@ -121,6 +125,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void chooseDate(int idx);
     void chooseType(int idx);
+    void toggleShowOrphans(bool showOrphans);
     void chooseWatchonly(int idx);
     void changedPrefix(const QString &prefix);
     void changedAmount(const QString &amount);
