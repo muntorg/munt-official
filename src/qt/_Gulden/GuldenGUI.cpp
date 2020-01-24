@@ -1096,6 +1096,7 @@ QDialog* GUI::createDialog(QWidget* parent, QString message, QString confirmLabe
 
     QLabel* labelDialogMessage = new QLabel(d);
     labelDialogMessage->setText(message);
+    labelDialogMessage->setTextInteractionFlags(Qt::TextSelectableByMouse);
     labelDialogMessage->setObjectName("labelDialogMessage");
     labelDialogMessage->setContentsMargins( 0, 0, 0, 0 );
     labelDialogMessage->setIndent(0);
