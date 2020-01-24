@@ -835,7 +835,7 @@ QHeaderView::up-arrow:hover
     border-left: 0px;
 }
 
-#receivingAddress, #receivingAddressLabel, #receivingAddress_dialog, #receivingAddressLabel_dialog, #newAccountName, #requestLabel, #buyEmailAddress, #buyBank, #lineEditChangeAccountName, #lineEditOldPassword, #lineEditNewPassword, #lineEditNewPasswordRepeat, #labelBackupPhrase, #edittextEnterRecoveryPhrase, #passEdit1, #passEdit2, #passEdit3, #labelEdit, #addressEdit, #privKeyEdit
+#receivingAddress, #receivingAddressLabel, #receivingAddressAccountName, #receivingAddress_dialog, #receivingAddressLabel_dialog, #newAccountName, #requestLabel, #buyEmailAddress, #buyBank, #lineEditChangeAccountName, #lineEditOldPassword, #lineEditNewPassword, #lineEditNewPasswordRepeat, #labelBackupPhrase, #edittextEnterRecoveryPhrase, #passEdit1, #passEdit2, #passEdit3, #labelEdit, #addressEdit, #privKeyEdit
 {
     font-size: BUTTON_FONT_SIZE;
     height: 28px;
@@ -1375,7 +1375,7 @@ GUI QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     background: none;
 }
 
-#newAccountName[valid=false], #lineEditNewPasswordRepeat[valid=false], #lineEditNewPassword[valid=false], #lineEditOldPassword[valid=false]
+#newAccountName[valid=false], #lineEditNewPasswordRepeat[valid=false], #lineEditNewPassword[valid=false], #lineEditOldPassword[valid=false], #receivingAddressAccountName[valid=false]
 {
     background-color: COLOR_VALIDATION_FAILED;
 }

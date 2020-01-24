@@ -157,6 +157,13 @@
                </widget>
               </item>
               <item>
+               <widget class="QLineEdit" name="receivingAddressAccountName">
+                <property name="placeholderText">
+                 <string>Recipient account name</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QCheckBox" name="checkBoxAddToAddressBook">
                 <property name="text">
                  <string>Add to address book</string>

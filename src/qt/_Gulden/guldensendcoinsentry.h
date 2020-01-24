@@ -69,6 +69,7 @@ public:
 public Q_SLOTS:
     void clear();
     void addressChanged();
+    void receivingAccountNameChanged();
     void tabChanged();
     void addressBookSelectionChanged();
     void myAccountsSelectionChanged();
