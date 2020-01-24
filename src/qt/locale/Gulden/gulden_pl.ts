@@ -679,6 +679,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Wpisz etykietę</translation>
     </message>
     <message>
+        <source>Recipient account name</source>
+        <translation>Nazwa konta odbiorcy</translation>
+    </message>
+    <message>
         <source>Add to address book</source>
         <translation>Dodaj do książki adresowej</translation>
     </message>
@@ -713,6 +717,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Amount below minimum for IBAN payment.</source>
         <translation>Kwota poniżej minimum dla płatności IBAN.</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>Nazwa odbiorcy jest wymagana do płatności IBAN.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -1682,6 +1690,24 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
         <translation>&amp;Eksportuj</translation>
     </message>
     <message>
+        <source>Show orphaned rewards</source>
+        <translation>Pokaż osamotnione nagrody</translation>
+    </message>
+    <message>
+        <source>Control display of orphaned rewards.
+
+Orphaned rewards naturally occur from time to time.
+Generally when someone else generates a block at the same time as yours.</source>
+        <translation>Kontroluj wyświetlanie osamotnionych nagród.
+
+Osamotnione nagrody pojawiają się naturalnie od czasu do czasu.
+Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translation>
+    </message>
+    <message>
+        <source>Export the current list of transactions to a file.</source>
+        <translation>Wyeksportuj bieżącą listę transakcji do pliku.</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>&amp;Kopia zapasowa portfela</translation>
     </message>
@@ -1771,6 +1797,10 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     <message>
         <source>Witness reward</source>
         <translation>Nagroda Witness</translation>
+    </message>
+    <message>
+        <source>Clear orphan transactions</source>
+        <translation>Wyczyść osamotnione transakcje</translation>
     </message>
     <message>
         <source>All dates</source>
@@ -3609,7 +3639,7 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     </message>
     <message>
         <source>%1 threads</source>
-        <translation>% 1 wątków</translation>
+        <translation>%1 wątków</translation>
     </message>
     <message>
         <source>Address copied to clipboard</source>

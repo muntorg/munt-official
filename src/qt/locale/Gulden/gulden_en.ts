@@ -954,7 +954,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Backup wallet</translation>
     </message>
     <message>
-        <location line="+982"/>
+        <location line="+983"/>
         <source>Imported key</source>
         <translation>Imported key</translation>
     </message>
@@ -1997,6 +1997,14 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <location filename="../../_Gulden/forms/newaccountdialog.ui" line="+190"/>
         <source>Scan QR to connect your mobile Gulden app</source>
         <translation>Scan QR to connect your mobile Gulden app</translation>
+    </message>
+</context>
+<context>
+    <name>NocksRequest</name>
+    <message>
+        <location filename="../../_Gulden/nocksrequest.cpp" line="+231"/>
+        <source>Okay</source>
+        <translation type="unfinished">Okay</translation>
     </message>
 </context>
 <context>
@@ -4210,12 +4218,12 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionTableModel</name>
     <message>
-        <location filename="../../transactiontablemodel.cpp" line="+903"/>
+        <location filename="../../transactiontablemodel.cpp" line="+916"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
     <message>
-        <location line="-630"/>
+        <location line="-643"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
@@ -4513,7 +4521,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Generation reward</translation>
     </message>
     <message>
-        <location line="+416"/>
+        <location line="+433"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
         <translation>Transaction status. Hover over this field to show number of confirmations.</translation>
     </message>
@@ -4556,12 +4564,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Comma separated file (*.csv)</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+21"/>
         <source>Exporting Failed</source>
         <translation>Exporting Failed</translation>
     </message>
     <message>
-        <location line="-6"/>
+        <location line="-7"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
@@ -4726,7 +4734,17 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Export Transaction History</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+17"/>
+        <source>Credit</source>
+        <translation type="unfinished">Credit</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Debit</source>
+        <translation type="unfinished">Debit</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>ID</source>
         <translation>ID</translation>
     </message>
@@ -5220,7 +5238,7 @@ In future versions of Gulden it will be possible to re-use this account for furt
 <context>
     <name>toolbar</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1221"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-1222"/>
         <source>Account toolbar</source>
         <translation>Account toolbar</translation>
     </message>
