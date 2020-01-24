@@ -18,8 +18,11 @@
 #include <QTimer>
 #include <QVariant>
 #include <QModelIndex>
+#include <QDialog>
 
 #include "walletmodel.h"
+#include "gui.h"
+
 
 
 #include <ostream>
@@ -33,7 +36,7 @@ static QString nocksHost()
     if (IsArgSet("-testnet"))
         return QString("sandbox.nocks.com");
     else
-        return QString("www.nocks.com");
+        return QString("api.nocks.com");
 }
 
 NocksRequest::NocksRequest( QObject* parent)
@@ -66,8 +69,8 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
 
     if (requestType == RequestType::Quotation)
     {
-        httpPostParamaters = QString("{\"pair\": \"%1_%2\", \"amount\": \"%3\", \"fee\": \"yes\", \"amountType\": \"withdrawal\"}").arg(from, to, amount);
-        netRequest.setUrl( QString("https://%1/api/price").arg(nocksHost()));
+        httpPostParamaters = QString("{\"source_currency\": \"%1\", \"target_currency\": \"%2\", \"amount\": {\"amount\": \"%3\", \"currency\": \"%2\"}, \"payment_method\": {\"method\":\"gulden\"}}").arg(from, to, amount);
+        netRequest.setUrl( QString("https://%1/api/v2/transaction/quote").arg(nocksHost()));
     }
     else
     {
@@ -91,20 +94,21 @@ void NocksRequest::startRequest(SendCoinsRecipient* recipient, RequestType type,
             description = m_recipient->forexDescription;
         }
                
-        //fixme: (FUT) (SEPA)
+        //fixme: (Post-2.1) (SEPA)
         QString httpExtraParams = "";
         /*
         if (forexExtraName != null && !forexExtraName.isEmpty())
             httpExtraParams = httpExtraParams + String.format(", \"name\": \"%s\"", forexExtraName);*/
         if (!description.isEmpty())
-            httpExtraParams = httpExtraParams + ", \"text\": \"" + description + "\"";
+            httpExtraParams = httpExtraParams + ", \"name\": \"" + description + "\"";
         /*if (forexExtraRemmitance2 != null && !forexExtraRemmitance2.isEmpty())
             httpExtraParams = httpExtraParams + String.format(", \"reference\": \"%s\"", forexExtraRemmitance2);*/
 
         QString forexAmount = GuldenUnits::format(GuldenUnits::NLG, recipient->amount, false, GuldenUnits::separatorNever);
 
-        httpPostParamaters = QString("{\"pair\": \"NLG_%1\", \"amount\": \"%2\", \"withdrawal\": \"%3\"%4}").arg(forexCurrencyType, forexAmount, recipient->address, httpExtraParams);
-        netRequest.setUrl( QString("https://%1/api/transaction").arg(nocksHost()));
+        //fixme: Pass a refund_address here
+        httpPostParamaters = QString("{\"source_currency\": \"%1\", \"target_currency\": \"%2\", \"target_address\": \"%3\", \"amount\": {\"amount\": \"%4\", \"currency\": \"%2\"}, \"payment_method\": {\"method\":\"gulden\"}%5}").arg(from, to, recipient->address, forexAmount, httpExtraParams);
+        netRequest.setUrl( QString("https://%1/api/v2/transaction").arg(nocksHost()));
     }
 
     netRequest.setRawHeader( "User-Agent", QByteArray(UserAgent().c_str()));
@@ -179,11 +183,8 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
         else
         {
             QByteArray jsonReply = reply->readAll();
-            QString temp = QString::fromStdString( jsonReply.data() );
             QJsonDocument jsonDoc = QJsonDocument::fromJson( jsonReply );
-            QJsonValue successValue = jsonDoc.object().value( "success" );
             QJsonValue errorValue = jsonDoc.object().value( "error" );
-
             if (errorValue != QJsonValue::Undefined)
             {
                 if (m_recipient)
@@ -195,7 +196,13 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
                 }
                 return;
             }
-            else if (successValue == QJsonValue::Undefined)
+            
+            QJsonValue dataObject = jsonDoc.object().value("data");            
+            QJsonValue sourceAmount = dataObject.toObject().value("source_amount");
+            QJsonValue targetAmount = dataObject.toObject().value("target_amount");
+            
+
+            if((sourceAmount == QJsonValue::Undefined) || (targetAmount == QJsonValue::Undefined))
             {
                 //fixme: (FUT)  Better error code
                 if (m_recipient)
@@ -209,17 +216,24 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
             {
                 if (requestType == RequestType::Quotation)
                 {
-                    GuldenUnits::parse(GuldenUnits::NLG, successValue.toObject().value("amount").toString(), &nativeAmount);
+                    GuldenUnits::parse(GuldenUnits::NLG, sourceAmount.toObject().value("amount").toString(), &nativeAmount);
                 }
                 else
                 {
-                    QString depositAmount = successValue.toObject().value("depositAmount").toString();
-                    QString depositAddress = successValue.toObject().value("deposit").toString();
-                    QString expirationTime = successValue.toObject().value("expirationTimestamp").toString();
-                    QString withdrawalAmount = successValue.toObject().value("withdrawalAmount").toString();
-                    QString withdrawalAddress = successValue.toObject().value("withdrawalOriginal").toString();
-
+                    QString depositAmount = sourceAmount.toObject().value("amount").toString();
+                    QString withdrawalAmount = targetAmount.toObject().value("amount").toString();
+                    
+                    // If on testnet then display the payment URL so user can verify it.
+                    if (IsArgSet("-testnet"))
+                    {
+                        QString paymentURL = dataObject.toObject().value("payment_url").toString(); 
+                        QString message = paymentURL;
+                        QDialog* d = GUI::createDialog(nullptr, message, tr("Okay"), QString(""), 400, 180);
+                        d->exec();
+                    }
+                    
                     //fixme: (FUT)  Should check amount adds up as well, but can't because of fee... - Manually subtract fee and verify it all adds up?
+                    QString withdrawalAddress = dataObject.toObject().value("target_address").toString();               
                     if (withdrawalAddress.toStdString() != originalAddress )
                     {
                         m_recipient->forexFailCode = "Withdrawal address modified, please contact a developer for assistance.";
@@ -228,9 +242,9 @@ void NocksRequest::netRequestFinished( QNetworkReply* reply )
                     }
                     m_recipient->paymentType = SendCoinsRecipient::PaymentType::NormalPayment;
                     m_recipient->forexAddress = QString::fromStdString(originalAddress);
-                    m_recipient->address = depositAddress;
+                    m_recipient->address = dataObject.toObject().find("payments")->toObject().find("data")->toArray()[0].toObject().find("metadata")->toObject().find("address")->toString();
                     GuldenUnits::parse(GuldenUnits::NLG, depositAmount, &m_recipient->amount);
-                    m_recipient->expiry = expirationTime.toLong() - 120;
+                    m_recipient->expiry = dataObject.toObject().value("expire_at").toObject().value("timestamp").toVariant().toLongLong();
                     m_recipient->forexFailCode = "";
                 }
 

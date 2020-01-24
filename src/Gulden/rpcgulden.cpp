@@ -14,6 +14,8 @@
 #include <boost/assign/list_of.hpp>
 
 #include "auto_checkpoints.h"
+#include "init.h"
+#include "unity/appmanager.h"
 
 #ifdef ENABLE_WALLET
 #include <wallet/rpcwallet.h>
@@ -2373,39 +2375,19 @@ static UniValue resetdatadirfull(const JSONRPCRequest& request)
         throw std::runtime_error("resetdatadirfull does not take arguments\n");
     }
 
-    LogPrintf("Partial datadir wipe requested.\n");
-    LogPrintf("Turning off networking for datadir wipe.\n");
+    LogPrintf("Full datadir wipe requested.\n");
+    // Immediately disable what we can so this is cleaner.
+    if (g_connman)
     {
-        // Disable what we can so this is cleaner.
-        if (!g_connman)
-        {
-            g_connman->SetNetworkActive(false);
-        }
-        witnessingEnabled = false;
+        g_connman->SetNetworkActive(false);
     }
+    witnessingEnabled = false;
+    fullyEraseDatadirOnShutdown=true;
     
-    // Grab the main locks - try stop the code from doing anything important while we are busy.
-    #ifdef ENABLE_WALLET
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
-    #else
-    LOCK(cs_main);
-    #endif
-    
-    fs::remove(GetDataDir() / "banlist.dat");
-    fs::remove(GetDataDir() / "peers.dat");
-    fs::remove(GetDataDir() / "db.log");
-    fs::remove(GetDataDir() / "mempool.dat");
-    fs::remove_all(GetDataDir() / "autocheckpoints");
-    fs::remove_all(GetDataDir() / "blocks");
-    fs::remove_all(GetDataDir() / "database");
-    fs::remove_all(GetDataDir() / "chainstate");
-    fs::remove_all(GetDataDir() / "witstate");
-    
-    // Forcefully close app
-    exit(EXIT_SUCCESS);
-
-    return NullUniValue;
+    // Event loop will exit after current HTTP requests have been handled, so
+    // this reply will get back to the client.
+    GuldenAppManager::gApp->shutdown();
+    return "Stopping application and fully resetting data directory (excluding wallet)";
 }
 
 static UniValue resetdatadirpartial(const JSONRPCRequest& request)
@@ -2418,32 +2400,18 @@ static UniValue resetdatadirpartial(const JSONRPCRequest& request)
     }
 
     LogPrintf("Partial datadir wipe requested.\n");
-    LogPrintf("Turning off networking for datadir wipe.\n");
+    // Immediately disable what we can so this is cleaner.
+    if (g_connman)
     {
-        // Disable what we can so this is cleaner.
-        if (!g_connman)
-        {
-            g_connman->SetNetworkActive(false);
-        }
-        witnessingEnabled = false;
+        g_connman->SetNetworkActive(false);
     }
+    witnessingEnabled = false;
+    partiallyEraseDatadirOnShutdown=true;
     
-    // Grab the main locks - try stop the code from doing anything important while we are busy.
-    #ifdef ENABLE_WALLET
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
-    #else
-    LOCK(cs_main);
-    #endif
-    
-    fs::remove_all(GetDataDir() / "autocheckpoints");
-    fs::remove(GetDataDir() / "banlist.dat");
-    fs::remove(GetDataDir() / "peers.dat");
-    
-    // Forcefully close app
-    exit(EXIT_SUCCESS);
-
-    return NullUniValue;
+    // Event loop will exit after current HTTP requests have been handled, so
+    // this reply will get back to the client.
+    GuldenAppManager::gApp->shutdown();
+    return "Stopping application and partially resetting data directory (excluding wallet)";
 }
 
 static UniValue resetconfig(const JSONRPCRequest& request)

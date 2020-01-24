@@ -66,4 +66,7 @@ std::string HelpMessage(HelpMessageMode mode);
 /** Returns licensing information (for -version) */
 std::string LicenseInfo();
 
+extern bool partiallyEraseDatadirOnShutdown;
+extern bool fullyEraseDatadirOnShutdown;
+
 #endif // GULDEN_INIT_H

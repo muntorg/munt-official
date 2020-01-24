@@ -135,6 +135,8 @@ static const char* FEE_ESTIMATES_FILENAME="fee_estimates.dat";
 
 
 std::atomic<bool> fDumpMempoolLater(false);
+bool partiallyEraseDatadirOnShutdown=false;
+bool fullyEraseDatadirOnShutdown=false;
 
 /**
  * This is a minimally invasive approach to shutdown on LevelDB read errors from the
@@ -309,6 +311,23 @@ void CoreShutdown(boost::thread_group& threadGroup)
     ECC_Stop();
     LogPrintf("Core shutdown: done.\n");
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
+    
+    if (fullyEraseDatadirOnShutdown||partiallyEraseDatadirOnShutdown)
+    {
+        fs::remove_all(GetDataDir() / "autocheckpoints");
+        fs::remove(GetDataDir() / "banlist.dat");
+        fs::remove(GetDataDir() / "peers.dat");
+    }
+    if (fullyEraseDatadirOnShutdown)
+    {
+        fs::remove(GetDataDir() / "db.log");
+        fs::remove(GetDataDir() / "mempool.dat");
+        fs::remove(GetDataDir() / FEE_ESTIMATES_FILENAME);
+        fs::remove_all(GetDataDir() / "blocks");
+        fs::remove_all(GetDataDir() / "database");
+        fs::remove_all(GetDataDir() / "chainstate");
+        fs::remove_all(GetDataDir() / "witstate");
+    }
 }
 
 //Signal handlers should be written in a way that does not result in any unwanted side-effects
