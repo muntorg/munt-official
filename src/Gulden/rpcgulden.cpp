@@ -2537,7 +2537,7 @@ static UniValue resetconfig_pi_medmem(const JSONRPCRequest& request)
         streamConfig << keepLine << "\n";
     }
     streamConfig << "maxmempool=100\n";
-    streamConfig << "dbcache=100\n";
+    streamConfig << "dbcache=200\n";
     streamConfig << "rpcthreads=1\n";
     streamConfig << "reverseheaders=false\n";
 
