@@ -1281,9 +1281,9 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                                 break;
                             }
 
-                            // Abort for timestamp update if its been longer than ~3 minutes.
+                            // Abort for timestamp update if its been longer than ~3 minutes; but only if difficulty reduction has not yet kicked in and we are on a machine that generated arenas 'quickly'
                             // Randomly stagger the checks so that all miners perform slightly differently.
-                            if (nArenaSetupTime < 5000.0 && (GetTimeMillis() - nStart > nTimeout))
+                            if (nMissedSteps == 0 && nArenaSetupTime < 5000.0 && (GetTimeMillis() - nStart > nTimeout))
                             {
                                 break;
                             }
@@ -1309,9 +1309,15 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                                 nCount=0;
                                 
                                 // Abort for timestamp update if difficulty has dropped
-                                if (nMissedSteps != CalculateMissedTimeSteps(GetAdjustedFutureTime(), pindexParent->GetBlockTime()))
+                                std::uint64_t nUpdateMissedSteps = CalculateMissedTimeSteps(GetAdjustedFutureTime(), pindexParent->GetBlockTime());
+                                if (nMissedSteps != nUpdateMissedSteps)
                                 {
-                                    break;
+                                    //fixme: (2.1) Calculate the optimal "break even" proportion here based on arena setup time and increased chance of block discovery instead of this hardcoded 'estimated' solution.
+                                    //For machines with really slow arena setup time we only apply this for every second missed step, but starting from the first one.
+                                    if (nUpdateMissedSteps % 2 == 1 || nArenaSetupTime < 30000.0)
+                                    {
+                                        break;
+                                    }
                                 }
                             }
                             

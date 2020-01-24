@@ -12,9 +12,12 @@ RPC - Add 'fail_count' and 'action_nonce' data to 'getwitnessinfo' command.
 
 
 
-2.1.0.23
+2.1.0.24
 
+CORE    - Lower default memory usage on devices with <1gb memory.
 CORE    - Update to V2 nocks API for IBAN transactions.
+CORE    - Several minor mining improvements
+UI      - Display arena setup time in mining UI
 RPC     - Improve 'resetdatadirpartial' and 'resetdatadirfull' functionality.
 
 
