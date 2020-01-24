@@ -1665,6 +1665,24 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
         <translation>&amp;Exporteren</translation>
     </message>
     <message>
+        <source>Show orphaned rewards</source>
+        <translation>Laat de orphaned beloningen zien</translation>
+    </message>
+    <message>
+        <source>Control display of orphaned rewards.
+
+Orphaned rewards naturally occur from time to time.
+Generally when someone else generates a block at the same time as yours.</source>
+        <translation>Instelling van de zichtbaarheid van orphan beloningen.
+
+Orphan beloningen kunnen van tijd tot tijd optreden.
+Normaal gesproken als iemand anders een block genereert op dezelfde tijd als u.</translation>
+    </message>
+    <message>
+        <source>Export the current list of transactions to a file.</source>
+        <translation>Exporteer de bestaande lijst van transacties naar een bestand.</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>Back-up van portemonnee maken</translation>
     </message>
@@ -1754,6 +1772,10 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     <message>
         <source>Witness reward</source>
         <translation>Witness-beloning</translation>
+    </message>
+    <message>
+        <source>Clear orphan transactions</source>
+        <translation>Verwijder de orphan transacties</translation>
     </message>
     <message>
         <source>All dates</source>
@@ -2802,8 +2824,16 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
         <translation>Open</translation>
     </message>
     <message>
+        <source>Open the %1 data directory.</source>
+        <translation>open de 1% data map</translation>
+    </message>
+    <message>
         <source>Current PoW² phase</source>
         <translation>Huidige PoW²-fase</translation>
+    </message>
+    <message>
+        <source>Log file</source>
+        <translation>Log bestand</translation>
     </message>
     <message>
         <source>&amp;Console</source>
