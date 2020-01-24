@@ -314,19 +314,19 @@ void CoreShutdown(boost::thread_group& threadGroup)
     
     if (fullyEraseDatadirOnShutdown||partiallyEraseDatadirOnShutdown)
     {
-        fs::remove_all(GetDataDir() / "autocheckpoints");
-        fs::remove(GetDataDir() / "banlist.dat");
-        fs::remove(GetDataDir() / "peers.dat");
+        try { fs::remove_all(GetDataDir() / "autocheckpoints"); } catch(...){LogPrintf("Failed to delete autocheckpoints\n");}
+        try { fs::remove(GetDataDir() / "banlist.dat"); } catch(...){LogPrintf("Failed to delete banlist.dat\n");}
+        try { fs::remove(GetDataDir() / "peers.dat"); } catch(...){LogPrintf("Failed to delete peers.dat\n");}
     }
     if (fullyEraseDatadirOnShutdown)
     {
-        fs::remove(GetDataDir() / "db.log");
-        fs::remove(GetDataDir() / "mempool.dat");
-        fs::remove(GetDataDir() / FEE_ESTIMATES_FILENAME);
-        fs::remove_all(GetDataDir() / "blocks");
-        fs::remove_all(GetDataDir() / "database");
-        fs::remove_all(GetDataDir() / "chainstate");
-        fs::remove_all(GetDataDir() / "witstate");
+        try { fs::remove(GetDataDir() / "mempool.dat"); } catch(...){LogPrintf("Failed to delete mempool.dat\n");}
+        try { fs::remove(GetDataDir() / "FEE_ESTIMATES_FILENAME"); } catch(...){LogPrintf("Failed to delete fee estimates\n");}
+        try { fs::remove(GetDataDir() / "blocks"); } catch(...){LogPrintf("Failed to delete blocks folder\n");}
+        try { fs::remove(GetDataDir() / "chainstate"); } catch(...){LogPrintf("Failed to delete chainstate\n");}
+        try { fs::remove(GetDataDir() / "witstate"); } catch(...){LogPrintf("Failed to delete witstate\n");}
+        try { fs::remove(GetDataDir() / "database"); } catch(...){LogPrintf("Failed to delete database folder\n");}
+        try { fs::remove(GetDataDir() / "db.log"); } catch(...){LogPrintf("Failed to delete db.log\n");}
     }
 }
 
