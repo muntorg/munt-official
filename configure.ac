@@ -97,6 +97,7 @@ AC_PATH_PROG(HEXDUMP,hexdump)
 AC_PATH_TOOL(READELF, readelf)
 AC_PATH_TOOL(CPPFILT, c++filt)
 AC_PATH_TOOL(OBJCOPY, objcopy)
+AC_PATH_PROG(DJINNI_RUN, djinni-run,, $prefix/bin)
 
 AC_ARG_VAR(PYTHONPATH, Augments the default search path for python module files)
 
@@ -215,6 +216,13 @@ AC_ARG_ENABLE([werror],
     [enable_werror=$enableval],
     [enable_werror=no])
 
+# Strong warnings
+AC_ARG_ENABLE([strong-warnings],
+    [AS_HELP_STRING([--disable-strong-warnings],
+                    [Use compiler flags to generate extra warnings (default is yes)])],
+    [strong_warnings=$enableval],
+    [strong_warnings=yes])
+
 AC_LANG_PUSH([C++])
 AX_CHECK_COMPILE_FLAG([-Werror],[CXXFLAG_WERROR="-Werror"],[CXXFLAG_WERROR=""])
 
@@ -237,7 +245,7 @@ if test "x$enable_werror" = "xyes"; then
   AX_CHECK_COMPILE_FLAG([-Werror],[ERROR_CXXFLAGS="$ERROR_CXXFLAGS -Werror"],,[[$CXXFLAG_WERROR]])
 fi
 
-if test "x$CXXFLAGS_overridden" = "xno" -o "x$TRAVIS" = "xtrue"; then
+if test "x$strong_warnings" = "xyes"; then
   AX_CHECK_COMPILE_FLAG([-Wall],[CXXFLAGS="$CXXFLAGS -Wall"],,[[$CXXFLAG_WERROR]])
   AX_CHECK_COMPILE_FLAG([-Wextra],[CXXFLAGS="$CXXFLAGS -Wextra"],,[[$CXXFLAG_WERROR]])
   AX_CHECK_COMPILE_FLAG([-Wformat],[CXXFLAGS="$CXXFLAGS -Wformat"],,[[$CXXFLAG_WERROR]])
@@ -261,11 +269,23 @@ AC_ARG_WITH([utils],
   [build_gulden_utils=$withval],
   [build_gulden_utils=yes])
 
-AC_ARG_WITH([libs],
-  [AS_HELP_STRING([--with-libs],
-  [build libraries (default=yes)])],
-  [build_gulden_libs=$withval],
-  [build_gulden_libs=yes])
+AC_ARG_WITH([node-js-libs],
+  [AS_HELP_STRING([--with-node-js-libs],
+  [build node.js unity library (default=no)])],
+  [build_gulden_libs_node_js=yes],
+  [build_gulden_libs_node_js=no])
+
+AC_ARG_WITH([jni-libs],
+  [AS_HELP_STRING([--with-jni-libs],
+  [build jni unity library (default=no)])],
+  [build_gulden_libs_jni=yes],
+  [build_gulden_libs_jni=no])
+
+AC_ARG_WITH([objc-libs],
+  [AS_HELP_STRING([--with-objc-libs],
+  [build objc unity library (default=no)])],
+  [build_gulden_libs_objc=yes],
+  [build_gulden_libs_objc=no])
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
@@ -274,6 +294,8 @@ AC_ARG_WITH([daemon],
   [build_GuldenD=yes])
 
 use_pkgconfig=yes
+
+
 case $host in
   *mingw*)
 
@@ -420,6 +442,9 @@ case $host in
    *openbsd*)
      LEVELDB_TARGET_FLAGS="-DOS_OPENBSD"
      ;;
+   *ios*)
+     LEVELDB_TARGET_FLAGS="-DOS_MACOSX"
+     ;;
    *netbsd*)
      LEVELDB_TARGET_FLAGS="-DOS_NETBSD"
      ;;
@@ -446,6 +471,12 @@ if test x$use_pkgconfig = xyes; then
   fi
   ])
 fi
+
+AC_ARG_WITH([webview],
+  [AS_HELP_STRING([--with-webview],
+  [Build with embedded webview (webengine|webkit|no, default=webengine except on Windows 32 bit)])],
+  [with_webview=$withval],
+  [with_webview=$default_webview])
 
 if test x$use_extended_functional_tests != xno; then
   AC_SUBST(EXTENDED_FUNCTIONAL_TESTS, --extended)
@@ -569,6 +600,10 @@ fi
 
 AC_CHECK_HEADERS([endian.h sys/endian.h byteswap.h stdio.h stdlib.h unistd.h strings.h sys/types.h sys/stat.h sys/select.h sys/prctl.h])
 
+AC_CHECK_DECLS([getifaddrs, freeifaddrs],,,
+    [#include <sys/types.h>
+    #include <ifaddrs.h>]
+)
 AC_CHECK_DECLS([strnlen])
 
 # Check for fork(2), unrelated to --with-daemon (although used by it)
@@ -691,12 +726,20 @@ if test x$use_upnp != xno; then
   )
 fi
 
+dnl Check for Djinni
+if test x$build_gulden_libs_objc != xno; then
+  if test x$DJINNI_OBJCXXFLAGS = x; then
+    DJINNI_OBJCXXFLAGS=-I$prefix/include/objc
+  fi
+  AC_SUBST(DJINNI_OBJCXXFLAGS)
+fi
+
 GULDEN_QT_INIT
 
 dnl sets $gulden_enable_qt, $gulden_enable_qt_test, $gulden_enable_qt_dbus
 GULDEN_QT_CONFIGURE([$use_pkgconfig], [qt5])
 
-if test x$build_gulden_utils$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnonononono; then
+if test x$build_gulden_utils$build_gulden_libs_node_js$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnonononononono; then
     use_boost=no
 else
     use_boost=yes
@@ -879,6 +922,7 @@ if test x$use_pkgconfig = xyes; then
       PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, PKG_CHECK_MODULES([CRYPTOPP], [libcrypto++],, [AC_MSG_ERROR(libcryptopp not found.)]))
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
+      PKG_CHECK_MODULES([PROTOBUF], [protobuf],[have_protobuf=yes],[have_protobuf=no])
       GULDEN_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [GULDEN_QT_FAIL(libprotobuf not found)])])
       if test x$use_qr != xno; then
         GULDEN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
@@ -1030,13 +1074,18 @@ AC_MSG_CHECKING([whether to build utils (Gulden-cli Gulden-tx)])
 AM_CONDITIONAL([BUILD_GULDEN_UTILS], [test x$build_gulden_utils = xyes])
 AC_MSG_RESULT($build_gulden_utils)
 
-AC_MSG_CHECKING([whether to build libraries])
-AM_CONDITIONAL([BUILD_GULDEN_LIBS], [test x$build_gulden_libs = xyes])
-if test x$build_gulden_libs = xyes; then
-  AC_DEFINE(HAVE_CONSENSUS_LIB, 1, [Define this symbol if the consensus lib has been built])
-  AC_CONFIG_FILES([libguldenconsensus.pc:libguldenconsensus.pc.in])
-fi
-AC_MSG_RESULT($build_gulden_libs)
+AC_MSG_CHECKING([whether to build node.js libraries])
+AM_CONDITIONAL([BUILD_GULDEN_LIBS_NODE_JS], [test x$build_gulden_libs_node_js = xyes])
+AC_MSG_RESULT($build_gulden_libs_node_js)
+
+
+AC_MSG_CHECKING([whether to build jni libraries])
+AM_CONDITIONAL([BUILD_GULDEN_LIBS_JNI], [test x$build_gulden_libs_jni = xyes])
+AC_MSG_RESULT($build_gulden_libs_jni)
+
+AC_MSG_CHECKING([whether to build objc libraries])
+AM_CONDITIONAL([BUILD_GULDEN_LIBS_OBJC], [test x$build_gulden_libs_objc = xyes])
+AC_MSG_RESULT($build_gulden_libs_objc)
 
 AC_LANG_POP
 
@@ -1109,6 +1158,15 @@ if test x$gulden_enable_qt != xno; then
   dnl enable graph support
   PKG_CHECK_MODULES([QWT], [Qt5Qwt6],, [PKG_CHECK_MODULES([QWT], [Qt5Qwt],, [PKG_CHECK_MODULES([QWT], [Qt5Qwt5],, [AC_MSG_ERROR(qwt not found.)])])])
 
+  dnl enable webview support
+  if test x$with_webview = xwebengine; then
+      PKG_CHECK_MODULES([QWEB], [Qt5WebEngineWidgets], [AC_DEFINE([HAVE_WEBENGINE_VIEW],[1],[Define if embedded webview should use Qt WebEngine])], [AC_MSG_ERROR(Qt WebEngine not found.)])
+  else
+    if test x$with_webview = xwebkit; then
+      PKG_CHECK_MODULES([QWEB], [Qt5WebKit Qt5WebKitWidgets], [AC_DEFINE([HAVE_WEBKIT],[1],[Define if embedded webview should use Qt WebKit])], [AC_MSG_ERROR(Qt WebKit not found.)])
+    fi
+  fi
+
   dnl enable qr support
   AC_MSG_CHECKING([whether to build GUI with support for QR codes])
   if test x$have_qrencode = xno; then
@@ -1157,8 +1215,8 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_gulden_utils$build_gulden_libs$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnononononono; then
-  AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-libs --with-daemon --with-gui --enable-bench or --enable-tests])
+if test x$build_gulden_utils$build_gulden_libs_node_js$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnononononononono; then
+  AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-jni-libs --with-objc-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
 AM_CONDITIONAL([TARGET_DARWIN], [test x$TARGET_OS = xdarwin])
@@ -1173,6 +1231,7 @@ AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
 AM_CONDITIONAL([GLIBC_BACK_COMPAT],[test x$use_glibc_compat = xyes])
 AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
+AM_CONDITIONAL([TARGET_INTEL], [test x$host_cpu = xx86_64 -o x$host_cpu = xi686])
 
 AC_DEFINE(CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MAJOR, [Major version])
 AC_DEFINE(CLIENT_VERSION_MINOR, _CLIENT_VERSION_MINOR, [Minor version])
@@ -1216,6 +1275,8 @@ AC_SUBST(MINIUPNPC_CPPFLAGS)
 AC_SUBST(MINIUPNPC_LIBS)
 AC_SUBST(CRYPTO_LIBS)
 AC_SUBST(QWT_LIBS)
+AC_SUBST(HAVE_WEBENGINE_VIEW)
+AC_SUBST(HAVE_WEBKIT)
 AC_SUBST(SSL_LIBS)
 AC_SUBST(EVENT_LIBS)
 AC_SUBST(EVENT_PTHREADS_LIBS)
@@ -1305,3 +1366,7 @@ echo "  CXXFLAGS      = $CXXFLAGS"
 echo "  LDFLAGS       = $LDFLAGS"
 echo "  ARFLAGS       = $ARFLAGS"
 echo
+echo " Libraries:"
+echo "     jni:     $build_gulden_libs_jni"
+echo "     objc:    $build_gulden_libs_objc"
+echo "     node_js: $build_gulden_libs_node_js"
