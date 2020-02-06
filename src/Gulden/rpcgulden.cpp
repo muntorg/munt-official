@@ -25,8 +25,6 @@
 #include "wallet/witness_operations.h"
 #endif
 
-#include <univalue.h>
-
 #include <Gulden/util.h>
 #include <numeric>
 #include <boost/accumulators/accumulators.hpp>
