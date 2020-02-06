@@ -396,7 +396,7 @@ int ExpireMempoolForPartialSync(const std::shared_ptr<const CBlock>& pblock, con
 std::string FormatStateMessage(const CValidationState &state);
 
 /** Apply the effects of this transaction on the UTXO set represented by view */
-void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight, int nTxIndex);
+void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, uint32_t nHeight, uint32_t nTxIndex);
 
 /** Transaction validation functions */
 

@@ -187,7 +187,7 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     cachedCoinsUsage += coinIter->second.coin.DynamicMemoryUsage();
 }
 
-void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, int nHeight, int nTxIndex)
+void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, uint32_t nHeight, uint32_t nTxIndex)
 {
     bool fCoinbase = tx.IsCoinBase();
     const uint256& txid = tx.GetHash();

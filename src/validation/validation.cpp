@@ -423,7 +423,7 @@ void static InvalidBlockFound(CBlockIndex *pindex, const CValidationState &state
     }
 }
 
-void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txundo, int nHeight, int nTxIndex)
+void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txundo, uint32_t nHeight, uint32_t nTxIndex)
 {
     // mark inputs spent
     if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase()) {
@@ -441,7 +441,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txund
     AddCoins(inputs, tx, nHeight, nTxIndex);
 }
 
-void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight, int nTxIndex)
+void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, uint32_t nHeight, uint32_t nTxIndex)
 {
     CTxUndo txundo;
     UpdateCoins(tx, inputs, txundo, nHeight, nTxIndex);
