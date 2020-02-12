@@ -26,6 +26,8 @@
 int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out);
 void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txundo, uint32_t nHeight, uint32_t nTxIndex);
 
+//fixme: (PHASE4) Add additional tests for new segsig related coin features.
+
 namespace
 {
 //! equality test
