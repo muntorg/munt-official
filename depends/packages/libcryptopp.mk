@@ -10,7 +10,7 @@ $(package)_makefile_linux=GNUmakefile
 $(package)_makefile_mingw32=GNUmakefile
 $(package)_makefile=$($(package)_makefile_$(host_os))
 
-$(package)_cxxflags_debug += -DDEBUG -DDEBUG_LOCKORDER
+$(package)_cxxflags_debug += 
 $(package)_cxxflags_release += -DNDEBUG -O3 -fPIC
 $(package)_cxxflags += -std=c++17
 
@@ -30,12 +30,12 @@ define $(package)_config_cmds
 endef
 
 define $(package)_build_cmds
-  PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f GNUmakefile libcryptopp.pc && \
+  PREFIX=$($(package)_staging_prefix_dir) CXXFLAGS="$($(package)_cxxflags)" $(MAKE) -f GNUmakefile libcryptopp.pc && \
   PREFIX="$($(package)_staging_prefix_dir)" RANLIB="$($(package)_ranlib)" CXXFLAGS="$($(package)_cxxflags)" $(MAKE) -f $($(package)_makefile) static
 endef
 
 define $(package)_stage_cmds
-  PREFIX=$($(package)_staging_prefix_dir) RANLIB=$($(package)_ranlib) $(MAKE) -f $($(package)_makefile) install-lib
+  PREFIX=$($(package)_staging_prefix_dir) RANLIB=$($(package)_ranlib) CXXFLAGS="$($(package)_cxxflags)" $(MAKE) -f $($(package)_makefile) install-lib
 endef
 
 define $(package)_postprocess_cmds
