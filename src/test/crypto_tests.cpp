@@ -130,9 +130,7 @@ static void TestAES128CBC(const std::string &hexkey, const std::string &hexiv, b
     enc.SetKeyWithIV(&key[0], key.size(), &iv[0]);
     if (pad)
     {
-        #if !defined(DEBUG_LOCKORDER)
         CryptoPP::VectorSource s(in, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(realout)));
-        #endif
     }
     else
     {
@@ -148,9 +146,7 @@ static void TestAES128CBC(const std::string &hexkey, const std::string &hexiv, b
     dec.SetKeyWithIV(&key[0], key.size(), &iv[0]);
     if (pad)
     {
-        #if !defined(DEBUG_LOCKORDER)
         CryptoPP::VectorSource s(correctout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(decrypted)));
-        #endif
     }
     else
     {
@@ -165,14 +161,11 @@ static void TestAES128CBC(const std::string &hexkey, const std::string &hexiv, b
     {
         std::vector<unsigned char> sub(i, in.end());
         std::vector<unsigned char> subout;
-        #if !defined(DEBUG_LOCKORDER)
         CryptoPP::VectorSource encryptSource(sub, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(subout)));
-        #endif
         
         std::vector<unsigned char> subdecrypted;
-        #if !defined(DEBUG_LOCKORDER)
         CryptoPP::VectorSource decryptSource(subout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(subdecrypted)));
-        #endif
+
         BOOST_CHECK(decrypted.size() == in.size());
         BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
     }
@@ -192,9 +185,7 @@ static void TestAES256CBC(const std::string &hexkey, const std::string &hexiv, b
 
     if (pad)
     {
-        #if !defined(DEBUG_LOCKORDER)
         CryptoPP::VectorSource s(in, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(realout)));
-        #endif
     }
     else
     {
@@ -210,9 +201,7 @@ static void TestAES256CBC(const std::string &hexkey, const std::string &hexiv, b
     dec.SetKeyWithIV(&key[0], key.size(), &iv[0]);
     if (pad)
     {
-        #if !defined(DEBUG_LOCKORDER)
         CryptoPP::VectorSource s(correctout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(decrypted)));
-        #endif
     }
     else
     {
@@ -227,14 +216,10 @@ static void TestAES256CBC(const std::string &hexkey, const std::string &hexiv, b
     {
         std::vector<unsigned char> sub(i, in.end());
         std::vector<unsigned char> subout;
-        #if !defined(DEBUG_LOCKORDER)
         CryptoPP::VectorSource encryptSource(sub, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(subout)));
-        #endif
         
         std::vector<unsigned char> subdecrypted;
-        #if !defined(DEBUG_LOCKORDER)
         CryptoPP::VectorSource decryptSource(subout, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::VectorSink(subdecrypted)));
-        #endif
         BOOST_CHECK(decrypted.size() == in.size());
         BOOST_CHECK_MESSAGE(subdecrypted == sub, HexStr(subdecrypted) + std::string(" != ") + HexStr(sub));
     }
