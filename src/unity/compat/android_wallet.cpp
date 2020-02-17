@@ -233,9 +233,23 @@ android_wallet ParseAndroidProtoWallet(std::string walletPath, std::string walle
         // Combine the AES key with the IV and the encrypted data to retrieve the original unencrypted data
         CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
         dec.SetKeyWithIV(&aesKeyData[0], aesKeyData.size(), (const unsigned char*)&aesIV[0]);
-        CryptoPP::StringSource s(walletRet.walletSeedMnemonic, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::StringSink(aesCryptedData)));
-        
-        if (walletRet.walletSeedMnemonic.size() == 0)
+        bool failed = false;
+        try
+        {
+            auto sink = new CryptoPP::StringSink(walletRet.walletSeedMnemonic);
+            {
+                CryptoPP::StringSource s(aesCryptedData, true, new CryptoPP::StreamTransformationFilter(dec, sink));
+            }
+            if (walletRet.walletSeedMnemonic.length() == 0)
+            {
+                failed = true;
+            }
+        }
+        catch(...)
+        {
+            failed = true;
+        }
+        if (failed)
         {
             walletRet.resultMessage = "Decryption failed.";
             return walletRet;

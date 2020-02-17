@@ -1,3 +1,8 @@
+// Copyright (c) 2019-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
+
 #include "unity/compat/android_wallet.h"
 
 #include "clientversion.h"
@@ -12,7 +17,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-BOOST_FIXTURE_TEST_SUITE(util_tests, BasicTestingSetup)
+BOOST_FIXTURE_TEST_SUITE(unity_tests, BasicTestingSetup)
 
 bool retrieveWallet(std::string sFile, std::string sPassword, std::string phraseCheck)
 {
