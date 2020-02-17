@@ -36,7 +36,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
-      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" HOST=x86_64-unknown-linux-gnu PACKAGES="libqrencode-dev libminiupnpc-dev python3-zmq protobuf-compiler libdbus-1-dev libharfbuzz-dev libprotobuf-dev" DEP_OPTS="NO_QT=1 NO_WALLET=1 NO_UPNP=1 DEBUG=1 ALLOW_HOST_PACKAGES=1" RUN_TESTS=true GOAL="install" GULDEN_CONFIG="--enable-debug --enable-zmq --disable-wallet --with-gui=no --enable-glibc-back-compat --enable-reduce-exports CPPFLAGS=-DDEBUG_LOCKORDER --disable-shared --with-pic"
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" HOST=x86_64-unknown-linux-gnu PACKAGES="libqrencode-dev libminiupnpc-dev python3-zmq protobuf-compiler libdbus-1-dev libharfbuzz-dev libprotobuf-dev" DEP_OPTS="NO_QT=1 NO_WALLET=1 NO_UPNP=1 DEBUG=1 ALLOW_HOST_PACKAGES=1" RUN_TESTS=true GOAL="install" GULDEN_CONFIG="--enable-zmq --disable-wallet --with-gui=no --enable-glibc-back-compat --enable-reduce-exports CPPFLAGS=-DDEBUG_LOCKORDER"
 
 before_install:
     - eval "${MATRIX_EVAL}"
