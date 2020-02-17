@@ -49,6 +49,7 @@ BOOST_FIXTURE_TEST_SUITE(miner_tests, RegtestingSetup)
 
 static CFeeRate blockMinFeeRate = CFeeRate(DEFAULT_BLOCK_MIN_TX_FEE);
 
+#if 0
 static BlockAssembler AssemblerForTest(const CChainParams& params) {
     BlockAssembler::Options options;
 
@@ -92,6 +93,7 @@ struct {
     { 2, 1}, { 1, 2}, { 1, 0}, { 1, 2},
     { 2, 0}, { 2, 0}
 };
+#endif
 
 CBlockIndex CreateBlockIndex(int nHeight)
 {
@@ -110,6 +112,7 @@ bool TestSequenceLocks(const CTransaction &tx, int flags)
 // Test suite for ancestor feerate transaction selection.
 // Implemented as an additional function, rather than a separate test case,
 // to allow reusing the blockchain created in CreateNewBlock_validity.
+#if 0
 static void TestPackageSelection(const CChainParams& chainparams, std::shared_ptr<CReserveKeyOrScript> reservedScript, std::vector<CTransactionRef>& txFirst)
 {
     // Test the ancestor feerate transaction selection.
@@ -211,6 +214,7 @@ static void TestPackageSelection(const CChainParams& chainparams, std::shared_pt
     pblocktemplate = AssemblerForTest(chainparams).CreateNewBlock(chainActive.Tip(), reservedScript);
     BOOST_CHECK(pblocktemplate->block.vtx.size() >= 9 && pblocktemplate->block.vtx[8]->GetHash() == hashLowFeeTx2);
 }
+#endif
 
 // Define PRINT_TEST_NONCES_CPP to generate the blockinfo table once
 // #define PRINT_TEST_NONCES_CPP

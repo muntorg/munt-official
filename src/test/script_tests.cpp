@@ -109,6 +109,7 @@ static const char *FormatScriptError(ScriptError_t err)
     return "";
 }
 
+#if 0
 static ScriptError_t ParseScriptError(const std::string &name)
 {
     for (unsigned int i=0; i<ARRAYLEN(script_errors); ++i)
@@ -117,6 +118,7 @@ static ScriptError_t ParseScriptError(const std::string &name)
     BOOST_ERROR("Unknown scripterror \"" << name << "\" in test description");
     return SCRIPT_ERR_UNKNOWN_ERROR;
 }
+#endif
 
 BOOST_FIXTURE_TEST_SUITE(script_tests, BasicTestingSetup)
 

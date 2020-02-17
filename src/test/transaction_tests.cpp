@@ -352,13 +352,14 @@ BOOST_AUTO_TEST_CASE(test_Get)
 }
 
 
+#if 0
 static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outscript, CTransactionRef& output, CMutableTransaction& input, bool success = true)
 {
     //fixme: (PHASE4)
     // Seems to be unused, why does it need fixing in 2.0.1?
     GULDEN_TEST_REWRITE;
     //SignSignature issues
-	#if 0
+
     CMutableTransaction outputm;
     outputm.nVersion = 1;
     outputm.vin.resize(1);
@@ -393,8 +394,8 @@ static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outsc
     assert(input.vout.size() == 1);
     assert(input.vout[0] == inputm.vout[0]);
     assert(input.vin[0].segregatedSignatureData.stack == inputm.vin[0].segregatedSignatureData.stack);
-    #endif
 }
+#endif
 
 void CheckWithFlag(const CTransactionRef& output, const CMutableTransaction& input, int flags, bool success)
 {
