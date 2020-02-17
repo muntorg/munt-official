@@ -23,6 +23,8 @@ BOOST_FIXTURE_TEST_SUITE(policyestimator_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(BlockPolicyEstimates)
 {
+    GULDEN_TEST_REWRITE;
+    #if 0
     CBlockPolicyEstimator feeEst;
     CTxMemPool mpool(&feeEst);
     TestMemPoolEntryHelper entry;
@@ -194,6 +196,7 @@ BOOST_AUTO_TEST_CASE(BlockPolicyEstimates)
         BOOST_CHECK(feeEst.estimateSmartFee(i, NULL, mpool).GetFeePerK() >= feeEst.estimateRawFee(i, 0.85, FeeEstimateHorizon::MED_HALFLIFE).GetFeePerK());
         BOOST_CHECK(feeEst.estimateSmartFee(i, NULL, mpool).GetFeePerK() >= mpool.GetMinFee(1).GetFeePerK());
     }
+    #endif
 }
 
 BOOST_AUTO_TEST_SUITE_END()
