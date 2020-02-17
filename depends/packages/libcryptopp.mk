@@ -31,7 +31,7 @@ endef
 
 define $(package)_build_cmds
   PREFIX=$($(package)_staging_prefix_dir) $(MAKE) -f GNUmakefile libcryptopp.pc && \
-  PREFIX=$($(package)_staging_prefix_dir) RANLIB=$($(package)_ranlib) $(MAKE) -f $($(package)_makefile) static
+  PREFIX="$($(package)_staging_prefix_dir)" RANLIB="$($(package)_ranlib)" CXXFLAGS="$($(package)_cxxflags)" $(MAKE) -f $($(package)_makefile) static
 endef
 
 define $(package)_stage_cmds
