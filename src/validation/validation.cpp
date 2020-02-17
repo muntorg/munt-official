@@ -506,8 +506,10 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
         // is safe because block merkle hashes are still computed and checked,
         // Of course, if an assumed valid block is invalid due to false scriptSigs
         // this optimization would allow an invalid chain to be accepted.
-        if (fScriptChecks) {
-            for (unsigned int i = 0; i < tx.vin.size(); i++) {
+        if (fScriptChecks)
+        {
+            for (unsigned int i = 0; i < tx.vin.size(); i++)
+            {
                 const COutPoint &prevout = tx.vin[i].prevout;
                 if (prevout.IsNull() && tx.IsPoW2WitnessCoinBase())
                     continue;
@@ -530,7 +532,9 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
                         {
                             if (tx.vin[i].segregatedSignatureData.stack.size() != 1)
+                            {
                                 return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-segregated-signature-stack-size (%d) (standard-key-hash-input should always have a segregatedSignatureData stack size of exactly 1)", tx.vin[i].segregatedSignatureData.stack.size()));
+                            }
                         }
                         else
                         {
@@ -542,14 +546,20 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                             {
                                 spendSigningKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
                                 if (spendSigningKeyID.IsNull())
+                                {
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid spending key from prevout)"));
+                                }
                                 if (witnessSigningKeyID.IsNull())
+                                {
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
+                                }
                             }
                             else if (tx.vin[i].segregatedSignatureData.stack.size() == 1)
                             {
                                 if (witnessSigningKeyID.IsNull())
+                                {
                                     return state.DoS(100,false, REJECT_INVALID, strprintf("invalid-witness-prevout (unable to extract a valid witness key from prevout)"));
+                                }
                             }
                             else
                             {
@@ -619,7 +629,9 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         // non-upgraded nodes.
                         CScriptCheck check2(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags & ~STANDARD_NOT_MANDATORY_VERIFY_FLAGS, cacheStore, &txdata);
                         if (check2())
+                        {
                             return state.Invalid(false, REJECT_NONSTANDARD, strprintf("non-mandatory-script-verify-flag (%s)", ScriptErrorString(check.GetScriptError())));
+                        }
                     }
                     // Failures of other flags indicate a transaction that is
                     // invalid in new blocks, e.g. a invalid P2SH. We DoS ban
@@ -1141,8 +1153,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         // * witness (when witness enabled in flags and excludes coinbase)
         nSigOpsCost += GetTransactionSigOpCost(tx, view, flags);
         if (nSigOpsCost > MAX_BLOCK_SIGOPS_COST)
-            return state.DoS(100, error("ConnectBlock(): too many sigops"),
-                             REJECT_INVALID, "bad-blk-sigops");
+            return state.DoS(100, error("ConnectBlock(): too many sigops"), REJECT_INVALID, "bad-blk-sigops");
 
         txdata.emplace_back(tx);
 
@@ -1157,7 +1168,9 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     return true;
                 },
                 bundles))
+        {
             return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
+        }
 
         witnessBundles.push_back(std::make_shared<CWitnessBundles>(bundles));
         tx.witnessBundles = witnessBundles[txIndex];

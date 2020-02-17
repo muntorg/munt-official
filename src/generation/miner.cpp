@@ -497,7 +497,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     }
     else
     {
-        LogPrintf("CreateNewBlock: parent height [%d]; our height [%d; Difficulty [%d]\n", pParent->nHeight, nHeight, GetHumanDifficultyFromBits(pblock->nBits));
+        LogPrintf("CreateNewBlock: parent height [%d]; our height [%d]; Difficulty [%d]\n", pParent->nHeight, nHeight, GetHumanDifficultyFromBits(pblock->nBits));
     }
 
     // (GULDEN) Already done inside UpdateTime - don't need to do it again.
