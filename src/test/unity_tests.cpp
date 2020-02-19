@@ -52,6 +52,8 @@ bool retrieveEncryptedWalletWithWrongPassword(std::string sFile, std::string sPa
     return false;
 }
 
+// Issues using protobuf with _GLIBCXX_DEBUG enabled on travis
+#ifndef _GLIBCXX_DEBUG
 BOOST_AUTO_TEST_CASE(unity_android_wallet_import)
 {
     BOOST_CHECK(retrieveWallet(TESTDATADIR"wallet-seed-password-1234-protobuf","1234","umbrella dune genuine busy whip core famous pattern impulse solid nice film"));
@@ -63,6 +65,7 @@ BOOST_AUTO_TEST_CASE(unity_android_wallet_import)
     BOOST_CHECK(retrieveEncryptedWalletWithoutPassword(TESTDATADIR"wallet-seed-password-1234-protobuf","","umbrella dune genuine busy whip core famous pattern impulse solid nice film"));
     BOOST_CHECK(retrieveEncryptedWalletWithWrongPassword(TESTDATADIR"wallet-seed-password-1234-protobuf","4321","umbrella dune genuine busy whip core famous pattern impulse solid nice film"));
 }
+#endif
 
 
 

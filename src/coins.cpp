@@ -296,8 +296,8 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     // modified and being pruned. This means we can just delete
                     // it from the parent.
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
-                    cacheCoins.erase(itUs);
                     cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
+                    cacheCoins.erase(itUs);
                 } else {
                     // A normal modification.
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();

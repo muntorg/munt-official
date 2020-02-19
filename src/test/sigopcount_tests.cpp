@@ -153,9 +153,11 @@ BOOST_AUTO_TEST_CASE(GetTxSigOpCost)
         CScript scriptPubKey = GetScriptForDestination(CScriptID(redeemScript));
         CScript scriptSig = CScript() << OP_0 << OP_0 << ToByteVector(redeemScript);
 
+        #ifndef DEBUG_COINSCACHE_VALIDATE_INSERTS
         BuildTxs(spendingTx, coins, creationTx, scriptPubKey, scriptSig, CSegregatedSignatureData());
         BOOST_CHECK(GetTransactionSigOpCost(CTransaction(spendingTx), coins, flags) == 2 );
         BOOST_CHECK(VerifyWithFlag(creationTx, spendingTx, flags) == SCRIPT_ERR_CHECKMULTISIGVERIFY);
+        #endif
     }
 }
 

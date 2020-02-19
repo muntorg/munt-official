@@ -380,8 +380,8 @@ public:
             int nMid = nMedianTimeSpan/2;
 
             std::valarray<int64_t> pmedian(nMedianTimeSpan);
-            int64_t* pbegin = &pmedian[nMedianTimeSpan];
-            int64_t* pend = &pmedian[nMedianTimeSpan];
+            int64_t* pbegin = &pmedian[0]+nMedianTimeSpan;
+            int64_t* pend = &pmedian[0]+nMedianTimeSpan;
 
             const CBlockIndex* pindex = this;
             for (int i = 0; i < nMedianTimeSpan/2 && pindex; i++, pindex = pindex->pprev)
@@ -396,8 +396,8 @@ public:
         else
         {
             std::valarray<int64_t> pmedian(nMedianTimeSpan);
-            int64_t* pbegin = &pmedian[nMedianTimeSpan];
-            int64_t* pend = &pmedian[nMedianTimeSpan];
+            int64_t* pbegin = &pmedian[0]+nMedianTimeSpan;
+            int64_t* pend = &pmedian[0]+nMedianTimeSpan;
 
             const CBlockIndex* pindex = this;
             for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)
@@ -415,8 +415,8 @@ public:
             nMedianTimeSpan = 3;
 
         std::valarray<int64_t> pmedian(nMedianTimeSpan);
-        int64_t* pbegin = &pmedian[nMedianTimeSpan];
-        int64_t* pend = &pmedian[nMedianTimeSpan];
+        int64_t* pbegin = &pmedian[0]+nMedianTimeSpan;
+        int64_t* pend = &pmedian[0]+nMedianTimeSpan;
 
         const CBlockIndex* pindex = this;
         for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)
@@ -433,8 +433,8 @@ public:
             nMedianTimeSpan = 3;
 
         std::valarray<int64_t> pmedian(nMedianTimeSpan);
-        int64_t* pbegin = &pmedian[nMedianTimeSpan];
-        int64_t* pend = &pmedian[nMedianTimeSpan];
+        int64_t* pbegin = &pmedian[0]+nMedianTimeSpan;
+        int64_t* pend = &pmedian[0]+nMedianTimeSpan;
 
         const CBlockIndex* pindex = this;
         for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)

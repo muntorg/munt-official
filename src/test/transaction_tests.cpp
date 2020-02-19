@@ -28,6 +28,7 @@
 #include "script/standard.h"
 #include "utilstrencodings.h"
 #include "Gulden/util.h"
+#include "coins.h"
 
 #include <map>
 #include <string>
@@ -327,6 +328,7 @@ SetupDummyInputs(CBasicKeyStore& keystoreRet, CCoinsViewCache& coinsRet)
 
 BOOST_AUTO_TEST_CASE(test_Get)
 {
+    #ifndef DEBUG_COINSCACHE_VALIDATE_INSERTS
     CBasicKeyStore keystore;
     CCoinsView coinsDummy;
     CCoinsViewCache coins(&coinsDummy);
@@ -349,6 +351,7 @@ BOOST_AUTO_TEST_CASE(test_Get)
 
     BOOST_CHECK(AreInputsStandard(t1, coins));
     BOOST_CHECK_EQUAL(coins.GetValueIn(t1), (50+21+22)*CENT);
+    #endif
 }
 
 
@@ -433,6 +436,7 @@ static void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
 
 BOOST_AUTO_TEST_CASE(test_IsStandard)
 {
+    #ifndef DEBUG_COINSCACHE_VALIDATE_INSERTS
     LOCK(cs_main);
     CBasicKeyStore keystore;
     CCoinsView coinsDummy;
@@ -528,6 +532,7 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
     t.vout[0].output.scriptPubKey = CScript() << OP_RETURN;
     t.vout[1].output.scriptPubKey = CScript() << OP_RETURN;
     BOOST_CHECK(!IsStandardTx(t, reason, nPoW2Version));
+    #endif
 }
 
 BOOST_AUTO_TEST_SUITE_END()
