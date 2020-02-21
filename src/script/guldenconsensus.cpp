@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -104,9 +104,7 @@ static bool verify_flags(unsigned int flags)
     return (flags & ~(guldenconsensus_SCRIPT_FLAGS_VERIFY_ALL)) == 0;
 }
 
-static int verify_script(const unsigned char *scriptPubKey, unsigned int scriptPubKeyLen, CAmount amount,
-                                    const unsigned char *txTo        , unsigned int txToLen,
-                                    unsigned int nIn, unsigned int flags, guldenconsensus_error* err)
+static int verify_script(const unsigned char *scriptPubKey, unsigned int scriptPubKeyLen, CAmount amount, const unsigned char *txTo, unsigned int txToLen, unsigned int nIn, unsigned int flags, guldenconsensus_error* err)
 {
     if (!verify_flags(flags)) {
         return guldenconsensus_ERR_INVALID_FLAGS;
@@ -125,7 +123,8 @@ static int verify_script(const unsigned char *scriptPubKey, unsigned int scriptP
         PrecomputedTransactionData txdata(tx);
         //fixme: (PHASE4) (SEGSIG) (HIGH) - can't pass CKeyID(), need the actual keyID
         CKeyID tempKeyID;
-        return VerifyScript(tx.vin[nIn].scriptSig, CScript(scriptPubKey, scriptPubKey + scriptPubKeyLen), &tx.vin[nIn].segregatedSignatureData, flags, TransactionSignatureChecker(tempKeyID, tempKeyID, &tx, nIn, amount, txdata), NULL);
+        ScriptVersion scriptversion = (tx.vin[nIn].segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
+        return VerifyScript(tx.vin[nIn].scriptSig, CScript(scriptPubKey, scriptPubKey + scriptPubKeyLen), &tx.vin[nIn].segregatedSignatureData, flags, TransactionSignatureChecker(tempKeyID, tempKeyID, &tx, nIn, amount, txdata), scriptversion, NULL);
     } catch (const std::exception&) {
         return set_error(err, guldenconsensus_ERR_TX_DESERIALIZE); // Error deserializing
     }

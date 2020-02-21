@@ -505,7 +505,8 @@ struct Stacks
     Stacks() {}
     explicit Stacks(const std::vector<valtype>& scriptSigStack_) : script(scriptSigStack_), segregatedSignatureData() {}
     explicit Stacks(const SignatureData& data) : segregatedSignatureData(data.segregatedSignatureData.stack) {
-        EvalScript(script, data.scriptSig, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE);
+        ScriptVersion scriptversion = (data.segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
+        EvalScript(script, data.scriptSig, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(CKeyID(), CKeyID()), scriptversion);
     }
 
     SignatureData Output() const {

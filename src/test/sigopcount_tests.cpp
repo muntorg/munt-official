@@ -4,8 +4,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -77,7 +77,8 @@ static ScriptError VerifyWithFlag(const CTransaction& output, const CMutableTran
 {
     ScriptError error;
     CTransaction inputi(input);
-    bool ret = VerifyScript(inputi.vin[0].scriptSig, output.vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &inputi, 0, output.vout[0].nValue), &error);
+    ScriptVersion scriptversion = (inputi.vin[0].segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
+    bool ret = VerifyScript(inputi.vin[0].scriptSig, output.vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &inputi, 0, output.vout[0].nValue), scriptversion, &error);
     BOOST_CHECK((ret == true) == (error == SCRIPT_ERR_OK));
 
     return error;

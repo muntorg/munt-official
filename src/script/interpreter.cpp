@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -252,8 +252,10 @@ bool static CheckMinimalPush(const valtype& data, opcodetype opcode) {
     return true;
 }
 
-bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* serror)
+bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, ScriptVersion scriptversion, ScriptError* serror)
 {
+    SigVersion sigversion = (scriptversion == SCRIPT_V1) ? SIGVERSION_BASE : SIGVERSION_SEGSIG;
+    
     static const CScriptNum bnZero(0);
     static const CScriptNum bnOne(1);
     // static const CScriptNum bnFalse(0);
@@ -404,12 +406,13 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     if (nSequence < 0)
                         return set_error(serror, SCRIPT_ERR_NEGATIVE_LOCKTIME);
 
-                    // To provide for future soft-fork extensibility, if the
-                    // operand has the disabled lock-time flag set,
-                    // CHECKSEQUENCEVERIFY behaves as a NOP.
-                    //fixme: (PHASE4) SEGSIG
-                    //if ((IsOldTransactionVersion(tx.nVersion) && (txin.nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)) || (!IsOldTransactionVersion(tx.nVersion) && (txin.FlagIsSet(HasSequenceNumberMask)))) {
-                        //break;
+                    // For V1 compatibility only
+                    // To provide for future soft-fork extensibility, if the operand has the disabled lock-time flag set, CHECKSEQUENCEVERIFY behaves as a NOP.
+                    if (scriptversion == SCRIPT_V1 && ((nSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG) != 0))
+                    {
+                        break;
+                    }
+                    // For V2 the sequence number is always assigned meaning                    
 
                     // Compare the specified sequence number with the input.
                     if (!checker.CheckSequence(nSequence))
@@ -1410,7 +1413,7 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
-bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CSegregatedSignatureData* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror)
+bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CSegregatedSignatureData* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptVersion scriptversion, ScriptError* serror)
 {
     static const CSegregatedSignatureData emptyWitness;
     if (witness == NULL) {
@@ -1428,13 +1431,13 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     if (scriptSig.size() == 0 && witness)
     {
         CScript scriptSigTemp = PushAll(witness->stack);
-        if (!EvalScript(stack, scriptSigTemp, flags, checker, SIGVERSION_BASE, serror))
+        if (!EvalScript(stack, scriptSigTemp, flags, checker, scriptversion, serror))
             // serror is set
             return false;
     }
     else
     {
-        if (!EvalScript(stack, scriptSig, flags, checker, SIGVERSION_BASE, serror))
+        if (!EvalScript(stack, scriptSig, flags, checker, scriptversion, serror))
             // serror is set
             return false;
     }
@@ -1488,7 +1491,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
             {
                 if (flags & SCRIPT_VERIFY_P2SH)
                 stackCopy = stack;
-                if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
+                if (!EvalScript(stack, scriptPubKey, flags, checker, scriptversion, serror))
                 {
                     // serror is set
                     return false;
@@ -1508,7 +1511,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     {
         if (flags & SCRIPT_VERIFY_P2SH)
                 stackCopy = stack;
-        if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
+        if (!EvalScript(stack, scriptPubKey, flags, checker, scriptversion, serror))
         {
             // serror is set
             return false;
@@ -1539,7 +1542,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
         CScript pubKey2(pubKeySerialized.begin(), pubKeySerialized.end());
         popstack(stack);
 
-        if (!EvalScript(stack, pubKey2, flags, checker, SIGVERSION_BASE, serror))
+        if (!EvalScript(stack, pubKey2, flags, checker, scriptversion, serror))
             // serror is set
             return false;
         if (stack.empty())

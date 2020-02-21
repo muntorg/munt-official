@@ -4,8 +4,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -101,8 +101,6 @@ BOOST_FIXTURE_TEST_SUITE(transaction_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(tx_valid)
 {
-    GULDEN_TEST_REWRITE;
-    #if 0
     // Read tests from test/data/tx_valid.json
     // Format is an array of arrays
     // Inner arrays are either [ "comment" ]
@@ -178,12 +176,11 @@ BOOST_AUTO_TEST_CASE(tx_valid)
                 }
                 unsigned int verify_flags = ParseScriptFlags(test[2].get_str());
                 const CSegregatedSignatureData *segregatedSignatureData = &tx.vin[i].segregatedSignatureData;
-                BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), &err), strTest);
+                BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), SCRIPT_V1, &err), strTest);
                 BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
             }
         }
     }
-    #endif
 }
 
 BOOST_AUTO_TEST_CASE(tx_invalid)
@@ -264,7 +261,7 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
                     amount = mapprevOutValues[tx.vin[i].prevout];
                 }
                 const CSegregatedSignatureData *segregatedSignatureData = &tx.vin[i].segregatedSignatureData;
-                fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), &err);
+                fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), SCRIPT_V1, &err);
             }
             BOOST_CHECK_MESSAGE(!fValid, strTest);
             BOOST_CHECK_MESSAGE(err != SCRIPT_ERR_OK, ScriptErrorString(err));
@@ -404,7 +401,7 @@ void CheckWithFlag(const CTransactionRef& output, const CMutableTransaction& inp
 {
     ScriptError error;
     CTransaction inputi(input);
-    bool ret = VerifyScript(inputi.vin[0].scriptSig, output->vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &inputi, 0, output->vout[0].nValue), &error);
+    bool ret = VerifyScript(inputi.vin[0].scriptSig, output->vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &inputi, 0, output->vout[0].nValue), SCRIPT_V1, &error);
     assert(ret == success);
 }
 

@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -187,7 +187,8 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
             {
                 std::vector<std::vector<unsigned char> > stack;
                 // convert the scriptSig into a stack, so we can inspect the redeemScript
-                if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE))
+                ScriptVersion scriptversion = (tx.vin[i].segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
+                if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), scriptversion))
                     return false;
                 if (stack.empty())
                     return false;

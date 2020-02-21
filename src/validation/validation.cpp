@@ -450,7 +450,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, uint32_t nHeig
 bool CScriptCheck::operator()() {
     const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
     const CSegregatedSignatureData *witness = &ptxTo->vin[nIn].segregatedSignatureData;
-    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, spendingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), &error);
+    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, spendingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), SCRIPT_V1, &error);
 }
 
 int GetSpendHeight(const CCoinsViewCache& inputs)

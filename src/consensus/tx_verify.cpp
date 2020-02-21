@@ -4,8 +4,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -343,7 +343,7 @@ inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
         if (!input.scriptSig.IsPushOnly())
             return false;
         std::vector<std::vector<unsigned char>> stack;
-        if (!EvalScript(stack, input.scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE))
+        if (!EvalScript(stack, input.scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V1))
         {
             return false;
         }
@@ -446,7 +446,7 @@ inline bool IsUnSigned(const CTxIn& input)
         if (input.scriptSig.IsPushOnly())
         {
             std::vector<std::vector<unsigned char>> stack;
-            if (EvalScript(stack, input.scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE))
+            if (EvalScript(stack, input.scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V1))
             {
                 if (stack.size() == 0)
                     return true;
