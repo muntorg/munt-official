@@ -1,6 +1,13 @@
 // Copyright (c) 2012-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #include "rpc/server.h"
 #include "rpc/client.h"
@@ -105,23 +112,20 @@ BOOST_AUTO_TEST_CASE(rpc_togglenetwork)
 
 BOOST_AUTO_TEST_CASE(rpc_rawsign)
 {
-    GULDEN_TEST_REWRITE;
-    #if 0
     UniValue r;
     // input is a 1-of-2 multisig (so is output):
     std::string prevout =
       "[{\"txid\":\"b4cc287e58f87cdae59417329f710f3ecd75a4ee1d2872b7248f50977c8493f3\","
       "\"vout\":1,\"scriptPubKey\":\"a914b10c9df5f7edf436c697f02f1efdba4cf399615187\","
       "\"redeemScript\":\"512103debedc17b3df2badbcdd86d5feb4562b86fe182e5998abd8bcd4f122c6155b1b21027e940bb73ab8732bfdf7f9216ecefca5b94d6df834e77e108f68e66f126044c052ae\"}]";
-    r = CallRPC(std::string("createrawtransaction ")+prevout+" "+ "{\"GXpEs9RdwjWqbV3mu5Hm5S8sCQZX5XfGhJ\":11}");
+    r = CallRPC(std::string("createrawtransaction ")+prevout+" "+ "{\"giGGDF4gPxqGvyK7UzXDc875jVSGcpgnsy\":11}");
     std::string notsigned = r.get_str();
-    std::string privkey1 = "\"RamYVwk9M6328UURbNqGCPX3WeKKMUJzVPiZEXyomiWsgBaWgMkY\"";
-    std::string privkey2 = "\"Rbe2WKaqoa2FcJoJjgvZZ7TXvSuhCMqya9TgxKUkP3KMeaPtEeVy\"";
+    std::string privkey1 = "\"RcuVhjWLPMuHQk9wXtKRD2zcbpLfspJ8J8UoxCPgjtiuCjgSEwaG\"";
+    std::string privkey2 = "\"RbjbPD35yJFB6M9HArb6SVJyd2NH9DN9TjqH1HQzzzfLRqtd61La\"";
     r = CallRPC(std::string("signrawtransaction ")+notsigned+" "+prevout+" "+"[]");
     BOOST_CHECK(find_value(r.get_obj(), "complete").get_bool() == false);
     r = CallRPC(std::string("signrawtransaction ")+notsigned+" "+prevout+" "+"["+privkey1+","+privkey2+"]");
     BOOST_CHECK(find_value(r.get_obj(), "complete").get_bool() == true);
-    #endif
 }
 
 BOOST_AUTO_TEST_CASE(rpc_createraw_op_return)
