@@ -765,28 +765,28 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             std::vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
-            //fixme: (PHASE4) implement
-            /*{
+            //fixme: (PHASE4) implement for other transaction types
+            {
                 const Coin& coin = view.AccessCoin(out);
-                if (!coin.IsSpent() && coin.out.scriptPubKey != scriptPubKey) {
+                if (!coin.IsSpent() && coin.out.output.scriptPubKey != scriptPubKey) {
                     std::string err("Previous output scriptPubKey mismatch:\n");
-                    err = err + ScriptToAsmStr(coin.out.scriptPubKey) + "\nvs:\n"+
-                        ScriptToAsmStr(scriptPubKey);
+                    err = err + ScriptToAsmStr(coin.out.output.scriptPubKey) + "\nvs:\n" + ScriptToAsmStr(scriptPubKey);
                     throw JSONRPCError(RPC_DESERIALIZATION_ERROR, err);
                 }
                 Coin newcoin;
-                newcoin.out.scriptPubKey = scriptPubKey;
+                newcoin.out.output.scriptPubKey = scriptPubKey;
                 newcoin.out.nValue = 0;
                 if (prevOut.exists("amount")) {
                     newcoin.out.nValue = AmountFromValue(find_value(prevOut, "amount"));
                 }
                 newcoin.nHeight = 1;
                 view.AddCoin(out, std::move(newcoin), true);
-            }*/
+            }
 
             // if redeemScript given and not using the local wallet (private keys
             // given), add redeemScript to the tempKeystore so it can be signed:
-            if (fGivenKeys && (scriptPubKey.IsPayToScriptHash() )) {
+            if (fGivenKeys && (scriptPubKey.IsPayToScriptHash() ))
+            {
                 RPCTypeCheckObj(prevOut,
                     {
                         {"txid", UniValueType(UniValue::VSTR)},
@@ -805,10 +805,21 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     }
 
 #ifdef ENABLE_WALLET
-    //fixme: (FUT) (BIP44) (MED)
-    CKeyStore* keystore = ((fGivenKeys || !pwallet || !pwallet->activeAccount) ? &tempKeystore : pwallet->activeAccount);
+    std::vector<CKeyStore*> accountsToTry;
+    if (fGivenKeys || !pwallet || !pwallet->activeAccount)
+    {
+        accountsToTry.push_back(&tempKeystore);
+    }
+    else
+    {
+        for (const auto& accountPair : pactiveWallet->mapAccounts)
+        {
+            accountsToTry.push_back(accountPair.second);
+        }
+    }
 #else
-    CKeyStore* keystore = &tempKeystore;
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(&tempKeystore);
 #endif
 
     int nHashType = SIGHASH_ALL;
@@ -864,8 +875,6 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
 
         SignatureData sigdata;
-        std::vector<CKeyStore*> accountsToTry;
-        accountsToTry.push_back(keystore);
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
             ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, accountsToTry, &mergedTx, i, amount, nHashType), coin.out, sigdata, signType, mergedTx.nVersion);
