@@ -287,6 +287,9 @@ BOOST_AUTO_TEST_CASE(multisig_Sign)
         key[i].MakeNewKey(true);
         keystore.AddKey(key[i]);
     }
+    
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(&keystore);
 
     CScript a_and_b;
     a_and_b << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
@@ -303,11 +306,8 @@ BOOST_AUTO_TEST_CASE(multisig_Sign)
     txFrom.vout[1].output.scriptPubKey = a_or_b;
     txFrom.vout[2].output.scriptPubKey = escrow;
 
-    CMutableTransaction txTo[3] = // Spending transaction
-                                { CMutableTransaction(TEST_DEFAULT_TX_VERSION),
-                                  CMutableTransaction(TEST_DEFAULT_TX_VERSION),
-                                  CMutableTransaction(TEST_DEFAULT_TX_VERSION)
-                                };
+    // Spending transaction
+    CMutableTransaction txTo[3] = { CMutableTransaction(TEST_DEFAULT_TX_VERSION), CMutableTransaction(TEST_DEFAULT_TX_VERSION), CMutableTransaction(TEST_DEFAULT_TX_VERSION)};
     for (int i = 0; i < 3; i++)
     {
         txTo[i].vin.resize(1);
@@ -317,14 +317,10 @@ BOOST_AUTO_TEST_CASE(multisig_Sign)
         txTo[i].vout[0].nValue = 1;
     }
 
-    GULDEN_TEST_REWRITE;
-    #if 0
     for (int i = 0; i < 3; i++)
     {
-        BOOST_CHECK_MESSAGE(SignSignature(keystore, txFrom, txTo[i], 0, SIGHASH_ALL), strprintf("SignSignature %d", i));
+        BOOST_CHECK_MESSAGE(SignSignature(accountsToTry, txFrom, txTo[i], 0, SIGHASH_ALL, SignType::Spend), strprintf("SignSignature %d", i));
     }
-    #endif
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
