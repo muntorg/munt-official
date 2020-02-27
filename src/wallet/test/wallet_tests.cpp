@@ -514,10 +514,11 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
         ::importwallet(request);
 
         BOOST_CHECK_EQUAL(wallet.mapWallet.size(), 3U);
-        BOOST_CHECK_EQUAL(coinbaseTxns.size(), 103U);
-        for (size_t i = 0; i < coinbaseTxns.size(); ++i) {
+        BOOST_CHECK_EQUAL(coinbaseTxns.size(), COINBASE_MATURITY+3U);
+        for (size_t i = 0; i < coinbaseTxns.size(); ++i)
+        {
             bool found = wallet.GetWalletTx(coinbaseTxns[i].GetHash());
-            bool expected = i >= 100;
+            bool expected = i >= (size_t)COINBASE_MATURITY;
             BOOST_CHECK_EQUAL(found, expected);
         }
     }
@@ -652,7 +653,7 @@ public:
 
         CWalletTx wtx;
         CAccount* account = wallet->getActiveAccount();
-        CReserveKeyOrScript reservekey(wallet.get(), account, KEYCHAIN_EXTERNAL);
+        CReserveKeyOrScript reservekey(wallet.get(), account, KEYCHAIN_CHANGE);
         CAmount fee;
         int changePos = -1;
         std::string error;
@@ -671,8 +672,6 @@ public:
 
 BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
 {
-    GULDEN_TEST_REWRITE;
-    #if 0
     std::string coinbaseAddress = coinbaseKey.GetPubKey().GetID().ToString();
     LOCK(wallet->cs_wallet);
     CAccount* account = wallet->getActiveAccount();
@@ -715,7 +714,6 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
     BOOST_CHECK_EQUAL(list.size(), 1U);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
     BOOST_CHECK_EQUAL(list.begin()->second.size(), 2U);
-    #endif
 }
 
 BOOST_AUTO_TEST_SUITE_END()
