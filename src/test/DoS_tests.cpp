@@ -145,6 +145,8 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
     key.MakeNewKey(true);
     CBasicKeyStore keystore;
     keystore.AddKey(key);
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(&keystore);
 
     // 50 orphan transactions:
     for (int i = 0; i < 50; i++)
@@ -161,21 +163,19 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
         AddOrphanTx(MakeTransactionRef(tx), i);
     }
 
-    GULDEN_TEST_REWRITE;
-    #if 0
     // ... and 50 that depend on other orphans:
     for (int i = 0; i < 50; i++)
     {
         CTransactionRef txPrev = RandomOrphan();
 
-        CMutableTransaction tx;
+        CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
         tx.vin.resize(1);
         tx.vin[0].prevout.n = 0;
-        tx.vin[0].prevout.hash = txPrev->GetHash();
+        tx.vin[0].prevout.setHash(txPrev->GetHash());
         tx.vout.resize(1);
         tx.vout[0].nValue = 1*CENT;
-        tx.vout[0].scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
-        SignSignature(keystore, *txPrev, tx, 0, SIGHASH_ALL);
+        tx.vout[0].output.scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
+        SignSignature(accountsToTry, *txPrev, tx, 0, SIGHASH_ALL, SignType::Spend);
 
         AddOrphanTx(MakeTransactionRef(tx), i);
     }
@@ -185,17 +185,17 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
     {
         CTransactionRef txPrev = RandomOrphan();
 
-        CMutableTransaction tx;
+        CMutableTransaction tx(TEST_DEFAULT_TX_VERSION);
         tx.vout.resize(1);
         tx.vout[0].nValue = 1*CENT;
-        tx.vout[0].scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
+        tx.vout[0].output.scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
         tx.vin.resize(2777);
         for (unsigned int j = 0; j < tx.vin.size(); j++)
         {
             tx.vin[j].prevout.n = j;
-            tx.vin[j].prevout.hash = txPrev->GetHash();
+            tx.vin[j].prevout.setHash(txPrev->GetHash());
         }
-        SignSignature(keystore, *txPrev, tx, 0, SIGHASH_ALL);
+        SignSignature(accountsToTry, *txPrev, tx, 0, SIGHASH_ALL, SignType::Spend);
         // Re-use same signature for other inputs
         // (they don't have to be valid for this test)
         for (unsigned int j = 1; j < tx.vin.size(); j++)
@@ -203,7 +203,6 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
 
         BOOST_CHECK(!AddOrphanTx(MakeTransactionRef(tx), i));
     }
-    #endif
 
     // Test EraseOrphansFor:
     for (NodeId i = 0; i < 3; i++)
