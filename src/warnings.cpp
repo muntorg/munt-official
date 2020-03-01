@@ -92,11 +92,14 @@ std::string GetWarnings(const std::string& strFor)
 
 
     // Gulden: Warn if sync-checkpoint is too old (Don't enter safe mode)
-    if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
+    if (!IsArgSet("-regtest"))
     {
-        if (!IsInitialBlockDownload())
+        if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
         {
-            strStatusBar = strGUI = strRPC = "WARNING: Checkpoint is too old, please wait for a new checkpoint to arrive before engaging in any transactions.";
+            if (!IsInitialBlockDownload())
+            {
+                strStatusBar = strGUI = strRPC = "WARNING: Checkpoint is too old, please wait for a new checkpoint to arrive before engaging in any transactions.";
+            }
         }
     }
 

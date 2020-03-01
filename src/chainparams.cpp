@@ -642,6 +642,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 999999999999ULL;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].type = Consensus::DEPLOYMENT_POW;
+        
+        //Never activate
+        defaultSigmaSettings.activationDate = std::numeric_limits<uint64_t>::max();
 
 
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;

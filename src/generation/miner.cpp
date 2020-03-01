@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2019 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -113,12 +113,15 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
         }
     }
 
-    while (true && (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1))
+    if (pindexPrev->pprev)
     {
-        int64_t nNumMissedSteps = CalculateMissedTimeSteps(pblock->nTime, pindexPrev->GetBlockTime());        
-        if (nNumMissedSteps <= nMaxMissedSteps)
-            break;
-        pblock->nTime -= 10;
+        while (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1)
+        {
+            int64_t nNumMissedSteps = CalculateMissedTimeSteps(pblock->nTime, pindexPrev->GetBlockTime());        
+            if (nNumMissedSteps <= nMaxMissedSteps)
+                break;
+            pblock->nTime -= 10;
+        }
     }
     
     if (pblock->nTime <= pindexPrev->GetMedianTimePastWitness())

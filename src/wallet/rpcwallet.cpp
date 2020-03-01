@@ -1564,7 +1564,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
     // If rpconlylistsecuredtransactions is present then only include if tx is secured by a checkpoint
     bool securedTransaction = (Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock));
     //fixme:(PHASE5) Remove after checkpointing is gone (once phase4 is active)
-    if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && ( !securedTransaction && !IsArgSet("-testnet") ))
+    if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && !securedTransaction && !IsArgSet("-testnet") && !IsArgSet("-regtest") )
         return;
 
     std::vector<CAccount*> doForAccounts;
