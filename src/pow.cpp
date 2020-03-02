@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2019 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -115,15 +115,15 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
     if (block->nTime > defaultSigmaSettings.activationDate)
     {
         #ifdef VALIDATION_MOBILE
-            //fixme: (SIGMA) (PHASE4) (HIGH) Remove/improve this once we have witness-header-sync; this is a temporary measure to keep SPV performance adequate on low power devices for now.
+            //fixme: (SIGMA) (PHASE5) (HIGH) Remove/improve this once we have witness-header-sync; this is a temporary measure to keep SPV performance adequate on low power devices for now.
             // Benchmarking on 6 core mobile device showed roughly double performance when using 2 threads instead of 1
             // when further increasing the number of threads (3 and 4) performance stayed roughly the same though at the cost of
             // higher cpu and energy consumption and overall app/device responsiveness.
             // As such the number of threads is limited to 2 (if reported by the OS). Further research and benchmarking on a wider range of devices
             // would be needed to create a solution that gets the most out of a wide range of OS and devices. This might not be worth it though
             // as for mobile/SPV the witness-header-sync will probably completely skip the pow check in the future.
-            static sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads,
-                                                                              (uint64_t)std::max(1, std::min(2, (int)std::thread::hardware_concurrency()))));
+            uint32_t numVerifyThreads = std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::max(1, std::min(2, (int)std::thread::hardware_concurrency())));
+            static sigma_verify_context verify(defaultSigmaSettings, numVerifyThreads);
             static CCriticalSection csPOW;
             LOCK(csPOW);
 
