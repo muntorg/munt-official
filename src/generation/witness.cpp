@@ -109,7 +109,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         witnessKeyID = fittestWitnessOutput.output.witnessDetails.witnessKeyID;
     }
-    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (PHASE4) We can remove this.
+    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (PHASE5) We can remove this.
     {
         std::vector<unsigned char> hashWitnessBytes = fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash();
         witnessKeyID = CKeyID(uint160(hashWitnessBytes));
@@ -144,7 +144,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
 
     //fixme: (PHASE4) - Enable for testing then delete; this is testing code.
     //Note there has not been a single hit here in all the testing so this can definitely go in future.
-    #if 0
+    #ifdef DEBUG
     if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
@@ -637,7 +637,7 @@ void static GuldenWitness()
                                     for (size_t i=nSkipCoinbase; i < pblocktemplate->block.vtx.size(); i++)
                                     {
                                         bool bSkip = false;
-                                        //fixme: (PHASE4) Check why we were getting duplicates - something to do with mempool not being updated for latest block or something?
+                                        //fixme: (PHASE5) Check why we were getting duplicates - something to do with mempool not being updated for latest block or something?
                                         // Exclude any duplicates that somehow creep in.
                                         for(size_t j=0; j < nWitnessCoinbaseIndex; j++)
                                         {
