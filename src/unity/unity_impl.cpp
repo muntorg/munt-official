@@ -225,7 +225,8 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 
     const CTransaction& tx = *wtx.tx;
 
-    for (const CTxIn& txin: tx.vin) {
+    for (const CTxIn& txin: tx.vin)
+    {
         std::string address;
         CGuldenAddress addr;
         CTxDestination dest = CNoDestination();
@@ -233,7 +234,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         // Try to extract destination, this is not possible in general. Only if the previous
         // ouput of our input happens to be in our wallet. Which will usually only be the case for
         // our own transactions.
-        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.getHash());
+        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.getTransactionHash());
         if (mi != pwallet->mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -248,20 +249,27 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             }
         }
         if (addr.Set(dest))
+        {
             address = addr.ToString();
+        }
         std::string label;
         if (pwallet->mapAddressBook.count(address))
+        {
             label = pwallet->mapAddressBook[address].name;
+        }
         bool isMine = false;
         for (const auto& account : accountsToTry)
         {
             if (static_cast<const CGuldenWallet*>(pwallet)->IsMine(*account, txin))
+            {
                 isMine = true;
+            }
         }
         inputs.push_back(InputRecord(address, label, isMine));
     }
 
-    for (const CTxOut& txout: tx.vout) {
+    for (const CTxOut& txout: tx.vout)
+    {
         std::string address;
         CGuldenAddress addr;
         CTxDestination dest;
@@ -272,15 +280,21 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         }
 
         if (addr.Set(dest))
+        {
             address = addr.ToString();
+        }
         std::string label;
         if (pwallet->mapAddressBook.count(address))
+        {
             label = pwallet->mapAddressBook[address].name;
+        }
         bool isMine = false;
         for (const auto& account : accountsToTry)
         {
             if (IsMine(*account, txout))
+            {
                 isMine = true;
+            }
         }
         outputs.push_back(OutputRecord(txout.nValue, address, label, isMine));
     }
