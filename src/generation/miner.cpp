@@ -395,7 +395,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
                 LogPrintf("Error in CreateNewBlock: could not read block from disk.\n");
                 return nullptr;
             }
-            //fixme: (PHASE4)
+            //fixme: (PHASE5)
             // We don't want to canabalize coinbase transaction or 'witness refresh' transaction as these are 'generated' by miner and not actual transactions.
             for (uint32_t i = (bSegSigIsEnabled?1:2); i < pBlockCannibal.get()->vtx.size(); ++i)
             {
