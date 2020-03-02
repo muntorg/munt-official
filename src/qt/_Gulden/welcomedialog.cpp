@@ -56,12 +56,6 @@ WelcomeDialog::WelcomeDialog(const QStyle* _platformStyle, QWidget* parent)
     uiInterface.InitMessage.connect(boost::bind(InitMessage, this, _1));
     uiInterface.ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
 
-    //fixme: (PHASE4) Remove from future build - place in unit tests instead; we have had no reports of this assert so it seems to be pretty solid.
-    if (!testMnemonics())
-    {
-        assert(0);
-    }
-
     loadingAnimation = new QMovie(":/Gulden/loading_animation");
     if ( loadingAnimation->isValid() )
     {
