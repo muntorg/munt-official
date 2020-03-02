@@ -22,9 +22,4 @@ extern SecureString mnemonicFromEntropy(std::vector<unsigned char> entropyIn, in
 extern std::vector<unsigned char> entropyFromMnemonic(const SecureString& mnemonic);
 extern bool checkMnemonic(const SecureString& mnemonic);
 
-
-bool testMnemonics();
-
-
-
 #endif
