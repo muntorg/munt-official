@@ -1350,7 +1350,6 @@ bool WitnessCoinbaseInfoIsValid(CChain& chain, int nWitnessCoinbaseIndex, const 
     }
 
     // Now test that the reconstructed witness block is valid, if it is then the 'witness coinbase info' of this PoW block is valid.
-    //fixme: (PHASE4) SBSU - We really don't need to clone the entire chain here, could we clone just the last 1000 or something?
     // We work on a clone of the chain to prevent modifying the actual chain.
     {
         CBlockIndex* pPreviousIndexChain = nullptr;
