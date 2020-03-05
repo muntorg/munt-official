@@ -1770,26 +1770,32 @@ std::map<CTxDestination, std::vector<COutput>> CWallet::ListCoins(CAccount* forA
     AvailableCoins(forAccount, availableCoins);
 
     LOCK2(cs_main, cs_wallet);
-    for (auto& coin : availableCoins) {
+    for (auto& coin : availableCoins)
+    {
         CTxDestination address;
-        if (coin.fSpendable &&
-            ExtractDestination(FindNonChangeParentOutput(*coin.tx->tx, coin.i), address)) {
+        if (coin.fSpendable && ExtractDestination(FindNonChangeParentOutput(*coin.tx->tx, coin.i), address))
+        {
             result[address].emplace_back(std::move(coin));
         }
     }
 
     std::vector<COutPoint> lockedCoins;
     ListLockedCoins(lockedCoins);
-    for (const auto& output : lockedCoins) {
+    for (const auto& output : lockedCoins)
+    {
         CWalletTx* wtx = GetWalletTx(output);
-        if (wtx) {
+        if (wtx)
+        {
             int depth = wtx->GetDepthInMainChain();
-            if (depth >= 0 && output.n < wtx->tx->vout.size() &&
-                IsMine(wtx->tx->vout[output.n]) == ISMINE_SPENDABLE) {
+            if (depth >= 0 && output.n < wtx->tx->vout.size() && IsMine(wtx->tx->vout[output.n]) == ISMINE_SPENDABLE)
+            {
                 CTxDestination address;
-                if (ExtractDestination(FindNonChangeParentOutput(*wtx->tx, output.n), address)) {
-                    result[address].emplace_back(
-                        wtx, output.n, depth, true /* spendable */, true /* solvable */, false /* safe */);
+                if (ExtractDestination(FindNonChangeParentOutput(*wtx->tx, output.n), address))
+                {
+                    bool isSpendable = true;
+                    bool isSolvable = true;
+                    bool isSafe = false;
+                    result[address].emplace_back(wtx, output.n, depth, isSpendable, isSolvable, isSafe);
                 }
             }
         }
@@ -1802,11 +1808,12 @@ const CTxOut& CWallet::FindNonChangeParentOutput(const CTransaction& tx, int out
 {
     const CTransaction* ptx = &tx;
     int n = output;
-    while (IsChange(ptx->vout[n]) && ptx->vin.size() > 0) {
+    while (IsChange(ptx->vout[n]) && ptx->vin.size() > 0)
+    {
         const COutPoint& prevout = ptx->vin[0].prevout;
         CWalletTx* prev = GetWalletTx(prevout);
-        if (!prev || prev->tx->vout.size() <= prevout.n ||
-            !IsMine(prev->tx->vout[prevout.n])) {
+        if (!prev || prev->tx->vout.size() <= prevout.n || !IsMine(prev->tx->vout[prevout.n]))
+        {
             break;
         }
         ptx = prev->tx.get();
