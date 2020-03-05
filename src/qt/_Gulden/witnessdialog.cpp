@@ -308,11 +308,11 @@ void WitnessDialog::clearLabels()
     ui->labelEstimatedEarningsDurationValue->setText(tr("n/a"));
     ui->labelLockTimeRemainingValue->setText(tr("n/a"));
 }
+
 WitnessDialog::~WitnessDialog()
 {
     LOG_QT_METHOD;
 
-    std::unique_lock lock(statsUpdateMutex);
     {
         std::lock_guard<std::mutex> lock(statsUpdateMutex);
         statsUpdateShouldStop = true;
@@ -871,7 +871,7 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
         if (infoForAccount.nTotalNetworkWeightTip > 0)
             networkWeightLabel = QString::number(infoForAccount.nTotalNetworkWeightTip);
 
-        //fixme: (PHASE4) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
+        //fixme: (PHASE5) The below uses "dumb" conversion - i.e. it assumes 30 days in a month, it doesn't look at how many hours in current day etc.
         //Ideally this should be improved.
         //Note if we do improve it we may want to keep the "dumb" behaviour for testnet.
         {
@@ -963,7 +963,7 @@ void WitnessDialog::updateAccountIndicators()
         return;
 
     //Update account states to the latest block
-    //fixme: (PHASE4) - Some of this is redundant and can possibly be removed; as we set a lot of therse states now from within ::AddToWalletIfInvolvingMe
+    //fixme: (PHASE5) - Some of this is redundant and can possibly be removed; as we set a lot of therse states now from within ::AddToWalletIfInvolvingMe
     //However - we would have to update account serialization to serialise the warning state and/or test some things before removing this.
     {
         LOCK(cs_main); // Required for ReadBlockFromDisk as well as account access.
@@ -1021,7 +1021,7 @@ void WitnessDialog::updateAccountIndicators()
                         {
                             newState = AccountStatus::WitnessExpired;
 
-                            //fixme: (PHASE4) I think this is only needed for (ended) accounts - and not expired ones? Double check
+                            //fixme: (PHASE5) I think this is only needed for (ended) accounts - and not expired ones? Double check
                             // Due to lock changing cached balance for certain transactions will now be invalidated.
                             // Technically we should find those specific transactions and invalidate them, but it's simpler to just invalidate them all.
                             if (prevState != AccountStatus::WitnessExpired)
