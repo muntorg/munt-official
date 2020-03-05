@@ -1146,7 +1146,7 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 struct CWitnessBundles;
 typedef std::shared_ptr<const CWitnessBundles> CWitnessBundlesRef;
 
-//fixme: (PHASE4) Remove
+//fixme: (PHASE5) Remove
 #define CURRENT_TX_VERSION_POW2 (IsSegSigEnabled(chainActive.TipPrev()) ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
 
 /** The basic transaction that is broadcasted on the network and contained in
