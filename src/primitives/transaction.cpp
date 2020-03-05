@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -69,9 +69,25 @@ std::string CTxIn::ToString() const
         str += strprintf(", coinbase %s", HexStr(scriptSig));
     else
         str += strprintf(", scriptSig=%s", HexStr(scriptSig).substr(0, 24));
-    //fixme: (PHASE4)
-    if (nSequence != SEQUENCE_FINAL)
-        str += strprintf(", nSequence=%u", nSequence);
+        
+    if (FlagIsSet(CTxInFlags::HasRelativeLock))
+    {
+        str += strprintf(", relativeLockSequence=%u", nSequence);
+    }
+    else if (FlagIsSet(CTxInFlags::HasAbsoluteLock))
+    {
+        str += strprintf(", absoluteLockSequence=%u", nSequence);
+    }
+    //fixme: (PHASE4) - Other sequence behaviours we should log?
+    //else if(...)
+    //{
+    //}
+    //fixme: (PHASE5) - we can remove the below
+    else
+    {
+        if (nSequence != SEQUENCE_FINAL)
+            str += strprintf(", nSequence=%u", nSequence);
+    }
     str += ")";
     return str;
 }
