@@ -1442,7 +1442,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
             return false;
     }
 
-    //fixme: (PHASE4) we can remove this
+    //fixme: (PHASE5) we can remove this
     //Special case spending of witness scripts as this falls outside of normal script behaviour.
     if (scriptPubKey.IsPoW2Witness())
     {
