@@ -11,7 +11,7 @@
 
 #include "policy/rbf.h"
 
-//fixme: (PHASE4) we can make this the only behaviour and remove the previous behaviour.
+//fixme: (PHASE5) we can make this the only behaviour and remove the previous behaviour.
 static bool SignalsOptInRBFSegSig(const CTransaction &tx)
 {
     for(const CTxIn &txin : tx.vin)
