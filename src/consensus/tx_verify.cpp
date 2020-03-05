@@ -859,16 +859,6 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
             if (!inputs.HaveInputs(tx))
                 return state.Invalid(false, 0, "", "Inputs unavailable");
         }
-
-        int64_t nMaturityDepth;
-        if (IsOldTransactionVersion(tx.nVersion))
-        {
-            nMaturityDepth = COINBASE_MATURITY;
-        }
-        else
-        {
-            nMaturityDepth = COINBASE_MATURITY_PHASE4;
-        }
         
         CAmount nValueIn = 0;
         CAmount nFees = 0;
@@ -880,21 +870,20 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
             const Coin& coin = inputs.AccessCoin(prevout);
             assert(!coin.IsSpent());
             
-            //fixme: (PHASE4) mining maturity now increased, so this is no good.
             // If prev is index based, then ensure it has sufficient maturity. (For the sake of simplicity we keep this the same depth as mining maturity)
             if (!prevout.isHash)
             {
                 // NB! If we ever change the maturity depth here to a different one than that of coinbase maturity - then we also need to change the below 'else if' control block into an 'if' control block.
-                if (nSpendHeight - coin.nHeight < nMaturityDepth)
+                if (nSpendHeight - coin.nHeight < COINBASE_MATURITY)
                 {
-                    return state.Invalid(false, REJECT_INVALID, "bad-txns-insufficient-depth-index-input", strprintf("tried to spend input via index at depth %d; Only allowed at depth %d", nSpendHeight - coin.nHeight, nMaturityDepth));
+                    return state.Invalid(false, REJECT_INVALID, "bad-txns-insufficient-depth-index-input", strprintf("tried to spend input via index at depth %d; Only allowed at depth %d", nSpendHeight - coin.nHeight, COINBASE_MATURITY));
                 }
             }
             // If prev is coinbase, check that it's matured
             else if (coin.IsCoinBase())
             {
                 // NB! If we ever change the maturity depth here to a different one than that of prevout-index maturity (control block above this one) - then we also need to change the above 'else if' for this control block into an 'if' instead.
-                if (nSpendHeight - coin.nHeight < nMaturityDepth)
+                if (nSpendHeight - coin.nHeight < COINBASE_MATURITY)
                 {
                     return state.Invalid(false, REJECT_INVALID, "bad-txns-premature-spend-of-coinbase", strprintf("tried to spend coinbase at depth %d", nSpendHeight - coin.nHeight));
                 }

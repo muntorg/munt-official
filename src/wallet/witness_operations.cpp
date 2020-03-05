@@ -1,5 +1,6 @@
-// Copyright (c) 2016-2019 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Willem de Jonge (willem@isnapp.nl)
+// Modifications by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -62,7 +63,7 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
+    if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
         throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
     // Check type (can't extend script type, must witness once or renew after phase 4 activated)
@@ -332,8 +333,7 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
         (unused) currentWitnessTxOut;
         (unused) currentWitnessOutpoint;
         //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-        //fixme: (PHASE4) - Look into shortening the maturity period here, the full period is too long.
-        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
+        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
             throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
     }
 
@@ -713,8 +713,7 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
         (unused) currentWitnessTxOut;
         (unused) currentWitnessOutpoint;
         //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
-        //fixme: (PHASE4) - Look into shortening the maturity period here, the full period is too long.
-        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY_PHASE4))
+        if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
             throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
     }
 

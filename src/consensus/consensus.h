@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -25,12 +25,9 @@ static const unsigned int MAX_BLOCK_BASE_SIZE = MAX_BLOCK_SERIALIZED_SIZE;
 static const int64_t MAX_BLOCK_SIGOPS_COST = 80000;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
 static const int COINBASE_MATURITY_MAINNET = 100;
-static const int COINBASE_MATURITY_MAINNET_PHASE4 = 1200;
 static const int COINBASE_MATURITY_TESTNET = 10;
-static const int COINBASE_MATURITY_TESTNET_PHASE4 = 40;
 
 #define COINBASE_MATURITY (IsArgSet("-testnet") ? COINBASE_MATURITY_TESTNET : COINBASE_MATURITY_MAINNET)
-#define COINBASE_MATURITY_PHASE4 (IsArgSet("-testnet") ? COINBASE_MATURITY_TESTNET_PHASE4 : COINBASE_MATURITY_MAINNET_PHASE4)
 
 /** Flags for nSequence and nLockTime locks */
 enum {

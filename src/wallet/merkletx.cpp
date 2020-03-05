@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -74,16 +74,7 @@ int CMerkleTx::GetBlocksToMaturity() const
 {
     if (!IsCoinBase())
         return 0;
-    int nMaturityDepth;
-    if (IsOldTransactionVersion(tx->nVersion))
-    {
-        nMaturityDepth = COINBASE_MATURITY;
-    }
-    else
-    {
-        nMaturityDepth = COINBASE_MATURITY_PHASE4;
-    }
-    return std::max(0, (nMaturityDepth+1) - GetDepthInMainChain());
+    return std::max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain());
 }
 
 

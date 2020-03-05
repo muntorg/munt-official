@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -221,7 +221,7 @@ public:
         if (i >= walletTx->tx->vout.size())
             throw std::out_of_range("The output index is out of range");
 
-        if (walletTx->GetDepthInMainChain() > COINBASE_MATURITY_PHASE4 && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
+        if (walletTx->GetDepthInMainChain() > COINBASE_MATURITY && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
         {
             outpoint = COutPoint(walletTx->nHeight, walletTx->nIndex, i);
         }
