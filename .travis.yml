@@ -78,7 +78,7 @@ script:
     - DOCKER_EXEC "echo 'Cflags:-I/usr/include/qwt' | tee -a /usr/share/pkgconfig/Qt5Qwt.pc"
     - DOCKER_EXEC ../configure --cache-file=config.cache $GULDEN_CONFIG_ALL $GULDEN_CONFIG || ( cat config.log && false)
     - DOCKER_EXEC make $MAKEJOBS
-    - if [ "$RUN_TESTS" = "true" ]; then travis_wait 30 DOCKER_EXEC ./src/test/test_gulden; fi
+    - if [ "$RUN_TESTS" = "true" ]; then travis_wait 60 DOCKER_EXEC ./src/test/test_gulden; fi
 after_script:
     - echo $TRAVIS_COMMIT_RANGE
     - echo $TRAVIS_COMMIT_LOG
