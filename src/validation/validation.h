@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -16,6 +16,8 @@
 #if defined(HAVE_CONFIG_H)
 #include "config/gulden-config.h"
 #endif
+
+#include <compat/sys.h> // For PLATFORM_MOBILE define
 
 #include "amount.h"
 #include "coins.h"
@@ -45,7 +47,8 @@
 #if defined(__APPLE__) && defined(__MACH__)
 #include <TargetConditionals.h>
 #endif
-#if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0) || defined(__ANDROID__)
+
+#ifdef PLATFORM_MOBILE
 #define VALIDATION_MOBILE
 #endif
 class CBlockIndex;

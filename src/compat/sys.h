@@ -14,7 +14,16 @@
 
 #include <stdint.h>
 
-#if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0) || defined(__ANDROID__)
+#if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0)
+    #define PLATFORM_MOBILE
+    #define PLATFORM_MOBILE_IOS
+#endif
+#if defined(__ANDROID__)
+    #define PLATFORM_MOBILE
+    #define PLATFORM_MOBILE_IOS
+#endif
+
+#ifdef PLATFORM_MOBILE
 inline uint64_t systemPhysicalMemoryInBytes()
 {
     throw std::runtime_error("Don't call systemPhysicalMemoryInBytes() on mobile");
