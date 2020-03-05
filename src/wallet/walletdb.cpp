@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -59,12 +59,25 @@ bool CWalletDB::ErasePurpose(const std::string& strPurpose)
 
 bool CWalletDB::WriteTx(const CWalletTx& wtx)
 {
-    return WriteIC(std::pair(std::string("tx"), wtx.GetHash()), wtx);
+    auto hash = wtx.GetHash();
+
+    // Remove old format if present as we are trying to remove it
+    EraseIC(std::pair(std::string("tx"), hash));
+
+    // Write only latest format
+    return WriteIC(std::pair(std::string("wtx"), hash), wtx);
 }
 
 bool CWalletDB::EraseTx(uint256 hash)
 {
-    return EraseIC(std::pair(std::string("tx"), hash));
+    // Remove old format if present.
+    bool erasedOld = EraseIC(std::pair(std::string("tx"), hash));
+    
+    // Remove new format if present.
+    bool erasedNew = EraseIC(std::pair(std::string("wtx"), hash));
+    
+    // If either succeeded then we erased the transaction and can return true.
+    return (erasedOld || erasedNew);
 }
 
 bool CWalletDB::EraseKey(const CPubKey& vchPubKey)
@@ -441,11 +454,10 @@ public:
     }
 };
 
-bool
-ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
-             CWalletScanState &wss, std::string& strType, std::string& strErr)
+bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CWalletScanState &wss, std::string& strType, std::string& strErr)
 {
-    try {
+    try
+    {
         // Unserialize
         // Taking advantage of the fact that pair serialization
         // is just the two items serialized one after the other
@@ -462,8 +474,21 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssKey >> strAddress;
             ssValue >> pwallet->mapAddressBook[strAddress].purpose;
         }
-        else if (strType == "tx")
+        else if (strType == "wtx" || strType == "tx")
         {
+            // Work around for a mistake in initial unity (for mobile) rollout
+            // Where format changed in a way that wasn't fully 'backwards' compatible with future desktop upgrades.
+            // For desktop we introduce 'wtx' to do the upgrade 'right', but on mobile 'tx' is already also upgraded so we need to treat it as such (only on mobile)
+            // wtx is treated the same on both and should be preffered in future - we should phase out and remove 'tx' in future.
+            //fixme: (FUTURE) - Remove 'tx' completely once wallets are upgraded; may have to write some code to forcefully upgrade all 'tx' to 'wtx'
+            #ifndef PLATFORM_MOBILE
+                // Force old serialization version
+                if (strType == "tx")
+                {
+                    ssValue.SetVersion(2010000);
+                }
+            #endif
+
             uint256 hash;
             ssKey >> hash;
             CWalletTx wtx;
@@ -471,7 +496,9 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             CValidationState state;
 
             if (!(CheckTransaction(wtx, state) && (wtx.GetHash() == hash) && state.IsValid()))
+            {
                 return false;
+            }
 
             // Undo serialize changes in 31600
             if (31404 <= wtx.fTimeReceivedIsTxTime && wtx.fTimeReceivedIsTxTime <= 31703)
@@ -481,8 +508,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                     char fTmp;
                     char fUnused;
                     ssValue >> fTmp >> fUnused >> wtx.strFromAccount;
-                    strErr = strprintf("LoadWallet() upgrading tx ver=%d %d '%s' %s",
-                                       wtx.fTimeReceivedIsTxTime, fTmp, wtx.strFromAccount, hash.ToString());
+                    strErr = strprintf("LoadWallet() upgrading tx ver=%d %d '%s' %s", wtx.fTimeReceivedIsTxTime, fTmp, wtx.strFromAccount, hash.ToString());
                     wtx.fTimeReceivedIsTxTime = fTmp;
                 }
                 else
@@ -907,7 +933,8 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                 return false;
             }
         }
-    } catch (...)
+    }
+    catch (...)
     {
         return false;
     }
@@ -985,7 +1012,8 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                         {
                             // Leave other errors alone, if we try to fix them we might make things worse.
                             fNoncriticalErrors = true; // ... but do warn the user there is something wrong.
-                            if (strType == "tx") // Rescan if there is a bad transaction record:
+                            // Rescan if there is a bad transaction record:
+                            if (strType == "tx" || strType == "wtx")
                                 SoftSetBoolArg("-rescan", true);
                         }
                     }
@@ -1088,8 +1116,8 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                 {
                     // Leave other errors alone, if we try to fix them we might make things worse.
                     fNoncriticalErrors = true; // ... but do warn the user there is something wrong.
-                    if (strType == "tx")
-                        // Rescan if there is a bad transaction record:
+                    // Rescan if there is a bad transaction record:
+                    if (strType == "tx" || strType == "wtx")
                         SoftSetBoolArg("-rescan", true);
                 }
             }
@@ -1209,7 +1237,21 @@ DBErrors CWalletDB::FindWalletTx(std::vector<uint256>& vTxHash, std::vector<CWal
 
             std::string strType;
             ssKey >> strType;
-            if (strType == "tx") {
+            if (strType == "tx" || strType == "wtx")
+            {
+                // Work around for a mistake in initial unity (for mobile) rollout
+                // Where format changed in a way that wasn't fully 'backwards' compatible with future desktop upgrades.
+                // For desktop we introduce 'wtx' to do the upgrade 'right', but on mobile 'tx' is already also upgraded so we need to treat it as such (only on mobile)
+                // wtx is treated the same on both and should be preffered in future - we should phase out and remove 'tx' in future.
+                //fixme: (FUTURE) - Remove 'tx' completely once wallets are upgraded; may have to write some code to forcefully upgrade all 'tx' to 'wtx'
+                #ifndef PLATFORM_MOBILE
+                    // Force old serialization version
+                    if (strType == "tx")
+                    {
+                        ssValue.SetVersion(2010000);
+                    }
+                #endif
+            
                 uint256 hash;
                 ssKey >> hash;
 
@@ -1222,15 +1264,19 @@ DBErrors CWalletDB::FindWalletTx(std::vector<uint256>& vTxHash, std::vector<CWal
         }
         pcursor->close();
     }
-    catch (const boost::thread_interrupted&) {
+    catch (const boost::thread_interrupted&)
+    {
         throw;
     }
-    catch (...) {
+    catch (...)
+    {
         result = DB_CORRUPT;
     }
 
     if (fNoncriticalErrors && result == DB_LOAD_OK)
+    {
         result = DB_NONCRITICAL_ERROR;
+    }
 
     return result;
 }

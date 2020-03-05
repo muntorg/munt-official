@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -82,14 +82,14 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
         std::vector<uint256> vMerkleBranch; // For compatibility with older versions.
         READWRITE(tx);
         READWRITE(hashBlock);
 
-        // blockHeight from 2.1
-        if (   (s.GetType() & SER_DISK)
-            && (!ser_action.ForRead() || s.GetVersion() >= 2010000))
+        // From 2.1 (mobile unity wallets) and 2.2 (desktop wallets) we introduce block height and time for transactions.
+        if ( (s.GetType() & SER_DISK) && (s.GetVersion() >= 2020000))
         {
             READWRITE(nHeight);
             READWRITE(nBlockTime);
