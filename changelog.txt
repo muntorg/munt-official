@@ -1,13 +1,25 @@
 2.2.0
 
-CORE - Extend recovery phrase with (optional) birth number.
+This release incorporates several major feature branches, which combined involve over years of major development effort.
+Highlights include:
+* The final phase of our PoW² rollout, which brings new functionality to witness addresses/accounts
+* Our new 'v2' transaction format
+* Unity - A single unified codebase backend that is shared between desktop and mobile wallets
+
+PoW² phase4:
+RPC - Add 'fail_count' and 'action_nonce' data to 'getwitnessinfo' command.
+
+v2 transaction format:
 CORE - Introduce 'index based outpoints' to new transaction format; allowing for reduction of transaction size in many cases.
+CORE - Remove unncessary requirement of 'OP_0' from multisig transaction signatures (Legacy bitcoin bug)
+
+Other:
+CORE - Extend recovery phrase with (optional) birth number
 UI - Option to hide status bar when synchronized (default enabled). Disable to always show status indicators.
 RPC - Implement new 'importlinkedaccount' command.
 RPC - Add an optional purge option to 'deleteseed' command.
 RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fields to 'getblockchaininfo' results
-RPC - Remove command 'getblocktemplate'
-RPC - Add 'fail_count' and 'action_nonce' data to 'getwitnessinfo' command.
+And numerous more smaller changes and bug fixes, for a comprehensive list view the commit history on our github repository.
 
 
 
