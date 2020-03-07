@@ -62,7 +62,8 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
 
     // Check for immaturity
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
-    //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+    //fixme: (PHASE5) - Minor code cleanup.
+    //This check should go through the actual chain maturity stuff (via wtx) and not calculate maturity directly.
     if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
         throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
 
@@ -332,7 +333,8 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
     {
         (unused) currentWitnessTxOut;
         (unused) currentWitnessOutpoint;
-        //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+        //fixme: (PHASE5) - Minor code cleanup.
+        //This check should go through the actual chain maturity stuff (via wtx) and not calculate maturity directly.
         if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
             throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
     }
@@ -406,8 +408,11 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple
     }
 
 
-    //fixme: (PHASE4) Improve this, it should only happen if Sign transaction is a success.
-    //Also (low) this shares common code with CreateTransaction() - it should be factored out into a common helper.
+    //fixme: (PHASE5) - Minor code cleanup
+    //Improve this a bit, we should make this 'atomic'
+    //i.e. only perform the action that can't be rolled back (adding the key to the account) if the entire thing succeeds
+    //So only after the signing of the transaction is a success
+    //Also (low) this shares common code with CreateTransaction() - so it should be factored out into a common helper that both can use.
     CKey privWitnessKey;
     if (!witnessAccount->GetKey(pubWitnessKey.GetID(), privWitnessKey))
     {
@@ -712,7 +717,8 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
     {
         (unused) currentWitnessTxOut;
         (unused) currentWitnessOutpoint;
-        //fixme: (PHASE4) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
+        //fixme: (PHASE5) - Minor code cleanup.
+        //This check should go through the actual chain maturity stuff (via wtx) and not calculate maturity directly.
         if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
             throw witness_error(witness::RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
     }
