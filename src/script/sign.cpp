@@ -272,7 +272,6 @@ static CScript PushAll(const std::vector<valtype>& values)
     return result;
 }
 
-//fixme: (PHASE4) (SEGSIG) (MULTISIG)
 class CSigningKeysVisitor : public boost::static_visitor<void> {
 public:
     std::vector<CKeyID> vKeys;

@@ -142,15 +142,12 @@ public:
         UniValue obj(UniValue::VOBJ);
         CPubKey vchPubKey;
         obj.push_back(Pair("isscript", false));
-        //fixme: (PHASE4) - turn this back on
-        /*
         if (pwallet && pwallet->GetPubKey(dest.spendingKey, vchPubKey)) {
             obj.push_back(Pair("spendingpubkey", HexStr(vchPubKey)));
         }
         if (pwallet && pwallet->GetPubKey(dest.witnessKey, vchPubKey)) {
             obj.push_back(Pair("witnesspubkey", HexStr(vchPubKey)));
         }
-        */
         return obj;
     }
 

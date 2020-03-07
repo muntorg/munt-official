@@ -288,12 +288,14 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
         {   // PaymentRequest...
             CAmount subtotal = 0;
             const payments::PaymentDetails& details = rcp.paymentRequest.getDetails();
+            //fixme: (PHASE5) The payment request protocol currently assumes script
+            //So the below code only deals with creating script recipients
+            //We should expand this to deal with other transaction types as well.
             for (int i = 0; i < details.outputs_size(); i++)
             {
                 const payments::Output& out = details.outputs(i);
                 if (out.amount() <= 0) continue;
                 subtotal += out.amount();
-                //fixme: (PHASE4) (SEGSIG)
                 const unsigned char* scriptStr = (const unsigned char*)out.script().data();
                 CScript scriptPubKey(scriptStr, scriptStr+out.script().size());
                 CAmount nAmount = out.amount();

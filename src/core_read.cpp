@@ -97,8 +97,9 @@ CScript ParseScript(const std::string& s)
 // Check that all of the input and output scripts of a transaction contains valid opcodes
 bool CheckTxScriptsSanity(const CMutableTransaction& tx)
 {
-    //fixme: (PHASE4) (SegSig)
     // Check input scripts for non-coinbase txs
+    // NB! For segsig transactions this is a no-op
+    //fixme: (PHASE5) - we can remove this entirely once all transactions are segsig
     if (!CTransaction(tx).IsCoinBase()) {
         for (unsigned int i = 0; i < tx.vin.size(); i++) {
             if (!tx.vin[i].scriptSig.HasValidOps() || tx.vin[i].scriptSig.size() > MAX_SCRIPT_SIZE) {

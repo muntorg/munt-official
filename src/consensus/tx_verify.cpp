@@ -185,7 +185,7 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
 
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
-        //fixme: (PHASE4) (SEGSIG) - Is this right? - make sure we are counting sigops in segsig scripts correctly
+        //fixme: (PHASE5) (SEGSIG) - Is this right? - make sure we are counting sigops in segsig scripts correctly
         const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
         switch (prevout.GetType())
         {
