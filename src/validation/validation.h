@@ -38,6 +38,8 @@
 #include "consensus/tx_verify.h"
 #include "txmempool.h"
 
+#include <script/interpreter.h>
+
 #include <atomic>
 
 #include "uint256.h"
@@ -446,16 +448,25 @@ private:
     bool cacheStore;
     ScriptError error;
     PrecomputedTransactionData *txdata;
+    ScriptVersion scriptVer;
 
 public:
     //fixme: (PHASE5) - We can remove this after phase 4.
     CKeyID spendingKeyID;
 
-    CScriptCheck(): signingKeyID(CKeyID()), amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR) {}
-    CScriptCheck(CKeyID signingKeyID_, const CScript& scriptPubKeyIn, const CAmount amountIn, const CTransaction& txToIn, unsigned int nInIn, unsigned int nFlagsIn, bool cacheIn, PrecomputedTransactionData* txdataIn) :
-        signingKeyID(signingKeyID_),
-        scriptPubKey(scriptPubKeyIn), amount(amountIn),
-        ptxTo(&txToIn), nIn(nInIn), nFlags(nFlagsIn), cacheStore(cacheIn), error(SCRIPT_ERR_UNKNOWN_ERROR), txdata(txdataIn) { }
+    CScriptCheck(): signingKeyID(CKeyID()), amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR), scriptVer(SCRIPT_V1) {}
+    CScriptCheck(CKeyID signingKeyID_, const CScript& scriptPubKeyIn, const CAmount amountIn, const CTransaction& txToIn, unsigned int nInIn, unsigned int nFlagsIn, bool cacheIn, PrecomputedTransactionData* txdataIn, ScriptVersion scriptVerIn)
+    : signingKeyID(signingKeyID_)
+    , scriptPubKey(scriptPubKeyIn)
+    , amount(amountIn)
+    , ptxTo(&txToIn)
+    , nIn(nInIn)
+    , nFlags(nFlagsIn)
+    , cacheStore(cacheIn)
+    , error(SCRIPT_ERR_UNKNOWN_ERROR)
+    , txdata(txdataIn)
+    , scriptVer(scriptVerIn)
+    { }
 
     bool operator()();
 
@@ -470,6 +481,7 @@ public:
         std::swap(txdata, check.txdata);
         std::swap(signingKeyID, check.signingKeyID);
         std::swap(spendingKeyID, check.spendingKeyID);
+        std::swap(scriptVer, check.scriptVer);
     }
 
     ScriptError GetScriptError() const { return error; }

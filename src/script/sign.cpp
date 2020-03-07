@@ -139,7 +139,10 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
         return false;
 
     case TX_MULTISIG:
-        ret.push_back(valtype()); // workaround CHECKMULTISIG bug
+        if (sigversion == SIGVERSION_BASE)
+        {
+            ret.push_back(valtype()); // workaround CHECKMULTISIG bug
+        }
         return (SignN(vSolutions, creator, scriptPubKey, ret, sigversion));
 
     case TX_PUBKEYHASH_POW2WITNESS:
@@ -337,39 +340,32 @@ CKeyID ExtractSigningPubkeyFromTxOutput(const CTxOut& txOut, SignType type)
 
 bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOutput, SignatureData& sigdata, SignType type, uint64_t nVersion)
 {
+    SigVersion sigversion = IsOldTransactionVersion(nVersion) ? SIGVERSION_BASE : SIGVERSION_SEGSIG;
     if (fromOutput.GetType() <= CTxOutType::ScriptLegacyOutput)
     {
         CScript script = fromOutput.output.scriptPubKey;
         std::vector<valtype> result;
         txnouttype whichType;
-        bool solved = SignStep(creator, script, result, whichType, SIGVERSION_BASE, type);
+        bool solved = SignStep(creator, script, result, whichType, sigversion, type);
         CScript subscript;
         sigdata.segregatedSignatureData.stack.clear();
 
-        if (!IsOldTransactionVersion(nVersion))
+        if (solved && whichType == TX_SCRIPTHASH)
         {
-            //fixme: (PHASE4) (SEGSIG)
-            if (solved && whichType == TX_SCRIPTHASH)
-            {
-                 sigdata.segregatedSignatureData.stack = result;
-            }
-            else
-            {
-                sigdata.segregatedSignatureData.stack = result;
-            }
+            // Solver returns the subscript that needs to be evaluated;
+            // the final scriptSig is the signatures from that
+            // and then the serialized subscript:
+            script = subscript = CScript(result[0].begin(), result[0].end());
+            solved = solved && SignStep(creator, script, result, whichType, sigversion, type) && whichType != TX_SCRIPTHASH;
+            result.push_back(std::vector<unsigned char>(subscript.begin(), subscript.end()));
+        }
+        if (sigversion == SIGVERSION_BASE)
+        {
+            sigdata.scriptSig = PushAll(result);
         }
         else
         {
-            if (solved && whichType == TX_SCRIPTHASH)
-            {
-                // Solver returns the subscript that needs to be evaluated;
-                // the final scriptSig is the signatures from that
-                // and then the serialized subscript:
-                script = subscript = CScript(result[0].begin(), result[0].end());
-                solved = solved && SignStep(creator, script, result, whichType, SIGVERSION_BASE, type) && whichType != TX_SCRIPTHASH;
-                result.push_back(std::vector<unsigned char>(subscript.begin(), subscript.end()));
-            }
-            sigdata.scriptSig = PushAll(result);
+            sigdata.segregatedSignatureData.stack = result;
         }
         // Test solution
         return solved;
@@ -378,7 +374,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     {
         //fixme: (PHASE4) Additional sanity checks here.
         std::vector<valtype> result;
-        bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, SIGVERSION_BASE, type);
+        bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, sigversion, type);
         sigdata.segregatedSignatureData.stack = result;
 
         return solved;
@@ -387,7 +383,7 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     {
         //fixme: (PHASE4) Additional sanity checks here.
         std::vector<valtype> result;
-        bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, SIGVERSION_BASE, type);
+        bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, sigversion, type);
         sigdata.segregatedSignatureData.stack = result;
 
         return solved;
@@ -420,7 +416,6 @@ bool SignSignature(const std::vector<CKeyStore*>& accountsToTry, const CTxOut& f
     assert(nIn < txTo.vin.size());
 
     CTransaction txToConst(txTo);
-    //fixme: (PHASE4) (SEGSIG) (sign type)
     CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(fromOutput, SignType::Spend);
     TransactionSignatureCreator creator(signingKeyID, accountsToTry, &txToConst, nIn, amount, nHashType);
 

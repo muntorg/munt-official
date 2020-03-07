@@ -888,11 +888,24 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     CScript scriptCode(pbegincodehash, pend);
 
                     // Drop the signature in pre-segsig scripts but not segsig scripts
-                    if (sigversion == SIGVERSION_BASE) {
+                    if (sigversion == SIGVERSION_BASE)
+                    {
                         scriptCode.FindAndDelete(CScript(vchSig));
                     }
 
-                    if (!CheckSignatureEncoding(vchSig, flags, serror) || !CheckPubKeyEncoding(vchPubKey, flags, sigversion, serror)) {
+                    //fixme: (PHASE5) (SEGSIG) (DERSIG) - We don't check the signature encoding here as with segsig signatures are COMPACT encoded
+                    //And further signatures are 'seperated' from the transaction for transaction ID etc.
+                    //HOWEVER, we should still triple check that no compact encoding mutability is possible and introduce a check for the COMPACT encoded signature anyway if theres anything that needs checking.
+                    if (sigversion == SIGVERSION_BASE)
+                    {
+                        if (!CheckSignatureEncoding(vchSig, flags, serror))
+                        {
+                            //serror is set
+                            return false;
+                        }
+                    }
+                    if (!CheckPubKeyEncoding(vchPubKey, flags, sigversion, serror))
+                    {
                         //serror is set
                         return false;
                     }
@@ -942,17 +955,27 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         return set_error(serror, SCRIPT_ERR_SIG_COUNT);
                     int isig = ++i;
                     i += nSigsCount;
-                    if ((int)stack.size() < i)
-                        return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                    
+                    if (sigversion == SIGVERSION_SEGSIG)
+                    {
+                        if ((int)stack.size() < i-1)
+                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                    }
+                    else
+                    {
+                        if ((int)stack.size() < i)
+                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                    }
 
                     // Subset of script starting at the most recent codeseparator
                     CScript scriptCode(pbegincodehash, pend);
 
                     // Drop the signature in pre-segsig scripts but not segsig scripts
-                    for (int k = 0; k < nSigsCount; k++)
+                    if (sigversion == SIGVERSION_BASE)
                     {
-                        valtype& vchSig = stacktop(-isig-k);
-                        if (sigversion == SIGVERSION_BASE) {
+                        for (int k = 0; k < nSigsCount; k++)
+                        {
+                            valtype& vchSig = stacktop(-isig-k);
                             scriptCode.FindAndDelete(CScript(vchSig));
                         }
                     }
@@ -960,13 +983,25 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     bool fSuccess = true;
                     while (fSuccess && nSigsCount > 0)
                     {
-                        valtype& vchSig    = stacktop(-isig);
-                        valtype& vchPubKey = stacktop(-ikey);
+                        const valtype& vchSig = stacktop(-isig);
+                        const valtype& vchPubKey = stacktop(-ikey);
 
                         // Note how this makes the exact order of pubkey/signature evaluation
                         // distinguishable by CHECKMULTISIG NOT if the STRICTENC flag is set.
                         // See the script_(in)valid tests for details.
-                        if (!CheckSignatureEncoding(vchSig, flags, serror) || !CheckPubKeyEncoding(vchPubKey, flags, sigversion, serror)) {
+                        //fixme: (PHASE5) (SEGSIG) (DERSIG) - We don't check the signature encoding here as with segsig signatures are COMPACT encoded
+                        //And further signatures are 'seperated' from the transaction for transaction ID etc.
+                        //HOWEVER, we should still triple check that no compact encoding mutability is possible and introduce a check for the COMPACT encoded signature anyway if theres anything that needs checking.
+                        if (sigversion == SIGVERSION_BASE)
+                        {
+                            if (!CheckSignatureEncoding(vchSig, flags, serror))
+                            {
+                                // serror is set
+                                return false;
+                            }
+                        }
+                        if (!CheckPubKeyEncoding(vchPubKey, flags, sigversion, serror))
+                        {
                             // serror is set
                             return false;
                         }
@@ -998,17 +1033,20 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         popstack(stack);
                     }
 
-                    // A bug causes CHECKMULTISIG to consume one extra argument
-                    // whose contents were not checked in any way.
-                    //
-                    // Unfortunately this is a potential source of mutability,
-                    // so optionally verify it is exactly equal to zero prior
-                    // to removing it from the stack.
-                    if (stack.size() < 1)
-                        return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
-                    if ((flags & SCRIPT_VERIFY_NULLDUMMY) && stacktop(-1).size())
-                        return set_error(serror, SCRIPT_ERR_SIG_NULLDUMMY);
-                    popstack(stack);
+                    if (sigversion == SIGVERSION_BASE)
+                    {
+                        // A bug causes CHECKMULTISIG to consume one extra argument
+                        // whose contents were not checked in any way.
+                        //
+                        // Unfortunately this is a potential source of mutability,
+                        // so optionally verify it is exactly equal to zero prior
+                        // to removing it from the stack.
+                        if (stack.size() < 1)
+                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                        if ((flags & SCRIPT_VERIFY_NULLDUMMY) && stacktop(-1).size())
+                            return set_error(serror, SCRIPT_ERR_SIG_NULLDUMMY);
+                        popstack(stack);
+                    }
 
                     stack.push_back(fSuccess ? vchTrue : vchFalse);
 
@@ -1286,20 +1324,33 @@ bool TransactionSignatureChecker::CheckSig(const std::vector<unsigned char>& vch
     {
         CPubKey pubkey;
 
+        // Recover the public key from the signature (this also verifies the signature)
         if (!pubkey.RecoverCompact(sighash, vchSig))
             return false;
+        // Ensure the public key is valid
         if (!pubkey.IsValid())
             return false;
-        //fixme: (PHASE4) (HIGH) (SEGSIG) (MULTISIG!)
         // Ensure that the recovered pubkey is the correct one for the address in question
-        if (signatureKeyID == CKeyID() || signatureKeyID != pubkey.GetID())
+        if (signatureKeyID == CKeyID())
+        {
+            if (CPubKey(vchPubKey).GetID() != pubkey.GetID())
+            {
+                return false;
+            }
+        }
+        else if (signatureKeyID != pubkey.GetID())
+        {
             return false;
+        }
+        //NB! We don't need to verify the signature - the compact recovery already included verification
     }
     else
     {
         CPubKey pubkey = CPubKey(vchPubKey);
+        // Ensure the public key is valid
         if (!pubkey.IsValid())
             return false;
+        // Verify the signature is valid for the provided public key
         if (!VerifySignature(vchSig, pubkey, sighash))
             return false;
     }
@@ -1463,13 +1514,24 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
                 // Subset of script starting at the most recent codeseparator
                 CScript scriptCode(scriptPubKey);
 
-                if (!CheckSignatureEncoding(vchSig1, flags, serror) || !CheckPubKeyEncoding(vchPubKey1, flags, SIGVERSION_BASE, serror))
+                SigVersion sigVersion = (scriptversion == SCRIPT_V1) ? SIGVERSION_BASE : SIGVERSION_SEGSIG;
+                if (scriptversion == SCRIPT_V1)
+                {
+                    if (!CheckSignatureEncoding(vchSig1, flags, serror))
+                        return false;
+                }
+                if (!CheckPubKeyEncoding(vchPubKey1, flags, sigVersion, serror))
                     return false;
-                if (!CheckSignatureEncoding(vchSig2, flags, serror) || !CheckPubKeyEncoding(vchPubKey2, flags, SIGVERSION_BASE, serror))
+                if (scriptversion == SCRIPT_V1)
+                {
+                    if (!CheckSignatureEncoding(vchSig2, flags, serror))
+                        return false;
+                }
+                if (!CheckPubKeyEncoding(vchPubKey2, flags, sigVersion, serror))
                     return false;
-                if (!checker.CheckSig(vchSig1, vchPubKey1, scriptCode, SIGVERSION_BASE))
+                if (!checker.CheckSig(vchSig1, vchPubKey1, scriptCode, sigVersion))
                     return false;
-                if (!checker.CheckSig(vchSig2, vchPubKey2, scriptCode, SIGVERSION_BASE))
+                if (!checker.CheckSig(vchSig2, vchPubKey2, scriptCode, sigVersion))
                     return false;
                 if (checker.signatureKeyID != CPubKey(vchPubKey1).GetID())
                     return false;

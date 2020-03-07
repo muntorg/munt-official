@@ -450,7 +450,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, uint32_t nHeig
 bool CScriptCheck::operator()() {
     const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
     const CSegregatedSignatureData *witness = &ptxTo->vin[nIn].segregatedSignatureData;
-    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, spendingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), SCRIPT_V1, &error);
+    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, spendingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), scriptVer, &error);
 }
 
 int GetSpendHeight(const CCoinsViewCache& inputs)
@@ -603,11 +603,11 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                     return true;
                 }
 
-                //fixme: (PHASE4) (SEGSIG) - also transition to extracted signature.
+                //fixme: (PHASE4) (SEGSIG) - also transition to extracted signature. (SCRIPT_V2)
                 // Verify signature
                 //fixme: (PHASE4) spendingKeyID
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
-                CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata);
+                CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata, SCRIPT_V1);
                 if (scriptPubKey.IsPoW2Witness())
                 {
                     check.spendingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
@@ -627,7 +627,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         // arguments; if so, don't trigger DoS protection to
                         // avoid splitting the network between upgraded and
                         // non-upgraded nodes.
-                        CScriptCheck check2(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags & ~STANDARD_NOT_MANDATORY_VERIFY_FLAGS, cacheStore, &txdata);
+                        CScriptCheck check2(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags & ~STANDARD_NOT_MANDATORY_VERIFY_FLAGS, cacheStore, &txdata, SCRIPT_V1);
                         if (check2())
                         {
                             return state.Invalid(false, REJECT_NONSTANDARD, strprintf("non-mandatory-script-verify-flag (%s)", ScriptErrorString(check.GetScriptError())));

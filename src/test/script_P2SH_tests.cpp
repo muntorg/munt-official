@@ -55,6 +55,91 @@ static bool Verify(const CScript& scriptSig, const CScript& scriptPubKey, bool f
 
 BOOST_FIXTURE_TEST_SUITE(script_P2SH_tests, BasicTestingSetup)
 
+BOOST_AUTO_TEST_CASE(sign_segsig)
+{
+    LOCK(cs_main);
+    // Pay-to-script-hash looks like this:
+    // scriptSig:    <sig> <sig...> <serialized_script>
+    // scriptPubKey: HASH160 <hash> EQUAL
+
+    #ifdef ENABLE_WALLET
+    // Test SignSignature() (and therefore the version of Solver() that signs transactions)
+    CBasicKeyStore keystore;
+    CKey key[4];
+    for (int i = 0; i < 4; i++)
+    {
+        key[i].MakeNewKey(true);
+        keystore.AddKey(key[i]);
+    }
+
+    // 8 Scripts: checking all combinations of
+    // different keys, straight/P2SH, pubkey/pubkeyhash
+    CScript standardScripts[4];
+    standardScripts[0] << ToByteVector(key[0].GetPubKey()) << OP_CHECKSIG;
+    standardScripts[1] = GetScriptForDestination(key[1].GetPubKey().GetID());
+    standardScripts[2] << ToByteVector(key[1].GetPubKey()) << OP_CHECKSIG;
+    standardScripts[3] = GetScriptForDestination(key[2].GetPubKey().GetID());
+    CScript evalScripts[4];
+    for (int i = 0; i < 4; i++)
+    {
+        keystore.AddCScript(standardScripts[i]);
+        evalScripts[i] = GetScriptForDestination(CScriptID(standardScripts[i]));
+    }
+
+    CMutableTransaction txFrom(CTransaction::SEGSIG_ACTIVATION_VERSION);  // Funding transaction:
+    std::string reason;
+    txFrom.vout.resize(8);
+    for (int i = 0; i < 4; i++)
+    {
+        txFrom.vout[i].output.scriptPubKey = evalScripts[i];
+        txFrom.vout[i].nValue = COIN;
+        txFrom.vout[i+4].output.scriptPubKey = standardScripts[i];
+        txFrom.vout[i+4].nValue = COIN;
+    }
+    
+    BOOST_CHECK(IsStandardTx(txFrom, reason, 4, true));
+
+    std::vector<CMutableTransaction> txTo; // Spending transactions
+    txTo.resize(8, CMutableTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION));
+    for (int i = 0; i < 8; i++)
+    {
+        txTo[i].vin.resize(1);
+        txTo[i].vout.resize(1);
+        txTo[i].vin[0].prevout.n = i;
+        txTo[i].vin[0].prevout.setHash(txFrom.GetHash());
+        txTo[i].vout[0].nValue = 1;
+        BOOST_CHECK_MESSAGE(IsMine(keystore, txFrom.vout[i].output.scriptPubKey), strprintf("IsMine %d", i));
+    }
+    std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(&keystore);
+    for (int i = 0; i < 8; i++)
+    {
+        BOOST_CHECK_MESSAGE(SignSignature(accountsToTry, txFrom, txTo[i], 0, SIGHASH_ALL, SignType::Spend), strprintf("SignSignature %d", i));
+    }
+    // All of the above should be OK, and the txTos have valid signatures
+    // Check to make sure signature verification fails if we use the wrong segregatedSignatureData:
+    for (int i = 0; i < 8; i++)
+    {
+        PrecomputedTransactionData txdata(txTo[i]);
+        for (int j = 0; j < 8; j++)
+        {
+            CScript sigSave = txTo[i].vin[0].scriptSig;
+            CSegregatedSignatureData segregatedDataSave = txTo[i].vin[0].segregatedSignatureData;
+            txTo[i].vin[0].scriptSig = txTo[j].vin[0].scriptSig;
+            txTo[i].vin[0].segregatedSignatureData = txTo[j].vin[0].segregatedSignatureData;
+            const CTxOut& output = txFrom.vout[txTo[i].vin[0].prevout.n];
+            bool sigOK = CScriptCheck(CKeyID(), output.output.scriptPubKey, output.nValue, txTo[i], 0, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, false, &txdata, SCRIPT_V2)();
+            if (i == j)
+                BOOST_CHECK_MESSAGE(sigOK, strprintf("VerifySignature %d %d", i, j));
+            else
+                BOOST_CHECK_MESSAGE(!sigOK, strprintf("VerifySignature %d %d", i, j));
+            txTo[i].vin[0].scriptSig = sigSave;
+            txTo[i].vin[0].segregatedSignatureData = segregatedDataSave;
+        }
+    }
+    #endif
+}
+
 BOOST_AUTO_TEST_CASE(sign)
 {
     LOCK(cs_main);
@@ -125,7 +210,7 @@ BOOST_AUTO_TEST_CASE(sign)
             CScript sigSave = txTo[i].vin[0].scriptSig;
             txTo[i].vin[0].scriptSig = txTo[j].vin[0].scriptSig;
             const CTxOut& output = txFrom.vout[txTo[i].vin[0].prevout.n];
-            bool sigOK = CScriptCheck(CKeyID(), output.output.scriptPubKey, output.nValue, txTo[i], 0, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, false, &txdata)();
+            bool sigOK = CScriptCheck(CKeyID(), output.output.scriptPubKey, output.nValue, txTo[i], 0, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, false, &txdata, SCRIPT_V1)();
             if (i == j)
                 BOOST_CHECK_MESSAGE(sigOK, strprintf("VerifySignature %d %d", i, j));
             else
