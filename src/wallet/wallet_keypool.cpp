@@ -260,7 +260,7 @@ int64_t CWallet::GetOldestKeyPoolTime()
 
 void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey, const std::string sAccountName)
 {
-    //fixme: (PHASE4) Handle error here more appropriately etc.
+    //fixme: (PHASE5) Handle error here more appropriately etc.
     std::vector<std::pair<CKey, uint64_t>> keysAndBirthDates;
     bool urlError = false;
     try
