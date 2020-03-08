@@ -291,8 +291,8 @@ BOOST_AUTO_TEST_CASE(basic_transaction_tests)
 // paid to a TX_PUBKEY, the second 21 and 22 CENT outputs
 // paid to a TX_PUBKEYHASH.
 //
-static std::vector<CMutableTransaction>
-SetupDummyInputs(CBasicKeyStore& keystoreRet, CCoinsViewCache& coinsRet)
+#ifndef DEBUG_COINSCACHE_VALIDATE_INSERTS
+static std::vector<CMutableTransaction> SetupDummyInputs(CBasicKeyStore& keystoreRet, CCoinsViewCache& coinsRet)
 {
     std::vector<CMutableTransaction> dummyTransactions;
     dummyTransactions.resize(2, CMutableTransaction(TEST_DEFAULT_TX_VERSION));
@@ -322,6 +322,7 @@ SetupDummyInputs(CBasicKeyStore& keystoreRet, CCoinsViewCache& coinsRet)
 
     return dummyTransactions;
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(test_Get)
 {
@@ -351,85 +352,6 @@ BOOST_AUTO_TEST_CASE(test_Get)
     #endif
 }
 
-
-#if 0
-static void CreateCreditAndSpend(const CKeyStore& keystore, const CScript& outscript, CTransactionRef& output, CMutableTransaction& input, bool success = true)
-{
-    //fixme: (PHASE4)
-    // Seems to be unused, why does it need fixing in 2.0.1?
-    GULDEN_TEST_REWRITE;
-    //SignSignature issues
-
-    CMutableTransaction outputm;
-    outputm.nVersion = 1;
-    outputm.vin.resize(1);
-    outputm.vin[0].prevout.SetNull();
-    outputm.vin[0].scriptSig = CScript();
-    outputm.vout.resize(1);
-    outputm.vout[0].nValue = 1;
-    outputm.vout[0].output.scriptPubKey = outscript;
-    CDataStream ssout(SER_NETWORK, PROTOCOL_VERSION);
-    ssout << outputm;
-    ssout >> output;
-    assert(output->vin.size() == 1);
-    assert(output->vin[0] == outputm.vin[0]);
-    assert(output->vout.size() == 1);
-    assert(output->vout[0] == outputm.vout[0]);
-
-    CMutableTransaction inputm;
-    inputm.nVersion = 1;
-    inputm.vin.resize(1);
-    inputm.vin[0].prevout.hash = output->GetHash();
-    inputm.vin[0].prevout.n = 0;
-    inputm.vout.resize(1);
-    inputm.vout[0].nValue = 1;
-    inputm.vout[0].output.scriptPubKey = CScript();
-    bool ret = SignSignature(keystore, *output, inputm, 0, SIGHASH_ALL);
-    assert(ret == success);
-    CDataStream ssin(SER_NETWORK, PROTOCOL_VERSION);
-    ssin << inputm;
-    ssin >> input;
-    assert(input.vin.size() == 1);
-    assert(input.vin[0] == inputm.vin[0]);
-    assert(input.vout.size() == 1);
-    assert(input.vout[0] == inputm.vout[0]);
-    assert(input.vin[0].segregatedSignatureData.stack == inputm.vin[0].segregatedSignatureData.stack);
-}
-#endif
-
-void CheckWithFlag(const CTransactionRef& output, const CMutableTransaction& input, int flags, bool success)
-{
-    ScriptError error;
-    CTransaction inputi(input);
-    bool ret = VerifyScript(inputi.vin[0].scriptSig, output->vout[0].output.scriptPubKey, &inputi.vin[0].segregatedSignatureData, flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &inputi, 0, output->vout[0].nValue), SCRIPT_V1, &error);
-    assert(ret == success);
-}
-
-/* unused
-static CScript PushAll(const std::vector<valtype>& values)
-{
-    CScript result;
-    for(const valtype& v : values) {
-        if (v.size() == 0) {
-            result << OP_0;
-        } else if (v.size() == 1 && v[0] >= 1 && v[0] <= 16) {
-            result << CScript::EncodeOP_N(v[0]);
-        } else {
-            result << v;
-        }
-    }
-    return result;
-}
-
-static void ReplaceRedeemScript(CScript& script, const CScript& redeemScript)
-{
-    std::vector<valtype> stack;
-    EvalScript(stack, script, SCRIPT_VERIFY_STRICTENC, BaseSignatureChecker(CKeyID(), CKeyID()), SIGVERSION_BASE);
-    assert(stack.size() > 0);
-    stack.back() = std::vector<unsigned char>(redeemScript.begin(), redeemScript.end());
-    script = PushAll(stack);
-}
-*/
 
 BOOST_AUTO_TEST_CASE(test_IsStandard)
 {
