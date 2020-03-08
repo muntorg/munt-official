@@ -302,13 +302,10 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                     {
                         if (recipient.fSubtractFeeFromAmount && nFeeRet > 0)
                         {
-                            if (txout.nValue < 0)
-                                strFailReason = _("The transaction amount is too small to pay the fee");
-                            else
-                                strFailReason = _("The transaction amount is too small to send after the fee has been deducted");
+                            if (txout.nValue < 0) { strFailReason = _("The transaction amount is too small to pay the fee"); }
+                            else { strFailReason = _("The transaction amount is too small to send after the fee has been deducted"); }
                         }
-                        else
-                            strFailReason = _("Transaction amount too small");
+                        else { strFailReason = _("Transaction amount too small"); }
                         return false;
                     }
                     txNew.vout.push_back(txout);
@@ -451,7 +448,9 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                         std::vector<CTxOut>::iterator position = txNew.vout.begin()+nChangePosInOut;
                         txNew.vout.insert(position, *newTxOut);
                     }
-                } else {
+                }
+                else
+                {
                     reservekey.ReturnKey();
                     nChangePosInOut = -1;
                 }
@@ -552,14 +551,15 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
             {
                 SignatureData sigdata;
 
-                //fixme: (PHASE4) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
                     strFailReason = _("Signing transaction failed");
                     return false;
-                } else {
+                }
+                else
+                {
                     UpdateTransaction(txNew, nIn, sigdata);
                 }
 
@@ -820,7 +820,6 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
             {
                 SignatureData sigdata;
 
-                //fixme: (PHASE4) (SEGSIG) (sign type)
                 CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.txout, SignType::Spend);
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
