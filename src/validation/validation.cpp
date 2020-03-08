@@ -460,7 +460,7 @@ int GetSpendHeight(const CCoinsViewCache& inputs)
     return pindexPrev->nHeight + 1;
 }
 
-//fixme: (PHASE4) This should rather use move semantics, but CScript doesn't currently seem compatible with this.
+//fixme: (PHASE5) This should rather use move semantics, but CScript doesn't currently seem compatible with this.
 //fixme: (PHASE4) Use this in places that are hardcoded instead.
 CScript GetScriptForNonScriptOutput(const CTxOut& out)
 {
