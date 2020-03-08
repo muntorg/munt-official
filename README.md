@@ -71,6 +71,7 @@ If you are thinking about contributing toward the development of Gulden in some 
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
 * [Accelerated testnet](./technical_documentation/accelerated_testnet.md)
+* [Official testnet](./technical_documentation/accelerated_testnet.md#official-testnet)
 
 
 ### Community
@@ -93,7 +94,7 @@ If you are sure you need to build the software yourself, please read the [build 
 ### Additional technical information
 
 
-|Technical specifications|Main network|Testnet|
+|Technical specifications|Main network|[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)|
 |:-----------|:---------|:---------|
 |Consensus algorithm:|PoW² SIGMA/Witness|PoW² SIGMA/Witness|
 |Recommended transaction confirmations:|2|2|
@@ -109,7 +110,7 @@ If you are sure you need to build the software yourself, please read the [build 
 |Address version byte|38 (G)|65 (T)|
 |P2SH version byte|98 (g)|127 (t)|
 |BIP44 coin type|87 0x80000057|87 0x80000057|
-|**Infrastructure**|**Main network**|**Testnet**|
+|**Infrastructure**|**Main network**|**[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)**|
 |Official block explorer|blockchain.gulden.com|-|
 |Community block explorer|www.dactual.com|-|
 |DNS Seed 1|seed.gulden.com|-|
