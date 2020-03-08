@@ -232,8 +232,9 @@ CFeeBumper::CFeeBumper(const CWallet *pWallet, const uint256 txidIn, int newConf
     }
 
     // Mark new tx not replaceable, if requested.
-    if (!newTxReplaceable) {
-        if (mtx.nVersion <= CTransaction::SEGSIG_ACTIVATION_VERSION)
+    if (!newTxReplaceable)
+    {
+        if (!IsOldTransactionVersion(mtx.nVersion))
         {
             for (auto& input : mtx.vin)
             {

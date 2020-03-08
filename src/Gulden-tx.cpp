@@ -225,7 +225,7 @@ static void MutateTxRBFOptIn(CMutableTransaction& tx, const std::string& strInId
     //fixme: (PHASE5) We can eliminate the top loop once phase4 is locked in.
     // set the nSequence to MAX_INT - 2 (= RBF opt in flag)
     int cnt = 0;
-    if (tx.nVersion <= CTransaction::SEGSIG_ACTIVATION_VERSION)
+    if (IsOldTransactionVersion(tx.nVersion))
     {
         for (CTxIn& txin : tx.vin) {
             if (strInIdx == "" || cnt == inIdx) {
