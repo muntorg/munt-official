@@ -1004,22 +1004,8 @@ bool AppInitParameterInteraction()
 {
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 2: parameter interactions
-
     // also see: InitParameterInteraction()
-
-    // if using block pruning, then disallow txindex
-    if (GetArg("-prune", 0)) {
-        if (GetBoolArg("-txindex", DEFAULT_TXINDEX))
-            return InitError(errortr("Prune mode is incompatible with -txindex."));
-    }
-
-    // Make sure enough file descriptors are available
-    int nBind = std::max(
-                (gArgs.IsArgSet("-bind") ? gArgs.GetArgs("-bind").size() : 0) +
-                (gArgs.IsArgSet("-whitebind") ? gArgs.GetArgs("-whitebind").size() : 0), size_t(1));
-    nUserMaxConnections = GetArg("-maxconnections", DEFAULT_MAX_PEER_CONNECTIONS);
-    nMaxConnections = std::max(nUserMaxConnections, 0);
-
+    
     // Limit default memory usage on low memory systems, to try and prevent OOM on low spec pi devices and similar.
     if (systemPhysicalMemoryInBytes() <= 1*1024*1024*1024ULL)
     {
@@ -1048,6 +1034,19 @@ bool AppInitParameterInteraction()
             //InitWarning(strprintf(warningtr("Lowering receive buffer size from [%d] to [%d], because of system limitations, this can be overridden by explicitely setting -reverseheaders to true."), DEFAULT_MAXRECEIVEBUFFER, DEFAULT_MAXRECEIVEBUFFER_LOWMEM));
         //}   
     }
+
+    // if using block pruning, then disallow txindex
+    if (GetArg("-prune", 0)) {
+        if (GetBoolArg("-txindex", DEFAULT_TXINDEX))
+            return InitError(errortr("Prune mode is incompatible with -txindex."));
+    }
+
+    // Make sure enough file descriptors are available
+    int nBind = std::max(
+                (gArgs.IsArgSet("-bind") ? gArgs.GetArgs("-bind").size() : 0) +
+                (gArgs.IsArgSet("-whitebind") ? gArgs.GetArgs("-whitebind").size() : 0), size_t(1));
+    nUserMaxConnections = GetArg("-maxconnections", DEFAULT_MAX_PEER_CONNECTIONS);
+    nMaxConnections = std::max(nUserMaxConnections, 0);
         
     // Trim requested connection counts, to fit into system limitations
     int nSystemMaxConnections = FD_SETSIZE;
