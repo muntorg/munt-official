@@ -642,14 +642,12 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
-        //fixme: (PHASE4) (SEGSIG) (SIGNTYPE)
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
 
-        //fixme: (PHASE4) (SEGSIG) - We must somehow detect if this is a spend or a witness here.
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, accountsToTry, &mergedTx, i, amount, nHashType), coin.out, sigdata, Spend, mergedTx.nVersion);
+            ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, accountsToTry, &mergedTx, i, amount, nHashType), coin.out, sigdata, SignType::Spend, mergedTx.nVersion);
 
         // ... and merge in other signatures:
         for(const CTransaction& txv : txVariants)
