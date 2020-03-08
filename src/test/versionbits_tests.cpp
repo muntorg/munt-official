@@ -338,7 +338,7 @@ BOOST_AUTO_TEST_CASE(versionbits_computeblockversion)
     // VERSIONBITS_LAST_OLD_BLOCK_VERSION.
     //BOOST_CHECK_EQUAL(ComputeBlockVersion(lastBlock, mainnetParams) & VERSIONBITS_TOP_MASK, VERSIONBITS_TOP_BITS);
 
-    //fixme: (PHASE4) - Add unit tests for new version bits functionality here.
+    //fixme: (PHASE5) - Add unit tests for new version bits functionality here.
 }
 
 
