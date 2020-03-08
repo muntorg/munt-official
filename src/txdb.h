@@ -85,7 +85,8 @@ public:
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
     CCoinsViewCursor *Cursor() const override;
 
-    //fixme: (PHASE4) We can remove these for 2.1
+    //fixme: (PHASE5) We can remove some of these once phase4 is active.
+    //We will first need to figure out how to handle testnet however.
     void SetPhase2ActivationHash(const uint256 &hashPhase2ActivationPoint);
     uint256 GetPhase2ActivationHash();
     void SetPhase3ActivationHash(const uint256 &hashPhase3ActivationPoint);
