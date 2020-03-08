@@ -1797,7 +1797,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         CCoinsViewCache view(pcoinsTip);
         bool fJustCheck = false;
         bool fValidateWitness = true;
-        //fixme: (PHASE4) - relook into this for phase4.
+        //fixme: (PHASE5) (WITNESS/HEADER sync)- relook into this for phase5.
         //This check is expensive when syncing
         //So we bypass this with a small random chance of still checking IFF we are below the checkpoint heights.
         //Note:
