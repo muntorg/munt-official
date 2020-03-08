@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -43,13 +43,15 @@ CWallet::~CWallet()
 {
     delete pwalletdbEncryption;
     pwalletdbEncryption = NULL;
-    for (auto accountPair : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
-        delete accountPair.second;
+        (unused) accountUUID;
+        delete forAccount;
     }
-    for (auto mapPair : mapSeeds)
+    for (const auto& [seedUUID, forSeed] : mapSeeds)
     {
-        delete mapPair.second;
+        (unused) seedUUID;
+        delete forSeed;
     }
 }
 
@@ -63,10 +65,11 @@ DBErrors CWallet::LoadWallet(WalletLoadState& nExtraLoadState)
         {
             LOCK(cs_wallet);
             //fixme: (FUT) (ACCOUNTS)
-            for (auto accountPair : mapAccounts)
+            for (const auto& [accountUUID, forAccount] : mapAccounts)
             {
-                accountPair.second->setKeyPoolInternal.clear();
-                accountPair.second->setKeyPoolExternal.clear();
+                (unused) accountUUID;
+                forAccount->setKeyPoolInternal.clear();
+                forAccount->setKeyPoolExternal.clear();
             }
             // Note: can't top-up keypool here, because wallet is locked.
             // User will be prompted to unlock wallet the next operation

@@ -865,10 +865,11 @@ public:
     {
         AssertLockHeld(cs_wallet); // setKeyPool
         int nPoolSize=0;
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            LOCK(accountPair.second->cs_keypool);
-            nPoolSize += accountPair.second->GetKeyPoolSize();
+            (unused) accountUUID;
+            LOCK(forAccount->cs_keypool);
+            nPoolSize += forAccount->GetKeyPoolSize();
         }
         return nPoolSize;
     }

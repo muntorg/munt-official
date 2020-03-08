@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -212,9 +212,10 @@ bool CWallet::AddCScript(const CScript& redeemScript)
 
     //fixme: (FUT) (WATCH_ONLY)
     bool ret = false;
-    for (auto accountPair : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
-        if (accountPair.second->AddCScript(redeemScript))
+        (unused) accountUUID;
+        if (forAccount->AddCScript(redeemScript))
         {
             ret = true;
             break;
@@ -243,9 +244,10 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
 
     //fixme: (FUT) (WATCH_ONLY)
     bool ret = false;
-    for (auto accountPair : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
-        ret = accountPair.second->AddCScript(redeemScript);
+        (unused) accountUUID;
+        ret = forAccount->AddCScript(redeemScript);
         if (ret == true)
             break;
     }
@@ -257,10 +259,11 @@ bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
     AssertLockHeld(cs_wallet);
 
     bool ret = false;
-    for (auto accountPair : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
+        (unused) accountUUID;
         //fixme: (FUT) (WATCH_ONLY) - nCreateTime should go here as well?
-        if (accountPair.second->AddWatchOnly(dest))
+        if (forAccount->AddWatchOnly(dest))
             ret = true;
     }
     if (!ret)
@@ -278,9 +281,10 @@ bool CWallet::RemoveWatchOnly(const CScript &dest)
     AssertLockHeld(cs_wallet);
     //fixme: (FUT) (WATCH_ONLY)
     bool ret = true;
-    for (auto accountPair : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
-        if (accountPair.second->RemoveWatchOnly(dest))
+        (unused) accountUUID;
+        if (forAccount->RemoveWatchOnly(dest))
         {
             ret = true;
             break;
@@ -302,9 +306,10 @@ bool CWallet::LoadWatchOnly(const CScript &dest)
 
     //fixme: (FUT) (WATCH_ONLY)
     bool ret = false;
-    for (auto accountPair : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
-        ret = accountPair.second->AddWatchOnly(dest);
+        (unused) accountUUID;
+        ret = forAccount->AddWatchOnly(dest);
         if (ret)
             break;
     }
@@ -713,9 +718,10 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         }
         pwalletdbEncryption->WriteMasterKey(nMasterKeyMaxID, kMasterKey);
 
-        for (auto seedIter : mapSeeds)
+        for (const auto& [seedUUID, forSeed] : mapSeeds)
         {
-            if (!seedIter.second->Encrypt(_vMasterKey))
+            (unused) seedUUID;
+            if (!forSeed->Encrypt(_vMasterKey))
             {
                 pwalletdbEncryption->TxnAbort();
                 delete pwalletdbEncryption;
@@ -723,12 +729,12 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
                 // die and let the user reload the unencrypted wallet.
                 assert(false);
             }
-            pwalletdbEncryption->WriteHDSeed(*seedIter.second);
+            pwalletdbEncryption->WriteHDSeed(*forSeed);
         }
 
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (!accountPair.second->Encrypt(_vMasterKey))
+            if (!forAccount->Encrypt(_vMasterKey))
             {
                 pwalletdbEncryption->TxnAbort();
                 delete pwalletdbEncryption;
@@ -737,7 +743,7 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
                 // die and let the user reload the unencrypted wallet.
                 assert(false);
             }
-            pwalletdbEncryption->WriteAccount(getUUIDAsString(accountPair.second->getUUID()), accountPair.second);
+            pwalletdbEncryption->WriteAccount(getUUIDAsString(accountUUID), forAccount);
         }
 
         // Encryption was introduced in version 0.4.0
@@ -753,13 +759,15 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         delete pwalletdbEncryption;
         pwalletdbEncryption = NULL;
 
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            accountPair.second->Lock();
+            (unused) accountUUID;
+            forAccount->Lock();
         }
-        for (auto seedIter : mapSeeds)
+        for (const auto& [seedUUID, forSeed] : mapSeeds)
         {
-            seedIter.second->Lock();
+            (unused) seedUUID;
+            forSeed->Lock();
         }
         Unlock(strWalletPassphrase);
 
@@ -781,10 +789,11 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         dbw->Rewrite();
 
     }
-    for (auto accountPair : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
-        accountPair.second->internalKeyStore.NotifyStatusChanged(&accountPair.second->internalKeyStore);
-        accountPair.second->externalKeyStore.NotifyStatusChanged(&accountPair.second->externalKeyStore);
+        (unused) accountUUID;
+        forAccount->internalKeyStore.NotifyStatusChanged(&forAccount->internalKeyStore);
+        forAccount->externalKeyStore.NotifyStatusChanged(&forAccount->externalKeyStore);
     }
 
     return true;
@@ -950,11 +959,11 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose, bool fSelf
     if (wtx.strFromAccount.empty())
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->HaveWalletTx(wtx))
+            if (forAccount->HaveWalletTx(wtx))
             {
-                wtx.strFromAccount = getUUIDAsString(accountPair.first);
+                wtx.strFromAccount = getUUIDAsString(accountUUID);
             }
         }
     }
@@ -1430,9 +1439,10 @@ bool CWallet::IsChange(const CTxOut& txout) const
         if (!ExtractDestination(txout, address))
             return true;
 
-        for (const auto& accountItem : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (::IsMine(accountItem.second->internalKeyStore, address) > ISMINE_NO)
+            (unused) accountUUID;
+            if (::IsMine(forAccount->internalKeyStore, address) > ISMINE_NO)
                 return true;
         }
     }
@@ -2114,10 +2124,11 @@ DBErrors CWallet::ZapSelectTx(CWalletDB& walletdb, std::vector<uint256>& vHashIn
         if (dbw->Rewrite("\x04pool"))
         {
             //fixme: (FUT) (ACCOUNTS) (MED)
-            for (auto accountPair : mapAccounts)
+            for (const auto& [accountUUID, forAccount] : mapAccounts)
             {
-                accountPair.second->setKeyPoolInternal.clear();
-                accountPair.second->setKeyPoolExternal.clear();
+                (unused) accountUUID;
+                forAccount->setKeyPoolInternal.clear();
+                forAccount->setKeyPoolExternal.clear();
             }
             // Note: can't top-up keypool here, because wallet is locked.
             // User will be prompted to unlock wallet the next operation
@@ -2144,10 +2155,11 @@ DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
         {
             LOCK(cs_wallet);
             //fixme: (FUT) (ACCOUNTS) (MED)
-            for (auto accountPair : mapAccounts)
+            for (const auto& [accountUUID, forAccount] : mapAccounts)
             {
-                accountPair.second->setKeyPoolInternal.clear();
-                accountPair.second->setKeyPoolExternal.clear();
+                (unused) accountUUID;
+                forAccount->setKeyPoolInternal.clear();
+                forAccount->setKeyPoolExternal.clear();
             }
             // Note: can't top-up keypool here, because wallet is locked.
             // User will be prompted to unlock wallet the next operation
@@ -2363,11 +2375,12 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
     CWalletDB walletdb(*dbw);
 
     LOCK2(cs_main, cs_wallet);
-    for (const auto& accountItem : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
+        (unused) accountUUID;
         for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
         {
-            const auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? accountItem.second->setKeyPoolExternal : accountItem.second->setKeyPoolInternal );
+            const auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? forAccount->setKeyPoolExternal : forAccount->setKeyPoolInternal );
             for (const int64_t& id : keyPool)
             {
                 CKeyPool keypoolentry;

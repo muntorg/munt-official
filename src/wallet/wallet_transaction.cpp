@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -67,12 +67,12 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
 
 CAccount* CWallet::FindAccountForTransaction(const CTxOut& out)
 {
-    for (const auto& accountItem : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
-        CAccount* childAccount = accountItem.second;
-        if (::IsMine(*childAccount, out) == ISMINE_SPENDABLE)
+        (unused) accountUUID;
+        if (::IsMine(*forAccount, out) == ISMINE_SPENDABLE)
         {
-            return childAccount;
+            return forAccount;
         }
     }
     return NULL;

@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Authored by: Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -1729,8 +1729,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         // Relay alerts
         {
             LOCK(cs_mapAlerts);
-            for(PAIRTYPE(const uint256, CAlert)& item : mapAlerts)
-                item.second.RelayTo(pfrom);
+            for (const auto& [alertHash, alert] : mapAlerts)
+            {
+                (unused) alertHash;
+                alert.RelayTo(pfrom);
+            }
         }
 
         // Trigger mempool to be send when synced. This way transaction that were created recently but perhaps not reached the network

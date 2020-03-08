@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -326,14 +326,15 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
     //Update accounts if needed (creation time - shadow accounts etc.)
     {
         LOCK(cs_wallet);
-        for (const auto& accountIter : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountIter.second->HaveKey(keyID))
+            (unused) accountUUID;
+            if (forAccount->HaveKey(keyID))
             {
                 if (usageTime > 0)
                 {
                     CWalletDB walletdb(*dbw);
-                    accountIter.second->possiblyUpdateEarliestTime(usageTime, &walletdb);
+                    forAccount->possiblyUpdateEarliestTime(usageTime, &walletdb);
                 }
 
                 // We only do this the first time MarkKeyUsed is called - otherwise we have the following problem
@@ -356,10 +357,10 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                 {
                     keyUsedSet.insert(keyID);
 
-                    if (accountIter.second->m_State != AccountState::Normal && accountIter.second->m_State != AccountState::ShadowChild)
+                    if (forAccount->m_State != AccountState::Normal && forAccount->m_State != AccountState::ShadowChild)
                     {
-                        accountIter.second->m_State = AccountState::Normal;
-                        std::string name = accountIter.second->getLabel();
+                        forAccount->m_State = AccountState::Normal;
+                        std::string name = forAccount->getLabel();
 
                         //fixme: (FUT) (ACCOUNTS) remove this in name delete/restore labelling for something less error prone. (translations would break this for instance)
                         //We should just set a restored attribute on the account or something.
@@ -371,12 +372,12 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         {
                             name = _("Restored");
                         }
-                        addAccount(accountIter.second, name);
+                        addAccount(forAccount, name);
 
                         //fixme: (FUT) (ACCOUNTS) Shadow accounts during rescan...
                     }
 
-                    if (accountIter.second->IsHD() && accountIter.second->IsPoW2Witness())
+                    if (forAccount->IsHD() && forAccount->IsPoW2Witness())
                     {
                         //This is here for the sake of restoring wallets from recovery phrase only, in the normal case this has already been done by the funding code...
                         //fixme: (FUT) (ACCOUNTS) Improve this, there are two things that need improving:
@@ -384,21 +385,21 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         //We try to work around this by using an unlock callback, but if the user refuses to unlock then there might be issues.
                         //2) This will indescriminately add -all- used change keys in a witness account; even if used for normal transactions (which shouldn't be done, but still it would be preferable to avoid this)
                         //Note as witness-only accounts are not HD this is not an issue for witness-only accounts.
-                        if (accountIter.second->getLabel().find(_("[Restored]")) != std::string::npos)
+                        if (forAccount->getLabel().find(_("[Restored]")) != std::string::npos)
                         {
-                            if (accountIter.second->HaveKeyInternal(keyID))
+                            if (forAccount->HaveKeyInternal(keyID))
                             {
                                 std::function<void (void)> witnessKeyCallback = [=]()
                                 {
                                     CKey privWitnessKey;
-                                    if (!accountIter.second->GetKey(keyID, privWitnessKey))
+                                    if (!forAccount->GetKey(keyID, privWitnessKey))
                                     {
                                         //fixme: (FUT) localise
                                         std::string strErrorMessage = "Failed to mark witnessing key for encrypted usage";
                                         LogPrintf(strErrorMessage.c_str());
                                         CAlert::Notify(strErrorMessage, true, true);
                                     }
-                                    if (!static_cast<CWallet*>(this)->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *accountIter.second, KEYCHAIN_WITNESS))
+                                    if (!static_cast<CWallet*>(this)->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), *forAccount, KEYCHAIN_WITNESS))
                                     {
                                         //fixme: (FUT) localise
                                         std::string strErrorMessage = "Failed to mark witnessing key for encrypted usage";
@@ -406,7 +407,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                                         CAlert::Notify(strErrorMessage, true, true);
                                     }
                                 };
-                                if (accountIter.second->IsLocked())
+                                if (forAccount->IsLocked())
                                 {
                                     //Last ditch effort to try work around 1.
                                     uiInterface.RequestUnlockWithCallback(pactiveWallet, _("Wallet unlock required for witness key"), witnessKeyCallback);
@@ -860,22 +861,23 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
     {
         LOCK(cs_wallet);
 
-        for (const auto& accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->m_Type == subType)
+            (unused) accountUUID;
+            if (forAccount->m_Type == subType)
             {
-                if (accountPair.second->m_State == AccountState::Shadow)
+                if (forAccount->m_State == AccountState::Shadow)
                 {
-                    if (!newAccount || ((CAccountHD*)accountPair.second)->getIndex() < newAccount->getIndex())
+                    if (!newAccount || ((CAccountHD*)forAccount)->getIndex() < newAccount->getIndex())
                     {
-                        if (((CAccountHD*)accountPair.second)->getSeedUUID() == getActiveSeed()->getUUID())
+                        if (((CAccountHD*)forAccount)->getSeedUUID() == getActiveSeed()->getUUID())
                         {
                             //Only consider accounts that are
                             //1) Of the required state
                             //2) Marked as being shadow
                             //3) From the active seed
                             //4) Always take the lowest account index that we can find
-                            newAccount = (CAccountHD*)accountPair.second;
+                            newAccount = (CAccountHD*)forAccount;
                         }
                     }
                 }
@@ -1244,14 +1246,16 @@ bool CGuldenWallet::LockHard() const
     AssertLockHeld(cs_wallet);
 
     bool ret = true;
-    for (auto accountPair : mapAccounts)
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
     {
-        if (!accountPair.second->Lock())
+        (unused) accountUUID;
+        if (!forAccount->Lock())
             ret = false;
     }
-    for (auto seedPair : mapSeeds)
+    for (const auto& [seedUUID, forSeed] : mapSeeds)
     {
-        if (!seedPair.second->Lock())
+        (unused) seedUUID;
+        if (!forSeed->Lock())
             ret = false;
     }
 

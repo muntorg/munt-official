@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -37,12 +37,12 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccoun
         }
         if (forAccount && includeChildren)
         {
-            for (const auto& accountItem : mapAccounts)
+            for (const auto& [accountUUID, childAccount] : mapAccounts)
             {
-                const auto& childAccount = accountItem.second;
+                (unused) accountUUID;
                 if (childAccount->getParentUUID() == forAccount->getUUID())
                 {
-                    ret += GetDebit(txin, filter, forAccount, false);
+                    ret += GetDebit(txin, filter, childAccount, false);
                 }
             }
         }
@@ -61,12 +61,12 @@ CAmount CWallet::GetCredit(const CTxOut& txout, const isminefilter& filter, CAcc
 
     if (forAccount && includeChildren)
     {
-        for (const auto& accountItem : mapAccounts)
+        for (const auto& [accountUUID, childAccount] : mapAccounts)
         {
-            const auto& childAccount = accountItem.second;
+            (unused) accountUUID;
             if (childAccount->getParentUUID() == forAccount->getUUID())
             {
-                ret += GetCredit(txout, filter, forAccount, false);
+                ret += GetCredit(txout, filter, childAccount, false);
             }
         }
     }
@@ -503,9 +503,9 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool incl
     }
     if (forAccount && includeChildren)
     {
-        for (const auto& accountItem : mapAccounts)
+        for (const auto& [accountUUID, childAccount] : mapAccounts)
         {
-            const auto& childAccount = accountItem.second;
+            (unused) accountUUID;
             if (childAccount->getParentUUID() == forAccount->getUUID())
             {
                 nTotal += GetBalance(childAccount, useCache, includePoW2LockedWitnesses, false);
@@ -559,9 +559,9 @@ CAmount CWallet::GetUnconfirmedBalance(const CAccount* forAccount, bool includeP
     }
     if (forAccount && includeChildren)
     {
-        for (const auto& accountItem : mapAccounts)
+        for (const auto& [accountUUID, childAccount] : mapAccounts)
         {
-            const auto& childAccount = accountItem.second;
+            (unused) accountUUID;
             if (childAccount->getParentUUID() == forAccount->getUUID())
             {
                 nTotal += GetUnconfirmedBalance(childAccount, includePoW2LockedWitnesses, false);
@@ -590,9 +590,9 @@ CAmount CWallet::GetImmatureBalance(const CAccount* forAccount, bool includePoW2
     }
     if (forAccount && includeChildren)
     {
-        for (const auto& accountItem : mapAccounts)
+        for (const auto& [accountUUID, childAccount] : mapAccounts)
         {
-            const auto& childAccount = accountItem.second;
+            (unused) accountUUID;
             if (childAccount->getParentUUID() == forAccount->getUUID())
             {
                 nTotal += GetImmatureBalance(childAccount, includePoW2LockedWitnesses, false);

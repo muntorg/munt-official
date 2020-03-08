@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -83,10 +83,10 @@ public:
     {
         LOCK(cs_wallet);
         bool ret = true;
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
             bool needsWriteToDisk = false;
-            if (!accountPair.second->Unlock(vMasterKeyIn, needsWriteToDisk))
+            if (!forAccount->Unlock(vMasterKeyIn, needsWriteToDisk))
             {
                 LogPrintf("CWallet::UnlockWithMasterKey - Failed to unlock account");
                 ret = false;
@@ -94,15 +94,16 @@ public:
             if (needsWriteToDisk)
             {
                 CWalletDB db(*dbw);
-                if (!db.WriteAccount(getUUIDAsString(accountPair.second->getUUID()), accountPair.second))
+                if (!db.WriteAccount(getUUIDAsString(accountUUID), forAccount))
                 {
                     throw std::runtime_error("Writing account failed");
                 }
             }
         }
-        for (auto seedPair : mapSeeds)
+        for (const auto& [seedUUID, forSeed] : mapSeeds)
         {
-            if (!seedPair.second->Unlock(vMasterKeyIn))
+            (unused) seedUUID;
+            if (!forSeed->Unlock(vMasterKeyIn))
             {
                 LogPrintf("CWallet::UnlockWithMasterKey - Failed to unlock seed");
                 ret = false;
@@ -119,14 +120,16 @@ public:
 
     virtual bool IsCrypted() const
     {
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if(accountPair.second->IsCrypted())
+            (unused) accountUUID;
+            if(forAccount->IsCrypted())
                 return true;
         }
-        for (auto seedPair : mapSeeds)
+        for (const auto& [seedUUID, forSeed] : mapSeeds)
         {
-            if (seedPair.second->IsCrypted())
+            (unused) seedUUID;
+            if (forSeed->IsCrypted())
                 return true;
         }
         return false;
@@ -135,14 +138,16 @@ public:
 
     virtual bool IsLocked() const
     {
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if(accountPair.second->IsLocked())
+            (unused) accountUUID;
+            if(forAccount->IsLocked())
                 return true;
         }
-        for (auto seedPair : mapSeeds)
+        for (const auto& [seedUUID, forSeed] : mapSeeds)
         {
-            if (seedPair.second->IsLocked())
+            (unused) seedUUID;
+            if (forSeed->IsLocked())
                 return true;
         }
         return false;
@@ -151,9 +156,10 @@ public:
     virtual bool GetKey(const CKeyID &address, CKey& keyOut) const
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->GetKey(address, keyOut))
+            (unused) accountUUID;
+            if (forAccount->GetKey(address, keyOut))
                 return true;
         }
         return false;
@@ -163,9 +169,10 @@ public:
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut)
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->GetPubKey(address, vchPubKeyOut))
+            (unused) accountUUID;
+            if (forAccount->GetPubKey(address, vchPubKeyOut))
                 return true;
         }
         return false;
@@ -175,9 +182,10 @@ public:
     virtual bool HaveWatchOnly(const CScript &dest) const
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->HaveWatchOnly(dest))
+            (unused) accountUUID;
+            if (forAccount->HaveWatchOnly(dest))
                 return true;
         }
         return false;
@@ -186,9 +194,10 @@ public:
     virtual bool HaveWatchOnly() const
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->HaveWatchOnly())
+            (unused) accountUUID;
+            if (forAccount->HaveWatchOnly())
                 return true;
         }
         return false;
@@ -197,9 +206,10 @@ public:
     virtual bool HaveCScript(const CScriptID &hash)
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->HaveCScript(hash))
+            (unused) accountUUID;
+            if (forAccount->HaveCScript(hash))
                 return true;
         }
         return false;
@@ -208,9 +218,10 @@ public:
     virtual bool GetCScript(const CScriptID &hash, CScript& redeemScriptOut)
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->GetCScript(hash, redeemScriptOut))
+            (unused) accountUUID;
+            if (forAccount->GetCScript(hash, redeemScriptOut))
                 return true;
         }
         return false;
@@ -220,9 +231,10 @@ public:
     virtual bool HaveKey(const CKeyID &address) const
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->HaveKey(address))
+            (unused) accountUUID;
+            if (forAccount->HaveKey(address))
                 return true;
         }
         return false;
@@ -231,10 +243,11 @@ public:
     virtual bool HaveWatchOnly(const CScript &dest)
     {
         LOCK(cs_wallet);
-        for (auto accountPair : mapAccounts)
+        for (const auto& [accountUUID, forAccount] : mapAccounts)
         {
-            if (accountPair.second->HaveWatchOnly(dest))
-            return true;
+            (unused) accountUUID;
+            if (forAccount->HaveWatchOnly(dest))
+                return true;
         }
         return false;
     }

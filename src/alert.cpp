@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -227,9 +227,9 @@ bool CAlert::ProcessAlert(const std::vector<unsigned char>& alertKey, bool fThre
         }
 
         // Check if this alert has been cancelled
-        for(PAIRTYPE(const uint256, CAlert)& item : mapAlerts)
+        for (const auto& [alertHash, alert] : mapAlerts)
         {
-            const CAlert& alert = item.second;
+            (unused) alertHash;
             if (alert.Cancels(*this))
             {
                 LogPrint(BCLog::ALERT, "alert already cancelled by %d\n", alert.nID);

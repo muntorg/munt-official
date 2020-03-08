@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -113,9 +113,9 @@ std::string GetWarnings(const std::string& strFor)
     // Alerts
     {
         LOCK(cs_mapAlerts);
-        for(PAIRTYPE(const uint256, CAlert)& item : mapAlerts)
+        for (const auto& [alertHash, alert] : mapAlerts)
         {
-            const CAlert& alert = item.second;
+            (unused) alertHash;
             if (alert.AppliesToMe() )
             {
                 strStatusBar = strGUI = strRPC = alert.strStatusBar;
