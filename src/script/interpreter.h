@@ -55,18 +55,15 @@ enum
     // (softfork safe, BIP62 rule 5).
     SCRIPT_VERIFY_LOW_S     = (1U << 3),
 
-    // verify dummy stack item consumed by CHECKMULTISIG is of zero-length (softfork safe, BIP62 rule 7).
-    SCRIPT_VERIFY_NULLDUMMY = (1U << 4),
-
     // Using a non-push operator in the scriptSig causes script failure (softfork safe, BIP62 rule 2).
-    SCRIPT_VERIFY_SIGPUSHONLY = (1U << 5),
+    SCRIPT_VERIFY_SIGPUSHONLY = (1U << 4),
 
     // Require minimal encodings for all push operations (OP_0... OP_16, OP_1NEGATE where possible, direct
     // pushes up to 75 bytes, OP_PUSHDATA up to 255 bytes, OP_PUSHDATA2 for anything larger). Evaluating
     // any other push causes the script to fail (BIP62 rule 3).
     // In addition, whenever a stack element is interpreted as a number, it must be of minimal length (BIP62 rule 4).
     // (softfork safe)
-    SCRIPT_VERIFY_MINIMALDATA = (1U << 6),
+    SCRIPT_VERIFY_MINIMALDATA = (1U << 5),
 
     // Discourage use of NOPs reserved for upgrades (NOP1-10)
     //
@@ -76,32 +73,32 @@ enum
     // discouraged NOPs fails the script. This verification flag will never be
     // a mandatory flag applied to scripts in a block. NOPs that are not
     // executed, e.g.  within an unexecuted IF ENDIF block, are *not* rejected.
-    SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS  = (1U << 7),
+    SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS  = (1U << 6),
 
     // Require that only a single stack element remains after evaluation. This changes the success criterion from
     // "At least one stack element must remain, and when interpreted as a boolean, it must be true" to
     // "Exactly one stack element must remain, and when interpreted as a boolean, it must be true".
     // (softfork safe, BIP62 rule 6)
     // Note: CLEANSTACK should never be used without P2SH or WITNESS.
-    SCRIPT_VERIFY_CLEANSTACK = (1U << 8),
+    SCRIPT_VERIFY_CLEANSTACK = (1U << 7),
 
     // Verify CHECKLOCKTIMEVERIFY
     //
     // See BIP65 for details.
-    SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY = (1U << 9),
+    SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY = (1U << 8),
 
     // support CHECKSEQUENCEVERIFY opcode
     //
     // See BIP112 for details
-    SCRIPT_VERIFY_CHECKSEQUENCEVERIFY = (1U << 10),
+    SCRIPT_VERIFY_CHECKSEQUENCEVERIFY = (1U << 9),
 
     // Require the argument of OP_IF/NOTIF to be exactly 0x01 or empty vector
     //
-    SCRIPT_VERIFY_MINIMALIF = (1U << 11),
+    SCRIPT_VERIFY_MINIMALIF = (1U << 10),
 
     // Signature(s) must be empty vector if an CHECK(MULTI)SIG operation failed
     //
-    SCRIPT_VERIFY_NULLFAIL = (1U << 12),
+    SCRIPT_VERIFY_NULLFAIL = (1U << 11),
 };
 
 bool CheckSignatureEncoding(const std::vector<unsigned char> &vchSig, unsigned int flags, ScriptError* serror);

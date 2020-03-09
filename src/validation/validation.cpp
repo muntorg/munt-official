@@ -987,11 +987,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         nLockTimeFlags |= LOCKTIME_VERIFY_SEQUENCE;
     }
 
-    //fixme: (PHASE4) (SEGSIG)
-    // Start enforcing WITNESS rules using versionbits logic.
-    if (IsSegSigEnabled(pindex->pprev))
-        flags |= SCRIPT_VERIFY_NULLDUMMY;
-
     int64_t nTime2 = GetTimeMicros(); nTimeForks += nTime2 - nTime1;
     LogPrint(BCLog::BENCH, "    - Fork checks: %.2fms [%.2fs]\n", 0.001 * (nTime2 - nTime1), nTimeForks * 0.000001);
 
