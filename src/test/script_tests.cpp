@@ -90,7 +90,6 @@ static ScriptErrorDesc script_errors[]={
     {SCRIPT_ERR_MINIMALDATA, "MINIMALDATA"},
     {SCRIPT_ERR_SIG_PUSHONLY, "SIG_PUSHONLY"},
     {SCRIPT_ERR_SIG_HIGH_S, "SIG_HIGH_S"},
-    {SCRIPT_ERR_SIG_NULLDUMMY, "SIG_NULLDUMMY"},
     {SCRIPT_ERR_PUBKEYTYPE, "PUBKEYTYPE"},
     {SCRIPT_ERR_CLEANSTACK, "CLEANSTACK"},
     {SCRIPT_ERR_MINIMALIF, "MINIMALIF"},
@@ -528,9 +527,6 @@ BOOST_AUTO_TEST_CASE(script_build)
     AST(MKTEST(PUBKEY1 << OP_CHECKSIG,"P2PK with undefined hashtype", SCRIPT_VERIFY_STRICTENC).PushSig(keys.key1, 5).ScriptError(SCRIPT_ERR_SIG_HASHTYPE));
     AST(MKTEST(PUBKEY1 << OP_CHECKSIG << OP_NOT,"P2PK NOT with invalid sig and undefined hashtype but no STRICTENC", 0).PushSig(keys.key1, 5).DamagePush(10));
     AST(MKTEST(PUBKEY1 << OP_CHECKSIG << OP_NOT,"P2PK NOT with invalid sig and undefined hashtype", SCRIPT_VERIFY_STRICTENC).PushSig(keys.key1, 5).DamagePush(10).ScriptError(SCRIPT_ERR_SIG_HASHTYPE));
-
-    AST(MKTEST(OP_3 << PUBKEY0C << PUBKEY1C << PUBKEY2C << OP_3 << OP_CHECKMULTISIG,"3-of-3 with nonzero dummy but no NULLDUMMY", 0).Num(1).PushSig(keys.key0).PushSig(keys.key1).PushSig(keys.key2));
-    AST(MKTEST(OP_3 << PUBKEY0C << PUBKEY1C << PUBKEY2C << OP_3 << OP_CHECKMULTISIG << OP_NOT,"3-of-3 NOT with invalid sig and nonzero dummy but no NULLDUMMY", 0).Num(1).PushSig(keys.key0).PushSig(keys.key1).PushSig(keys.key2).DamagePush(10));
 
     AST(MKTEST(OP_2 << PUBKEY1C << PUBKEY1C << OP_2 << OP_CHECKMULTISIG,"2-of-2 with two identical keys and sigs pushed using OP_DUP but no SIGPUSHONLY", 0).Num(0).PushSig(keys.key1).Add(CScript() << OP_DUP));
     AST(MKTEST(OP_2 << PUBKEY1C << PUBKEY1C << OP_2 << OP_CHECKMULTISIG,"2-of-2 with two identical keys and sigs pushed using OP_DUP", SCRIPT_VERIFY_SIGPUSHONLY).Num(0).PushSig(keys.key1).Add(CScript() << OP_DUP).ScriptError(SCRIPT_ERR_SIG_PUSHONLY));

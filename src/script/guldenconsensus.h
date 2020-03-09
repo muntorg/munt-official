@@ -45,18 +45,18 @@ typedef enum guldenconsensus_error_t
     guldenconsensus_ERR_INVALID_FLAGS,
 } guldenconsensus_error;
 
+
 /** Script verification flags */
 enum
 {
     guldenconsensus_SCRIPT_FLAGS_VERIFY_NONE                = 0,
     guldenconsensus_SCRIPT_FLAGS_VERIFY_P2SH                = (1U << 0), // evaluate P2SH (BIP16) subscripts
     guldenconsensus_SCRIPT_FLAGS_VERIFY_DERSIG              = (1U << 2), // enforce strict DER (BIP66) compliance
-    guldenconsensus_SCRIPT_FLAGS_VERIFY_NULLDUMMY           = (1U << 4), // enforce NULLDUMMY (BIP147)
-    guldenconsensus_SCRIPT_FLAGS_VERIFY_CHECKLOCKTIMEVERIFY = (1U << 9), // enable CHECKLOCKTIMEVERIFY (BIP65)
-    guldenconsensus_SCRIPT_FLAGS_VERIFY_CHECKSEQUENCEVERIFY = (1U << 10), // enable CHECKSEQUENCEVERIFY (BIP112)
-    guldenconsensus_SCRIPT_FLAGS_VERIFY_WITNESS             = (1U << 11), // enable WITNESS (BIP141)
+    guldenconsensus_SCRIPT_FLAGS_VERIFY_CHECKLOCKTIMEVERIFY = (1U << 8), // enable CHECKLOCKTIMEVERIFY (BIP65)
+    guldenconsensus_SCRIPT_FLAGS_VERIFY_CHECKSEQUENCEVERIFY = (1U << 9), // enable CHECKSEQUENCEVERIFY (BIP112)
+    guldenconsensus_SCRIPT_FLAGS_VERIFY_WITNESS             = (1U << 13), // enable WITNESS (BIP141)
     guldenconsensus_SCRIPT_FLAGS_VERIFY_ALL                 = guldenconsensus_SCRIPT_FLAGS_VERIFY_P2SH | guldenconsensus_SCRIPT_FLAGS_VERIFY_DERSIG |
-                                                               guldenconsensus_SCRIPT_FLAGS_VERIFY_NULLDUMMY | guldenconsensus_SCRIPT_FLAGS_VERIFY_CHECKLOCKTIMEVERIFY |
+                                                               guldenconsensus_SCRIPT_FLAGS_VERIFY_CHECKLOCKTIMEVERIFY |
                                                                guldenconsensus_SCRIPT_FLAGS_VERIFY_CHECKSEQUENCEVERIFY | guldenconsensus_SCRIPT_FLAGS_VERIFY_WITNESS
 };
 
