@@ -534,9 +534,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     }
     else
     {
-        for( const auto& accountPair : wallet->mapAccounts )
+        for( const auto& [accountUUID, account] : wallet->mapAccounts )
         {
-            CAccount* account = accountPair.second;
             bool involvesWatchAddress = false;
             isminetype fAllFromMe = ISMINE_SPENDABLE;
             std::vector<CTxIn> vNotFromMe;
@@ -588,7 +587,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 if (wtx.IsPoW2WitnessCoinBase() && sub.credit == 0 && sub.debit == 0)
                     continue;
 
-                sub.actionAccountUUID = sub.receiveAccountUUID = sub.fromAccountUUID = account->getUUID();
+                sub.actionAccountUUID = sub.receiveAccountUUID = sub.fromAccountUUID = accountUUID;
                 sub.actionAccountParentUUID = sub.receiveAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
 
                 if (sub.credit == 0 && sub.debit == 0)
@@ -607,7 +606,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 //The sender will get its own transaction record and then we try 'automatically' match the two up and 'swap details' in a loop at the bottom of this function.
 
                 //Fill in all the details for the receive part of the transaction.
-                sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
+                sub.actionAccountUUID = sub.receiveAccountUUID = accountUUID;
                 sub.actionAccountParentUUID = sub.receiveAccountParentUUID = account->getParentUUID();
                 sub.idx = parts.size();
                 sub.involvesWatchAddress = involvesWatchAddress;
@@ -639,7 +638,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 {
                     const CTxOut& txout = outputs[nOut];
                     TransactionRecord sub(hash, nTime);
-                    sub.actionAccountUUID = sub.fromAccountUUID = account->getUUID();
+                    sub.actionAccountUUID = sub.fromAccountUUID = accountUUID;
                     sub.actionAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
                     sub.idx = parts.size();
                     sub.involvesWatchAddress = involvesWatchAddress;
@@ -724,13 +723,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     if (nNetMixed > 0)
                     {
                         sub.credit = nNetMixed;
-                        sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
+                        sub.actionAccountUUID = sub.receiveAccountUUID = accountUUID;
                         sub.actionAccountParentUUID = sub.receiveAccountParentUUID = account->getParentUUID();
                     }
                     else
                     {
                         sub.debit = -nNetMixed;
-                        sub.actionAccountUUID = sub.fromAccountUUID = account->getUUID();
+                        sub.actionAccountUUID = sub.fromAccountUUID = accountUUID;
                         sub.actionAccountParentUUID = sub.fromAccountParentUUID = account->getParentUUID();
                     }
 
