@@ -313,63 +313,59 @@ class CWallet;
 /**
  * Used by addmultisigaddress / createmultisig:
  */
-CScript _createmultisig_redeemScript(CWallet * const pwallet, const UniValue& params)
+CScript _createmultisig_redeemScript(CAccount* const forAccount, const UniValue& params)
 {
     int nRequired = params[0].get_int();
     const UniValue& keys = params[1].get_array();
 
     // Gather public keys
-    if (nRequired < 1)
-        throw std::runtime_error("a multisignature address must require at least one key to redeem");
-    if ((int)keys.size() < nRequired)
-        throw std::runtime_error(
-            strprintf("not enough keys supplied "
-                      "(got %u keys, but need at least %d to redeem)", keys.size(), nRequired));
-    if (keys.size() > 16)
-        throw std::runtime_error("Number of addresses involved in the multisignature address creation > 16\nReduce the number");
+    if (nRequired < 1) { throw std::runtime_error("a multisignature address must require at least one key to redeem"); }
+    if ((int)keys.size() < nRequired) { throw std::runtime_error(strprintf("not enough keys supplied (got %u keys, but need at least %d to redeem)", keys.size(), nRequired)); }
+    if (keys.size() > 16) { throw std::runtime_error("Number of addresses involved in the multisignature address creation > 16\nReduce the number"); }
+    
     std::vector<CPubKey> pubkeys;
     pubkeys.resize(keys.size());
     for (unsigned int i = 0; i < keys.size(); i++)
     {
         const std::string& ks = keys[i].get_str();
-#ifdef ENABLE_WALLET
-        // Case 1: Gulden address and we have full public key:
+        #ifdef ENABLE_WALLET
         CGuldenAddress address(ks);
-        if (pwallet && address.IsValid()) {
+        if (forAccount && address.IsValid())
+        {
+            // Case 1: Gulden address and we have full public key:
             CKeyID keyID;
-            if (!address.GetKeyID(keyID))
-                throw std::runtime_error(
-                    strprintf("%s does not refer to a key",ks));
             CPubKey vchPubKey;
-            if (!pwallet->GetPubKey(keyID, vchPubKey)) {
-                throw std::runtime_error(
-                    strprintf("no full public key for address %s",ks));
+            if (!address.GetKeyID(keyID)) { throw std::runtime_error(strprintf("%s does not refer to a key",ks)); }
+            if (!forAccount->GetPubKey(keyID, vchPubKey)){ throw std::runtime_error(strprintf("no full public key for address %s",ks)); }
+            if (!vchPubKey.IsFullyValid()) { throw std::runtime_error(" Invalid public key: "+ks); }
+            pubkeys[i] = vchPubKey;
+        }
+        else
+        #endif
+        {
+            // Case 2: hex public key
+            bool validPublicKey=false;
+            if (IsHex(ks))
+            {
+                CPubKey vchPubKey(ParseHex(ks));
+                if (vchPubKey.IsFullyValid())
+                {
+                    validPublicKey = true;
+                    pubkeys[i] = vchPubKey;
+                }
             }
-            if (!vchPubKey.IsFullyValid())
+            if (!validPublicKey)
+            {
                 throw std::runtime_error(" Invalid public key: "+ks);
-            pubkeys[i] = vchPubKey;
-        }
-
-        // Case 2: hex public key
-        else
-#endif
-        if (IsHex(ks))
-        {
-            CPubKey vchPubKey(ParseHex(ks));
-            if (!vchPubKey.IsFullyValid())
-                throw std::runtime_error(" Invalid public key: "+ks);
-            pubkeys[i] = vchPubKey;
-        }
-        else
-        {
-            throw std::runtime_error(" Invalid public key: "+ks);
+            }
         }
     }
     CScript result = GetScriptForMultisig(nRequired, pubkeys);
 
     if (result.size() > MAX_SCRIPT_ELEMENT_SIZE)
-        throw std::runtime_error(
-                strprintf("redeemScript exceeds size limit: %d > %d", result.size(), MAX_SCRIPT_ELEMENT_SIZE));
+    { 
+        throw std::runtime_error(strprintf("redeemScript exceeds size limit: %d > %d", result.size(), MAX_SCRIPT_ELEMENT_SIZE));
+    }
 
     return result;
 }
@@ -377,9 +373,9 @@ CScript _createmultisig_redeemScript(CWallet * const pwallet, const UniValue& pa
 UniValue createmultisig(const JSONRPCRequest& request)
 {
 #ifdef ENABLE_WALLET
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
 #else
-    CWallet * const pwallet = NULL;
+    CWallet* const pwallet = NULL;
 #endif
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 2)
@@ -411,11 +407,12 @@ UniValue createmultisig(const JSONRPCRequest& request)
         throw std::runtime_error(msg);
     }
 
-    //fixme: (FUT) (MED) (WATCH_ONLY)
-    throw JSONRPCError(RPC_INVALID_PARAMETER, "Sorry for the inconvenience, watch only addresses are temporarily disabled but will come back in a future release.");
-
     // Construct using pay-to-script-hash:
-    CScript inner = _createmultisig_redeemScript(pwallet, request.params);
+    #ifdef ENABLE_WALLET
+    CScript inner = _createmultisig_redeemScript(pwallet->activeAccount, request.params);
+    #else
+    CScript inner = _createmultisig_redeemScript(nullptr, request.params);
+    #endif
     CScriptID innerID(inner);
     CGuldenAddress address(innerID);
 

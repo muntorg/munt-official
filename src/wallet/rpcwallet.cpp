@@ -442,13 +442,13 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
     vecSend.push_back(recipient);
     
     std::vector<CKeyStore*> accountsToTry;
+    accountsToTry.push_back(fromAccount);
     for ( const auto& accountPair : pactiveWallet->mapAccounts )
     {
         if(accountPair.second->getParentUUID() == fromAccount->getUUID())
         {
             accountsToTry.push_back(accountPair.second);
         }
-        accountsToTry.push_back(fromAccount);
     }
     if (!pwallet->CreateTransaction(accountsToTry, vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
         if (!fSubtractFeeFromAmount && nValue + nFeeRequired > curBalance)
@@ -1262,7 +1262,7 @@ UniValue sendmany(const JSONRPCRequest& request)
 }
 
 // Defined in rpc/misc.cpp
-extern CScript _createmultisig_redeemScript(CWallet * const pwallet, const UniValue& params);
+extern CScript _createmultisig_redeemScript(CAccount* const forAccount, const UniValue& params);
 
 UniValue addmultisigaddress(const JSONRPCRequest& request)
 {
@@ -1271,7 +1271,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
         return NullUniValue;
     }
 
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
+    if (request.fHelp || request.params.size() != 3)
     {
         std::string msg = "addmultisigaddress num_required [\"key\",...] ( \"account\" )\n"
             "\nAdd a num-required-to-sign multisignature address to the wallet.\n"
@@ -1285,7 +1285,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
             "       \"address\"  (string) Gulden address or hex-encoded public key\n"
             "       ...,\n"
             "     ]\n"
-            "3. \"account\"      (string, optional) DEPRECATED. An account to assign the addresses to.\n"
+            "3. \"account\"      (string) An account to assign the addresses to.\n"
 
             "\nResult:\n"
             "\"address\"         (string) A Gulden address associated with the keys.\n"
@@ -1299,23 +1299,16 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
         throw std::runtime_error(msg);
     }
 
-    throw std::runtime_error("Temporarily disabled for this release as it needs to be reworked to be account safe, will return soon in a future release, apologies for the inconvenience.");
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    //fixme: (PHASE4)
-    /*DS_LOCK2(cs_main, pwallet->cs_wallet);
-
-    std::string strAccount;
-    if (request.params.size() > 2)
-        strAccount = AccountFromValue(request.params[2]);
-
+    CAccount* forAccount = AccountFromValue(pactiveWallet, request.params[2], false);
+    
     // Construct using pay-to-script-hash:
-    CScript inner = _createmultisig_redeemScript(pwallet, request.params);
+    CScript inner = _createmultisig_redeemScript(forAccount, request.params);
     CScriptID innerID(inner);
-    pwallet->AddCScript(inner);
+    forAccount->AddCScript(inner);
 
-    pwallet->SetAddressBook(innerID, strAccount, "send");
-    return CGuldenAddress(innerID).ToString();*/
-    return "";
+    return CGuldenAddress(innerID).ToString();
 }
 
 struct tallyitem
