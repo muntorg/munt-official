@@ -203,9 +203,35 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
     return true;
 }
 
-bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
+bool IsSegregatedSignatureDataStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 {
-    //fixme: (PHASE4) (SEGSIG)
+    //fixme: (PHASE5) - Look into any other restrictions we may want to add here.
+    // Don't think there is anything - but check again against bitcoin equivalent (IsWitnessStandard) to be sure
+    
+    // Old transaction format  has no segregated signature data
+    if (IsOldTransactionVersion(tx.nVersion))
+    {
+        if (tx.HasSegregatedSignatures())
+            return false;
+        return true;
+    }
+
+    static const unsigned int MAX_STANDARD_SEGREGATED_SIGNATURE_STACK_ITEMS = 100;
+    static const unsigned int MAX_STANDARD_SEGREGATED_SIGNATURE_STACK_ITEM_SIZE = 80;
+
+    for (uint64_t i=0; i<tx.vin.size(); ++i)
+    {
+        size_t sizeSegregatedSignatureStack = tx.vin[i].segregatedSignatureData.stack.size() - 1;
+        if (sizeSegregatedSignatureStack > MAX_STANDARD_SEGREGATED_SIGNATURE_STACK_ITEMS)
+            return false;
+
+        for (unsigned int j = 0; j < sizeSegregatedSignatureStack; j++)
+        {
+            if (tx.vin[i].segregatedSignatureData.stack[j].size() > MAX_STANDARD_SEGREGATED_SIGNATURE_STACK_ITEM_SIZE)
+                return false;
+        }
+    }
+    
     return true;
 }
 

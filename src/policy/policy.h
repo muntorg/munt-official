@@ -91,6 +91,8 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
      */
 bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
 
+bool IsSegregatedSignatureDataStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
+
 extern CFeeRate incrementalRelayFee;
 extern CFeeRate dustRelayFee;
 extern unsigned int nBytesPerSigOp;
