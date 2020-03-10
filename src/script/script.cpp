@@ -11,6 +11,8 @@
 // file COPYING
 
 #include "script.h"
+#include "alert.h"
+#include <util.h>
 
 #include "tinyformat.h"
 #include "utilstrencodings.h"
@@ -255,9 +257,15 @@ std::vector<unsigned char> CScript::GetPow2WitnessHash() const
 //OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
 bool CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
+    //fixme: (PHASE5) - Enable UI alert for failiure here, can't use CAlert directly because its undefined in test_gulden builds
     if (this->size() != 74)
     {
-        //fixme: (PHASE4) Better error handling - this should probably at least log something.
+        std::string strErrorMessage = strprintf("Can't extract witness from a script of invalid size[%d]", this->size());
+        //CAlert::Notify(strErrorMessage, true, true);
+        LogPrintf("%s", strErrorMessage.c_str());
+        #ifdef DEBUG
+        assert(0);
+        #endif
         return false;
     }
 
@@ -266,10 +274,20 @@ bool CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
     opcodetype opcode;
     std::vector<unsigned char> item;
     if (!GetOp(it, opcode, item) || opcode != OP_0)
+    {
+        std::string strErrorMessage = strprintf("Can't extract witness; incorrectly encoded script");
+        //CAlert::Notify(strErrorMessage, true, true);
+        LogPrintf("%s", strErrorMessage.c_str());
         return false;
+    }
 
     if (!GetOp(it, opcode, item) || opcode != (unsigned char)72)
+    {
+        std::string strErrorMessage = strprintf("Can't extract witness; incorrectly encoded script");
+        //CAlert::Notify(strErrorMessage, true, true);
+        LogPrintf("%s", strErrorMessage.c_str());
         return false;
+    }
 
     std::vector<unsigned char> vchSpendingKey( begin()+2, begin()+22 );
     witness.spendingKeyID = CKeyID(uint160(vchSpendingKey));
