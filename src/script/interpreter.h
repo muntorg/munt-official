@@ -128,7 +128,7 @@ uint256 SignatureHash(const CScript &scriptCode, const CTransaction& txTo, unsig
 class BaseSignatureChecker
 {
 public:
-    //fixme: (PHASE4) Temporary placed here - move back to TransactionSignatureChecker after phase 4 activation.
+    //fixme: (PHASE5) Temporary placed here - move back to TransactionSignatureChecker after phase 4 activation.
     const CKeyID signatureKeyID;
     const CKeyID spendingKeyID;
     BaseSignatureChecker(const CKeyID signatureKeyID_, const CKeyID spendingKeyID_) : signatureKeyID(signatureKeyID_), spendingKeyID(spendingKeyID_) {}
