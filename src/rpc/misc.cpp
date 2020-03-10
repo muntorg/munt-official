@@ -374,8 +374,6 @@ UniValue createmultisig(const JSONRPCRequest& request)
 {
 #ifdef ENABLE_WALLET
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
-#else
-    CWallet* const pwallet = NULL;
 #endif
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 2)
