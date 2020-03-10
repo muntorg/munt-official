@@ -543,7 +543,7 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
 
     CTxOutPoW2Witness witnessDetails;
 
-    // FIXME: (PHASE4) use only rewards of current witness parts, not of previous ones after a re-fund
+    // fixme: (PHASE5) Use only rewards of current locked witness amounts, not of previous ones after a re-fund...
     // Extract details for every witness reward we have received.
     filter->setAccountFilter(forAccount);
     int rows = filter->rowCount();
@@ -809,7 +809,7 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
             (generatedPoints.rbegin())->setY(infoForAccount.nEarningsToDate);
         }
 
-        //fixme: (PHASE4) This is a bit broken - use nOurWeight etc.
+        //fixme: (PHASE5) This is a bit broken - use nOurWeight etc.
         // Fill in the remaining time on the 'actual earnings' curve with a forecast.
         QPolygonF generatedPointsForecast;
         int nXGeneratedForecast = 0;
