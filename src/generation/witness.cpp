@@ -575,8 +575,7 @@ void static GuldenWitness()
                         CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight);
                         CAmount witnessFeesSubsidy = 0;
 
-                        //fixme: (PHASE4) (ISMINE_WITNESS)
-                        if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_SPENDABLE)
+                        if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_WITNESS)
                         {
                             CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(witnessInfo.selectedWitnessTransaction);
                             if (selectedWitnessAccount)

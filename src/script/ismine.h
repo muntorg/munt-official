@@ -30,6 +30,9 @@ enum isminetype : uint_fast8_t
     //! Indicates that we know how to create a scriptSig that would solve this if we were given the appropriate private keys
     ISMINE_WATCH_SOLVABLE = 2,
     ISMINE_WATCH_ONLY = ISMINE_WATCH_SOLVABLE | ISMINE_WATCH_UNSOLVABLE,
+    //fixme: (PHASE5) - We should assign a different value to ISMINE_WITNESS than ISMINE_SPENDABLE
+    //However this will require carefully going through every case in the code that deals with "ISMINE_" values to ensure its handled right.
+    ISMINE_WITNESS = 4,
     ISMINE_SPENDABLE = 4,
     ISMINE_ALL = ISMINE_WATCH_ONLY | ISMINE_SPENDABLE
 };

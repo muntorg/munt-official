@@ -145,9 +145,8 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& 
         }
         if (keystore.HaveKey(spendingKeyID))
             return ISMINE_SPENDABLE;
-        //fixme: (PHASE4) (ISMINE_WITNESS)
         if (keystore.HaveKey(witnessKeyID))
-            return ISMINE_SPENDABLE;
+            return ISMINE_WITNESS;
         break;
     }
 
@@ -170,9 +169,8 @@ isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
         {
             if (keystore.HaveKey(txout.output.witnessDetails.spendingKeyID))
                 return ISMINE_SPENDABLE;
-            //fixme: (PHASE4) (ISMINE_WITNESS)
             if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
-                return ISMINE_SPENDABLE;
+                return ISMINE_WITNESS;
             break;
         }
         case CTxOutType::StandardKeyHashOutput:
@@ -201,11 +199,10 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CTxOut& txo
             if (haveWitnessKey)
                 keystore.MarkKeyUsed(txout.output.witnessDetails.witnessKeyID, time);
 
-            //fixme: (PHASE4) (ISMINE_WITNESS)
             if (haveSpendingKey)
                 return ISMINE_SPENDABLE;
             if (haveWitnessKey)
-                return ISMINE_SPENDABLE;
+                return ISMINE_WITNESS;
             break;
         }
         case CTxOutType::StandardKeyHashOutput:
@@ -345,9 +342,8 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
 
         if (haveSpendingKey)
             return ISMINE_SPENDABLE;
-        //fixme: (PHASE4) (ISMINE_WITNESS)
         if (haveWitnessKey)
-            return ISMINE_SPENDABLE;
+            return ISMINE_WITNESS;
         break;
     }
 
