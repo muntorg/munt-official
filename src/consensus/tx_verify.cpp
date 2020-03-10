@@ -464,15 +464,16 @@ inline bool IsUnSigned(const CTxIn& input)
 */
 inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, const CTxOut& prevOut, const CTxOut& output, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
-    //fixme: (PHASE4) - Remove in future once all problem addresses are cleaned up
+    //fixme: (PHASE5) - Remove in future once all problem addresses are cleaned up
     //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
+    //fixme: (PHASE4) (RELEASE) SEt a new activation block for this
     if (nSpendHeight > 881000 || (IsArgSet("-testnet") && nSpendHeight > 96400))
     {
         if (IsUnSigned(input))
         {
             if (inputDetails.witnessKeyID == inputDetails.spendingKeyID)
             {
-                std::string sDest1 = CGuldenAddress(inputDetails.spendingKeyID).ToString();
+                std::string sDest1 = CGuldenAddress(CPoW2WitnessDestination(inputDetails.witnessKeyID, inputDetails.spendingKeyID)).ToString();
                 std::string sDest2 = CGuldenAddress(outputDetails.spendingKeyID).ToString();
                 if (haveStaticFundingAddress(sDest1, nSpendHeight) <= 0)
                     return false;
