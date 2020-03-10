@@ -1249,7 +1249,6 @@ public:
 
     std::string ToString() const;
 
-    //fixme: (PHASE4) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)
