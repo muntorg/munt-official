@@ -415,7 +415,7 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
     if (inputs[0].second.lockUntilBlock >= nCheckHeight)
         return false;
 
-    //fixme: (PHASE4) - We must remove this in future once it is no longer needed
+    //fixme: (PHASE5) - Remove once phase4 fully activated
     if (inputs[0].second.witnessKeyID == inputs[0].second.spendingKeyID)
     {
         if (tx.vout.size() != 1)
@@ -437,9 +437,9 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
     return true;
 }
 
+//fixme: (PHASE5) - Remove this check once phase4 is active
 inline bool IsUnSigned(const CTxIn& input)
 {
-    //fixme: (PHASE4) - Remove this check for phase 4.
     if (input.segregatedSignatureData.stack.size() == 0)
     {
         // At this point we only need to check here that the scriptSig is push only and that it has 0 items as a result, the rest is checked by later parts of the code.
