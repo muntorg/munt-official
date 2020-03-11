@@ -18,13 +18,13 @@ Download the latest linux*.tar.gz extract it and simply copy GuldenD out of it i
 Generic docker instructions
 -----
 
-When to use gitian for your builds:
+When to use docker for your builds:
 * You are on an older distribution
 * You want to build with minimal manual fuss and with minimal distruption/changes to your operating system
 
 The easiest way to build Gulden on any distribution with minimal work is to simply use the docker build script.
 Instructions:
-* Follow distro specific steps to install docker (e.g. apt-get install docker.io && systemctl start docker)
+* Follow distro specific steps to install docker (e.g. `apt-get install docker.io && systemctl start docker`)
 * Run the docker build script from the root of this repo `./developer-tools/build_docker.sh`
 * Resulting binaries will be output inside the `build` directory
 
