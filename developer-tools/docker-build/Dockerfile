@@ -23,12 +23,10 @@ RUN apt-get update && apt-get install  -y \
 RUN apt-get update && apt-get install  -y \
     libqrencode-dev \
     libminiupnpc-dev \
-    libqt5webkit5-dev \
     qtwebengine5-dev \
     libqwt-qt5-dev \
     libqwt-headers \
     python3-zmq \
-    libqt5webkit5-dev \
     qtbase5-dev \
     qttools5-dev-tools \
     protobuf-compiler \
