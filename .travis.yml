@@ -88,7 +88,7 @@ script:
     - DOCKER_EXEC ../configure --cache-file=config.cache $GULDEN_CONFIG_ALL $GULDEN_CONFIG || ( cat config.log && false)
     - if [ "DIST_ONLY" = "true" ]; then DOCKER_EXEC make dist; fi
     - if [ "DIST_ONLY" != "true" ]; then DOCKER_EXEC make $MAKEJOBS; fi
-    - if [ "$RUN_TESTS" = "true" ]; then travis_wait 60 DOCKER_EXEC ./src/test/test_gulden; fi
+#    - if [ "$RUN_TESTS" = "true" ]; then travis_wait 60 DOCKER_EXEC ./src/test/test_gulden; fi
 after_script:
     - echo $TRAVIS_COMMIT_RANGE
     - echo $TRAVIS_COMMIT_LOG
