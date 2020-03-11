@@ -550,7 +550,6 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/echo256/sphlib/sph_types.h \
   crypto/hash/sigma/echo256/sphlib/sph_echo.h \
   crypto/hash/sigma/echo256/sphlib/aes_helper.c \
-  crypto/hash/sigma/shavite3_256/shavite3_256_opt_compress.h \
   crypto/hash/sigma/shavite3_256/ref/AESround.h \
   crypto/hash/sigma/shavite3_256/ref/portable.h \
   crypto/hash/sigma/shavite3_256/ref/shavite3_256_ref_compress.h \
