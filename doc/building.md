@@ -15,19 +15,19 @@ There are binaries for every release, please reconsider your need to build and u
 Latest binaries can always be found here: https://github.com/Gulden/gulden-official/releases
 Download the latest linux*.tar.gz extract it and simply copy GuldenD out of it instead of going through the unnecessary hassle of building.
 
-Gitian instructions
+Generic docker instructions
 -----
-
-Note work on the automated gitian build script is temporarily ongoing. If the setup doesn't work for you it may be necessary to take manual steps, bug reports and pull requests to improve this are welcome.
 
 When to use gitian for your builds:
 * You are on an older distribution
-* You want to build with minimal manual fuss
-* You are not in a rush - the downside of gitian builds is that they are slow.
+* You want to build with minimal manual fuss and with minimal distruption/changes to your operating system
 
+The easiest way to build Gulden on any distribution with minimal work is to simply use the docker build script.
 Instructions:
-* ./contrib/gitian-build.sh --setup x.x.x.x    (substitute x.x.x.x for the latest version number e.g. 2.0.0.9)
-* ./contrib/gitian-build.sh --build -o -l x.x.x.x
+* Follow distro specific steps to install docker (e.g. apt-get install docker.io && systemctl start docker)
+* Run the docker build script from the root of this repo `./developer-tools/build_docker.sh`
+* Resulting binaries will be output inside the `build` directory
+
 
 Platform specific instructions
 -----
@@ -88,6 +88,21 @@ Optional dependencies (depending on configure - e.g. qt only for GUI builds):
 > dbus fontconfig freetype icu libevent libX11 libXau libxcb libXext libXrender libpcre qrencode &gt;=qt-5.6.1 renderproto xcb_proto xextproto xproto xtrans
 
 
+
+Gitian instructions
+-----
+
+Note work on the automated gitian build script is temporarily ongoing. If the setup doesn't work for you it may be necessary to take manual steps, bug reports and pull requests to improve this are welcome.
+
+When to use gitian for your builds:
+* You want to do reproducible builds like the official builds the developers do
+
+Instructions:
+* ./contrib/gitian-build.sh --setup x.x.x.x    (substitute x.x.x.x for the latest version number e.g. 2.0.0.9)
+* ./contrib/gitian-build.sh --build -o -l x.x.x.x
+
+
+
 GuldenCore framework for iOS
 -----
 
@@ -106,6 +121,18 @@ Use Homebrew to install build tools:
 Build the framework library:
 
 > ./developer-tools/mobile/ios/build_ios_core.sh
+
+
+GuldenCore framework for android
+-----
+
+Fetch build prerequisites:
+* `./developer-tools/mobile/android/fetch_android.sh`
+
+Build the framework library:
+* `./developer-tools/mobile/android/build_android_core.sh`
+
+
 
 
 Troubleshooting
