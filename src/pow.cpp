@@ -20,6 +20,7 @@
 #include "random.h"
 #include <thread>
 
+#include "chainparams.h"
 #include <validation/validation.h> //For VALIDATION_MOBILE
 
 /*GULDEN - We  use our own calculation from elsewhere in the source
@@ -145,6 +146,11 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
             static CCriticalSection csPOW;
             LOCK(csPOW);
 
+            // Testnet optimisation - only verify last 5 days worth of blocks
+            if (Params().IsOfficialTestnetV1() && (block->nTime < GetTime() - 86400*5))
+            {
+                return true;
+            }
             //fixme: (SIGMA) - Detect faster machines and disable this optimisation for them, this will further increase network security.
             // We speed up verification by doing a half verify 40% of the time instead of a full verify
             // As a half verify has a 50% chance of detecting a 'half valid' hash an attacker has only a 20% chance of a node accepting his header without banning him
