@@ -2847,7 +2847,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     //Enforce embedded witness coinbase data in phase 3.
     //Only the second block with a phase 3 parent onwards has a witness coinbase with embedded data, as only the first block with a phase 3 parent has a witness.
     //Also having the check here prevents miners from broadcasting invalid blocks sooner.
-    //fixme: (PHASE4) This is now a duplicate of the check in ConnectBlock - reconsider if we need both.
+    //fixme: (PHASE5) This is now a duplicate of the check in ConnectBlock - reconsider if we need both.
     //This was added as invalid blocks were still being accepted (just not connected) and this was combining with other factors to cause network issues.
     if (nHeight > 10 && IsPow2Phase3Active(nHeight-2) && !fHaveSegregatedSignatures && block.nVersionPoW2Witness == 0)
     {
