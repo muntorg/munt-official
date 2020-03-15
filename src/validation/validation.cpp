@@ -1610,6 +1610,10 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
         const CBlockIndex* pindex = chainActive.Tip();
         for (int bit = 0; bit < VERSIONBITS_NUM_BITS; bit++)
         {
+            //fixme: (PHASE5) 
+            //Silence phase 2 bit warning (as we retroactively removed phase2 check)
+            if (bit == 27)
+                continue;
             WarningBitsConditionChecker checker(bit);
             ThresholdState state = checker.GetStateFor(pindex, chainParams.GetConsensus(), warningcache[bit]);
             if (state == THRESHOLD_ACTIVE || state == THRESHOLD_LOCKED_IN)
