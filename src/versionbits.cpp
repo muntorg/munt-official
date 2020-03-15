@@ -24,14 +24,6 @@ const struct VBDeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_B
     {
         /*.name =*/ "csv",
         /*.gbt_force =*/ true,
-    },
-    {
-        /*.name =*/ "PoW² - phase 2",
-        /*.gbt_force =*/ true,
-    },
-    {
-        /*.name =*/ "PoW² - phase 4",
-        /*.gbt_force =*/ true,
     }
 };
 
@@ -194,31 +186,6 @@ private:
 protected:
     int64_t BeginTime(const Consensus::Params& params) const
     {
-        //fixme: (PHASE5) We can remove this after phase 4 activation.
-        if (id == Consensus::DEPLOYMENT_POW2_PHASE4)
-        {
-            int64_t nActivationTime = GetPoW2Phase3ActivationTime(chainActive);
-            if (nActivationTime > 0)
-            {
-                //fixme: (PHASE4) - hardcode a new activation time for launch (this is the activation time for old non-updated clients)
-                // Mainnet - 1 month from phase 3 activation
-                // Testnet - immediate
-                if (!IsArgSet("-testnet"))
-                {
-                    nActivationTime += 2629746;
-                }
-                if (nActivationTime <= 0)
-                {
-                    return std::numeric_limits<int64_t>::max();
-                }
-                return nActivationTime;
-            }
-            else
-            {
-                return std::numeric_limits<int64_t>::max();
-            }
-        }
-
         return params.vDeployments[id].nStartTime;
     }
     int64_t EndTime(const Consensus::Params& params) const { return params.vDeployments[id].nTimeout; }

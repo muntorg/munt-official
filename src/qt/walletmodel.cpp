@@ -277,7 +277,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
     QSet<QString> setAddress; // Used to detect duplicates
     int nAddresses = 0;
 
-    int nTipPrevPoW2Phase = GetPoW2Phase(chainActive.Tip()->pprev, Params(), chainActive);
+    int nTipPrevPoW2Phase = GetPoW2Phase(chainActive.Tip()->pprev);
     // Pre-check input data for validity
     for(const SendCoinsRecipient &rcp : recipients)
     {

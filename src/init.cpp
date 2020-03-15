@@ -1632,17 +1632,10 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         }
     }
 
-    if (chainparams.GetConsensus().vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nTimeout != 0) {
-        // Only advertise witness capabilities if they have a reasonable start time.
-        // This allows us to have the code merged without a defined softfork, by setting its
-        // end time to 0.
-        // Note that setting NODE_SEGSIG is never required: the only downside from not
-        // doing so is that after activation, no upgraded nodes will fetch from you.
-        nLocalServices = ServiceFlags(nLocalServices | NODE_SEGSIG);
-        // Only care about others providing witness capabilities if there is a softfork
-        // defined.
-        nRelevantServices = ServiceFlags(nRelevantServices | NODE_SEGSIG);
-    }
+    // Note that setting NODE_SEGSIG is never required: the only downside from not
+    // doing so is that after activation, no upgraded nodes will fetch from you.
+    nLocalServices = ServiceFlags(nLocalServices | NODE_SEGSIG);
+    nRelevantServices = ServiceFlags(nRelevantServices | NODE_SEGSIG);
 
     // ********************************************************* Step 10: import blocks
 

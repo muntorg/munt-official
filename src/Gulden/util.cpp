@@ -124,155 +124,26 @@ CHDSeed::SeedType SeedTypeFromString(std::string type)
 }
 #endif
 
-static uint256 phase3ActivationHash;
-static uint256 phase4ActivationHash;
-void PerformFullChainPhaseScan(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
+bool IsPow2Phase2Active(const CBlockIndex* pindexPrev)
 {
-    DO_BENCHMARK("WIT: PerformFullChainPhaseScan", BCLog::BENCH|BCLog::WITNESS);
-
-    #ifdef ENABLE_WALLET
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-    #else
-    LOCK(cs_main);
-    #endif
-
-    bool phase3Active = false;
-    int nStartHeight = 778176;
-    for(int i=nStartHeight; i<chain.Height(); ++i)
-    {
-        if (IsPow2Phase3Active(chain[i]->nHeight))
-        {
-            phase3Active = true;
-            nStartHeight = i;
-            break;
-        }
-    }
-    if (phase3Active)
-    {
-        for(int i=nStartHeight; i<chain.Height(); ++i)
-        {
-            if (IsPow2Phase4Active(chain[i], chainparams, chain, viewOverride))
-            {
-                break;
-            }
-        }
-    }
-}
-
-int GetPhase2ActivationHeight()
-{
-    if (IsArgSet("-testnet"))
-    {
-        return 20;
-    }
-    else
-    {
-        return 778176;
-    }
-}
-
-bool IsPow2Phase2Active(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
-{
-    if (!pIndex)
-        return false;
-
-    // If we don't yet have any information on phase activation then do a once off scan on the entire chain so that our caches are correctly primed.
-    if (pIndex && (IsArgSet("-tesnet") || pIndex->nHeight > 778176))
-    {
-        // Prevent infinite recursion.
-        static bool once = true;
-        if (once)
-        {
-            once = false;
-            PerformFullChainPhaseScan(pIndex, chainparams, chain, viewOverride);
-        }
-    }
-
-    if (IsArgSet("-testnet"))
-    {
-        if (pIndex->nHeight > 20)
+    if (pindexPrev && ((uint64_t)pindexPrev->nHeight >= Params().GetConsensus().pow2Phase2FirstBlockHeight))
             return true;
-    }
-    else
-    {
-        if (pIndex->nHeight > 778176)
-            return true;
-    }
+    
     return false;
 }
 
-// Phase 3
-// prevhash of blocks continue to point to previous PoW block alone.
-// prevhash of witness block is stored in coinbase.
 bool IsPow2Phase3Active(uint64_t nHeight)
 {
-    if (IsArgSet("-testnet"))
-    {
-        if (nHeight > 50)
-            return true;
-    }
-    else
-    {
-        if (nHeight >= 778301)
-            return true;
-    }
+    if (nHeight >= Params().GetConsensus().pow2Phase3FirstBlockHeight)
+        return true;
     return false;
 }
 
-// Phase 4 becomes active after witnesses signal that 95% of peers are upgraded, for an entire 'signal window'
-// Creation of new 'backwards compatible' witness addresses becomes impossible at this point.
-// Full 'backwards incompatible' witnessing triggers at this point.
-// New 'segsig' transaction format triggers at this point.
-// All peers of version < 2.0 can no longer transact at this point.
-// prevhash of blocks starts to point to witness header instead of PoW header
-bool IsPow2Phase4Active(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
+bool IsPow2Phase4Active(const CBlockIndex* pindexPrev)
 {
-    DO_BENCHMARK("WIT: IsPow2Phase4Active", BCLog::BENCH|BCLog::WITNESS);
-
-    // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
-    static int checkDepth = IsArgSet("-testnet") ? 10 : 778301+17280;
-    if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
-        return false;
-
-    // Optimisation - If we have never activated phase 3 then phase 4 can't possibly be active either.
-    if (phase3ActivationHash == uint256())
-        phase3ActivationHash = ppow2witdbview->GetPhase3ActivationHash();
-    if (phase3ActivationHash == uint256())
-        return false;
-
-    // Now we try make use of the activation hash (if phase 3 is already active) to speed up testing.
-    if (phase4ActivationHash == uint256())
-        phase4ActivationHash = ppow2witdbview->GetPhase4ActivationHash();
-    if (phase4ActivationHash != uint256())
+    if (pindexPrev && ((uint64_t)pindexPrev->nHeight >= Params().GetConsensus().pow2Phase4FirstBlockHeight))
     {
-        const CBlockIndex* pIndexPrev = pIndex;
-        while (pIndexPrev)
-        {
-            if (pIndexPrev->GetBlockHashPoW2() == phase4ActivationHash)
-                return true;
-            // No point searching any further as we won't find any true matches below this depth.
-            if (pIndexPrev->nHeight < checkDepth)
-                break;
-            pIndexPrev = pIndexPrev->pprev;
-        }
-    }
-
-    {
-        #ifdef ENABLE_WALLET
-        LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-        #else
-        LOCK(cs_main);
-        #endif
-        // Version bits - mined by PoW but controlled by witnesses.
-        bool ret = (VersionBitsState(pIndex, chainparams.GetConsensus(), Consensus::DEPLOYMENT_POW2_PHASE4, versionbitscache) == THRESHOLD_ACTIVE);
-        // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
-        // Then set ourselves as the activation hash.
-        if (ret)
-        {
-            phase4ActivationHash = pIndex->GetBlockHashPoW2();
-            ppow2witdbview->SetPhase4ActivationHash(phase4ActivationHash);
-            return true;
-        }
+        return true;
     }
     return false;
 }
@@ -292,12 +163,7 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
     #endif
 
     // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
-    static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
-    if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
-        return false;
-
-    // Optimisation - If we have never activated phase 4 then phase 5 can't possibly be active either.
-    if (phase4ActivationHash == uint256())
+    if (!IsPow2Phase4Active(pIndex))
         return false;
 
     // Now we try make use of the activation hash (if phase 3 is already active) to speed up testing.
@@ -311,14 +177,14 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
             if (pIndexPrev->GetBlockHashPoW2() == phase5ActivationHash)
                 return true;
             // No point searching any further as we won't find any true matches below this depth.
-            if (pIndexPrev->nHeight < checkDepth)
+            if ((uint64_t)pIndexPrev->nHeight < Params().GetConsensus().pow2Phase4FirstBlockHeight)
                 break;
             pIndexPrev = pIndexPrev->pprev;
         }
     }
 
     // Phase 5 can't be active if phase 4 is not.
-    if (!IsPow2Phase4Active(pIndex, params, chain, viewOverride))
+    if (!IsPow2Phase4Active(pIndex))
     {
         return false;
     }
@@ -342,30 +208,22 @@ bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, C
 }
 
 
-bool IsPow2WitnessingActive(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
+bool IsPow2WitnessingActive(uint64_t nHeight)
 {
-    static int checkDepth = IsArgSet("-testnet") ? 10 : gEarliestPossibleMainnetWitnessActivationHeight;
-    if (!pIndex || !pIndex->pprev || pIndex->nHeight < checkDepth )
-        return false;
-
     // If phase 3, 4 or 5 is active then witnessing is active - we only need to check phase 3 to be sure as if 4 or 5 is active for a block 3 will be as well.
-    return IsPow2Phase3Active(pIndex->nHeight);
+    return IsPow2Phase3Active(nHeight);
 }
 
-int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride)
+int GetPoW2Phase(const CBlockIndex* pindexPrev)
 {
     int nRet = 1;
-    if (IsPow2Phase2Active(pIndex, chainparams, chain, viewOverride))
+    if (IsPow2Phase2Active(pindexPrev))
     {
         nRet = 2;
-        if (IsPow2Phase3Active(pIndex->nHeight))
+        if (IsPow2Phase3Active(pindexPrev?pindexPrev->nHeight:0))
         {
             nRet = 3;
-            if (phase3ActivationHash == uint256())
-            {
-                GetPoW2Phase3ActivationTime(chain, viewOverride);
-            }
-            if (IsPow2Phase4Active(pIndex, chainparams, chain, viewOverride))
+            if (IsPow2Phase4Active(pindexPrev))
                 nRet = 4;
             //NB! We don't call IsPow2Phase5Active here as it can lead to infinite recursion in some cases.
         }
@@ -410,34 +268,6 @@ int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockN
 uint64_t GetPoW2RemainingLockLengthInBlocks(uint64_t lockUntilBlock, uint64_t tipHeight)
 {
     return (lockUntilBlock < tipHeight) ? 0 : (lockUntilBlock - tipHeight) + 1;
-}
-
-int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride)
-{
-    if (phase3ActivationHash == uint256())
-        phase3ActivationHash = ppow2witdbview->GetPhase3ActivationHash();
-
-    //NB! We don't have to worry about re-organisations here, as the phase checks will ensure that phase3ActivationHash is always current for the chain we are on.
-    if (phase3ActivationHash != uint256())
-    {
-        if (mapBlockIndex.count(phase3ActivationHash))
-        {
-            CBlockIndex* pIndex = mapBlockIndex[phase3ActivationHash];
-            return pIndex->nTime;
-        }
-    }
-    if (IsPow2Phase3Active(chain.Tip()->nHeight))
-    {
-        CBlockIndex* pIndex = chain.Tip();
-        while (pIndex->pprev && IsPow2Phase3Active(pIndex->pprev->nHeight))
-        {
-            pIndex = pIndex->pprev;
-        }
-        phase3ActivationHash = pIndex->GetBlockHashPoW2();
-        ppow2witdbview->SetPhase3ActivationHash(phase3ActivationHash);
-        return pIndex->nTime;
-    }
-    return 0;
 }
 
 typedef std::pair<int64_t, int64_t> NumAndWeight;

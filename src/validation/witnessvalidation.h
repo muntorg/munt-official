@@ -75,8 +75,6 @@ struct CGetWitnessInfo
 
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
 
-CAmount GetBlockSubsidyWitness(int nHeight);
-
 // Returns all competing orphans at same height and same parent as current tip.
 // NB! It is important that we consider height and not chain weight here.
 // If there is a stalled chain due to absentee signer(s) delta may drop the difficulty so competing PoW blocks will have a lower chain weight, but we still want to sign them to get the chain moving again.

@@ -23,8 +23,6 @@ enum DeploymentPos
 {
     DEPLOYMENT_TESTDUMMY,
     DEPLOYMENT_CSV, // Deployment of BIP68, BIP112, and BIP113.
-    DEPLOYMENT_POW2_PHASE2,
-    DEPLOYMENT_POW2_PHASE4,
     // NOTE: Also add new deployments to VersionBitsDeploymentInfo in versionbits.cpp
     MAX_VERSION_BITS_DEPLOYMENTS
 };
@@ -78,6 +76,12 @@ struct Params {
     uint32_t nRuleChangeActivationThreshold;
     uint32_t nMinerConfirmationWindow;
     BIP9Deployment vDeployments[MAX_VERSION_BITS_DEPLOYMENTS];
+    uint64_t fixedRewardIntroductionHeight;
+    uint64_t fixedRewardReductionHeight;
+    uint64_t pow2Phase2FirstBlockHeight;
+    uint64_t pow2Phase3FirstBlockHeight;
+    uint64_t devBlockSubsidyActivationHeight;
+    uint64_t pow2Phase4FirstBlockHeight;
     /** Proof of work parameters */
     uint256 powLimit;
     bool fPowAllowMinDifficultyBlocks;

@@ -312,8 +312,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     nHeight = pParent->nHeight + 1;
 
-    int nParentPoW2Phase = GetPoW2Phase(pParent, chainparams, chainActive);
-    int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev, chainparams, chainActive);
+    int nParentPoW2Phase = GetPoW2Phase(pParent);
+    int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev);
     bool bSegSigIsEnabled = IsSegSigEnabled(pParent);
 
     //Until PoW2 activates mining subsidy remains full, after it activates PoW part of subsidy is reduced.
@@ -331,7 +331,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // First 'active' block of phase 4 (first block with a phase 4 parent) contains two witness subsidies so miner loses out on 20 NLG for this block
     // This block is treated special. (but special casing can dissapear for PHASE5 release.
     if (nGrandParentPoW2Phase == 3 && nParentPoW2Phase == 4)
-        nSubsidy -= GetBlockSubsidyWitness(nHeight);
+        nSubsidy -= GetBlockSubsidyWitness(nHeight-1);
     
     CAmount nSubsidyDev = GetBlockSubsidyDev(nHeight);
     nSubsidy -= nSubsidyDev;
@@ -881,8 +881,8 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
         LOCK(cs_main);
         pChainTip = chainActive.Tip();
     }
-    int nPoW2PhaseTip = GetPoW2Phase(pChainTip, chainparams, chainActive);
-    int nPoW2PhasePrev = GetPoW2Phase(pChainTip->pprev, chainparams, chainActive);
+    int nPoW2PhaseTip = GetPoW2Phase(pChainTip);
+    int nPoW2PhasePrev = GetPoW2Phase(pChainTip->pprev);
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("Generated: hash=%s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
 
@@ -913,8 +913,8 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
     // Tip if last mined block was a witness block. (Mining new chain tip)
     // Tip~1 if the last mine block was a PoW block. (Competing chain tip to the current one - in case there is no witness for the current one)
     //int nPoW2PhaseTip = GetPoW2Phase(pindexTip, Params(), chainActive);
-    int nPoW2PhaseGreatGrandParent = pIndexParent->pprev && pIndexParent->pprev->pprev ? GetPoW2Phase(pIndexParent->pprev->pprev, Params(), chainActive) : 1;
-    int nPoW2PhaseGrandParent = pIndexParent->pprev ? GetPoW2Phase(pIndexParent->pprev, Params(), chainActive) : 1;
+    int nPoW2PhaseGreatGrandParent = pIndexParent->pprev && pIndexParent->pprev->pprev ? GetPoW2Phase(pIndexParent->pprev->pprev) : 1;
+    int nPoW2PhaseGrandParent = pIndexParent->pprev ? GetPoW2Phase(pIndexParent->pprev) : 1;
     boost::this_thread::interruption_point();
 
     if (nPoW2PhaseGrandParent >= 3)

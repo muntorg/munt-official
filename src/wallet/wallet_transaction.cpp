@@ -906,7 +906,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                     witnessDestination.lockFromBlock = witCoin.coin.nHeight;
                 }
 
-                if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) >= 4)
+                if (GetPoW2Phase(chainActive.Tip()) >= 4)
                 {
                     renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
                     renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;

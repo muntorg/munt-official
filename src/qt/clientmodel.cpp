@@ -357,7 +357,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
 void ClientModel::updatePoW2Display()
 {
     //fixme: (PHASE5) We can remove this once phase5 is locked in
-    cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    cachedPoW2Phase = GetPoW2Phase(chainActive.Tip());
 }
 
 static void HeaderProgressChanged(ClientModel *clientmodel, int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)

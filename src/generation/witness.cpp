@@ -455,12 +455,12 @@ void static GuldenWitness()
             Consensus::Params pParams = chainparams.GetConsensus();
 
             //We can only start witnessing from phase 3 onward.
-            if ( !pindexTip || !pindexTip->pprev || !IsPow2WitnessingActive(pindexTip, chainparams, chainActive)  )
+            if (!pindexTip || !pindexTip->pprev || !IsPow2WitnessingActive(pindexTip->nHeight))
             {
                 MilliSleep(5000);
                 continue;
             }
-            int nPoW2PhasePrev = GetPoW2Phase(pindexTip->pprev, chainparams, chainActive);
+            int nPoW2PhasePrev = GetPoW2Phase(pindexTip->pprev);
 
             //fixme: (POST-PHASE5)
             //Ideally instead of just sleeping/busy polling rather wait on a signal that gets triggered only when new blocks come in??
@@ -612,7 +612,7 @@ void static GuldenWitness()
                                     reserveKeys[selectedWitnessAccount->getUUID()] = coinbaseScript;
                                 }
 
-                                int nPoW2PhaseParent = GetPoW2Phase(candidateIter->pprev, chainparams, chainActive);
+                                int nPoW2PhaseParent = GetPoW2Phase(candidateIter->pprev);
 
                                 /** Now add any additional transactions if there is space left **/
                                 if (nPoW2PhaseParent >= 4)

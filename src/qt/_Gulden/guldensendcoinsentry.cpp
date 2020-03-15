@@ -905,7 +905,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
             LOCK(cs_main);
 
             lastUpdate = GetTimeMillis();
-            if (IsPow2WitnessingActive(chainActive.TipPrev(), Params(), chainActive))
+            if (IsPow2WitnessingActive(chainActive.TipPrev()->nHeight))
             {
                 CGetWitnessInfo witnessInfo;
                 CBlock block;

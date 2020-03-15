@@ -373,7 +373,7 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
     t.vout[0].output.scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
 
     std::string reason;
-    int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    int nPoW2Version = GetPoW2Phase(chainActive.Tip());
     BOOST_CHECK(IsStandardTx(t, reason, nPoW2Version));
 
     // Check dust with default relay fee:

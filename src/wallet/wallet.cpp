@@ -1094,7 +1094,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     if (range.first->second != tx.GetHash())
                     {
                         const CWalletTx* prev = GetWalletTx(txin.prevout);
-                        if (prev && GetPoW2Phase(chainActive.Tip(), Params(), chainActive) == 3 && prev->tx->vout.size() > 0 && prev->tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
+                        if (prev && GetPoW2Phase(chainActive.Tip()) == 3 && prev->tx->vout.size() > 0 && prev->tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
                         {
                             LogPrintf("Updated phase 3 witness transaction %s (in block %s) replace wallet transaction %s\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString());
                             if (mapWallet.find(range.first->second)->second.mapValue.count("replaced_by_txid") == 0)

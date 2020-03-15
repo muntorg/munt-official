@@ -251,7 +251,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         pTipIndex = chainActive.Tip();
     }
 
-    if (!pTipIndex || pTipIndex->nHeight < GetPhase2ActivationHeight())
+    if (!pTipIndex || pTipIndex->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight)
         return NullUniValue;
 
     if (request.params.size() >= 2)
@@ -261,7 +261,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         showMineOnly = request.params[2].get_bool();
 
     CBlockIndex* pTipIndex_ = nullptr;
-    //fixme: (2.0.x) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
+    //fixme: (PHASE5) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
     CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(chainActive, pTipIndex, 10), pTipIndex, pTipIndex_);
 
     if (!pTipIndex_)
@@ -275,11 +275,11 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
     if (IsPow2Phase5Active(pTipIndex_, Params(), tempChain, &viewNew))
         nPow2Phase = 5;
-    else if (IsPow2Phase4Active(pTipIndex_, Params(), tempChain, &viewNew))
+    else if (IsPow2Phase4Active(pTipIndex_))
         nPow2Phase = 4;
-    else if (IsPow2Phase3Active(pTipIndex_->nHeight))
+    else if (IsPow2Phase3Active(pTipIndex_?pTipIndex_->nHeight:0))
         nPow2Phase = 3;
-    else if (IsPow2Phase2Active(pTipIndex_, Params(), tempChain, &viewNew))
+    else if (IsPow2Phase2Active(pTipIndex_))
         nPow2Phase = 2;
 
     CGetWitnessInfo witInfo;
@@ -961,7 +961,7 @@ static UniValue createwitnessaccount(const JSONRPCRequest& request)
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
-    if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) < 2)
+    if (GetPoW2Phase(chainActive.Tip()) < 2)
         throw std::runtime_error("Cannot create witness accounts before phase 2 activates.");
 
     return createaccounthelper(pwallet, request.params[0].get_str(), "Witness", false);
@@ -1239,7 +1239,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"100d\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
 
-    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip());
 
     // Basic sanity checks.
     if (!pwallet)
@@ -3335,7 +3335,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
     if (!chainActive.Tip())
         throw std::runtime_error("Wait for chain to synchronise before using command.");
 
-    if (!IsPow2WitnessingActive(chainActive.Tip(), Params(), chainActive, nullptr))
+    if (!IsPow2WitnessingActive(chainActive.Tip()->nHeight))
         throw std::runtime_error("Wait for witnessing to activate before using this command.");
 
     EnsureWalletIsUnlocked(pwallet);

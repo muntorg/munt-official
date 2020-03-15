@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(sign)
         txFrom.vout[i+4].output.scriptPubKey = standardScripts[i];
         txFrom.vout[i+4].nValue = COIN;
     }
-    int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    int nPoW2Version = GetPoW2Phase(chainActive.Tip());
     BOOST_CHECK(IsStandardTx(txFrom, reason, nPoW2Version));
 
     std::vector<CMutableTransaction> txTo; // Spending transactions
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE(set)
         txFrom.vout[i].output.scriptPubKey = outer[i];
         txFrom.vout[i].nValue = CENT;
     }
-    int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    int nPoW2Version = GetPoW2Phase(chainActive.Tip());
     BOOST_CHECK(IsStandardTx(txFrom, reason, nPoW2Version));
 
     std::vector<CMutableTransaction> txTo; // Spending transactions

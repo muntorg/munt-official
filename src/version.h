@@ -27,7 +27,7 @@ static const int GETHEADERS_VERSION = 31800;
 //fixme: (PHASE5) - After phase4 activation bump min proto version
 //! disconnect from peers older than this proto version
 static const int MIN_PEER_PROTO_VERSION = 70014;
-#define MIN_PEER_PROTO_VERSION (IsPow2Phase4Active(chainActive.Tip(), chainparams, chainActive) ? PROTOCOL_VERSION : MIN_PEER_PROTO_VERSION)
+#define MIN_PEER_PROTO_VERSION (IsPow2Phase4Active(chainActive.Tip()) ? PROTOCOL_VERSION : MIN_PEER_PROTO_VERSION)
 
 //! nTime field added to CAddress, starting with this version;
 //! if possible, avoid requesting addresses nodes older than this

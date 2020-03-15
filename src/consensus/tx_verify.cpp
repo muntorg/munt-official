@@ -375,8 +375,8 @@ inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
 {
     //fixme: (PHASE4) (SEGSIG) - test coinbase type. - Don't think this is actually necessary anymore.
-    // Only 1 signature (witness key) - except in phase 3 embedded PoW coinbase where it is 0.
-    if (input.segregatedSignatureData.stack.size() != 1 && input.segregatedSignatureData.stack.size() != 0)
+    // No signatures
+    if (input.segregatedSignatureData.stack.size() != 2 && input.segregatedSignatureData.stack.size() != 0)
         return false;
     // Amount in address should stay the same or increase
     if (nInputAmount > nOutputAmount)
@@ -464,10 +464,9 @@ inline bool IsUnSigned(const CTxIn& input)
 */
 inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, const CTxOut& prevOut, const CTxOut& output, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
-    //fixme: (PHASE5) - Remove in future once all problem addresses are cleaned up
+    //fixme: (PHASE5) - Remove once all addresses dealt with
     //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
-    //fixme: (PHASE4) (RELEASE) SEt a new activation block for this
-    if (nSpendHeight > 881000 || (IsArgSet("-testnet") && nSpendHeight > 96400))
+    if (nSpendHeight > Params().GetConsensus().pow2Phase4FirstBlockHeight-150)
     {
         if (IsUnSigned(input))
         {
@@ -748,7 +747,7 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
     return true;
 }
 
-//fixme: (PHASE4) (HIGH) Implement unit test code for this function.
+//fixme: (PHASE5) (HIGH) Implement unit test code for this function.
 bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
     if (pWitnessBundles)

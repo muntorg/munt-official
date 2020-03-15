@@ -23,18 +23,14 @@ CHDSeed::SeedType SeedTypeFromString(std::string type);
 #endif
 
 class CBlockIndex;
-bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase2Active(const CBlockIndex* pindexPrev);
 bool IsPow2Phase3Active(uint64_t nHeight);
-bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase4Active(const CBlockIndex* pindexPrev);
 bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2WitnessingActive(uint64_t nHeight);
+int GetPoW2Phase(const CBlockIndex* pindexPrev);
 
-int GetPhase2ActivationHeight();
-
-bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
-int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
-
-int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
 int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks);
 

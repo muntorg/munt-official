@@ -903,10 +903,12 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         // This setting doesn't force the selection of any particular chain but makes validating some faster by
         //  effectively caching the result of part of the verification.
         BlockMap::const_iterator  it = mapBlockIndex.find(hashAssumeValid);
-        if (it != mapBlockIndex.end()) {
+        if (it != mapBlockIndex.end())
+        {
             if (it->second->GetAncestor(pindex->nHeight) == pindex &&
                 pindexBestHeader->GetAncestor(pindex->nHeight) == pindex &&
-                pindexBestHeader->nChainWork >= UintToArith256(chainparams.GetConsensus().nMinimumChainWork)) {
+                pindexBestHeader->nChainWork >= UintToArith256(chainparams.GetConsensus().nMinimumChainWork))
+            {
                 // This block is a member of the assumed verified chain and an ancestor of the best header.
                 // The equivalent time check discourages hash power from extorting the network via DOS attack
                 //  into accepting an invalid block through telling users they must manually set assumevalid.
@@ -1029,8 +1031,8 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //unsigned int nWitnessCoinbasePayoutIndex = nWitnessCoinbaseIndex + 1;
     //NB! This must occur before CCheckQueueControl to prevent CCheckQueueControl re-entrancy.
 
-    int nPoW2PhaseParent = GetPoW2Phase(pindex->pprev, chainparams, chain, &view);
-    int nPoW2PhaseGrandParent = GetPoW2Phase(pindex->pprev->pprev, chainparams, chain, &view);
+    int nPoW2PhaseParent = GetPoW2Phase(pindex->pprev);
+    int nPoW2PhaseGrandParent = GetPoW2Phase(pindex->pprev->pprev);
     //NB! IMPORTANT - Below this point we should -not- do any further Is/Get PoW2 phase checks - as we modify the view below which alters the results of phase 3 check.
     //Do and store all such tests above this point in the code.
 
@@ -1209,7 +1211,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //Phase 3 - miner mines 80 reward for himself and 20 reward for previous blocks witness...
     //Phase 4/5 - miner mines 80 reward for himself, witness 20 reward for himself (two seperate coinbases)
     CAmount nSubsidy = GetBlockSubsidy(pindex->nHeight);
-    CAmount nSubsidyWitness = GetBlockSubsidyWitness(pindex->nHeight);
+    CAmount nSubsidyWitnessExpected = GetBlockSubsidyWitness(pindex->nHeight);
     CAmount nSubsidyDev = GetBlockSubsidyDev(pindex->nHeight);
 
     //fixme: (PHASE4) Unit tests
@@ -1220,14 +1222,19 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         unsigned int nWitnessCoinbasePayoutIndex = nEmbeddedWitnessCoinbaseIndex + 1;
 
         if (block.vtx[0]->vout.size()-1 < nWitnessCoinbasePayoutIndex)
+        {
             return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness payout)"), REJECT_INVALID, "bad-cb-nowitnesspayout");
+        }
 
-        if (block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue != nSubsidyWitness)
-            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount [%d] [%d])", block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue, nSubsidyWitness), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
+        CAmount nSubsidyWitnessPaid = block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue;
+        if (nSubsidyWitnessPaid != nSubsidyWitnessExpected)
+        {
+            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount [%d] [%d])", block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue, nSubsidyWitnessExpected), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
+        }
     }
     else if (nPoW2PhaseParent >= 4)
     {
-        nSubsidy -= nSubsidyWitness;
+        nSubsidy -= nSubsidyWitnessExpected;
     }
 
     if (block.nVersionPoW2Witness == 0)
@@ -1248,10 +1255,10 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     nValIn += output.out.nValue;
             }
 
-            nSubsidyWitness += nFeesPoW2Witness;
-            if (block.vtx[nWitnessCoinbaseIndex]->GetValueOut() - nValIn > nSubsidyWitness)
+            nSubsidyWitnessExpected += nFeesPoW2Witness;
+            if (block.vtx[nWitnessCoinbaseIndex]->GetValueOut() - nValIn > nSubsidyWitnessExpected)
             {
-                return state.DoS(100, error("ConnectBlock(): PoW2 witness pays too much (actual=%d vs limit=%d)", block.vtx[nWitnessCoinbaseIndex]->GetValueOut(), nSubsidyWitness), REJECT_INVALID, "bad-witness-cb-amount");
+                return state.DoS(100, error("ConnectBlock(): PoW2 witness pays too much (actual=%d vs limit=%d)", block.vtx[nWitnessCoinbaseIndex]->GetValueOut(), nSubsidyWitnessExpected), REJECT_INVALID, "bad-witness-cb-amount");
             }
 
             if (nPoW2PhaseParent == 3)
@@ -1293,8 +1300,14 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     
     if (nSubsidyDev > 0)
     {
-        //fixme: (PHASE4) Ensure this check right for phase4 as well.
-        if ((nPoW2PhaseGrandParent >= 3 && block.vtx[0]->vout.size() != 4) || (nPoW2PhaseGrandParent < 3 && block.vtx[0]->vout.size() != 2))
+        if (nPoW2PhaseGrandParent < 3)
+        {
+            // This should never happen, dev subsidy only part of phase 3.
+            assert(0);
+        }
+        // Phase 3 - Must have 4 outputs (miner, dev, marker, witness)
+        // Phase 4 - Must have 2 outputs (miner, dev) - witness in seperate transaction
+        if ((nPoW2PhaseGrandParent == 3 && block.vtx[0]->vout.size() != 4) || (nPoW2PhaseGrandParent > 3 && block.vtx[0]->vout.size() != 2))
         {
             return state.DoS(100, error("ConnectBlock(): coinbase has incorrect number of outputs (actual=%d vs limit=%d)", block.vtx[0]->vout.size(), (nPoW2PhaseGrandParent >= 3)?4:2), REJECT_INVALID, "bad-cb-amount");
         }
@@ -1586,10 +1599,6 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
         {
             WarningBitsConditionChecker checker(bit);
             ThresholdState state = checker.GetStateFor(pindex, chainParams.GetConsensus(), warningcache[bit]);
-            //fixme: (PHASE5) We can remove
-            // Bypass invalid warnings for phase 4 activation 
-            if (bit == chainParams.GetConsensus().vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].bit)
-                continue;
             if (state == THRESHOLD_ACTIVE || state == THRESHOLD_LOCKED_IN)
             {
                 const std::string strWarning = strprintf(_("Warning: unknown new rules activated (versionbit %i)"), bit);
@@ -2749,7 +2758,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     }
 
     // Check that no transactions (from phase2 onward) have transaction version above 4 - this behaviour is no longer allowed
-    if (doUTXOChecks && GetPoW2Phase(pindexPrev, chainParams, chainOverride, viewOverride) >= 3)
+    if (doUTXOChecks && GetPoW2Phase(pindexPrev) >= 3)
     {
         for (const auto& tx : block.vtx)
         {
@@ -2835,9 +2844,12 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         if (block.vtx[0]->vout.size()-1 < nWitnessCoinbasePayoutIndex)
             return state.DoS(20, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness payout)"), REJECT_INVALID, "bad-cb-nowitnesspayout");
 
-        CAmount nSubsidyWitness = GetBlockSubsidyWitness(nHeight);
-        if (block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue != nSubsidyWitness)
-            return state.DoS(20, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount [%d] [%d])", block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue, nSubsidyWitness), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
+        CAmount nSubsidyWitnessExpected = GetBlockSubsidyWitness(nHeight-1);
+        CAmount nSubsidyWitnessActual = block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue;
+        if (nSubsidyWitnessActual != nSubsidyWitnessExpected)
+        {
+            return state.DoS(20, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount [%d] [%d])", nSubsidyWitnessActual, nSubsidyWitnessExpected), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
+        }
     }
 
     // And the same for witness coinbase. (Enforce rule that the coinbase starts with serialized block height)

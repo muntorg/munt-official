@@ -87,40 +87,58 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
     return false;
 }
 
-CAmount GetBlockSubsidy(int nHeight)
+CAmount GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
     if (fRegTest)
         return 50 * COIN;
 
     CAmount nSubsidy = 0;
-    if(nHeight == 1) //First block premine
+    if(nHeight == 1)
     {
-        nSubsidy = 170000000 * COIN;
+        nSubsidy = 170000000 * COIN; // First block (premine)
     }
-    else if(nHeight <= 250000) // 1000 Gulden per block for first 250k blocks
+    else if(nHeight < Params().GetConsensus().fixedRewardReductionHeight)
     {
-        nSubsidy = 1000 * COIN; 
+        nSubsidy = 1000 * COIN; // 1000 Gulden per block for first 250k blocks
     }
-    else if(nHeight <= 1030000) // Switch to fixed reward of 100 Gulden per block (no halving)
+    else if(nHeight < Params().GetConsensus().devBlockSubsidyActivationHeight)
     {
-        nSubsidy = 100 * COIN; 
+        nSubsidy = 100 * COIN; // 100 Gulden per block (fixed reward/no halving)
     }
-    else if (nHeight <= 1183564) // 110 Gulden per block (no halving) - 50 mining, 40 development, 20 witness.
+    else if (nHeight < Params().GetConsensus().pow2Phase4FirstBlockHeight+1)
     {
-        nSubsidy = 110 * COIN;
+        nSubsidy = 110 * COIN; // 110 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 20 witness.
     }
-    else if (nHeight <= 10892797) // 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness.
+    else if(nHeight <= 10887739)
     {
-        nSubsidy = 120 * COIN;
+        nSubsidy = 120 * COIN; // 120 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
     }
     return nSubsidy;
 }
 
-CAmount GetBlockSubsidyDev(int nHeight)
+CAmount GetBlockSubsidyWitness(uint64_t nHeight)
+{
+    CAmount nSubsidy=0;
+    if (nHeight < Params().GetConsensus().pow2Phase3FirstBlockHeight)
+    {
+        nSubsidy = 0;
+    }
+    else if (nHeight < Params().GetConsensus().pow2Phase4FirstBlockHeight+1)
+    {
+        nSubsidy = 20 * COIN; // 100 Gulden per block (no halving) - 80 mining, 20 witness
+    }
+    else if(nHeight <= 10887739)
+    {
+        nSubsidy = 30 * COIN; // 120 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
+    }
+    return nSubsidy;
+}
+
+CAmount GetBlockSubsidyDev(uint64_t nHeight)
 {
     CAmount nSubsidy = 0;
-    if(nHeight > 1030000) // 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness.
+    if(nHeight >= Params().GetConsensus().devBlockSubsidyActivationHeight) // 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness.
     {
         nSubsidy = 40 * COIN;
     }

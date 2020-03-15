@@ -165,7 +165,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     {
         // Rather not work on nonstandard transactions (unless -testnet/-regtest)
         std::string reason;
-        int nPoW2Version = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+        int nPoW2Version = GetPoW2Phase(chainActive.Tip());
         if (fRequireStandard && !IsStandardTx(tx, reason, nPoW2Version, segsigEnabled))
             return state.DoS(0, false, REJECT_NONSTANDARD, reason);
     }
