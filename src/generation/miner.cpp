@@ -418,16 +418,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize((nSubsidyDev>0)?2:1);
     #ifdef ENABLE_WALLET
-    if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
+    CKeyID pubKeyID;
+    if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly() && coinbaseReservedKey->GetReservedKeyID(pubKeyID))
     {
         coinbaseTx.vout[0].SetType(CTxOutType::StandardKeyHashOutput);
-        CPubKey addressPubKey;
-        if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
-        {
-            LogPrintf("Error in CreateNewBlock: could not retrieve public key for output address.\n");
-            return nullptr;
-        }
-        coinbaseTx.vout[0].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+        coinbaseTx.vout[0].output.standardKeyHash = CTxOutStandardKeyHash(pubKeyID);
     }
     else
     #endif
@@ -1104,8 +1099,17 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             CAlert::Notify("Invalid mining address", true, true);
             return;
         }
-        CScript outputScript = GetScriptForDestination(address.Get());
-        coinbaseScript = std::make_shared<CReserveKeyOrScript>(outputScript);
+        if (IsPow2Phase4Active(chainActive.Tip()))
+        {
+            CKeyID addressKeyID;
+            address.GetKeyID(addressKeyID);
+            coinbaseScript = std::make_shared<CReserveKeyOrScript>(addressKeyID);
+        }
+        else
+        {
+            CScript outputScript = GetScriptForDestination(address.Get());
+            coinbaseScript = std::make_shared<CReserveKeyOrScript>(outputScript);
+        }
     }
     else
     {
@@ -1116,8 +1120,8 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
         // Throw an error if no script was provided.  This can happen
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
-        //fixme: (PHASE4) - We should allow for an empty reserveScript with only the key as script is technically no longer essential...
-        if (!coinbaseScript || coinbaseScript->reserveScript.empty())
+        
+        if (!coinbaseScript || (coinbaseScript->scriptOnly() && coinbaseScript->reserveScript.empty()))
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
 
 

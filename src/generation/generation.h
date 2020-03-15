@@ -22,11 +22,14 @@ protected:
     int64_t nIndex;
     int64_t nKeyChain;
     CPubKey vchPubKey;
+    CKeyID pubKeyID;
 public:
     //fixme: (POST-PHASE5): make private again.
     CAccount* account;
     CReserveKeyOrScript(CWallet* pwalletIn, CAccount* forAccount, int64_t forKeyChain);
     CReserveKeyOrScript(CScript& script);
+    CReserveKeyOrScript(CPubKey &pubkey);
+    CReserveKeyOrScript(CKeyID &pubKeyID_);
     CReserveKeyOrScript() = default;
     CReserveKeyOrScript(const CReserveKeyOrScript&) = delete;
     CReserveKeyOrScript& operator=(const CReserveKeyOrScript&) = delete;
@@ -36,6 +39,7 @@ public:
     bool scriptOnly();
     void ReturnKey();
     bool GetReservedKey(CPubKey &pubkey);
+    bool GetReservedKeyID(CKeyID &pubKeyID_);
     void KeepKey();
     void KeepScript() override;
     void keepScriptOnDestroy() override;

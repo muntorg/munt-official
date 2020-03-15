@@ -2330,7 +2330,7 @@ bool CReserveKeyOrScript::GetReservedKey(CPubKey& pubkey)
     if (scriptOnly())
         return false;
 
-    if (nIndex == -1)
+    if (pwallet && nIndex == -1)
     {
         CKeyPool keypool;
         pwallet->ReserveKeyFromKeyPool(nIndex, keypool, account, nKeyChain);
@@ -2345,6 +2345,18 @@ bool CReserveKeyOrScript::GetReservedKey(CPubKey& pubkey)
     }
     assert(vchPubKey.IsValid());
     pubkey = vchPubKey;
+    return true;
+}
+
+bool CReserveKeyOrScript::GetReservedKeyID(CKeyID &pubKeyID_)
+{
+    if (scriptOnly())
+        return false;
+    
+    if (pubKeyID.IsNull())
+        return false;
+    
+    pubKeyID_ = pubKeyID;
     return true;
 }
 
@@ -2398,6 +2410,7 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
 
 void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
 {
+    //fixme: (PHASE5) - Clean this all up.
     std::shared_ptr<CReserveKeyOrScript> rKey;
     if (forAccount)
     {
@@ -2413,9 +2426,17 @@ void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, C
         CAlert::Notify("Failed to obtain reward key for mining account.", true, true);
         return;
     }
-
-    script = rKey;
-    script->reserveScript = CScript() << ToByteVector(pubkey) << OP_CHECKSIG;
+    
+    CKeyID pubKeyID;
+    if (IsPow2Phase4Active(chainActive.Tip()) && rKey->GetReservedKeyID(pubKeyID))
+    {
+        script = std::make_shared<CReserveKeyOrScript>();
+    }
+    else
+    {
+        script = rKey;
+        script->reserveScript = CScript() << ToByteVector(pubkey) << OP_CHECKSIG;
+    }
 }
 
 void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)

@@ -72,6 +72,26 @@ CReserveKeyOrScript::CReserveKeyOrScript(CScript& script)
     reserveScript = script;
 }
 
+CReserveKeyOrScript::CReserveKeyOrScript(CPubKey &pubkey)
+{
+    pwallet = nullptr;
+    account = nullptr;
+    // By setting index as -1 we ensure key is not returned.
+    nIndex = -1;
+    nKeyChain = -1;
+    vchPubKey = pubkey;
+}
+
+CReserveKeyOrScript::CReserveKeyOrScript(CKeyID &pubKeyID_)
+{
+    pwallet = nullptr;
+    account = nullptr;
+    // By setting index as -1 we ensure key is not returned.
+    nIndex = -1;
+    nKeyChain = -1;
+    pubKeyID = pubKeyID_;
+}
+
 CReserveKeyOrScript::~CReserveKeyOrScript()
 {
     if (shouldKeepOnDestroy)
@@ -82,7 +102,7 @@ CReserveKeyOrScript::~CReserveKeyOrScript()
 
 bool CReserveKeyOrScript::scriptOnly()
 {
-    if (account == nullptr && pwallet == nullptr)
+    if (account == nullptr && pwallet == nullptr && pubKeyID.IsNull())
         return true;
     return false;
 }
