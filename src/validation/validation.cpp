@@ -1312,13 +1312,26 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             return state.DoS(100, error("ConnectBlock(): coinbase has incorrect number of outputs (actual=%d vs limit=%d)", block.vtx[0]->vout.size(), (nPoW2PhaseGrandParent >= 3)?4:2), REJECT_INVALID, "bad-cb-amount");
         }
         
-        //fixme: (PHASE4)- handle other vout types
         static std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
         static CPubKey pubKeyDevSubsidyCheck(data.begin(), data.end());
         static CScript scriptDevSubsidyCheck = (CScript() << ToByteVector(pubKeyDevSubsidyCheck) << OP_CHECKSIG);
-        if (block.vtx[0]->vout[1].output.scriptPubKey != scriptDevSubsidyCheck)
+        if (block.vtx[0]->vout[1].output.nType == CTxOutType::StandardKeyHashOutput)
         {
-            return state.DoS(100, error("ConnectBlock(): coinbase lacks dev subsidy output"), REJECT_INVALID, "bad-cb-amount");
+            if (block.vtx[0]->vout[1].output.standardKeyHash.keyID != pubKeyDevSubsidyCheck.GetID())
+            {
+                return state.DoS(100, error("ConnectBlock(): coinbase lacks dev subsidy output"), REJECT_INVALID, "bad-cb-amount");
+            }
+        }
+        else if (block.vtx[0]->vout[1].output.nType == CTxOutType::ScriptLegacyOutput)
+        {
+            if (block.vtx[0]->vout[1].output.scriptPubKey != scriptDevSubsidyCheck)
+            {
+                return state.DoS(100, error("ConnectBlock(): coinbase lacks dev subsidy output"), REJECT_INVALID, "bad-cb-amount");
+            }
+        }
+        else
+        {
+            return state.DoS(100, error("ConnectBlock(): coinbase has invalid type for dev subsidy output"), REJECT_INVALID, "bad-cb-amount");
         }
         if (block.vtx[0]->vout[1].nValue != nSubsidyDev)
         {

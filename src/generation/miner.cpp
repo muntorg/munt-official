@@ -437,13 +437,20 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     }
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
     
-    //fixme: (PHASE4)- handle other vout types
     if (nSubsidyDev > 0)
     {
         std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
-        CPubKey pubKey(data.begin(), data.end());
-        coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
-        coinbaseTx.vout[1].output.scriptPubKey = (CScript() << ToByteVector(pubKey) << OP_CHECKSIG);
+        CPubKey addressPubKey(data.begin(), data.end());
+        if (bSegSigIsEnabled)
+        {
+            coinbaseTx.vout[1].SetType(CTxOutType::StandardKeyHashOutput);
+            coinbaseTx.vout[1].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+        }
+        else
+        {    
+            coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
+            coinbaseTx.vout[1].output.scriptPubKey = (CScript() << ToByteVector(addressPubKey) << OP_CHECKSIG);
+        }
         coinbaseTx.vout[1].nValue = nSubsidyDev;
     }
 
