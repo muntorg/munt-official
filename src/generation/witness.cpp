@@ -376,7 +376,7 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
     // Sign witness coinbase.
     {
         LOCK(pactiveWallet->cs_wallet);
-        if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, Witness))
+        if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, SignType::Witness))
         {
             std::string strErrorMessage = strprintf("Failed to sign witness coinbase: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);

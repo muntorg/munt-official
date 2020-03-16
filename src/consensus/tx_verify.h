@@ -113,7 +113,7 @@ struct CWitnessBundles: std::vector<CWitnessTxBundle>
 
 };
 
-bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight);
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight, bool isOldTransactionVersion);
 
 CAmount CalculateWitnessPenaltyFee(const CTxOut& output);
 void IncrementWitnessFailCount(uint64_t& failCount);

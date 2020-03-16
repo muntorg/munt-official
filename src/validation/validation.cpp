@@ -603,11 +603,10 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                     return true;
                 }
 
-                //fixme: (PHASE4) (SEGSIG) - also transition to extracted signature. (SCRIPT_V2)
                 // Verify signature
-                //fixme: (PHASE4) spendingKeyID
+                ScriptVersion scriptversion = IsOldTransactionVersion(tx.nVersion) ? SCRIPT_V1 : SCRIPT_V2;
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
-                CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata, SCRIPT_V1);
+                CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata, scriptversion);
                 if (scriptPubKey.IsPoW2Witness())
                 {
                     check.spendingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);

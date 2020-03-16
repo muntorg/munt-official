@@ -372,12 +372,28 @@ inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 * Input/Output.
 * Signed by witness key.
 */
-inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
+inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight, bool isOldTransactionVersion)
 {
-    //fixme: (PHASE4) (SEGSIG) - test coinbase type. - Don't think this is actually necessary anymore.
-    // No signatures
-    if (input.segregatedSignatureData.stack.size() != 2 && input.segregatedSignatureData.stack.size() != 0)
-        return false;
+    //Phase 3 (no signatures)
+    //Phase 4, 1 signature - stack will have either 1 or 2 items depending on whether its a script or proper PoW2-witness address.
+    if (isOldTransactionVersion)
+    {
+        if (input.segregatedSignatureData.stack.size() != 0)
+            return false;
+    }
+    else
+    {
+        if (inputDetails.nType == CTxOutType::PoW2WitnessOutput)
+        {
+            if (input.segregatedSignatureData.stack.size() != 1)
+                return false;
+        }
+        if (inputDetails.nType == ScriptLegacyOutput)
+        {
+            if (input.segregatedSignatureData.stack.size() != 2)
+                return false;
+        }
+    }
     // Amount in address should stay the same or increase
     if (nInputAmount > nOutputAmount)
         return false;
@@ -748,7 +764,7 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
 }
 
 //fixme: (PHASE5) (HIGH) Implement unit test code for this function.
-bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight)
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight, bool isOldTransactionVersion)
 {
     if (pWitnessBundles)
     {
@@ -765,7 +781,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                     const auto& outputDetails = bundle.outputs[0].second;
 
                     // Witnessing: amount should stay the same or increase, fail count can reduced by 1 or 0, if lockfrom was previously 0 it must be set to the current block height. Can only appear as a "witnesscoinbase" transaction.
-                    if ( IsWitnessBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
+                    if ( IsWitnessBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight, isOldTransactionVersion) )
                     {
                         if (bundle.outputs[0].first.nValue - prevOut.nValue > gMaximumWitnessCompoundAmount * COIN)
                         {
@@ -1010,7 +1026,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
             return false;
         }
 
-        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, nSpendHeight))
+        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, nSpendHeight, IsOldTransactionVersion(tx.nVersion)))
         {
             return false;
         }

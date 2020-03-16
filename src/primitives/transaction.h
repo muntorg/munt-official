@@ -496,6 +496,11 @@ public:
         READWRITE(VARINT(failCount));
         READWRITE(VARINT(actionNonce));
     }
+    
+    //fixme: (PHASE5) remove
+    //NB! Don't serialise this or use this for compares
+    //We use this only inside witness bundle calculations where we need to know the input type without looking it up again
+    CTxOutType nType;
 };
 
 class CTxOutStandardKeyHash
