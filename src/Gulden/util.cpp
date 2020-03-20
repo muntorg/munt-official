@@ -402,17 +402,29 @@ int DailyBlocksTarget()
 uint64_t MinimumWitnessLockLength()
 {
     if (Params().IsOfficialTestnetV1())
+    {
         return gMinimumWitnessLockDays * gRefactorDailyBlocksUsage;
+    }
+    else if (IsArgSet("-testnet"))
+    {
+        return 50;
+    }
     else
+    {
         return gMinimumWitnessLockDays * DailyBlocksTarget();
+    }
 }
 
 uint64_t MaximumWitnessLockLength()
 {
-    if (Params().IsOfficialTestnetV1())
+    if (IsArgSet("-testnet"))
+    {
         return gMaximumWitnessLockDays * gRefactorDailyBlocksUsage;
+    }
     else
+    {
         return gMaximumWitnessLockDays * DailyBlocksTarget();
+    }
 }
 
 static constexpr int recovery_birth_period = 7 * 24 * 3600; // one week
