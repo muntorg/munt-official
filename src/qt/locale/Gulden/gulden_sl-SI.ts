@@ -9,6 +9,213 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Znesek</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Izbira vhodnih kovancev</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Št.vhodov:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Št.bajtov:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Znesek:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Prah:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Provizija:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Po proviziji:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Vračilo:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>izberi vse/nič</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Drevesni prikaz</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Seznam</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Oznaka priliva</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Naslov priliva</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Potrditve</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Potrjeno</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Znesek</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Nič</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Neznano</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 in %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Znesek</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Shrani sliko ...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR Koda</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopiraj &amp;URl</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopiraj &amp;naslov</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Znesek</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Oblika</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Stanje sredstev</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Nepotrjene transakcije na opazovanih naslovih</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Skupni znesek sredstev s katerimi še ne razpolagate prosto, ker so del še nepotrjenih transakcij.</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Skupaj:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nedozorelo:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Trenutna vsota vseh vaših sredstev</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Trenutno skupno stanje sredstev na opazovanih naslovih</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Opazovano:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Na voljo:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Skupni znesek vaših sredstev, s katerimi lahko prosto razpolagate</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Trenutno stanje vaših sredstev na opazovanih naslovih</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Nepotrjeno:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Na voljo:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Nedavne transakcije</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -93,100 +300,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Shrani sliko ...</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Shrani sliko ...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Znesek</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR Koda</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopiraj &amp;URl</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopiraj &amp;naslov</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Izbira vhodnih kovancev</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Št.vhodov:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Št.bajtov:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Znesek:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Prah:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Provizija:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Po proviziji:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Vračilo:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>izberi vse/nič</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Drevesni prikaz</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Seznam</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Znesek</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Oznaka priliva</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Naslov priliva</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Potrditve</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Potrjeno</translation>
     </message>
 </context>
 <context>
@@ -310,56 +423,6 @@
     <message>
         <source>Balance:</source>
         <translation>Stanje:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Znesek</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Nič</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Neznano</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 in %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Znesek</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
     </message>
 </context>
 <context>
@@ -911,69 +974,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Izbiranje datoteke z zahtevkom za plačilo</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Oblika</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Stanje sredstev</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Nepotrjene transakcije na opazovanih naslovih</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Skupni znesek sredstev s katerimi še ne razpolagate prosto, ker so del še nepotrjenih transakcij.</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Skupaj:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nedozorelo:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Trenutna vsota vseh vaših sredstev</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Trenutno skupno stanje sredstev na opazovanih naslovih</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Opazovano:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Na voljo:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Skupni znesek vaših sredstev, s katerimi lahko prosto razpolagate</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Trenutno stanje vaših sredstev na opazovanih naslovih</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Nepotrjeno:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Na voljo:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Nedavne transakcije</translation>
     </message>
 </context>
 <context>

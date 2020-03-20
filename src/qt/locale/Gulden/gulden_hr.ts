@@ -9,6 +9,121 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Iznos</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Izbor ulaza transakcije</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Količina:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bajtova:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Iznos:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Prah:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Naknada:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Vraćeno:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>Izaberi sve/ništa</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Primljeno pod oznakom</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Primljeno na adresu</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Broj potvrda</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Potvrđeno</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Iznos</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 i %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Iznos</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Spremi sliku...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR kôd</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopiraj &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopiraj &amp;adresu</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Iznos</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Oblik</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Ukupno:</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -120,88 +235,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Spremi sliku...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Iznos</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR kôd</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopiraj &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopiraj &amp;adresu</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Izbor ulaza transakcije</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Količina:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bajtova:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Iznos:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Prah:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Naknada:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Vraćeno:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>Izaberi sve/ništa</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Iznos</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Primljeno pod oznakom</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Primljeno na adresu</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Broj potvrda</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Potvrđeno</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Quantity:</source>
@@ -254,28 +287,6 @@
     <message>
         <source>Balance:</source>
         <translation>Stanje:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Iznos</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 i %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Iznos</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
     </message>
 </context>
 <context>
@@ -578,17 +589,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Izaberi datoteku zahtjeva za plaćanje</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Oblik</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Ukupno:</translation>
     </message>
 </context>
 <context>

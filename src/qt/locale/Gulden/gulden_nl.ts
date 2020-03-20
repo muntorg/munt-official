@@ -4,12 +4,27 @@
     <extra-po-header-language>nl</extra-po-header-language>
     <extra-po-header-language_team>LANGUAGE TEAM &lt;EMAIL@ADDRESS&gt;</extra-po-header-language_team>
     <extra-po-header-last_translator>FULL NAME &lt;EMAIL@ADDRESS&gt;</extra-po-header-last_translator>
-    <extra-po-header-po_revision_date>2019-08-09 13:25+0000</extra-po-header-po_revision_date>
-    <extra-po-header-pot_creation_date>2019-08-09 13:25+0000</extra-po-header-pot_creation_date>
+    <extra-po-header-po_revision_date>2018-08-29 15:43+0000</extra-po-header-po_revision_date>
+    <extra-po-header-pot_creation_date>2018-08-29 15:43+0000</extra-po-header-pot_creation_date>
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>NocksRequest</name>
+    <message>
+        <source>Okay</source>
+        <translation>Oké</translation>
+    </message>
+</context>
+<context>
     <name>AccountSettingsDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Oké</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleren</translation>
+    </message>
     <message>
         <source>Change name of account</source>
         <translation>Wijzig rekeningnaam</translation>
@@ -58,10 +73,6 @@ WAARSCHUWING: zorg dat u de enige persoon bent die deze QR-code kan zien omdat a
         <translation>Account is niet leeg. Maak eerst uw Guldens over alvorens u dit account verwijdert.</translation>
     </message>
     <message>
-        <source>Okay</source>
-        <translation>Oké</translation>
-    </message>
-    <message>
         <source>Are you sure you want to delete %1 from your account list?
 </source>
         <translation>Weet u zeker dat u %1 wil verwijderen uit het adresboek?
@@ -71,126 +82,6 @@ WAARSCHUWING: zorg dat u de enige persoon bent die deze QR-code kan zien omdat a
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
         <translation>Weet u zeker dat u %1 van uw accountlijst wilt verwijderen? De adressen van dit account blijven actief.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleren</translation>
-    </message>
-</context>
-<context>
-    <name>NewAccountDialog</name>
-    <message>
-        <source>Enter name of account.</source>
-        <translation>Voer naam in van rekening</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
-    </message>
-    <message>
-        <source>Click here to make QR code visible.
-WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Klik hier om uw QR code zichtbaar te maken. 
-WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot uw Guldens.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source>Account name</source>
-        <translation>Rekening naam</translation>
-    </message>
-    <message>
-        <source>Create account type</source>
-        <translation>Kies een rekening type</translation>
-    </message>
-    <message>
-        <source>Import account type</source>
-        <translation>Importeer een rekening type</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;&lt;li&gt;Verstuur geld naar een IBAN bankrekening&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Mobiele portemonnee beheren en aanvullen vanuit uw desktop&lt;/li&gt;&lt;li&gt;Leeg eenvoudig uw mobiele wallet mocht deze gestolen worden of defect raken&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;Flexibele periodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importeer een witness rekening van een ander apparaat&lt;/li&gt;&lt;li&gt;Laat dit apparaat fungeren als uw backup van uw witness rekening zodat hij altijd beschikbaar is om te kunnen witnessen&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importeer een private key vanuit een &quot;cold storage&quot;&lt;/li&gt;&lt;li&gt;Wordt niet beschermd door uw herstelzin&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <source>Standard</source>
-        <translation>Standaard</translation>
-    </message>
-    <message>
-        <source>Linked mobile</source>
-        <translation>Gelinkte mobiel</translation>
-    </message>
-    <message>
-        <source>Witness</source>
-        <translation>Witness</translation>
-    </message>
-    <message>
-        <source>Witness-only</source>
-        <translation>Alleen witness</translation>
-    </message>
-    <message>
-        <source>Private key</source>
-        <translation>Private key</translation>
-    </message>
-    <message>
-        <source>Scan QR to connect your mobile Gulden app</source>
-        <translation>Scan QR om met uw mobiele Gulden-app te verbinden</translation>
-    </message>
-</context>
-<context>
-    <name>BackupDialog</name>
-    <message>
-        <source>Done</source>
-        <translation>Klaar</translation>
-    </message>
-    <message>
-        <source>Backup phrase</source>
-        <translation>Herstelzin</translation>
-    </message>
-    <message>
-        <source>Show backup phrase</source>
-        <translation>Toon herstelzin</translation>
-    </message>
-    <message>
-        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation>Het wordt aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
-    </message>
-    <message>
-        <source>Save to file</source>
-        <translation>Bewaar als bestand</translation>
-    </message>
-    <message>
-        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit is uw herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
-    </message>
-    <message>
-        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Dit zijn uw herstelzinnen, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
-    </message>
-    <message>
-        <source>No recovery phrases present for this wallet.</source>
-        <translation>Geen herstelzin aanwezig voor deze portemonnee</translation>
-    </message>
-    <message>
-        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation>Uw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
     </message>
 </context>
 <context>
@@ -326,6 +217,10 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>Request payments (generates QR codes and gulden: URIs)</source>
         <translation>Betaalverzoek (genereert QR-codes en Gulden-URI&apos;s)</translation>
+    </message>
+    <message>
+        <source>Control and view information for mining account.</source>
+        <translation>Beheer en bekijk informatie over mining account</translation>
     </message>
     <message>
         <source>&amp;Transactions</source>
@@ -649,6 +544,57 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
         <translation>Annuleer</translation>
     </message>
     <message>
+        <source>1 year</source>
+        <translation>1 jaar</translation>
+    </message>
+    <message>
+        <source>%1 years</source>
+        <translation>%1 jaren</translation>
+    </message>
+    <message>
+        <source>1 month</source>
+        <translation>1 maand</translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 maanden</translation>
+    </message>
+    <message>
+        <source>Lock funds for:</source>
+        <translation>Blokkeer het bedrag voor:</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation>3 jaren</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>De Guldens zijn geblokkeerd gedurende 30 dagen (%1 maand). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de looptijd.</translation>
+    </message>
+    <message>
+        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
+        <translation>Waarschuwing: Dit gewicht is meer dan 1% van het huidige totale gewicht van het netwerk, dit is fantastisch om bij te dragen aan de netwerkbeveiliging, maar niet aanbevolen voor het maximaliseren van uw inkomsten. Voor een maximaal inkomen is het in deze situatie meestal beter om uw geld op te splitsen in twee rekeningen. Een uitzondering is als u redenen hebt om aan te nemen dat het gewicht van het netwerk in de toekomst waarschijnlijk aanzienlijk zal toenemen, vraag dan om meer advies voordat u verder gaat als u niet zeker bent over de beste handelwijze.</translation>
+    </message>
+    <message>
+        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
+        <translation>Een minimaal gewicht van %1 is vereist, maar het geselecteerde gewicht is slechts %2. Verhoog de hoeveelheid of de looptijd voor meer gewicht.</translation>
+    </message>
+    <message>
+        <source>A minimum amount of %1 is required.</source>
+        <translation>Een minimum hoeveelheid van %1 is vereist.</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
+
+Estimated earnings: %3 (%4% per month)
+
+Witness weight: %5</source>
+        <translation>De Guldens zijn geblokkeerd gedurende %1 dagen (%2). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de looptijd.
+Verwachte verdiensten: %3 (%4% per maand)
+
+Witness-gewicht: %5</translation>
+    </message>
+    <message>
         <source>My accounts</source>
         <translation>Mijn rekeningen</translation>
     </message>
@@ -665,6 +611,10 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
         <translation>Voer beschrijving in</translation>
     </message>
     <message>
+        <source>Recipient account name</source>
+        <translation>Naam van de begunstigde</translation>
+    </message>
+    <message>
         <source>Add to address book</source>
         <translation>Voeg toe aan adresboek</translation>
     </message>
@@ -673,32 +623,16 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
         <translation>Adresboek</translation>
     </message>
     <message>
-        <source>Lock funds for:</source>
-        <translation>Blokkeer het bedrag voor:</translation>
-    </message>
-    <message>
-        <source>1 month</source>
-        <translation>1 maand</translation>
-    </message>
-    <message>
-        <source>3 years</source>
-        <translation>3 jaren</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
-        <translation>De Guldens zijn geblokkeerd gedurende 30 dagen (%1 maand). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de looptijd.</translation>
-    </message>
-    <message>
-        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
-        <translation>Waarschuwing: Dit gewicht is meer dan 1% van het huidige totale gewicht van het netwerk, dit is fantastisch om bij te dragen aan de netwerkbeveiliging, maar niet aanbevolen voor het maximaliseren van uw inkomsten. Voor een maximaal inkomen is het in deze situatie meestal beter om uw geld op te splitsen in twee rekeningen. Een uitzondering is als u redenen hebt om aan te nemen dat het gewicht van het netwerk in de toekomst waarschijnlijk aanzienlijk zal toenemen, vraag dan om meer advies voordat u verder gaat als u niet zeker bent over de beste handelwijze.</translation>
-    </message>
-    <message>
         <source>Amount exceeds maximum for IBAN payment.</source>
         <translation>Bedrag is groter dan maximum voor een IBAN-betaling</translation>
     </message>
     <message>
         <source>Amount below minimum for IBAN payment.</source>
         <translation>Bedrag is kleiner dan minimum voor een IBAN-betaling</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>De naam van de begunstigde is noodzakelijk voor een IBAN betaling</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -721,39 +655,372 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
         <translation>Opslaan</translation>
     </message>
     <message>
-        <source>A minimum amount of %1 is required.</source>
-        <translation>Een minimum hoeveelheid van %1 is vereist.</translation>
-    </message>
-    <message>
-        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
-        <translation>Een minimaal gewicht van %1 is vereist, maar het geselecteerde gewicht is slechts %2. Verhoog de hoeveelheid of de looptijd voor meer gewicht.</translation>
-    </message>
-    <message>
-        <source>1 year</source>
-        <translation>1 jaar</translation>
-    </message>
-    <message>
-        <source>%1 years</source>
-        <translation>%1 jaren</translation>
-    </message>
-    <message>
-        <source>%1 months</source>
-        <translation>%1 maanden</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
-
-Estimated earnings: %3 (%4% per month)
-
-Witness weight: %5</source>
-        <translation>De Guldens zijn geblokkeerd gedurende %1 dagen (%2). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de looptijd.
-Verwachte verdiensten: %3 (%4% per maand)
-
-Witness-gewicht: %5</translation>
-    </message>
-    <message>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
         <translation>Ongeveer %1 Gulden is vereist, inclusief IBAN-transactiekosten</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionView</name>
+    <message>
+        <source>Credit</source>
+        <translation>Credit</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Debet</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Kommagescheiden bestand (*.csv)</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Export mislukt</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Bevestigd</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopieer adres</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopieer label</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopieer bedrag</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopieer transactie-ID</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Gegenereerd</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Ontvangen met</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Verzonden aan</translation>
+    </message>
+    <message>
+        <source>Internal transfer</source>
+        <translation>Interne transactie</translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation>Witness-beloning</translation>
+    </message>
+    <message>
+        <source>Clear orphan transactions</source>
+        <translation>Verwijder de orphan transacties</translation>
+    </message>
+    <message>
+        <source>All dates</source>
+        <translation>Alle data</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>Vandaag</translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation>Deze week</translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation>Deze maand</translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation>Vorige maand</translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation>Dit jaar</translation>
+    </message>
+    <message>
+        <source>Select range</source>
+        <translation>Selecteer periode</translation>
+    </message>
+    <message>
+        <source>All transaction types</source>
+        <translation>Alle transactietypes</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Anders</translation>
+    </message>
+    <message>
+        <source>Search label</source>
+        <translation>Zoek op label</translation>
+    </message>
+    <message>
+        <source>Min amount</source>
+        <translation>Min. bedrag</translation>
+    </message>
+    <message>
+        <source>Abandon transaction</source>
+        <translation>Transactie afbreken</translation>
+    </message>
+    <message>
+        <source>Increase transaction fee</source>
+        <translation>Verhoog transactiekosten</translation>
+    </message>
+    <message>
+        <source>Copy raw transaction</source>
+        <translation>Kopieer de ruwe transactie</translation>
+    </message>
+    <message>
+        <source>Copy full transaction details</source>
+        <translation>Kopieer alle transactiedetails</translation>
+    </message>
+    <message>
+        <source>Edit label</source>
+        <translation>Bewerk label</translation>
+    </message>
+    <message>
+        <source>Show transaction details</source>
+        <translation>Toon transactiedetails</translation>
+    </message>
+    <message>
+        <source>Export Transaction History</source>
+        <translation>Exporteer transactieverleden</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the transaction history to %1.</source>
+        <translation>Er is een fout opgetreden bij het opslaan van het transactieverleden naar %1.</translation>
+    </message>
+    <message>
+        <source>Exporting Successful</source>
+        <translation>Export is succesvol</translation>
+    </message>
+    <message>
+        <source>The transaction history was successfully saved to %1.</source>
+        <translation>Het transactieverleden was succesvol bewaard in %1.</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation>Bereik:</translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation>tot</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Credit</source>
+        <translation>Credit</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Debet</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Bedrag</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Bericht</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Open voor nog %n blok</numerusform>
+            <numerusform>Open voor nog %n blokken</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Openen totdat %1</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>In conflict met transactie met %1 bevestiging</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1/offline</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation>0/onbevestigd, %1</translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation>In geheugenpool</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>Niet in geheugenpool</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation>Verlaten</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/onbevestigd</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 bevestigingen</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, is nog niet met succes uitgezonden</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation>
+            <numerusform>, uitgezonden naar %n knooppunt</numerusform>
+            <numerusform>, uitgezonden naar %n knooppunten</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>Bron</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Gegenereerd</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Van</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>onbekend</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Aan</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>eigen adres</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>alleen-bekijkbaar</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>label</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation>
+            <numerusform>komt tot wasdom na %n nieuw blok</numerusform>
+            <numerusform>komt tot wasdom na %n nieuwe blokken</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>niet geaccepteerd</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>Totaal debet</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>Totaal crediet</translation>
+    </message>
+    <message>
+        <source>Total moved</source>
+        <translation>Totaal verplaatst</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transactiekosten</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Nettobedrag</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Opmerking</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>Transactie-ID</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>Totale grootte van de transactie</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>Uitgangsindex</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>Handelaar</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Gegenereerde munten moeten %1 blokken rijpen voordat ze kunnen worden besteed. 
+Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de blokketen toegevoegd te worden. Als het niet lukt om in de keten toegevoegd te worden, zal de status veranderen naar &quot;niet geaccepteerd&quot; en zal deze niet besteedbaar zijn. Dit kan soms gebeuren als een ander knooppunt een blok genereert binnen een paar seconden na die van u.</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>Debuginformatie</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transactie</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>Ingangen</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>waar</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>onjuist</translation>
     </message>
 </context>
 <context>
@@ -882,6 +1149,10 @@ Witness-gewicht: %5</translation>
         <translation>Oké</translation>
     </message>
     <message>
+        <source>New mining address</source>
+        <translation>Nieuw mining adres</translation>
+    </message>
+    <message>
         <source>Edit Address</source>
         <translation>Adres bewerken</translation>
     </message>
@@ -981,6 +1252,91 @@ Witness-gewicht: %5</translation>
     </message>
 </context>
 <context>
+    <name>NewAccountDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleer</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Voer naam in van rekening</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Klaar</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation>Klik hier om uw QR code zichtbaar te maken. 
+WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot uw Guldens.</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Concurreer met andere miners door Gulden te creëren met jouw vrije CPU kracht&lt;/li&gt;&lt;li&gt;Help het netwerk beveiligen&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Mining</translation>
+    </message>
+    <message>
+        <source>Account name</source>
+        <translation>Rekening naam</translation>
+    </message>
+    <message>
+        <source>Create account type</source>
+        <translation>Kies een rekening type</translation>
+    </message>
+    <message>
+        <source>Import account type</source>
+        <translation>Importeer een rekening type</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;&lt;li&gt;Verstuur geld naar een IBAN bankrekening&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Mobiele portemonnee beheren en aanvullen vanuit uw desktop&lt;/li&gt;&lt;li&gt;Leeg eenvoudig uw mobiele wallet mocht deze gestolen worden of defect raken&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Laat uw kapitaal aangroeien&lt;/li&gt;&lt;li&gt;Flexibele periodes vanaf 1 maand tot 3 jaar&lt;/li&gt;&lt;li&gt;Help het netwerk te ondersteunen met minimale hardware benodigdheden&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importeer een witness rekening van een ander apparaat&lt;/li&gt;&lt;li&gt;Laat dit apparaat fungeren als uw backup van uw witness rekening zodat hij altijd beschikbaar is om te kunnen witnessen&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importeer een private key vanuit een &quot;cold storage&quot;&lt;/li&gt;&lt;li&gt;Wordt niet beschermd door uw herstelzin&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Standard</source>
+        <translation>Standaard</translation>
+    </message>
+    <message>
+        <source>Linked mobile</source>
+        <translation>Gelinkte mobiel</translation>
+    </message>
+    <message>
+        <source>Witness</source>
+        <translation>Witness</translation>
+    </message>
+    <message>
+        <source>Witness-only</source>
+        <translation>Alleen witness</translation>
+    </message>
+    <message>
+        <source>Private key</source>
+        <translation>Private key</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect your mobile Gulden app</source>
+        <translation>Scan QR om met uw mobiele Gulden-app te verbinden</translation>
+    </message>
+</context>
+<context>
     <name>PasswordModifyDialog</name>
     <message>
         <source>Cancel</source>
@@ -1018,6 +1374,14 @@ Witness-gewicht: %5</translation>
         <translation>Voer beschrijving in</translation>
     </message>
     <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Kopieer adres naar klembord</translation>
+    </message>
+    <message>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
@@ -1028,10 +1392,6 @@ Witness-gewicht: %5</translation>
     <message>
         <source>address</source>
         <translation>Adres</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adres gekopieerd naar klembord</translation>
     </message>
     <message>
         <source>Request copied to clipboard</source>
@@ -1060,10 +1420,6 @@ Witness-gewicht: %5</translation>
     <message>
         <source>Close</source>
         <translation>Sluiten</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Kopieer adres naar klembord</translation>
     </message>
     <message>
         <source>Save QR as image</source>
@@ -1160,10 +1516,6 @@ Witness-gewicht: %5</translation>
     <message>
         <source>Resulting URI too long, try to reduce the text for the label.</source>
         <translation>Resulterende URI te lang, Kort de text in voor dit label</translation>
-    </message>
-    <message>
-        <source>Error loading the buy page, please check your connection and try again later.</source>
-        <translation>Error tijdens het laden van de betaal pagina, controleer uw verbinding en probeer het (op een later moment) opnieuw</translation>
     </message>
 </context>
 <context>
@@ -1533,6 +1885,856 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     </message>
 </context>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Bedrag</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen label)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Muntselectie</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Kwantiteit:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Bedrag:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Stof:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Vergoeding:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Na vergoeding:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Wisselgeld:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(de)selecteer alles</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Boommodus</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Lijstmodus</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Ontvangen met label</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Ontvangen met adres</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Bevestigingen</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Bevestigd</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopieer adres</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopieer label</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopieer bedrag</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopieer transactie-ID</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Blokeer ongebruikte</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Deblokkeer ongebruikte</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Kopieer aantal</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Kopieer vergoeding</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Kopieer na vergoeding</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Kopieer bytes</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Kopieer stof</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Kopieer wisselgeld</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 geblokeerd)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>ja</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>nee</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>De omschrijving wordt rood als een ontvanger een bedrag ontvangt kleiner dan de huidige dust treshold.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Kan per ingang +/- %1 satoshi(s) variëren.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>wijzig van %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(wijzig)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Bedrag</translation>
+    </message>
+    <message>
+        <source>Enter an address (e.g. %1)</source>
+        <translation>Voer een adres in (bijv. %1)</translation>
+    </message>
+    <message>
+        <source>Enter a private key</source>
+        <translation>Voer een private key in</translation>
+    </message>
+    <message>
+        <source>Enter a Gulden URL</source>
+        <translation>Voer een Gulden-URL in</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 u</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Geen</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N.v.t.</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n seconde(n)</numerusform>
+            <numerusform>%n seconde(n)</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n minuut</numerusform>
+            <numerusform>%n minuten</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n uur</numerusform>
+            <numerusform>%n uur</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n dag</numerusform>
+            <numerusform>%n dagen</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n week</numerusform>
+            <numerusform>%n weken</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 en %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n jaar</numerusform>
+            <numerusform>%n jaar</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1 nog niet veilig verlaten...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Bedrag</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>Afbeelding op&amp;slaan...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-code</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopieer &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopieer &amp;adres</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>Betalingsverzoek aan %1</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Betalingsinformatie</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Bericht</translation>
+    </message>
+</context>
+<context>
+    <name>WitnessDialog</name>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 maanden</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Informatie</translation>
+    </message>
+    <message>
+        <source>To begin witnessing, select an account from which to lock funds:</source>
+        <translation>Om te beginnen met witnessing, selecteert u een account van waaruit Gulden worden vastgezet:</translation>
+    </message>
+    <message>
+        <source>Projected earnings graph</source>
+        <translation>Verwachte inkomsten grafiek</translation>
+    </message>
+    <message>
+        <source>Compound earnings</source>
+        <translation>Cumulatieve inkomsten</translation>
+    </message>
+    <message>
+        <source>n/a</source>
+        <translation>n.v.t.</translation>
+    </message>
+    <message>
+        <source>Lock time remaining</source>
+        <translation>Resterende looptijd</translation>
+    </message>
+    <message>
+        <source>Locked from</source>
+        <translation>Vastgezet vanaf</translation>
+    </message>
+    <message>
+        <source>Locked until</source>
+        <translation>Vastgezet tot en met</translation>
+    </message>
+    <message>
+        <source>Last earnings</source>
+        <translation>Laatste beloning op:</translation>
+    </message>
+    <message>
+        <source>Earnings</source>
+        <translation>Totale beloning</translation>
+    </message>
+    <message>
+        <source>Lock duration</source>
+        <translation>Looptijd</translation>
+    </message>
+    <message>
+        <source>Required earnings frequency</source>
+        <translation>Benodigde belonings tijd</translation>
+    </message>
+    <message>
+        <source>Weight</source>
+        <translation>Gewicht</translation>
+    </message>
+    <message>
+        <source>Estimated earnings frequency</source>
+        <translation>Verwachte belonings tijd</translation>
+    </message>
+    <message>
+        <source>Network weight</source>
+        <translation>Netwerk gewicht</translation>
+    </message>
+    <message>
+        <source>Inactive witness account</source>
+        <translation>Inactieve witness-rekening</translation>
+    </message>
+    <message>
+        <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
+        <translation>Uw witness rekening is gedeactiveerd omdat uw rekening niet binnen de verwachte tijd heeft kunnen &quot;witnessen&quot;. Als dit vaak gebeurt, zorg er dan voor dat u een stabiele witnessing omgeving hebt of neem contact op met support. Om witnessing te hervatten, selecteert u de rekening hieronder en drukt u op de knop &apos;Rekening vernieuwen&apos;. Een kleine heractiverings-fee zal u worden berekend.</translation>
+    </message>
+    <message>
+        <source>Waiting for confirmation</source>
+        <translation>Wachten op bevestiging</translation>
+    </message>
+    <message>
+        <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
+        <translation>Uw witness account wacht op de transactiebevestiging van het netwerk voordat het actief wordt, gemiddeld duurt dit slechts een paar minuten. Mocht deze pagina langer dan deze periode blijven verschijnen, raadpleeg dan het transactie tabblad en/of vraag om assistentie.</translation>
+    </message>
+    <message>
+        <source>Account emptied</source>
+        <translation>Account is leeggemaakt</translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
+In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
+        <translation>Uw witness-rekening is klaar met witnessing en alle bedragen zijn verplaatst. Uw inkomsten en transacties blijven hier zichtbaar maar u kunt de rekening verder niet meer gebruiken. Als u witness weer wil gebruiken, maak dan een nieuwe witness-rekening aan.
+In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te hergebruiken voor witnessing.</translation>
+    </message>
+    <message>
+        <source>Change units</source>
+        <translation>Verander eenheden</translation>
+    </message>
+    <message>
+        <source>View graph</source>
+        <translation>Bekijk de grafiek</translation>
+    </message>
+    <message>
+        <source>Empty account</source>
+        <translation>Account legen</translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
+        <translation>Beloning opnemen</translation>
+    </message>
+    <message>
+        <source>Fund account</source>
+        <translation>Vul het account</translation>
+    </message>
+    <message>
+        <source>Renew account</source>
+        <translation>Vernieuw account</translation>
+    </message>
+    <message>
+        <source>Earnings to date</source>
+        <translation>Inkomsten tot datum</translation>
+    </message>
+    <message>
+        <source>Projected earnings</source>
+        <translation>Verwachte inkomsten</translation>
+    </message>
+    <message>
+        <source>Initial projected earnings</source>
+        <translation>Initiële verwachte inkomsten</translation>
+    </message>
+    <message>
+        <source>&amp;Blocks</source>
+        <translation>&amp;Blokken</translation>
+    </message>
+    <message>
+        <source>&amp;Days</source>
+        <translation>&amp;Dagen</translation>
+    </message>
+    <message>
+        <source>&amp;Weeks</source>
+        <translation>&amp;Weken</translation>
+    </message>
+    <message>
+        <source>&amp;Months</source>
+        <translation>&amp;Maanden</translation>
+    </message>
+    <message>
+        <source>%1 blocks</source>
+        <translation>%1 blokken</translation>
+    </message>
+    <message>
+        <source>%1 days</source>
+        <translation>%1 dagen</translation>
+    </message>
+    <message>
+        <source>%1 weeks</source>
+        <translation>%1 weken</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <source>Rotate witness key</source>
+        <translation>Roteer witness-sleutel</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen label)</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Ontvangen</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Verstuurd</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Open tot %1</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Gegenereerd</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>alleen-bekijkbaar</translation>
+    </message>
+    <message>
+        <source>Unlock funds</source>
+        <translation>Deblokkeer saldo</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>Omschrijving</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Open voor nog %n blok</numerusform>
+            <numerusform>Open voor nog %n blokken</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Offline</source>
+        <translation>Niet verbonden</translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation>Onbevestigd</translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation>Afbreken</translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>Bevestigen (%1 van %2 aanbevolen bevestigingen)</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Bevestigd (%1 bevestigingen)</translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation>Conflicterend</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>immatuur (%1 bevestigingen, zal beschikbaar zijn na %2)</translation>
+    </message>
+    <message>
+        <source>This block was not received by any other nodes and will probably not be accepted!</source>
+        <translation>Dit blok is niet ontvangen bij andere knooppunten en zal waarschijnlijk niet worden geaccepteerd!</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>Gegenereerd maar niet geaccepteerd</translation>
+    </message>
+    <message>
+        <source>External payee</source>
+        <translation>Externe</translation>
+    </message>
+    <message>
+        <source>Multiple addresses</source>
+        <translation>Meerdere adressen</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Ontvangen met</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Ontvangen van</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Verzonden aan</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Betaling aan uzelf</translation>
+    </message>
+    <message>
+        <source>Internal transfer</source>
+        <translation>Interne transactie</translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation>Witness-beloning</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension</source>
+        <translation>Financier uitbreiding witness-rekening</translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation>Breid witness-rekening uit</translation>
+    </message>
+    <message>
+        <source>Split locked funds</source>
+        <translation>Splits geblokkeerde fondsen</translation>
+    </message>
+    <message>
+        <source>Merge locked funds</source>
+        <translation>Voeg geblokkeerde fondsen samen</translation>
+    </message>
+    <message>
+        <source>Renew witness account</source>
+        <translation>Vernieuwen witness-rekening</translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation>Vul witness-rekening</translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation>Blokkeer het saldo</translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation>Leeg witness-rekening</translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation>Ontvangen van witness-rekening</translation>
+    </message>
+    <message>
+        <source>Lock funds from: %1</source>
+        <translation>Blokkeer het saldo vanaf: %1</translation>
+    </message>
+    <message>
+        <source>Extend locked funds from: %1</source>
+        <translation>Breid geblokkeerde fondsen uit van: %1</translation>
+    </message>
+    <message>
+        <source>Split locked funds: %1</source>
+        <translation>Splits geblokkeerde fondsen: %1</translation>
+    </message>
+    <message>
+        <source>Merge locked funds: %1</source>
+        <translation>Voeg fondsen bij elkaar: %1</translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation>Roteer witness-sleutel: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds from: %1</source>
+        <translation>Deblokkeer het saldo vanaf: %1</translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
+        <translation>Betaald aan: %1</translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation>Betaling van: %1</translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation>Complexe transactie, bekijk transactiedetails</translation>
+    </message>
+    <message>
+        <source>Internal transfer from: %1</source>
+        <translation>Interne transactie van: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account: %1</source>
+        <translation>Vul witness-rekening: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
+        <translation>Financier uitbreiding witness-rekening: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation>Deblokkeer het saldo naar: %1</translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation>Interne transactie naar: %1</translation>
+    </message>
+    <message>
+        <source>Internal account movement</source>
+        <translation>Verplaatsing interne account</translation>
+    </message>
+    <message>
+        <source>Extend locked funds</source>
+        <translation>Breid geblokkeerde fondsen uit</translation>
+    </message>
+    <message>
+        <source>Generation reward</source>
+        <translation>Genereer-beloning</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Transactiestatus. Houd de muiscursor boven dit veld om het aantal bevestigingen te tonen.</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Datum en tijd waarop deze transactie is ontvangen.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Transactietype.</translation>
+    </message>
+    <message>
+        <source>Whether or not a watch-only address is involved in this transaction.</source>
+        <translation>Al dan niet een alleen-bekijkenadres betrokken is in deze transactie.</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction.</source>
+        <translation>Doel van de transactie</translation>
+    </message>
+    <message>
+        <source>Amount added to balance.</source>
+        <translation>Toegevoegd aan totaalbedrag</translation>
+    </message>
+    <message>
+        <source>Amount removed from balance.</source>
+        <translation>Bedrag verwijderd van saldo.</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulier</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Balans</translation>
+    </message>
+    <message>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Gulden network after a connection is established, but this process has not completed yet.</source>
+        <translation>De weergegeven informatie kan verouderd zijn. Uw portemonnee synchroniseert automatisch met het Gulden-netwerk nadat een verbinding tot stand is gebracht, maar dit proces is nog niet voltooid.</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Onbevestigde transacties naar alleen-bekijkbare adressen</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>De som van de transacties die nog bevestigd moeten worden, en nog niet meetellen in uw beschikbare saldo</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totaal:</translation>
+    </message>
+    <message>
+        <source>Generated balance in watch-only addresses that has not yet matured</source>
+        <translation>Gegenereerd saldo in alleen-bekijkbare adressen dat nog niet tot wasdom is gekomen</translation>
+    </message>
+    <message>
+        <source>Generated balance that has not yet matured</source>
+        <translation>Gegenereerd saldo dat nog niet tot wasdom is gekomen</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Immatuur:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Uw totale saldo</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Huidige balans in alleen-bekijkbare adressen.</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Alleen-bekijkbaar:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Beschikbaar:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Uw beschikbare saldo</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Uw huidige balans in alleen-bekijkbare adressen</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>In behandeling:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Besteedbaar:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Recente transacties</translation>
+    </message>
+</context>
+<context>
+    <name>SyncOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulier</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Verbergen</translation>
+    </message>
+    <message>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw portemonnee synchroniseert nu voor het eerst met het Gulden netwerk.&lt;br/&gt;Pas als uw portemonnee klaar is met synchroniseren, zullen uw saldo en recente transacties zichtbaar zijn.</translation>
+    </message>
+    <message>
+        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
+        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw wallet wordt nu gesynchroniseerd met het Gulden netwerk.&lt;br/&gt;Pas als uw wallet volledig is gesynchroniseerd zijn uw transacties en balans zichtbaar.</translation>
+    </message>
+</context>
+<context>
+    <name>WarningOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulier</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Verbergen</translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Klaar</translation>
+    </message>
+    <message>
+        <source>Backup phrase</source>
+        <translation>Herstelzin</translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation>Toon herstelzin</translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>Het wordt aangeraden om ook een beveiligde back-up van uw portemonnee op te slaan, naast het veilig bewaren van de herstelzin.</translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation>Bewaar als bestand</translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Dit is uw herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Dit zijn uw herstelzinnen, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation>Geen herstelzin aanwezig voor deze portemonnee</translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>Uw portemonnee bevat legacy non-HD-accounts, deze kunnen niet worden hersteld met een herstelzin en vereisen een wallet.dat back-up. Wij raden aan de Guldens van deze legacy account over te zetten naar een nieuwe HD-account.</translation>
+    </message>
+</context>
+<context>
     <name>AccountSummaryWidget</name>
     <message>
         <source>Account balances</source>
@@ -1708,173 +2910,6 @@ Normaal gesproken als iemand anders een block genereert op dezelfde tijd als u.<
     </message>
 </context>
 <context>
-    <name>TransactionView</name>
-    <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Kommagescheiden bestand (*.csv)</translation>
-    </message>
-    <message>
-        <source>Exporting Failed</source>
-        <translation>Export mislukt</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adres</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Bevestigd</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Kopieer adres</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopieer label</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopieer bedrag</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopieer transactie-ID</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Gegenereerd</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation>Type</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation>Ontvangen met</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation>Verzonden aan</translation>
-    </message>
-    <message>
-        <source>Internal transfer</source>
-        <translation>Interne transactie</translation>
-    </message>
-    <message>
-        <source>Witness reward</source>
-        <translation>Witness-beloning</translation>
-    </message>
-    <message>
-        <source>Clear orphan transactions</source>
-        <translation>Verwijder de orphan transacties</translation>
-    </message>
-    <message>
-        <source>All dates</source>
-        <translation>Alle data</translation>
-    </message>
-    <message>
-        <source>Today</source>
-        <translation>Vandaag</translation>
-    </message>
-    <message>
-        <source>This week</source>
-        <translation>Deze week</translation>
-    </message>
-    <message>
-        <source>This month</source>
-        <translation>Deze maand</translation>
-    </message>
-    <message>
-        <source>Last month</source>
-        <translation>Vorige maand</translation>
-    </message>
-    <message>
-        <source>This year</source>
-        <translation>Dit jaar</translation>
-    </message>
-    <message>
-        <source>Select range</source>
-        <translation>Selecteer periode</translation>
-    </message>
-    <message>
-        <source>All transaction types</source>
-        <translation>Alle transactietypes</translation>
-    </message>
-    <message>
-        <source>Other</source>
-        <translation>Anders</translation>
-    </message>
-    <message>
-        <source>Search label</source>
-        <translation>Zoek op label</translation>
-    </message>
-    <message>
-        <source>Min amount</source>
-        <translation>Min. bedrag</translation>
-    </message>
-    <message>
-        <source>Abandon transaction</source>
-        <translation>Transactie afbreken</translation>
-    </message>
-    <message>
-        <source>Increase transaction fee</source>
-        <translation>Verhoog transactiekosten</translation>
-    </message>
-    <message>
-        <source>Copy raw transaction</source>
-        <translation>Kopieer de ruwe transactie</translation>
-    </message>
-    <message>
-        <source>Copy full transaction details</source>
-        <translation>Kopieer alle transactiedetails</translation>
-    </message>
-    <message>
-        <source>Edit label</source>
-        <translation>Bewerk label</translation>
-    </message>
-    <message>
-        <source>Show transaction details</source>
-        <translation>Toon transactiedetails</translation>
-    </message>
-    <message>
-        <source>Export Transaction History</source>
-        <translation>Exporteer transactieverleden</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
-    </message>
-    <message>
-        <source>There was an error trying to save the transaction history to %1.</source>
-        <translation>Er is een fout opgetreden bij het opslaan van het transactieverleden naar %1.</translation>
-    </message>
-    <message>
-        <source>Exporting Successful</source>
-        <translation>Export is succesvol</translation>
-    </message>
-    <message>
-        <source>The transaction history was successfully saved to %1.</source>
-        <translation>Het transactieverleden was succesvol bewaard in %1.</translation>
-    </message>
-    <message>
-        <source>Range:</source>
-        <translation>Bereik:</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <translation>tot</translation>
-    </message>
-</context>
-<context>
     <name>AddressTableModel</name>
     <message>
         <source>Label</source>
@@ -1887,53 +2922,6 @@ Normaal gesproken als iemand anders een block genereert op dezelfde tijd als u.<
     <message>
         <source>(no label)</source>
         <translation>(geen label)</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adres</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>Afbeelding op&amp;slaan...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Bedrag</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-code</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopieer &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopieer &amp;adres</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>Betalingsverzoek aan %1</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>Betalingsinformatie</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Bericht</translation>
     </message>
 </context>
 <context>
@@ -1965,411 +2953,6 @@ Normaal gesproken als iemand anders een block genereert op dezelfde tijd als u.<
     <message>
         <source>Requested</source>
         <translation>Gevraagd</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(geen label)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Muntselectie</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Kwantiteit:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Bedrag:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Stof:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Vergoeding:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Na vergoeding:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Wisselgeld:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(de)selecteer alles</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Boommodus</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Lijstmodus</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Bedrag</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Ontvangen met label</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Ontvangen met adres</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Bevestigingen</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Bevestigd</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Kopieer adres</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopieer label</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopieer bedrag</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopieer transactie-ID</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Blokeer ongebruikte</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Deblokkeer ongebruikte</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Kopieer aantal</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Kopieer vergoeding</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Kopieer na vergoeding</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Kopieer bytes</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Kopieer stof</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Kopieer wisselgeld</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 geblokeerd)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>ja</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>nee</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>De omschrijving wordt rood als een ontvanger een bedrag ontvangt kleiner dan de huidige dust treshold.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Kan per ingang +/- %1 satoshi(s) variëren.</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>wijzig van %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(wijzig)</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionTableModel</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(geen label)</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Ontvangen</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Verstuurd</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Open tot %1</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Gegenereerd</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>alleen-bekijkbaar</translation>
-    </message>
-    <message>
-        <source>Unlock funds</source>
-        <translation>Deblokkeer saldo</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation>Type</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation>Omschrijving</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>Open voor nog %n blok</numerusform>
-            <numerusform>Open voor nog %n blokken</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Niet verbonden</translation>
-    </message>
-    <message>
-        <source>Unconfirmed</source>
-        <translation>Onbevestigd</translation>
-    </message>
-    <message>
-        <source>Abandoned</source>
-        <translation>Afbreken</translation>
-    </message>
-    <message>
-        <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation>Bevestigen (%1 van %2 aanbevolen bevestigingen)</translation>
-    </message>
-    <message>
-        <source>Confirmed (%1 confirmations)</source>
-        <translation>Bevestigd (%1 bevestigingen)</translation>
-    </message>
-    <message>
-        <source>Conflicted</source>
-        <translation>Conflicterend</translation>
-    </message>
-    <message>
-        <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation>immatuur (%1 bevestigingen, zal beschikbaar zijn na %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Dit blok is niet ontvangen bij andere knooppunten en zal waarschijnlijk niet worden geaccepteerd!</translation>
-    </message>
-    <message>
-        <source>Generated but not accepted</source>
-        <translation>Gegenereerd maar niet geaccepteerd</translation>
-    </message>
-    <message>
-        <source>External payee</source>
-        <translation>Externe</translation>
-    </message>
-    <message>
-        <source>Multiple addresses</source>
-        <translation>Meerdere adressen</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation>Ontvangen met</translation>
-    </message>
-    <message>
-        <source>Received from</source>
-        <translation>Ontvangen van</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation>Verzonden aan</translation>
-    </message>
-    <message>
-        <source>Payment to yourself</source>
-        <translation>Betaling aan uzelf</translation>
-    </message>
-    <message>
-        <source>Internal transfer</source>
-        <translation>Interne transactie</translation>
-    </message>
-    <message>
-        <source>Witness reward</source>
-        <translation>Witness-beloning</translation>
-    </message>
-    <message>
-        <source>Fund witness account extension</source>
-        <translation>Financier uitbreiding witness-rekening</translation>
-    </message>
-    <message>
-        <source>Extend witness account</source>
-        <translation>Breid witness-rekening uit</translation>
-    </message>
-    <message>
-        <source>Split locked funds</source>
-        <translation>Splits geblokkeerde fondsen</translation>
-    </message>
-    <message>
-        <source>Merge locked funds</source>
-        <translation>Voeg geblokkeerde fondsen samen</translation>
-    </message>
-    <message>
-        <source>Rotate witness key</source>
-        <translation>Roteer witness-sleutel</translation>
-    </message>
-    <message>
-        <source>Renew witness account</source>
-        <translation>Vernieuwen witness-rekening</translation>
-    </message>
-    <message>
-        <source>Fund witness account</source>
-        <translation>Vul witness-rekening</translation>
-    </message>
-    <message>
-        <source>Lock funds</source>
-        <translation>Blokkeer het saldo</translation>
-    </message>
-    <message>
-        <source>Empty witness account</source>
-        <translation>Leeg witness-rekening</translation>
-    </message>
-    <message>
-        <source>Received from witness account</source>
-        <translation>Ontvangen van witness-rekening</translation>
-    </message>
-    <message>
-        <source>Lock funds from: %1</source>
-        <translation>Blokkeer het saldo vanaf: %1</translation>
-    </message>
-    <message>
-        <source>Extend locked funds from: %1</source>
-        <translation>Breid geblokkeerde fondsen uit van: %1</translation>
-    </message>
-    <message>
-        <source>Split locked funds: %1</source>
-        <translation>Splits geblokkeerde fondsen: %1</translation>
-    </message>
-    <message>
-        <source>Merge locked funds: %1</source>
-        <translation>Voeg fondsen bij elkaar: %1</translation>
-    </message>
-    <message>
-        <source>Rotate witness key: %1</source>
-        <translation>Roteer witness-sleutel: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds from: %1</source>
-        <translation>Deblokkeer het saldo vanaf: %1</translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation>Betaald aan: %1</translation>
-    </message>
-    <message>
-        <source>Payment from: %1</source>
-        <translation>Betaling van: %1</translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
-        <translation>Complexe transactie, bekijk transactiedetails</translation>
-    </message>
-    <message>
-        <source>Internal transfer from: %1</source>
-        <translation>Interne transactie van: %1</translation>
-    </message>
-    <message>
-        <source>Fund witness account: %1</source>
-        <translation>Vul witness-rekening: %1</translation>
-    </message>
-    <message>
-        <source>Fund witness account extension: %1</source>
-        <translation>Financier uitbreiding witness-rekening: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds to: %1</source>
-        <translation>Deblokkeer het saldo naar: %1</translation>
-    </message>
-    <message>
-        <source>Internal transfer to: %1</source>
-        <translation>Interne transactie naar: %1</translation>
-    </message>
-    <message>
-        <source>Internal account movement</source>
-        <translation>Verplaatsing interne account</translation>
-    </message>
-    <message>
-        <source>Extend locked funds</source>
-        <translation>Breid geblokkeerde fondsen uit</translation>
-    </message>
-    <message>
-        <source>Generation reward</source>
-        <translation>Genereer-beloning</translation>
-    </message>
-    <message>
-        <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>Transactiestatus. Houd de muiscursor boven dit veld om het aantal bevestigingen te tonen.</translation>
-    </message>
-    <message>
-        <source>Date and time that the transaction was received.</source>
-        <translation>Datum en tijd waarop deze transactie is ontvangen.</translation>
-    </message>
-    <message>
-        <source>Type of transaction.</source>
-        <translation>Transactietype.</translation>
-    </message>
-    <message>
-        <source>Whether or not a watch-only address is involved in this transaction.</source>
-        <translation>Al dan niet een alleen-bekijkenadres betrokken is in deze transactie.</translation>
-    </message>
-    <message>
-        <source>User-defined intent/purpose of the transaction.</source>
-        <translation>Doel van de transactie</translation>
-    </message>
-    <message>
-        <source>Amount added to balance.</source>
-        <translation>Toegevoegd aan totaalbedrag</translation>
-    </message>
-    <message>
-        <source>Amount removed from balance.</source>
-        <translation>Bedrag verwijderd van saldo.</translation>
     </message>
 </context>
 <context>
@@ -2411,292 +2994,6 @@ Normaal gesproken als iemand anders een block genereert op dezelfde tijd als u.<
     <message>
         <source>Network Alert</source>
         <translation>Netwerkwaarschuwing</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Bedrag</translation>
-    </message>
-    <message>
-        <source>Enter an address (e.g. %1)</source>
-        <translation>Voer een adres in (bijv. %1)</translation>
-    </message>
-    <message>
-        <source>Enter a private key</source>
-        <translation>Voer een private key in</translation>
-    </message>
-    <message>
-        <source>Enter a Gulden URL</source>
-        <translation>Voer een Gulden-URL in</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 u</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Geen</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N.v.t.</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n seconde(n)</numerusform>
-            <numerusform>%n seconde(n)</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n minuut</numerusform>
-            <numerusform>%n minuten</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n uur</numerusform>
-            <numerusform>%n uur</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n dag</numerusform>
-            <numerusform>%n dagen</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n week</numerusform>
-            <numerusform>%n weken</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 en %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n jaar</numerusform>
-            <numerusform>%n jaar</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation>%1 nog niet veilig verlaten...</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Bedrag</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Bericht</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>Open voor nog %n blok</numerusform>
-            <numerusform>Open voor nog %n blokken</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Openen totdat %1</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation>In conflict met transactie met %1 bevestiging</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation>0/onbevestigd, %1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation>In geheugenpool</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation>Niet in geheugenpool</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation>Verlaten</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/onbevestigd</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 bevestigingen</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, is nog niet met succes uitgezonden</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, uitgezonden naar %n knooppunt</numerusform>
-            <numerusform>, uitgezonden naar %n knooppunten</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>Bron</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Gegenereerd</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>Van</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>onbekend</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>Aan</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>eigen adres</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>alleen-bekijkbaar</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>label</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation>Credit</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation>
-            <numerusform>komt tot wasdom na %n nieuw blok</numerusform>
-            <numerusform>komt tot wasdom na %n nieuwe blokken</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>niet geaccepteerd</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Debet</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>Totaal debet</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>Totaal crediet</translation>
-    </message>
-    <message>
-        <source>Total moved</source>
-        <translation>Totaal verplaatst</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>Transactiekosten</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>Nettobedrag</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Opmerking</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>Transactie-ID</translation>
-    </message>
-    <message>
-        <source>Transaction total size</source>
-        <translation>Totale grootte van de transactie</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>Uitgangsindex</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>Handelaar</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Gegenereerde munten moeten %1 blokken rijpen voordat ze kunnen worden besteed. 
-Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de blokketen toegevoegd te worden. Als het niet lukt om in de keten toegevoegd te worden, zal de status veranderen naar &quot;niet geaccepteerd&quot; en zal deze niet besteedbaar zijn. Dit kan soms gebeuren als een ander knooppunt een blok genereert binnen een paar seconden na die van u.</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>Debuginformatie</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>Transactie</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>Ingangen</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>waar</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>onjuist</translation>
     </message>
 </context>
 <context>
@@ -2806,14 +3103,6 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     <message>
         <source>Current number of transactions</source>
         <translation>Huidig aantal transacties</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Geheugengebruik</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Debuglogbestand</translation>
     </message>
     <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
@@ -3377,242 +3666,6 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     </message>
 </context>
 <context>
-    <name>WitnessDialog</name>
-    <message>
-        <source>Information</source>
-        <translation>Informatie</translation>
-    </message>
-    <message>
-        <source>%1 months</source>
-        <translation>%1 maanden</translation>
-    </message>
-    <message>
-        <source>To begin witnessing, select an account from which to lock funds:</source>
-        <translation>Om te beginnen met witnessing, selecteert u een account van waaruit Gulden worden vastgezet:</translation>
-    </message>
-    <message>
-        <source>Projected earnings graph</source>
-        <translation>Verwachte inkomsten grafiek</translation>
-    </message>
-    <message>
-        <source>Compound earnings</source>
-        <translation>Cumulatieve inkomsten</translation>
-    </message>
-    <message>
-        <source>n/a</source>
-        <translation>n.v.t.</translation>
-    </message>
-    <message>
-        <source>Lock time remaining</source>
-        <translation>Resterende looptijd</translation>
-    </message>
-    <message>
-        <source>Locked from</source>
-        <translation>Vastgezet vanaf</translation>
-    </message>
-    <message>
-        <source>Locked until</source>
-        <translation>Vastgezet tot en met</translation>
-    </message>
-    <message>
-        <source>Last earnings</source>
-        <translation>Laatste beloning op:</translation>
-    </message>
-    <message>
-        <source>Earnings</source>
-        <translation>Totale beloning</translation>
-    </message>
-    <message>
-        <source>Lock duration</source>
-        <translation>Looptijd</translation>
-    </message>
-    <message>
-        <source>Required earnings frequency</source>
-        <translation>Benodigde belonings tijd</translation>
-    </message>
-    <message>
-        <source>Weight</source>
-        <translation>Gewicht</translation>
-    </message>
-    <message>
-        <source>Estimated earnings frequency</source>
-        <translation>Verwachte belonings tijd</translation>
-    </message>
-    <message>
-        <source>Network weight</source>
-        <translation>Netwerk gewicht</translation>
-    </message>
-    <message>
-        <source>Inactive witness account</source>
-        <translation>Inactieve witness-rekening</translation>
-    </message>
-    <message>
-        <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
-        <translation>Uw witness rekening is gedeactiveerd omdat uw rekening niet binnen de verwachte tijd heeft kunnen &quot;witnessen&quot;. Als dit vaak gebeurt, zorg er dan voor dat u een stabiele witnessing omgeving hebt of neem contact op met support. Om witnessing te hervatten, selecteert u de rekening hieronder en drukt u op de knop &apos;Rekening vernieuwen&apos;. Een kleine heractiverings-fee zal u worden berekend.</translation>
-    </message>
-    <message>
-        <source>Waiting for confirmation</source>
-        <translation>Wachten op bevestiging</translation>
-    </message>
-    <message>
-        <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
-        <translation>Uw witness account wacht op de transactiebevestiging van het netwerk voordat het actief wordt, gemiddeld duurt dit slechts een paar minuten. Mocht deze pagina langer dan deze periode blijven verschijnen, raadpleeg dan het transactie tabblad en/of vraag om assistentie.</translation>
-    </message>
-    <message>
-        <source>Account emptied</source>
-        <translation>Account is leeggemaakt</translation>
-    </message>
-    <message>
-        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
-In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
-        <translation>Uw witness-rekening is klaar met witnessing en alle bedragen zijn verplaatst. Uw inkomsten en transacties blijven hier zichtbaar maar u kunt de rekening verder niet meer gebruiken. Als u witness weer wil gebruiken, maak dan een nieuwe witness-rekening aan.
-In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te hergebruiken voor witnessing.</translation>
-    </message>
-    <message>
-        <source>Change units</source>
-        <translation>Verander eenheden</translation>
-    </message>
-    <message>
-        <source>View graph</source>
-        <translation>Bekijk de grafiek</translation>
-    </message>
-    <message>
-        <source>Empty account</source>
-        <translation>Account legen</translation>
-    </message>
-    <message>
-        <source>Withdraw earnings</source>
-        <translation>Beloning opnemen</translation>
-    </message>
-    <message>
-        <source>Fund account</source>
-        <translation>Vul het account</translation>
-    </message>
-    <message>
-        <source>Renew account</source>
-        <translation>Vernieuw account</translation>
-    </message>
-    <message>
-        <source>Earnings to date</source>
-        <translation>Inkomsten tot datum</translation>
-    </message>
-    <message>
-        <source>Projected earnings</source>
-        <translation>Verwachte inkomsten</translation>
-    </message>
-    <message>
-        <source>Initial projected earnings</source>
-        <translation>Initiële verwachte inkomsten</translation>
-    </message>
-    <message>
-        <source>&amp;Blocks</source>
-        <translation>&amp;Blokken</translation>
-    </message>
-    <message>
-        <source>&amp;Days</source>
-        <translation>&amp;Dagen</translation>
-    </message>
-    <message>
-        <source>&amp;Weeks</source>
-        <translation>&amp;Weken</translation>
-    </message>
-    <message>
-        <source>&amp;Months</source>
-        <translation>&amp;Maanden</translation>
-    </message>
-    <message>
-        <source>%1 blocks</source>
-        <translation>%1 blokken</translation>
-    </message>
-    <message>
-        <source>%1 days</source>
-        <translation>%1 dagen</translation>
-    </message>
-    <message>
-        <source>%1 weeks</source>
-        <translation>%1 weken</translation>
-    </message>
-</context>
-<context>
-    <name>Gulden</name>
-    <message>
-        <source>Done loading</source>
-        <translation>Laden is gereed</translation>
-    </message>
-    <message>
-        <source>Erasing block index...</source>
-        <translation>Blokindex legen...</translation>
-    </message>
-    <message>
-        <source>Error reading from database, shutting down.</source>
-        <translation>Fout bij lezen database, app sluit af.</translation>
-    </message>
-    <message>
-        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation>Ongeldige of geen genesisblok gevonden. Verkeerde datadirectory voor netwerk?</translation>
-    </message>
-    <message>
-        <source>Legacy account</source>
-        <translation>Legacy-rekening</translation>
-    </message>
-    <message>
-        <source>Loading P2P addresses...</source>
-        <translation>P2P-adressen worden geladen...</translation>
-    </message>
-    <message>
-        <source>Loading banlist...</source>
-        <translation>Banlijst wordt geladen...</translation>
-    </message>
-    <message>
-        <source>Loading block index...</source>
-        <translation>Blokindex wordt geladen...</translation>
-    </message>
-    <message>
-        <source>Loading wallet...</source>
-        <translation>Portemonnee wordt geladen...</translation>
-    </message>
-    <message>
-        <source>My account</source>
-        <translation>Mijn account</translation>
-    </message>
-    <message>
-        <source>Wallet unlock required for wallet upgrade</source>
-        <translation>Ontgrendelen portemonnee noodzakelijk voor upgrade</translation>
-    </message>
-    <message>
-        <source>Zapping all transactions from wallet...</source>
-        <translation>Alle transacties worden uit de wallet verwijderd...</translation>
-    </message>
-    <message>
-        <source>Pruning blockstore...</source>
-        <translation>Opschonen blockstore...</translation>
-    </message>
-    <message>
-        <source>Reloading block index...</source>
-        <translation>Herladen blokindex...</translation>
-    </message>
-    <message>
-        <source>Rescanning...</source>
-        <translation>Herscannen...</translation>
-    </message>
-    <message>
-        <source>Rewinding blocks...</source>
-        <translation>Blokken terugspoelen...</translation>
-    </message>
-    <message>
-        <source>Starting network threads...</source>
-        <translation>Starten netwerk threads...</translation>
-    </message>
-    <message>
-        <source>Upgrading block index...</source>
-        <translation>Blokindex upgraden...</translation>
-    </message>
-    <message>
-        <source>Verifying blocks...</source>
-        <translation>Blokken verifiëren....</translation>
-    </message>
-</context>
-<context>
     <name>GuldenAmountField</name>
     <message>
         <source>Max</source>
@@ -3687,10 +3740,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
         <translation>Het verlagen van het geheugengebruik is niet aanbevolen. Het vertraagt je mining operatie terwijl het evenveel cpu kracht en energie gebruikt. Alleen gebruiken als laatste optie op machines met een laag geheugen.</translation>
-    </message>
-    <message>
-        <source>%1 Mb</source>
-        <translation>%1 Mb</translation>
     </message>
     <message>
         <source>%1 threads</source>
@@ -3770,6 +3819,33 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     </message>
 </context>
 <context>
+    <name>ViewAddressDialog</name>
+    <message>
+        <source>Address copied to clipboard</source>
+        <translation>Adres gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <source>Copy address to clipboard</source>
+        <translation>Adres naar klembord kopiëren</translation>
+    </message>
+    <message>
+        <source>address</source>
+        <translation>adres</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulterend URI te lang, probeer de tekst voor het etiket / bericht te verkleinen.</translation>
+    </message>
+    <message>
+        <source>My witness address</source>
+        <translation>Mijn Witness adres</translation>
+    </message>
+    <message>
+        <source>No valid witness address has been generated for this account</source>
+        <translation>Er is geen geldig Witness adres voor deze account aangemaakt</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -3790,111 +3866,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Select payment request file to open</source>
         <translation>Selecteer betalingsverzoekbestand om te openen</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulier</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Balans</translation>
-    </message>
-    <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Gulden network after a connection is established, but this process has not completed yet.</source>
-        <translation>De weergegeven informatie kan verouderd zijn. Uw portemonnee synchroniseert automatisch met het Gulden-netwerk nadat een verbinding tot stand is gebracht, maar dit proces is nog niet voltooid.</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Onbevestigde transacties naar alleen-bekijkbare adressen</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>De som van de transacties die nog bevestigd moeten worden, en nog niet meetellen in uw beschikbare saldo</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Totaal:</translation>
-    </message>
-    <message>
-        <source>Generated balance in watch-only addresses that has not yet matured</source>
-        <translation>Gegenereerd saldo in alleen-bekijkbare adressen dat nog niet tot wasdom is gekomen</translation>
-    </message>
-    <message>
-        <source>Generated balance that has not yet matured</source>
-        <translation>Gegenereerd saldo dat nog niet tot wasdom is gekomen</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Immatuur:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Uw totale saldo</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Huidige balans in alleen-bekijkbare adressen.</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Alleen-bekijkbaar:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Beschikbaar:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Uw beschikbare saldo</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Uw huidige balans in alleen-bekijkbare adressen</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>In behandeling:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Besteedbaar:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Recente transacties</translation>
-    </message>
-</context>
-<context>
-    <name>SyncOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulier</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>Verbergen</translation>
-    </message>
-    <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network for the first time.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw portemonnee synchroniseert nu voor het eerst met het Gulden netwerk.&lt;br/&gt;Pas als uw portemonnee klaar is met synchroniseren, zullen uw saldo en recente transacties zichtbaar zijn.</translation>
-    </message>
-    <message>
-        <source>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Notice&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Your wallet is now synchronizing with the Gulden network.&lt;br/&gt;Once your wallet has finished synchronizing, your balance and recent transactions will be visible.</source>
-        <translation>&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Opmerking&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Uw wallet wordt nu gesynchroniseerd met het Gulden netwerk.&lt;br/&gt;Pas als uw wallet volledig is gesynchroniseerd zijn uw transacties en balans zichtbaar.</translation>
-    </message>
-</context>
-<context>
-    <name>WarningOverlay</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulier</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>Verbergen</translation>
     </message>
 </context>
 <context>
@@ -4042,33 +4013,6 @@ In toekomstige versies van Gulden zal het mogelijk worden om deze rekening  te h
     <message>
         <source>Yes</source>
         <translation>Ja</translation>
-    </message>
-</context>
-<context>
-    <name>ViewAddressDialog</name>
-    <message>
-        <source>address</source>
-        <translation>adres</translation>
-    </message>
-    <message>
-        <source>Address copied to clipboard</source>
-        <translation>Adres gekopieerd naar klembord</translation>
-    </message>
-    <message>
-        <source>Copy address to clipboard</source>
-        <translation>Adres naar klembord kopiëren</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resulterend URI te lang, probeer de tekst voor het etiket / bericht te verkleinen.</translation>
-    </message>
-    <message>
-        <source>My witness address</source>
-        <translation>Mijn Witness adres</translation>
-    </message>
-    <message>
-        <source>No valid witness address has been generated for this account</source>
-        <translation>Er is geen geldig Witness adres voor deze account aangemaakt</translation>
     </message>
 </context>
 <context>

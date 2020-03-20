@@ -9,6 +9,109 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kopurua</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(etiketarik ez)</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Kopurua</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopiatu helbidea</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopiatu etiketa</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kopurua</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kopurua</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etiketa</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Helbidea</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Kopiatu helbidea</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Mezua</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kopurua</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Mezua</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Zabalik %1 arte</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/konfirmatu gabe</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 konfirmazioak</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, ez da arrakastaz emititu oraindik</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>ezezaguna</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transakzioaren</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Inprimakia</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -193,29 +296,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>Etiketa</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Helbidea</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Kopurua</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Kopiatu helbidea</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Mezua</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -232,33 +312,6 @@
     <message>
         <source>Message</source>
         <translation>Mezua</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(etiketarik ez)</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Kopurua</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Kopurua</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Kopiatu helbidea</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopiatu etiketa</translation>
     </message>
 </context>
 <context>
@@ -431,52 +484,6 @@
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Kopurua</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Kopurua</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Mezua</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Zabalik %1 arte</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/konfirmatu gabe</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 konfirmazioak</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ez da arrakastaz emititu oraindik</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>ezezaguna</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>Transakzioaren</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -524,13 +531,6 @@
     <message>
         <source>Options</source>
         <translation>Aukerak</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Inprimakia</translation>
     </message>
 </context>
 <context>

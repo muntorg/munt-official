@@ -9,6 +9,102 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Selección de moneda</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Cantidad:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Monto:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Polvo:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Comisión:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Cambio:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(de)seleccionar todo</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Modo de árbol</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Modo de lista</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Recibido con etiqueta</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Recibido con dirección</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Confirmaciones</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Confirmado</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 y %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Copiar Dirección</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -78,69 +174,6 @@
     </message>
 </context>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Selección de moneda</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Cantidad:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Monto:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Polvo:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Comisión:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Cambio:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(de)seleccionar todo</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Modo de árbol</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Modo de lista</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Recibido con etiqueta</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Recibido con dirección</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Fecha</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Confirmaciones</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Confirmado</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Quantity:</source>
@@ -161,39 +194,6 @@
     <message>
         <source>Change:</source>
         <translation>Cambio:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 y %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Copiar Dirección</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Fecha</translation>
     </message>
 </context>
 <context>

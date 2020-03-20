@@ -9,6 +9,70 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Саны</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Саны</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Шаң</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Комиссия</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Комиссия алу кейін</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Күні</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Растау саны</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Растық</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Саны</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 немесе %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Саны</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Саны</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Күні</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>C&amp;lose</source>
@@ -58,41 +122,6 @@
     </message>
 </context>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>Саны</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Шаң</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Комиссия</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Комиссия алу кейін</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Саны</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Күні</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Растау саны</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Растық</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Amount:</source>
@@ -109,35 +138,6 @@
     <message>
         <source>After Fee:</source>
         <translation>Комиссия алу кейін:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Саны</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 немесе %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Саны</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Саны</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Күні</translation>
     </message>
 </context>
 <context>

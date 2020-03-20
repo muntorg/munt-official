@@ -9,6 +9,106 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Бајти:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Сума:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Прашина:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Провизија:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>После Провизија:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Кусур:</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 д</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 ч</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 м</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 с</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 мс</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 и %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Сними Слика...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR Код</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Копирај &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Копирај &amp;Адреса</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -81,64 +181,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Сними Слика...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Сума</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR Код</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Копирај &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Копирај &amp;Адреса</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Bytes:</source>
-        <translation>Бајти:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Сума:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Прашина:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Провизија:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>После Провизија:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Кусур:</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Сума</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Bytes:</source>
@@ -163,48 +205,6 @@
     <message>
         <source>Change:</source>
         <translation>Кусур:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Сума</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 д</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 ч</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 м</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 с</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 мс</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 и %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Сума</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
     </message>
 </context>
 <context>

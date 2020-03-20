@@ -9,6 +9,153 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Daudzums</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Daudzums:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Baiti:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Daudzums:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Maksa:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Pēc Maksas:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Atlikums:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>iezīmēt visus</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Koka režīms</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Saraksta režīms</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datums</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Apstiprinājumi</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Apstiprināts</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Daudzums</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 st</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 un %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Daudzums</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Saglabāt Attēlu...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR Kods</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopēt &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopēt &amp;Adresi</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Daudzums</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datums</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Forma</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Kopējā apstiprināmo transakciju vērtība, vēl nav ieskaitīta tērējamajā bilancē</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Kopsumma:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nenobriedušu:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Jūsu kopējā tekošā bilance</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Pieejams:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Tava pašreizējā tērējamā bilance</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Neizšķirts:</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>C&amp;lose</source>
@@ -81,84 +228,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Saglabāt Attēlu...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Daudzums</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR Kods</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopēt &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopēt &amp;Adresi</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Quantity:</source>
-        <translation>Daudzums:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Baiti:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Daudzums:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Maksa:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Pēc Maksas:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Atlikums:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>iezīmēt visus</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Koka režīms</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Saraksta režīms</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Daudzums</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datums</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Apstiprinājumi</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Apstiprināts</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Quantity:</source>
@@ -227,40 +296,6 @@
     <message>
         <source>Balance:</source>
         <translation>Bilance:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Daudzums</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 st</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 un %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Daudzums</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datums</translation>
     </message>
 </context>
 <context>
@@ -626,41 +661,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Izvēlies maksājuma pieprasījuma datni</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Forma</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Kopējā apstiprināmo transakciju vērtība, vēl nav ieskaitīta tērējamajā bilancē</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Kopsumma:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nenobriedušu:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Jūsu kopējā tekošā bilance</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Pieejams:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Tava pašreizējā tērējamā bilance</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Neizšķirts:</translation>
     </message>
 </context>
 <context>

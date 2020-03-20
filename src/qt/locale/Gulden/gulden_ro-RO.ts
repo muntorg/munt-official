@@ -9,6 +9,213 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sumă</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Selectarea monedei</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Cantitate:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Octeţi:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Sumă:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Praf:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Taxă:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>După taxă:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Schimb:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(de)selectare tot</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Mod arbore</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Mod listă</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Primite cu eticheta</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Primite cu adresa</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Confirmări</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Confirmat</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 z</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Niciuna</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 şi %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salvează imaginea...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>Cod QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Copiază &amp;URl</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Copiază &amp;adresa</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Balanţă</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Tranzacţii neconfirmate la adresele doar-supraveghere</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Totalul tranzacţiilor care nu sunt confirmate încă şi care nu sunt încă adunate la balanţa de cheltuieli</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Total:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nematurizat:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Balanţa totală curentă</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Soldul dvs. total în adresele doar-supraveghere</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Doar-supraveghere:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Disponibil:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Balanţa dvs. curentă de cheltuieli</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Soldul dvs. curent în adresele doar-supraveghere</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>În aşteptare:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Cheltuibil:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Tranzacţii recente</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -93,100 +300,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Salvează imaginea...</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Salvează imaginea...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>Cod QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Copiază &amp;URl</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Copiază &amp;adresa</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Selectarea monedei</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Cantitate:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Octeţi:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Sumă:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Praf:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Taxă:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>După taxă:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Schimb:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(de)selectare tot</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Mod arbore</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Mod listă</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Sumă</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Primite cu eticheta</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Primite cu adresa</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Confirmări</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Confirmat</translation>
     </message>
 </context>
 <context>
@@ -294,56 +407,6 @@
     <message>
         <source>Balance:</source>
         <translation>Balanţă:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 z</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Niciuna</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 şi %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
     </message>
 </context>
 <context>
@@ -937,69 +1000,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Selectaţi fişierul cerere de plată</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Balanţă</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Tranzacţii neconfirmate la adresele doar-supraveghere</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Totalul tranzacţiilor care nu sunt confirmate încă şi care nu sunt încă adunate la balanţa de cheltuieli</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Total:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nematurizat:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Balanţa totală curentă</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Soldul dvs. total în adresele doar-supraveghere</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Doar-supraveghere:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Disponibil:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Balanţa dvs. curentă de cheltuieli</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Soldul dvs. curent în adresele doar-supraveghere</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>În aşteptare:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Cheltuibil:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Tranzacţii recente</translation>
     </message>
 </context>
 <context>

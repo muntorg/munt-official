@@ -9,6 +9,113 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sasia</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(pa etiketë)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Zgjedhja e monedhes</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Shuma:</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopjo adresën</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>po</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>jo</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sasia</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 dhe %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sasia</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etiketë</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adresë</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Kopjo adresen</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sasia</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Hapur deri më %1</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/I pakonfirmuar</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 konfirmimet</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, nuk është transmetuar me sukses deri tani</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>i/e panjohur</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>transaksionit</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formilarë</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -138,25 +245,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>Etiketë</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adresë</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Sasia</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Kopjo adresen</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -169,41 +257,6 @@
     <message>
         <source>Date</source>
         <translation>Data</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(pa etiketë)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Zgjedhja e monedhes</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Shuma:</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Sasia</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Kopjo adresën</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>po</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>jo</translation>
     </message>
 </context>
 <context>
@@ -360,52 +413,6 @@
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Sasia</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 dhe %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Sasia</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Hapur deri më %1</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/I pakonfirmuar</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 konfirmimet</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, nuk është transmetuar me sukses deri tani</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>i/e panjohur</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>transaksionit</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -493,13 +500,6 @@
     <message>
         <source>version</source>
         <translation>versioni</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formilarë</translation>
     </message>
 </context>
 <context>

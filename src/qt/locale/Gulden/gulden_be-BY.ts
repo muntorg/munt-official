@@ -9,6 +9,213 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Колькасць</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>непазначаны</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Колькасць:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Байтаў:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Колькасць:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Пыл:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Камісія:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Пасля камісіі:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(не)выбраць ўсё</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Рэжым дрэва</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Рэжым спіса</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Прыняць праз метку</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Прыняць праз адрас</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Пацверджанняў</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Пацверджана</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Капіяваць адрас</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Капіяваць пазнаку</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Капіяваць колькасць</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Капіяваць ID транзакцыі</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Замкнуць непатрачанае</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Адамкнуць непатрачанае</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Капіяваць колькасць</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Капіяваць камісію</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Капіяваць з выняткам камісіі</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Капіяваць байты</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Капіяваць пыл</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>так</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>не</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Колькасць</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 і %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Колькасць</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Метка</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адрас</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Капіяваць адрас</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Паведамленне</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Колькасць</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Паведамленне</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1/offline</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/непацверджана</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 пацверджанняў</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Статус</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, пакуль не было паспяхова транслявана</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>невядома</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Каментар</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>ID</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -221,29 +428,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>Метка</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Адрас</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Колькасць</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Капіяваць адрас</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Паведамленне</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -260,125 +444,6 @@
     <message>
         <source>Message</source>
         <translation>Паведамленне</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>непазначаны</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Колькасць:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Байтаў:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Колькасць:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Пыл:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Камісія:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Пасля камісіі:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(не)выбраць ўсё</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Рэжым дрэва</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Рэжым спіса</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Колькасць</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Прыняць праз метку</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Прыняць праз адрас</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Пацверджанняў</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Пацверджана</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Капіяваць адрас</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Капіяваць пазнаку</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Капіяваць колькасць</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Капіяваць ID транзакцыі</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Замкнуць непатрачанае</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Адамкнуць непатрачанае</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Капіяваць колькасць</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Капіяваць камісію</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Капіяваць з выняткам камісіі</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Капіяваць байты</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Капіяваць пыл</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>так</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>не</translation>
     </message>
 </context>
 <context>
@@ -615,64 +680,6 @@
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Колькасць</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 і %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Колькасць</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Паведамленне</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/непацверджана</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 пацверджанняў</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Статус</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, пакуль не было паспяхова транслявана</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>невядома</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Каментар</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>ID</translation>
-    </message>
-</context>
-<context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
@@ -806,13 +813,6 @@
     <message>
         <source>Open URI</source>
         <translation>Адкрыць URI</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Форма</translation>
     </message>
 </context>
 <context>

@@ -9,6 +9,511 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Credit</source>
+        <translation>Credito</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Enviado</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Mensaje</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Abierto hasta %1</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>Hay un conflicto con la traducción de las confirmaciones %1</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1/sin conexión</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation>0/no confirmado, %1</translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation>en el equipo de memoria</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>no en el equipo de memoria</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation>abandonado</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/no confirmado</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>confirmaciones %1</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Estado</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, no ha sido emitido con éxito aún</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>Fuente</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Generado</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Desde</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Para</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>dirección propia</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>de observación</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>etiqueta</translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>no aceptada</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>Total enviado</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>Total recibido</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Comisión de transacción</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Cantidad neta</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Comentario</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>Identificador de transacción (ID)</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>Indice de salida</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>Vendedor</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Los bitcoins generados deben madurar %1 bloques antes de que puedan gastarse. Cuando generó este bloque, se transmitió a la red para que se añadiera a la cadena de bloques. Si no consigue entrar en la cadena, su estado cambiará a &quot;no aceptado&quot; y ya no se podrá gastar. Esto puede ocurrir ocasionalmente si otro nodo genera un bloque a pocos segundos del suyo.</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>Información de depuración</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transacción</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>entradas</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>verdadero</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>falso</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(sin etiqueta)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Selección de la moneda</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Cantidad:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Cuantía:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Polvo:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Tasa:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Después de aplicar la comisión:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Cambio:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(des)marcar todos</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Modo árbol</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Modo lista</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Recibido con etiqueta</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Recibido con dirección</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Confirmaciones</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Confirmado</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Copiar ubicación</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copiar etiqueta</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Copiar cantidad</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Copiar ID de transacción</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Bloquear lo no gastado</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Desbloquear lo no gastado</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Copiar cantidad</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Copiar comisión</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Copiar después de couta</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Copiar bytes</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Copiar polvo</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Copiar cambio</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 bloqueado)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>sí</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>no</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>Esta etiqueta se vuelve roja si algún destinatario recibe una cantidad inferior a la actual puerta polvorienta.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Puede variar +/- %1 satoshi(s) por entrada.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>cambia desde %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(cambio)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ninguno</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n segundo</numerusform>
+            <numerusform>%n segundos</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n minuto</numerusform>
+            <numerusform>%n minutos</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n hora</numerusform>
+            <numerusform>%n horas</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n dia</numerusform>
+            <numerusform>%n dias</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n semana</numerusform>
+            <numerusform>%n semanas</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 y %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n año</numerusform>
+            <numerusform>%n años</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1 no se ha cerrado de forma segura todavía...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Dirección</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>Guardar Imagen...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>Código QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Copiar &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Copiar &amp;Dirección</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>Solicitar pago a %1</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Información de pago</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Mensaje</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulario</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldos</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Transacciones sin confirmar en direcciones watch-only</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Total de transacciones pendientes de confirmar y que aún no contribuye al saldo disponible</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Total:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>No madurado:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Su saldo actual total</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Saldo total en las direcciones watch-only</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>De observación:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Disponible:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Su saldo disponible actual</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Su saldo actual en direcciones watch-only</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Pendiente:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Gastable:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Transacciones recientes</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -277,53 +782,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>Etiqueta</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Dirección</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>Guardar Imagen...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>Código QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Copiar &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Copiar &amp;Dirección</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>Solicitar pago a %1</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>Información de pago</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Mensaje</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -352,157 +810,6 @@
     <message>
         <source>Requested</source>
         <translation>Solicitado</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(sin etiqueta)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Selección de la moneda</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Cantidad:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Cuantía:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Polvo:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Tasa:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Después de aplicar la comisión:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Cambio:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(des)marcar todos</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Modo árbol</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Modo lista</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Recibido con etiqueta</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Recibido con dirección</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Fecha</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Confirmaciones</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Confirmado</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Copiar ubicación</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Copiar etiqueta</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Copiar cantidad</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Copiar ID de transacción</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Bloquear lo no gastado</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Desbloquear lo no gastado</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Copiar cantidad</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Copiar comisión</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Copiar después de couta</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Copiar bytes</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Copiar polvo</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Copiar cambio</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 bloqueado)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>sí</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>no</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>Esta etiqueta se vuelve roja si algún destinatario recibe una cantidad inferior a la actual puerta polvorienta.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Puede variar +/- %1 satoshi(s) por entrada.</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>cambia desde %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(cambio)</translation>
     </message>
 </context>
 <context>
@@ -972,250 +1279,6 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>Imagen PNG (*.png)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ninguno</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/D</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n segundo</numerusform>
-            <numerusform>%n segundos</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n minuto</numerusform>
-            <numerusform>%n minutos</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n hora</numerusform>
-            <numerusform>%n horas</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n dia</numerusform>
-            <numerusform>%n dias</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n semana</numerusform>
-            <numerusform>%n semanas</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 y %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n año</numerusform>
-            <numerusform>%n años</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation>%1 no se ha cerrado de forma segura todavía...</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Fecha</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Mensaje</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Abierto hasta %1</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation>Hay un conflicto con la traducción de las confirmaciones %1</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/sin conexión</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation>0/no confirmado, %1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation>en el equipo de memoria</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation>no en el equipo de memoria</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation>abandonado</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/no confirmado</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>confirmaciones %1</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Estado</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, no ha sido emitido con éxito aún</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>Fuente</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Generado</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>Desde</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>desconocido</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>Para</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>dirección propia</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>de observación</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>etiqueta</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation>Credito</translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>no aceptada</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Enviado</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>Total enviado</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>Total recibido</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>Comisión de transacción</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>Cantidad neta</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Comentario</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>Identificador de transacción (ID)</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>Indice de salida</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>Vendedor</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Los bitcoins generados deben madurar %1 bloques antes de que puedan gastarse. Cuando generó este bloque, se transmitió a la red para que se añadiera a la cadena de bloques. Si no consigue entrar en la cadena, su estado cambiará a &quot;no aceptado&quot; y ya no se podrá gastar. Esto puede ocurrir ocasionalmente si otro nodo genera un bloque a pocos segundos del suyo.</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>Información de depuración</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>Transacción</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>entradas</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>verdadero</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>falso</translation>
     </message>
 </context>
 <context>
@@ -1914,69 +1977,6 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>Seleccionar el archivo de solicitud de pago para abrir</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulario</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldos</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Transacciones sin confirmar en direcciones watch-only</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Total de transacciones pendientes de confirmar y que aún no contribuye al saldo disponible</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Total:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>No madurado:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Su saldo actual total</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Saldo total en las direcciones watch-only</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>De observación:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Disponible:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Su saldo disponible actual</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Su saldo actual en direcciones watch-only</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Pendiente:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Gastable:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Transacciones recientes</translation>
     </message>
 </context>
 <context>

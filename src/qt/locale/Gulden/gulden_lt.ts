@@ -9,6 +9,141 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Monetų pasirinkimas</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Kiekis:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Baitai:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Suma:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Mokestis:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Po mokesčio:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Graža:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(ne)pasirinkti viską</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Medžio režimas</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Sąrašo režimas</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Patvirtinimai</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Patvirtintas</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>nėra</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR kodas</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Kopijuoti adresą</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Forma</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Viso:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nepribrendę:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Jūsų balansas</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Galimi:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Jūsų dabartinis išleidžiamas balansas</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Laukiantys:</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -85,65 +220,6 @@
     </message>
 </context>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Monetų pasirinkimas</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Kiekis:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Baitai:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Suma:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Mokestis:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Po mokesčio:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Graža:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(ne)pasirinkti viską</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Medžio režimas</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Sąrašo režimas</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Patvirtinimai</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Patvirtintas</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Quantity:</source>
@@ -192,51 +268,6 @@
     <message>
         <source>Balance:</source>
         <translation>Balansas:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>nėra</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR kodas</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Kopijuoti adresą</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
     </message>
 </context>
 <context>
@@ -543,37 +574,6 @@
     <message>
         <source>command-line options</source>
         <translation>komandinės eilutės parametrai</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Forma</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Viso:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nepribrendę:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Jūsų balansas</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Galimi:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Jūsų dabartinis išleidžiamas balansas</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Laukiantys:</translation>
     </message>
 </context>
 <context>

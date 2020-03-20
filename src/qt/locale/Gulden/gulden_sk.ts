@@ -9,6 +9,217 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(bez popisu)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Výber mince</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Množstvo:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bajtov:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Suma:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Prach:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Poplatok:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Po poplatku:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Zmena:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(ne)vybrať všetko</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Stromový režim</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Zoznamový režim</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Prijaté s označením</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Prijaté s adresou</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dátum</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Potvrdenia</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Potvrdené</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Žiadne</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>nie je k dispozícii</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation> %1 a  %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>Uložiť obrázok...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR kód</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopírovať &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopírovať adresu</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dátum</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Forma</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Stav účtu</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Nepotvrdené transakcie pre adresy ktoré sa iba sledujú</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Suma transakcií ktoré ešte neboli potvrdené a ešte sa nepočítajú do disponibilného zostatku</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Celkovo:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nezrelé:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Váš súčasný celkový zostatok</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Aktuálny celkový zostatok pre adries ktoré sa iba sledujú</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Iba sledované:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Disponibilné:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Váš aktuálny disponibilný zostatok</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Váš celkový zostatok pre adresy ktoré sa iba sledujú</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Čakajúce potvrdenie:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Použiteľné:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Nedávne transakcie</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -63,81 +274,6 @@
     <message>
         <source>(no label)</source>
         <translation>(bez popisu)</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(bez popisu)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Výber mince</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Množstvo:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bajtov:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Suma:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Prach:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Poplatok:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Po poplatku:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Zmena:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(ne)vybrať všetko</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Stromový režim</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Zoznamový režim</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Prijaté s označením</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Prijaté s adresou</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dátum</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Potvrdenia</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Potvrdené</translation>
     </message>
 </context>
 <context>
@@ -332,79 +468,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>Uložiť obrázok...</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>Uložiť obrázok...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR kód</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopírovať &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopírovať adresu</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Žiadne</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>nie je k dispozícii</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation> %1 a  %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dátum</translation>
     </message>
 </context>
 <context>
@@ -1061,69 +1124,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Vyberte súbor s výzvou k platbe</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Forma</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Stav účtu</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Nepotvrdené transakcie pre adresy ktoré sa iba sledujú</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Suma transakcií ktoré ešte neboli potvrdené a ešte sa nepočítajú do disponibilného zostatku</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Celkovo:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nezrelé:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Váš súčasný celkový zostatok</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Aktuálny celkový zostatok pre adries ktoré sa iba sledujú</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Iba sledované:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Disponibilné:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Váš aktuálny disponibilný zostatok</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Váš celkový zostatok pre adresy ktoré sa iba sledujú</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Čakajúce potvrdenie:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Použiteľné:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Nedávne transakcie</translation>
     </message>
 </context>
 <context>

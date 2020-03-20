@@ -9,6 +9,173 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Jumlah</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Pemilihan Koin</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Kuantitas:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Jumlah:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Dust:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Biaya:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Dengan Biaya:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Kembalian:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(Tidak)memilih semua</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Tree mode</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Mode daftar</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Diterima dengan label</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Diterima dengan alamat</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Tanggal</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Konfirmasi</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Terkonfirmasi</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Nilai</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 Jam</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 menit</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>T/S</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 dan %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Jumlah</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Simpan Gambaran...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>Kode QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Salin &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Salin &amp;Alamat</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Jumlah</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Tanggal</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulir</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldo:</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Jumlah keseluruhan transaksi yang belum dikonfirmasi, dan belum saatnya dihitung sebagai pengeluaran saldo yang telah dibelanjakan.</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Jumlah:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Terlalu Muda:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Jumlah saldo Anda sekarang</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Tersedia:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Jumlah yang Anda bisa keluarkan sekarang</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Ditunda</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -93,100 +260,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Simpan Gambaran...</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Simpan Gambaran...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Jumlah</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>Kode QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Salin &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Salin &amp;Alamat</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Pemilihan Koin</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Kuantitas:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Jumlah:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Dust:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Biaya:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Dengan Biaya:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Kembalian:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(Tidak)memilih semua</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Tree mode</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Mode daftar</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Jumlah</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Diterima dengan label</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Diterima dengan alamat</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Tanggal</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Konfirmasi</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Terkonfirmasi</translation>
     </message>
 </context>
 <context>
@@ -278,40 +351,6 @@
     <message>
         <source>Balance:</source>
         <translation>Saldo:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Nilai</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 Jam</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 menit</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>T/S</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 dan %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Jumlah</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Tanggal</translation>
     </message>
 </context>
 <context>
@@ -811,45 +850,6 @@
     <message>
         <source>The supplied proxy address is invalid.</source>
         <translation>Alamat proxy yang diisi tidak valid.</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulir</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldo:</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Jumlah keseluruhan transaksi yang belum dikonfirmasi, dan belum saatnya dihitung sebagai pengeluaran saldo yang telah dibelanjakan.</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Jumlah:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Terlalu Muda:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Jumlah saldo Anda sekarang</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Tersedia:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Jumlah yang Anda bisa keluarkan sekarang</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Ditunda</translation>
     </message>
 </context>
 <context>

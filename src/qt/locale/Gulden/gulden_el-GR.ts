@@ -9,6 +9,213 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Ποσό</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Επιλογή κερμάτων</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Ποσότητα:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Ποσό:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Σκόνη</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Ταρίφα</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Ταρίφα αλλαγής</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Ρέστα:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(από)επιλογή όλων</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Εμφάνιση τύπου δέντρο</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Λίστα εντολών</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Παραλήφθηκε με επιγραφή</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Παραλείφθηκε με την εξής διεύθυνση</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Ημερομηνία</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Επικυρώσεις</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Επικυρωμένες</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Ποσό</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 ώ</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 λ</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Κανένα</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Μη διαθέσιμο</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 και %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Ποσό</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Αποθήκευση εικόνας...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>Κώδικας QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Αντιγραφη της επιλεγμενης διεύθυνσης στο πρόχειρο του συστηματος</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Αντιγραφή &amp;Διεύθυνσης</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Ποσό</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Ημερομηνία</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Φόρμα</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Υπόλοιπο:</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Μη επικυρωμένες συναλλαγές σε διευθύνσεις παρακολούθησης μόνο</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Το άθροισμα των συναλλαγών που δεν έχουν ακόμα επιβεβαιωθεί και δεν προσμετρώνται στο τρέχον διαθέσιμο υπόλοιπό σας</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Σύνολο:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Ανώριμος</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Το τρέχον συνολικό υπόλοιπο</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Το τρέχον συνολικό υπόλοιπο σε διευθύνσεις παρακολούθησης μόνο</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Επίβλεψη μόνο:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Διαθέσιμο:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Το τρέχον διαθέσιμο υπόλοιπο</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Το τρέχον υπόλοιπο σας σε διευθύνσεις παρακολούθησης μόνο</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Εκκρεμούν:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Ξοδεμένα:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Πρόσφατες συναλλαγές</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -82,100 +289,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Αποθήκευση εικόνας...</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Αποθήκευση εικόνας...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Ποσό</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>Κώδικας QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Αντιγραφη της επιλεγμενης διεύθυνσης στο πρόχειρο του συστηματος</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Αντιγραφή &amp;Διεύθυνσης</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Επιλογή κερμάτων</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Ποσότητα:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Ποσό:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Σκόνη</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Ταρίφα</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Ταρίφα αλλαγής</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Ρέστα:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(από)επιλογή όλων</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Εμφάνιση τύπου δέντρο</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Λίστα εντολών</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Ποσό</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Παραλήφθηκε με επιγραφή</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Παραλείφθηκε με την εξής διεύθυνση</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Ημερομηνία</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Επικυρώσεις</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Επικυρωμένες</translation>
     </message>
 </context>
 <context>
@@ -283,56 +396,6 @@
     <message>
         <source>Balance:</source>
         <translation>Υπόλοιπο:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Ποσό</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 ώ</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 λ</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Κανένα</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Μη διαθέσιμο</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 και %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Ποσό</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Ημερομηνία</translation>
     </message>
 </context>
 <context>
@@ -833,69 +896,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Επιλέξτε πληρωμή αρχείου αίτησης</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Φόρμα</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Υπόλοιπο:</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Μη επικυρωμένες συναλλαγές σε διευθύνσεις παρακολούθησης μόνο</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Το άθροισμα των συναλλαγών που δεν έχουν ακόμα επιβεβαιωθεί και δεν προσμετρώνται στο τρέχον διαθέσιμο υπόλοιπό σας</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Σύνολο:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Ανώριμος</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Το τρέχον συνολικό υπόλοιπο</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Το τρέχον συνολικό υπόλοιπο σε διευθύνσεις παρακολούθησης μόνο</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Επίβλεψη μόνο:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Διαθέσιμο:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Το τρέχον διαθέσιμο υπόλοιπο</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Το τρέχον υπόλοιπο σας σε διευθύνσεις παρακολούθησης μόνο</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Εκκρεμούν:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Ξοδεμένα:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Πρόσφατες συναλλαγές</translation>
     </message>
 </context>
 <context>

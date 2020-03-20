@@ -9,6 +9,173 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sumo</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Kvanto:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bajtoj:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Sumo:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Polvo:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Krompago:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Post krompago:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Restmono:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(mal)elekti ĉion</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Arboreĝimo</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Listreĝimo</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Ricevita kun etikedo</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Ricevita kun adreso</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dato</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Konfirmoj</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Konfirmita</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sumo</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Neniu</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>neaplikebla</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 kaj %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sumo</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Konservi Bildon...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-kodo</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopii &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopii &amp;Adreson</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sumo</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dato</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formularo</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldoj</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>la sumo de transakcioj ankoraŭ ne konfirmitaj, kiuj ankoraŭ ne elspezeblas</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totalo:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nematura:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>via aktuala totala saldo</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>via aktuala elspezebla saldo</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Elspezebla:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Lastaj transakcioj</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -85,96 +252,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Konservi Bildon...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Sumo</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-kodo</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopii &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopii &amp;Adreson</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Quantity:</source>
-        <translation>Kvanto:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bajtoj:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Sumo:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Polvo:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Krompago:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Post krompago:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Restmono:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(mal)elekti ĉion</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Arboreĝimo</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Listreĝimo</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Sumo</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Ricevita kun etikedo</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Ricevita kun adreso</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dato</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Konfirmoj</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Konfirmita</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Quantity:</source>
@@ -239,44 +316,6 @@
     <message>
         <source>Balance:</source>
         <translation>Saldo:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Sumo</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Neniu</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>neaplikebla</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 kaj %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Sumo</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dato</translation>
     </message>
 </context>
 <context>
@@ -681,45 +720,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Elektu la dosieron de la pagpeto</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formularo</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldoj</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>la sumo de transakcioj ankoraŭ ne konfirmitaj, kiuj ankoraŭ ne elspezeblas</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Totalo:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nematura:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>via aktuala totala saldo</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>via aktuala elspezebla saldo</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Elspezebla:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Lastaj transakcioj</translation>
     </message>
 </context>
 <context>

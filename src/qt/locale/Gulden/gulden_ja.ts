@@ -9,6 +9,527 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Credit</source>
+        <translation>クレジット</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>引き落とし額</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>総額</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>日付</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>メッセージ</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>%n 以上のブロックを開く</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>ユニット %1 を開く</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>%1 検証のトランザクションと衝突</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1/オフライン</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation>0/未検証, %1</translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation>メモリプール内</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>メモリプール外</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation>中止</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/未検証</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 確認</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>ステータス</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>まだブロードキャストが成功していません</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation>
+            <numerusform>%n ノードにブロードキャスト</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>ソース</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>生成された</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>送信</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>未確認</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>受信</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>自分のアドレス</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>監視限定</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>ラベル</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation>
+            <numerusform>あと %n ブロックで成熟します</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>承認されなかった</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>総出金額</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>総入金額</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>取引手数料</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>正味金額</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>コメント</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>取引 ID</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>トランザクションの全体サイズ</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>出力インデックス</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>商人</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>生成されたコインは使う前に%1のブロックを完成させる必要があります。あなたが生成した時、このブロックはブロック チェーンに追加されるネットワークにブロードキャストされました。チェーンに追加されるのが失敗した場合、状態が&quot;不承認&quot;に変更されて使えなくなるでしょう。これは、別のノードがあなたの数秒前にブロックを生成する場合に時々起こるかもしれません。</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>デバッグ情報</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>取引</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>入力</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>正しい</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>正しくない</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>総額</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>（ラベル無し）</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>コイン選択</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>数量:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>バイト:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>総額:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>ダスト：</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>手数料:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>手数料差引後:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>釣り銭:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>すべて選択/選択解除</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>ツリーモード</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>リストモード</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>ラベルに対する入金一覧</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>アドレスに対する入金一覧</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>日付</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>検証数</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>検証済み</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>アドレスをコピーする</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>ラベルをコピーする</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>総額のコピー</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>取引 ID をコピー</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>未使用トランザクションをロックする</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>未使用トランザクションをアンロックする</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>数量をコピーする</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>手数料をコピーする</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>手数料差引後の値をコピーする</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>バイト数をコピーする</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>ダストをコピーする</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>釣り銭をコピー</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 がロック済み)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>はい</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>いいえ</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>少なくともひとつの受取額が現在のダスト閾値を下回る場合にはこのラベルは赤くなります。</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>ひとつの入力につき %1 satoshi 前後ずれることがあります。</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>%1 (%2) からのおつり</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(おつり)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>総額</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1日</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1秒</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>なし</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1ミリ秒</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n 秒</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n 分</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n 時間</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n 日</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n 週間</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 と %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n 年</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1 はまだ安全に終了していません...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>総額</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ラベル</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>アドレス</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>画像を保存(&amp;S)</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR コード</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>URI をコピーする (&amp;U)</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>アドレスをコピーする (&amp;A)</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>%1 への支払いリクエストを行う</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>支払い情報</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>メッセージ</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>フォーム</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>残高</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>監視限定アドレスに対する未検証のトランザクション</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>未検証の取引で利用可能残高に反映されていない数</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>合計:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>未完成:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>あなたの現在の残高</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>監視限定アドレス内の現在の全残高</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>監視限定:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>利用可能:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>あなたの利用可能残高</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>監視限定アドレス内の現在の残高</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>検証待ち:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>使用可能:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>最近のトランザクション</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -277,53 +798,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>ラベル</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>アドレス</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>画像を保存(&amp;S)</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>総額</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR コード</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>URI をコピーする (&amp;U)</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>アドレスをコピーする (&amp;A)</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>%1 への支払いリクエストを行う</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>支払い情報</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>メッセージ</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -352,157 +826,6 @@
     <message>
         <source>Requested</source>
         <translation>要求</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>（ラベル無し）</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>コイン選択</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>数量:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>バイト:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>総額:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>ダスト：</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>手数料:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>手数料差引後:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>釣り銭:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>すべて選択/選択解除</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>ツリーモード</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>リストモード</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>総額</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>ラベルに対する入金一覧</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>アドレスに対する入金一覧</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>日付</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>検証数</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>検証済み</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>アドレスをコピーする</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>ラベルをコピーする</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>総額のコピー</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>取引 ID をコピー</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>未使用トランザクションをロックする</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>未使用トランザクションをアンロックする</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>数量をコピーする</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>手数料をコピーする</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>手数料差引後の値をコピーする</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>バイト数をコピーする</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>ダストをコピーする</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>釣り銭をコピー</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 がロック済み)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>はい</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>いいえ</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>少なくともひとつの受取額が現在のダスト閾値を下回る場合にはこのラベルは赤くなります。</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>ひとつの入力につき %1 satoshi 前後ずれることがあります。</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>%1 (%2) からのおつり</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(おつり)</translation>
     </message>
 </context>
 <context>
@@ -976,266 +1299,6 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>PNG画像ファイル(*.png)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>総額</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1日</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1秒</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>なし</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1ミリ秒</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n 秒</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n 分</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n 時間</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n 日</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n 週間</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 と %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n 年</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation>%1 はまだ安全に終了していません...</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>総額</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>日付</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>メッセージ</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>%n 以上のブロックを開く</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>ユニット %1 を開く</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation>%1 検証のトランザクションと衝突</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/オフライン</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation>0/未検証, %1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation>メモリプール内</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation>メモリプール外</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation>中止</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/未検証</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 確認</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>ステータス</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>まだブロードキャストが成功していません</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>%n ノードにブロードキャスト</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>ソース</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>生成された</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>送信</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>未確認</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>受信</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>自分のアドレス</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>監視限定</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>ラベル</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation>クレジット</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation>
-            <numerusform>あと %n ブロックで成熟します</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>承認されなかった</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>引き落とし額</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>総出金額</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>総入金額</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>取引手数料</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>正味金額</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>コメント</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>取引 ID</translation>
-    </message>
-    <message>
-        <source>Transaction total size</source>
-        <translation>トランザクションの全体サイズ</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>出力インデックス</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>商人</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>生成されたコインは使う前に%1のブロックを完成させる必要があります。あなたが生成した時、このブロックはブロック チェーンに追加されるネットワークにブロードキャストされました。チェーンに追加されるのが失敗した場合、状態が&quot;不承認&quot;に変更されて使えなくなるでしょう。これは、別のノードがあなたの数秒前にブロックを生成する場合に時々起こるかもしれません。</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>デバッグ情報</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>取引</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>入力</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>正しい</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>正しくない</translation>
     </message>
 </context>
 <context>
@@ -1932,69 +1995,6 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>開きたい支払いリクエストファイルを選択してください</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>フォーム</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>残高</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>監視限定アドレスに対する未検証のトランザクション</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>未検証の取引で利用可能残高に反映されていない数</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>合計:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>未完成:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>あなたの現在の残高</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>監視限定アドレス内の現在の全残高</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>監視限定:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>利用可能:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>あなたの利用可能残高</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>監視限定アドレス内の現在の残高</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>検証待ち:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>使用可能:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>最近のトランザクション</translation>
     </message>
 </context>
 <context>

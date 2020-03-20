@@ -9,6 +9,527 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Credit</source>
+        <translation>收入</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>支出</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>金额</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>日期</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>消息</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>再打开 %n 个数据块</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>至 %1 个数据块时开启</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>与一个有 %1 个确认的交易冲突</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1 / 离线</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation>0/未确认，%1</translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation>在内存池中</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>不在内存池中</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation>已抛弃</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/未确认</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 已确认</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>状态</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>，未被成功广播</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation>
+            <numerusform>, 通过 %n 个节点广播 </numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>源</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>生成</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>来自</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>未知</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>到</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>自己的地址</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>观察地址(watch-only) </translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>标签</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation>
+            <numerusform>%n 个数据块后成熟(mature) </numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>未被接受</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>总收入</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>总支出</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>交易费</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>净额</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>备注</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>交易总大小</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>输出索引</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>商家</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>生成的比特币在可以使用前必须有 %1 个成熟的区块。当您生成了此区块后，它将被广播到网络中以加入区块链。如果它未成功进入区块链，其状态将变更为“不接受”并且不可使用。这可能偶尔会发生，如果另一个节点比你早几秒钟成功生成一个区块。</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>调试信息</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>交易</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>输入</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>否</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>金额</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(无标签)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>选择钱币</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>总量：</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>字节：</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>金额：</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>小额：</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>费用：</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>加上交易费用后:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>变更 : </translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(不)全选</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>树状模式</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>列表模式</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>按标签收款</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>按地址收款</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>日期</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>确认</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>已确认</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>复制地址</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>复制标签</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>复制金额</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>复制交易识别码</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>锁定未花费</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>解锁未花费</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>复制数目</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>复制手续费</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>复制计费后金额</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>复制字节数</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>复制零散金额</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>复制找零金额</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(锁定 %1 枚)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>否</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>当任何一个收款金额小于目前的零散金额上限时，文字会变红色。</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>每组输入可能有 +/- %1 个 satoshi 的误差。</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>找零前是 %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(找零)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>金额</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 天</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 小时</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 分钟</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 秒</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>无</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>不可用</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 毫秒</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n 秒</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n 分钟</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n 小时</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n 天</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n 周</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 和 %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n 年</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1 尚未安全退出</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>金额</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>标签</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>地址</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>保存图片(&amp;S)...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>二维码</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>复制 URI(&amp;U)</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>复制地址(&amp;A)</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>请求付款到 %1</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>付款信息</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>消息</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>表单</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>余额</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>观察地址(watch-only address)的未确认交易记录 </translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>尚未确认的交易总额，未计入当前余额</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>总额：</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>未成熟的：</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>您当前的总余额</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>观察地址(watch-only address)中的当前总余额 </translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>查看-只有:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>可使用的余额：</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>您当前可使用的余额</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>您当前 观察地址(watch-only address)的余额 </translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>等待中的余额：</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>可使用：</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>最近交易记录</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -277,53 +798,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>标签</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>地址</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>保存图片(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>金额</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>二维码</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>复制 URI(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>复制地址(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>请求付款到 %1</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>付款信息</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>消息</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -352,157 +826,6 @@
     <message>
         <source>Requested</source>
         <translation>总额</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(无标签)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>选择钱币</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>总量：</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>字节：</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>金额：</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>小额：</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>费用：</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>加上交易费用后:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>变更 : </translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(不)全选</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>树状模式</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>列表模式</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>金额</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>按标签收款</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>按地址收款</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>确认</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>已确认</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>复制地址</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>复制标签</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>复制金额</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>复制交易识别码</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>锁定未花费</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>解锁未花费</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>复制数目</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>复制手续费</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>复制计费后金额</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>复制字节数</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>复制零散金额</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>复制找零金额</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(锁定 %1 枚)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>是</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>否</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>当任何一个收款金额小于目前的零散金额上限时，文字会变红色。</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>每组输入可能有 +/- %1 个 satoshi 的误差。</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>找零前是 %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(找零)</translation>
     </message>
 </context>
 <context>
@@ -964,266 +1287,6 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>PNG 图像(*.png)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>金额</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 天</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 小时</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 分钟</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 秒</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>无</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>不可用</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 毫秒</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n 秒</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n 分钟</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n 小时</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n 天</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n 周</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 和 %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n 年</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation>%1 尚未安全退出</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>金额</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>消息</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>再打开 %n 个数据块</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>至 %1 个数据块时开启</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation>与一个有 %1 个确认的交易冲突</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1 / 离线</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation>0/未确认，%1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation>在内存池中</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation>不在内存池中</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation>已抛弃</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/未确认</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 已确认</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>状态</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>，未被成功广播</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, 通过 %n 个节点广播 </numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>源</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>生成</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>来自</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>未知</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>到</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>自己的地址</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>观察地址(watch-only) </translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>标签</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation>收入</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation>
-            <numerusform>%n 个数据块后成熟(mature) </numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>未被接受</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>支出</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>总收入</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>总支出</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>交易费</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>净额</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>备注</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>ID</translation>
-    </message>
-    <message>
-        <source>Transaction total size</source>
-        <translation>交易总大小</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>输出索引</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>商家</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>生成的比特币在可以使用前必须有 %1 个成熟的区块。当您生成了此区块后，它将被广播到网络中以加入区块链。如果它未成功进入区块链，其状态将变更为“不接受”并且不可使用。这可能偶尔会发生，如果另一个节点比你早几秒钟成功生成一个区块。</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>调试信息</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>交易</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>输入</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>是</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>否</translation>
     </message>
 </context>
 <context>
@@ -1917,69 +1980,6 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>选择要打开的付款请求文件</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>表单</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>余额</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>观察地址(watch-only address)的未确认交易记录 </translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>尚未确认的交易总额，未计入当前余额</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>总额：</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>未成熟的：</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>您当前的总余额</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>观察地址(watch-only address)中的当前总余额 </translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>查看-只有:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>可使用的余额：</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>您当前可使用的余额</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>您当前 观察地址(watch-only address)的余额 </translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>等待中的余额：</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>可使用：</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>最近交易记录</translation>
     </message>
 </context>
 <context>

@@ -9,6 +9,114 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kogus</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(silt puudub)</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Kogus</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Kuupäev</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Kinnitused</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Kinnitatud</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopeeri aadress</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopeeri kogus</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopeeri transaktsiooni ID</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>jah</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>ei</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kogus</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kogus</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Silt</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Aadress</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salvesta Pilt...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR Kood</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Sõnum</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kogus</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Kuupäev</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Sõnum</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Olek</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Kommentaar</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>Transaktsiooni ID</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Delete the currently selected address from the list</source>
@@ -48,33 +156,6 @@
     <message>
         <source>(no label)</source>
         <translation>(silt puudub)</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>Silt</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Aadress</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Salvesta Pilt...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Kogus</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR Kood</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Sõnum</translation>
     </message>
 </context>
 <context>
@@ -149,53 +230,6 @@
     <message>
         <source>Range:</source>
         <translation>Vahemik:</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(silt puudub)</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Kogus</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Kogus</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Kuupäev</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Kinnitused</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Kinnitatud</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Kopeeri aadress</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopeeri kogus</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopeeri transaktsiooni ID</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>jah</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>ei</translation>
     </message>
 </context>
 <context>
@@ -316,40 +350,6 @@
     <message>
         <source>Save QR Code</source>
         <translation>Salvesta QR Kood</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Kogus</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Kogus</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Kuupäev</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Sõnum</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Olek</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Kommentaar</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>Transaktsiooni ID</translation>
     </message>
 </context>
 <context>

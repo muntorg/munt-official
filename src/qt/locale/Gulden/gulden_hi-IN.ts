@@ -9,44 +9,14 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;मिटाए !!</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>नया पता लिखिए !</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>चुनिन्दा पते को सिस्टम क्लिपबोर्ड पर कापी करे !</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>पहचान शब्द/अक्षर डालिए !</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>नया पहचान शब्द/अक्षर डालिए !</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>दोबारा नया पहचान शब्द/अक्षर डालिए !</translation>
-    </message>
-</context>
-<context>
     <name>CoinControlDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>राशि :</translation>
-    </message>
     <message>
         <source>Amount</source>
         <translation>राशि</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>राशि :</translation>
     </message>
     <message>
         <source>Date</source>
@@ -55,29 +25,6 @@
     <message>
         <source>Confirmed</source>
         <translation>पक्का</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>राशि :</translation>
-    </message>
-    <message>
-        <source>Send Coins</source>
-        <translation>सिक्के भेजें|</translation>
-    </message>
-    <message>
-        <source>Confirm the send action</source>
-        <translation>भेजने की पुष्टि करें</translation>
-    </message>
-    <message>
-        <source>Send to multiple recipients at once</source>
-        <translation>एक साथ कई प्राप्तकर्ताओं को भेजें</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>बाकी रकम :</translation>
     </message>
 </context>
 <context>
@@ -112,6 +59,66 @@
     <message>
         <source>Date</source>
         <translation>taareek</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>फार्म</translation>
+    </message>
+</context>
+<context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;मिटाए !!</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>नया पता लिखिए !</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>चुनिन्दा पते को सिस्टम क्लिपबोर्ड पर कापी करे !</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>पहचान शब्द/अक्षर डालिए !</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>नया पहचान शब्द/अक्षर डालिए !</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>दोबारा नया पहचान शब्द/अक्षर डालिए !</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>राशि :</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>सिक्के भेजें|</translation>
+    </message>
+    <message>
+        <source>Confirm the send action</source>
+        <translation>भेजने की पुष्टि करें</translation>
+    </message>
+    <message>
+        <source>Send to multiple recipients at once</source>
+        <translation>एक साथ कई प्राप्तकर्ताओं को भेजें</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>बाकी रकम :</translation>
     </message>
 </context>
 <context>
@@ -200,13 +207,6 @@
     <message>
         <source>Usage:</source>
         <translation>खपत :</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>फार्म</translation>
     </message>
 </context>
 <context>

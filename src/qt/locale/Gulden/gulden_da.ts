@@ -9,6 +9,536 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Credit</source>
+        <translation>Kredit</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Debet</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Beløb</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dato</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Besked</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Åben i %n yderligere blok</numerusform>
+            <numerusform>Åben i %n yderligere blokke</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Åben indtil %1</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>i konflikt med en transaktion, der har %1 bekræftelser</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1/offline</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation>0/ubekræftet, %1</translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation>i hukommelsespulje</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>ikke i hukommelsespulje</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation>opgivet</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/ubekræftet</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 bekræftelser</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, er ikke blevet transmitteret endnu</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation>
+            <numerusform>, transmitteret igennem %n knude</numerusform>
+            <numerusform>, transmitteret igennem %n knuder</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>Kilde</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Genereret</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Fra</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>ukendt</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Til</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>egen adresse</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>kigge</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>mærkat</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation>
+            <numerusform>modner om %n blok</numerusform>
+            <numerusform>modner om %n blokke</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>ikke accepteret</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>Total debet</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>Total kredit</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaktionsgebyr</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Nettobeløb</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Kommentar</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>Transaktions-ID</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>Totalstørrelse af transaktion</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>Outputindeks</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>Forretningsdrivende</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Minede bitcoins skal modne %1 blokke, før de kan bruges. Da du genererede denne blok, blev den transmitteret til netværket for at blive føjet til blokkæden. Hvis det ikke lykkes at få den i kæden, vil dens tilstand ændres til “ikke accepteret”, og den vil ikke kunne bruges. Dette kan ske nu og da, hvis en anden knude udvinder en blok inden for nogle få sekunder fra din.</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>Fejlsøgningsinformation</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaktion</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>Input</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>sand</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>falsk</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Beløb</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ingen mærkat)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Coin-styring</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Mængde:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Byte:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Beløb:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Støv:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Gebyr:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Efter gebyr:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Byttepenge:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(af)vælg alle</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Trætilstand</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Listetilstand</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Modtaget med mærke</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Modtaget med adresse</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dato</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Bekræftelser</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Bekræftet</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopiér adresse</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopiér mærkat</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopiér beløb</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopiér transaktions-ID</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Fastlås ubrugte</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Lås ubrugte op</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Kopiér mængde</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Kopiér gebyr</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Kopiér eftergebyr</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Kopiér byte</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Kopiér støv</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Kopiér byttepenge</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 fastlåst)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>ja</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>nej</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>Denne mærkat bliver rød, hvis en eller flere modtagere modtager et beløb, der er mindre end den aktuelle støvgrænse.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Kan variere med ±%1 satoshi per input.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>byttepenge fra %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(byttepange)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Beløb</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 t</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ingen</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n sekund</numerusform>
+            <numerusform>%n sekunder</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n minut</numerusform>
+            <numerusform>%n minutter</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n time</numerusform>
+            <numerusform>%n timer</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n dag</numerusform>
+            <numerusform>%n dage</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n uge</numerusform>
+            <numerusform>%n uger</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 og %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n år</numerusform>
+            <numerusform>%n år</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1 har endnu ikke afsluttet på sikker vis…</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Beløb</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Mærkat</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adresse</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Gem billede…</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-kode</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopiér &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopiér &amp;adresse</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>Anmod om betaling til %1</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Betalingsinformation</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Besked</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formular</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldi:</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Ubekræftede transaktioner til kigge-adresser</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Total saldo for transaktioner, som ikke er blevet bekræftet endnu, og som ikke endnu er en del af den tilgængelige saldo</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Total:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Umodne:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Din nuværende totale saldo</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Nuværende totalsaldo på kigge-adresser</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Kigge:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Tilgængelig:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Din nuværende tilgængelige saldo</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Din nuværende saldo på kigge-adresser</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Afventende:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Spendérbar:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Nylige transaktioner</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -277,53 +807,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>Mærkat</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adresse</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Gem billede…</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Beløb</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-kode</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopiér &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopiér &amp;adresse</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>Anmod om betaling til %1</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>Betalingsinformation</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Besked</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -352,157 +835,6 @@
     <message>
         <source>Requested</source>
         <translation>Anmodet</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(ingen mærkat)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Coin-styring</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Mængde:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Byte:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Beløb:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Støv:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Gebyr:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Efter gebyr:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Byttepenge:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(af)vælg alle</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Trætilstand</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Listetilstand</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Beløb</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Modtaget med mærke</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Modtaget med adresse</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dato</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Bekræftelser</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Bekræftet</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Kopiér adresse</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopiér mærkat</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopiér beløb</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopiér transaktions-ID</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Fastlås ubrugte</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Lås ubrugte op</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Kopiér mængde</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Kopiér gebyr</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Kopiér eftergebyr</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Kopiér byte</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Kopiér støv</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Kopiér byttepenge</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 fastlåst)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>ja</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>nej</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>Denne mærkat bliver rød, hvis en eller flere modtagere modtager et beløb, der er mindre end den aktuelle støvgrænse.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Kan variere med ±%1 satoshi per input.</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>byttepenge fra %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(byttepange)</translation>
     </message>
 </context>
 <context>
@@ -979,275 +1311,6 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>PNG-billede (*.png)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Beløb</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 t</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ingen</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n sekund</numerusform>
-            <numerusform>%n sekunder</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n minut</numerusform>
-            <numerusform>%n minutter</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n time</numerusform>
-            <numerusform>%n timer</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n dag</numerusform>
-            <numerusform>%n dage</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n uge</numerusform>
-            <numerusform>%n uger</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 og %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n år</numerusform>
-            <numerusform>%n år</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation>%1 har endnu ikke afsluttet på sikker vis…</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Beløb</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dato</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Besked</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>Åben i %n yderligere blok</numerusform>
-            <numerusform>Åben i %n yderligere blokke</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Åben indtil %1</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation>i konflikt med en transaktion, der har %1 bekræftelser</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation>0/ubekræftet, %1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation>i hukommelsespulje</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation>ikke i hukommelsespulje</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation>opgivet</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/ubekræftet</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 bekræftelser</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, er ikke blevet transmitteret endnu</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, transmitteret igennem %n knude</numerusform>
-            <numerusform>, transmitteret igennem %n knuder</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>Kilde</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Genereret</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>Fra</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>ukendt</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>Til</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>egen adresse</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>kigge</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>mærkat</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation>Kredit</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation>
-            <numerusform>modner om %n blok</numerusform>
-            <numerusform>modner om %n blokke</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>ikke accepteret</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Debet</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>Total debet</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>Total kredit</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>Transaktionsgebyr</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>Nettobeløb</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Kommentar</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>Transaktions-ID</translation>
-    </message>
-    <message>
-        <source>Transaction total size</source>
-        <translation>Totalstørrelse af transaktion</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>Outputindeks</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>Forretningsdrivende</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Minede bitcoins skal modne %1 blokke, før de kan bruges. Da du genererede denne blok, blev den transmitteret til netværket for at blive føjet til blokkæden. Hvis det ikke lykkes at få den i kæden, vil dens tilstand ændres til “ikke accepteret”, og den vil ikke kunne bruges. Dette kan ske nu og da, hvis en anden knude udvinder en blok inden for nogle få sekunder fra din.</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>Fejlsøgningsinformation</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>Transaktion</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>Input</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>sand</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>falsk</translation>
     </message>
 </context>
 <context>
@@ -1938,69 +2001,6 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>Vælg fil for betalingsanmodning til åbning</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldi:</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Ubekræftede transaktioner til kigge-adresser</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Total saldo for transaktioner, som ikke er blevet bekræftet endnu, og som ikke endnu er en del af den tilgængelige saldo</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Total:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Umodne:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Din nuværende totale saldo</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Nuværende totalsaldo på kigge-adresser</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Kigge:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Tilgængelig:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Din nuværende tilgængelige saldo</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Din nuværende saldo på kigge-adresser</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Afventende:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Spendérbar:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Nylige transaktioner</translation>
     </message>
 </context>
 <context>

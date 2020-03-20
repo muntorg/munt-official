@@ -9,6 +9,527 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Credit</source>
+        <translation>入帳</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>出帳</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>金額</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>日期</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>訊息</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>到下 %n 個區塊生出來前可修改</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>到 %1 前可修改</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>跟一個目前確認 %1 次的交易互相衝突</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1 次/離線中</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation>0 次/未確認，%1</translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation>在記憶池中</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>不在記憶池中</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation>已中止</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1 次/未確認</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>確認 %1 次</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>狀態</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>，還沒成功公告出去</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation>
+            <numerusform>，已公告給 %n 個節點</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>來源</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>生產出來</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>來源</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>未知</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>目的</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>自己的位址</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>只能看</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>標記</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation>
+            <numerusform>再等 %n 個區塊生出來後成熟</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>不被接受</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>出帳總額</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>入帳總額</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>交易手續費</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>淨額</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>附註</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>交易識別碼</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>交易總大小</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>輸出索引</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>商家</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>生產出來的錢要再等 %1 個區塊生出來後才成熟可以用。當區塊生產出來時會公布到網路上，來被加進區塊鏈。如果加失敗了，狀態就會變成「不被接受」，而且不能夠花。如果在你生產出區塊的幾秒鐘內，也有其他節點生產出來的話，就有可能會發生這種情形。</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>除錯資訊</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>交易</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>輸入</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>否</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>金額</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(無標記)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>選擇錢幣</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>數目:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>位元組數:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>金額:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>零散錢:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>手續費:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>計費後金額:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>找零金額:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>全選或全不選</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>樹狀模式</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>列表模式</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>收款標記</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>收款位址</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>日期</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>確認次數</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>已確認</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>複製位址</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>複製標記</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>複製金額</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>複製交易識別碼</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>鎖定不用</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>解鎖可用</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>複製數目</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>複製手續費</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>複製計費後金額</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>複製位元組數</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>複製零散金額</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>複製找零金額</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(鎖定 %1 枚)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>否</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>當任何一個收款金額小於目前的零散金額上限時，文字會變紅色。</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>每組輸入可能有 +/- %1 個 satoshi 的誤差。</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>找零前是 %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(找零)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>金額</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 天</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 小時</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 分鐘</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 秒</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>無</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>未知</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 毫秒</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n 秒鐘</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n 分鐘</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n 小時</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n 天</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n 星期</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1又 %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n 年</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1 還沒有安全地結束...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>金額</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>標記:</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>位址</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>儲存圖片...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR Code</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>複製 URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>複製位址</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>付款給 %1 的要求</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>付款資訊</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>訊息</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>表單</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>餘額</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>所有只能看位址還沒確認的交易</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>還沒被確認的交易的總金額，可用餘額不包含這些金額</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>總金額:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>未成熟金額:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>目前全部餘額</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>所有只能看位址的目前全部餘額</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>只能看:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>可用金額:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>目前可用餘額</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>所有只能看位址的目前餘額</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>未定金額:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>可支配:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>最近的交易</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -277,53 +798,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>標記:</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>位址</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>儲存圖片...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>金額</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR Code</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>複製 URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>複製位址</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>付款給 %1 的要求</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>付款資訊</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>訊息</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -352,157 +826,6 @@
     <message>
         <source>Requested</source>
         <translation>要求金額</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(無標記)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>選擇錢幣</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>數目:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>位元組數:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>金額:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>零散錢:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>手續費:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>計費後金額:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>找零金額:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>全選或全不選</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>樹狀模式</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>列表模式</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>金額</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>收款標記</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>收款位址</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>確認次數</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>已確認</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>複製位址</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>複製標記</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>複製金額</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>複製交易識別碼</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>鎖定不用</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>解鎖可用</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>複製數目</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>複製手續費</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>複製計費後金額</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>複製位元組數</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>複製零散金額</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>複製找零金額</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(鎖定 %1 枚)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>是</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>否</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>當任何一個收款金額小於目前的零散金額上限時，文字會變紅色。</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>每組輸入可能有 +/- %1 個 satoshi 的誤差。</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>找零前是 %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(找零)</translation>
     </message>
 </context>
 <context>
@@ -970,266 +1293,6 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>PNG 圖檔(*.png)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>金額</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 天</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 小時</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 分鐘</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 秒</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>無</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>未知</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 毫秒</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n 秒鐘</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n 分鐘</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n 小時</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n 天</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n 星期</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1又 %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n 年</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation>%1 還沒有安全地結束...</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>金額</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>訊息</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>到下 %n 個區塊生出來前可修改</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>到 %1 前可修改</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation>跟一個目前確認 %1 次的交易互相衝突</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1 次/離線中</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation>0 次/未確認，%1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation>在記憶池中</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation>不在記憶池中</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation>已中止</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1 次/未確認</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>確認 %1 次</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>狀態</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>，還沒成功公告出去</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>，已公告給 %n 個節點</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>來源</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>生產出來</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>來源</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>未知</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>目的</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>自己的位址</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>只能看</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>標記</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation>入帳</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation>
-            <numerusform>再等 %n 個區塊生出來後成熟</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>不被接受</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>出帳</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>出帳總額</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>入帳總額</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>交易手續費</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>淨額</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>附註</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>交易識別碼</translation>
-    </message>
-    <message>
-        <source>Transaction total size</source>
-        <translation>交易總大小</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>輸出索引</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>商家</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>生產出來的錢要再等 %1 個區塊生出來後才成熟可以用。當區塊生產出來時會公布到網路上，來被加進區塊鏈。如果加失敗了，狀態就會變成「不被接受」，而且不能夠花。如果在你生產出區塊的幾秒鐘內，也有其他節點生產出來的話，就有可能會發生這種情形。</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>除錯資訊</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>交易</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>輸入</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>是</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>否</translation>
     </message>
 </context>
 <context>
@@ -1926,69 +1989,6 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>選擇要開啟的付款要求資料檔</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>表單</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>餘額</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>所有只能看位址還沒確認的交易</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>還沒被確認的交易的總金額，可用餘額不包含這些金額</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>總金額:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>未成熟金額:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>目前全部餘額</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>所有只能看位址的目前全部餘額</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>只能看:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>可用金額:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>目前可用餘額</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>所有只能看位址的目前餘額</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>未定金額:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>可支配:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>最近的交易</translation>
     </message>
 </context>
 <context>

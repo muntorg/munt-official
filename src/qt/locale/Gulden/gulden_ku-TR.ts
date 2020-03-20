@@ -9,6 +9,62 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>سەرجەم</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>کۆ:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>تێچوون:</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>رێکەت</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>بەڵێ</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>نەخێر</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>سەرجەم</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>سەرجەم</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>ناوونیشان</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>سەرجەم</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>رێکەت</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>C&amp;lose</source>
@@ -50,17 +106,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Address</source>
-        <translation>ناوونیشان</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>سەرجەم</translation>
-    </message>
-</context>
-<context>
     <name>TransactionView</name>
     <message>
         <source>Address</source>
@@ -69,33 +114,6 @@
     <message>
         <source>Date</source>
         <translation>رێکەت</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>کۆ:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>تێچوون:</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>سەرجەم</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>رێکەت</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>بەڵێ</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>نەخێر</translation>
     </message>
 </context>
 <context>
@@ -111,24 +129,6 @@
     <message>
         <source>fast</source>
         <translation>خێرا</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>سەرجەم</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>سەرجەم</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>رێکەت</translation>
     </message>
 </context>
 <context>

@@ -9,6 +9,141 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>அளவு</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>விலை:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>கட்டணம்:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>கட்டணத்திறகுப் பின்:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>மாற்று:</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>தேதி</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>உறுதிப்படுத்தல்கள்</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>உறுதியாக</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 மற்றும் %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>முகவரி</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;படத்தை சேமி...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR குறியீடு</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>நகலை &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>நகலை விலாசம்</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>தேதி</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>படிவம்</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>மீதி</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>மொத்தம்:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>முதிராத:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>கிடைக்ககூடிய:</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>நிலுவையில்:</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>C&amp;lose</source>
@@ -58,33 +193,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Address</source>
-        <translation>முகவரி</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;படத்தை சேமி...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>விலை</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR குறியீடு</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>நகலை &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>நகலை விலாசம்</translation>
-    </message>
-</context>
-<context>
     <name>TransactionView</name>
     <message>
         <source>Address</source>
@@ -111,45 +219,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;படத்தை சேமி...</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Quantity:</source>
-        <translation>அளவு</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>விலை:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>கட்டணம்:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>கட்டணத்திறகுப் பின்:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>மாற்று:</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>விலை</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>தேதி</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>உறுதிப்படுத்தல்கள்</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>உறுதியாக</translation>
     </message>
 </context>
 <context>
@@ -193,48 +262,6 @@
     <message>
         <source>Balance:</source>
         <translation>மீதி:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>விலை</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 மற்றும் %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>விலை</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>தேதி</translation>
     </message>
 </context>
 <context>
@@ -479,33 +506,6 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>படிவம்</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>மீதி</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>மொத்தம்:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>முதிராத:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>கிடைக்ககூடிய:</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>நிலுவையில்:</translation>
     </message>
 </context>
 <context>

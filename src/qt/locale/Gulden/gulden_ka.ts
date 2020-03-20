@@ -9,6 +9,153 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>თანხა</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>რაოდენობა:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>ბაიტები:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>თანხა:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>საკომისიო:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>დამატებითი საკომისიო:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>ხურდა:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>ყველას მონიშვნა/(მოხსნა)</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>განტოტვილი</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>სია</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>თარიღი</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>დადასტურება</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>დადასტურებულია</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>თანხა</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 სთ</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 წთ</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>მიუწვდ.</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 და %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>თანხა</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>გამო&amp;სახულების შენახვა...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-კოდი</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;URI-ის კოპირება</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>მის&amp;ამართის კოპირება</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>თანხა</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>თარიღი</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>ფორმა</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>დასადასტურებელი ტრანსაქციების საერთო რაოდენობა, რომლებიც ჯერ არ არის ასახული ბალანსში</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>სულ:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>მოუმზადებელია:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>თქვენი სრული მიმდინარე ბალანსი</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>ხელმისაწვდომია:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>თქვენი ხელმისაწვდომი ნაშთი</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>იგზავნება:</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>C&amp;lose</source>
@@ -78,84 +225,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>გამო&amp;სახულების შენახვა...</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>გამო&amp;სახულების შენახვა...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>თანხა</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-კოდი</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>&amp;URI-ის კოპირება</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>მის&amp;ამართის კოპირება</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Quantity:</source>
-        <translation>რაოდენობა:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>ბაიტები:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>თანხა:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>საკომისიო:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>დამატებითი საკომისიო:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>ხურდა:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>ყველას მონიშვნა/(მოხსნა)</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>განტოტვილი</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>სია</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>თანხა</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>თარიღი</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>დადასტურება</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>დადასტურებულია</translation>
     </message>
 </context>
 <context>
@@ -231,40 +300,6 @@
     <message>
         <source>Balance:</source>
         <translation>ბალანსი:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>თანხა</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 სთ</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 წთ</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>მიუწვდ.</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 და %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>თანხა</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>თარიღი</translation>
     </message>
 </context>
 <context>
@@ -626,41 +661,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>გადახდის მოთხოვნის ფაილის არჩევა</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>ფორმა</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>დასადასტურებელი ტრანსაქციების საერთო რაოდენობა, რომლებიც ჯერ არ არის ასახული ბალანსში</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>სულ:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>მოუმზადებელია:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>თქვენი სრული მიმდინარე ბალანსი</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>ხელმისაწვდომია:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>თქვენი ხელმისაწვდომი ნაშთი</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>იგზავნება:</translation>
     </message>
 </context>
 <context>

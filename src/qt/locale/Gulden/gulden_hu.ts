@@ -9,6 +9,197 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Összeg</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Érme Választás</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Mennyiség:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bájtok:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Összeg:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Por-határ:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Díj:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Utólagos díj:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Visszajáró:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>mindent kiválaszt/elvet</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Fa nézet</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Lista nézet</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Címkével érkezett</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Címmel érkezett</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dátum</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Megerősítések</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Megerősítve</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Összeg</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 n</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 ó</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 p</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 mp</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Semmi</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Nem elérhető</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 és %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Összeg</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Kép mentése</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR kód</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;URI másolása</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Cím másolása</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Összeg</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dátum</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Űrlap</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Egyenlegek</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Még megerősítésre váró, a jelenlegi egyenlegbe be nem számított tranzakciók</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Összesen:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Éretlen:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Aktuális egyenleged</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Csak megfigyelés</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Elérhető:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Jelenlegi egyenleg</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Küldés:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Elkölthető:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>A legutóbbi tranzakciók</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -93,100 +284,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Kép mentése</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Kép mentése</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Összeg</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR kód</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>&amp;URI másolása</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Cím másolása</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Érme Választás</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Mennyiség:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bájtok:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Összeg:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Por-határ:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Díj:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Utólagos díj:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Visszajáró:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>mindent kiválaszt/elvet</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Fa nézet</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Lista nézet</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Összeg</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Címkével érkezett</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Címmel érkezett</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dátum</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Megerősítések</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Megerősítve</translation>
     </message>
 </context>
 <context>
@@ -282,52 +379,6 @@
     <message>
         <source>Balance:</source>
         <translation>Egyenleg:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Összeg</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 n</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 ó</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 p</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 mp</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Semmi</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Nem elérhető</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 és %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Összeg</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dátum</translation>
     </message>
 </context>
 <context>
@@ -759,57 +810,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Fizetési kérelmi fájl kiválasztása</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Űrlap</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Egyenlegek</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Még megerősítésre váró, a jelenlegi egyenlegbe be nem számított tranzakciók</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Összesen:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Éretlen:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Aktuális egyenleged</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Csak megfigyelés</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Elérhető:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Jelenlegi egyenleg</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Küldés:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Elkölthető:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>A legutóbbi tranzakciók</translation>
     </message>
 </context>
 <context>

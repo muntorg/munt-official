@@ -9,6 +9,241 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(بدون برچسب)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>انتخاب سکه</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>تعداد:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>بایت ها:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>مبلغ:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>هزینه:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>هزینه ی پسین:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>پول خورد:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(لغو)انتخاب همه</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>مدل درختی</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>مدل لیست</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>دریافت شده با برچسب</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>دریافت شده با نشانی</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>تاریخ</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>تاییدیه ها</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>تأیید شده</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>کپی برچسب</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>کپی مقدار</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>کپی شناسهٔ تراکنش</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>قفل کردن خرج نشده ها</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>بازکردن قفل خرج نشده ها</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>کپی تعداد</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 قفل شده)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>بله</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>خیر</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(تغییر)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 روز</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 ساعت</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 دقیقه</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 ثانیه</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>هیچکدام</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>ناموجود</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 میلیونم ثانیه</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 و %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>برچسب</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>آدرس</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;ذخیره عکس...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>کد QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;کپی نشانی</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>تاریخ</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>فرم</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>تراز ها</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>مجموع تراکنش‌هایی که هنوز تأیید نشده‌اند؛ و هنوز روی تراز علی‌الحساب اعمال نشده‌اند</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>جمع کل:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>نارسیده:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>تراز کل فعلی شما</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>در دسترس:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>تراز علی‌الحساب شما</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>در انتظار:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>:قابل خرج کردن</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>تراکنش های اخیر</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -102,33 +337,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>برچسب</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>آدرس</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;ذخیره عکس...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>کد QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;کپی نشانی</translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -172,117 +380,6 @@
     <message>
         <source>Copy transaction ID</source>
         <translation>کپی شناسهٔ تراکنش</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(بدون برچسب)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>انتخاب سکه</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>تعداد:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>بایت ها:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>مبلغ:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>هزینه:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>هزینه ی پسین:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>پول خورد:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(لغو)انتخاب همه</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>مدل درختی</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>مدل لیست</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>دریافت شده با برچسب</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>دریافت شده با نشانی</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>تاریخ</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>تاییدیه ها</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>تأیید شده</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>کپی برچسب</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>کپی مقدار</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>کپی شناسهٔ تراکنش</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>قفل کردن خرج نشده ها</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>بازکردن قفل خرج نشده ها</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>کپی تعداد</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 قفل شده)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>بله</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>خیر</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(تغییر)</translation>
     </message>
 </context>
 <context>
@@ -490,56 +587,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;ذخیره عکس...</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 روز</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 ساعت</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 دقیقه</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 ثانیه</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>هیچکدام</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>ناموجود</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 میلیونم ثانیه</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 و %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>تاریخ</translation>
     </message>
 </context>
 <context>
@@ -978,53 +1025,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>انتخاب فایل درخواست پرداخت</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>فرم</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>تراز ها</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>مجموع تراکنش‌هایی که هنوز تأیید نشده‌اند؛ و هنوز روی تراز علی‌الحساب اعمال نشده‌اند</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>جمع کل:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>نارسیده:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>تراز کل فعلی شما</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>در دسترس:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>تراز علی‌الحساب شما</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>در انتظار:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>:قابل خرج کردن</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>تراکنش های اخیر</translation>
     </message>
 </context>
 <context>

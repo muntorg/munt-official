@@ -9,6 +9,113 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>การเลือก Coin</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>จำนวน:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>ไบต์:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>จำนวน:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>เศษ:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>ค่าธรรมเนียม:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>ส่วนที่เหลือจากค่าธรรมเนียม:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>เงินทอน:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(ไม่)เลือกทั้งหมด</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>โหมดแบบต้นไม้</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>โหมดแบบรายการ</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>รับโดยป้ายชื่อ (label)</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>รับโดยที่เก็บ</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>วันที่</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>การยืนยัน</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>ยืนยันแล้ว</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 และ %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>วันที่</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>รูป</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -101,77 +208,6 @@
     </message>
 </context>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>การเลือก Coin</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>จำนวน:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>ไบต์:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>จำนวน:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>เศษ:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>ค่าธรรมเนียม:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>ส่วนที่เหลือจากค่าธรรมเนียม:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>เงินทอน:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(ไม่)เลือกทั้งหมด</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>โหมดแบบต้นไม้</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>โหมดแบบรายการ</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>จำนวน</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>รับโดยป้ายชื่อ (label)</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>รับโดยที่เก็บ</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>วันที่</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>การยืนยัน</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>ยืนยันแล้ว</translation>
-    </message>
-</context>
-<context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Quantity:</source>
@@ -204,35 +240,6 @@
     <message>
         <source>Send Coins</source>
         <translation>ส่งเหรียญ</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>จำนวน</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 และ %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>จำนวน</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>จำนวน</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>วันที่</translation>
     </message>
 </context>
 <context>
@@ -583,13 +590,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>เลือก ไฟล์การเรียกการชำระเงิน</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>รูป</translation>
     </message>
 </context>
 </TS>

@@ -9,6 +9,213 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Кількість</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Вибір Монет</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Кількість:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Байтів:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Сума:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Пил:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Комісія:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Після комісії:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Решта:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>Вибрати/зняти всі</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Деревом</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Списком</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Отримано з позначкою</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Отримано з адресою</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Підтверджень</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Підтверджені</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Кількість</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 д</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 г</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 х</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 с</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Відсутні</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 мс</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 та %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Кількість</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Зберегти зображення...</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-Код</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;Скопіювати URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Скопіювати &amp;адресу</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Кількість</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Баланси</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Непідтверджені транзакції на адреси для спостереження</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Сума монет у непідтверджених транзакціях</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Всього:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Незрілі:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Ваш поточний сукупний баланс</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Поточний сукупний баланс в адресах для спостереження</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Тільки спостереження:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Наявно:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Ваш поточний підтверджений баланс</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Ваш поточний баланс в адресах для спостереження</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Очікується:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Доступно:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Останні транзакції</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -93,100 +300,6 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Зберегти зображення...</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Зберегти зображення...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Кількість</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-Код</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>&amp;Скопіювати URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Скопіювати &amp;адресу</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Вибір Монет</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Кількість:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Байтів:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Сума:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Пил:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Комісія:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Після комісії:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Решта:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>Вибрати/зняти всі</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Деревом</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Списком</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Кількість</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Отримано з позначкою</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Отримано з адресою</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Підтверджень</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Підтверджені</translation>
     </message>
 </context>
 <context>
@@ -310,56 +423,6 @@
     <message>
         <source>Balance:</source>
         <translation>Баланс:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Кількість</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 д</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 г</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 х</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 с</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Відсутні</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Н/Д</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 мс</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 та %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Кількість</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
     </message>
 </context>
 <context>
@@ -989,69 +1052,6 @@
     <message>
         <source>Select payment request file</source>
         <translation>Виберіть файл запиту платежу</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Форма</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Баланси</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Непідтверджені транзакції на адреси для спостереження</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Сума монет у непідтверджених транзакціях</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Всього:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Незрілі:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Ваш поточний сукупний баланс</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Поточний сукупний баланс в адресах для спостереження</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Тільки спостереження:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Наявно:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Ваш поточний підтверджений баланс</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Ваш поточний баланс в адресах для спостереження</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Очікується:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Доступно:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Останні транзакції</translation>
     </message>
 </context>
 <context>

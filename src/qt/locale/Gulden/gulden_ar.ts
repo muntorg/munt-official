@@ -9,6 +9,321 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Debit</source>
+        <translation>دين</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>تاريخ</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>رسالة </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>مفتوح حتى %1</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1 غير متواجد</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>غير مؤكدة/%1</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>تأكيد %1</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>الحالة.</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>,  لم يتم حتى الآن البث بنجاح</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>المصدر</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>تم اصداره.</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>من</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>غير معروف</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>الى</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>عنوانه</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>علامة</translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>غير مقبولة</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>رسوم المعاملة</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>تعليق</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>رقم المعاملة</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>تاجر</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>معاملة</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>صحيح</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>خاطئ</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(لا وصف)</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>اختيار العمله</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>الكمية :</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>بايت</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>القيمة :</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>غبار:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>رسوم :</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>بعد الرسوم :</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>تعديل :</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>عدم اختيار الجميع</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>صيغة الشجرة</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>صيغة القائمة</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>مستقبل مع ملصق</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>مستقبل مع عنوان</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>تاريخ</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>تأكيدات</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>تأكيد</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>  انسخ عنوان</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation> انسخ التسمية</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>نسخ الكمية</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>نسخ رقم العملية</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>نسخ الكمية </translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>نسخ الرسوم</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>نسخ بعد الرسوم</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>نسخ التعديل</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>نعم</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>لا</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(تغير)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 ساعة</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 دقيقة</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>غير معروف</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 و %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>وصف</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>عنوان</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;حفظ الصورة</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>رمز كيو ار</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>نسخ  &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>نسخ &amp;العنوان</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>معلومات الدفع</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation> URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>رسالة </translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>نمودج</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>المجموع:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>غير ناضجة</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>رصيدك الكلي الحالي</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>متوفر</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>معلق:</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -241,49 +556,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Label</source>
-        <translation>وصف</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>عنوان</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;حفظ الصورة</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>رمز كيو ار</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>نسخ  &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>نسخ &amp;العنوان</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>معلومات الدفع</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation> URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>رسالة </translation>
-    </message>
-</context>
-<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -304,125 +576,6 @@
     <message>
         <source>(no message)</source>
         <translation>( لا رسائل )</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(لا وصف)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>اختيار العمله</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>الكمية :</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>بايت</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>القيمة :</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>غبار:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>رسوم :</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>بعد الرسوم :</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>تعديل :</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>عدم اختيار الجميع</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>صيغة الشجرة</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>صيغة القائمة</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>مستقبل مع ملصق</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>مستقبل مع عنوان</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>تاريخ</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>تأكيدات</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>تأكيد</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>  انسخ عنوان</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation> انسخ التسمية</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>نسخ الكمية</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>نسخ رقم العملية</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>نسخ الكمية </translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>نسخ الرسوم</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>نسخ بعد الرسوم</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>نسخ التعديل</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>نعم</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>لا</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(تغير)</translation>
     </message>
 </context>
 <context>
@@ -734,132 +887,6 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>صورة PNG (*.png)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 ساعة</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 دقيقة</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>غير معروف</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 و %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>تاريخ</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>رسالة </translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>مفتوح حتى %1</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1 غير متواجد</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>غير مؤكدة/%1</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>تأكيد %1</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>الحالة.</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>,  لم يتم حتى الآن البث بنجاح</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>المصدر</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>تم اصداره.</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>من</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>غير معروف</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>الى</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>عنوانه</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>علامة</translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>غير مقبولة</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>دين</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>رسوم المعاملة</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>تعليق</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>رقم المعاملة</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>تاجر</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>معاملة</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>صحيح</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>خاطئ</translation>
     </message>
 </context>
 <context>
@@ -1272,33 +1299,6 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>حدد ملف طلب الدفع لفتحه</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>نمودج</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>المجموع:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>غير ناضجة</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>رصيدك الكلي الحالي</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>متوفر</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>معلق:</translation>
     </message>
 </context>
 <context>
