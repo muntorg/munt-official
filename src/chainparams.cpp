@@ -446,11 +446,11 @@ public:
 
             if (fIsOfficialTestnetV1)
             {
-                consensus.fixedRewardReductionHeight=528590;
+                consensus.fixedRewardReductionHeight=528740;
                 consensus.pow2Phase2FirstBlockHeight=21;
                 consensus.pow2Phase3FirstBlockHeight=51;
-                consensus.devBlockSubsidyActivationHeight=528600;
-                consensus.pow2Phase4FirstBlockHeight=528612;
+                consensus.devBlockSubsidyActivationHeight=528750;
+                consensus.pow2Phase4FirstBlockHeight=528762;
             }
             else
             {
