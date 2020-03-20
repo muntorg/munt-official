@@ -809,8 +809,19 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
     for (const auto output : outputs)
     {
         ss << VARINT(output.first + 1);
-        //fixme: (PHASE4) (SEGSIG)
-        ss << *(const CScriptBase*)(&output.second.out.output.scriptPubKey);
+        ss << output.second.out.GetType();
+        switch (output.second.out.GetType())
+        {
+            case CTxOutType::ScriptLegacyOutput:
+                ss << *(const CScriptBase*)(&output.second.out.output.scriptPubKey);
+                break;
+            case CTxOutType::StandardKeyHashOutput:
+                ss << output.second.out.output.standardKeyHash;
+                break;
+            case CTxOutType::PoW2WitnessOutput:
+                ss << output.second.out.output.witnessDetails;
+                break;
+        }
         ss << VARINT(output.second.out.nValue);
         {
             std::vector<CTxDestination> addresses;
