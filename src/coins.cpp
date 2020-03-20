@@ -58,7 +58,6 @@ size_t CCoinsViewCache::DynamicMemoryUsage() const
 }
 
 //fixme: (PHASE5) (Post-release) - Make this debug mode only once we have more certainty
-#define DEBUG_COINSCACHE_VALIDATE_INSERTS
 void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const
 {
     // check args

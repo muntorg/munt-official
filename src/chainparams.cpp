@@ -110,7 +110,7 @@ public:
         consensus.pow2Phase2FirstBlockHeight=778177;
         consensus.pow2Phase3FirstBlockHeight=778301;
         consensus.devBlockSubsidyActivationHeight=1030001;
-        consensus.pow2Phase4FirstBlockHeight=1122868;
+        consensus.pow2Phase4FirstBlockHeight=1131652; // Approximately, 6th march @ 6pm
         
 
         // Message start string to avoid accidental cross communication with other chains or software.

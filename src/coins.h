@@ -402,7 +402,7 @@ public:
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn=nullptr) const;
 
-    //#define DEBUG_COINSCACHE_VALIDATE_INSERTS 
+    #define DEBUG_COINSCACHE_VALIDATE_INSERTS 
     void validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const;
 
     /**
