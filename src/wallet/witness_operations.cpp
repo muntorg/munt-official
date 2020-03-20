@@ -166,7 +166,9 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
 {
     std::vector<CAmount> amounts;
     LOCK(cs_main);
-    if (IsSegSigEnabled(chainActive.TipPrev())) {
+    // For the sake of testnet we turn off 'splitting' for very short lock periods as it was triggering some testnet specific 'short period' bugs that aren't worth fixing for mainnet (where they can't occur)
+    if (IsSegSigEnabled(chainActive.TipPrev()) && requestedPeriodInBlocks > 1000)
+    {
         CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
         amounts = optimalWitnessDistribution(amount, requestedPeriodInBlocks, witnessInfo.nTotalWeightEligibleAdjusted);
     }
@@ -212,9 +214,10 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
         requestedPeriodInBlocks += 50;
 
     // Enforce minimum weight for each amount
-    if (std::any_of(amounts.begin(), amounts.end(), [&](const auto& amount){
-            return GetPoW2RawWeightForAmount(amount, requestedPeriodInBlocks) < gMinimumWitnessWeight; }))
+    if (std::any_of(amounts.begin(), amounts.end(), [&](const auto& amount){ return GetPoW2RawWeightForAmount(amount, requestedPeriodInBlocks) < gMinimumWitnessWeight; }))
+    {
         throw witness_error(witness::RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
+    }
 
     // Finally attempt to create and send the witness transaction.
     CPoW2WitnessDestination destinationPoW2Witness;
