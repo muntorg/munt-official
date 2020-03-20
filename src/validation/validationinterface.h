@@ -47,7 +47,6 @@ void UnregisterAllValidationInterfaces();
 class CValidationInterface {
 public:
     virtual ~CValidationInterface() {}
-protected:
     virtual void StalledWitness([[maybe_unused]] const CBlockIndex* pBlock, [[maybe_unused]] uint64_t nSeconds) {}
     virtual void UpdatedBlockTip([[maybe_unused]] const CBlockIndex *pindexNew, [[maybe_unused]] const CBlockIndex *pindexFork, [[maybe_unused]] bool fInitialDownload) {}
     virtual void TransactionAddedToMempool([[maybe_unused]] const CTransactionRef &ptxn) {}
@@ -61,9 +60,6 @@ protected:
     virtual void GetScriptForWitnessing([[maybe_unused]] std::shared_ptr<CReserveKeyOrScript>&, [[maybe_unused]] CAccount* forAccount) {};
     virtual void NewPoWValidBlock([[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::shared_ptr<const CBlock>& block) {};
     virtual void PruningConflictingBlock([[maybe_unused]] const uint256& orphanBlockHash) {}
-    friend void ::RegisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
-    friend void ::UnregisterValidationInterface([[maybe_unused]] CValidationInterface* interface);
-    friend void ::UnregisterAllValidationInterfaces();
 };
 
 struct CMainSignals {

@@ -23,6 +23,9 @@
 
 #include <boost/scope_exit.hpp>
 
+#ifdef WIN32
+#include <fcntl.h>
+#endif
 
 
 using namespace google::protobuf;

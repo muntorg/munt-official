@@ -261,16 +261,14 @@ void LogSelection(uint64_t nSel, std::string sAlgoName)
             LogPrintf("[%d] Selected hybrid implementation\n", sAlgoName); break;
     }
 }
-
+#ifndef __APPLE__
+#include <sys/auxv.h>
+#endif
 #else
 void LogSelection(uint64_t nSel, std::string sAlgoName)
 {
     //fixme: (SIGMA) Implement for riscv
 }
-#endif
-
-#ifndef __APPLE__
-#include <sys/auxv.h>
 #endif
 
 void selectOptimisedImplementations()
