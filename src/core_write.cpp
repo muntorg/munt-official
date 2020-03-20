@@ -243,30 +243,29 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
         out.pushKV("value", outValue);
         out.pushKV("n", (int64_t)i);
 
-        if (txout.GetType() <= CTxOutType::ScriptLegacyOutput)
+        switch (txout.GetType())
         {
-            UniValue o(UniValue::VOBJ);
-            ScriptPubKeyToUniv(txout.output.scriptPubKey, o, true);
-            out.pushKV("scriptPubKey", o);
-            vout.push_back(out);
-        }
-        else if (txout.GetType() == CTxOutType::PoW2WitnessOutput)
-        {
-            UniValue o(UniValue::VOBJ);
-            PoW2WitnessToUniv(txout, o, true);
-            out.pushKV("PoW²-witness", o);
-            vout.push_back(out);
-        }
-        else if (txout.GetType() == CTxOutType::StandardKeyHashOutput)
-        {
-            UniValue o(UniValue::VOBJ);
-            StandardKeyHashToUniv(txout, o, true);
-            out.pushKV("standard-key-hash", o);
-            vout.push_back(out);
-        }
-        else
-        {
-            assert(0);
+            case CTxOutType::ScriptLegacyOutput:
+            {
+                UniValue o(UniValue::VOBJ);
+                ScriptPubKeyToUniv(txout.output.scriptPubKey, o, true);
+                out.pushKV("scriptPubKey", o);
+                vout.push_back(out);
+            }
+            case CTxOutType::PoW2WitnessOutput:
+            {
+                UniValue o(UniValue::VOBJ);
+                PoW2WitnessToUniv(txout, o, true);
+                out.pushKV("PoW²-witness", o);
+                vout.push_back(out);
+            }
+            case CTxOutType::StandardKeyHashOutput:
+            {
+                UniValue o(UniValue::VOBJ);
+                StandardKeyHashToUniv(txout, o, true);
+                out.pushKV("standard-key-hash", o);
+                vout.push_back(out);
+            }
         }
     }
     entry.pushKV("vout", vout);

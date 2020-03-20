@@ -1050,12 +1050,27 @@ static UniValue gettxout(const JSONRPCRequest& request)
         ret.push_back(Pair("confirmations", (int64_t)(pindex->nHeight - coin.nHeight + 1)));
     }
     ret.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
-    //fixme: (PHASE4) - (SEGSIG)
-    if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
+    UniValue o(UniValue::VOBJ);
+    switch (coin.out.GetType())
     {
-        UniValue o(UniValue::VOBJ);
-        ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
-        ret.push_back(Pair("scriptPubKey", o));
+        case CTxOutType::ScriptLegacyOutput:
+        {
+            ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
+            ret.push_back(Pair("scriptPubKey", o));
+            break;
+        }
+        case CTxOutType::StandardKeyHashOutput:
+        {
+            PoW2WitnessToUniv(coin.out, o, true);
+            ret.push_back(Pair("PoW²-witness", o));
+            break;
+        }
+        case CTxOutType::PoW2WitnessOutput:
+        {
+            StandardKeyHashToUniv(coin.out, o, true);
+            ret.push_back(Pair("standard-key-hash", o));
+            break;
+        }
     }
     ret.push_back(Pair("coinbase", (bool)coin.fCoinBase));
 

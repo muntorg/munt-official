@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <primitives/transaction.h>
 
 class CBlock;
 class CScript;
@@ -27,6 +28,8 @@ std::vector<unsigned char> ParseHexUV(const UniValue& v, const std::string& strN
 // core_write.cpp
 std::string FormatScript(const CScript& script);
 std::string EncodeHexTx(const CTransaction& tx, const int serializeFlags = 0);
+void StandardKeyHashToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex);
+void PoW2WitnessToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex);
 void ScriptPubKeyToUniv(const CScript& scriptPubKey, UniValue& out, bool fIncludeHex);
 void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry);
 
