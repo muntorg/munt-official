@@ -110,7 +110,7 @@ struct PrecomputedTransactionData
     PrecomputedTransactionData(const CTransaction& tx);
 };
 
-//fixme: (PHASE4) SEGSIG
+//fixme: (PHASE4) (RELEASE) - go through all occurences of this one more time and check usages all make sense
 enum SigVersion
 {
     SIGVERSION_BASE = 0,
