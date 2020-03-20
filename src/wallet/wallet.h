@@ -214,14 +214,14 @@ CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtrac
 
 class CInputCoin {
 public:
-    CInputCoin(const CWalletTx* walletTx, unsigned int i)
+    CInputCoin(const CWalletTx* walletTx, unsigned int i, bool allowIndexBased)
     {
         if (!walletTx)
             throw std::invalid_argument("walletTx should not be null");
         if (i >= walletTx->tx->vout.size())
             throw std::out_of_range("The output index is out of range");
 
-        if (walletTx->GetDepthInMainChain() > COINBASE_MATURITY && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
+        if (allowIndexBased && walletTx->GetDepthInMainChain() > COINBASE_MATURITY && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
         {
             outpoint = COutPoint(walletTx->nHeight, walletTx->nIndex, i);
         }
@@ -452,7 +452,7 @@ private:
      * all coins from coinControl are selected; Never select unconfirmed coins
      * if they are not ours
      */
-    bool SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, const CCoinControl *coinControl = NULL) const;
+    bool SelectCoins(bool allowIndexBased, const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, const CCoinControl *coinControl = NULL) const;
 
     CWalletDB *pwalletdbEncryption;
 
@@ -614,7 +614,7 @@ public:
      * completion the coin set and corresponding actual target value is
      * assembled
      */
-    bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, uint64_t nMaxAncestors, std::vector<COutput> vCoins, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const;
+    bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, uint64_t nMaxAncestors, std::vector<COutput> vCoins, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, bool allowIndexBased) const;
 
     bool IsSpent(const COutPoint& outpoint) const;
 

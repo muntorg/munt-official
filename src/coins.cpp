@@ -38,15 +38,27 @@ size_t CCoinsViewBacked::EstimateSize() const { return base->EstimateSize(); }
 
 SaltedOutpointHasher::SaltedOutpointHasher() : k0(GetRand(std::numeric_limits<uint64_t>::max())), k1(GetRand(std::numeric_limits<uint64_t>::max())) {}
 
-CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0), pChainedWitView(nullptr) {}
-CCoinsViewCache::CCoinsViewCache(CCoinsViewCache *baseIn) : CCoinsViewBacked(baseIn), cachedCoinsUsage(0), pChainedWitView(baseIn->pChainedWitView?std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(baseIn->pChainedWitView.get())):nullptr) {}
+CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn)
+: CCoinsViewBacked(baseIn)
+, cachedCoinsUsage(0)
+, pChainedWitView(nullptr)
+, cacheMempoolRefs(0)
+{}
+
+CCoinsViewCache::CCoinsViewCache(CCoinsViewCache *baseIn)
+: CCoinsViewBacked(baseIn)
+, cachedCoinsUsage(0)
+, pChainedWitView(baseIn->pChainedWitView?std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(baseIn->pChainedWitView.get())):nullptr)
+, cacheMempoolRefs(0)
+{}
 
 size_t CCoinsViewCache::DynamicMemoryUsage() const
 {
     return memusage::DynamicUsage(cacheCoins) + cachedCoinsUsage;
 }
 
-#ifdef DEBUG
+//fixme: (PHASE5) (Post-release) - Make this debug mode only once we have more certainty
+#define DEBUG_COINSCACHE_VALIDATE_INSERTS
 void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const
 {
     // check args
@@ -54,31 +66,61 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
     assert(outpoint.n == voutIndex);
 
     // cacheCoins and cacheCoinRefs keep a 1:1 correspondence, so any difference in size is a bug for sure
-    assert(cacheCoins.size() == cacheCoinRefs.size());
+    // Sadly not quite true:
+    // 1) cacheCoins may contain a dirty entry and a live entry both of which correspond to the same cacheCoinRefs (e.g. reorganisation)
+    // 2) mempool entries don't have a block height (so aren't in cacheCoinRefs), so we track those as 'cacheMempoolRefs' counter and compensate
+    if (cacheCoins.size() != cacheCoinRefs.size()+cacheMempoolRefs)
+    {
+        uint64_t nNotSpentCacheCoinsCount = 0;
+        for (const auto& it : cacheCoins)
+        {
+            if (!(it.second.flags&CCoinsCacheEntry::DIRTY && it.second.coin.IsSpent()))
+            {
+                ++nNotSpentCacheCoinsCount;
+            }
+        }
+        assert(nNotSpentCacheCoinsCount == cacheCoinRefs.size()+cacheMempoolRefs);
+    }
 
     CCoinsRefMap::iterator refIt = cacheCoinRefs.find(outpoint.isHash ? COutPoint(block, txIndex, voutIndex) : outpoint);
-    if (refIt != cacheCoinRefs.end()) {
-        // entry present in cacheCoinRefs
-        const COutPoint& canonicalOutPoint = refIt->second;
-        CCoinsMap::iterator it = cacheCoins.find(canonicalOutPoint);
-        assert(it != cacheCoins.end());  // verify it is present in cacheCoins as well
-        const Coin& coin = it->second.coin;
-
-        // and that its properties are matching
-        assert(!canonicalOutPoint.isHash || canonicalOutPoint.getTransactionHash() == outpoint.getTransactionHash());
-        assert(canonicalOutPoint.isHash || (canonicalOutPoint.getTransactionBlockNumber() == block && canonicalOutPoint.getTransactionIndex() == txIndex));
-        assert(canonicalOutPoint.n == voutIndex);
-        assert(coin.nHeight == block);
-        assert(coin.nTxIndex == txIndex);
+    
+    // Mempool entries should never be present in cacheCoinRefs (they have no block height)
+    if (block == MEMPOOL_HEIGHT && txIndex == MEMPOOL_INDEX)
+    {
+        assert(outpoint.isHash);
+        assert(refIt == cacheCoinRefs.end());        
     }
     else
-    {
-        // no entry in cacheCoinRefs, so it should be absent in cacheCoins also
-        assert(!outpoint.isHash || cacheCoins.find(outpoint) == cacheCoins.end());
-        assert(outpoint.isHash || cacheCoins.find(COutPoint(block, txIndex, voutIndex)) == cacheCoins.end());
+    {    
+        if (refIt != cacheCoinRefs.end())
+        {
+            // entry present in cacheCoinRefs
+            const COutPoint& canonicalOutPoint = refIt->second;
+            CCoinsMap::iterator it = cacheCoins.find(canonicalOutPoint);
+            assert(it != cacheCoins.end());  // verify it is present in cacheCoins as well
+            const Coin& coin = it->second.coin;
+
+            // if canonicalOutPoint is not a hash then something is very wrong
+            assert(canonicalOutPoint.isHash);
+            
+            // If the two don't share an identical transaction hash something is very wrong
+            bool transactionHashesMatch = canonicalOutPoint.getTransactionHash() == outpoint.getTransactionHash();
+            // Unless the other one is spent and marked dirty, in which case thats fine
+            assert(transactionHashesMatch || (it->second.flags&CCoinsCacheEntry::DIRTY&&it->second.coin.IsSpent()));
+            
+            // Block and index should match up
+            assert(coin.nHeight == block);
+            assert(coin.nTxIndex == txIndex);
+            assert(canonicalOutPoint.n == voutIndex);
+        }
+        else
+        {
+            // no entry in cacheCoinRefs, so it should be absent in cacheCoins also
+            assert(!outpoint.isHash || cacheCoins.find(outpoint) == cacheCoins.end());
+            assert(outpoint.isHash || cacheCoins.find(COutPoint(block, txIndex, voutIndex)) == cacheCoins.end());
+        }
     }
 }
-#endif
 
 CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn) const
 {
@@ -90,14 +132,22 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
         {
             if (pRefIterReturn)
             {
-                *pRefIterReturn = cacheCoinRefs.find(COutPoint(coinIter->second.coin.nHeight, coinIter->second.coin.nTxIndex, outpoint.n));
-                assert(*pRefIterReturn != cacheCoinRefs.end());
+                if (coinIter->second.coin.nHeight == MEMPOOL_HEIGHT && coinIter->second.coin.nTxIndex == MEMPOOL_INDEX)
+                {
+                    *pRefIterReturn = cacheCoinRefs.end();
+                }
+                else
+                {
+                    *pRefIterReturn = cacheCoinRefs.find(COutPoint(coinIter->second.coin.nHeight, coinIter->second.coin.nTxIndex, outpoint.n));
+                    assert(*pRefIterReturn != cacheCoinRefs.end());
+                }
             }
             return coinIter;
         }
     }
     else
     {
+        assert(!(outpoint.getTransactionBlockNumber() == MEMPOOL_HEIGHT && outpoint.getTransactionIndex() == MEMPOOL_INDEX));
         CCoinsRefMap::iterator refIter = cacheCoinRefs.find(outpoint);
         if (refIter != cacheCoinRefs.end())
         {
@@ -114,26 +164,33 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
     COutPoint insertOutpoint(outpoint);
     if (!base->GetCoin(outpoint, tmp, &insertOutpoint))
         return cacheCoins.end();
+    
+    // Never directly insert non-hash outpoints
+    assert(insertOutpoint.isHash);
 
-    // verify coin and outpoint consistency
-    if (!insertOutpoint.isHash)
-    {
-        assert(tmp.nHeight == insertOutpoint.getTransactionBlockNumber());
-        assert(tmp.nTxIndex == insertOutpoint.getTransactionIndex());
-    }
-
-    // have it in base view, auto-create copy in the cache
-
+    // Ensure consistency
     validateInsert(outpoint, tmp.nHeight, tmp.nTxIndex, outpoint.n);
 
-    auto refRetIter = (cacheCoinRefs.emplace(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n), insertOutpoint)).first;
+    // have it in base view, auto-create copy in the cache   
+    if (tmp.nHeight == MEMPOOL_HEIGHT && tmp.nHeight == MEMPOOL_INDEX)
+    {
+        ++cacheMempoolRefs;
+        if (pRefIterReturn)
+            *pRefIterReturn = cacheCoinRefs.end();
+            
+    }
+    else
+    {
+        auto refRetIter = (cacheCoinRefs.emplace(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n), insertOutpoint)).first;
+        if (pRefIterReturn)
+            *pRefIterReturn = refRetIter;
+    }
     auto retIter = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(insertOutpoint), std::forward_as_tuple(std::move(tmp))).first;
-    if (pRefIterReturn)
-        *pRefIterReturn = refRetIter;
     
-    if (retIter->second.coin.IsSpent()) {
-        // The parent only has an empty entry for this outpoint; we can consider our
-        // version as fresh.
+    
+    // If the parent only has an empty entry for this outpoint; we can consider our version as fresh.
+    if (retIter->second.coin.IsSpent())
+    {
         retIter->second.flags = CCoinsCacheEntry::FRESH;
     }
     cachedCoinsUsage += retIter->second.coin.DynamicMemoryUsage();
@@ -143,7 +200,8 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
 bool CCoinsViewCache::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const
 {
     CCoinsMap::const_iterator it = FetchCoin(outpoint);
-    if (it != cacheCoins.end()) {
+    if (it != cacheCoins.end())
+    {
         if (pOutpointRet)
             *pOutpointRet = it->first;
         coin = it->second.coin;
@@ -163,21 +221,36 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     }
 
     assert(!coin.IsSpent());
-    if (coin.out.IsUnspendable()) return;
+    if (coin.out.IsUnspendable())
+    {
+        return;
+    }
+    
+    // Never directly insert non-hash outpoints
+    assert(outpoint.isHash);
 
+    // Ensure consistency
     validateInsert(outpoint, coin.nHeight, coin.nTxIndex, outpoint.n);
 
-    CTxOut out = coin.out;
-
-    cacheCoinRefs.emplace(COutPoint(coin.nHeight, coin.nTxIndex, outpoint.n), outpoint);
+    if (coin.nHeight == MEMPOOL_HEIGHT && coin.nHeight == MEMPOOL_INDEX)
+    {
+        ++cacheMempoolRefs;
+    }
+    else
+    {
+        cacheCoinRefs.emplace(COutPoint(coin.nHeight, coin.nTxIndex, outpoint.n), outpoint);
+    }
     auto [coinIter, inserted] = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(outpoint), std::tuple<>());
     
     bool fresh = false;
-    if (!inserted) {
+    if (!inserted)
+    {
         cachedCoinsUsage -= coinIter->second.coin.DynamicMemoryUsage();
     }
-    if (!possible_overwrite) {
-        if (!coinIter->second.coin.IsSpent()) {
+    if (!possible_overwrite)
+    {
+        if (!coinIter->second.coin.IsSpent())
+        {
             throw std::logic_error("Adding new coin that replaces non-pruned entry");
         }
         fresh = !(coinIter->second.flags & CCoinsCacheEntry::DIRTY);
@@ -191,14 +264,15 @@ void AddCoins(CCoinsViewCache& cache, const CTransaction &tx, uint32_t nHeight, 
 {
     bool fCoinbase = tx.IsCoinBase();
     const uint256& txid = tx.GetHash();
-    for (size_t i = 0; i < tx.vout.size(); ++i) {
+    for (size_t i = 0; i < tx.vout.size(); ++i)
+    {
         // Pass fCoinbase as the possible_overwrite flag to AddCoin, in order to correctly
         // deal with the pre-BIP30 occurrences of duplicate coinbase transactions.
         cache.AddCoin(COutPoint(txid, i), Coin(tx.vout[i], nHeight, nTxIndex, fCoinbase, !IsOldTransactionVersion(tx.nVersion)), fCoinbase);
     }
 }
 
-void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool nodeletefresh)
+void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, CoinUndo* moveout, bool nodeletefresh)
 {
     if (pChainedWitView)
     {
@@ -209,16 +283,33 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, Coin* moveout, bool n
 
     CCoinsRefMap::iterator coinRefIter;
     CCoinsMap::iterator coinIter = FetchCoin(outpoint, &coinRefIter);
-    if (coinIter == cacheCoins.end()) return;
-    assert(coinRefIter != cacheCoinRefs.end());
-    cachedCoinsUsage -= coinIter->second.coin.DynamicMemoryUsage();
-    if (moveout) {
-        *moveout = std::move(coinIter->second.coin);
+    if (coinIter == cacheCoins.end())
+    {
+        return;
     }
-    if (!nodeletefresh && coinIter->second.flags & CCoinsCacheEntry::FRESH) {
-        cacheCoinRefs.erase(coinRefIter);
+    if (!(coinIter->second.coin.nHeight == MEMPOOL_HEIGHT && coinIter->second.coin.nTxIndex == MEMPOOL_INDEX))
+    {
+        assert(coinRefIter != cacheCoinRefs.end());
+    }
+    cachedCoinsUsage -= coinIter->second.coin.DynamicMemoryUsage();
+    if (moveout)
+    {
+        *moveout = CoinUndo(std::move(coinIter->second.coin), coinIter->first.getTransactionHash());
+    }
+    if (!nodeletefresh && coinIter->second.flags & CCoinsCacheEntry::FRESH)
+    {
+        if (coinRefIter != cacheCoinRefs.end())
+        {
+            cacheCoinRefs.erase(coinRefIter);
+        }
+        else
+        {
+            --cacheMempoolRefs;
+        }
         cacheCoins.erase(coinIter);
-    } else {
+    }
+    else
+    {
         coinIter->second.flags |= CCoinsCacheEntry::DIRTY;
         coinIter->second.coin.Spend();
     }
@@ -229,9 +320,12 @@ static const Coin coinEmpty;
 const Coin& CCoinsViewCache::AccessCoin(const COutPoint &outpoint) const
 {
     CCoinsMap::const_iterator it = FetchCoin(outpoint);
-    if (it == cacheCoins.end()) {
+    if (it == cacheCoins.end())
+    {
         return coinEmpty;
-    } else {
+    }
+    else
+    {
         return it->second.coin;
     }
 }
@@ -262,13 +356,18 @@ void CCoinsViewCache::SetBestBlock(const uint256 &hashBlockIn)
 
 bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn)
 {
-    for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();) {
-        if (it->second.flags & CCoinsCacheEntry::DIRTY) { // Ignore non-dirty entries (optimization).
+    for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();)
+    {
+        // Ignore non-dirty entries (optimization).
+        if (it->second.flags & CCoinsCacheEntry::DIRTY)
+        {
             CCoinsMap::iterator itUs = cacheCoins.find(it->first);
-            if (itUs == cacheCoins.end()) {
+            if (itUs == cacheCoins.end())
+            {
                 // The parent cache does not have an entry, while the child does
                 // We can ignore it if it's both FRESH and pruned in the child
-                if (!(it->second.flags & CCoinsCacheEntry::FRESH && it->second.coin.IsSpent())) {
+                if (!(it->second.flags & CCoinsCacheEntry::FRESH && it->second.coin.IsSpent()))
+                {
                     // Otherwise we will need to create it in the parent
                     // and move the data up and mark it as dirty
                     CCoinsCacheEntry& entry = cacheCoins[it->first];
@@ -279,26 +378,49 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     // Otherwise it might have just been flushed from the parent's cache
                     // and already exist in the grandparent
                     if (it->second.flags & CCoinsCacheEntry::FRESH)
+                    {
                         entry.flags |= CCoinsCacheEntry::FRESH;
-                    cacheCoinRefs[COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, it->first.n)] = it->first;
+                    }
+                    if (entry.coin.nHeight == MEMPOOL_HEIGHT && entry.coin.nHeight == MEMPOOL_INDEX)
+                    {
+                        ++cacheMempoolRefs;
+                    }
+                    else
+                    {
+                        cacheCoinRefs.emplace(COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, it->first.n), it->first);
+                    }
                 }
-            } else {
+            }
+            else
+            {
                 // Assert that the child cache entry was not marked FRESH if the
                 // parent cache entry has unspent outputs. If this ever happens,
                 // it means the FRESH flag was misapplied and there is a logic
                 // error in the calling code.
                 if ((it->second.flags & CCoinsCacheEntry::FRESH) && !itUs->second.coin.IsSpent())
+                {
                     throw std::logic_error("FRESH flag misapplied to cache entry for base transaction with spendable outputs");
+                }
 
                 // Found the entry in the parent cache
-                if ((itUs->second.flags & CCoinsCacheEntry::FRESH) && it->second.coin.IsSpent()) {
+                if ((itUs->second.flags & CCoinsCacheEntry::FRESH) && it->second.coin.IsSpent())
+                {
                     // The grandparent does not have an entry, and the child is
                     // modified and being pruned. This means we can just delete
                     // it from the parent.
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
-                    cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
+                    if (itUs->second.coin.nHeight == MEMPOOL_HEIGHT && itUs->second.coin.nTxIndex == MEMPOOL_INDEX)
+                    {
+                        --cacheMempoolRefs;
+                    }
+                    else
+                    {
+                        cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
+                    }
                     cacheCoins.erase(itUs);
-                } else {
+                }
+                else
+                {
                     // A normal modification.
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
                     itUs->second.coin = std::move(it->second.coin);
@@ -327,6 +449,7 @@ bool CCoinsViewCache::Flush()
     bool fOk = base->BatchWrite(cacheCoins, hashBlock);
     cacheCoins.clear();
     cacheCoinRefs.clear();
+    cacheMempoolRefs = 0;
     cachedCoinsUsage = 0;
     return fOk;
 }
@@ -337,9 +460,17 @@ void CCoinsViewCache::Uncache(const COutPoint& hash)
         pChainedWitView->Uncache(hash);
 
     CCoinsMap::iterator it = cacheCoins.find(hash);
-    if (it != cacheCoins.end() && it->second.flags == 0) {
+    if (it != cacheCoins.end() && it->second.flags == 0)
+    {
         cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
-        cacheCoinRefs.erase(COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n));
+        if (it->second.coin.nHeight == MEMPOOL_HEIGHT && it->second.coin.nTxIndex == MEMPOOL_INDEX)
+        {
+            --cacheMempoolRefs;
+        }
+        else
+        {
+            cacheCoinRefs.erase(COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n));
+        }
         cacheCoins.erase(it);
     }
 }
@@ -369,11 +500,16 @@ CAmount CCoinsViewCache::GetValueIn(const CTransaction& tx) const
 
 bool CCoinsViewCache::HaveInputs(const CTransaction& tx) const
 {
-    if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase()) {
-        for (unsigned int i = 0; i < tx.vin.size(); i++) {
-            if (!HaveCoin(tx.vin[i].prevout)) {
+    if (!tx.IsCoinBase() || tx.IsPoW2WitnessCoinBase())
+    {
+        for (unsigned int i = 0; i < tx.vin.size(); i++)
+        {
+            if (!HaveCoin(tx.vin[i].prevout))
+            {
                 if (!tx.IsPoW2WitnessCoinBase() || !tx.vin[i].prevout.IsNull())
+                {
                     return false;
+                }
             }
         }
     }
@@ -387,7 +523,8 @@ static const size_t MAX_OUTPUTS_PER_BLOCK = MAX_BLOCK_BASE_SIZE / 22; // TODO: m
 const Coin& AccessByTxid(const CCoinsViewCache& view, const uint256& txid)
 {
     COutPoint iter(txid, 0);
-    while (iter.n < MAX_OUTPUTS_PER_BLOCK) {
+    while (iter.n < MAX_OUTPUTS_PER_BLOCK)
+    {
         const Coin& alternate = view.AccessCoin(iter);
         if (!alternate.IsSpent()) return alternate;
         ++iter.n;

@@ -28,7 +28,7 @@ class CTxUndo
 {
 public:
     // undo information for all txins
-    std::vector<Coin> vprevout;
+    std::vector<CoinUndo> vprevout;
 
     template <typename Stream>
     void Serialize(Stream& s) const {

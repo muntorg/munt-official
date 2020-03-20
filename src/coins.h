@@ -121,6 +121,44 @@ public:
     }
 };
 
+class CoinUndo : public Coin
+{
+    public:
+    uint256 prevhash;
+    CoinUndo(Coin&& fromCoin, uint256 hashIn)
+    : Coin(fromCoin)
+    , prevhash(hashIn)
+    {
+    }
+    
+    //! empty constructor
+    CoinUndo() : Coin() {}
+    
+    template<typename Stream>
+    void Serialize(Stream &s) const
+    {
+        assert(!IsSpent());
+        uint32_t code = (nHeight<<2) + (fSegSig << 1) + fCoinBase;
+        ::Serialize(s, VARINT(code));
+        ::Serialize(s, VARINT(nTxIndex));
+        out.WriteToStream(s, (fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
+        ::Serialize(s, prevhash);
+    }
+
+    template<typename Stream>
+    void Unserialize(Stream &s)
+    {
+        uint32_t code = 0;
+        ::Unserialize(s, VARINT(code));
+        nHeight = ( ((code  & 0b11111111111111111111111111111100) >> 2) );
+        fSegSig = ( (code   & 0b00000000000000000000000000000010) > 0 );
+        fCoinBase = ( (code & 0b00000000000000000000000000000001) > 0 );
+        ::Unserialize(s, VARINT(nTxIndex));
+        out.ReadFromStream(s, (fSegSig ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1));
+        ::Unserialize(s, prevhash);
+    }
+};
+
 class SaltedOutpointHasher
 {
 private:
@@ -254,6 +292,7 @@ protected:
     mutable uint256 hashBlock;
     mutable CCoinsMap cacheCoins;
     mutable CCoinsRefMap cacheCoinRefs;
+    mutable uint64_t cacheMempoolRefs;
 
     /* Cached dynamic memory usage for the inner Coin objects. */
     mutable size_t cachedCoinsUsage;
@@ -297,7 +336,7 @@ public:
      * If no unspent output exists for the passed outpoint, this call
      * has no effect.
      */
-    void SpendCoin(const COutPoint &outpoint, Coin* moveto = nullptr, bool nodeletefresh = false);
+    void SpendCoin(const COutPoint &outpoint, CoinUndo* moveto = nullptr, bool nodeletefresh = false);
 
     /**
      * Push the modifications applied to this cache to its base.
@@ -363,13 +402,8 @@ public:
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn=nullptr) const;
 
-#ifdef DEBUG
-    #define DEBUG_COINSCACHE_VALIDATE_INSERTS
+    //#define DEBUG_COINSCACHE_VALIDATE_INSERTS 
     void validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const;
-#else
-    // compiler can easily optimise it out in release
-    void validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const {}
-#endif
 
     /**
      * By making the copy constructor private, we prevent accidentally using it when one intends to create a cache on top of a base cache.

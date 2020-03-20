@@ -314,7 +314,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                 // Choose coins to use
                 CAmount nValueIn = 0;
                 setCoins.clear();
-                if (!SelectCoins(vAvailableCoins, nValueToSelect, setCoins, nValueIn, coinControl))
+                if (!SelectCoins(!IsOldTransactionVersion(txNew.nVersion), vAvailableCoins, nValueToSelect, setCoins, nValueIn, coinControl))
                 {
                     strFailReason = _("Insufficient funds");
                     return false;
@@ -653,7 +653,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 // Choose coins to use
                 CAmount nValueSelected = 0;
                 setCoins.clear();
-                if (!SelectCoins(vAvailableCoins, nFeeOut, setCoins, nValueSelected, coinControl))
+                if (!SelectCoins(IsOldTransactionVersion(txNew.nVersion), vAvailableCoins, nFeeOut, setCoins, nValueSelected, coinControl))
                 {
                     strFailReason = _("Insufficient funds");
                     return false;

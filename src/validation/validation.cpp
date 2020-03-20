@@ -675,13 +675,23 @@ bool AbortNode(CValidationState& state, const std::string& strMessage, const std
  * @param out The out point that corresponds to the tx input.
  * @return A DisconnectResult as an int
  */
-int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out)
+int ApplyTxInUndo(CoinUndo&& undo, CCoinsViewCache& view, COutPoint out)
 {
     bool fClean = true;
 
-    if (view.HaveCoin(out)) fClean = false; // overwriting transaction output
+    // We always want to revert to using the hash based outpoint here to keep the coin database consistent
+    if (!out.isHash)
+    {
+        out.setHash(undo.prevhash);
+    }
 
-    if (undo.nHeight == 0) {
+    if (view.HaveCoin(out))
+    {
+        fClean = false; // overwriting transaction output
+    }
+
+    if (undo.nHeight == 0)
+    {
         // Missing undo metadata (height and coinbase). Older versions included this
         // information only in undo records for the last spend of a transactions'
         // outputs. This implies that it must be present for some other output of the same tx.
@@ -689,10 +699,13 @@ int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out)
         if (!GetTxHash(out, txHash))
             return DISCONNECT_FAILED; // adding output for transaction without known metadata
         const Coin& alternate = AccessByTxid(view, txHash);
-        if (!alternate.IsSpent()) {
+        if (!alternate.IsSpent()) 
+        {
             undo.nHeight = alternate.nHeight;
             undo.fCoinBase = alternate.fCoinBase;
-        } else {
+        }
+        else
+        {
             return DISCONNECT_FAILED; // adding output for transaction without known metadata
         }
     }
@@ -734,7 +747,7 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
         for (size_t o = 0; o < tx.vout.size(); o++) {
             if (!tx.vout[o].IsUnspendable()) {
                 COutPoint out(hash, o);
-                Coin coin;
+                CoinUndo coin;
                 view.SpendCoin(out, &coin);
                 if (tx.vout[o] != coin.out) {
                     fClean = false; // transaction output mismatch
@@ -742,8 +755,9 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
             }
         }
 
-        // restore inputs
-        if (i > 0) { // not coinbases
+        // restore inputs (not coinbases)
+        if (i > 0)
+        {
             CTxUndo &txundo = blockUndo.vtxundo[i-1];
             //fixme: (PHASE4) (HIGH) (force only 1 valid input in checkblock as well.)
             if (tx.IsPoW2WitnessCoinBase())
@@ -753,7 +767,8 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
                     error("DisconnectBlock(): transaction and undo data inconsistent");
                     return DISCONNECT_FAILED;
                 }
-                for (unsigned int j = tx.vin.size(); j-- > 0;) {
+                for (unsigned int j = tx.vin.size(); j-- > 0;)
+                {
                     if (!tx.vin[j].prevout.IsNull())
                     {
                         const COutPoint &out = tx.vin[j].prevout;
@@ -766,11 +781,13 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
             }
             else
             {
-                if (txundo.vprevout.size() != tx.vin.size()) {
+                if (txundo.vprevout.size() != tx.vin.size())
+                {
                     error("DisconnectBlock(): transaction and undo data inconsistent");
                     return DISCONNECT_FAILED;
                 }
-                for (unsigned int j = tx.vin.size(); j-- > 0;) {
+                for (unsigned int j = tx.vin.size(); j-- > 0;)
+                {
                     const COutPoint &out = tx.vin[j].prevout;
                     int res = ApplyTxInUndo(std::move(txundo.vprevout[j]), view, out);
                     if (res == DISCONNECT_FAILED)
@@ -4078,7 +4095,7 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                     //Note: an attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
                     // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some data after detecting wrong chain)
                     // So this is not really a major weakening of security in any way and still more than sufficient.
-                    if ((mapBlockIndex.find(block.hashPrevBlock)->second->nHeight < Checkpoints::LastCheckPointHeight()))
+                    if (mapBlockIndex.find(block.hashPrevBlock)->second->nHeight < Checkpoints::LastCheckPointHeight())
                     {
                         fAssumePOWGood = true;
                     }

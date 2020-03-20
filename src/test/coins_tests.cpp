@@ -23,7 +23,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out);
+int ApplyTxInUndo(CoinUndo&& undo, CCoinsViewCache& view, COutPoint out);
 void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txundo, uint32_t nHeight, uint32_t nTxIndex);
 
 //fixme: (PHASE4) Add additional tests for new segsig related coin features.
@@ -477,7 +477,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             if (!tx.IsCoinBase())
             {
                 const COutPoint &out = tx.vin[0].prevout;
-                Coin coin = undo.vprevout[0];
+                CoinUndo coin = undo.vprevout[0];
                 ApplyTxInUndo(std::move(coin), *(stack.back()), out);
             }
             // Store as a candidate for reconnection
