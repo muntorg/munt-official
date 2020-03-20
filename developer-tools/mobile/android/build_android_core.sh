@@ -115,7 +115,7 @@ do
   else
     echo Skipping explicit configure
   fi
-  make -j ${NUM_PROCS}
+  make -j ${NUM_PROCS} V=1
   cd ..
 
   mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib} | true

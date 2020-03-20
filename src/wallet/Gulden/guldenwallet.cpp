@@ -326,9 +326,9 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
     //Update accounts if needed (creation time - shadow accounts etc.)
     {
         LOCK(cs_wallet);
-        for (const auto& [accountUUID, forAccount] : mapAccounts)
+        for (const auto& accountIter : mapAccounts)
         {
-            (unused) accountUUID;
+            auto& forAccount = accountIter.second;
             if (forAccount->HaveKey(keyID))
             {
                 if (usageTime > 0)
