@@ -342,7 +342,7 @@ void GUI::requestEmptyWitness()
     CAmount availableAmount = pactiveWallet->GetBalance(fromWitnessAccount, false, false, true);
     if (availableAmount > 0)
     {
-        //fixme: (PHASE4) - Remove this when ready
+        //fixme: (PHASE5) - Remove this when ready
         {
             CGetWitnessInfo witnessInfo;
             CBlock block;

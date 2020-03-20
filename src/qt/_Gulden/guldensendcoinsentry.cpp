@@ -878,7 +878,7 @@ void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
 {
     setValid(ui->pow2LockFundsInfoLabel, true);
 
-    //fixme: (PHASE4) Improve this dialog.
+    //fixme: (PHASE5) Improve this dialog.
     CAmount nAmount = ui->payAmount->amount();
     ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
 

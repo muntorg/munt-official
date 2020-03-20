@@ -286,7 +286,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 break;
                 case CWitnessTxBundle::WitnessTxType::WitnessType:
                 {
-                    //fixme: (PHASE4) - this can change into a break once we apply other fixes described in other fixmes in this function.
+                    //fixme: (PHASE5) - this can change into a break once we apply other fixes described in other fixmes in this function.
                     goto continuedecompose;
                 }
                 break;

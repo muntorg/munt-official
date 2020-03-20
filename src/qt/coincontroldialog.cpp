@@ -496,7 +496,7 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
 
         // Bytes
         CTxDestination address;
-        //fixme: (PHASE4) SEGSIG - change the size calculations here.
+        //fixme: (PHASE5) SEGSIG - change the size calculations here.
         if(ExtractDestination(out.tx->tx->vout[out.i], address))
         {
             CPubKey pubkey;
