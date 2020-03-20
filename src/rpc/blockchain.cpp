@@ -806,7 +806,8 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
     ss << hash;
     ss << VARINT(outputs.begin()->second.nHeight * 2 + outputs.begin()->second.fCoinBase);
     stats.nTransactions++;
-    for (const auto output : outputs) {
+    for (const auto output : outputs)
+    {
         ss << VARINT(output.first + 1);
         //fixme: (PHASE4) (SEGSIG)
         ss << *(const CScriptBase*)(&output.second.out.output.scriptPubKey);
@@ -841,19 +842,24 @@ static bool GetUTXOStats(CCoinsView *view, CCoinsStats &stats)
     ss << stats.hashBlock;
     uint256 prevkey;
     std::map<uint32_t, Coin> outputs;
-    while (pcursor->Valid()) {
+    while (pcursor->Valid())
+    {
         boost::this_thread::interruption_point();
         COutPoint key;
         uint256 txHash;
         Coin coin;
-        if (pcursor->GetKey(key) && pcursor->GetValue(coin) && GetTxHash(key, txHash)) {
-            if (!outputs.empty() && txHash != prevkey) {
+        if (pcursor->GetKey(key) && pcursor->GetValue(coin) && GetTxHash(key, txHash))
+        {
+            if (!outputs.empty() && txHash != prevkey)
+            {
                 ApplyStats(stats, ss, prevkey, outputs);
                 outputs.clear();
             }
             prevkey = txHash;
             outputs[key.n] = std::move(coin);
-        } else {
+        }
+        else
+        {
             return error("%s: unable to read value", __func__);
         }
         pcursor->Next();
