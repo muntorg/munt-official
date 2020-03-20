@@ -222,7 +222,6 @@ UniValue validateaddress(const JSONRPCRequest& request)
     CGuldenAddress address(request.params[0].get_str());
     bool isValid = address.IsValid();
 
-    //fixme: (PHASE4) Add some segsig specific output here.
     UniValue ret(UniValue::VOBJ);
     ret.push_back(Pair("isvalid", isValid));
     if (isValid)
@@ -231,6 +230,7 @@ UniValue validateaddress(const JSONRPCRequest& request)
         std::string currentAddress = address.ToString();
         ret.push_back(Pair("address", currentAddress));
 
+        //fixme: (PHASE5) Add some segsig specific output here.
         CScript scriptPubKey = GetScriptForDestination(dest);
         ret.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
 
