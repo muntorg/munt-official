@@ -1135,7 +1135,6 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 wtx.SetMerkleBranch(pIndex, posInBlock);
 
             RemoveAddressFromKeypoolIfIsMine(tx, pIndex ? pIndex->nTime : 0);
-            //fixme: (PHASE4) Is this even needed? Surely only checking the outputs is fine
             for(const auto& txin : wtx.tx->vin)
             {
                 RemoveAddressFromKeypoolIfIsMine(txin, pIndex ? pIndex->nTime : 0);
@@ -1177,7 +1176,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             }
 
             return ret;
-            //fixme: (PHASE4) It is not clear if this is 100% necessary or not. See comment below for the original motivation.
+            //fixme: (PHASE5) It is not clear if this is 100% necessary or not. See comment below for the original motivation.
             //Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.
             //Is there maybe a better way to do this?
             //
