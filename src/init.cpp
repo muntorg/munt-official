@@ -755,6 +755,13 @@ bool AppInitParameterInteraction()
     // ********************************************************* Step 2: parameter interactions
     // also see: InitParameterInteraction()
     
+    #ifdef BETA_BUILD
+    if (!IsArgSet("-testnet"))
+    {
+        return InitError(errortr("Running beta builds on mainnet is dangerous, please don't do this."));
+    }
+    #endif
+    
     // Limit default memory usage on low memory systems, to try and prevent OOM on low spec pi devices and similar.
     if (systemPhysicalMemoryInBytes() <= 1*1024*1024*1024ULL)
     {

@@ -17,6 +17,9 @@ static const bool DEFAULT_DISABLE_SAFEMODE = false;
 static const bool DEFAULT_STOPAFTERBLOCKIMPORT = false;
 static const bool DEFAULT_SPV = false;
 
+//fixme: (PHASE4) comment this out for release
+#define BETA_BUILD
+
 namespace boost
 {
 class thread_group;

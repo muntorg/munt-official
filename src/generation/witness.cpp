@@ -35,6 +35,7 @@
 #include "utiltime.h"
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
+#include "init.h"
 
 #include <algorithm>
 #include <numeric>
@@ -162,9 +163,10 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
         return false;
 
-    //fixme: (PHASE4) - Enable for testing then delete; this is testing code.
+    //fixme: (PHASE4) (RELEASE) 
     //Note there has not been a single hit here in all the testing so this can definitely go in future.
-    #ifdef DEBUG
+    //Delete this for final release build
+    #ifdef BETA_BUILD
     if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
