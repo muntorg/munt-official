@@ -111,7 +111,7 @@ ifeq ($(rapidcheck_packages_),)
 packages += $(rapidcheck_packages)
 endif
 
-all_packages = $(packages) $(native_packages)
+all_packages = $(native_packages) $(packages)
 
 meta_depends = Makefile funcs.mk builders/default.mk hosts/default.mk hosts/$(host_os).mk builders/$(build_os).mk
 
