@@ -624,7 +624,7 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
         return false;
 
     // F: verify that output value is at least input value
-    if (nInputValue < nOutputValue)
+    if (nOutputValue < nInputValue)
         return false;
 
     return true;
@@ -723,10 +723,12 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
     {
         const auto& inputDetails = input.second;
 
-        if (1 > std::count_if(outputs.begin(), outputs.end(), [&](const auto& output) {
+        if (1 > std::count_if(outputs.begin(), outputs.end(), [&](const auto& output)
+        {
                 const auto& outputDetails = output.second;
                 if (input.first.nValue != output.first.nValue)
                     return false;
+
                 if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
                     return false;
                 if (inputDetails.witnessKeyID == outputDetails.witnessKeyID)
