@@ -115,7 +115,7 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
         //We work around this by looking up the hash (if its in the wallet) and using that instead
         //However callers to this function should also rather just pass in index based inputs where possible
         uint256 convertedHash;
-        if (!coinControl.IsSelected(txin.prevout) && !(txin.prevout.isHash && GetTxHash(txin.prevout, convertedHash) && !coinControl.IsSelected(COutpoint(convertedHash, txin.prevout.n))))
+        if (!coinControl.IsSelected(txin.prevout) && !(txin.prevout.isHash && GetTxHash(txin.prevout, convertedHash) && !coinControl.IsSelected(COutPoint(convertedHash, txin.prevout.n))))
         {
             tx.vin.push_back(txin);
 
