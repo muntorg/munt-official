@@ -1,5 +1,5 @@
-// Copyright (c) 2015-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2015-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -388,18 +388,39 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
     }
 
     CWitnessRewardTemplate rewardTemplate;
-    if (selectedWitnessAccount->hasRewardTemplate()) {
+    // If an explicit template has been set then use that, otherwise create a default template
+    if (selectedWitnessAccount->hasRewardTemplate())
+    {
         LOCK(pactiveWallet->cs_wallet);
         rewardTemplate = selectedWitnessAccount->getRewardTemplate();
     }
-    else { // Create default template
-
-        // Take compounding setting
-        rewardTemplate.destinations.push_back(
-            CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), selectedWitnessAccount->getCompounding(), 0.0, false, false));
-        // Any remaing (and compound overflow) goes to witness account non-compounding (or reward script if set)
-        rewardTemplate.destinations.push_back(
-            CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+    else
+    {
+        if (selectedWitnessAccount->getCompounding() > 0)
+        {
+            auto compoundAmount = selectedWitnessAccount->getCompounding();
+            if (compoundAmount == MAX_MONEY)
+            {
+                compoundAmount = witnessBlockSubsidy;
+                // Subsidy and any overflow fees to compound
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), compoundAmount, 0.0, true, false));
+                // Any compound overflow to script
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, false, true));
+            }
+            else
+            {
+                // Pay up until requested amount to compound
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), compoundAmount, 0.0, false, false));
+                // Any remaining fees/overflow to script
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+            }
+        }
+        else
+        {
+            // Compound nothing, all money into 'reward script'
+            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), 0, 0.0, false, false));
+            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+        }
     }
 
     // Output for subsidy and refresh witness address.
