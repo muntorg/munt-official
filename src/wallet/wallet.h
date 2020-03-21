@@ -237,7 +237,7 @@ public:
 
     CInputCoin(const COutPoint& outpoint_, const CTxOut& txout_, bool allowIndexBased, uint64_t nBlockHeight=0, uint64_t nTxIndex=0)
     {
-        if (allowIndexBased && nBlockHeight < (uint64_t)chainActive.Tip()->nHeight && ((uint64_t)chainActive.Tip()->nHeight - nBlockHeight > COINBASE_MATURITY))
+        if (allowIndexBased && nBlockHeight < (uint64_t)chainActive.Tip()->nHeight && ((uint64_t)chainActive.Tip()->nHeight - nBlockHeight > (uint64_t)COINBASE_MATURITY))
         {
             // Convert to an index based outpoint, whenever possible
             outpoint = COutPoint(nBlockHeight, nTxIndex, outpoint_.n);
