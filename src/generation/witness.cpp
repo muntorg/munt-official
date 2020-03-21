@@ -434,6 +434,10 @@ void static GuldenWitness()
 {
     LogPrintf("GuldenWitness started\n");
     RenameThread("gulden-witness");
+    
+    // Don't even try witness if we have no wallet (-disablewallet)
+    if (!pactiveWallet)
+        return;
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     static bool regTest = GetBoolArg("-regtest", false);
