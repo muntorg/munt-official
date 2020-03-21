@@ -109,7 +109,13 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     // Add new txins (keeping original txin scriptSig/order)
     for(const CTxIn& txin : wtx.tx->vin)
     {
-        if (!coinControl.IsSelected(txin.prevout))
+        //NB!!!
+        //If txin.prevout was hash based and not index based, and a valid index based outpoint representation also exists (mature enough) then we end up with a double output here.
+        //CreateTransaction ends up selecting the index based outpoint and the two txin no longer match
+        //We work around this by looking up the hash (if its in the wallet) and using that instead
+        //However callers to this function should also rather just pass in index based inputs where possible
+        uint256 convertedHash;
+        if (!coinControl.IsSelected(txin.prevout) && !(txin.prevout.isHash && GetTxHash(txin.prevout, convertedHash) && !coinControl.IsSelected(COutput(convertedHash, txin.prevout.n))))
         {
             tx.vin.push_back(txin);
 
@@ -886,7 +892,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
             if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
             {
                 // Add witness input
-                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
+                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
                 // Add witness output
                 CTxOut renewedWitnessTxOutput;
@@ -967,7 +973,7 @@ void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, C
         if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
         {
             // Add witness input
-            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
+            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
             // Add witness output
             CTxOut renewedWitnessTxOutput;

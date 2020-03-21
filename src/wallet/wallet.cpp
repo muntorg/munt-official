@@ -2033,10 +2033,16 @@ bool CWallet::SelectCoins(bool allowIndexBased, const std::vector<COutput>& vAva
     // remove preset inputs from vCoins
     for (std::vector<COutput>::iterator it = vCoins.begin(); it != vCoins.end() && coinControl && coinControl->HasSelected();)
     {
-        if (setPresetCoins.count(CInputCoin(it->tx, it->i, allowIndexBased)))
+        // Check in both forms (index based and not) to eliminate the same selection occuring twice
+        if (setPresetCoins.count(CInputCoin(it->tx, it->i, allowIndexBased)) 
+            || (allowIndexBased && setPresetCoins.count(CInputCoin(it->tx, it->i, false))))
+        {
             it = vCoins.erase(it);
+        }
         else
+        {
             ++it;
+        }
     }
 
     size_t nMaxChainLength = std::min(GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT), GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT));
