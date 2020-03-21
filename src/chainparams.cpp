@@ -446,7 +446,7 @@ public:
 
             if (fIsOfficialTestnetV1)
             {
-                consensus.fixedRewardReductionHeight=528740;
+                consensus.fixedRewardReductionHeight=250001;
                 consensus.pow2Phase2FirstBlockHeight=21;
                 consensus.pow2Phase3FirstBlockHeight=51;
                 consensus.devBlockSubsidyActivationHeight=528750;
