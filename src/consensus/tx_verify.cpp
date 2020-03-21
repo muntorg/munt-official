@@ -624,7 +624,7 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
         return false;
 
     // F: verify that output value is at least input value
-    if (nInputValue > nOutputValue)
+    if (nInputValue < nOutputValue)
         return false;
 
     return true;
