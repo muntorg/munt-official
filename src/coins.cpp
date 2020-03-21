@@ -68,7 +68,7 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
     // Sadly not quite true:
     // 1) cacheCoins may contain a dirty entry and a live entry both of which correspond to the same cacheCoinRefs (e.g. reorganisation)
     // 2) mempool entries don't have a block height (so aren't in cacheCoinRefs), so we track those as 'cacheMempoolRefs' counter and compensate
-    if (cacheCoins.size() != cacheCoinRefs.size()+cacheMempoolRefs)
+    /*if (cacheCoins.size() != cacheCoinRefs.size()+cacheMempoolRefs)
     {
         uint64_t nNotSpentCacheCoinsCount = 0;
         for (const auto& it : cacheCoins)
@@ -79,7 +79,7 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
             }
         }
         assert(nNotSpentCacheCoinsCount == cacheCoinRefs.size()+cacheMempoolRefs);
-    }
+    }*/
 
     CCoinsRefMap::iterator refIt = cacheCoinRefs.find(outpoint.isHash ? COutPoint(block, txIndex, voutIndex) : outpoint);
     
