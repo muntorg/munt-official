@@ -131,7 +131,7 @@ public:
             paymentRequest.SerializeToString(&sPaymentRequest);
         std::string sAuthenticatedMerchant = authenticatedMerchant.toStdString();
 
-        //fixme: (PHASE4) Is it necessary to serialise the pow2 stuff here? Looks like its only used for merchant stuff which should never be happening with witnesses...
+        //fixme: (PHASE5) Is it necessary to serialise the pow2 stuff here? Looks like its only used for merchant stuff which should never be happening with witnesses...
         READWRITE(this->nVersion);
         READWRITE(sAddress);
         READWRITE(sLabel);
