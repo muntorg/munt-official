@@ -1235,7 +1235,7 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull()) || IsPoW2WitnessCoinBase();
     }
 
-    //fixme: (PHASE4) - check second vin is a witness transaction.
+    //fixme: (PHASE5) Not sure if necessary or overkill, check second vin is a witness transaction, doing so will be expensive, I suspect we don't need to do it.
     bool IsPoW2WitnessCoinBase() const
     {
         return (vin.size() == 2 && vin[0].prevout.IsNull());
@@ -1303,7 +1303,7 @@ struct CMutableTransaction
         return a.GetHash() == b.GetHash();
     }
 
-    //fixme: (PHASE4) - We can possibly improve this test by testing transaction version instead.
+    //fixme: (PHASE5) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)
