@@ -116,6 +116,11 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
         return false;
     }
 
+    if (tx.flags[HasExtraFlags] != 0)
+    {
+        reason = "tx-has-extraflags";
+    }
+
     for(const CTxIn& txin : tx.vin)
     {
         // Biggest 'standard' txin is a 15-of-15 P2SH multisig with compressed
