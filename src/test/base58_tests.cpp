@@ -96,7 +96,7 @@ public:
     }
     bool operator()(const CPoW2WitnessDestination &id) const
     {
-        //fixme: (PHASE4) (tests)
+        //fixme: (PHASE5) (tests)
         return false;
     }
     bool operator()(const CNoDestination &no) const

@@ -301,7 +301,7 @@ static UniValue getaddress(const JSONRPCRequest& request)
                 result.push_back(CGuldenAddress(addr).ToString());
             }
         }
-        //fixme: (PHASE4) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
+        //fixme: (PHASE5) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
     }
 
     return result;
