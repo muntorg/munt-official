@@ -744,10 +744,10 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
         if (i > 0)
         {
             CTxUndo &txundo = blockUndo.vtxundo[i-1];
-            //fixme: (PHASE4) (HIGH) (force only 1 valid input in checkblock as well.)
             if (tx.IsPoW2WitnessCoinBase())
             {
-                if (txundo.vprevout.size() != 1 || tx.vin.size() < 2)
+                //NB! 'IsPoW2WitnessCoinBase' already forces vin size to be 2, and the first input NULL, so we don't need to validate the size here
+                if (txundo.vprevout.size() != 1)
                 {
                     error("DisconnectBlock(): transaction and undo data inconsistent");
                     return DISCONNECT_FAILED;
@@ -995,7 +995,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     CBlockUndo blockundo;
 
-    //fixme: (PHASE4) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
+    //fixme: (PHASE5) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
     //However GetWitness calls recursively into ConnectBlock and CCheckQueueControl has a non-recursive mutex - so we must call this before creating 
     // Witness block must have valid signature from witness.
     if (block.nVersionPoW2Witness != 0)
@@ -1122,7 +1122,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             {
                 if (!view.HaveInputs(tx))
                 {
-                    //fixme: (PHASE4) - Low level fix for problem of conflicting transaction entering mempool and causing miners to be unable to mine (due to selecting invalid transactions for block continuously).
+                    //fixme: (PHASE5) - Low level fix for problem of conflicting transaction entering mempool and causing miners to be unable to mine (due to selecting invalid transactions for block continuously).
                     //This fix should remain in place, but a follow up fix is needed to try stop the conflicting transaction entering the mempool to begin with - need to hunt the source of this down.
                     //Seems to have something to do with a double (conflicting) witness renewal transaction.
                     mempool.removeRecursive(tx, MemPoolRemovalReason::UNKNOWN);
@@ -1297,7 +1297,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     {
         return state.DoS(100, error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)", actualBlockReward, expectedBlockReward), REJECT_INVALID, "bad-cb-amount");
     }
-    // fixme: (PHASE4) Forbid block reward that under pays as well
+    // fixme: (PHASE5) Forbid block reward that under pays as well - leave this for now and reconsider in future.
     
     if (nSubsidyDev > 0)
     {
@@ -2622,17 +2622,24 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     if (block.nVersionPoW2Witness != 0)
     {
         for (unsigned int i = 1; i < block.vtx.size(); i++)
+        {
             if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
+            {
                 nWitnessCoinbaseIndex = i;
+            }
+        }
     }
 
     // Extra coinbase (invalid)
     for (unsigned int i = (nWitnessCoinbaseIndex == 0 ? 1 : nWitnessCoinbaseIndex+1); i < block.vtx.size(); i++)
+    {
         if (block.vtx[i]->IsCoinBase())
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-multiple", false, "block contains excess coinbase transactions");
+    }
 
     // Check the merkle root.
-    if (fCheckMerkleRoot) {
+    if (fCheckMerkleRoot)
+    {
         bool mutated;
         uint256 hashMerkleRoot2 = BlockMerkleRoot(block.vtx.begin(), (nWitnessCoinbaseIndex == 0 ? block.vtx.end() : block.vtx.begin()+nWitnessCoinbaseIndex), &mutated);
         if (block.hashMerkleRoot != hashMerkleRoot2)
@@ -2660,9 +2667,11 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 
     // Check transactions
     for (const auto& tx : block.vtx)
+    {
         if (!CheckTransaction(*tx, state, true))
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
                                  strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
+    }
 
     unsigned int nSigOps = 0;
     for (const auto& tx : block.vtx)
@@ -2957,7 +2966,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 {
     AssertLockHeld(cs_main);
 
-    //fixme: (PHASE4) Double check handling of different header types.
+    //fixme: (PHASE5) Double check handling of different header types.
 
     CBlockIndex* pindexPrev = nullptr;
     bool promoteToFullTree = false;
