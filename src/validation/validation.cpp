@@ -461,22 +461,17 @@ int GetSpendHeight(const CCoinsViewCache& inputs)
 }
 
 //fixme: (PHASE5) This should rather use move semantics, but CScript doesn't currently seem compatible with this.
-//fixme: (PHASE4) Use this in places that are hardcoded instead.
 CScript GetScriptForNonScriptOutput(const CTxOut& out)
 {
-    if (out.GetType() <= CTxOutType::PoW2WitnessOutput)
+    if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
         return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
     }
-    else if (out.GetType() <= CTxOutType::StandardKeyHashOutput)
+    else if (out.GetType() == CTxOutType::StandardKeyHashOutput)
     {
         std::vector<unsigned char> sWitnessPlaceholder = {'k','e','y','h','a','s','h'};
         return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
-    }
-    else
-    {
-        assert(0);
     }
     return CScript();
 }
@@ -567,17 +562,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                             }
                         }
 
-                        CScript scriptCodePlaceHolder;
-                        if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
-                        {
-                            std::vector<unsigned char> sKeyHashPlaceholder = {'k','e','y','h','a','s','h'};
-                            scriptCodePlaceHolder = CScript(sKeyHashPlaceholder.begin(), sKeyHashPlaceholder.end());
-                        }
-                        else
-                        {
-                            std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
-                            scriptCodePlaceHolder = CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
-                        }
+                        CScript scriptCodePlaceHolder = GetScriptForNonScriptOutput(coin.out);
 
                         //We extract the pubkey from the signatures so just pass in an empty pubkey for the checks.
                         std::vector<unsigned char> vchEmptyPubKey;
