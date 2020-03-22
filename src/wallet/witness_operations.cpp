@@ -170,7 +170,7 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
     if (IsSegSigEnabled(chainActive.TipPrev()) && requestedPeriodInBlocks > 1000)
     {
         CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
-        amounts = optimalWitnessDistribution(amount, requestedPeriodInBlocks, witnessInfo.nTotalWeightEligibleAdjusted);
+        amounts = optimalWitnessDistribution(amount, requestedPeriodInBlocks, witnessInfo.nTotalWeightEligibleRaw);
     }
     else
         amounts = { amount };
@@ -853,7 +853,7 @@ void redistributewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAcc
 void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
 {
     CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
-    auto distribution = optimalWitnessDistribution(amount, requestedLockPeriodInBlocks, witnessInfo.nTotalWeightEligibleAdjusted);
+    auto distribution = optimalWitnessDistribution(amount, requestedLockPeriodInBlocks, witnessInfo.nTotalWeightEligibleRaw);
     redistributeandextendwitnessaccount(pwallet, fundingAccount, witnessAccount, distribution, requestedLockPeriodInBlocks, pTxid, pFee);
 }
 
@@ -888,27 +888,6 @@ double witnessFraction(const std::vector<CAmount>& amounts, const uint64_t durat
     return fraction;
 }
 
-/** Amount where maximum weight is reached and so any extra on top of that will not produce any gains */
-CAmount maxWorkableWitnessAmount(uint64_t lockDuration, uint64_t totalWeight)
-{
-    uint64_t weight = totalWeight / 100;
-
-    // note that yearly_blocks is only correct for mainnet and should be parametrized for testnet, however it is consistent with
-    // with other parts of the code that also use mainnet characteristics for weight determination when on testnet
-    const double yearly_blocks = 365 * 576;
-    const double K = 100000.0;
-    const double T = (1.0 + lockDuration / (yearly_blocks));
-
-    // solve quadratic to find amount that will match weight
-    const double A = T / K;
-    const double B = T;
-    const double C = - (double)(weight);
-
-    double amount = (-B + sqrt(B*B - 4.0 * A * C)) / (2.0 * A);
-
-    return CAmount (amount * COIN);
-}
-
 std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet* pWallet, CAccount* account)
 {
     // assumes all account witness outputs have identical characteristics
@@ -938,44 +917,67 @@ std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet*
     return std::tuple(distribution, duration, total);
 }
 
+CAmount maxAmountForDurationAndWeight(uint64_t lockDuration, uint64_t targetWeight)
+{
+    // note that yearly_blocks is only correct for mainnet and should be parametrized for testnet, however it is consistent with
+    // with other parts of the code that also use mainnet characteristics for weight determination when on testnet
+    const double yearly_blocks = 365 * gRefactorDailyBlocksUsage;
+    const double K = 100000.0;
+    const double T = (1.0 + lockDuration / (yearly_blocks));
+
+    // solve quadratic to find amount that will match weight
+    const double A = T / K;
+    const double B = T;
+    const double C = - (double)(targetWeight);
+
+    double amount = (-B + sqrt(B*B - 4.0 * A * C)) / (2.0 * A);
+
+    return CAmount (amount * COIN);
+}
+
 std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t duration, uint64_t totalWeight)
 {
     std::vector<CAmount> distribution;
 
-    CAmount minAmount = gMinimumWitnessAmount * COIN;
+    // Amount where maximum weight is reached and so any extra on top of that will not produce any gains
+    CAmount partMax = maxAmountForDurationAndWeight(duration, totalWeight/100);
+    // Amount we have to be above to be a valid part of chain
+    CAmount partMin = maxAmountForDurationAndWeight(duration, gMinimumWitnessWeight)+1;
+    if (partMin < gMinimumWitnessAmount)
+        partMin = gMinimumWitnessAmount+1;
 
-    CAmount partMax = maxWorkableWitnessAmount(duration, totalWeight);
-
-    // Divide int parts into 90% of maximum workable amount. Staying (well) below the maximum workable amount
-    // does not reduce the expected witness rewards but it leaves some room for:
-    // a) adding remaining part if it is below minimum witness amount (5000) without going over max workable (which would hurt expected rewards)
+    // Divide int parts into 95% of maximum workable amount.
+    // Leaves some room for:
+    // a) leaves some room for entwork weight fluctuatiopns
     // b) leaves some room when total network witness weight changes
-    CAmount partTarget = (90 * partMax) / 100;
+    CAmount partTarget = (95 * partMax) / 100;
 
     // ensure minimum criterium is met (on mainnet this is not expected to happen)
-    if (partTarget < minAmount)
-        partTarget = minAmount;
+    if (partTarget < partMin)
+        partTarget = partMin;
 
     int wholeParts = totalAmount / partTarget;
+    
+    CAmount remainder = totalAmount - wholeParts * partTarget;
+    CAmount partRemainder = remainder/wholeParts;
 
     for (int i=0; i< wholeParts; i++)
-        distribution.push_back(partTarget);
+    {
+        distribution.push_back(partTarget+partRemainder);
+        remainder -= partRemainder;
+    }
 
-    CAmount remainder = totalAmount - wholeParts * partTarget;
-
-    // add remainder to last part if it is small and fits within workable amount
-    // or remainder is too small (which is only expected to happen on testnet)
-    if (distribution.size() > 0 && (distribution[0] + remainder <= partMax || remainder < minAmount))
-        distribution[0] += remainder;
-    else
-        distribution.push_back(remainder);
+    // add any final remainder to first part
+    distribution[0] += remainder;
 
     return distribution;
 }
 
 bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo)
 {
-    uint64_t totalWeight = witnessInfo.nTotalWeightEligibleAdjusted;
+    // NB! We prefer the raw weight to the eligible weight as the raw weight fluctuates less
+    // And over time the two should become close anyway
+    uint64_t totalWeight = witnessInfo.nTotalWeightEligibleRaw;
 
     auto [currentDistribution, duration, totalAmount] = witnessDistribution(pWallet, account);
     double currentFraction = witnessFraction(currentDistribution, duration, totalWeight);
@@ -990,7 +992,8 @@ bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const
 
 uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t duration, uint64_t totalWeight)
 {
-    return std::accumulate(amounts.begin(), amounts.end(), uint64_t(0), [=](uint64_t acc, CAmount amount) {
+    return std::accumulate(amounts.begin(), amounts.end(), uint64_t(0), [=](uint64_t acc, CAmount amount)
+    {
         return acc + adjustedWeightForAmount(amount, duration, totalWeight);
     });
 }
