@@ -531,7 +531,7 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
             return sigs2;
         return sigs1;
     case TX_PUBKEYHASH_POW2WITNESS:
-        //fixme: (PHASE4) Key renewal
+        //fixme: (PHASE5) Key renewal
         //We need to devise a way to sign with the right key here (both keys if it is a spend, witness key if just witnessing)
         return sigs1;
     case TX_SCRIPTHASH:
