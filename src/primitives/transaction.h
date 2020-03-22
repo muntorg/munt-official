@@ -166,7 +166,7 @@ public:
 
     template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, CTxInFlags nFlags, int nTransactionVersion)
     {
-        //fixme: (PHASE4) Implement usage of nType here.
+        // Future, if we ever make use of future input types e.g. FUTURE_TX_IN_TYPE2 then we must make use of them here
         (void) nType;
         CSerActionUnserialize ser_action;
 
@@ -199,7 +199,7 @@ public:
 
     template <typename Stream> inline void WriteToStream(Stream& s, CTxInType nType, CTxInFlags nFlags, int nTransactionVersion) const
     {
-        //fixme: (PHASE4) Implement usage of nType here.
+        // Future, if we ever make use of future input types e.g. FUTURE_TX_IN_TYPE2 then we must make use of them here
         (void) nType;
         CSerActionSerialize ser_action;
 
