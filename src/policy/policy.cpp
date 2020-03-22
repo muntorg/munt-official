@@ -145,12 +145,24 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
     txnouttype whichType;
     for(const CTxOut& txout : tx.vout)
     {
-        if (txout.GetType() <= CTxOutType::ScriptLegacyOutput)
+        switch (txout.GetType())
         {
-            if (!::IsStandard(txout.output.scriptPubKey, whichType, segsigEnabled))
+            case CTxOutType::ScriptLegacyOutput:
             {
-                reason = "scriptpubkey";
-                return false;
+                if (!::IsStandard(txout.output.scriptPubKey, whichType, segsigEnabled))
+                {
+                    reason = "scriptpubkey";
+                    return false;
+                }
+                break;
+            }
+            case CTxOutType::StandardKeyHashOutput:
+                break;
+            case CTxOutType::PoW2WitnessOutput:
+                break;
+            default:
+            {
+                reason = "unsupported-ctxout-type";
             }
         }
 
