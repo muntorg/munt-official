@@ -18,7 +18,7 @@ $(package)_config_opts_i686_linux=address-model=32 architecture=x86
 $(package)_config_opts_aarch64_ios=architecture=x86 target-os=iphone
 $(package)_toolset_$(host_os)=gcc
 $(package)_toolset_darwin=clang-darwin
-$(package)_toolset_ios=darwin
+$(package)_toolset_ios=clang-darwin
 $(package)_archiver_$(host_os)=$($(package)_ar)
 $(package)_archiver_darwin=$($(package)_ar)
 $(package)_archiver_ios=$($(package)_libtool)

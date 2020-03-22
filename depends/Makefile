@@ -3,7 +3,7 @@
 SOURCES_PATH ?= $(BASEDIR)/sources
 WORK_PATH = $(BASEDIR)/work
 BASE_CACHE ?= $(BASEDIR)/built
-SDK_PATH ?= $(shell ./sdk.guess $(BASEDIR)/SDKs)
+SDK_PATH ?= $(BASEDIR)/SDKs
 NO_QT ?=
 RAPIDCHECK ?=
 NO_WALLET ?=
@@ -56,10 +56,6 @@ host_os+=$(findstring mingw32,$(full_host_os))
 host_os:=$(strip $(host_os))
 ifeq ($(host_os),)
 host_os=$(full_host_os)
-endif
-host_flavor=$(word 4,$(subst -, ,$(canonical_host)))
-ifeq ($(host_flavor),androideabi)
-host_flavor=android
 endif
 
 $(host_arch)_$(host_os)_prefix=$(BASEDIR)/$(host)
