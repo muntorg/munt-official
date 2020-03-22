@@ -943,8 +943,8 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
     CAmount partMax = maxAmountForDurationAndWeight(duration, totalWeight/100);
     // Amount we have to be above to be a valid part of chain
     CAmount partMin = maxAmountForDurationAndWeight(duration, gMinimumWitnessWeight)+1;
-    if (partMin < gMinimumWitnessAmount)
-        partMin = gMinimumWitnessAmount+1;
+    if (partMin < gMinimumWitnessAmount*COIN)
+        partMin = gMinimumWitnessAmount*COIN+1;
 
     // Divide int parts into 95% of maximum workable amount.
     // Leaves some room for:
@@ -958,18 +958,24 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
 
     int wholeParts = totalAmount / partTarget;
     
-    CAmount remainder = totalAmount - wholeParts * partTarget;
-    CAmount partRemainder = remainder/wholeParts;
-
-    for (int i=0; i< wholeParts; i++)
+    if (wholeParts > 0)
     {
-        distribution.push_back(partTarget+partRemainder);
-        remainder -= partRemainder;
+        CAmount remainder = totalAmount - wholeParts * partTarget;
+        CAmount partRemainder = remainder/wholeParts;
+
+        for (int i=0; i< wholeParts; i++)
+        {
+            distribution.push_back(partTarget+partRemainder);
+            remainder -= partRemainder;
+        }
+
+        // add any final remainder to first part
+        distribution[0] += remainder;
     }
-
-    // add any final remainder to first part
-    distribution[0] += remainder;
-
+    else
+    {
+        distribution.push_back(totalAmount);
+    }
     return distribution;
 }
 

@@ -65,7 +65,7 @@ void OptimizeWitnessDialog::confirmClicked()
             CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
             auto [currentDistribution, duration, totalAmount] = witnessDistribution(pactiveWallet, witnessAccount);
 
-            auto optimalDistribution = optimalWitnessDistribution(totalAmount, duration, witnessInfo.nTotalWeightEligibleAdjusted);
+            auto optimalDistribution = optimalWitnessDistribution(totalAmount, duration, witnessInfo.nTotalWeightEligibleRaw);
             
             if (currentDistribution == optimalDistribution || (currentDistribution.size() == 1 && optimalDistribution.size() == 1))
             {
