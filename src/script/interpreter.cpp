@@ -1193,9 +1193,11 @@ public:
     }
 };
 
-uint256 GetPrevoutHash(const CTransaction& txTo) {
+uint256 GetPrevoutHash(const CTransaction& txTo)
+{
     CHashWriter ss(SER_GETHASH, 0);
-    for (const auto& txin : txTo.vin) {
+    for (const auto& txin : txTo.vin)
+    {
         txin.prevout.WriteToStream(ss, txin.GetType(), txin.GetFlags(), txTo.nVersion);
     }
     return ss.GetHash();

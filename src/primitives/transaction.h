@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -70,7 +70,6 @@ struct CBlockPosition
 };
 
 
-//fixme: (PHASE4) (SEGSIG) Ensure again that network rules for the other 7 types are consistently handled.
 // Represented in class as 3 bits.
 // Maximum of 8 values
 enum CTxInType : uint8_t
