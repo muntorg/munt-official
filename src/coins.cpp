@@ -171,7 +171,7 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
     validateInsert(outpoint, tmp.nHeight, tmp.nTxIndex, outpoint.n);
 
     // have it in base view, auto-create copy in the cache   
-    if (tmp.nHeight == MEMPOOL_HEIGHT && tmp.nHeight == MEMPOOL_INDEX)
+    if (tmp.nHeight == MEMPOOL_HEIGHT && tmp.nTxIndex == MEMPOOL_INDEX)
     {
         ++cacheMempoolRefs;
         if (pRefIterReturn)
@@ -231,7 +231,7 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     // Ensure consistency
     validateInsert(outpoint, coin.nHeight, coin.nTxIndex, outpoint.n);
 
-    if (coin.nHeight == MEMPOOL_HEIGHT && coin.nHeight == MEMPOOL_INDEX)
+    if (coin.nHeight == MEMPOOL_HEIGHT && coin.nTxIndex == MEMPOOL_INDEX)
     {
         ++cacheMempoolRefs;
     }
@@ -380,7 +380,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     {
                         entry.flags |= CCoinsCacheEntry::FRESH;
                     }
-                    if (entry.coin.nHeight == MEMPOOL_HEIGHT && entry.coin.nHeight == MEMPOOL_INDEX)
+                    if (entry.coin.nHeight == MEMPOOL_HEIGHT && entry.coin.nTxIndex == MEMPOOL_INDEX)
                     {
                         ++cacheMempoolRefs;
                     }
