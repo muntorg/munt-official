@@ -163,32 +163,6 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
         return false;
 
-    //fixme: (PHASE4) (RELEASE) 
-    //Note there has not been a single hit here in all the testing so this can definitely go in future.
-    //Delete this for final release build
-    #ifdef BETA_BUILD
-    if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
-    {
-        if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
-        {
-            std::string strErrorMessage = strprintf("Fatal witness error - segsig key mismatch: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
-            CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
-            return false;
-        }
-    }
-    else
-    {
-        if (CKeyID(uint160(fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != key.GetPubKey().GetID())
-        {
-            std::string strErrorMessage = strprintf("Fatal witness error - legacy key mismatch: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
-            CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
-            return false;
-        }
-    }
-    #endif
-
     return true;
 }
 
