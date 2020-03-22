@@ -1142,7 +1142,6 @@ public:
         {
             if (nInput != nIn && (fHashSingle || fHashNone))
             {
-                //fixme: (PHASE4) (SEGSIG) - CHECK THIS MAKES SENSE? SHOULD WE SERIALISE TYPE FOR 'others'?
                 // let the others update at will
                 ::Serialize(s, (int)0);
             }
