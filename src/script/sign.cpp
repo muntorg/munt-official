@@ -48,7 +48,7 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
     uint256 hash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion);
     if (sigversion == SIGVERSION_SEGSIG)
     {
-        //fixme: (PHASE4) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
+        //fixme: (PHASE5) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
         if (!key.SignCompact(hash, vchSig))
             return false;
     }
