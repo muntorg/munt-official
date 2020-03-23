@@ -223,19 +223,30 @@ public:
 
         if (allowIndexBased && walletTx->GetDepthInMainChain() > COINBASE_MATURITY && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
         {
+            // Convert to an index based outpoint, whenever possible
             outpoint = COutPoint(walletTx->nHeight, walletTx->nIndex, i);
         }
         else
         {
+            // Use a regular hash based outpoint
             outpoint = COutPoint(walletTx->GetHash(), i);
         }
         
         txout = walletTx->tx->vout[i];
     }
 
-    CInputCoin(const COutPoint& outpoint_, const CTxOut& txout_)
+    CInputCoin(const COutPoint& outpoint_, const CTxOut& txout_, bool allowIndexBased, uint64_t nBlockHeight=0, uint64_t nTxIndex=0)
     {
-        outpoint = outpoint_;
+        if (allowIndexBased && nBlockHeight < (uint64_t)chainActive.Tip()->nHeight && ((uint64_t)chainActive.Tip()->nHeight - nBlockHeight > (uint64_t)COINBASE_MATURITY))
+        {
+            // Convert to an index based outpoint, whenever possible
+            outpoint = COutPoint(nBlockHeight, nTxIndex, outpoint_.n);
+        }
+        else
+        {
+            // Use a regular hash based outpoint
+            outpoint = outpoint_;
+        }
         txout = txout_;
     }
 
@@ -751,6 +762,9 @@ public:
     CAmount GetAvailableBalance(CAccount* forAccount, const CCoinControl* coinControl = nullptr) const;
 
     //! Fund a transaction that is otherwise already created
+    // Where possible it is best to ensuire that all inputs of the transaction to be funded are constructed as index based (if they fit the criteria) instead of hash based
+    // Otherwise this can result in some obscure issues, see comments in function body for more witnessDetails
+    // The function automatically tries to take care of these issues but its better to avoid it having to do so entirely
     bool FundTransaction(CAccount* fundingAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl, CReserveKeyOrScript& reservekey);
 
     //! Sign a transaction that is already fully populated/funded

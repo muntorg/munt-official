@@ -5,8 +5,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -70,7 +70,6 @@ struct CBlockPosition
 };
 
 
-//fixme: (PHASE4) (SEGSIG) Ensure again that network rules for the other 7 types are consistently handled.
 // Represented in class as 3 bits.
 // Maximum of 8 values
 enum CTxInType : uint8_t
@@ -86,7 +85,7 @@ enum CTxInType : uint8_t
 };
 
 //fixme: (PHASE4) (MOBILE) (SPV) (SEGSIG) Ensure IndexBasedOutpoint working on mobile SPV wallets
-//fixme: (PHASE4) (SEGSIG) Double check all RBF/AbsoluteLock/RelativeLock behaviour
+//fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
 // Only 5 bits available for TxInFlags.
 // The are used as bit flags so only 5 values possible each with an on/off state.
 // All 5 values are currently in use.
@@ -167,7 +166,7 @@ public:
 
     template <typename Stream> inline void ReadFromStream(Stream& s, CTxInType nType, CTxInFlags nFlags, int nTransactionVersion)
     {
-        //fixme: (PHASE4) Implement usage of nType here.
+        // Future, if we ever make use of future input types e.g. FUTURE_TX_IN_TYPE2 then we must make use of them here
         (void) nType;
         CSerActionUnserialize ser_action;
 
@@ -200,7 +199,7 @@ public:
 
     template <typename Stream> inline void WriteToStream(Stream& s, CTxInType nType, CTxInFlags nFlags, int nTransactionVersion) const
     {
-        //fixme: (PHASE4) Implement usage of nType here.
+        // Future, if we ever make use of future input types e.g. FUTURE_TX_IN_TYPE2 then we must make use of them here
         (void) nType;
         CSerActionSerialize ser_action;
 
@@ -1236,7 +1235,7 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull()) || IsPoW2WitnessCoinBase();
     }
 
-    //fixme: (PHASE4) - check second vin is a witness transaction.
+    //fixme: (PHASE5) Not sure if necessary or overkill, check second vin is a witness transaction, doing so will be expensive, I suspect we don't need to do it.
     bool IsPoW2WitnessCoinBase() const
     {
         return (vin.size() == 2 && vin[0].prevout.IsNull());
@@ -1304,7 +1303,7 @@ struct CMutableTransaction
         return a.GetHash() == b.GetHash();
     }
 
-    //fixme: (PHASE4) - We can possibly improve this test by testing transaction version instead.
+    //fixme: (PHASE5) - We can possibly improve this test by testing transaction version instead.
     bool HasSegregatedSignatures() const
     {
         for (size_t i = 0; i < vin.size(); i++)

@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -48,7 +48,7 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
     uint256 hash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion);
     if (sigversion == SIGVERSION_SEGSIG)
     {
-        //fixme: (PHASE4) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
+        //fixme: (PHASE5) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
         if (!key.SignCompact(hash, vchSig))
             return false;
     }
@@ -257,6 +257,7 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutStandardKe
     return true;
 }
 
+//fixme: (PHASE5) de-dupe
 static CScript PushAll(const std::vector<valtype>& values)
 {
     CScript result;
@@ -310,14 +311,13 @@ CKeyID ExtractSigningPubkeyFromTxOutput(const CTxOut& txOut, SignType type)
     {
         case ScriptLegacyOutput:
         {
-            //fixme: (PHASE4) (SEGSIG)
             CTxDestination dest;
             if (!ExtractDestination(txOut.output.scriptPubKey, dest))
                 return CKeyID();
 
             CSigningKeysVisitor getSigningKeys(type);
             getSigningKeys.Process(dest);
-            //fixme: (PHASE4) (SEGSIG) MULTISIG
+            //NB! This looks weird, but with multisig we get the signatures later when evaluating the script, so actually this is correct.
             if (getSigningKeys.vKeys.size() != 1)
                 return CKeyID();
             return getSigningKeys.vKeys[0];
@@ -371,7 +371,6 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
-        //fixme: (PHASE4) Additional sanity checks here.
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, sigversion, type);
         sigdata.segregatedSignatureData.stack = result;
@@ -380,7 +379,6 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::StandardKeyHashOutput)
     {
-        //fixme: (PHASE4) Additional sanity checks here.
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, sigversion, type);
         sigdata.segregatedSignatureData.stack = result;
@@ -531,7 +529,7 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
             return sigs2;
         return sigs1;
     case TX_PUBKEYHASH_POW2WITNESS:
-        //fixme: (PHASE4) Key renewal
+        //fixme: (PHASE5) Key renewal
         //We need to devise a way to sign with the right key here (both keys if it is a spend, witness key if just witnessing)
         return sigs1;
     case TX_SCRIPTHASH:

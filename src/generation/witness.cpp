@@ -1,5 +1,5 @@
-// Copyright (c) 2015-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2015-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -162,32 +162,6 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     uint256 hash = pBlock->GetHashPoW2();
     if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
         return false;
-
-    //fixme: (PHASE4) (RELEASE) 
-    //Note there has not been a single hit here in all the testing so this can definitely go in future.
-    //Delete this for final release build
-    #ifdef BETA_BUILD
-    if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
-    {
-        if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
-        {
-            std::string strErrorMessage = strprintf("Fatal witness error - segsig key mismatch: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
-            CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
-            return false;
-        }
-    }
-    else
-    {
-        if (CKeyID(uint160(fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != key.GetPubKey().GetID())
-        {
-            std::string strErrorMessage = strprintf("Fatal witness error - legacy key mismatch: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
-            CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
-            return false;
-        }
-    }
-    #endif
 
     return true;
 }
@@ -388,18 +362,39 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
     }
 
     CWitnessRewardTemplate rewardTemplate;
-    if (selectedWitnessAccount->hasRewardTemplate()) {
+    // If an explicit template has been set then use that, otherwise create a default template
+    if (selectedWitnessAccount->hasRewardTemplate())
+    {
         LOCK(pactiveWallet->cs_wallet);
         rewardTemplate = selectedWitnessAccount->getRewardTemplate();
     }
-    else { // Create default template
-
-        // Take compounding setting
-        rewardTemplate.destinations.push_back(
-            CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), selectedWitnessAccount->getCompounding(), 0.0, false, false));
-        // Any remaing (and compound overflow) goes to witness account non-compounding (or reward script if set)
-        rewardTemplate.destinations.push_back(
-            CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+    else
+    {
+        if (selectedWitnessAccount->getCompounding() > 0)
+        {
+            auto compoundAmount = selectedWitnessAccount->getCompounding();
+            if (compoundAmount == MAX_MONEY)
+            {
+                compoundAmount = witnessBlockSubsidy;
+                // Subsidy and any overflow fees to compound
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), compoundAmount, 0.0, true, false));
+                // Any compound overflow to script
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, false, true));
+            }
+            else
+            {
+                // Pay up until requested amount to compound
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), compoundAmount, 0.0, false, false));
+                // Any remaining fees/overflow to script
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+            }
+        }
+        else
+        {
+            // Compound nothing, all money into 'reward script'
+            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), 0, 0.0, false, false));
+            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+        }
     }
 
     // Output for subsidy and refresh witness address.
@@ -434,6 +429,10 @@ void static GuldenWitness()
 {
     LogPrintf("GuldenWitness started\n");
     RenameThread("gulden-witness");
+    
+    // Don't even try witness if we have no wallet (-disablewallet)
+    if (!pactiveWallet)
+        return;
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     static bool regTest = GetBoolArg("-regtest", false);

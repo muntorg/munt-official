@@ -9,6 +9,116 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Valitse hiiren oikealla painikkeella muokataksesi osoitetta tai nimikettä</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>S&amp;ulje</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Poista valittu osoite listalta</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Poista</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Vie auki olevan välilehden tiedot tiedostoon</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Vie</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Luo uusi osoite</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Uusi</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Kopioi valittu osoite leikepöydälle</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopioi</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Vie</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Tunnuslauseen tekstinsyöttökenttä</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Kirjoita tunnuslause</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Uusi tunnuslause</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Toista uusi tunnuslause</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Verkon peite</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>Estetty kunnes</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Tallenna kuva</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Tallenna kuva</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Määrä</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-koodi</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopioi &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopioi &amp;Osoite</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -99,29 +209,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Määrä</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Tallenna kuva</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-koodi</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopioi &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopioi &amp;Osoite</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -130,156 +217,6 @@
     <message>
         <source>Date</source>
         <translation>Aika</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Lomake</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldot</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Vahvistamattomat rahansiirrot vain katseltaviin osoitteisiin</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Varmistamattomien rahansiirtojen summa, jota ei lasketa käytettävissä olevaan taseeseen.</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Yhteensä:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Epäkypsää:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Tililläsi tällä hetkellä olevien Bitcoinien määrä</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Nykyinen tase seurantaosoitetteissa</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Seuranta:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Käytettävissä:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Nykyinen käytettävissä oleva tase</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Nykyinen tase seurantaosoitetteissa</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Odotetaan:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Käytettävissä:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Viimeisimmät rahansiirrot</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Valitse hiiren oikealla painikkeella muokataksesi osoitetta tai nimikettä</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>S&amp;ulje</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Poista valittu osoite listalta</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Poista</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Vie auki olevan välilehden tiedot tiedostoon</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Vie</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Luo uusi osoite</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Uusi</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopioi valittu osoite leikepöydälle</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Kopioi</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Vie</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Tunnuslauseen tekstinsyöttökenttä</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Kirjoita tunnuslause</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Uusi tunnuslause</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Toista uusi tunnuslause</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Verkon peite</translation>
-    </message>
-    <message>
-        <source>Banned Until</source>
-        <translation>Estetty kunnes</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Tallenna kuva</translation>
     </message>
 </context>
 <context>
@@ -1018,6 +955,69 @@
     <message>
         <source>Select payment request file</source>
         <translation>Valitse maksupyynnön tiedosto</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Lomake</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldot</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Vahvistamattomat rahansiirrot vain katseltaviin osoitteisiin</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Varmistamattomien rahansiirtojen summa, jota ei lasketa käytettävissä olevaan taseeseen.</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Yhteensä:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Epäkypsää:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Tililläsi tällä hetkellä olevien Bitcoinien määrä</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Nykyinen tase seurantaosoitetteissa</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Seuranta:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Käytettävissä:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Nykyinen käytettävissä oleva tase</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Nykyinen tase seurantaosoitetteissa</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Odotetaan:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Käytettävissä:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Viimeisimmät rahansiirrot</translation>
     </message>
 </context>
 <context>

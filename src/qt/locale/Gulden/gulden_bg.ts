@@ -9,409 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Credit</source>
-        <translation>Кредит</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Дебит</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Сума</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Съобщение</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Подлежи на промяна до %1</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/офлайн</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/непотвърдени</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>включена в %1 блока</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Статус</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, все още не е изпратено</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>Източник</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Издадени</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>От</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>неизвестен</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>За</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>собствен адрес</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>само гледане</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>име</translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>не е приет</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>Общ дълг</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>Общ дълг</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>Такса</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>Нетна сума</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Коментар</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>ID</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>Търговец</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Генерираните монети трябва да отлежат %1 блока преди да могат да бъдат похарчени. Когато генерираш блока, той се разпространява в мрежата, за да се добави в блок-веригата. Ако не успее да се добави във веригата, неговия статус  ще се стане &quot;неприет&quot; и няма да може да се похарчи. Това е възможно да се случи случайно, ако друг възел генерира блок няколко секунди след твоя.</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>Информация за грешките</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>Транзакция</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>true</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>false</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Сума</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(без име)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Избор на монета</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Количество:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Байтове:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Сума:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Прах:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Такса:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>След прилагане на ДДС</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Ресто</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(Пре)махни всички</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Дървовиден режим</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Списъчен режим</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Получени с име</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Получени с адрес</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Потвърждения</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Потвърдени</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Копирай адрес</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Копирай име</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Копирай сума</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Копирай транзакция с ID</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Заключване на неизхарченото</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Отключване на неизхарченото</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Копиране на количеството</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Копиране на данък добавена стойност</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Копиране след прилагане на данък добавена стойност</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Копиране на байтовете</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Копирай прахта:</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Копирай рестото</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 заключен)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>да</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>не</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>ресто от %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(промени)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Сума</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 ден</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 час</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 минута</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 секунда</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Неналичен</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Несъществуващ</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 милисекунда</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 и %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Сума</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Име</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Адрес</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Запиши изображение...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR код</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Копиране на &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Копирай адрес</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>Изискване на плащане от %1</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>Данни за плащането</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Съобщение</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Формуляр</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Баланс</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Общо:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Неразвит:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Текущият ви общ баланс</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>В наблюдателен режим:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Налично:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Вашата текуща сметка за изразходване</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Изчакващо:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>За харчене:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Скорошни транзакции</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -664,6 +261,49 @@
     </message>
 </context>
 <context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Label</source>
+        <translation>Име</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Запиши изображение...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR код</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Копиране на &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Копирай адрес</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>Изискване на плащане от %1</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Данни за плащането</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Съобщение</translation>
+    </message>
+</context>
+<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -684,6 +324,149 @@
     <message>
         <source>(no message)</source>
         <translation>(без съобщение)</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(без име)</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Избор на монета</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Количество:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Байтове:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Сума:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Прах:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Такса:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>След прилагане на ДДС</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Ресто</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(Пре)махни всички</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Дървовиден режим</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Списъчен режим</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Получени с име</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Получени с адрес</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Потвърждения</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Потвърдени</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Копирай адрес</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Копирай име</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Копирай сума</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Копирай транзакция с ID</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Заключване на неизхарченото</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Отключване на неизхарченото</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Копиране на количеството</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Копиране на данък добавена стойност</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Копиране след прилагане на данък добавена стойност</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Копиране на байтовете</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Копирай прахта:</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Копирай рестото</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 заключен)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>да</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>не</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>ресто от %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(промени)</translation>
     </message>
 </context>
 <context>
@@ -876,10 +659,6 @@
         <translation>Тип</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Извън линия</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Непотвърдено</translation>
     </message>
@@ -898,10 +677,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Неплатим (%1 потвърждения, ще бъде платим след %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Блокът не е получен от останалите участници и най-вероятно няма да бъде одобрен.</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1067,6 +842,168 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>PNG Изображение (*.png)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 ден</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 час</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 минута</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 секунда</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Неналичен</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Несъществуващ</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 милисекунда</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 и %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Съобщение</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Кредит</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Дебит</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Подлежи на промяна до %1</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/непотвърдени</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>включена в %1 блока</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Статус</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>Източник</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Издадени</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>От</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>неизвестен</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>За</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>собствен адрес</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>само гледане</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>име</translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>не е приет</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>Общ дълг</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>Общ дълг</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Такса</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Нетна сума</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Коментар</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>Търговец</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Генерираните монети трябва да отлежат %1 блока преди да могат да бъдат похарчени. Когато генерираш блока, той се разпространява в мрежата, за да се добави в блок-веригата. Ако не успее да се добави във веригата, неговия статус  ще се стане &quot;неприет&quot; и няма да може да се похарчи. Това е възможно да се случи случайно, ако друг възел генерира блок няколко секунди след твоя.</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>Информация за грешките</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Транзакция</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>true</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>false</translation>
     </message>
 </context>
 <context>
@@ -1559,6 +1496,53 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Формуляр</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Баланс</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Общо:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Неразвит:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Текущият ви общ баланс</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>В наблюдателен режим:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Налично:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Вашата текуща сметка за изразходване</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Изчакващо:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>За харчене:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Скорошни транзакции</translation>
     </message>
 </context>
 <context>

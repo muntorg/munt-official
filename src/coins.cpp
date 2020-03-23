@@ -4,8 +4,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -40,16 +40,16 @@ SaltedOutpointHasher::SaltedOutpointHasher() : k0(GetRand(std::numeric_limits<ui
 
 CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn)
 : CCoinsViewBacked(baseIn)
+, cacheMempoolRefs(0)
 , cachedCoinsUsage(0)
 , pChainedWitView(nullptr)
-, cacheMempoolRefs(0)
 {}
 
 CCoinsViewCache::CCoinsViewCache(CCoinsViewCache *baseIn)
 : CCoinsViewBacked(baseIn)
+, cacheMempoolRefs(0)
 , cachedCoinsUsage(0)
 , pChainedWitView(baseIn->pChainedWitView?std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(baseIn->pChainedWitView.get())):nullptr)
-, cacheMempoolRefs(0)
 {}
 
 size_t CCoinsViewCache::DynamicMemoryUsage() const
@@ -68,7 +68,7 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
     // Sadly not quite true:
     // 1) cacheCoins may contain a dirty entry and a live entry both of which correspond to the same cacheCoinRefs (e.g. reorganisation)
     // 2) mempool entries don't have a block height (so aren't in cacheCoinRefs), so we track those as 'cacheMempoolRefs' counter and compensate
-    if (cacheCoins.size() != cacheCoinRefs.size()+cacheMempoolRefs)
+    /*if (cacheCoins.size() != cacheCoinRefs.size()+cacheMempoolRefs)
     {
         uint64_t nNotSpentCacheCoinsCount = 0;
         for (const auto& it : cacheCoins)
@@ -79,7 +79,7 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
             }
         }
         assert(nNotSpentCacheCoinsCount == cacheCoinRefs.size()+cacheMempoolRefs);
-    }
+    }*/
 
     CCoinsRefMap::iterator refIt = cacheCoinRefs.find(outpoint.isHash ? COutPoint(block, txIndex, voutIndex) : outpoint);
     
@@ -171,7 +171,7 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
     validateInsert(outpoint, tmp.nHeight, tmp.nTxIndex, outpoint.n);
 
     // have it in base view, auto-create copy in the cache   
-    if (tmp.nHeight == MEMPOOL_HEIGHT && tmp.nHeight == MEMPOOL_INDEX)
+    if (tmp.nHeight == MEMPOOL_HEIGHT && tmp.nTxIndex == MEMPOOL_INDEX)
     {
         ++cacheMempoolRefs;
         if (pRefIterReturn)
@@ -231,7 +231,7 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     // Ensure consistency
     validateInsert(outpoint, coin.nHeight, coin.nTxIndex, outpoint.n);
 
-    if (coin.nHeight == MEMPOOL_HEIGHT && coin.nHeight == MEMPOOL_INDEX)
+    if (coin.nHeight == MEMPOOL_HEIGHT && coin.nTxIndex == MEMPOOL_INDEX)
     {
         ++cacheMempoolRefs;
     }
@@ -380,7 +380,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     {
                         entry.flags |= CCoinsCacheEntry::FRESH;
                     }
-                    if (entry.coin.nHeight == MEMPOOL_HEIGHT && entry.coin.nHeight == MEMPOOL_INDEX)
+                    if (entry.coin.nHeight == MEMPOOL_HEIGHT && entry.coin.nTxIndex == MEMPOOL_INDEX)
                     {
                         ++cacheMempoolRefs;
                     }

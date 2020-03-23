@@ -9,6 +9,29 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Xóa</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Tạo một địa chỉ mới</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>Tạo mới</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Sao chép các địa chỉ đã được chọn vào bộ nhớ tạm thời của hệ thống</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>Sao chép</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -42,29 +65,6 @@
     <message>
         <source>Amount</source>
         <translation>Số lượng</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Xóa</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Tạo một địa chỉ mới</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>Tạo mới</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Sao chép các địa chỉ đã được chọn vào bộ nhớ tạm thời của hệ thống</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>Sao chép</translation>
     </message>
 </context>
 <context>

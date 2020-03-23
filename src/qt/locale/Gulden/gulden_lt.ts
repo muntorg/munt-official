@@ -9,6 +9,82 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Spustelėkite dešinįjį klaviša norint keisti adresą arba etiketę</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;Užverti</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Ištrinti pasirinktą adresą iš sąrašo</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Trinti</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Eksportuoti informaciją iš dabartinės lentelės į failą</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksportuoti</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Sukurti naują adresą</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Naujas</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Kopijuoti esamą adresą į mainų atmintį</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopijuoti</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksportuoti</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Slaptafrazės dialogas</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Įvesti slaptafrazę</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Nauja slaptafrazė</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Pakartokite naują slaptafrazę</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>Banned Until</source>
+        <translation>Užblokuotas iki</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -110,113 +186,6 @@
     <message>
         <source>Date</source>
         <translation>Data</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Forma</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Viso:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nepribrendę:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Jūsų balansas</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Galimi:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Jūsų dabartinis išleidžiamas balansas</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Laukiantys:</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Spustelėkite dešinįjį klaviša norint keisti adresą arba etiketę</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;Užverti</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Ištrinti pasirinktą adresą iš sąrašo</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Trinti</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksportuoti informaciją iš dabartinės lentelės į failą</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksportuoti</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Sukurti naują adresą</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Naujas</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopijuoti esamą adresą į mainų atmintį</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Kopijuoti</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksportuoti</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Slaptafrazės dialogas</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Įvesti slaptafrazę</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Nauja slaptafrazė</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Pakartokite naują slaptafrazę</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>Banned Until</source>
-        <translation>Užblokuotas iki</translation>
     </message>
 </context>
 <context>
@@ -574,6 +543,37 @@
     <message>
         <source>command-line options</source>
         <translation>komandinės eilutės parametrai</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Forma</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Viso:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nepribrendę:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Jūsų balansas</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Galimi:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Jūsų dabartinis išleidžiamas balansas</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Laukiantys:</translation>
     </message>
 </context>
 <context>

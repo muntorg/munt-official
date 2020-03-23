@@ -9,225 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>כמות</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(ללא תוית)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>בחירת מטבע</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>כמות:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>בתים:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>סכום:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>אבק:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>עמלה:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>לאחר עמלה:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>עודף:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>ביטול/אישור הבחירה</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>מצב עץ</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>מצב רשימה</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>התקבל עם תווית</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>התקבל עם כתובת</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>תאריך</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>אישורים</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>מאושר</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>כמות</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 ימים</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 שעות</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 דקות</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 שניות</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>ללא</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>לא זמין</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 מילישניות</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 ו%2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>כמות</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>תוית</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>כתובת</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;שמירת תמונה…</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>קוד QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>העתקת &amp;כתובת משאב</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>העתקת &amp;כתובת</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>כמות</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>תאריך</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>טופס</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>מאזנים</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>העברות בלתי מאושרות לכתובות לצפייה בלבד</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>הסכום הכולל של העברות שטרם אושרו ועדיין אינן נספרות בחישוב היתרה הזמינה</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>סך הכול:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>לא בשל:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>סך כל היתרה הנוכחית שלך</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>המאזן הכולל הנוכחי בכתובות לצפייה בלבד</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>צפייה בלבד:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>זמין:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>היתרה הזמינה הנוכחית</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>המאזן הנוכחי שלך בכתובות לקריאה בלבד</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>בהמתנה:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>ניתנים לבזבוז</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>העברות אחרונות</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -356,6 +137,37 @@
     </message>
 </context>
 <context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Label</source>
+        <translation>תוית</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>כתובת</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;שמירת תמונה…</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>כמות</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>קוד QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>העתקת &amp;כתובת משאב</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>העתקת &amp;כתובת</translation>
+    </message>
+</context>
+<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -368,6 +180,81 @@
     <message>
         <source>Date</source>
         <translation>תאריך</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(ללא תוית)</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>כמות</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>בחירת מטבע</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>כמות:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>בתים:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>סכום:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>אבק:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>עמלה:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>לאחר עמלה:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>עודף:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>ביטול/אישור הבחירה</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>מצב עץ</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>מצב רשימה</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>התקבל עם תווית</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>התקבל עם כתובת</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>תאריך</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>אישורים</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>מאושר</translation>
     </message>
 </context>
 <context>
@@ -531,6 +418,56 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;שמירת תמונה…</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>כמות</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 ימים</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 שעות</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 דקות</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 שניות</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>ללא</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>לא זמין</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 מילישניות</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 ו%2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>כמות</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>תאריך</translation>
     </message>
 </context>
 <context>
@@ -1055,6 +992,69 @@
     <message>
         <source>Select payment request file</source>
         <translation>בחירת קובץ בקשת תשלום</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>טופס</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>מאזנים</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>העברות בלתי מאושרות לכתובות לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>הסכום הכולל של העברות שטרם אושרו ועדיין אינן נספרות בחישוב היתרה הזמינה</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>סך הכול:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>לא בשל:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>סך כל היתרה הנוכחית שלך</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>המאזן הכולל הנוכחי בכתובות לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>צפייה בלבד:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>זמין:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>היתרה הזמינה הנוכחית</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>המאזן הנוכחי שלך בכתובות לקריאה בלבד</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>בהמתנה:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>ניתנים לבזבוז</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>העברות אחרונות</translation>
     </message>
 </context>
 <context>

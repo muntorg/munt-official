@@ -9,6 +9,116 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Klik-kanan untuk mengubah alamat atau label</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>T&amp;utup</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Hapus alamat yang sementara dipilih dari daftar</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Hapus</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Ekspor data dalam tab sekarang ke sebuah berkas</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Ekspor</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Buat alamat baru</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Baru</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Salin alamat yang dipilih ke clipboard</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Menyalin</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Ekspor</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Dialog Kata kunci</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Masukkan kata kunci</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Kata kunci baru</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Ulangi kata kunci baru</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Netmask</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>Di banned sampai</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Simpan Gambaran...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Simpan Gambaran...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Jumlah</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>Kode QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Salin &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Salin &amp;Alamat</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -103,29 +213,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Jumlah</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Simpan Gambaran...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>Kode QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Salin &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Salin &amp;Alamat</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -134,132 +221,6 @@
     <message>
         <source>Date</source>
         <translation>Tanggal</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulir</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldo:</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Jumlah keseluruhan transaksi yang belum dikonfirmasi, dan belum saatnya dihitung sebagai pengeluaran saldo yang telah dibelanjakan.</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Jumlah:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Terlalu Muda:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Jumlah saldo Anda sekarang</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Tersedia:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Jumlah yang Anda bisa keluarkan sekarang</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Ditunda</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Klik-kanan untuk mengubah alamat atau label</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>T&amp;utup</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Hapus alamat yang sementara dipilih dari daftar</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Hapus</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Ekspor data dalam tab sekarang ke sebuah berkas</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Ekspor</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Buat alamat baru</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Baru</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Salin alamat yang dipilih ke clipboard</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Menyalin</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Ekspor</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Dialog Kata kunci</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Masukkan kata kunci</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Kata kunci baru</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Ulangi kata kunci baru</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask</translation>
-    </message>
-    <message>
-        <source>Banned Until</source>
-        <translation>Di banned sampai</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Simpan Gambaran...</translation>
     </message>
 </context>
 <context>
@@ -850,6 +811,45 @@
     <message>
         <source>The supplied proxy address is invalid.</source>
         <translation>Alamat proxy yang diisi tidak valid.</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulir</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldo:</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Jumlah keseluruhan transaksi yang belum dikonfirmasi, dan belum saatnya dihitung sebagai pengeluaran saldo yang telah dibelanjakan.</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Jumlah:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Terlalu Muda:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Jumlah saldo Anda sekarang</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Tersedia:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Jumlah yang Anda bisa keluarkan sekarang</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Ditunda</translation>
     </message>
 </context>
 <context>

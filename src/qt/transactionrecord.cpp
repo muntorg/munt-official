@@ -4,8 +4,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -43,9 +43,11 @@ bool TransactionRecord::showTransaction(const CWalletTx &wtx)
 bool AddAddressForOutPoint(const CWallet *wallet, const COutPoint& outpoint, std::string address)
 {
     CTransactionRef tx;
-    if (outpoint.isHash) {
+    if (outpoint.isHash)
+    {
         const CWalletTx* wtx = wallet->GetWalletTx(outpoint.getTransactionHash());
-        if (wtx) {
+        if (wtx)
+        {
             tx = wtx->tx;
         }
     }
@@ -53,8 +55,12 @@ bool AddAddressForOutPoint(const CWallet *wallet, const COutPoint& outpoint, std
     {
         CBlock block;
         LOCK(cs_main);
-        if (ReadBlockFromDisk(block, chainActive[outpoint.getTransactionBlockNumber()], Params()) && block.vtx.size() > outpoint.getTransactionIndex()) {
-            tx = block.vtx[outpoint.getTransactionIndex()];
+        if (chainActive.Tip() && (uint64_t)outpoint.getTransactionBlockNumber() < (uint64_t)chainActive.Tip()->nHeight)
+        {
+            if (ReadBlockFromDisk(block, chainActive[outpoint.getTransactionBlockNumber()], Params()) && block.vtx.size() > outpoint.getTransactionIndex())
+            {
+                tx = block.vtx[outpoint.getTransactionIndex()];
+            }
         }
     }
 

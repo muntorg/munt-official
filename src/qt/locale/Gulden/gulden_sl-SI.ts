@@ -9,6 +9,116 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Desni klik za urejanje naslovov ali oznak</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;Zapri</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Izbriši trenutno označeni naslov  iz seznama</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>I&amp;zbriši</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Izvozi podatke v trenutnem zavihku v datoteko</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Izvozi</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Ustvari nov naslov</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Novo</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Kopiraj trenutno izbrani naslov v odložišče</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopiraj</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Izvozi</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Vnos gesla</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Vnesite geslo</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Novo geslo</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Ponovite novo geslo</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Netmaska</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>Prepoved do</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Shrani sliko ...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Shrani sliko ...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Znesek</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR Koda</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopiraj &amp;URl</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopiraj &amp;naslov</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -119,29 +229,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Znesek</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Shrani sliko ...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR Koda</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopiraj &amp;URl</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopiraj &amp;naslov</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -150,156 +237,6 @@
     <message>
         <source>Date</source>
         <translation>Datum</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Oblika</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Stanje sredstev</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Nepotrjene transakcije na opazovanih naslovih</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Skupni znesek sredstev s katerimi še ne razpolagate prosto, ker so del še nepotrjenih transakcij.</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Skupaj:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nedozorelo:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Trenutna vsota vseh vaših sredstev</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Trenutno skupno stanje sredstev na opazovanih naslovih</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Opazovano:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Na voljo:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Skupni znesek vaših sredstev, s katerimi lahko prosto razpolagate</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Trenutno stanje vaših sredstev na opazovanih naslovih</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Nepotrjeno:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Na voljo:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Nedavne transakcije</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Desni klik za urejanje naslovov ali oznak</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;Zapri</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Izbriši trenutno označeni naslov  iz seznama</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>I&amp;zbriši</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Izvozi podatke v trenutnem zavihku v datoteko</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Izvozi</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Ustvari nov naslov</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Novo</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopiraj trenutno izbrani naslov v odložišče</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Kopiraj</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Izvozi</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Vnos gesla</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Vnesite geslo</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Novo geslo</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Ponovite novo geslo</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmaska</translation>
-    </message>
-    <message>
-        <source>Banned Until</source>
-        <translation>Prepoved do</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Shrani sliko ...</translation>
     </message>
 </context>
 <context>
@@ -974,6 +911,69 @@
     <message>
         <source>Select payment request file</source>
         <translation>Izbiranje datoteke z zahtevkom za plačilo</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Oblika</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Stanje sredstev</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Nepotrjene transakcije na opazovanih naslovih</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Skupni znesek sredstev s katerimi še ne razpolagate prosto, ker so del še nepotrjenih transakcij.</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Skupaj:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nedozorelo:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Trenutna vsota vseh vaših sredstev</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Trenutno skupno stanje sredstev na opazovanih naslovih</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Opazovano:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Na voljo:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Skupni znesek vaših sredstev, s katerimi lahko prosto razpolagate</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Trenutno stanje vaših sredstev na opazovanih naslovih</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Nepotrjeno:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Na voljo:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Nedavne transakcije</translation>
     </message>
 </context>
 <context>

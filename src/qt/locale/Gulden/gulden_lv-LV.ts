@@ -9,6 +9,101 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;Aizvērt</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Izdzēst iezīmētās adreses no saraksta</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Dzēst</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Datus no tekošā ieliktņa eksportēt uz failu</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksportēt</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Izveidot jaunu adresi</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Jauns</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Kopēt iezīmēto adresi uz starpliktuvi</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopēt</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksportēt</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Paroles dialogs</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Ierakstiet paroli</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Jauna parole</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Jaunā parole vēlreiz</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Saglabāt Attēlu...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Saglabāt Attēlu...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Daudzums</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR Kods</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopēt &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopēt &amp;Adresi</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -87,29 +182,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Daudzums</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Saglabāt Attēlu...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR Kods</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopēt &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopēt &amp;Adresi</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -118,113 +190,6 @@
     <message>
         <source>Date</source>
         <translation>Datums</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Forma</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Kopējā apstiprināmo transakciju vērtība, vēl nav ieskaitīta tērējamajā bilancē</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Kopsumma:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nenobriedušu:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Jūsu kopējā tekošā bilance</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Pieejams:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Tava pašreizējā tērējamā bilance</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Neizšķirts:</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;Aizvērt</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Izdzēst iezīmētās adreses no saraksta</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Dzēst</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Datus no tekošā ieliktņa eksportēt uz failu</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksportēt</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Izveidot jaunu adresi</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Jauns</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopēt iezīmēto adresi uz starpliktuvi</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Kopēt</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksportēt</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Paroles dialogs</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Ierakstiet paroli</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Jauna parole</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Jaunā parole vēlreiz</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Saglabāt Attēlu...</translation>
     </message>
 </context>
 <context>
@@ -661,6 +626,41 @@
     <message>
         <source>Select payment request file</source>
         <translation>Izvēlies maksājuma pieprasījuma datni</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Forma</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Kopējā apstiprināmo transakciju vērtība, vēl nav ieskaitīta tērējamajā bilancē</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Kopsumma:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nenobriedušu:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Jūsu kopējā tekošā bilance</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Pieejams:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Tava pašreizējā tērējamā bilance</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Neizšķirts:</translation>
     </message>
 </context>
 <context>

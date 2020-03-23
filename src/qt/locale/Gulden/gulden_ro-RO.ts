@@ -9,6 +9,116 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Click-dreapta pentru a edita adresa sau eticheta</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>Închide</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Şterge adresele curent selectate din listă</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Şterge</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Exportă datele din tab-ul curent într-un fişier</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportă</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Creează o adresă nouă</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Nou</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Copiază adresa selectată în clipboard</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Copiază</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportă</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Dialogul pentru fraza de acces</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Introduceţi fraza de acces</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Frază de acces nouă</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Repetaţi noua frază de acces</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Netmask</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>Banat până la</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salvează imaginea...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salvează imaginea...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>Cod QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Copiază &amp;URl</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Copiază &amp;adresa</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -119,29 +229,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Salvează imaginea...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>Cod QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Copiază &amp;URl</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Copiază &amp;adresa</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -150,156 +237,6 @@
     <message>
         <source>Date</source>
         <translation>Data</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Balanţă</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Tranzacţii neconfirmate la adresele doar-supraveghere</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Totalul tranzacţiilor care nu sunt confirmate încă şi care nu sunt încă adunate la balanţa de cheltuieli</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Total:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nematurizat:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Balanţa totală curentă</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Soldul dvs. total în adresele doar-supraveghere</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Doar-supraveghere:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Disponibil:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Balanţa dvs. curentă de cheltuieli</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Soldul dvs. curent în adresele doar-supraveghere</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>În aşteptare:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Cheltuibil:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Tranzacţii recente</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Click-dreapta pentru a edita adresa sau eticheta</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>Închide</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Şterge adresele curent selectate din listă</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Şterge</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Exportă datele din tab-ul curent într-un fişier</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Exportă</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Creează o adresă nouă</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Nou</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Copiază adresa selectată în clipboard</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Copiază</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Exportă</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Dialogul pentru fraza de acces</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Introduceţi fraza de acces</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Frază de acces nouă</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Repetaţi noua frază de acces</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask</translation>
-    </message>
-    <message>
-        <source>Banned Until</source>
-        <translation>Banat până la</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Salvează imaginea...</translation>
     </message>
 </context>
 <context>
@@ -1000,6 +937,69 @@
     <message>
         <source>Select payment request file</source>
         <translation>Selectaţi fişierul cerere de plată</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Balanţă</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Tranzacţii neconfirmate la adresele doar-supraveghere</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Totalul tranzacţiilor care nu sunt confirmate încă şi care nu sunt încă adunate la balanţa de cheltuieli</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Total:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nematurizat:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Balanţa totală curentă</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Soldul dvs. total în adresele doar-supraveghere</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Doar-supraveghere:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Disponibil:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Balanţa dvs. curentă de cheltuieli</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Soldul dvs. curent în adresele doar-supraveghere</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>În aşteptare:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Cheltuibil:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Tranzacţii recente</translation>
     </message>
 </context>
 <context>

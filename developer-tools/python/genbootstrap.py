@@ -24,6 +24,7 @@ rpcuser=os.environ["CHECKPOINT_RPC_USER"]
 rpcpass=os.environ["CHECKPOINT_RPC_PASSWORD"]
 rpcport=os.environ["CHECKPOINT_RPC_PORT"]
 rpcip=os.environ["CHECKPOINT_RPC_IP"]
+messageheader=os.environ["CHECKPOINT_MSG_HEADER"]
 bootstrapfilename=os.environ["BOOTSTRAP_FILENAME"]
 
 # ====== END USER SETTINGS ======
@@ -46,7 +47,7 @@ def print_bootstrap(height):
     hash = access.getblockhash(height)
     block_hex = access.getblock(hash, 0)
     block_bin = binascii.unhexlify(block_hex)
-    bootstrap_file.write(binascii.unhexlify('fcfef7e0'))
+    bootstrap_file.write(binascii.unhexlify(messageheader))
     bootstrap_file.write(struct.pack('i', len(block_bin)))
     bootstrap_file.write(block_bin)
 

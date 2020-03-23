@@ -109,7 +109,13 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     // Add new txins (keeping original txin scriptSig/order)
     for(const CTxIn& txin : wtx.tx->vin)
     {
-        if (!coinControl.IsSelected(txin.prevout))
+        //NB!!!
+        //If txin.prevout was hash based and not index based, and a valid index based outpoint representation also exists (mature enough) then we end up with a double output here.
+        //CreateTransaction ends up selecting the index based outpoint and the two txin no longer match
+        //We work around this by looking up the hash (if its in the wallet) and using that instead
+        //However callers to this function should also rather just pass in index based inputs where possible
+        uint256 convertedHash;
+        if (!coinControl.IsSelected(txin.prevout) && !(txin.prevout.isHash && GetTxHash(txin.prevout, convertedHash) && !coinControl.IsSelected(COutPoint(convertedHash, txin.prevout.n))))
         {
             tx.vin.push_back(txin);
 
@@ -162,9 +168,8 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
         }
         else if(tx.nLockTime == 0)
         {
-            //fixme: (PHASE4) (SEGSIG) - Do we have to set relative lock time on the inputs?
-            //Whats the relationship between relative and absolute locktime?
-            //nFlags |= CTxInFlags::OptInRBF;
+            //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+            //nFlags |= CTxInFlags::HasAbsoluteLock;
         }
         else
         {
@@ -249,15 +254,17 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
-    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (PHASE5) (only set this for high fee [per byte] transactions?)
-        txNew.nLockTime = chainActive.Height();
+    //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+    //if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (PHASE5) (only set this for high fee [per byte] transactions?)
+        //txNew.nLockTime = chainActive.Height();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
     // that transactions that are delayed after signing for whatever reason,
     // e.g. high-latency mix networks and some CoinJoin implementations, have
     // better privacy.
-    if (GetRandInt(100) == 0)
-        txNew.nLockTime = std::max(0, (int)txNew.nLockTime - GetRandInt(100));
+    //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+    //if (GetRandInt(100) == 0)
+        //txNew.nLockTime = std::max(0, (int)txNew.nLockTime - GetRandInt(100));
 
     assert(txNew.nLockTime <= (unsigned int)chainActive.Height());
     assert(txNew.nLockTime < LOCKTIME_THRESHOLD);
@@ -886,7 +893,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
             if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
             {
                 // Add witness input
-                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
+                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
                 // Add witness output
                 CTxOut renewedWitnessTxOutput;
@@ -967,7 +974,7 @@ void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, C
         if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
         {
             // Add witness input
-            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
+            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
             // Add witness output
             CTxOut renewedWitnessTxOutput;

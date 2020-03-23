@@ -9,6 +9,116 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Høyreklikk for å redigere adressen eller merkelappen</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;Lukk</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Slett den valgte adressen fra listen.</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Slett</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Eksporter data fra nåværende fane til fil</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksporter</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Opprett en ny addresse</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Ny</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Kopier den valgte adressen til systemets utklippstavle</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopier</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksporter</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Dialog for Adgangsfrase</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Angi adgangsfrase</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Ny adgangsfrase</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Gjenta ny adgangsfrase</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Nettmaske</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>Utestengt til</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Lagre Bilde...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Lagre Bilde...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Beløp</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-kode</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopier &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopier &amp;Adresse</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -119,29 +229,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Beløp</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Lagre Bilde...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-kode</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopier &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopier &amp;Adresse</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -150,156 +237,6 @@
     <message>
         <source>Date</source>
         <translation>Dato</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Skjema</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldoer</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Ubekreftede transaksjoner til kun observerbare adresser</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Totalt antall ubekreftede transaksjoner som ikke teller med i saldo</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Totalt:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Umoden:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Din nåværende saldo</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Nåværende totale balanse i kun observerbare adresser</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Kun observerbar:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Tilgjengelig:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Din nåværende saldo</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Din nåværende balanse i kun observerbare adresser</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Under behandling:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Kan brukes:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Nylige transaksjoner</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Høyreklikk for å redigere adressen eller merkelappen</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;Lukk</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Slett den valgte adressen fra listen.</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Slett</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksporter data fra nåværende fane til fil</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksporter</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Opprett en ny addresse</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Ny</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopier den valgte adressen til systemets utklippstavle</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Kopier</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksporter</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Dialog for Adgangsfrase</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Angi adgangsfrase</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Ny adgangsfrase</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Gjenta ny adgangsfrase</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Nettmaske</translation>
-    </message>
-    <message>
-        <source>Banned Until</source>
-        <translation>Utestengt til</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Lagre Bilde...</translation>
     </message>
 </context>
 <context>
@@ -1062,6 +999,69 @@
     <message>
         <source>Select payment request file</source>
         <translation>Velg fil for betalingsetterspørring</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Skjema</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldoer</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Ubekreftede transaksjoner til kun observerbare adresser</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Totalt antall ubekreftede transaksjoner som ikke teller med i saldo</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totalt:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Umoden:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Din nåværende saldo</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Nåværende totale balanse i kun observerbare adresser</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Kun observerbar:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Tilgjengelig:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Din nåværende saldo</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Din nåværende balanse i kun observerbare adresser</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Under behandling:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Kan brukes:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Nylige transaksjoner</translation>
     </message>
 </context>
 <context>

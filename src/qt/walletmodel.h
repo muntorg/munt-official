@@ -5,7 +5,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -131,7 +131,7 @@ public:
             paymentRequest.SerializeToString(&sPaymentRequest);
         std::string sAuthenticatedMerchant = authenticatedMerchant.toStdString();
 
-        //fixme: (PHASE4) Is it necessary to serialise the pow2 stuff here? Looks like its only used for merchant stuff which should never be happening with witnesses...
+        //fixme: (PHASE5) Is it necessary to serialise the pow2 stuff here? Looks like its only used for merchant stuff which should never be happening with witnesses...
         READWRITE(this->nVersion);
         READWRITE(sAddress);
         READWRITE(sLabel);

@@ -50,33 +50,40 @@ void OptimizeWitnessDialog::confirmClicked()
     QString questionString = tr("Are you sure you want to optimize the witness parts?");
 
     CAccount* fundingAccount = ui->fundingSelection->selectedAccount();
-    if (!fundingAccount) {
+    if (!fundingAccount)
+    {
         GUI::createDialog(this, tr("No funding account selected"), tr("Okay"), QString(""), 400, 180)->exec();
         return;
     }
 
-    pactiveWallet->BeginUnlocked(_("Wallet unlock required to optimize witness parts"), [=](){
-
-        try {
+    auto performOptimise = [=]()
+    {
+        try
+        {
             LOCK2(cs_main, pactiveWallet->cs_wallet);
             CAccount* witnessAccount = pactiveWallet->activeAccount;
             CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
             auto [currentDistribution, duration, totalAmount] = witnessDistribution(pactiveWallet, witnessAccount);
-            (unused)currentDistribution;
-            auto optimalDistribution = optimalWitnessDistribution(totalAmount, duration, witnessInfo.nTotalWeightEligibleAdjusted);
-            redistributewitnessaccount(pactiveWallet,
-                                       fundingAccount,
-                                       witnessAccount,
-                                       optimalDistribution,
-                                       nullptr, nullptr); // ignore result params
+
+            auto optimalDistribution = optimalWitnessDistribution(totalAmount, duration, witnessInfo.nTotalWeightEligibleRaw);
+            
+            if (currentDistribution == optimalDistribution || (currentDistribution.size() == 1 && optimalDistribution.size() == 1))
+            {
+                GUI::createDialog(this, tr("Account is already optimal"), tr("Okay"), QString(""), 400, 180)->exec();
+                return;
+            }
+            
+            redistributewitnessaccount(pactiveWallet, fundingAccount, witnessAccount, optimalDistribution, nullptr, nullptr); // ignore result params           
 
             // request dismissal only when succesful
             Q_EMIT dismiss(this);
 
-        } catch (std::runtime_error& e) {
+        }
+        catch (std::runtime_error& e)
+        {
             GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
         }
-
         pactiveWallet->EndUnlocked();
-    });
+    };
+    pactiveWallet->BeginUnlocked(_("Wallet unlock required to optimize witness parts"), performOptimise);
 }

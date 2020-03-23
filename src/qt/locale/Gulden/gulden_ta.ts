@@ -9,6 +9,111 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;மூடு</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;அழி</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ஏற்றுமதி</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>ஒரு புதிய முகவரியை உருவாக்கு</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;புதிய</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;நகல்</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>முகவரிகள் அனுப்பப்படுகின்றன</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>முகவரிகள் பெறப்படுகின்றன</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ஏற்றுமதி</translation>
+    </message>
+</context>
+<context>
+    <name>AddressTableModel</name>
+    <message>
+        <source>Address</source>
+        <translation>முகவரி</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address</source>
+        <translation>முகவரி</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;படத்தை சேமி...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR குறியீடு</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>நகலை &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>நகலை விலாசம்</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionView</name>
+    <message>
+        <source>Address</source>
+        <translation>முகவரி</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>தேதி</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>உறுதியாக</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Netmask</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;படத்தை சேமி...</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -79,33 +184,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>விலை</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>முகவரி</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;படத்தை சேமி...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR குறியீடு</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>நகலை &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>நகலை விலாசம்</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -114,111 +192,6 @@
     <message>
         <source>Date</source>
         <translation>தேதி</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>படிவம்</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>மீதி</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>மொத்தம்:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>முதிராத:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>கிடைக்ககூடிய:</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>நிலுவையில்:</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;மூடு</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;அழி</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;ஏற்றுமதி</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>ஒரு புதிய முகவரியை உருவாக்கு</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;புதிய</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;நகல்</translation>
-    </message>
-    <message>
-        <source>Sending addresses</source>
-        <translation>முகவரிகள் அனுப்பப்படுகின்றன</translation>
-    </message>
-    <message>
-        <source>Receiving addresses</source>
-        <translation>முகவரிகள் பெறப்படுகின்றன</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;ஏற்றுமதி</translation>
-    </message>
-</context>
-<context>
-    <name>AddressTableModel</name>
-    <message>
-        <source>Address</source>
-        <translation>முகவரி</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionView</name>
-    <message>
-        <source>Address</source>
-        <translation>முகவரி</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>தேதி</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>உறுதியாக</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;படத்தை சேமி...</translation>
     </message>
 </context>
 <context>
@@ -506,6 +479,33 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>படிவம்</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>மீதி</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>மொத்தம்:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>முதிராத:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>கிடைக்ககூடிய:</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>நிலுவையில்:</translation>
     </message>
 </context>
 <context>

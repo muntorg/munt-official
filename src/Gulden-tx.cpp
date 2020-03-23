@@ -5,7 +5,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -230,8 +230,8 @@ static void MutateTxRBFOptIn(CMutableTransaction& tx, const std::string& strInId
         for (CTxIn& txin : tx.vin) {
             if (strInIdx == "" || cnt == inIdx) {
                 if (txin.GetSequence(tx.nVersion) > MAX_BIP125_RBF_SEQUENCE) {
-                    //fixme: (PHASE4) (SEGSIG)
-                    txin.SetSequence(MAX_BIP125_RBF_SEQUENCE, tx.nVersion, CTxInFlags::HasTimeBasedRelativeLock);
+                    //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+                    //txin.SetSequence(MAX_BIP125_RBF_SEQUENCE, tx.nVersion, CTxInFlags::HasTimeBasedRelativeLock);
                 }
             }
             ++cnt;
@@ -278,7 +278,7 @@ static void MutateTxAddInput(CMutableTransaction& tx, const std::string& strInpu
         nSequenceIn = std::stoul(vStrInputParts[2]);
 
     // append to transaction input list
-    //fixme: (PHASE4) (SEGSIG)
+    //fixme: (PHASE4POSTREL) (SEGSIG)
     CTxIn txin(txid, vout, CScript(), nSequenceIn, 0);
     tx.vin.push_back(txin);
 }
@@ -590,14 +590,14 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
             if (nOut < 0)
                 throw std::runtime_error("vout must be positive");
 
-            //fixme: (PHASE4) (SEGSIG)
+            //fixme: (PHASE4POSTREL) (SEGSIG)
             COutPoint out(txid, nOut);
             std::vector<unsigned char> pkData(ParseHexUV(prevOut["scriptPubKey"], "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
             {
                 const Coin& coin = view.AccessCoin(out);
-                //fixme: (PHASE4) (SEGSIG)
+                //fixme: (PHASE4POSTREL) (SEGSIG)
                 if (!coin.IsSpent() && coin.out.output.scriptPubKey != scriptPubKey) {
                     std::string err("Previous output scriptPubKey mismatch:\n");
                     err = err + ScriptToAsmStr(coin.out.output.scriptPubKey) + "\nvs:\n"+
@@ -793,8 +793,8 @@ static int CommandLineRawTx(int argc, char* argv[])
             argv++;
         }
 
-        //fixme: (PHASE4) SEGSIG) Some of the MutateTx stuff doesn't work at all for segsig - it is only used by gulden-tx, we should consider just refusing to allow them for now.
-        //fixme: (PHASE4) (SEGSIG) (HIGH) (CURRENT_TX_VERSION_POW2) - Hardcoding to 1 below is (probably?) wrong but CURRENT_TX_VERSION_POW2 doesn't work right as it requires symbols that are undefined for Gulden-tx
+        //fixme: (PHASE4POSTREL) SEGSIG) Some of the MutateTx stuff doesn't work at all for segsig - it is only used by gulden-tx, we should consider just refusing to allow them for now.
+        //fixme: (PHASE4POSTREL) (SEGSIG) (HIGH) (CURRENT_TX_VERSION_POW2) - Hardcoding to 1 below is (probably?) wrong but CURRENT_TX_VERSION_POW2 doesn't work right as it requires symbols that are undefined for Gulden-tx
         CMutableTransaction tx(1);
         int startArg;
 

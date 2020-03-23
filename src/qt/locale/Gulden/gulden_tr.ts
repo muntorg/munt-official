@@ -9,527 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Credit</source>
-        <translation>Alınan Tutar</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Çekilen Tutar</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Tutar</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Tarih</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>İleti</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>%n taneden daha fazla blok için açık</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>%1 değerine dek açık</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation>%1 doğrulamalı bir işlem ile çelişti</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/çevrim dışı</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation>0/doğrulanmamış, %1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation>bellek alanında</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation>bellek alanında değil</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation>terk edilmiş</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/doğrulanmadı</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 doğrulama</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Durum</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, henüz başarılı bir şekilde yayınlanmadı</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, %n düğüm aracılığıyla yayınlandı</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>Kaynak</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Oluşturuldu</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>Gönderen</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>bilinmiyor</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>Alıcı</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>kendi adresiniz</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>sadece-izlenen</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>etiket</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation>
-            <numerusform>%n ek blok sonrasında olgunlaşacak</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>kabul edilmedi</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>Toplam çekilen tutar</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>Toplam alınan tutar</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>İşlem ücreti</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>Net tutar</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Yorum</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>İşlem ID&apos;si</translation>
-    </message>
-    <message>
-        <source>Transaction total size</source>
-        <translation>İşlemin toplam boyutu</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>Çıktı indeksi</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>Tüccar</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Oluşturulan bitcoin&apos;lerin harcanabilmelerinden önce %1 blok beklemeleri gerekmektedir. Bu blok, oluşturduğunuzda, blok zincirine eklenmesi için ağda yayınlandı. Zincire eklenmesi başarısız olursa, durumu &quot;kabul edilmedi&quot; olarak değiştirilecek ve harcanamayacaktır. Bu, bazen başka bir düğüm sizden birkaç saniye önce ya da sonra blok oluşturursa meydana gelebilir.</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>Hata ayıklama bilgisi</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>İşlem</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>Girdiler</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>doğru</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>yanlış</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Tutar</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(etiket yok)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Bitcoin Seçimi</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Miktar:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bayt:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Tutar:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Toz:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Ücret:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Ücretten sonra:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Para üstü:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>tümünü seç(me)</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Ağaç kipi</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Liste kipi</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Şu etiketle alındı</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Şu adresle alındı</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Tarih</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Doğrulamalar</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Doğrulandı</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Adres kopyala</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Etiket kopyala</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Tutarı kopyala</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>İşlem ID&apos;sini kopyala</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Harcanmamışı kilitle</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Harcanmamışın kilidini aç</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Miktarı kopyala</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Ücreti kopyala</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Ücretten sonrasını kopyala</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Baytları kopyala</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Tozu kopyala</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Para üstünü kopyala</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 kilitlendi)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>evet</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>hayır</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>Eğer herhangi bir alıcı mevcut toz eşiğinden daha düşük bir tutar alırsa bu etiket kırmızıya dönüşür.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Girdi başına +/- %1 satoshi değişebilir.</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>%1 ögesinden para üstü (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(para üstü)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Tutar</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 g</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Boş</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Mevcut değil</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n saniye</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n dakika</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n saat</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n gün</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n hafta</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 ve %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n yıl</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation>%1  henüz güvenli bir şekilde çıkış yapmamıştır...</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Tutar</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Etiket</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adres</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>Resmi ka&amp;ydet...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR Kodu</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>&amp;URI&apos;yi kopyala</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Adresi kopyala</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>%1 unsuruna ödeme talep et</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>Ödeme bilgisi</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>İleti</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Bakiyeler</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Sadece izlenen adreslere gelen doğrulanmamış işlemler</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Henüz doğrulanmamış ve harcanabilir bakiyeye eklenmemiş işlemlerin toplamı</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Toplam:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Olgunlaşmamış:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Güncel toplam bakiyeniz</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Sadece izlenen adreslerdeki güncel toplam bakiye</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Sadece-izlenen:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Mevcut:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Güncel harcanabilir bakiyeniz</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Sadece izlenen adreslerdeki güncel bakiyeniz</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Beklemede:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Harcanabilir:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Son işlemler</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -798,6 +277,53 @@
     </message>
 </context>
 <context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Label</source>
+        <translation>Etiket</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>Resmi ka&amp;ydet...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Tutar</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR Kodu</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;URI&apos;yi kopyala</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Adresi kopyala</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>%1 unsuruna ödeme talep et</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Ödeme bilgisi</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>İleti</translation>
+    </message>
+</context>
+<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -826,6 +352,157 @@
     <message>
         <source>Requested</source>
         <translation>Talep edilen</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(etiket yok)</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Tutar</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Bitcoin Seçimi</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Miktar:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bayt:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Tutar:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Toz:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Ücret:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Ücretten sonra:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Para üstü:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>tümünü seç(me)</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Ağaç kipi</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Liste kipi</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Şu etiketle alındı</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Şu adresle alındı</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Tarih</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Doğrulamalar</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Doğrulandı</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Adres kopyala</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Etiket kopyala</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Tutarı kopyala</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>İşlem ID&apos;sini kopyala</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Harcanmamışı kilitle</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Harcanmamışın kilidini aç</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Miktarı kopyala</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Ücreti kopyala</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Ücretten sonrasını kopyala</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Baytları kopyala</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Tozu kopyala</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Para üstünü kopyala</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 kilitlendi)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>evet</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>hayır</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>Eğer herhangi bir alıcı mevcut toz eşiğinden daha düşük bir tutar alırsa bu etiket kırmızıya dönüşür.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Girdi başına +/- %1 satoshi değişebilir.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>%1 ögesinden para üstü (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(para üstü)</translation>
     </message>
 </context>
 <context>
@@ -1090,10 +767,6 @@
         </translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Çevrim dışı</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Doğrulanmamış</translation>
     </message>
@@ -1116,10 +789,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Olgunlaşmamış (%1 doğrulama, %2 doğrulama sonra kullanılabilir olacaktır)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Bu blok başka hiçbir düğüm tarafından alınmamıştır ve muhtemelen kabul edilmeyecektir!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1293,6 +962,252 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>PNG Resim (*.png)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Tutar</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 g</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Boş</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Mevcut değil</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n saniye</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n dakika</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n saat</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n gün</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n hafta</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 ve %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n yıl</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1  henüz güvenli bir şekilde çıkış yapmamıştır...</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Tutar</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Tarih</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>İleti</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Alınan Tutar</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Çekilen Tutar</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>%n taneden daha fazla blok için açık</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>%1 değerine dek açık</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>%1 doğrulamalı bir işlem ile çelişti</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation>0/doğrulanmamış, %1</translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation>bellek alanında</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>bellek alanında değil</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation>terk edilmiş</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/doğrulanmadı</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 doğrulama</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Durum</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>Kaynak</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Oluşturuldu</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Gönderen</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>bilinmiyor</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Alıcı</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>kendi adresiniz</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>sadece-izlenen</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>etiket</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation>
+            <numerusform>%n ek blok sonrasında olgunlaşacak</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>kabul edilmedi</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>Toplam çekilen tutar</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>Toplam alınan tutar</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>İşlem ücreti</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Net tutar</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Yorum</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>İşlem ID&apos;si</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>İşlemin toplam boyutu</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>Çıktı indeksi</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>Tüccar</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Oluşturulan bitcoin&apos;lerin harcanabilmelerinden önce %1 blok beklemeleri gerekmektedir. Bu blok, oluşturduğunuzda, blok zincirine eklenmesi için ağda yayınlandı. Zincire eklenmesi başarısız olursa, durumu &quot;kabul edilmedi&quot; olarak değiştirilecek ve harcanamayacaktır. Bu, bazen başka bir düğüm sizden birkaç saniye önce ya da sonra blok oluşturursa meydana gelebilir.</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>Hata ayıklama bilgisi</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>İşlem</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>Girdiler</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>doğru</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>yanlış</translation>
     </message>
 </context>
 <context>
@@ -1989,6 +1904,69 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>Açılacak ödeme talebi dosyasını seç</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Bakiyeler</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Sadece izlenen adreslere gelen doğrulanmamış işlemler</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Henüz doğrulanmamış ve harcanabilir bakiyeye eklenmemiş işlemlerin toplamı</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Toplam:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Olgunlaşmamış:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Güncel toplam bakiyeniz</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Sadece izlenen adreslerdeki güncel toplam bakiye</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Sadece-izlenen:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Mevcut:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Güncel harcanabilir bakiyeniz</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Sadece izlenen adreslerdeki güncel bakiyeniz</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Beklemede:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Harcanabilir:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Son işlemler</translation>
     </message>
 </context>
 <context>

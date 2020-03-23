@@ -1,5 +1,5 @@
-// Copyright (c) 2015-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2015-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -251,7 +251,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         pTipIndex = chainActive.Tip();
     }
 
-    if (!pTipIndex || pTipIndex->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight)
+    if (!pTipIndex || (uint64_t)pTipIndex->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight)
         return NullUniValue;
 
     if (request.params.size() >= 2)
@@ -1125,13 +1125,13 @@ static UniValue getminingrewardaddress(const JSONRPCRequest& request)
     return result;
 }
 
-static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
+static witnessOutputsInfoVector getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
 {
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
         throw std::runtime_error("Failed to enumerate all witness coins.");
 
-    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    witnessOutputsInfoVector matchedOutputs;
     for (const auto& [outpoint, coin] : allWitnessCoins)
     {
         CTxDestination compareDestination;
@@ -1139,24 +1139,24 @@ static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsFor
 
         if (fValidAddress && (CGuldenAddress(compareDestination) == searchAddress))
         {
-            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, coin.nTxIndex, outpoint));
         }
     }
     return matchedOutputs;
 }
 
-static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAccount(CAccount* forAccount)
+static witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount)
 {
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
         throw std::runtime_error("Failed to enumerate all witness coins.");
 
-    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    witnessOutputsInfoVector matchedOutputs;
     for (const auto& [outpoint, coin] : allWitnessCoins)
     {
         if (IsMine(*forAccount, coin.out))
         {
-            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, coin.nTxIndex, outpoint));
         }
     }
     return matchedOutputs;
@@ -2290,9 +2290,10 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     }
 
     // Find the account
-    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     (unused) currentWitnessHeight;
     (unused) currentWitnessOutpoint;
+    (unused) currentWitnessTxIndex;
     CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
     if (!witnessAccount)
     {

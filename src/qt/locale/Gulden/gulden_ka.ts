@@ -9,6 +9,101 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;დახურვა</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>მონიშნული მისამართის წაშლა სიიდან</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;წაშლა</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>ამ ბარათიდან მონაცემების ექსპორტი ფაილში</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ექსპორტი</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>ახალი მისამართის შექმნა</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>შექმ&amp;ნა</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>მონიშნული მისამართის კოპირება სისტემურ კლიპბორდში</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;კოპირება</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ექსპორტი</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>ფრაზა-პაროლის დიალოგი</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>შეიყვანეთ ფრაზა-პაროლი</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>ახალი ფრაზა-პაროლი</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>გაიმეორეთ ახალი ფრაზა-პაროლი</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>გამო&amp;სახულების შენახვა...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>გამო&amp;სახულების შენახვა...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>თანხა</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-კოდი</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;URI-ის კოპირება</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>მის&amp;ამართის კოპირება</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -87,29 +182,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>თანხა</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>გამო&amp;სახულების შენახვა...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-კოდი</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>&amp;URI-ის კოპირება</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>მის&amp;ამართის კოპირება</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -118,113 +190,6 @@
     <message>
         <source>Date</source>
         <translation>თარიღი</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>ფორმა</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>დასადასტურებელი ტრანსაქციების საერთო რაოდენობა, რომლებიც ჯერ არ არის ასახული ბალანსში</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>სულ:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>მოუმზადებელია:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>თქვენი სრული მიმდინარე ბალანსი</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>ხელმისაწვდომია:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>თქვენი ხელმისაწვდომი ნაშთი</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>იგზავნება:</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;დახურვა</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>მონიშნული მისამართის წაშლა სიიდან</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;წაშლა</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>ამ ბარათიდან მონაცემების ექსპორტი ფაილში</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;ექსპორტი</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>ახალი მისამართის შექმნა</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>შექმ&amp;ნა</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>მონიშნული მისამართის კოპირება სისტემურ კლიპბორდში</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;კოპირება</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;ექსპორტი</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>ფრაზა-პაროლის დიალოგი</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>შეიყვანეთ ფრაზა-პაროლი</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>ახალი ფრაზა-პაროლი</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>გაიმეორეთ ახალი ფრაზა-პაროლი</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>გამო&amp;სახულების შენახვა...</translation>
     </message>
 </context>
 <context>
@@ -661,6 +626,41 @@
     <message>
         <source>Select payment request file</source>
         <translation>გადახდის მოთხოვნის ფაილის არჩევა</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>ფორმა</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>დასადასტურებელი ტრანსაქციების საერთო რაოდენობა, რომლებიც ჯერ არ არის ასახული ბალანსში</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>სულ:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>მოუმზადებელია:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>თქვენი სრული მიმდინარე ბალანსი</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>ხელმისაწვდომია:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>თქვენი ხელმისაწვდომი ნაშთი</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>იგზავნება:</translation>
     </message>
 </context>
 <context>

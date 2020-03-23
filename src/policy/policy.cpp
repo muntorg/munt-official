@@ -44,23 +44,22 @@ bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
     return false;
 }
 
-    /**
-     * Check transaction inputs to mitigate two
-     * potential denial-of-service attacks:
-     * 
-     * 1. scriptSigs with extra data stuffed into them,
-     *    not consumed by scriptPubKey (or P2SH script)
-     * 2. P2SH scripts with a crazy number of expensive
-     *    CHECKSIG/CHECKMULTISIG operations
-     *
-     * Why bother? To avoid denial-of-service attacks; an attacker
-     * can submit a standard HASH... OP_EQUAL transaction,
-     * which will get accepted into blocks. The redemption
-     * script can be anything; an attacker could use a very
-     * expensive-to-check-upon-redemption script like:
-     *   DUP CHECKSIG DROP ... repeated 100 times... OP_1
-     */
-
+/**
+    * Check transaction inputs to mitigate two
+    * potential denial-of-service attacks:
+    * 
+    * 1. scriptSigs with extra data stuffed into them,
+    *    not consumed by scriptPubKey (or P2SH script)
+    * 2. P2SH scripts with a crazy number of expensive
+    *    CHECKSIG/CHECKMULTISIG operations
+    *
+    * Why bother? To avoid denial-of-service attacks; an attacker
+    * can submit a standard HASH... OP_EQUAL transaction,
+    * which will get accepted into blocks. The redemption
+    * script can be anything; an attacker could use a very
+    * expensive-to-check-upon-redemption script like:
+    *   DUP CHECKSIG DROP ... repeated 100 times... OP_1
+    */
 bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool segsigEnabled)
 {
     std::vector<std::vector<unsigned char> > vSolutions;
@@ -76,11 +75,12 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool s
             return false;
         if (m < 1 || m > n)
             return false;
-    } else if (whichType == TX_NULL_DATA &&
-               (!fAcceptDatacarrier || scriptPubKey.size() > nMaxDatacarrierBytes))
+    }
+    else if (whichType == TX_NULL_DATA && (!fAcceptDatacarrier || scriptPubKey.size() > nMaxDatacarrierBytes))
+    {
           return false;
+    }
 
-    //fixme: (PHASE4) (SEGSIG)
     return whichType != TX_NONSTANDARD;
 }
 
@@ -110,9 +110,23 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
     // computing signature hashes is O(ninputs*txsize). Limiting transactions
     // to MAX_STANDARD_TX_WEIGHT mitigates CPU exhaustion attacks.
     unsigned int sz = GetTransactionWeight(tx);
-    if (sz >= MAX_STANDARD_TX_WEIGHT) {
+    if (sz >= MAX_STANDARD_TX_WEIGHT)
+    {
         reason = "tx-size";
         return false;
+    }
+
+    if (!IsOldTransactionVersion(tx.nVersion))
+    {
+        if (tx.flags[HasExtraFlags] != 0)
+        {
+            reason = "tx-has-extraflags";
+        }
+        //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look into this post release
+        if (tx.flags[HasLockTime] != 0)
+        {
+            reason = "tx-has-locktime";
+        }
     }
 
     for(const CTxIn& txin : tx.vin)
@@ -124,45 +138,93 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
         // future-proofing. That's also enough to spend a 20-of-20
         // CHECKMULTISIG scriptPubKey, though such a scriptPubKey is not
         // considered standard.
-        if (txin.scriptSig.size() > 1650) {
+        if (txin.scriptSig.size() > 1650)
+        {
             reason = "scriptsig-size";
             return false;
         }
-        if (!txin.scriptSig.IsPushOnly()) {
+        if (!txin.scriptSig.IsPushOnly())
+        {
             reason = "scriptsig-not-pushonly";
             return false;
+        }
+        if (txin.GetType() != CTxInType::CURRENT_TX_IN_TYPE)
+        {
+            reason = "unsupported-ctxin-type";
+        }
+        //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look into this post release
+        if (txin.FlagIsSet(HasLock) != 0)
+        {
+            reason = "txin-has-lock";
         }
     }
 
     unsigned int nDataOut = 0;
     txnouttype whichType;
-    for(const CTxOut& txout : tx.vout) {
-        if (txout.GetType() <= CTxOutType::ScriptLegacyOutput)
+    for(const CTxOut& txout : tx.vout)
+    {
+        switch (txout.GetType())
         {
-            if (!::IsStandard(txout.output.scriptPubKey, whichType, segsigEnabled)) {
-                reason = "scriptpubkey";
-                return false;
+            case CTxOutType::ScriptLegacyOutput:
+            {
+                if (!::IsStandard(txout.output.scriptPubKey, whichType, segsigEnabled))
+                {
+                    reason = "scriptpubkey";
+                    return false;
+                }
+                break;
+            }
+            case CTxOutType::StandardKeyHashOutput:
+                break;
+            case CTxOutType::PoW2WitnessOutput:
+                break;
+            default:
+            {
+                reason = "unsupported-ctxout-type";
             }
         }
 
         if (whichType == TX_NULL_DATA)
+        {
             nDataOut++;
-        else if ((whichType == TX_MULTISIG) && (!fIsBareMultisigStd)) {
+        }
+        else if ((whichType == TX_MULTISIG) && (!fIsBareMultisigStd))
+        {
             reason = "bare-multisig";
             return false;
-        } else if (IsDust(txout, ::dustRelayFee)) {
+        }
+        else if (IsDust(txout, ::dustRelayFee))
+        {
             reason = "dust";
             return false;
         }
     }
 
     // only one OP_RETURN txout is permitted
-    if (nDataOut > 1) {
+    if (nDataOut > 1)
+    {
         reason = "multi-op-return";
         return false;
     }
 
     return true;
+}
+
+//fixme: (PHASE5) de-dupe
+typedef std::vector<unsigned char> valtype;
+static CScript PushAll(const std::vector<valtype>& values)
+{
+    CScript result;
+    for(const valtype& v : values) {
+        if (v.size() == 0) {
+            result << OP_0;
+        } else if (v.size() == 1 && v[0] >= 1 && v[0] <= 16) {
+            result << CScript::EncodeOP_N(v[0]);
+        } else {
+            result << v;
+        }
+    }
+    return result;
 }
 
 bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
@@ -187,13 +249,24 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
             {
                 std::vector<std::vector<unsigned char> > stack;
                 // convert the scriptSig into a stack, so we can inspect the redeemScript
-                ScriptVersion scriptversion = (tx.vin[i].segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
-                if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), scriptversion))
-                    return false;
+                if (IsOldTransactionVersion(tx.nVersion))
+                {
+                    if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V1))
+                        return false;
+                }
+                else
+                {
+                    if (tx.vin[i].scriptSig.size() != 0)
+                        return false;
+                    CScript scriptSigTemp = PushAll(tx.vin[i].segregatedSignatureData.stack);
+                    if (!EvalScript(stack, scriptSigTemp, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V2))
+                        return false;
+                }
                 if (stack.empty())
                     return false;
                 CScript subscript(stack.back().begin(), stack.back().end());
-                if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS) {
+                if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS)
+                {
                     return false;
                 }
             }

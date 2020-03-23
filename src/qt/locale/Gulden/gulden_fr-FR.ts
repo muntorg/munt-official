@@ -56,141 +56,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
 </context>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Montant</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Sélection de pièce </translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Quantité:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Octets:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Montant :</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Poussière: </translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Frais:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Après frais:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(dé)sélectionné tout:</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Mode arbre</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Mode list</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Reçu avec : </translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Reçue avec l&apos;adresse</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Confirmée</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Montant</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 j</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Aucun</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 et %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Montant</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Sauvegarder image</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Copier &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Copier &amp;Adresse</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Montant</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulaire</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Votre balance totale courante</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Regarder seulement:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Disponible: </translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>En attente:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Dépensable: </translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Transactions récentes </translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -275,6 +140,110 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Sauvegarder image</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Sauvegarder image</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Montant</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Copier &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Copier &amp;Adresse</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Montant</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Sélection de pièce </translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Quantité:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Octets:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Montant :</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Poussière: </translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Frais:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Après frais:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(dé)sélectionné tout:</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Mode arbre</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Mode list</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Reçu avec : </translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Reçue avec l&apos;adresse</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Confirmée</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Montant</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 j</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 et %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Montant</translation>
     </message>
 </context>
 <context>
@@ -768,6 +737,37 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Select payment request file</source>
         <translation>Sélectionner un fichier de demande de paiement</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulaire</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Votre balance totale courante</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Regarder seulement:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Disponible: </translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>En attente:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Dépensable: </translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Transactions récentes </translation>
     </message>
 </context>
 <context>

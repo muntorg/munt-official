@@ -252,31 +252,39 @@ bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp, bool 
     index.nHeight = tip->nHeight + 1;
 
     std::pair<int, int64_t> lockPair;
-    if (useExistingLockPoints) {
+    if (useExistingLockPoints)
+    {
         assert(lp);
         lockPair.first = lp->height;
         lockPair.second = lp->time;
     }
-    else {
+    else
+    {
         // pcoinsTip contains the UTXO set for chainActive.Tip()
         CCoinsViewMemPool viewMemPool(pcoinsTip, mempool);
         std::vector<int> prevheights;
         prevheights.resize(tx.vin.size());
-        for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++) {
+        for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++)
+        {
             const CTxIn& txin = tx.vin[txinIndex];
             Coin coin;
-            if (!viewMemPool.GetCoin(txin.prevout, coin)) {
+            if (!viewMemPool.GetCoin(txin.prevout, coin))
+            {
                 return error("%s: Missing input", __func__);
             }
-            if (coin.nHeight == MEMPOOL_HEIGHT) {
+            if (coin.nHeight == MEMPOOL_HEIGHT)
+            {
                 // Assume all mempool transaction confirm in the next block
                 prevheights[txinIndex] = tip->nHeight + 1;
-            } else {
+            }
+            else
+            {
                 prevheights[txinIndex] = coin.nHeight;
             }
         }
         lockPair = CalculateSequenceLocks(tx, flags, &prevheights, index);
-        if (lp) {
+        if (lp)
+        {
             lp->height = lockPair.first;
             lp->time = lockPair.second;
             // Also store the hash of the block with the highest height of
@@ -293,9 +301,11 @@ bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp, bool 
             // lock on a mempool input, so we can use the return value of
             // CheckSequenceLocks to indicate the LockPoints validity
             int maxInputHeight = 0;
-            for(int height : prevheights) {
+            for(int height : prevheights)
+            {
                 // Can ignore mempool inputs since we'll fail if they had non-zero locks
-                if (height != tip->nHeight+1) {
+                if (height != tip->nHeight+1)
+                {
                     maxInputHeight = std::max(maxInputHeight, height);
                 }
             }
@@ -461,22 +471,17 @@ int GetSpendHeight(const CCoinsViewCache& inputs)
 }
 
 //fixme: (PHASE5) This should rather use move semantics, but CScript doesn't currently seem compatible with this.
-//fixme: (PHASE4) Use this in places that are hardcoded instead.
 CScript GetScriptForNonScriptOutput(const CTxOut& out)
 {
-    if (out.GetType() <= CTxOutType::PoW2WitnessOutput)
+    if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
         return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
     }
-    else if (out.GetType() <= CTxOutType::StandardKeyHashOutput)
+    else if (out.GetType() == CTxOutType::StandardKeyHashOutput)
     {
         std::vector<unsigned char> sWitnessPlaceholder = {'k','e','y','h','a','s','h'};
         return CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
-    }
-    else
-    {
-        assert(0);
     }
     return CScript();
 }
@@ -567,17 +572,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                             }
                         }
 
-                        CScript scriptCodePlaceHolder;
-                        if (coin.out.GetType() == CTxOutType::StandardKeyHashOutput)
-                        {
-                            std::vector<unsigned char> sKeyHashPlaceholder = {'k','e','y','h','a','s','h'};
-                            scriptCodePlaceHolder = CScript(sKeyHashPlaceholder.begin(), sKeyHashPlaceholder.end());
-                        }
-                        else
-                        {
-                            std::vector<unsigned char> sWitnessPlaceholder = {'p','o','w','2','w','i','t','n','e','s','s'};
-                            scriptCodePlaceHolder = CScript(sWitnessPlaceholder.begin(), sWitnessPlaceholder.end());
-                        }
+                        CScript scriptCodePlaceHolder = GetScriptForNonScriptOutput(coin.out);
 
                         //We extract the pubkey from the signatures so just pass in an empty pubkey for the checks.
                         std::vector<unsigned char> vchEmptyPubKey;
@@ -759,10 +754,10 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
         if (i > 0)
         {
             CTxUndo &txundo = blockUndo.vtxundo[i-1];
-            //fixme: (PHASE4) (HIGH) (force only 1 valid input in checkblock as well.)
             if (tx.IsPoW2WitnessCoinBase())
             {
-                if (txundo.vprevout.size() != 1 || tx.vin.size() < 2)
+                //NB! 'IsPoW2WitnessCoinBase' already forces vin size to be 2, and the first input NULL, so we don't need to validate the size here
+                if (txundo.vprevout.size() != 1)
                 {
                     error("DisconnectBlock(): transaction and undo data inconsistent");
                     return DISCONNECT_FAILED;
@@ -1010,7 +1005,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     CBlockUndo blockundo;
 
-    //fixme: (PHASE4) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
+    //fixme: (PHASE5) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
     //However GetWitness calls recursively into ConnectBlock and CCheckQueueControl has a non-recursive mutex - so we must call this before creating 
     // Witness block must have valid signature from witness.
     if (block.nVersionPoW2Witness != 0)
@@ -1099,7 +1094,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     CCheckQueueControl<CScriptCheck> control(fScriptChecks && nScriptCheckThreads ? &scriptcheckqueue : NULL);
 
-    std::vector<int> prevheights;
     CAmount nFees = 0;
     CAmount nFeesPoW2Witness = 0;
     int nInputs = 0;
@@ -1118,17 +1112,29 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
         if (tx.IsPoW2WitnessCoinBase())
         {
+            std::vector<int> prevheights;
+            prevheights.resize(tx.vin.size());
             for (unsigned int inputIndex = 0; inputIndex < tx.vin.size(); inputIndex++)
             {
-                if (!tx.vin[inputIndex].prevout.IsNull())
+                if (tx.vin[inputIndex].prevout.IsNull())
+                {
+                    prevheights[inputIndex] = 0;
+                }
+                else
                 {
                     if (!view.HaveCoin(tx.vin[inputIndex].prevout))
                     {
                         return state.DoS(100, error("ConnectBlock(): witness coinbase inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                     }
-
-                    //fixme: (PHASE4) (SEGSIG) - Find a way to implement the bip68 sequence stuff here as well with minimal code churn...
+                    prevheights[inputIndex] = view.AccessCoin(tx.vin[inputIndex].prevout).nHeight;
                 }
+            }
+            // Check that transaction is BIP68 final
+            // BIP68 lock checks (as opposed to nLockTime checks) must
+            // be in ConnectBlock because they require the UTXO set
+            if (!SequenceLocks(tx, nLockTimeFlags, &prevheights, *pindex))
+            {
+                return state.DoS(100, error("%s: contains a non-BIP68-final transaction", __func__), REJECT_INVALID, "bad-txns-nonfinal");
             }
         }
         else
@@ -1137,7 +1143,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             {
                 if (!view.HaveInputs(tx))
                 {
-                    //fixme: (PHASE4) - Low level fix for problem of conflicting transaction entering mempool and causing miners to be unable to mine (due to selecting invalid transactions for block continuously).
+                    //fixme: (PHASE5) - Low level fix for problem of conflicting transaction entering mempool and causing miners to be unable to mine (due to selecting invalid transactions for block continuously).
                     //This fix should remain in place, but a follow up fix is needed to try stop the conflicting transaction entering the mempool to begin with - need to hunt the source of this down.
                     //Seems to have something to do with a double (conflicting) witness renewal transaction.
                     mempool.removeRecursive(tx, MemPoolRemovalReason::UNKNOWN);
@@ -1148,14 +1154,15 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                 // Check that transaction is BIP68 final
                 // BIP68 lock checks (as opposed to nLockTime checks) must
                 // be in ConnectBlock because they require the UTXO set
+                std::vector<int> prevheights;
                 prevheights.resize(tx.vin.size());
                 for (size_t j = 0; j < tx.vin.size(); j++) {
                     prevheights[j] = view.AccessCoin(tx.vin[j].prevout).nHeight;
                 }
 
-                if (!SequenceLocks(tx, nLockTimeFlags, &prevheights, *pindex)) {
-                    return state.DoS(100, error("%s: contains a non-BIP68-final transaction", __func__),
-                                    REJECT_INVALID, "bad-txns-nonfinal");
+                if (!SequenceLocks(tx, nLockTimeFlags, &prevheights, *pindex))
+                {
+                    return state.DoS(100, error("%s: contains a non-BIP68-final transaction", __func__), REJECT_INVALID, "bad-txns-nonfinal");
                 }
             }
         }
@@ -1230,7 +1237,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     CAmount nSubsidyWitnessExpected = GetBlockSubsidyWitness(pindex->nHeight);
     CAmount nSubsidyDev = GetBlockSubsidyDev(pindex->nHeight);
 
-    //fixme: (PHASE4) Unit tests
     // Second block with a phase 3 parent up to and including first block with a phase 4 parent.
     // Coinbase of previous witness block embedded in coinbase of current PoW block.
     if (nPoW2PhaseGrandParent == 3 && nPoW2PhaseParent != 4)
@@ -1293,8 +1299,14 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             }
             else if (nPoW2PhaseParent >= 4)
             {
-                //fixme: (PHASE4) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
-                //Phase 4 has no coinbase restrictions
+                if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 2)
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vin size)"), REJECT_INVALID, "bad-witness-cb");
+
+                if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].prevout.IsNull())
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid prevout)"), REJECT_INVALID, "bad-witness-cb");
+
+                if (block.vtx[nWitnessCoinbaseIndex]->vin[0].GetSequence(block.vtx[nWitnessCoinbaseIndex]->nVersion) != 0)
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid sequence)"), REJECT_INVALID, "bad-witness-cb");
             }
         }
         else
@@ -1303,8 +1315,12 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         }
     }
 
-
-    //fixme: (PHASE4) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
+    //fixme: (PHASE5) (SEGSIG/POW2) - Triple check that there are no additional remaining tests that should go here.
+    // We already check:
+    // 1) The witness signature matches the witness (earlier in this function)
+    // 2) The witness coinbase has the right number of inputs (earlier in this function)
+    // 3) The witness timestamp is valid (when we verify the header)
+    // 4) The transactions just get checked as normal
 
     CAmount expectedBlockReward = nFees + nSubsidy;
     CAmount actualBlockReward = block.vtx[0]->GetValueOut();
@@ -1312,7 +1328,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     {
         return state.DoS(100, error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)", actualBlockReward, expectedBlockReward), REJECT_INVALID, "bad-cb-amount");
     }
-    // fixme: (PHASE4) Forbid block reward that under pays as well
+    // fixme: (PHASE5) Forbid block reward that under pays as well - leave this for now and reconsider in future.
     
     if (nSubsidyDev > 0)
     {
@@ -2637,17 +2653,24 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     if (block.nVersionPoW2Witness != 0)
     {
         for (unsigned int i = 1; i < block.vtx.size(); i++)
+        {
             if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
+            {
                 nWitnessCoinbaseIndex = i;
+            }
+        }
     }
 
     // Extra coinbase (invalid)
     for (unsigned int i = (nWitnessCoinbaseIndex == 0 ? 1 : nWitnessCoinbaseIndex+1); i < block.vtx.size(); i++)
+    {
         if (block.vtx[i]->IsCoinBase())
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-multiple", false, "block contains excess coinbase transactions");
+    }
 
     // Check the merkle root.
-    if (fCheckMerkleRoot) {
+    if (fCheckMerkleRoot)
+    {
         bool mutated;
         uint256 hashMerkleRoot2 = BlockMerkleRoot(block.vtx.begin(), (nWitnessCoinbaseIndex == 0 ? block.vtx.end() : block.vtx.begin()+nWitnessCoinbaseIndex), &mutated);
         if (block.hashMerkleRoot != hashMerkleRoot2)
@@ -2675,9 +2698,11 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 
     // Check transactions
     for (const auto& tx : block.vtx)
+    {
         if (!CheckTransaction(*tx, state, true))
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
                                  strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), state.GetDebugMessage()));
+    }
 
     unsigned int nSigOps = 0;
     for (const auto& tx : block.vtx)
@@ -2737,7 +2762,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 
     // Check timestamp against prev
     if (block.GetBlockTime() <= pindexPrev->GetMedianTimePastWitness())
-        return state.Invalid(false, REJECT_INVALID, "time-too-old", "block's timestamp is too early");
+        return state.Invalid(false, REJECT_INVALID, "time-too-old", "blocks PoW timestamp is too early");
 
     // Check timestamp
     if (pindexPrev->nHeight > (IsArgSet("-testnet") ? 446500 : 437500) )
@@ -2751,17 +2776,36 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
     }
 
-    //fixme: (PHASE4) (SEGSIG) Enforce segsig upgrade rules here; this is I think redundany as it is already handled elsewhere, but we should catch it earlier.
-
-    // Reject outdated version blocks when 95% (75% on testnet) of the network has upgraded:
-    // check for version 2, 3 and 4 upgrades
-    /* GULDEN - These aren't valid for Gulden
-    if((block.nVersion < 2 && nHeight >= consensusParams.BIP34Height) ||
-       (block.nVersion < 3 && nHeight >= consensusParams.BIP66Height) ||
-       (block.nVersion < 4 && nHeight >= consensusParams.BIP65Height))
-            return state.Invalid(false, REJECT_OBSOLETE, strprintf("bad-version(0x%08x)", block.nVersion),
-                                 strprintf("rejected nVersion=0x%08x block", block.nVersion));
-    */
+    if (block.nVersionPoW2Witness != 0)
+    {
+        if (block.nTimePoW2Witness <= pindexPrev->GetMedianTimePastPoW())
+        {
+            return state.Invalid(false, REJECT_INVALID, "time-too-old", "blocks witness timestamp is too early");
+        }
+        if (block.hashMerkleRootPoW2Witness == uint256())
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-merkle-invalid", "block sets null witness merkle root");
+        }
+        if ( std::all_of(block.witnessHeaderPoW2Sig.begin(), block.witnessHeaderPoW2Sig.end(), [](auto c){return c==0;}) )
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-signature-invalid", "block sets null witness signature");
+        }
+    }
+    else
+    {
+        if (block.nTimePoW2Witness != 0)
+        {
+            return state.Invalid(false, REJECT_INVALID, "time-invalid", "block sets witness time without witness version");
+        }
+        if (block.hashMerkleRootPoW2Witness != uint256())
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-merkle-invalid", "block sets witness merkle root without witness version");
+        }
+        if ( !std::all_of(block.witnessHeaderPoW2Sig.begin(), block.witnessHeaderPoW2Sig.end(), [](auto c){return c==0;}) )
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-signature-invalid", "block sets witness signature without witness version");
+        }
+    }    
 
     return true;
 }
@@ -2972,7 +3016,7 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
 {
     AssertLockHeld(cs_main);
 
-    //fixme: (PHASE4) Double check handling of different header types.
+    //fixme: (PHASE5) Double check handling of different header types.
 
     CBlockIndex* pindexPrev = nullptr;
     bool promoteToFullTree = false;
