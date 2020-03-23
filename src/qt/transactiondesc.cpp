@@ -132,7 +132,16 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
             nUnmatured += wallet->GetCredit(txout, ISMINE_ALL);
         strHTML += "<b>" + tr("Credit") + ":</b> ";
         if (wtx.IsInMainChain())
-            strHTML += GuldenUnits::formatHtmlWithUnit(unit, nUnmatured)+ " (" + tr("matures in %n more block(s)", "", wtx.GetBlocksToMaturity()) + ")";
+        {
+            if (wtx.IsCoinBase())
+            {
+                strHTML += GuldenUnits::formatHtmlWithUnit(unit, nUnmatured - nDebit)+ " (" + tr("matures in %n more block(s)", "", wtx.GetBlocksToMaturity()) + ")";
+            }
+            else
+            {
+                strHTML += GuldenUnits::formatHtmlWithUnit(unit, nUnmatured)+ " (" + tr("matures in %n more block(s)", "", wtx.GetBlocksToMaturity()) + ")";
+            }
+        }
         else
             strHTML += "(" + tr("not accepted") + ")";
         strHTML += "<br>";
@@ -232,7 +241,10 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
         }
     }
 
-    strHTML += "<b>" + tr("Net amount") + ":</b> " + GuldenUnits::formatHtmlWithUnit(unit, nNet, true) + "<br>";
+    if (!wtx.IsCoinBase())
+    {
+        strHTML += "<b>" + tr("Net amount") + ":</b> " + GuldenUnits::formatHtmlWithUnit(unit, nNet, true) + "<br>";
+    }
 
     //
     // Message
