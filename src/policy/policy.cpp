@@ -116,9 +116,17 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
         return false;
     }
 
-    if (tx.flags[HasExtraFlags] != 0)
+    if (!IsOldTransactionVersion(tx.nVersion))
     {
-        reason = "tx-has-extraflags";
+        if (tx.flags[HasExtraFlags] != 0)
+        {
+            reason = "tx-has-extraflags";
+        }
+        //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look into this post release
+        if (tx.flags[HasLockTime] != 0)
+        {
+            reason = "tx-has-locktime";
+        }
     }
 
     for(const CTxIn& txin : tx.vin)
@@ -143,6 +151,11 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
         if (txin.GetType() != CTxInType::CURRENT_TX_IN_TYPE)
         {
             reason = "unsupported-ctxin-type";
+        }
+        //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look into this post release
+        if (txin.FlagIsSet(HasLock) != 0)
+        {
+            reason = "txin-has-lock";
         }
     }
 

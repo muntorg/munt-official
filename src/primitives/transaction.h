@@ -85,7 +85,7 @@ enum CTxInType : uint8_t
 };
 
 //fixme: (PHASE4) (MOBILE) (SPV) (SEGSIG) Ensure IndexBasedOutpoint working on mobile SPV wallets
-//fixme: (PHASE4) (SEGSIG) Double check all RBF/AbsoluteLock/RelativeLock behaviour
+//fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
 // Only 5 bits available for TxInFlags.
 // The are used as bit flags so only 5 values possible each with an on/off state.
 // All 5 values are currently in use.

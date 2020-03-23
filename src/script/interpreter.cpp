@@ -1366,10 +1366,9 @@ bool TransactionSignatureChecker::CheckLockTime(const CScriptNum& nLockTime) con
     // We want to compare apples to apples, so fail the script
     // unless the type of nLockTime being tested is the same as
     // the nLockTime in the transaction.
-    if (!(
-        (txTo->nLockTime <  LOCKTIME_THRESHOLD && nLockTime <  LOCKTIME_THRESHOLD) ||
-        (txTo->nLockTime >= LOCKTIME_THRESHOLD && nLockTime >= LOCKTIME_THRESHOLD)
-    ))
+    if (!txTo->nLockTime <  LOCKTIME_THRESHOLD && nLockTime <  LOCKTIME_THRESHOLD)
+        return false;
+    if (!txTo->nLockTime >= LOCKTIME_THRESHOLD && nLockTime >= LOCKTIME_THRESHOLD)
         return false;
 
     // Now that we know we're comparing apples-to-apples, the
@@ -1387,7 +1386,7 @@ bool TransactionSignatureChecker::CheckLockTime(const CScriptNum& nLockTime) con
     // prevent this condition. Alternatively we could test all
     // inputs, but testing just this input minimizes the data
     // required to prove correct CHECKLOCKTIMEVERIFY execution.
-    //fixme: (PHASE4) (SEGSIG) - CHECK FOR SEQUENCE FLAGS
+    
     if (CTxIn::SEQUENCE_FINAL == txTo->vin[nIn].GetSequence(txTo->nVersion))
         return false;
 
@@ -1396,55 +1395,79 @@ bool TransactionSignatureChecker::CheckLockTime(const CScriptNum& nLockTime) con
 
 bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) const
 {
-    // Relative lock times are supported by comparing the passed
-    // in operand to the sequence number of the input.
-    const int64_t txToSequence = (int64_t)txTo->vin[nIn].GetSequence(txTo->nVersion);
-
     // Fail if the transaction's version number is not set high
     // enough to trigger BIP 68 rules.
     if (static_cast<uint32_t>(txTo->nVersion) < 2)
         return false;
 
-    // Sequence numbers with their most significant bit set are not
-    // consensus constrained. Testing that the transaction's sequence
-    // number do not have this bit set prevents using this property
-    // to get around a CHECKSEQUENCEVERIFY check.
-    if ((IsOldTransactionVersion(txTo->nVersion) && (txToSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG))
-        || (!IsOldTransactionVersion(txTo->nVersion) && (txTo->vin[nIn].FlagIsSet(CTxInFlags::HasRelativeLock))))
-        return false;
-
-    // Mask off any bits that do not have consensus-enforced meaning
-    // before doing the integer comparisons
-    const uint32_t nLockTimeMask = IsOldTransactionVersion(txTo->nVersion) ? (CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK) : (std::numeric_limits<uint32_t>::max());
-    const int64_t txToSequenceMasked = txToSequence & nLockTimeMask;
-    const CScriptNum nSequenceMasked = nSequence & nLockTimeMask;
-
-    // There are two kinds of nSequence: lock-by-blockheight
-    // and lock-by-blocktime, distinguished by whether
-    // nSequenceMasked < CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG.
-    //
-    // We want to compare apples to apples, so fail the script
-    // unless the type of nSequenceMasked being tested is the same as
-    // the nSequenceMasked in the transaction.
     if (IsOldTransactionVersion(txTo->nVersion))
     {
-        if (!(
-            (txToSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG) ||
-            (txToSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG)
-        )) {
+        // Relative lock times are supported by comparing the passed
+        // in operand to the sequence number of the input.
+        const int64_t txToSequence = (int64_t)txTo->vin[nIn].GetSequence(txTo->nVersion);
+    
+        // Sequence numbers with their most significant bit set are not
+        // consensus constrained. Testing that the transaction's sequence
+        // number do not have this bit set prevents using this property
+        // to get around a CHECKSEQUENCEVERIFY check.
+        if (txToSequence & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG)
             return false;
-        }
+        
+        // Mask off any bits that do not have consensus-enforced meaning
+        // before doing the integer comparisons
+        const uint32_t nLockTimeMask = CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK;
+        const int64_t txToSequenceMasked = txToSequence & nLockTimeMask;
+        const CScriptNum nSequenceMasked = nSequence & nLockTimeMask;
+        
+        // There are two kinds of nSequence: lock-by-blockheight
+        // and lock-by-blocktime, distinguished by whether
+        // nSequenceMasked < CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG.
+        //
+        // We want to compare apples to apples, so fail the script
+        // unless the type of nSequenceMasked being tested is the same as
+        // the nSequenceMasked in the transaction.
+        if (!(txToSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked < CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG))
+            return false;
+        if (!(txToSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG && nSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG))
+            return false;
+
+        // Now that we know we're comparing apples-to-apples, the
+        // comparison is a simple numeric one.
+        if (nSequenceMasked > txToSequenceMasked)
+            return false;
     }
     else
     {
-        //fixme: (PHASE4) HIGH - (SEGSIG)
+        const int64_t txToSequence = (int64_t)txTo->vin[nIn].GetSequence(txTo->nVersion);
+
+        // Ensure we can't get around a CHECKSEQUENCEVERIFY check by having no 'sequence number' at all
+        if (!txTo->vin[nIn].FlagIsSet(CTxInFlags::HasRelativeLock))
+            return false;
+        
+        // There are two kinds of nSequence: lock-by-blockheight
+        // and lock-by-blocktime
+        // Ensure we compare the same type
+        const uint32_t nLockTimeMask = CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG | CTxIn::SEQUENCE_LOCKTIME_MASK;
+        const CScriptNum nSequenceMasked = nSequence & nLockTimeMask;
+        if (txTo->vin[nIn].FlagIsSet(CTxInFlags::HasTimeBasedRelativeLock) && nSequenceMasked <  CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG)
+        {               
+            return false;
+        }
+        else if (txTo->vin[nIn].FlagIsSet(CTxInFlags::HasBlockBasedRelativeLock) && nSequenceMasked >= CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG)
+        {
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+        
+        // Now that we know we're comparing apples-to-apples, the
+        // comparison is a simple numeric one.
+        if (nSequenceMasked > txToSequence)
+                return false;
     }
-
-    // Now that we know we're comparing apples-to-apples, the
-    // comparison is a simple numeric one.
-    if (nSequenceMasked > txToSequenceMasked)
-        return false;
-
+    
     return true;
 }
 

@@ -393,9 +393,9 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         {
             if (rbfOptIn)
                 nFlags |= CTxInFlags::OptInRBF;
-            //fixme: (PHASE4) (SEGSIG) Also handle block based sequence number.
-            if (rawTx.nLockTime)
-                nFlags |= CTxInFlags::HasTimeBasedRelativeLock;
+            //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+            //if (rawTx.nLockTime)
+                //nFlags |= CTxInFlags::HasTimeBasedRelativeLock;
         }
 
         // set the sequence number if passed in the parameters object

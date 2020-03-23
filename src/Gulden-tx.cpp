@@ -230,8 +230,8 @@ static void MutateTxRBFOptIn(CMutableTransaction& tx, const std::string& strInId
         for (CTxIn& txin : tx.vin) {
             if (strInIdx == "" || cnt == inIdx) {
                 if (txin.GetSequence(tx.nVersion) > MAX_BIP125_RBF_SEQUENCE) {
-                    //fixme: (PHASE4POSTREL) (SEGSIG)
-                    txin.SetSequence(MAX_BIP125_RBF_SEQUENCE, tx.nVersion, CTxInFlags::HasTimeBasedRelativeLock);
+                    //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+                    //txin.SetSequence(MAX_BIP125_RBF_SEQUENCE, tx.nVersion, CTxInFlags::HasTimeBasedRelativeLock);
                 }
             }
             ++cnt;
