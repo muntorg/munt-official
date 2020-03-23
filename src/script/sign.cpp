@@ -371,7 +371,6 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
-        //fixme: (PHASE4) Additional sanity checks here.
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, sigversion, type);
         sigdata.segregatedSignatureData.stack = result;
@@ -380,7 +379,6 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::StandardKeyHashOutput)
     {
-        //fixme: (PHASE4) Additional sanity checks here.
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, sigversion, type);
         sigdata.segregatedSignatureData.stack = result;
