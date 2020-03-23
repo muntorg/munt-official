@@ -207,13 +207,26 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                     bool fReplacementOptOut = true;
                     if (fEnableReplacement)
                     {
-                        for(const CTxIn &_txin : ptxConflicting->vin)
+                        if (IsOldTransactionVersion(tx.nVersion))
                         {
-                            //fixme: (PHASE4) (SEGSIG)
-                            if (_txin.GetSequence(ptxConflicting->nVersion) < std::numeric_limits<unsigned int>::max()-1)
+                            for(const CTxIn &_txin : ptxConflicting->vin)
                             {
-                                fReplacementOptOut = false;
-                                break;
+                                if (_txin.GetSequence(ptxConflicting->nVersion) < std::numeric_limits<unsigned int>::max()-1)
+                                {
+                                    fReplacementOptOut = false;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for(const CTxIn &_txin : ptxConflicting->vin)
+                            {
+                                if (_txin.FlagIsSet(CTxInFlags::OptInRBF))
+                                {
+                                    fReplacementOptOut = false;
+                                    break;
+                                }
                             }
                         }
                     }
