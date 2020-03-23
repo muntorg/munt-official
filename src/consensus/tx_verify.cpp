@@ -64,8 +64,7 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
     // tx.nVersion is signed integer so requires cast to unsigned otherwise
     // we would be doing a signed comparison and half the range of nVersion
     // wouldn't support BIP 68.
-    bool fEnforceBIP68 = static_cast<uint32_t>(tx.nVersion) >= 2
-                      && flags & LOCKTIME_VERIFY_SEQUENCE;
+    bool fEnforceBIP68 = static_cast<uint32_t>(tx.nVersion) >= 2 && (flags & LOCKTIME_VERIFY_SEQUENCE);
 
     // Do not enforce sequence numbers as a relative lock time
     // unless we have been instructed to
@@ -73,15 +72,18 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
         return std::pair(nMinHeight, nMinTime);
     }
 
-    for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++) {
+    for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++)
+    {
         const CTxIn& txin = tx.vin[txinIndex];
 
         // Gulden - segsig - if we aren't using relative locktime then we don't have a sequence number at all.
         // Sequence numbers with the most significant bit set are not
         // treated as relative lock-times, nor are they given any
         // consensus-enforced meaning at this point.
-        if ((IsOldTransactionVersion(tx.nVersion) && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG))
-            || (!IsOldTransactionVersion(tx.nVersion) && (!txin.FlagIsSet(CTxInFlags::HasRelativeLock)))) {
+        bool test1 = IsOldTransactionVersion(tx.nVersion) && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG);
+        bool test2 = !IsOldTransactionVersion(tx.nVersion) && !txin.FlagIsSet(CTxInFlags::HasRelativeLock);
+        if (test1 || test2)
+        {
             // The height of this input is not relevant for sequence locks
             (*prevHeights)[txinIndex] = 0;
             continue;
@@ -89,8 +91,9 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
 
         int nCoinHeight = (*prevHeights)[txinIndex];
 
-        if ((IsOldTransactionVersion(tx.nVersion) && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG))
-            || (!IsOldTransactionVersion(tx.nVersion) && (txin.FlagIsSet(HasTimeBasedRelativeLock))))
+        bool test3 = IsOldTransactionVersion(tx.nVersion) && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG);
+        bool test4 = !IsOldTransactionVersion(tx.nVersion) && txin.FlagIsSet(HasTimeBasedRelativeLock);
+        if (test3 || test4)
         {
             int64_t nCoinTime = block.GetAncestor(std::max(nCoinHeight-1, 0))->GetMedianTimePast();
             // NOTE: Subtract 1 to maintain nLockTime semantics
@@ -107,16 +110,24 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
             // txout being spent, which is the median time past of the
             // block prior.
             if (IsOldTransactionVersion(tx.nVersion))
+            {
                 nMinTime = std::max(nMinTime, nCoinTime + (int64_t)((txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_MASK) << CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) - 1);
+            }
             else
+            {
                 nMinTime = std::max(nMinTime, nCoinTime + (txin.GetSequence(tx.nVersion) << CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) - 1);
+            }
         }
         else
         {
             if (IsOldTransactionVersion(tx.nVersion))
+            {
                 nMinHeight = std::max(nMinHeight, nCoinHeight + (int)(txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_MASK) - 1);
+            }
             else
+            {
                 nMinHeight = std::max(nMinHeight, nCoinHeight + (int)txin.GetSequence(tx.nVersion) - 1);
+            }
         }
     }
 

@@ -252,31 +252,39 @@ bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp, bool 
     index.nHeight = tip->nHeight + 1;
 
     std::pair<int, int64_t> lockPair;
-    if (useExistingLockPoints) {
+    if (useExistingLockPoints)
+    {
         assert(lp);
         lockPair.first = lp->height;
         lockPair.second = lp->time;
     }
-    else {
+    else
+    {
         // pcoinsTip contains the UTXO set for chainActive.Tip()
         CCoinsViewMemPool viewMemPool(pcoinsTip, mempool);
         std::vector<int> prevheights;
         prevheights.resize(tx.vin.size());
-        for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++) {
+        for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++)
+        {
             const CTxIn& txin = tx.vin[txinIndex];
             Coin coin;
-            if (!viewMemPool.GetCoin(txin.prevout, coin)) {
+            if (!viewMemPool.GetCoin(txin.prevout, coin))
+            {
                 return error("%s: Missing input", __func__);
             }
-            if (coin.nHeight == MEMPOOL_HEIGHT) {
+            if (coin.nHeight == MEMPOOL_HEIGHT)
+            {
                 // Assume all mempool transaction confirm in the next block
                 prevheights[txinIndex] = tip->nHeight + 1;
-            } else {
+            }
+            else
+            {
                 prevheights[txinIndex] = coin.nHeight;
             }
         }
         lockPair = CalculateSequenceLocks(tx, flags, &prevheights, index);
-        if (lp) {
+        if (lp)
+        {
             lp->height = lockPair.first;
             lp->time = lockPair.second;
             // Also store the hash of the block with the highest height of
@@ -293,9 +301,11 @@ bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp, bool 
             // lock on a mempool input, so we can use the return value of
             // CheckSequenceLocks to indicate the LockPoints validity
             int maxInputHeight = 0;
-            for(int height : prevheights) {
+            for(int height : prevheights)
+            {
                 // Can ignore mempool inputs since we'll fail if they had non-zero locks
-                if (height != tip->nHeight+1) {
+                if (height != tip->nHeight+1)
+                {
                     maxInputHeight = std::max(maxInputHeight, height);
                 }
             }
@@ -1084,7 +1094,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     CCheckQueueControl<CScriptCheck> control(fScriptChecks && nScriptCheckThreads ? &scriptcheckqueue : NULL);
 
-    std::vector<int> prevheights;
     CAmount nFees = 0;
     CAmount nFeesPoW2Witness = 0;
     int nInputs = 0;
@@ -1103,17 +1112,29 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
         if (tx.IsPoW2WitnessCoinBase())
         {
+            std::vector<int> prevheights;
+            prevheights.resize(tx.vin.size());
             for (unsigned int inputIndex = 0; inputIndex < tx.vin.size(); inputIndex++)
             {
-                if (!tx.vin[inputIndex].prevout.IsNull())
+                if (tx.vin[inputIndex].prevout.IsNull())
+                {
+                    prevheights[inputIndex] = 0;
+                }
+                else
                 {
                     if (!view.HaveCoin(tx.vin[inputIndex].prevout))
                     {
                         return state.DoS(100, error("ConnectBlock(): witness coinbase inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                     }
-
-                    //fixme: (PHASE4) (SEGSIG) - Find a way to implement the bip68 sequence stuff here as well with minimal code churn...
+                    prevheights[inputIndex] = view.AccessCoin(tx.vin[inputIndex].prevout).nHeight;
                 }
+            }
+            // Check that transaction is BIP68 final
+            // BIP68 lock checks (as opposed to nLockTime checks) must
+            // be in ConnectBlock because they require the UTXO set
+            if (!SequenceLocks(tx, nLockTimeFlags, &prevheights, *pindex))
+            {
+                return state.DoS(100, error("%s: contains a non-BIP68-final transaction", __func__), REJECT_INVALID, "bad-txns-nonfinal");
             }
         }
         else
@@ -1133,14 +1154,15 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                 // Check that transaction is BIP68 final
                 // BIP68 lock checks (as opposed to nLockTime checks) must
                 // be in ConnectBlock because they require the UTXO set
+                std::vector<int> prevheights;
                 prevheights.resize(tx.vin.size());
                 for (size_t j = 0; j < tx.vin.size(); j++) {
                     prevheights[j] = view.AccessCoin(tx.vin[j].prevout).nHeight;
                 }
 
-                if (!SequenceLocks(tx, nLockTimeFlags, &prevheights, *pindex)) {
-                    return state.DoS(100, error("%s: contains a non-BIP68-final transaction", __func__),
-                                    REJECT_INVALID, "bad-txns-nonfinal");
+                if (!SequenceLocks(tx, nLockTimeFlags, &prevheights, *pindex))
+                {
+                    return state.DoS(100, error("%s: contains a non-BIP68-final transaction", __func__), REJECT_INVALID, "bad-txns-nonfinal");
                 }
             }
         }
