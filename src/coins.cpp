@@ -40,16 +40,16 @@ SaltedOutpointHasher::SaltedOutpointHasher() : k0(GetRand(std::numeric_limits<ui
 
 CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn)
 : CCoinsViewBacked(baseIn)
+, cacheMempoolRefs(0)
 , cachedCoinsUsage(0)
 , pChainedWitView(nullptr)
-, cacheMempoolRefs(0)
 {}
 
 CCoinsViewCache::CCoinsViewCache(CCoinsViewCache *baseIn)
 : CCoinsViewBacked(baseIn)
+, cacheMempoolRefs(0)
 , cachedCoinsUsage(0)
 , pChainedWitView(baseIn->pChainedWitView?std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(baseIn->pChainedWitView.get())):nullptr)
-, cacheMempoolRefs(0)
 {}
 
 size_t CCoinsViewCache::DynamicMemoryUsage() const
