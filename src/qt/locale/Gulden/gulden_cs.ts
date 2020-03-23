@@ -9,545 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Credit</source>
-        <translation>Příjem</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Výdaj</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Částka</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Zpráva</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>Otevřeno pro %n další blok</numerusform>
-            <numerusform>Otevřeno pro %n další bloky</numerusform>
-            <numerusform>Otevřeno pro %n dalších bloků</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Otřevřeno dokud %1</translation>
-    </message>
-    <message>
-        <source>conflicted with a transaction with %1 confirmations</source>
-        <translation>koliduje s transakcí o %1 konfirmacích</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
-        <source>0/unconfirmed, %1</source>
-        <translation>0/nepotvrzeno, %1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation>v transakčním zásobníku</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation>není ani v transakčním zásobníku</translation>
-    </message>
-    <message>
-        <source>abandoned</source>
-        <translation>zanechaná</translation>
-    </message>
-    <message>
-        <source>%1/unconfirmed</source>
-        <translation>%1/nepotvrzeno</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 potvrzení</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Stav</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ještě nebylo rozesláno</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, rozesláno přes %n uzel</numerusform>
-            <numerusform>, rozesláno přes %n uzly</numerusform>
-            <numerusform>, rozesláno přes %n uzlů</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation>Zdroj</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Vygenerováno</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>Od</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>neznámo</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>Pro</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>vlastní adresa</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>sledovaná</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>označení</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation>
-            <numerusform>dozraje po %n bloku</numerusform>
-            <numerusform>dozraje po %n blocích</numerusform>
-            <numerusform>dozraje po %n blocích</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>neakceptováno</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>Celkové výdaje</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>Celkové příjmy</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>Transakční poplatek</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>Čistá částka</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation>Komentář</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>ID transakce</translation>
-    </message>
-    <message>
-        <source>Transaction total size</source>
-        <translation>Celková velikost transakce</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>Pořadí výstupu</translation>
-    </message>
-    <message>
-        <source>Merchant</source>
-        <translation>Obchodník</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Vygenerované mince musí čekat %1 bloků, než mohou být utraceny. Když jsi vygeneroval tenhle blok, tak byl rozposlán do sítě, aby byl přidán do řetězce bloků. Pokud se mu nepodaří dostat se do řetězce, změní se na „neakceptovaný“ a nepůjde utratit. To se občas může stát, pokud jiný uzel vygeneruje blok zhruba ve stejném okamžiku jako ty.</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>Ladicí informace</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>Transakce</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>Vstupy</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>true</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>false</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Částka</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(bez označení)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Výběr mincí</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Počet:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bajtů:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Částka:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Prach:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Poplatek:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Čistá částka:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Drobné:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(od)označit všechny</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Zobrazit jako strom</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Vypsat jako seznam</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Příjem na označení</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Příjem na adrese</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Potvrzení</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Potvrzeno</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Kopíruj adresu</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopíruj její označení</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopíruj částku</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopíruj ID transakce</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Zamkni neutracené</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Odemkni k utracení</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Kopíruj počet</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Kopíruj poplatek</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Kopíruj čistou částku</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Kopíruj bajty</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Kopíruj prach</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Kopíruj drobné</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 zamčeno)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>ano</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>ne</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>Popisek zčervená, pokud má některý příjemce obdržet částku menší, než je aktuální práh pro prach.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Může se lišit o +/– %1 satoshi na každý vstup.</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>drobné z %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(drobné)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Částka</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Žádné</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n vteřinu</numerusform>
-            <numerusform>%n vteřiny</numerusform>
-            <numerusform>%n vteřin</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n minutu</numerusform>
-            <numerusform>%n minuty</numerusform>
-            <numerusform>%n minut</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n hodinu</numerusform>
-            <numerusform>%n hodiny</numerusform>
-            <numerusform>%n hodin</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n den</numerusform>
-            <numerusform>%n dny</numerusform>
-            <numerusform>%n dnů</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n týden</numerusform>
-            <numerusform>%n týdny</numerusform>
-            <numerusform>%n týdnů</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 a %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n rok</numerusform>
-            <numerusform>%n roky</numerusform>
-            <numerusform>%n roků</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 didn&apos;t yet exit safely...</source>
-        <translation>%1 ještě bezpečně neskončil…</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Částka</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Označení</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adresa</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Ulož obrázek...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR kód</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>&amp;Kopíruj URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopíruj &amp;adresu</translation>
-    </message>
-    <message>
-        <source>Request payment to %1</source>
-        <translation>Platební požadavek: %1</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>Informace o platbě</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Zpráva</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulář</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Stavy účtů</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Nepotvrzené transakce sledovaných adres</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Souhrn transakcí, které ještě nejsou potvrzené a které se ještě nezapočítávají do celkového disponibilního stavu účtu</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Celkem:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nedozráno:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Celkový stav tvého účtu</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Aktuální stav účtu sledovaných adres</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Sledované:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>K dispozici:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Aktuální disponibilní stav tvého účtu</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Aktuální stav účtu sledovaných adres</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Očekáváno:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Běžné:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Poslední transakce</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -816,6 +277,53 @@
     </message>
 </context>
 <context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Label</source>
+        <translation>Označení</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adresa</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Ulož obrázek...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Částka</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR kód</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;Kopíruj URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopíruj &amp;adresu</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>Platební požadavek: %1</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Informace o platbě</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Zpráva</translation>
+    </message>
+</context>
+<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -844,6 +352,157 @@
     <message>
         <source>Requested</source>
         <translation>Požádáno</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(bez označení)</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Částka</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Výběr mincí</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Počet:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bajtů:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Částka:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Prach:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Poplatek:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Čistá částka:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Drobné:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(od)označit všechny</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Zobrazit jako strom</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Vypsat jako seznam</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Příjem na označení</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Příjem na adrese</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Potvrzení</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Potvrzeno</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopíruj adresu</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopíruj její označení</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopíruj částku</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopíruj ID transakce</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Zamkni neutracené</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Odemkni k utracení</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Kopíruj počet</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Kopíruj poplatek</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Kopíruj čistou částku</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Kopíruj bajty</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Kopíruj prach</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Kopíruj drobné</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 zamčeno)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>ano</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>ne</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>Popisek zčervená, pokud má některý příjemce obdržet částku menší, než je aktuální práh pro prach.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Může se lišit o +/– %1 satoshi na každý vstup.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>drobné z %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(drobné)</translation>
     </message>
 </context>
 <context>
@@ -1120,10 +779,6 @@
         </translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Nepotvrzeno</translation>
     </message>
@@ -1146,10 +801,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Nedozráno (%1 potvrzení, dozraje při %2 potvrzeních)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Tento blok nedostal žádný jiný uzel a pravděpodobně nebude akceptován!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1323,6 +974,268 @@
     <message>
         <source>PNG Image (*.png)</source>
         <translation>PNG obrázek (*.png)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Částka</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Žádné</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n vteřinu</numerusform>
+            <numerusform>%n vteřiny</numerusform>
+            <numerusform>%n vteřin</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n minutu</numerusform>
+            <numerusform>%n minuty</numerusform>
+            <numerusform>%n minut</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n hodinu</numerusform>
+            <numerusform>%n hodiny</numerusform>
+            <numerusform>%n hodin</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n den</numerusform>
+            <numerusform>%n dny</numerusform>
+            <numerusform>%n dnů</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n týden</numerusform>
+            <numerusform>%n týdny</numerusform>
+            <numerusform>%n týdnů</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 a %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n rok</numerusform>
+            <numerusform>%n roky</numerusform>
+            <numerusform>%n roků</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 didn&apos;t yet exit safely...</source>
+        <translation>%1 ještě bezpečně neskončil…</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Částka</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Zpráva</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Příjem</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Výdaj</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Otevřeno pro %n další blok</numerusform>
+            <numerusform>Otevřeno pro %n další bloky</numerusform>
+            <numerusform>Otevřeno pro %n dalších bloků</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Otřevřeno dokud %1</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>koliduje s transakcí o %1 konfirmacích</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, %1</source>
+        <translation>0/nepotvrzeno, %1</translation>
+    </message>
+    <message>
+        <source>in memory pool</source>
+        <translation>v transakčním zásobníku</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>není ani v transakčním zásobníku</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <translation>zanechaná</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/nepotvrzeno</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 potvrzení</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Stav</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>Zdroj</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Vygenerováno</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Od</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>neznámo</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Pro</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>vlastní adresa</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>sledovaná</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>označení</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation>
+            <numerusform>dozraje po %n bloku</numerusform>
+            <numerusform>dozraje po %n blocích</numerusform>
+            <numerusform>dozraje po %n blocích</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>neakceptováno</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>Celkové výdaje</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>Celkové příjmy</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transakční poplatek</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Čistá částka</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Komentář</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>ID transakce</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>Celková velikost transakce</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>Pořadí výstupu</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>Obchodník</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to &quot;not accepted&quot; and it won&apos;t be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Vygenerované mince musí čekat %1 bloků, než mohou být utraceny. Když jsi vygeneroval tenhle blok, tak byl rozposlán do sítě, aby byl přidán do řetězce bloků. Pokud se mu nepodaří dostat se do řetězce, změní se na „neakceptovaný“ a nepůjde utratit. To se občas může stát, pokud jiný uzel vygeneruje blok zhruba ve stejném okamžiku jako ty.</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>Ladicí informace</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transakce</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>Vstupy</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>true</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>false</translation>
     </message>
 </context>
 <context>
@@ -2023,6 +1936,69 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>Vyber soubor platebního požadavku k načtení</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulář</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Stavy účtů</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Nepotvrzené transakce sledovaných adres</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Souhrn transakcí, které ještě nejsou potvrzené a které se ještě nezapočítávají do celkového disponibilního stavu účtu</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Celkem:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nedozráno:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Celkový stav tvého účtu</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Aktuální stav účtu sledovaných adres</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Sledované:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>K dispozici:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Aktuální disponibilní stav tvého účtu</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Aktuální stav účtu sledovaných adres</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Očekáváno:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Běžné:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Poslední transakce</translation>
     </message>
 </context>
 <context>

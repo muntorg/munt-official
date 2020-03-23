@@ -248,305 +248,6 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Importo</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(nessuna etichetta)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Selezione Input</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Quantità:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Byte:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Importo:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Trascurabile:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Commissione:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Dopo Commissione:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Resto:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(de)seleziona tutto</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Modalità Albero</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Modalità Lista</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Ricevuto con l&apos;etichetta</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Ricevuto con l&apos;indirizzo</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Conferme</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Confermato</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Copia indirizzo</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Copia etichetta</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Copia importo</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Copia ID della transazione</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Blocco non utilizzato</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Sblocco non utilizzato</translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>Copia quantità</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>Copia tassa</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Copia con la tassa</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Copia bytes</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Copia trascurabile</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Copia modifica</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 bloccato)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>Si</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>no</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
-        <translation>Questa etichetta diventa rossa se un destinatario riceve un importo inferiore al valore corrente.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Può variare +/- %1 satoshi per input.</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>modifica da %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(modifica)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Importo</translation>
-    </message>
-    <message>
-        <source>Enter a Gulden URL</source>
-        <translation>Inserisci indirizzo URL Gulden</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Nessuno</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/D</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 e %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Importo</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Etichetta</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Indirizzo</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Salva Immagine...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>Codice QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Copia &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Copia &amp;Indirizzo</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Importo</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Modulo</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldo</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Transazioni non confermate su indirizzi di sola lettura</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Totale delle transazioni in corso di conferma e che non sono ancora conteggiate nel saldo spendibile</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Totale:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Immaturo:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Il tuo saldo totale attuale</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Saldo corrente totale negli indirizzi di sola lettura</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Sola lettura:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Disponibile:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Il tuo saldo spendibile attuale</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Il tuo saldo attuale negli indirizzi di sola lettura</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>In attesa:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Spendibile:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Transazioni recenti</translation>
-    </message>
-</context>
-<context>
     <name>BackupDialog</name>
     <message>
         <source>Done</source>
@@ -726,6 +427,37 @@ The account will continue to be monitored and will be restored should it receive
     </message>
 </context>
 <context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Label</source>
+        <translation>Etichetta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Indirizzo</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salva Immagine...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Importo</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>Codice QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Copia &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Copia &amp;Indirizzo</translation>
+    </message>
+</context>
+<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -738,6 +470,157 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Date</source>
         <translation>Data</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(nessuna etichetta)</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Importo</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Selezione Input</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Quantità:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Byte:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Importo:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Trascurabile:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Commissione:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Dopo Commissione:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Resto:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(de)seleziona tutto</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Modalità Albero</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Modalità Lista</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Ricevuto con l&apos;etichetta</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Ricevuto con l&apos;indirizzo</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Conferme</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Confermato</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Copia indirizzo</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copia etichetta</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Copia importo</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Copia ID della transazione</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Blocco non utilizzato</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Sblocco non utilizzato</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Copia quantità</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Copia tassa</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Copia con la tassa</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Copia bytes</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Copia trascurabile</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Copia modifica</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 bloccato)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>Si</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>no</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>Questa etichetta diventa rossa se un destinatario riceve un importo inferiore al valore corrente.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Può variare +/- %1 satoshi per input.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>modifica da %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(modifica)</translation>
     </message>
 </context>
 <context>
@@ -885,14 +768,6 @@ The account will continue to be monitored and will be restored should it receive
         <source>Sent</source>
         <translation>Inviato</translation>
     </message>
-    <message>
-        <source>Split locked funds</source>
-        <translation>Dividere i fondi bloccati</translation>
-    </message>
-    <message>
-        <source>Merge locked funds</source>
-        <translation>Unisci i fondi bloccati</translation>
-    </message>
 </context>
 <context>
     <name>BanTableModel</name>
@@ -933,6 +808,60 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Network Alert</source>
         <translation>Avviso di rete</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Importo</translation>
+    </message>
+    <message>
+        <source>Enter a Gulden URL</source>
+        <translation>Inserisci indirizzo URL Gulden</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Nessuno</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 e %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Importo</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
     </message>
 </context>
 <context>
@@ -1572,6 +1501,69 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
     <message>
         <source>Select payment request file</source>
         <translation>Seleziona il file di richiesta di pagamento</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Modulo</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldo</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Transazioni non confermate su indirizzi di sola lettura</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Totale delle transazioni in corso di conferma e che non sono ancora conteggiate nel saldo spendibile</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totale:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Immaturo:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Il tuo saldo totale attuale</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Saldo corrente totale negli indirizzi di sola lettura</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Sola lettura:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Disponibile:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Il tuo saldo spendibile attuale</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Il tuo saldo attuale negli indirizzi di sola lettura</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>In attesa:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Spendibile:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Transazioni recenti</translation>
     </message>
 </context>
 <context>

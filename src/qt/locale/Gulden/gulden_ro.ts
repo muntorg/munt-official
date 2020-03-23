@@ -9,98 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Selecția monedelor</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Cantitatea:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Biți:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Cantitate:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Taxa:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>După taxă:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Schimbă:</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Mod arbore</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Mod listă</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Primit cu adresa</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Confirmări</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Confirmat</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 și %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Salvează imaginea...</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -185,6 +93,98 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Salvează imaginea...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salvează imaginea...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Selecția monedelor</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Cantitatea:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Biți:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Cantitate:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Taxa:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>După taxă:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Schimbă:</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Mod arbore</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Mod listă</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Primit cu adresa</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Confirmări</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Confirmat</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 și %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
     </message>
 </context>
 <context>

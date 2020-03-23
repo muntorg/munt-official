@@ -9,50 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>رقم</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>رقم:</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>تاریخ</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>رقم</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>رقم</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>کاپی پتہ</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>رقم</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>تاریخ</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -115,6 +71,50 @@
     <message>
         <source>Repeat new passphrase</source>
         <translation>نیا پاس فریز دہرائیں</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>رقم</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>رقم:</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>تاریخ</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>رقم</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>رقم</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>کاپی پتہ</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>رقم</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>تاریخ</translation>
     </message>
 </context>
 <context>

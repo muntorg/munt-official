@@ -536,18 +536,18 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <location filename="../../forms/coincontroldialog.ui" line="+420"/>
-        <source>Amount</source>
-        <translation>Amount</translation>
-    </message>
-    <message>
         <location filename="../../coincontroldialog.cpp" line="+656"/>
         <location line="+52"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
     <message>
-        <location filename="../../forms/coincontroldialog.ui" line="-406"/>
+        <location filename="../../forms/coincontroldialog.ui" line="+420"/>
+        <source>Amount</source>
+        <translation>Amount</translation>
+    </message>
+    <message>
+        <location line="-406"/>
         <source>Coin Selection</source>
         <translation>Coin Selection</translation>
     </message>
@@ -848,13 +848,13 @@ The account will continue to be monitored and will be restored should it receive
         <location filename="../../_Gulden/fundwitnessdialog.cpp" line="+92"/>
         <location line="+20"/>
         <location line="+28"/>
-        <location line="+21"/>
+        <location line="+24"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
         <location filename="../../_Gulden/forms/fundwitnessdialog.ui" line="+220"/>
-        <location filename="../../_Gulden/fundwitnessdialog.cpp" line="-74"/>
+        <location filename="../../_Gulden/fundwitnessdialog.cpp" line="-77"/>
         <location line="+48"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
@@ -943,22 +943,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="+134"/>
-        <source>Withdrawable funds in this account is not yet mature, please wait and try again later.</source>
-        <translation>Withdrawable funds in this account is not yet mature, please wait and try again later.</translation>
-    </message>
-    <message>
-        <location filename="../../gui.cpp" line="+256"/>
-        <source>Operating in SPV mode (simple payment verification)</source>
-        <translation>Operating in SPV mode (simple payment verification)</translation>
-    </message>
-    <message>
-        <location line="+1113"/>
-        <source>%1 block(s) remaining.</source>
-        <translation>%1 block(s) remaining.</translation>
-    </message>
-    <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-196"/>
+        <location line="-62"/>
         <location line="+29"/>
         <source>Total</source>
         <translation>Total</translation>
@@ -987,17 +972,32 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Conversion estimate</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="-964"/>
+        <location filename="../../gui.cpp" line="+405"/>
         <source>&amp;Address</source>
         <translation>&amp;Address</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+29"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+198"/>
+        <source>Withdrawable funds in this account is not yet mature, please wait and try again later.</source>
+        <translation>Withdrawable funds in this account is not yet mature, please wait and try again later.</translation>
+    </message>
+    <message>
+        <location filename="../../gui.cpp" line="-149"/>
+        <source>Operating in SPV mode (simple payment verification)</source>
+        <translation>Operating in SPV mode (simple payment verification)</translation>
+    </message>
+    <message>
+        <location line="+1113"/>
+        <source>%1 block(s) remaining.</source>
+        <translation>%1 block(s) remaining.</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-169"/>
         <source>Wallet balances</source>
         <translation>Wallet balances</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+127"/>
+        <location filename="../../gui.cpp" line="-837"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
     </message>
@@ -1534,7 +1534,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="+132"/>
+        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+270"/>
+        <source>My accounts</source>
+        <translation>My accounts</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+132"/>
         <source>1 year</source>
         <translation>1 year</translation>
     </message>
@@ -1544,7 +1549,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>%1 years</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+387"/>
+        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="+117"/>
         <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+4"/>
         <source>1 month</source>
         <translation>1 month</translation>
@@ -1598,12 +1603,7 @@ Estimated earnings: %3 (%4% per month)
 Witness weight: %5</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="-189"/>
-        <source>My accounts</source>
-        <translation>My accounts</translation>
-    </message>
-    <message>
-        <location line="-167"/>
+        <location filename="../../_Gulden/forms/guldensendcoinsentry.ui" line="-356"/>
         <source>Receiving address</source>
         <translation>Receiving address</translation>
     </message>
@@ -2157,10 +2157,16 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>OptimizeWitnessDialog</name>
     <message>
-        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="+54"/>
-        <location line="+23"/>
+        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="+55"/>
+        <location line="+17"/>
+        <location line="+12"/>
         <source>Okay</source>
         <translation>Okay</translation>
+    </message>
+    <message>
+        <location line="-12"/>
+        <source>Account is already optimal</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../_Gulden/forms/optimizewitnessdialog.ui" line="+155"/>
@@ -2168,7 +2174,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="-23"/>
+        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="-17"/>
         <source>No funding account selected</source>
         <translation>No funding account selected</translation>
     </message>
@@ -2188,13 +2194,18 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Optimize</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="-4"/>
+        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="-5"/>
         <source>Are you sure you want to optimize the witness parts?</source>
         <translation>Are you sure you want to optimize the witness parts?</translation>
     </message>
 </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <location filename="../../optionsdialog.cpp" line="+329"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
     <message>
         <location filename="../../forms/optionsdialog.ui" line="+654"/>
         <source>Automatically hide status bar when synchronised. Disable to always show status indicators.</source>
@@ -2206,12 +2217,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Hide status bar when synchronized</translation>
     </message>
     <message>
-        <location filename="../../optionsdialog.cpp" line="+329"/>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
-        <location filename="../../forms/optionsdialog.ui" line="-593"/>
+        <location line="-593"/>
         <source>Periodically check if updates are available. </source>
         <translation>Periodically check if updates are available. </translation>
     </message>
@@ -3617,12 +3623,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
-        <location filename="../../receiverequestdialog.cpp" line="+92"/>
-        <source>Amount</source>
-        <translation>Amount</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location filename="../../receiverequestdialog.cpp" line="+94"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
@@ -3637,7 +3638,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&amp;Save Image...</translation>
     </message>
     <message>
-        <location line="-66"/>
+        <location filename="../../receiverequestdialog.cpp" line="+2"/>
+        <source>Amount</source>
+        <translation>Amount</translation>
+    </message>
+    <message>
+        <location filename="../../forms/receiverequestdialog.ui" line="-66"/>
         <source>QR Code</source>
         <translation>QR Code</translation>
     </message>
@@ -3652,7 +3658,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Copy &amp;Address</translation>
     </message>
     <message>
-        <location filename="../../receiverequestdialog.cpp" line="-9"/>
+        <location filename="../../receiverequestdialog.cpp" line="-11"/>
         <source>Request payment to %1</source>
         <translation>Request payment to %1</translation>
     </message>
@@ -4188,39 +4194,39 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionDesc</name>
     <message>
-        <location filename="../../transactiondesc.cpp" line="+133"/>
-        <location line="+12"/>
-        <location line="+53"/>
-        <location line="+33"/>
-        <location line="+56"/>
-        <source>Credit</source>
-        <translation>Credit</translation>
-    </message>
-    <message>
-        <location line="-91"/>
-        <location line="+32"/>
-        <location line="+56"/>
-        <source>Debit</source>
-        <translation>Debit</translation>
-    </message>
-    <message>
-        <location line="+28"/>
+        <location filename="../../transactiondesc.cpp" line="+324"/>
         <source>Amount</source>
         <translation>Amount</translation>
     </message>
     <message>
-        <location line="-242"/>
+        <location line="-254"/>
         <source>Date</source>
         <translation>Date</translation>
     </message>
     <message>
-        <location line="+171"/>
+        <location line="+183"/>
         <location line="+11"/>
         <source>Message</source>
         <translation>Message</translation>
     </message>
+    <message>
+        <location line="-131"/>
+        <location line="+21"/>
+        <location line="+53"/>
+        <location line="+33"/>
+        <location line="+59"/>
+        <source>Credit</source>
+        <translation>Credit</translation>
+    </message>
+    <message>
+        <location line="-94"/>
+        <location line="+32"/>
+        <location line="+59"/>
+        <source>Debit</source>
+        <translation>Debit</translation>
+    </message>
     <message numerus="yes">
-        <location line="-215"/>
+        <location line="-259"/>
         <source>Open for %n more block(s)</source>
         <translation>
             <numerusform>Open for %n more block(s)</numerusform>
@@ -4285,40 +4291,41 @@ If you  have recently received funds you may need to wait for them to clear befo
     <message>
         <location line="+5"/>
         <location line="+13"/>
-        <location line="+71"/>
+        <location line="+80"/>
         <source>From</source>
         <translation>From</translation>
     </message>
     <message>
-        <location line="-71"/>
+        <location line="-80"/>
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
     <message>
         <location line="+1"/>
         <location line="+20"/>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>To</source>
         <translation>To</translation>
     </message>
     <message>
-        <location line="-86"/>
+        <location line="-95"/>
         <source>own address</source>
         <translation>own address</translation>
     </message>
     <message>
         <location line="+0"/>
-        <location line="+68"/>
+        <location line="+77"/>
         <source>watch-only</source>
         <translation>watch-only</translation>
     </message>
     <message>
-        <location line="-66"/>
+        <location line="-75"/>
         <source>label</source>
         <translation>label</translation>
     </message>
     <message numerus="yes">
-        <location line="+35"/>
+        <location line="+38"/>
+        <location line="+4"/>
         <source>matures in %n more block(s)</source>
         <translation>
             <numerusform>matures in %n more block(s)</numerusform>
@@ -4326,7 +4333,7 @@ If you  have recently received funds you may need to wait for them to clear befo
         </translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+4"/>
         <source>not accepted</source>
         <translation>not accepted</translation>
     </message>
@@ -4351,12 +4358,12 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Transaction fee</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+18"/>
         <source>Net amount</source>
         <translation>Net amount</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Comment</source>
         <translation>Comment</translation>
     </message>
@@ -4429,26 +4436,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionTableModel</name>
     <message>
-        <location filename="../../transactiontablemodel.cpp" line="+424"/>
-        <location line="+155"/>
-        <location line="+36"/>
-        <source>Rotate witness key</source>
-        <translation>Rotate witness key</translation>
-    </message>
-    <message>
-        <location line="-193"/>
-        <location line="+153"/>
-        <location line="+38"/>
-        <source>Rearrange locked funds</source>
-        <translation>Rearrange locked funds</translation>
-    </message>
-    <message>
-        <location line="-103"/>
-        <source>Rearrange locked funds: %1</source>
-        <translation>Rearrange locked funds: %1</translation>
-    </message>
-    <message>
-        <location line="+386"/>
+        <location filename="../../transactiontablemodel.cpp" line="+896"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
@@ -4468,7 +4456,14 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Sent</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+151"/>
+        <location line="+155"/>
+        <location line="+36"/>
+        <source>Rotate witness key</source>
+        <translation>Rotate witness key</translation>
+    </message>
+    <message>
+        <location line="-280"/>
         <source>Open until %1</source>
         <translation>Open until %1</translation>
     </message>
@@ -4483,7 +4478,19 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>watch-only</translation>
     </message>
     <message>
-        <location line="+134"/>
+        <location line="-63"/>
+        <location line="+153"/>
+        <location line="+38"/>
+        <source>Rearrange locked funds</source>
+        <translation>Rearrange locked funds</translation>
+    </message>
+    <message>
+        <location line="-103"/>
+        <source>Rearrange locked funds: %1</source>
+        <translation>Rearrange locked funds: %1</translation>
+    </message>
+    <message>
+        <location line="+109"/>
         <location line="+2"/>
         <source>Unlock funds</source>
         <translation>Unlock funds</translation>
@@ -4748,17 +4755,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionView</name>
     <message>
-        <location filename="../../transactionview.cpp" line="+402"/>
-        <source>Credit</source>
-        <translation>Credit</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Debit</source>
-        <translation>Debit</translation>
-    </message>
-    <message>
-        <location line="-17"/>
+        <location filename="../../transactionview.cpp" line="+386"/>
         <source>Comma separated file (*.csv)</source>
         <translation>Comma separated file (*.csv)</translation>
     </message>
@@ -4808,7 +4805,17 @@ If you  have recently received funds you may need to wait for them to clear befo
         <translation>Copy transaction ID</translation>
     </message>
     <message>
-        <location line="-68"/>
+        <location line="+242"/>
+        <source>Credit</source>
+        <translation>Credit</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Debit</source>
+        <translation>Debit</translation>
+    </message>
+    <message>
+        <location line="-311"/>
         <source>Generated</source>
         <translation>Generated</translation>
     </message>
@@ -5245,9 +5252,9 @@ Generally when someone else generates a block at the same time as yours.</transl
         <translation>Extend</translation>
     </message>
     <message>
-        <location line="+43"/>
-        <source>Optimize</source>
-        <translation>Optimize</translation>
+        <location line="-663"/>
+        <source>Information</source>
+        <translation>Information</translation>
     </message>
     <message>
         <location filename="../../_Gulden/witnessdialog.cpp" line="+515"/>
@@ -5255,7 +5262,12 @@ Generally when someone else generates a block at the same time as yours.</transl
         <translation>%1 months</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/witnessdialog.ui" line="-53"/>
+        <location filename="../../_Gulden/forms/witnessdialog.ui" line="+706"/>
+        <source>Optimize</source>
+        <translation>Optimize</translation>
+    </message>
+    <message>
+        <location line="-53"/>
         <source>Upgrade</source>
         <translation>Upgrade</translation>
     </message>
@@ -5309,12 +5321,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>Show graph</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/forms/witnessdialog.ui" line="-525"/>
-        <source>Information</source>
-        <translation>Information</translation>
-    </message>
-    <message>
-        <location line="-37"/>
+        <location filename="../../_Gulden/forms/witnessdialog.ui" line="-562"/>
         <source>Projected earnings graph</source>
         <translation>Projected earnings graph</translation>
     </message>
@@ -5515,12 +5522,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>1 month</translation>
     </message>
     <message>
-        <location line="-42"/>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
-    <message>
-        <location line="+21"/>
+        <location line="-21"/>
         <source>Lock funds for:</source>
         <translation>Lock funds for:</translation>
     </message>
@@ -5561,6 +5563,11 @@ Witness weight: %5</source>
 Estimated earnings: %3 (%4% per month)
 
 Witness weight: %5</translation>
+    </message>
+    <message>
+        <location filename="../../_Gulden/forms/witnessdurationwidget.ui" line="-126"/>
+        <source>Form</source>
+        <translation>Form</translation>
     </message>
 </context>
 <context>

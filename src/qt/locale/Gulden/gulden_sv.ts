@@ -9,311 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Mängd</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(Ingen etikett)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Myntval</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>Kvantitet:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Antal byte:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Belopp:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Damm:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Avgift:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Efter avgift:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Växel:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(av)markera allt</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Trädvy</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Listvy</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>Mottagen med etikett</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Mottagen med adress</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>Bekräftelser</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Bekräftad</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Kopiera adress</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopiera etikett</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopiera belopp</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopiera transaktions-ID</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>ja</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>nej</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Mängd</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ingen</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>ej tillgänglig</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n sekund</numerusform>
-            <numerusform>%n sekunder</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n minut</numerusform>
-            <numerusform>%n minuter</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation>
-            <numerusform>%n timme</numerusform>
-            <numerusform>%n timmar</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation>
-            <numerusform>%n dag</numerusform>
-            <numerusform>%n dagar</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation>
-            <numerusform>%n vecka</numerusform>
-            <numerusform>%n veckor</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 och %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation>
-            <numerusform>%n år</numerusform>
-            <numerusform>%n år</numerusform>
-        </translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Mängd</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Etikett</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adress</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Spara Bild...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-kod</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopiera &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopiera &amp;Adress</translation>
-    </message>
-    <message>
-        <source>Payment information</source>
-        <translation>Betalinformaton</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Meddelande</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Mängd</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Meddelande</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Status</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulär</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Balanser</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Okonfirmerade transaktioner till granska-bara adresser</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Totalt antal transaktioner som ännu inte bekräftats, och som ännu inte räknas med i aktuellt saldo</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Totalt:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Omogen:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Ditt nuvarande totala saldo</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Nuvarande total balans i granska-bara adresser</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Granska-bara:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Tillgängligt:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Ditt tillgängliga saldo</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Ditt nuvarande saldo i granska-bara adresser</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Pågående:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Spenderbar:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Nyligen genomförda transaktioner</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -471,6 +166,49 @@ Var vänlig och försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Label</source>
+        <translation>Etikett</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adress</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Spara Bild...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Mängd</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-kod</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopiera &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopiera &amp;Adress</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Betalinformaton</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Meddelande</translation>
+    </message>
+</context>
+<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -491,6 +229,105 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>(no message)</source>
         <translation>(inget meddelande)</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(Ingen etikett)</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Mängd</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>Myntval</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Kvantitet:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Antal byte:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Belopp:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Damm:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Avgift:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Efter avgift:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Växel:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(av)markera allt</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Trädvy</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Listvy</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Mottagen med etikett</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Mottagen med adress</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Bekräftelser</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Bekräftad</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopiera adress</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopiera etikett</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopiera belopp</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopiera transaktions-ID</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>ja</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>nej</translation>
     </message>
 </context>
 <context>
@@ -769,6 +606,106 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Spara Bild...</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Mängd</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ingen</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>ej tillgänglig</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation>
+            <numerusform>%n sekund</numerusform>
+            <numerusform>%n sekunder</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation>
+            <numerusform>%n minut</numerusform>
+            <numerusform>%n minuter</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation>
+            <numerusform>%n timme</numerusform>
+            <numerusform>%n timmar</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation>
+            <numerusform>%n dag</numerusform>
+            <numerusform>%n dagar</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation>
+            <numerusform>%n vecka</numerusform>
+            <numerusform>%n veckor</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 och %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation>
+            <numerusform>%n år</numerusform>
+            <numerusform>%n år</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Mängd</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Meddelande</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
     </message>
 </context>
 <context>
@@ -1415,6 +1352,69 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Select payment request file</source>
         <translation>Välj betalningsbegäransfil</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulär</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Balanser</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Okonfirmerade transaktioner till granska-bara adresser</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Totalt antal transaktioner som ännu inte bekräftats, och som ännu inte räknas med i aktuellt saldo</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totalt:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Omogen:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Ditt nuvarande totala saldo</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Nuvarande total balans i granska-bara adresser</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Granska-bara:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Tillgängligt:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Ditt tillgängliga saldo</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Ditt nuvarande saldo i granska-bara adresser</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Pågående:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Spenderbar:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Nyligen genomförda transaktioner</translation>
     </message>
 </context>
 <context>

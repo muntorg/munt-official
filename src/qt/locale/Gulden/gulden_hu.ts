@@ -9,6 +9,116 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>A cím vagy címke szerkeszteséhez kattintson a jobb gombbal</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;Bezárás</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Kiválasztott cím törlése a listából</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Törlés</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Jelenlegi nézet exportálása fájlba</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportálás</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Új cím létrehozása</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Új</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>A kiválasztott cím másolása a vágólapra</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Másolás</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportálás</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Jelszó párbeszédablak</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Add meg a jelszót</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Új jelszó</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Új jelszó újra</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP-cím/maszk</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>Kitiltás vége</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Kép mentése</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Kép mentése</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Összeg</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR kód</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;URI másolása</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Cím másolása</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -115,29 +225,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Összeg</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Kép mentése</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR kód</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>&amp;URI másolása</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Cím másolása</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -146,144 +233,6 @@
     <message>
         <source>Date</source>
         <translation>Dátum</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Űrlap</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Egyenlegek</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Még megerősítésre váró, a jelenlegi egyenlegbe be nem számított tranzakciók</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Összesen:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Éretlen:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Aktuális egyenleged</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Csak megfigyelés</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Elérhető:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Jelenlegi egyenleg</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Küldés:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Elkölthető:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>A legutóbbi tranzakciók</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>A cím vagy címke szerkeszteséhez kattintson a jobb gombbal</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;Bezárás</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Kiválasztott cím törlése a listából</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Törlés</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Jelenlegi nézet exportálása fájlba</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Exportálás</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Új cím létrehozása</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Új</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>A kiválasztott cím másolása a vágólapra</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Másolás</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Exportálás</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Jelszó párbeszédablak</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Add meg a jelszót</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Új jelszó</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Új jelszó újra</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP-cím/maszk</translation>
-    </message>
-    <message>
-        <source>Banned Until</source>
-        <translation>Kitiltás vége</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Kép mentése</translation>
     </message>
 </context>
 <context>
@@ -810,6 +759,57 @@
     <message>
         <source>Select payment request file</source>
         <translation>Fizetési kérelmi fájl kiválasztása</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Űrlap</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Egyenlegek</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Még megerősítésre váró, a jelenlegi egyenlegbe be nem számított tranzakciók</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Összesen:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Éretlen:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Aktuális egyenleged</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Csak megfigyelés</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Elérhető:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Jelenlegi egyenleg</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Küldés:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Elkölthető:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>A legutóbbi tranzakciók</translation>
     </message>
 </context>
 <context>

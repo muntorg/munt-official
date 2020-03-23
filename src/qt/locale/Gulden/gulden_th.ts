@@ -9,6 +9,98 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>คลิกขวาเพื่อแก้ไขที่อยู่ หรือป้ายชื่อ</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;ปิด</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>ลบที่อยู่ที่เลือกไว้ในขณะนี้จากรายการ</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;ลบ</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>ส่งออกข้อมูลที่อยู่ในแท็บไปที่ไฟล์</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ส่งออก</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>สร้างที่อยู่ใหม่</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;สร้างใหม่</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>คัดลอกที่อยู่ที่ถูกเลือกไปยัง คลิปบอร์ดของระบบ</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;คัดลอก</translation>
+    </message>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>เลือกที่อยู่เพื่อส่งเหรียญไปไว้</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>เลือกที่อยู่เพื่อส่งเหรียญไปไว้</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>ส่งที่อยู่</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ส่งออก</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>ช่องสำหรับ รหัสผ่าน</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>ใส่รหัสผ่าน</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>รหัสผา่นใหม่</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>กรุณากรอกรหัสผ่านใหม่อีกครั้งหนึ่ง</translation>
+    </message>
+</context>
+<context>
+    <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Netmask (ตัวกรอง IP)</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>ห้าม จนถึง</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -106,105 +198,6 @@
     <message>
         <source>Date</source>
         <translation>วันที่</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>รูป</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>คลิกขวาเพื่อแก้ไขที่อยู่ หรือป้ายชื่อ</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;ปิด</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>ลบที่อยู่ที่เลือกไว้ในขณะนี้จากรายการ</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;ลบ</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>ส่งออกข้อมูลที่อยู่ในแท็บไปที่ไฟล์</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;ส่งออก</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>สร้างที่อยู่ใหม่</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;สร้างใหม่</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>คัดลอกที่อยู่ที่ถูกเลือกไปยัง คลิปบอร์ดของระบบ</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;คัดลอก</translation>
-    </message>
-    <message>
-        <source>Choose the address to send coins to</source>
-        <translation>เลือกที่อยู่เพื่อส่งเหรียญไปไว้</translation>
-    </message>
-    <message>
-        <source>Choose the address to receive coins with</source>
-        <translation>เลือกที่อยู่เพื่อส่งเหรียญไปไว้</translation>
-    </message>
-    <message>
-        <source>Sending addresses</source>
-        <translation>ส่งที่อยู่</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;ส่งออก</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>ช่องสำหรับ รหัสผ่าน</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>ใส่รหัสผ่าน</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>รหัสผา่นใหม่</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>กรุณากรอกรหัสผ่านใหม่อีกครั้งหนึ่ง</translation>
-    </message>
-</context>
-<context>
-    <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask (ตัวกรอง IP)</translation>
-    </message>
-    <message>
-        <source>Banned Until</source>
-        <translation>ห้าม จนถึง</translation>
     </message>
 </context>
 <context>
@@ -590,6 +583,13 @@
     <message>
         <source>Select payment request file</source>
         <translation>เลือก ไฟล์การเรียกการชำระเงิน</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>รูป</translation>
     </message>
 </context>
 </TS>

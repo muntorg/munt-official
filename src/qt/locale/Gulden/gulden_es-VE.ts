@@ -9,6 +9,75 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Click derecho para editar la dirección o etiqueta</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>C&amp;errar</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Borrar las direcciones seleccionadas recientemente de la lista</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Borrar</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Exportar los datos en la pestaña actual a un archivo</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportar</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Crear una nueva dirección</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Nuevo</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Copie las direcciones seleccionadas actualmente al portapapeles del sistema</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Copiar</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportar</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Diálogo contraseña</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Ingresa frase de contraseña</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Nueva frase de contraseña</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Repetir nueva frase de contraseña</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -102,75 +171,6 @@
     <message>
         <source>Date</source>
         <translation>Fecha</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Click derecho para editar la dirección o etiqueta</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>C&amp;errar</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Borrar las direcciones seleccionadas recientemente de la lista</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Borrar</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Exportar los datos en la pestaña actual a un archivo</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Exportar</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Crear una nueva dirección</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Nuevo</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Copie las direcciones seleccionadas actualmente al portapapeles del sistema</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Copiar</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Exportar</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Diálogo contraseña</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Ingresa frase de contraseña</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Nueva frase de contraseña</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Repetir nueva frase de contraseña</translation>
     </message>
 </context>
 <context>

@@ -9,6 +9,55 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>Жабу</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>Жою</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>Экспорт</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Жаңа адрес енгізу</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>Жаңа</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Таңдаған адресті тізімнен жою</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>Экспорт</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Құпия сөзді енгізу</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Жаңа құпия сөзі</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Жаңа құпия сөзді қайта енгізу</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -70,55 +119,6 @@
     <message>
         <source>Date</source>
         <translation>Күні</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>Жабу</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>Жою</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>Экспорт</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Жаңа адрес енгізу</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>Жаңа</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Таңдаған адресті тізімнен жою</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>Экспорт</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Құпия сөзді енгізу</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Жаңа құпия сөзі</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Жаңа құпия сөзді қайта енгізу</translation>
     </message>
 </context>
 <context>

@@ -9,61 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>iznos</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Iznos:</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>datum</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>Potvrdjen</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>iznos</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>iznos</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopirajte adresu</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>iznos</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>datum</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Форма</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -131,6 +76,54 @@
     <message>
         <source>Repeat new passphrase</source>
         <translation>Поновите нову лозинку</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>iznos</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Iznos:</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>datum</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Potvrdjen</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>iznos</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>iznos</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopirajte adresu</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>iznos</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>datum</translation>
     </message>
 </context>
 <context>
@@ -227,6 +220,13 @@
     <message>
         <source>Usage:</source>
         <translation>Korišćenje:</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
     </message>
 </context>
 <context>

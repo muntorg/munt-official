@@ -10,297 +10,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>거래액</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(라벨 없음)</translation>
-    </message>
-    <message>
-        <source>Coin Selection</source>
-        <translation>코인 선택</translation>
-    </message>
-    <message>
-        <source>Quantity:</source>
-        <translation>수량:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>바이트:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>금액:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>더스트:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>수수료:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>수수료 이후:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>체인지:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>모두 선택(하지 않음)</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>트리 모드</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>리스트 모드</translation>
-    </message>
-    <message>
-        <source>Received with label</source>
-        <translation>입금과 함께 수신된 라벨</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>입금과 함께 수신된 주소</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>날짜</translation>
-    </message>
-    <message>
-        <source>Confirmations</source>
-        <translation>확인</translation>
-    </message>
-    <message>
-        <source>Confirmed</source>
-        <translation>확인됨</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>주소 복사</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>라벨 복사</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>거래액 복사</translation>
-    </message>
-    <message>
-        <source>Copy transaction ID</source>
-        <translation>거래 아이디 복사</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>사용되지 않은 주소를 잠금 처리합니다.</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>사용되지 않은 주소를 잠금 해제합니다. </translation>
-    </message>
-    <message>
-        <source>Copy quantity</source>
-        <translation>수량 복사</translation>
-    </message>
-    <message>
-        <source>Copy fee</source>
-        <translation>수수료 복사</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>수수료 이후 복사</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>bytes 복사</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>더스트 복사</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>잔돈 복사</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 잠금)</translation>
-    </message>
-    <message>
-        <source>yes</source>
-        <translation>예</translation>
-    </message>
-    <message>
-        <source>no</source>
-        <translation>아니요</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>입력마다 +/- %1 사토시(s)가 변할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>%1로부터 변경 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(잔돈)</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>거래액</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 일</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 시간</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 분</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 초</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>없음</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>없음</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 그리고 %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>거래액</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>라벨</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>주소</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>이미지 저장(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR 코드</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>URI 복사(&amp;U)</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>주소 복사(&amp;A)</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>거래액</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>날짜</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>유형</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>잔액</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>모니터링 지갑의 검증되지 않은 트랜잭션</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>전체 거래들은 아직 확인되지 않았고, 그리고 현재 잔액에 아직 반영되지 않았습니다.</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>총액:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>아직 사용 불가능:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>당신의 현재 총액</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>모니터링 지갑의 현재 잔액</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>모니터링 지갑:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>사용 가능</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>당신의 현재 사용 가능한 잔액</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>모니터링 지갑의 현재 잔액</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>미확정</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>사용가능:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>최근 거래</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -541,6 +250,37 @@
     </message>
 </context>
 <context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Label</source>
+        <translation>라벨</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>주소</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>이미지 저장(&amp;S)...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>거래액</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR 코드</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>URI 복사(&amp;U)</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>주소 복사(&amp;A)</translation>
+    </message>
+</context>
+<context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
@@ -553,6 +293,153 @@
     <message>
         <source>Date</source>
         <translation>날짜</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(라벨 없음)</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>거래액</translation>
+    </message>
+    <message>
+        <source>Coin Selection</source>
+        <translation>코인 선택</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>수량:</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>바이트:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>금액:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>더스트:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>수수료:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>수수료 이후:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>체인지:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>모두 선택(하지 않음)</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>트리 모드</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>리스트 모드</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>입금과 함께 수신된 라벨</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>입금과 함께 수신된 주소</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>날짜</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>확인됨</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>주소 복사</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>라벨 복사</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>거래액 복사</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>거래 아이디 복사</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>사용되지 않은 주소를 잠금 처리합니다.</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>사용되지 않은 주소를 잠금 해제합니다. </translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>수량 복사</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>수수료 복사</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>수수료 이후 복사</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>bytes 복사</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>더스트 복사</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>잔돈 복사</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 잠금)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>예</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>아니요</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>입력마다 +/- %1 사토시(s)가 변할 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>%1로부터 변경 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(잔돈)</translation>
     </message>
 </context>
 <context>
@@ -856,6 +743,56 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>이미지 저장(&amp;S)...</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>거래액</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 일</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 시간</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 분</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 초</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>없음</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>없음</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 그리고 %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>거래액</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>날짜</translation>
     </message>
 </context>
 <context>
@@ -1528,6 +1465,69 @@
     <message>
         <source>Select payment request file to open</source>
         <translation>지불 요청 파일을 열기 위해서 선택하세요</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>유형</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>잔액</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>모니터링 지갑의 검증되지 않은 트랜잭션</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>전체 거래들은 아직 확인되지 않았고, 그리고 현재 잔액에 아직 반영되지 않았습니다.</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>총액:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>아직 사용 불가능:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>당신의 현재 총액</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>모니터링 지갑의 현재 잔액</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>모니터링 지갑:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>사용 가능</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>당신의 현재 사용 가능한 잔액</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>모니터링 지갑의 현재 잔액</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>미확정</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>사용가능:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>최근 거래</translation>
     </message>
 </context>
 <context>

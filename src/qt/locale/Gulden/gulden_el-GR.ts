@@ -9,6 +9,105 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Δεξί-κλικ για επεξεργασία της διεύθυνσης ή της ετικέτας</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>Κ&amp;λείσιμο</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Αντιγραφη της επιλεγμενης διεύθυνσης στο πρόχειρο του συστηματος</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Διαγραφή</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Εξαγωγή δεδομένων καρτέλας σε αρχείο</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Εξαγωγή</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Δημιουργία νέας διεύθυνσης</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Νέo</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Αντέγραψε την επιλεγμένη διεύθυνση στο πρόχειρο του συστήματος</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Αντιγραφή</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Εξαγωγή</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Φράση πρόσβασης </translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Βάλτε κωδικό πρόσβασης</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>&amp;Αλλαγή κωδικού</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Επανέλαβε τον νέο κωδικό πρόσβασης</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Αποθήκευση εικόνας...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Αποθήκευση εικόνας...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Ποσό</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>Κώδικας QR</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Αντιγραφη της επιλεγμενης διεύθυνσης στο πρόχειρο του συστηματος</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Αντιγραφή &amp;Διεύθυνσης</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -119,29 +218,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Ποσό</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Αποθήκευση εικόνας...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>Κώδικας QR</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Αντιγραφη της επιλεγμενης διεύθυνσης στο πρόχειρο του συστηματος</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Αντιγραφή &amp;Διεύθυνσης</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -150,145 +226,6 @@
     <message>
         <source>Date</source>
         <translation>Ημερομηνία</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Φόρμα</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Υπόλοιπο:</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Μη επικυρωμένες συναλλαγές σε διευθύνσεις παρακολούθησης μόνο</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Το άθροισμα των συναλλαγών που δεν έχουν ακόμα επιβεβαιωθεί και δεν προσμετρώνται στο τρέχον διαθέσιμο υπόλοιπό σας</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Σύνολο:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Ανώριμος</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Το τρέχον συνολικό υπόλοιπο</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Το τρέχον συνολικό υπόλοιπο σε διευθύνσεις παρακολούθησης μόνο</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Επίβλεψη μόνο:</translation>
-    </message>
-    <message>
-        <source>Available:</source>
-        <translation>Διαθέσιμο:</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>Το τρέχον διαθέσιμο υπόλοιπο</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Το τρέχον υπόλοιπο σας σε διευθύνσεις παρακολούθησης μόνο</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Εκκρεμούν:</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Ξοδεμένα:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Πρόσφατες συναλλαγές</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Δεξί-κλικ για επεξεργασία της διεύθυνσης ή της ετικέτας</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>Κ&amp;λείσιμο</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Αντιγραφη της επιλεγμενης διεύθυνσης στο πρόχειρο του συστηματος</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Διαγραφή</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Εξαγωγή δεδομένων καρτέλας σε αρχείο</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Εξαγωγή</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Δημιουργία νέας διεύθυνσης</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Νέo</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Αντέγραψε την επιλεγμένη διεύθυνση στο πρόχειρο του συστήματος</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Αντιγραφή</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Εξαγωγή</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Φράση πρόσβασης </translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Βάλτε κωδικό πρόσβασης</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>&amp;Αλλαγή κωδικού</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Επανέλαβε τον νέο κωδικό πρόσβασης</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Αποθήκευση εικόνας...</translation>
     </message>
 </context>
 <context>
@@ -896,6 +833,69 @@
     <message>
         <source>Select payment request file</source>
         <translation>Επιλέξτε πληρωμή αρχείου αίτησης</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Φόρμα</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Υπόλοιπο:</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Μη επικυρωμένες συναλλαγές σε διευθύνσεις παρακολούθησης μόνο</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>Το άθροισμα των συναλλαγών που δεν έχουν ακόμα επιβεβαιωθεί και δεν προσμετρώνται στο τρέχον διαθέσιμο υπόλοιπό σας</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Σύνολο:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Ανώριμος</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Το τρέχον συνολικό υπόλοιπο</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Το τρέχον συνολικό υπόλοιπο σε διευθύνσεις παρακολούθησης μόνο</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Επίβλεψη μόνο:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Διαθέσιμο:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Το τρέχον διαθέσιμο υπόλοιπο</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Το τρέχον υπόλοιπο σας σε διευθύνσεις παρακολούθησης μόνο</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Εκκρεμούν:</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Ξοδεμένα:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Πρόσφατες συναλλαγές</translation>
     </message>
 </context>
 <context>

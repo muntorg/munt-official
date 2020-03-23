@@ -9,137 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Credit</source>
-        <translation>Krediet</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Debiet</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Bedrag</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Boodskap</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>Van</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>onbekend</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>Na</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>eie adres</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>etiket</translation>
-    </message>
-    <message>
-        <source>not accepted</source>
-        <translation>nie aanvaar nie</translation>
-    </message>
-    <message>
-        <source>Transaction fee</source>
-        <translation>Transaksie fooi</translation>
-    </message>
-    <message>
-        <source>Net amount</source>
-        <translation>Netto bedrag</translation>
-    </message>
-    <message>
-        <source>Transaction ID</source>
-        <translation>Transaksie ID</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>Transaksie</translation>
-    </message>
-    <message>
-        <source>true</source>
-        <translation>waar</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>onwaar</translation>
-    </message>
-</context>
-<context>
-    <name>CoinControlDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Bedrag</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(geen etiket)</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Bedrag:</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
-    </message>
-    <message>
-        <source>Copy address</source>
-        <translation>Maak kopie van adres</translation>
-    </message>
-    <message>
-        <source>Copy amount</source>
-        <translation>Kopieer bedrag</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Bedrag</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Bedrag</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Etiket</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adres</translation>
-    </message>
-    <message>
-        <source>Message</source>
-        <translation>Boodskap</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Vorm</translation>
-    </message>
-</context>
-<context>
     <name>AddressBookPage</name>
     <message>
         <source>Delete the currently selected address from the list</source>
@@ -179,6 +48,25 @@
     <message>
         <source>(no label)</source>
         <translation>(geen etiket)</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Label</source>
+        <translation>Etiket</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Bedrag</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Boodskap</translation>
     </message>
 </context>
 <context>
@@ -273,6 +161,33 @@
     <message>
         <source>to</source>
         <translation>aan</translation>
+    </message>
+</context>
+<context>
+    <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen etiket)</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Bedrag</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Bedrag:</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Maak kopie van adres</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopieer bedrag</translation>
     </message>
 </context>
 <context>
@@ -437,6 +352,84 @@
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Bedrag</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Bedrag</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Boodskap</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Krediet</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Debiet</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Van</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>onbekend</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Na</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>eie adres</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>etiket</translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>nie aanvaar nie</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaksie fooi</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Netto bedrag</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>Transaksie ID</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaksie</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>waar</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>onwaar</translation>
+    </message>
+</context>
+<context>
     <name>EditAddressDialog</name>
     <message>
         <source>&amp;Label</source>
@@ -501,6 +494,13 @@
     <message>
         <source>Usage:</source>
         <translation>Gebruik:</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Vorm</translation>
     </message>
 </context>
 <context>

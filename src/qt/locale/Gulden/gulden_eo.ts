@@ -9,6 +9,105 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Dekstre-klaku por redakti adreson aŭ etikedon</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;Fermi</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Forigi la elektitan adreson el la listo</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Forigi</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Eksporti la datumojn el la aktuala langeto al dosiero</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksporti</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Krei novan adreson</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Nova</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Kopii elektitan adreson al la tondejo</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopii</translation>
+    </message>
+</context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksporti</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Dialogo pri pasfrazo</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Enigu pasfrazon</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Nova pasfrazo</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Ripetu la novan pasfrazon</translation>
+    </message>
+</context>
+<context>
+    <name>ClickableQRImage</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Konservi Bildon...</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Konservi Bildon...</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Sumo</translation>
+    </message>
+    <message>
+        <source>QR Code</source>
+        <translation>QR-kodo</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation>Kopii &amp;URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Kopii &amp;Adreson</translation>
+    </message>
+</context>
+<context>
     <name>CoinControlDialog</name>
     <message>
         <source>Amount</source>
@@ -103,29 +202,6 @@
     </message>
 </context>
 <context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Sumo</translation>
-    </message>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Konservi Bildon...</translation>
-    </message>
-    <message>
-        <source>QR Code</source>
-        <translation>QR-kodo</translation>
-    </message>
-    <message>
-        <source>Copy &amp;URI</source>
-        <translation>Kopii &amp;URI</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Kopii &amp;Adreson</translation>
-    </message>
-</context>
-<context>
     <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
@@ -134,121 +210,6 @@
     <message>
         <source>Date</source>
         <translation>Dato</translation>
-    </message>
-</context>
-<context>
-    <name>OverviewPage</name>
-    <message>
-        <source>Form</source>
-        <translation>Formularo</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldoj</translation>
-    </message>
-    <message>
-        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>la sumo de transakcioj ankoraŭ ne konfirmitaj, kiuj ankoraŭ ne elspezeblas</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Totalo:</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Nematura:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>via aktuala totala saldo</translation>
-    </message>
-    <message>
-        <source>Your current spendable balance</source>
-        <translation>via aktuala elspezebla saldo</translation>
-    </message>
-    <message>
-        <source>Spendable:</source>
-        <translation>Elspezebla:</translation>
-    </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Lastaj transakcioj</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBookPage</name>
-    <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Dekstre-klaku por redakti adreson aŭ etikedon</translation>
-    </message>
-    <message>
-        <source>C&amp;lose</source>
-        <translation>&amp;Fermi</translation>
-    </message>
-    <message>
-        <source>Delete the currently selected address from the list</source>
-        <translation>Forigi la elektitan adreson el la listo</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Forigi</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Eksporti la datumojn el la aktuala langeto al dosiero</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksporti</translation>
-    </message>
-    <message>
-        <source>Create a new address</source>
-        <translation>Krei novan adreson</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;Nova</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopii elektitan adreson al la tondejo</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Kopii</translation>
-    </message>
-</context>
-<context>
-    <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksporti</translation>
-    </message>
-</context>
-<context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Dialogo pri pasfrazo</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>Enigu pasfrazon</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>Nova pasfrazo</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Ripetu la novan pasfrazon</translation>
-    </message>
-</context>
-<context>
-    <name>ClickableQRImage</name>
-    <message>
-        <source>&amp;Save Image...</source>
-        <translation>&amp;Konservi Bildon...</translation>
     </message>
 </context>
 <context>
@@ -720,6 +681,45 @@
     <message>
         <source>Select payment request file</source>
         <translation>Elektu la dosieron de la pagpeto</translation>
+    </message>
+</context>
+<context>
+    <name>OverviewPage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formularo</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldoj</translation>
+    </message>
+    <message>
+        <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
+        <translation>la sumo de transakcioj ankoraŭ ne konfirmitaj, kiuj ankoraŭ ne elspezeblas</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totalo:</translation>
+    </message>
+    <message>
+        <source>Immature:</source>
+        <translation>Nematura:</translation>
+    </message>
+    <message>
+        <source>Your current total balance</source>
+        <translation>via aktuala totala saldo</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>via aktuala elspezebla saldo</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Elspezebla:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Lastaj transakcioj</translation>
     </message>
 </context>
 <context>
