@@ -168,9 +168,7 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
         }
         else if(tx.nLockTime == 0)
         {
-            //fixme: (PHASE4) (SEGSIG) - Do we have to set relative lock time on the inputs?
-            //Whats the relationship between relative and absolute locktime?
-            //nFlags |= CTxInFlags::OptInRBF;
+            nFlags |= CTxInFlags::HasAbsoluteLock;
         }
         else
         {
