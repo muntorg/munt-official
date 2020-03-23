@@ -197,6 +197,23 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
     return true;
 }
 
+//fixme: (PHASE5) de-dupe
+typedef std::vector<unsigned char> valtype;
+static CScript PushAll(const std::vector<valtype>& values)
+{
+    CScript result;
+    for(const valtype& v : values) {
+        if (v.size() == 0) {
+            result << OP_0;
+        } else if (v.size() == 1 && v[0] >= 1 && v[0] <= 16) {
+            result << CScript::EncodeOP_N(v[0]);
+        } else {
+            result << v;
+        }
+    }
+    return result;
+}
+
 bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 {
     if (tx.IsCoinBase())
@@ -219,13 +236,24 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
             {
                 std::vector<std::vector<unsigned char> > stack;
                 // convert the scriptSig into a stack, so we can inspect the redeemScript
-                ScriptVersion scriptversion = (tx.vin[i].segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
-                if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), scriptversion))
-                    return false;
+                if (IsOldTransactionVersion(tx.nVersion))
+                {
+                    if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V1))
+                        return false;
+                }
+                else
+                {
+                    if (tx.vin[i].scriptSig.size() != 0)
+                        return false;
+                    CScript scriptSigTemp = PushAll(tx.vin[i].segregatedSignatureData.stack);
+                    if (!EvalScript(stack, scriptSigTemp, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V2))
+                        return false;
+                }
                 if (stack.empty())
                     return false;
                 CScript subscript(stack.back().begin(), stack.back().end());
-                if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS) {
+                if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS)
+                {
                     return false;
                 }
             }

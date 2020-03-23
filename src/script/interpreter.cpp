@@ -1448,6 +1448,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     return true;
 }
 
+//fixme: (PHASE5) de-dupe
 static CScript PushAll(const std::vector<valtype>& values)
 {
     CScript result;

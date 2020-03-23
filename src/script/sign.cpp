@@ -257,6 +257,7 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutStandardKe
     return true;
 }
 
+//fixme: (PHASE5) de-dupe
 static CScript PushAll(const std::vector<valtype>& values)
 {
     CScript result;
@@ -310,14 +311,13 @@ CKeyID ExtractSigningPubkeyFromTxOutput(const CTxOut& txOut, SignType type)
     {
         case ScriptLegacyOutput:
         {
-            //fixme: (PHASE4) (SEGSIG)
             CTxDestination dest;
             if (!ExtractDestination(txOut.output.scriptPubKey, dest))
                 return CKeyID();
 
             CSigningKeysVisitor getSigningKeys(type);
             getSigningKeys.Process(dest);
-            //fixme: (PHASE4) (SEGSIG) MULTISIG
+            //NB! This looks weird, but with multisig we get the signatures later when evaluating the script, so actually this is correct.
             if (getSigningKeys.vKeys.size() != 1)
                 return CKeyID();
             return getSigningKeys.vKeys[0];
