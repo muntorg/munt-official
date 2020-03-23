@@ -164,8 +164,14 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
 
 void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee)
 {
+    if (!IsPow2Phase2Active(chainActive.Tip()))
+    {
+        throw witness_error(witness::RPC_MISC_ERROR, strprintf("Can't create witness accounts before phase 2 activates"));
+    }
+    
     std::vector<CAmount> amounts;
     LOCK(cs_main);
+    
     // For the sake of testnet we turn off 'splitting' for very short lock periods as it was triggering some testnet specific 'short period' bugs that aren't worth fixing for mainnet (where they can't occur)
     if (IsSegSigEnabled(chainActive.TipPrev()) && requestedPeriodInBlocks > 1000)
     {
@@ -180,6 +186,11 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
 
 void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& amounts, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee)
 {
+    if (!IsPow2Phase2Active(chainActive.Tip()))
+    {
+        throw witness_error(witness::RPC_MISC_ERROR, strprintf("Can't create witness accounts before phase 2 activates"));
+    }
+
     if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
         throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
 
