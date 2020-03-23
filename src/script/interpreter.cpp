@@ -1466,14 +1466,15 @@ static CScript PushAll(const std::vector<valtype>& values)
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CSegregatedSignatureData* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptVersion scriptversion, ScriptError* serror)
 {
     static const CSegregatedSignatureData emptyWitness;
-    if (witness == NULL) {
+    if (witness == NULL)
+    {
         witness = &emptyWitness;
     }
-    //fixme: (PHASE4) Triple check removal of hadWitness = false here.
 
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
 
-    if ((flags & SCRIPT_VERIFY_SIGPUSHONLY) != 0 && !scriptSig.IsPushOnly()) {
+    if ((flags & SCRIPT_VERIFY_SIGPUSHONLY) != 0 && !scriptSig.IsPushOnly())
+    {
         return set_error(serror, SCRIPT_ERR_SIG_PUSHONLY);
     }
 
