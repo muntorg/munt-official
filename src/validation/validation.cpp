@@ -1215,7 +1215,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     CAmount nSubsidyWitnessExpected = GetBlockSubsidyWitness(pindex->nHeight);
     CAmount nSubsidyDev = GetBlockSubsidyDev(pindex->nHeight);
 
-    //fixme: (PHASE4) Unit tests
     // Second block with a phase 3 parent up to and including first block with a phase 4 parent.
     // Coinbase of previous witness block embedded in coinbase of current PoW block.
     if (nPoW2PhaseGrandParent == 3 && nPoW2PhaseParent != 4)

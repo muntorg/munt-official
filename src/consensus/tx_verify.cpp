@@ -242,14 +242,17 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         {
             if (tx.vin[0].scriptSig.size() != 0)
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-            //fixme: (PHASE4) (SEGSIG) (HIGH) implement - check the segregatedSignatureData here? (already tested elsewhere I believe but double check)
+            if (tx.vin[0].segregatedSignatureData.stack.size() != 2)
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-segdata");
         }
     }
     else
     {
         for (const auto& txin : tx.vin)
+        {
             if (txin.prevout.IsNull())
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
+        }
     }
 
     return true;
