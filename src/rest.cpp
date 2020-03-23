@@ -503,13 +503,13 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                     CDataStream oss(SER_NETWORK, PROTOCOL_VERSION);
                     oss << strRequestMutable;
                     oss >> fCheckMemPool;
-                    //fixme: (PHASE4) (SEGSIG)
+                    //fixme: (PHASE4POSTREL) (SEGSIG)
                     int nSize = 0;
                     oss >> COMPACTSIZE(nSize);
                     for (int i=0; i<nSize; ++i)
                     {
                         COutPoint outpoint;
-                        //fixme: (PHASE4) (SEGSIG)
+                        //fixme: (PHASE4POSTREL) (SEGSIG)
                         outpoint.WriteToStream(oss, (CTxInType)0, (CTxInFlags)0, 1);
                         vOutPoints.push_back(outpoint);
                     }
@@ -608,7 +608,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                 utxo.push_back(Pair("height", (int32_t)coin.nHeight));
                 utxo.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
 
-                //fixme: (PHASE4) (SEGSIG)
+                //fixme: (PHASE4POSTREL) (SEGSIG)
                 if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
                 {
                     // include the script in a json output
