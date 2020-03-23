@@ -1299,8 +1299,14 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             }
             else if (nPoW2PhaseParent >= 4)
             {
-                //fixme: (PHASE4) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
-                //Phase 4 has no coinbase restrictions
+                if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 2)
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vin size)"), REJECT_INVALID, "bad-witness-cb");
+
+                if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].prevout.IsNull())
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid prevout)"), REJECT_INVALID, "bad-witness-cb");
+
+                if (block.vtx[nWitnessCoinbaseIndex]->vin[0].GetSequence(block.vtx[nWitnessCoinbaseIndex]->nVersion) != 0)
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid sequence)"), REJECT_INVALID, "bad-witness-cb");
             }
         }
         else
@@ -1309,8 +1315,12 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         }
     }
 
-
-    //fixme: (PHASE4) (SEGSIG/POW2) - Triple check that there are no remaining tests that should go here.
+    //fixme: (PHASE5) (SEGSIG/POW2) - Triple check that there are no additional remaining tests that should go here.
+    // We already check:
+    // 1) The witness signature matches the witness (earlier in this function)
+    // 2) The witness coinbase has the right number of inputs (earlier in this function)
+    // 3) The witness timestamp is valid (when we verify the header)
+    // 4) The transactions just get checked as normal
 
     CAmount expectedBlockReward = nFees + nSubsidy;
     CAmount actualBlockReward = block.vtx[0]->GetValueOut();
