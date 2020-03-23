@@ -543,7 +543,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         PrecomputedTransactionData txdata(tx);
         if (!CheckInputs(tx, state, view, true, scriptVerifyFlags, true, txdata, tx.witnessBundles.get()))
         {
-            //fixme: (PHASE4) (SEGSIG) removed cleanstack/witness check here - double check if it was necessary.
+            //fixme: (PHASE5) (SEGSIG) removed cleanstack/witness check here as it wasn't necessary anymore. However triple check if we may have missed something.
             return false; // state filled in by CheckInputs
         }
 

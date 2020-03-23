@@ -2752,7 +2752,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 
     // Check timestamp against prev
     if (block.GetBlockTime() <= pindexPrev->GetMedianTimePastWitness())
-        return state.Invalid(false, REJECT_INVALID, "time-too-old", "block's timestamp is too early");
+        return state.Invalid(false, REJECT_INVALID, "time-too-old", "blocks PoW timestamp is too early");
 
     // Check timestamp
     if (pindexPrev->nHeight > (IsArgSet("-testnet") ? 446500 : 437500) )
@@ -2766,17 +2766,36 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
     }
 
-    //fixme: (PHASE4) (SEGSIG) Enforce segsig upgrade rules here; this is I think redundany as it is already handled elsewhere, but we should catch it earlier.
-
-    // Reject outdated version blocks when 95% (75% on testnet) of the network has upgraded:
-    // check for version 2, 3 and 4 upgrades
-    /* GULDEN - These aren't valid for Gulden
-    if((block.nVersion < 2 && nHeight >= consensusParams.BIP34Height) ||
-       (block.nVersion < 3 && nHeight >= consensusParams.BIP66Height) ||
-       (block.nVersion < 4 && nHeight >= consensusParams.BIP65Height))
-            return state.Invalid(false, REJECT_OBSOLETE, strprintf("bad-version(0x%08x)", block.nVersion),
-                                 strprintf("rejected nVersion=0x%08x block", block.nVersion));
-    */
+    if (block.nVersionPoW2Witness != 0)
+    {
+        if (block.nTimePoW2Witness <= pindexPrev->GetMedianTimePastPoW())
+        {
+            return state.Invalid(false, REJECT_INVALID, "time-too-old", "blocks witness timestamp is too early");
+        }
+        if (block.hashMerkleRootPoW2Witness == uint256())
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-merkle-invalid", "block sets null witness merkle root");
+        }
+        if ( std::all_of(block.witnessHeaderPoW2Sig.begin(), block.witnessHeaderPoW2Sig.end(), [](auto c){return c==0;}) )
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-signature-invalid", "block sets null witness signature");
+        }
+    }
+    else
+    {
+        if (block.nTimePoW2Witness != 0)
+        {
+            return state.Invalid(false, REJECT_INVALID, "time-invalid", "block sets witness time without witness version");
+        }
+        if (block.hashMerkleRootPoW2Witness != uint256())
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-merkle-invalid", "block sets witness merkle root without witness version");
+        }
+        if ( !std::all_of(block.witnessHeaderPoW2Sig.begin(), block.witnessHeaderPoW2Sig.end(), [](auto c){return c==0;}) )
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-signature-invalid", "block sets witness signature without witness version");
+        }
+    }    
 
     return true;
 }
