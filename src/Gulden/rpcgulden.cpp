@@ -3132,15 +3132,15 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
             "setwitnessrewardtemplate \"witness_account\" [[\"destination1\" (,\"amount\") (,\"percentage%\") (,\"remainder\") (,\"compound_overflow\")], [\"destination2\" ...], ...]\n"
-            "\nSet the template to control where witness earnings are paid. Multiple destianations can be specified, compounding or not each receving a fixed\n"
+            "\nSet the template to control where witness earnings are paid. Multiple destinations can be specified, compounding or not each receiving a fixed\n"
             "amount and/or a percentage of the witness amounts earned.\n"
             "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
             "2. \"destinationX\"           (required) an address or one of the special keywords: \"account\" or \"compound\"\n"
-            "                                  where: \"compound\", compound into witness\n"
-            "                                         \"account\", to witness account, but not compounding (ie. spendable)\n"
+            "                                         "\"compound\", compounds back into \"witness_account\"\n|
+                                                      "\"account\" pays out to \"witness_account\" without compounding (ie. spendable payout)\n"
             "3. amount                     (string, optional) Fixed amount for this destination.\n"
             "4. percentage                 (string, optional) Percentage of remaining non-fixed amount for this destination (postfixed with % symbol).\n"
-            "4. remainder                  (string, optional) The remainder marked destination receives amount reamining after dishing out fixed and percentage amounts.\n"
+            "4. remainder                  (string, optional) The remainder marked destination receives any amount still remaining after distributing fixed and percentage amounts.\n"
             "5. compound_overflow          (string, optional) The compound_overflow marked destination receives any excess compound.\n"
             "\nResult:\n"
             "(string) The UUID of the account that has been modified.\n"
@@ -3153,11 +3153,11 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
             "When resulting compound exceeds the allowed amount without a \"compound_overflow\" in the template, the overflow will go to the remainder (which cannot be on the \"compound\" destination in this case).\n"
             "\nDistribution of rewards:\n"
             "1. All fixed amounts are distributed (including compound)\n"
-            "2. Percentages of the remaining amount are dihsed out.\n"
+            "2. Percentages of the remaining amount are distributed.\n"
             "3. Any remaining amount goes to the remainder destination.\n"
-            "4. If the compound amount resulting from above calculation exceeds the maximum allowed the maximum will be compound and the excess amount will go to compound_overflow.\n"
+            "4. If the compound amount resulting from above calculation exceeds the maximum allowed compound amount, then the maximum will be compounded and any excess amount will go to compound_overflow.\n"
             "\nExamples:\n"
-            "Assuming there is 90 NLG witness reward to dive, then in the example below the fixed amount to divide is 40 (10 + 30), leaving 50 for percentage splits. Only 40% (20 NLG) is specified (5% + 5% + 30%), leaving 30 NLG as remainder.\n"
+            "Assuming there is 90 NLG witness reward to divide, then in the example below the fixed amount to divide is 40 (10 + 30), leaving 50 for percentage splits. Only 40% (20 NLG) is specified (5% + 5% + 30%), leaving 30 NLG as remainder.\n"
             "So the distribution is: 2.5 NLG to TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF, 40 non-compounding to the witness account, 2.5 NLG to TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo (compound overflow = 0) and 45 is compounded into the witness.\n"
             + HelpExampleCli("setwitnessrewardtemplate \"my witness account\" '[[\"TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF\", \"5%\"], [\"account\", \"10\", \"remainder\"],[\"TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo\", \"5%\", \"compound_overflow\"], [\"compound\", \"30\", \"30%\"]]'", "")
             + HelpExampleRpc("setwitnessrewardtemplate \"my witness account\" '[[\"TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF\", \"5%\"], [\"account\", \"10\", \"remainder\"],[\"TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo\", \"5%\", \"compound_overflow\"], [\"compound\", \"30\", \"30%\"]]'", ""));
