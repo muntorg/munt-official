@@ -763,6 +763,7 @@ bool AppInitParameterInteraction()
     #endif
     
     // Limit default memory usage on low memory systems, to try and prevent OOM on low spec pi devices and similar.
+    #ifndef PLATFORM_MOBILE
     if (systemPhysicalMemoryInBytes() <= 1*1024*1024*1024ULL)
     {
         if (SoftSetArg("-maxconnections", i64tostr(40)))
@@ -790,6 +791,7 @@ bool AppInitParameterInteraction()
             //InitWarning(strprintf(warningtr("Lowering receive buffer size from [%d] to [%d], because of system limitations, this can be overridden by explicitely setting -reverseheaders to true."), DEFAULT_MAXRECEIVEBUFFER, DEFAULT_MAXRECEIVEBUFFER_LOWMEM));
         //}   
     }
+    #endif
 
     // if using block pruning, then disallow txindex
     if (GetArg("-prune", 0)) {

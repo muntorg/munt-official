@@ -734,7 +734,6 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
 
         // Enforce new combined weight > old combined weight
         const CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
-        uint64_t networkWeight = witnessInfo.nTotalWeightEligibleAdjusted;
         uint64_t dummyLockFrom, dummyLockUntil;
         uint64_t oldLockPeriod = GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, dummyLockFrom, dummyLockUntil);
         std::vector<CAmount> oldAmounts;
