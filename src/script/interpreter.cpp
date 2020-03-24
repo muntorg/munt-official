@@ -1366,9 +1366,9 @@ bool TransactionSignatureChecker::CheckLockTime(const CScriptNum& nLockTime) con
     // We want to compare apples to apples, so fail the script
     // unless the type of nLockTime being tested is the same as
     // the nLockTime in the transaction.
-    if (!txTo->nLockTime <  LOCKTIME_THRESHOLD && nLockTime <  LOCKTIME_THRESHOLD)
+    if (!(txTo->nLockTime <  LOCKTIME_THRESHOLD && nLockTime <  LOCKTIME_THRESHOLD))
         return false;
-    if (!txTo->nLockTime >= LOCKTIME_THRESHOLD && nLockTime >= LOCKTIME_THRESHOLD)
+    if (!(txTo->nLockTime >= LOCKTIME_THRESHOLD && nLockTime >= LOCKTIME_THRESHOLD))
         return false;
 
     // Now that we know we're comparing apples-to-apples, the

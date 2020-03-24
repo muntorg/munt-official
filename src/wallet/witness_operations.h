@@ -107,7 +107,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
 std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet* pWallet, CAccount* account);
 std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t duration, uint64_t totalWeight);
-uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t duration, uint64_t totalWeight);
+uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t duration);
 double witnessFraction(const std::vector<CAmount>& amounts, const uint64_t duration, const uint64_t totalWeight);
 std::string witnessKeysLinkUrlForAccount(CWallet* pWallet, CAccount* account);
 
