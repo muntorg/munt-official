@@ -78,7 +78,7 @@ void WitnessDurationWidget::durationValueChanged(int newValueDays)
     }
 }
 
-#define WITNESS_SUBSIDY 20
+#define WITNESS_SUBSIDY 30
 
 void WitnessDurationWidget::update()
 {
@@ -100,7 +100,7 @@ void WitnessDurationWidget::update()
     uint64_t duration = nDays * DailyBlocksTarget();
     uint64_t networkWeight = GetNetworkWeight();
     const auto optimalAmounts = optimalWitnessDistribution(nAmount, duration, networkWeight);
-    int64_t nOurWeight = combinedWeight(optimalAmounts, duration, networkWeight);
+    int64_t nOurWeight = combinedWeight(optimalAmounts, duration);
 
     if (nOurWeight < nRequiredWeight)
     {

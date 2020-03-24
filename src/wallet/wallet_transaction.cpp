@@ -114,15 +114,32 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
         //CreateTransaction ends up selecting the index based outpoint and the two txin no longer match
         //We work around this by looking up the hash (if its in the wallet) and using that instead
         //However callers to this function should also rather just pass in index based inputs where possible
-        uint256 convertedHash;
-        if (!coinControl.IsSelected(txin.prevout) && !(txin.prevout.isHash && GetTxHash(txin.prevout, convertedHash) && !coinControl.IsSelected(COutPoint(convertedHash, txin.prevout.n))))
+        if (!coinControl.IsSelected(txin.prevout))
         {
-            tx.vin.push_back(txin);
-
-            if (lockUnspents)
+            bool add = false;
+            if (txin.prevout.isHash)
             {
-              LOCK2(cs_main, cs_wallet);
-              LockCoin(txin.prevout);
+                add = true;
+            }
+            else
+            {
+                uint256 convertedHash;
+                if (GetTxHash(txin.prevout, convertedHash))
+                {
+                    if(!coinControl.IsSelected(COutPoint(convertedHash, txin.prevout.n)))
+                    {
+                        add = true;
+                    }
+                }
+            }
+            if (add)
+            {
+                tx.vin.push_back(txin);
+                if (lockUnspents)
+                {
+                    LOCK2(cs_main, cs_wallet);
+                    LockCoin(txin.prevout);
+                }
             }
         }
     }
