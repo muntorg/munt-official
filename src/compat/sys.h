@@ -13,6 +13,7 @@
 #endif
 
 #include <stdint.h>
+#include <stdexcept>
 
 #if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE!=0)
     #define PLATFORM_MOBILE
