@@ -3135,9 +3135,9 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
             "\nSet the template to control where witness earnings are paid. Multiple destinations can be specified, compounding or not each receiving a fixed\n"
             "amount and/or a percentage of the witness amounts earned.\n"
             "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
-            "2. \"destinationX\"           (required) an address or one of the special keywords: \"account\" or \"compound\"\n"
-            "                                         "\"compound\", compounds back into \"witness_account\"\n|
-                                                      "\"account\" pays out to \"witness_account\" without compounding (ie. spendable payout)\n"
+            "2. \"destinationX\"           (required) an address or one of the special keywords, \"account\" or \"compound\"\n"
+            "                                         \"compound\", compounds back into \"witness_account\"\n"
+            "                                         \"account\" pays out to \"witness_account\" without compounding (ie. spendable payout)\n"
             "3. amount                     (string, optional) Fixed amount for this destination.\n"
             "4. percentage                 (string, optional) Percentage of remaining non-fixed amount for this destination (postfixed with % symbol).\n"
             "4. remainder                  (string, optional) The remainder marked destination receives any amount still remaining after distributing fixed and percentage amounts.\n"
