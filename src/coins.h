@@ -26,6 +26,8 @@
 
 #include <unordered_map>
 
+#include <compat/sys.h>
+
 /**
  * A UTXO entry.
  *
@@ -402,8 +404,13 @@ public:
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn=nullptr) const;
 
-    #define DEBUG_COINSCACHE_VALIDATE_INSERTS 
+    #ifndef PLATFORM_MOBILE
+    #define DEBUG_COINSCACHE_VALIDATE_INSERTS
+    //fixme: (PHASE5) (Post-release) - Make this debug mode only once we have more certainty
     void validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const;
+    #else
+    void validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const {};
+    #endif
 
     /**
      * By making the copy constructor private, we prevent accidentally using it when one intends to create a cache on top of a base cache.
