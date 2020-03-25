@@ -57,7 +57,8 @@ size_t CCoinsViewCache::DynamicMemoryUsage() const
     return memusage::DynamicUsage(cacheCoins) + cachedCoinsUsage;
 }
 
-//fixme: (PHASE5) (Post-release) - Make this debug mode only once we have more certainty
+
+#ifndef PLATFORM_MOBILE
 void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const
 {
     // check args
@@ -120,6 +121,7 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
         }
     }
 }
+#endif
 
 CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn) const
 {
