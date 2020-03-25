@@ -1,4 +1,20 @@
-2.2.0
+2.2.0.2
+
+UI - Minor fixes to witness dialog
+CORE - Minor stability fixes
+
+
+
+
+2.2.0.1
+
+UI - Minor cosmetic fixes
+CORE - Minor stability fixes
+
+
+
+
+2.2.0.0
 
 This release incorporates several major feature branches, which combined involve over years of major development effort.
 Highlights include:
