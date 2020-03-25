@@ -234,7 +234,21 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         // Try to extract destination, this is not possible in general. Only if the previous
         // ouput of our input happens to be in our wallet. Which will usually only be the case for
         // our own transactions.
-        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.getTransactionHash());
+        
+        uint256 txHash;
+        if (txin.prevout.isHash)
+        {
+            txHash = txin.prevout.getTransactionHash();
+        }
+        else
+        {
+            if (!GetTxHash(txin.prevout, txHash))
+            {
+                LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.prevout.getTransactionBlockNumber(), txin.prevout.getTransactionIndex());
+                continue;
+            }
+        }
+        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txHash);
         if (mi != pwallet->mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
