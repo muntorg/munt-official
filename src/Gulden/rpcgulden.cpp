@@ -2561,17 +2561,23 @@ static UniValue getlastblocks(const JSONRPCRequest& request)
 {
     // NB! Delibritely return no help, we don't want this command to be listed in the help.
     if (request.fHelp) throw std::runtime_error("");
-    if (request.params.size() != 0)
+    if (request.params.size() > 1)
     {
-        throw std::runtime_error("getlastblocks does not take arguments\n");
+        throw std::runtime_error(
+            "\nRenew an expired witness account. \n"
+            "1. \"num_blocks\"        (optional) How many blocks to go back from the tip; default 30\n");
     }
 
+    uint64_t numBlocks = 30;
+    if (request.params.size() > 0)
+        numBlocks = request.params[0].get_int();
+        
     LogPrintf("getlastblocks requested.\n");
     UniValue result(UniValue::VOBJ);    
-    if (chainActive.Tip()->nHeight > 30)
+    if (chainActive.Tip()->nHeight > numBlocks)
     {
         CBlockIndex* pIndex = chainActive.Tip();
-        for (int i=0;i<30;++i)
+        for (int i=0;i<numBlocks;++i)
         {
             result.push_back(Pair(pIndex->GetBlockHashPoW2().ToString(),pIndex->nHeight));
             pIndex = pIndex->pprev;
@@ -3522,7 +3528,7 @@ static const CRPCCommand commands[] =
     { "support",                 "resetconfig_pi_lowmem",           &resetconfig_pi_lowmem,          true,    {""} },
     { "support",                 "resetconfig_pi_medmem",           &resetconfig_pi_medmem,          true,    {""} },
     { "support",                 "getcheckpoint",                   &getcheckpoint,                  true,    {""} },
-    { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {""} },
+    { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {"num_blocks"} },
 
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
     { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },
