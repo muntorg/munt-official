@@ -774,7 +774,7 @@ bool AppInitParameterInteraction()
         {
             InitWarning(strprintf(warningtr("Reducing -maxmempool to 100, because of system limitations, this can be overridden by explicitely setting -maxmempool to a larger amount.")));
         }
-        if (SoftSetArg("-dbcache", i64tostr(200)))
+        if (SoftSetArg("-dbcache", i64tostr(100)))
         {
             InitWarning(strprintf(warningtr("Reducing -dbcache to 200, because of system limitations, this can be overridden by explicitely setting -dbcache to a larger amount.")));
         }

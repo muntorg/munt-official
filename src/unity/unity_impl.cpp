@@ -827,6 +827,7 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     {
         SoftSetArg("-testnet", "C1534687770:60");
         SoftSetArg("-addnode", "devbak.net");
+        SoftSetArg("-addnode", "45.62.236.132");
     }
 
     //fixme: (FUT) (UNITY) Reverse headers
