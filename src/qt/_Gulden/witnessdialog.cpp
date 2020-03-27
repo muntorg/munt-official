@@ -820,7 +820,6 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
 
         // Populate the 'actual earnings' curve.
         QPolygonF generatedPoints;
-        int nXGenerated = 0;
         CAmount generatedTotal = 0;
         for (const auto& pointIter : infoForAccount.pointMapGenerated)
         {
@@ -835,18 +834,14 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
         //fixme: (PHASE5) This is a bit broken - use nOurWeight etc.
         // Fill in the remaining time on the 'actual earnings' curve with a forecast.
         QPolygonF generatedPointsForecast;
-        int nXGeneratedForecast = 0;
         if (generatedPoints.size() > 0)
         {
             generatedPointsForecast << generatedPoints.back();
             for (const auto& pointIter : infoForAccount.pointMapForecast)
             {
-                nXGeneratedForecast = pointIter.first;
-                if (nXGeneratedForecast > nXGenerated)
-                {
-                    generatedTotal += pointIter.second;
-                    generatedPointsForecast << QPointF(nXGeneratedForecast, generatedTotal);
-                }
+                double forecastOffset = generatedPoints.back().x();
+                generatedTotal += pointIter.second;
+                generatedPointsForecast << QPointF(pointIter.first+forecastOffset, generatedTotal);
             }
         }
 
