@@ -647,7 +647,8 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
 
     bool succes = false;
 
-    try {
+    try
+    {
         CAccount* forAccount;
         if (!model || !(forAccount = model->getActiveAccount()) || !forAccount->IsPoW2Witness())
             throw std::runtime_error("Witness account not accessible");
@@ -660,68 +661,90 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
         if (pWitnessStatus != nullptr)
             *pWitnessStatus = accountStatus.status;
 
+        bool hasSpendableBalance = pactiveWallet->GetBalance(forAccount, false, false, true) > 0;
+
         //Witness only witness account skips all the fancy states for now and just always shows the statistics page
         if (forAccount->m_Type == WitnessOnlyWitnessAccount)
         {
             computedWidgetIndex = WitnessDialogStates::STATISTICS;
-            stateWithdrawEarningsButton = true;
-        }
-        else {
-            switch (accountStatus.status) {
-            case WitnessStatus::Empty:
-                computedWidgetIndex = WitnessDialogStates::EMPTY;
-                break;
-            case WitnessStatus::Pending:
-                computedWidgetIndex = WitnessDialogStates::PENDING;
-                break;
-            case WitnessStatus::Witnessing:
-                computedWidgetIndex = WitnessDialogStates::STATISTICS;
-                break;
-            case WitnessStatus::Ended:
-                computedWidgetIndex = WitnessDialogStates::FINAL;
-                break;
-            case WitnessStatus::Expired:
-                computedWidgetIndex = WitnessDialogStates::EXPIRED;
-                break;
-            case WitnessStatus::Emptying:
-                computedWidgetIndex = WitnessDialogStates::FINAL;
-                break;
+            if (accountStatus.status != WitnessStatus::Empty)
+            {
+                stateWithdrawEarningsButton = true;
             }
-
-            bool hasSpendableBalance = pactiveWallet->GetBalance(forAccount, false, false, true) > 0;
-
+        }
+        else
+        {
+            switch (accountStatus.status)
+            {
+                case WitnessStatus::Empty:
+                {
+                    computedWidgetIndex = WitnessDialogStates::EMPTY;
+                    break;
+                }
+                case WitnessStatus::Pending:
+                {
+                    computedWidgetIndex = WitnessDialogStates::PENDING;
+                    break;
+                }
+                case WitnessStatus::Witnessing:
+                {
+                    computedWidgetIndex = WitnessDialogStates::STATISTICS;
+                    break;
+                }
+                case WitnessStatus::Ended:
+                {
+                    computedWidgetIndex = WitnessDialogStates::FINAL;
+                    break;
+                }
+                case WitnessStatus::Expired:
+                {
+                    computedWidgetIndex = WitnessDialogStates::EXPIRED;
+                    break;
+                }
+                case WitnessStatus::Emptying:
+                {
+                    computedWidgetIndex = WitnessDialogStates::FINAL;
+                    break;
+                }
+            }
             stateEmptyWitnessButton = accountStatus.status == WitnessStatus::Ended && !accountStatus.hasUnconfirmedWittnessTx;
-            stateWithdrawEarningsButton = hasSpendableBalance && accountStatus.status == WitnessStatus::Witnessing;
-            stateWithdrawEarningsButton2 = hasSpendableBalance && accountStatus.status == WitnessStatus::Expired;
             stateRenewWitnessButton = accountStatus.status == WitnessStatus::Expired && !accountStatus.hasUnconfirmedWittnessTx;
             stateUpgradeButton = accountStatus.status == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
             stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (accountStatus.status == WitnessStatus::Witnessing || accountStatus.status == WitnessStatus::Expired) && !accountStatus.hasUnconfirmedWittnessTx;
             stateOptimizeButton = accountStatus.status == WitnessStatus::Witnessing && !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
+        }
+        stateWithdrawEarningsButton = hasSpendableBalance && accountStatus.status == WitnessStatus::Witnessing;
+        stateWithdrawEarningsButton2 = hasSpendableBalance && accountStatus.status == WitnessStatus::Expired;
+        
 
-            setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
+        setWidgetIndex = WitnessDialogStates(userWidgetIndex >= 0 ? userWidgetIndex : computedWidgetIndex);
 
-            if (computedWidgetIndex == WitnessDialogStates::STATISTICS) {
-                requestStatisticsUpdate(accountStatus);
-            }
+        if (computedWidgetIndex == WitnessDialogStates::STATISTICS)
+        {
+            requestStatisticsUpdate(accountStatus);
         }
         succes = true;
     }
-    catch (const std::runtime_error& e) {
+    catch (const std::runtime_error& e)
+    {
         computedWidgetIndex = setWidgetIndex = WitnessDialogStates::STATE_ERROR;
         ui->labelErrorInfo->setText(e.what());
     }
 
     ui->witnessDialogStackedWidget->setCurrentIndex(setWidgetIndex);
 
-    if (setWidgetIndex == WitnessDialogStates::STATISTICS && computedWidgetIndex != WitnessDialogStates::STATISTICS) {
+    if (setWidgetIndex == WitnessDialogStates::STATISTICS && computedWidgetIndex != WitnessDialogStates::STATISTICS)
+    {
         ui->viewWitnessGraphButton->setText(tr("Close graph"));
         ui->viewWitnessGraphButton->setVisible(true);
     }
-    else if (setWidgetIndex != WitnessDialogStates::STATISTICS && (computedWidgetIndex == WitnessDialogStates::EXPIRED || computedWidgetIndex == WitnessDialogStates::FINAL)) {
+    else if (setWidgetIndex != WitnessDialogStates::STATISTICS && (computedWidgetIndex == WitnessDialogStates::EXPIRED || computedWidgetIndex == WitnessDialogStates::FINAL))
+    {
         ui->viewWitnessGraphButton->setText(tr("Show graph"));
         ui->viewWitnessGraphButton->setVisible(true);
     }
-    else {
+    else
+    {
         ui->viewWitnessGraphButton->setVisible(false);
     }
 
@@ -797,7 +820,6 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
 
         // Populate the 'actual earnings' curve.
         QPolygonF generatedPoints;
-        int nXGenerated = 0;
         CAmount generatedTotal = 0;
         for (const auto& pointIter : infoForAccount.pointMapGenerated)
         {
@@ -812,18 +834,14 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
         //fixme: (PHASE5) This is a bit broken - use nOurWeight etc.
         // Fill in the remaining time on the 'actual earnings' curve with a forecast.
         QPolygonF generatedPointsForecast;
-        int nXGeneratedForecast = 0;
         if (generatedPoints.size() > 0)
         {
             generatedPointsForecast << generatedPoints.back();
             for (const auto& pointIter : infoForAccount.pointMapForecast)
             {
-                nXGeneratedForecast = pointIter.first;
-                if (nXGeneratedForecast > nXGenerated)
-                {
-                    generatedTotal += pointIter.second;
-                    generatedPointsForecast << QPointF(nXGeneratedForecast, generatedTotal);
-                }
+                double forecastOffset = generatedPoints.back().x();
+                generatedTotal += pointIter.second;
+                generatedPointsForecast << QPointF(pointIter.first+forecastOffset, generatedTotal);
             }
         }
 
@@ -1163,17 +1181,34 @@ void WitnessDialog::setModel(WalletModel* _model)
 void WitnessDialog::activeAccountChanged(CAccount* account)
 {
     if (prevActiveAccount == account || !account || !account->IsPoW2Witness())
+    {
         return;
+    }
 
     prevActiveAccount = account;
 
     userWidgetIndex = -1;
     clearDialogStack();
     WitnessStatus witnessStatus;
-    if (doUpdate(true, &witnessStatus) && witnessStatus == WitnessStatus::Empty)
-        pushDialog(new FundWitnessDialog(model, platformStyle, this));
+    
+    // Only show fund dialog for regular witness accounts, and only if we are not still busy syncing
+    // Otherwise users may accidentally fund an account twice
+    if (doUpdate(true, &witnessStatus))
+    {
+        if (witnessStatus == WitnessStatus::Empty)
+        {
+            if (!account->IsWitnessOnly())
+            {
+                if (!IsInitialBlockDownload())
+                {
+                    pushDialog(new FundWitnessDialog(model, platformStyle, this));
+                }
+            }
+        }
+    }
 
-    if (model) {
+    if (model)
+    {
         ui->renewWitnessAccountTableView->setWalletModel(model, 1 * COIN);
     }
 }

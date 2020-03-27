@@ -20,6 +20,8 @@
 // Gulden specific includes
 #include "Gulden/util.h"
 
+#include <alert.h>
+
 bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const { return false; }
 bool CCoinsView::HaveCoin(const COutPoint &outpoint) const { return false; }
 uint256 CCoinsView::GetBestBlock() const { return uint256(); }
@@ -106,7 +108,14 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
             // If the two don't share an identical transaction hash something is very wrong
             bool transactionHashesMatch = canonicalOutPoint.getTransactionHash() == outpoint.getTransactionHash();
             // Unless the other one is spent and marked dirty, in which case thats fine
-            assert(transactionHashesMatch || (it->second.flags&CCoinsCacheEntry::DIRTY&&it->second.coin.IsSpent()));
+            if (!transactionHashesMatch && !(it->second.flags&CCoinsCacheEntry::DIRTY&&it->second.coin.IsSpent()))
+            {
+                std::string warning = strprintf("Warning: outpoint mismatch.\nPlease notify the developers with this information to assist them.\n\n"
+                                                "cohash:[%s]\nophash:[%s]\nblock:[%d] txidx:[%d] outidx:[%d] flags:[%d] spent:[%s] lookupishash: [%s]",
+                                                canonicalOutPoint.getTransactionHash().ToString(), outpoint.getTransactionHash().ToString(), 
+                                                block, txIndex, voutIndex, it->second.flags, (it->second.coin.IsSpent()?"yes":"no"), (outpoint.isHash?"yes":"no"));
+                uiInterface.NotifyUIAlertChanged(warning);
+            }
             
             // Block and index should match up
             assert(coin.nHeight == block);

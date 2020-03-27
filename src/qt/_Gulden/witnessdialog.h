@@ -115,6 +115,7 @@ private:
     ClientModel *clientModel;
     WalletModel *model;
     CAccount* prevActiveAccount = nullptr;
+    bool lastCheckWasDuringInitialBlockDownload = false;
 
     int userWidgetIndex = -1;
     int prevWitnessedTipHeight = 0;

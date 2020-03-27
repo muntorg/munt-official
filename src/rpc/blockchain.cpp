@@ -1511,6 +1511,47 @@ static UniValue invalidateblock(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
+static UniValue invalidateblocksatheight(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "invalidateblocksatheight \"height\"\n"
+            "\nPermanently marks all block candidates at a given height as invalid, as if it violated a consensus rule.\n"
+            "\nArguments:\n"
+            "1. \"block_height\"   (integet, required) the hash of the block to mark as invalid\n"
+            "\nResult:\n"
+            "\nExamples:\n"
+            + HelpExampleCli("invalidateblocksatheight", "\"300000\"")
+            + HelpExampleRpc("invalidateblocksatheight", "\"300000\"")
+        );
+
+    uint64_t nHeight = request.params[0].get_int();
+    
+    CValidationState state;
+    {
+        LOCK(cs_main);
+        while (chainActive.Height() >= nHeight)
+        {
+            {
+                LOCK(cs_main);
+                if (!InvalidateBlock(state, Params(), chainActive[nHeight]))
+                    throw JSONRPCError(RPC_DATABASE_ERROR, "failed to invalidate block");
+            }
+            
+            if (state.IsValid())
+            {
+                ActivateBestChain(state, Params());
+            }
+            
+            if (!state.IsValid())
+            {
+                throw JSONRPCError(RPC_DATABASE_ERROR, state.GetRejectReason());
+            }
+        }
+    }
+    return NullUniValue;
+}
+
 static UniValue reconsiderblock(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -1639,11 +1680,12 @@ static const CRPCCommand commands[] =
     { "blockchain",         "preciousblock",          &preciousblock,          true,  {"blockhash"} },
 
     /* Not shown in help */
-    { "hidden",             "invalidateblock",        &invalidateblock,        true,  {"blockhash"} },
-    { "hidden",             "reconsiderblock",        &reconsiderblock,        true,  {"blockhash"} },
-    { "hidden",             "waitfornewblock",        &waitfornewblock,        true,  {"timeout"} },
-    { "hidden",             "waitforblock",           &waitforblock,           true,  {"blockhash","timeout"} },
-    { "hidden",             "waitforblockheight",     &waitforblockheight,     true,  {"height","timeout"} },
+    { "hidden",             "invalidateblock",         &invalidateblock,         true,  {"blockhash"} },
+    { "hidden",             "invalidateblocksatheight",&invalidateblocksatheight,true,  {"block_height"} },
+    { "hidden",             "reconsiderblock",         &reconsiderblock,         true,  {"blockhash"} },
+    { "hidden",             "waitfornewblock",         &waitfornewblock,         true,  {"timeout"} },
+    { "hidden",             "waitforblock",            &waitforblock,            true,  {"blockhash","timeout"} },
+    { "hidden",             "waitforblockheight",      &waitforblockheight,      true,  {"height","timeout"} },
 };
 
 void RegisterBlockchainRPCCommands(CRPCTable &t)
