@@ -715,8 +715,9 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
     EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);
 
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint] = unspentWitnessOutputs[0];
-    (unused)currentWitnessOutpoint;
     (unused)currentWitnessHeight;
+    (unused)currentWitnessTxIndex;
+    (unused)currentWitnessOutpoint;
 
     // Get the current witness details
     CTxOutPoW2Witness currentWitnessDetails;
@@ -1011,7 +1012,7 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
         }
 
         // add any final remainder to first part
-        distribution[0] += partRemainder;
+        distribution[0] += remainder;
     }
     else
     {
