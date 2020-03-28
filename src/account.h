@@ -360,8 +360,9 @@ public:
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain);
     void AddChild(CAccount* childAccount);
 
-    unsigned int GetKeyPoolSize(int nchain);
-    [[deprecated]] unsigned int GetKeyPoolSize();
+    unsigned int GetKeyPoolSize(int keyChain);
+    //Deprecated, should be removed in future in favour of the one above
+    unsigned int GetKeyPoolSize();
 
     std::string getLabel() const;
     void setLabel(const std::string& label, CWalletDB* Db);
