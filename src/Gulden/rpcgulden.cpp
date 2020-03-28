@@ -2577,7 +2577,7 @@ static UniValue getlastblocks(const JSONRPCRequest& request)
     if (chainActive.Tip()->nHeight > numBlocks)
     {
         CBlockIndex* pIndex = chainActive.Tip();
-        for (int i=0;i<numBlocks;++i)
+        for (uint64_t i=0;i<numBlocks;++i)
         {
             result.push_back(Pair(pIndex->GetBlockHashPoW2().ToString(),pIndex->nHeight));
             pIndex = pIndex->pprev;

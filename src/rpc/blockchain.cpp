@@ -1530,7 +1530,7 @@ static UniValue invalidateblocksatheight(const JSONRPCRequest& request)
     CValidationState state;
     {
         LOCK(cs_main);
-        while (chainActive.Height() >= nHeight)
+        while ((uint64_t)chainActive.Height() >= nHeight)
         {
             {
                 LOCK(cs_main);
