@@ -1,3 +1,15 @@
+2.2.0.3
+
+UI    - Fix issue where a witness account that had o nly partially been emptied could not be fully emptied
+UI    - Fix a bug in witness overview when transaction was still pending first confirmation after funding
+UI    - Fix some issues where transactions spending money out of witness accounts were not displaying the right amount in transaction list
+UI    - Fix an issue with witness graph display strangely
+CORE  - Fix an issue where mining address would change if doing a restore on top of an existing block chain
+CORE  - Temporarily lower default memory usage on pis for first batch of 2.2 pi upgrades; we will raise these limits again in future
+
+
+
+
 2.2.0.2
 
 UI - Minor fixes to witness dialog
