@@ -2574,7 +2574,7 @@ static UniValue getlastblocks(const JSONRPCRequest& request)
         
     LogPrintf("getlastblocks requested.\n");
     UniValue result(UniValue::VOBJ);    
-    if (chainActive.Tip()->nHeight > numBlocks)
+    if ((uint64_t)chainActive.Tip()->nHeight > numBlocks)
     {
         CBlockIndex* pIndex = chainActive.Tip();
         for (uint64_t i=0;i<numBlocks;++i)
