@@ -23,6 +23,7 @@
 #include "Gulden/util.h"
 
 #include <alert.h>
+#include "ui_interface.h"
 
 bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const { return false; }
 bool CCoinsView::HaveCoin(const COutPoint &outpoint) const { return false; }
