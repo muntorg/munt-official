@@ -204,7 +204,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     
     
     //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
-    std::vector<CKeyStore*> accountsToTry;
+    std::vector<CAccount*> accountsToTry;
     accountsToTry.push_back(pactiveWallet->activeAccount);
     for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
     {
