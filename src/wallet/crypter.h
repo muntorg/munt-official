@@ -187,6 +187,7 @@ protected:
     }
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const;
     virtual bool GetKey(const CKeyID &address, CKey& keyOut) const;
+    virtual bool GetKeyIDWithHighestIndex(CKeyID& address) const;
     virtual bool GetKey(const CKeyID &address, int64_t& HDKeyIndex) const;
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
     virtual void GetKeys(std::set<CKeyID> &setAddress) const

@@ -205,18 +205,23 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     
     //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
     std::vector<CKeyStore*> accountsToTry;
-    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    accountsToTry.push_back(pactiveWallet->activeAccount);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
     {
-        if(accountPair.second->getParentUUID() == pactiveWallet->activeAccount->getUUID())
+        (unused) accountUUID;
+        if (account->getParentUUID() == pactiveWallet->activeAccount->getUUID())
         {
-            accountsToTry.push_back(accountPair.second);
+            accountsToTry.push_back(account);
         }
-        accountsToTry.push_back(pactiveWallet->activeAccount);
     }
-    
 
-    int64_t subtracted = wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
-    int64_t added = wtx.GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
+    int64_t subtracted;
+    int64_t added;
+    for (const auto& account : accountsToTry)
+    {
+        subtracted += wtx.GetDebit(ISMINE_SPENDABLE, account, true);
+        added += wtx.GetCredit(ISMINE_SPENDABLE, account, true);
+    }
 
     CAmount fee = 0;
     // if any funds were subtracted the transaction was sent by us

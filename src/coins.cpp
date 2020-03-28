@@ -125,7 +125,19 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
         else
         {
             // no entry in cacheCoinRefs, so it should be absent in cacheCoins also
-            assert(!outpoint.isHash || cacheCoins.find(outpoint) == cacheCoins.end());
+            if (outpoint.isHash)
+            {
+                if (cacheCoins.find(outpoint) != cacheCoins.end())
+                {
+                    CCoinsMap::iterator it = cacheCoins.find(outpoint);
+                    std::string warning = strprintf("Warning: outpoint mismatch.\nPlease notify the developers with this information to assist them.\n\n"
+                                                "ophash:[%s]\nblock:[%d] txidx:[%d] outidx:[%d] flags:[%d] spent:[%s] lookupishash: [%s]",
+                                                outpoint.getTransactionHash().ToString(), 
+                                                block, txIndex, voutIndex, it->second.flags, (it->second.coin.IsSpent()?"yes":"no"), (outpoint.isHash?"yes":"no"));
+                    uiInterface.NotifyUIAlertChanged(warning);
+                }
+            }
+            // The non-hash output definitely shouldn't be in the cacheCoins ever
             assert(outpoint.isHash || cacheCoins.find(COutPoint(block, txIndex, voutIndex)) == cacheCoins.end());
         }
     }

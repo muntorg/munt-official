@@ -139,6 +139,24 @@ public:
         }
         return false;
     }
+    bool GetKeyIDWithHighestIndex(CKeyID& HDKeyID) const
+    {
+        int64_t highestIndex=0;
+        {
+            LOCK(cs_KeyStore);
+            if (mapHDKeys.empty())
+                return false;
+            for (const auto& [keyID, keyIndex] : mapHDKeys)
+            {
+                if (keyIndex >= highestIndex)
+                {
+                    highestIndex = keyIndex;
+                    HDKeyID = keyID;
+                }
+            }
+        }
+        return true;
+    }
     virtual bool AddCScript(const CScript& redeemScript);
     virtual bool HaveCScript(const CScriptID &hash) const;
     virtual bool GetCScript(const CScriptID &hash, CScript& redeemScriptOut) const;
