@@ -17,6 +17,8 @@
 
 #include <assert.h>
 
+#include "txmempool.h"
+
 // Gulden specific includes
 #include "Gulden/util.h"
 
