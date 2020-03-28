@@ -1099,6 +1099,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             CAlert::Notify("Invalid mining address", true, true);
             return;
         }
+        #ifdef ENABLE_WALLET
         if (IsPow2Phase4Active(chainActive.Tip()))
         {
             CKeyID addressKeyID;
@@ -1106,6 +1107,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             coinbaseScript = std::make_shared<CReserveKeyOrScript>(addressKeyID);
         }
         else
+        #endif
         {
             CScript outputScript = GetScriptForDestination(address.Get());
             coinbaseScript = std::make_shared<CReserveKeyOrScript>(outputScript);
