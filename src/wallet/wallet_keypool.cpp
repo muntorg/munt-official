@@ -59,7 +59,7 @@ bool CWallet::NewKeyPool()
 }
 
 //fixme: (FUT) (ACCOUNTS) GULDEN Note for HD this should actually care more about maintaining a gap above the last used address than it should about the size of the pool.
-int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewAllocations, CAccount* topupForAccount)
+int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewAllocations, CAccount* topupForAccount, unsigned int nMinimalKeypoolOverride)
 {
     // Return -1 if we fail to allocate any -and- one of the accounts is not HD -and- it is locked.
     uint32_t nNew = 0;
@@ -103,7 +103,7 @@ int CWallet::TopUpKeyPool(unsigned int nTargetKeypoolSize, unsigned int nMaxNewA
                 uint32_t nFinalAccountTargetSize = nAccountTargetSize;
                 if (loopForAccount->IsMinimalKeyPool())
                 {
-                    nFinalAccountTargetSize = 1;
+                    nFinalAccountTargetSize = nMinimalKeypoolOverride;
                 }
 
                 for (auto& keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })

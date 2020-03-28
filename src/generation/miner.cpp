@@ -1099,6 +1099,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             CAlert::Notify("Invalid mining address", true, true);
             return;
         }
+        #ifdef ENABLE_WALLET
         if (IsPow2Phase4Active(chainActive.Tip()))
         {
             CKeyID addressKeyID;
@@ -1106,6 +1107,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             coinbaseScript = std::make_shared<CReserveKeyOrScript>(addressKeyID);
         }
         else
+        #endif
         {
             CScript outputScript = GetScriptForDestination(address.Get());
             coinbaseScript = std::make_shared<CReserveKeyOrScript>(outputScript);
@@ -1121,8 +1123,14 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
         
+        #ifdef ENABLE_WALLET
         if (!coinbaseScript || (coinbaseScript->scriptOnly() && coinbaseScript->reserveScript.empty()))
+        #else
+        if (!coinbaseScript || coinbaseScript->reserveScript.empty())
+        #endif
+        {
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
+        }
 
 
         while (true)

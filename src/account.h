@@ -360,6 +360,8 @@ public:
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain);
     void AddChild(CAccount* childAccount);
 
+    unsigned int GetKeyPoolSize(int keyChain);
+    //Deprecated, should be removed in future in favour of the one above
     unsigned int GetKeyPoolSize();
 
     std::string getLabel() const;
@@ -435,6 +437,7 @@ public:
     //For serialization only.
     CAccountHD(){};
 
+    virtual bool GetKeyIDWithHighestIndex(CKeyID& HDKeyID, int nChain) const;
     virtual bool GetKey(CExtKey& childKey, int nChain) const;
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;

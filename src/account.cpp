@@ -425,6 +425,18 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, Accoun
     m_readOnly = true;
 }
 
+bool CAccountHD::GetKeyIDWithHighestIndex(CKeyID& HDKeyID, int nChain) const
+{
+    if (nChain == KEYCHAIN_EXTERNAL)
+    {
+        return externalKeyStore.GetKeyIDWithHighestIndex(HDKeyID);
+    }
+    else
+    {
+        return internalKeyStore.GetKeyIDWithHighestIndex(HDKeyID);
+    }
+}
+
 bool CAccountHD::GetKey(CExtKey& childKey, int nChain) const
 {
     assert(!m_readOnly);
@@ -1073,11 +1085,23 @@ uint64_t CAccount::getEarliestPossibleCreationTime()
     return earliestPossibleCreationTime;
 }
 
-//fixme: (FUT) (ACCOUNTS) (CLEANUP) - relook at how the wallet reports keypool size in an accounts context.
 unsigned int CAccount::GetKeyPoolSize()
 {
     AssertLockHeld(cs_keypool); // setKeyPool
     return setKeyPoolExternal.size();
+}
+
+unsigned int CAccount::GetKeyPoolSize(int nChain)
+{
+    AssertLockHeld(cs_keypool); // setKeyPool
+    if (nChain == KEYCHAIN_EXTERNAL)
+    {
+        return setKeyPoolExternal.size();
+    }
+    else
+    {
+        return setKeyPoolInternal.size();
+    }
 }
 
 std::string CAccount::getLabel() const

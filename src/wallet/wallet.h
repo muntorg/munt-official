@@ -826,7 +826,7 @@ public:
     /*
     size_t KeypoolCountExternalKeys();
     */
-    int TopUpKeyPool(unsigned int nTargetKeypoolSize = 0, unsigned int nMaxNewAllocations = 0, CAccount* forAccount = nullptr);
+    int TopUpKeyPool(unsigned int nTargetKeypoolSize = 0, unsigned int nMaxNewAllocations = 0, CAccount* forAccount = nullptr, unsigned int nMinimalKeypoolOverride = 1);
     void ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool, CAccount* forAccount, int64_t keyChain);
     void KeepKey(int64_t nIndex);
     void ReturnKey(int64_t nIndex, CAccount* forAccount, int64_t keyChain);

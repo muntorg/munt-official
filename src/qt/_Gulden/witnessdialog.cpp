@@ -681,6 +681,12 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                     computedWidgetIndex = WitnessDialogStates::EMPTY;
                     break;
                 }
+                case WitnessStatus::EmptyWithRemainder:
+                {
+                    computedWidgetIndex = WitnessDialogStates::FINAL;
+                    stateEmptyWitnessButton = true;
+                    break;
+                }
                 case WitnessStatus::Pending:
                 {
                     computedWidgetIndex = WitnessDialogStates::PENDING;
@@ -689,16 +695,22 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                 case WitnessStatus::Witnessing:
                 {
                     computedWidgetIndex = WitnessDialogStates::STATISTICS;
+                    stateUpgradeButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
+                    stateOptimizeButton = !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
+                    stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasUnconfirmedWittnessTx;
                     break;
                 }
                 case WitnessStatus::Ended:
                 {
                     computedWidgetIndex = WitnessDialogStates::FINAL;
+                    stateEmptyWitnessButton = !accountStatus.hasUnconfirmedWittnessTx;
                     break;
                 }
                 case WitnessStatus::Expired:
                 {
                     computedWidgetIndex = WitnessDialogStates::EXPIRED;
+                    stateRenewWitnessButton = !accountStatus.hasUnconfirmedWittnessTx;
+                    stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasUnconfirmedWittnessTx;
                     break;
                 }
                 case WitnessStatus::Emptying:
@@ -707,11 +719,6 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                     break;
                 }
             }
-            stateEmptyWitnessButton = accountStatus.status == WitnessStatus::Ended && !accountStatus.hasUnconfirmedWittnessTx;
-            stateRenewWitnessButton = accountStatus.status == WitnessStatus::Expired && !accountStatus.hasUnconfirmedWittnessTx;
-            stateUpgradeButton = accountStatus.status == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
-            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (accountStatus.status == WitnessStatus::Witnessing || accountStatus.status == WitnessStatus::Expired) && !accountStatus.hasUnconfirmedWittnessTx;
-            stateOptimizeButton = accountStatus.status == WitnessStatus::Witnessing && !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
         }
         stateWithdrawEarningsButton = hasSpendableBalance && accountStatus.status == WitnessStatus::Witnessing;
         stateWithdrawEarningsButton2 = hasSpendableBalance && accountStatus.status == WitnessStatus::Expired;

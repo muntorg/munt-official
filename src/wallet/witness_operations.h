@@ -74,6 +74,7 @@ struct CGetWitnessInfo;
 
 enum class WitnessStatus {
     Empty,
+    EmptyWithRemainder,
     Pending,
     Witnessing,
     Ended,
