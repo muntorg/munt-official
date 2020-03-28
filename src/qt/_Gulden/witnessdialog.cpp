@@ -681,6 +681,12 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                     computedWidgetIndex = WitnessDialogStates::EMPTY;
                     break;
                 }
+                case WitnessStatus::EmptyWithRemainder:
+                {
+                    computedWidgetIndex = WitnessDialogStates::FINAL;
+                    stateEmptyWitnessButton = true;
+                    break;
+                }
                 case WitnessStatus::Pending:
                 {
                     computedWidgetIndex = WitnessDialogStates::PENDING;
@@ -689,16 +695,22 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                 case WitnessStatus::Witnessing:
                 {
                     computedWidgetIndex = WitnessDialogStates::STATISTICS;
+                    stateUpgradeButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
+                    stateOptimizeButton = !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
+                    stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasUnconfirmedWittnessTx;
                     break;
                 }
                 case WitnessStatus::Ended:
                 {
                     computedWidgetIndex = WitnessDialogStates::FINAL;
+                    stateEmptyWitnessButton = !accountStatus.hasUnconfirmedWittnessTx;
                     break;
                 }
                 case WitnessStatus::Expired:
                 {
                     computedWidgetIndex = WitnessDialogStates::EXPIRED;
+                    stateRenewWitnessButton = !accountStatus.hasUnconfirmedWittnessTx;
+                    stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasUnconfirmedWittnessTx;
                     break;
                 }
                 case WitnessStatus::Emptying:
@@ -707,11 +719,6 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                     break;
                 }
             }
-            stateEmptyWitnessButton = accountStatus.status == WitnessStatus::Ended && !accountStatus.hasUnconfirmedWittnessTx;
-            stateRenewWitnessButton = accountStatus.status == WitnessStatus::Expired && !accountStatus.hasUnconfirmedWittnessTx;
-            stateUpgradeButton = accountStatus.status == WitnessStatus::Witnessing && IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
-            stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && (accountStatus.status == WitnessStatus::Witnessing || accountStatus.status == WitnessStatus::Expired) && !accountStatus.hasUnconfirmedWittnessTx;
-            stateOptimizeButton = accountStatus.status == WitnessStatus::Witnessing && !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
         }
         stateWithdrawEarningsButton = hasSpendableBalance && accountStatus.status == WitnessStatus::Witnessing;
         stateWithdrawEarningsButton2 = hasSpendableBalance && accountStatus.status == WitnessStatus::Expired;
@@ -820,7 +827,6 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
 
         // Populate the 'actual earnings' curve.
         QPolygonF generatedPoints;
-        int nXGenerated = 0;
         CAmount generatedTotal = 0;
         for (const auto& pointIter : infoForAccount.pointMapGenerated)
         {
@@ -835,18 +841,14 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
         //fixme: (PHASE5) This is a bit broken - use nOurWeight etc.
         // Fill in the remaining time on the 'actual earnings' curve with a forecast.
         QPolygonF generatedPointsForecast;
-        int nXGeneratedForecast = 0;
         if (generatedPoints.size() > 0)
         {
             generatedPointsForecast << generatedPoints.back();
             for (const auto& pointIter : infoForAccount.pointMapForecast)
             {
-                nXGeneratedForecast = pointIter.first;
-                if (nXGeneratedForecast > nXGenerated)
-                {
-                    generatedTotal += pointIter.second;
-                    generatedPointsForecast << QPointF(nXGeneratedForecast, generatedTotal);
-                }
+                double forecastOffset = generatedPoints.back().x();
+                generatedTotal += pointIter.second;
+                generatedPointsForecast << QPointF(pointIter.first+forecastOffset, generatedTotal);
             }
         }
 

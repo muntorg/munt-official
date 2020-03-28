@@ -596,9 +596,12 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
     const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(account);
     EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);
 
-    bool hasBalance = pactiveWallet->GetBalance(account, true, true, true) +
-                          pactiveWallet->GetImmatureBalance(account, true, true) +
-                          pactiveWallet->GetUnconfirmedBalance(account, true, true) > 0;
+    bool hasUnconfirmedBalance = pactiveWallet->GetUnconfirmedBalance(account, true, true) > 0;
+    bool hasImmatureBalance = pactiveWallet->GetImmatureBalance(account, true, true) > 0;
+    bool hasLockedBalance = pactiveWallet->GetLockedBalance(account, true) > 0;
+    bool hasMatureBalance = pactiveWallet->GetBalance(account, true, false, true) > 0;
+    
+    bool hasBalance = hasUnconfirmedBalance||hasImmatureBalance||hasMatureBalance||hasLockedBalance;
 
     bool isLocked = haveUnspentWitnessUtxo && IsPoW2WitnessLocked(witnessDetails0, chainActive.Tip()->nHeight);
 
@@ -607,14 +610,42 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
                          return witnessHasExpired(ri.nAge, ri.nWeight, networkWeight);
                      });
 
-    if (!haveUnspentWitnessUtxo && hasBalance) status = WitnessStatus::Pending;
-    else if (!haveUnspentWitnessUtxo && !hasBalance) status = WitnessStatus::Empty;
-    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired) status = WitnessStatus::Expired;
-    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && !isExpired) status = WitnessStatus::Witnessing;
-    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired) status = WitnessStatus::Expired;
-    else if (haveUnspentWitnessUtxo && hasBalance && !isLocked) status = WitnessStatus::Ended;
-    else if (haveUnspentWitnessUtxo && !hasBalance && !isLocked) status = WitnessStatus::Emptying;
-    else throw std::runtime_error("Unable to determine witness state.");
+    if (!haveUnspentWitnessUtxo && (hasImmatureBalance||hasUnconfirmedBalance||hasLockedBalance))
+    {
+        status = WitnessStatus::Pending;
+    }
+    else if (!haveUnspentWitnessUtxo && !hasBalance)
+    {
+        status = WitnessStatus::Empty;
+    }
+    else if (!haveUnspentWitnessUtxo && hasMatureBalance && !(hasImmatureBalance || hasUnconfirmedBalance))
+    {
+        status = WitnessStatus::EmptyWithRemainder;
+    }
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired)
+    {
+        status = WitnessStatus::Expired;
+    }
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && !isExpired)
+    {
+        status = WitnessStatus::Witnessing;
+    }
+    else if (haveUnspentWitnessUtxo && hasBalance && isLocked && isExpired)
+    {
+        status = WitnessStatus::Expired;
+    }
+    else if (haveUnspentWitnessUtxo && hasBalance && !isLocked)
+    {
+        status = WitnessStatus::Ended;
+    }
+    else if (haveUnspentWitnessUtxo && !hasBalance && !isLocked)
+    {
+        status = WitnessStatus::Emptying;
+    }
+    else
+    {
+        throw std::runtime_error("Unable to determine witness state.");
+    }
 
     // NOTE: assuming any unconfirmed tx here is a witness one to avoid getting the witness bundles and testing those, this will almost always be
     // correct. Any edge cases where this fails will automatically resolve once the tx confirms.
@@ -684,8 +715,9 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
     EnsureMatchingWitnessCharacteristics(unspentWitnessOutputs);
 
     const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint] = unspentWitnessOutputs[0];
-    (unused)currentWitnessOutpoint;
     (unused)currentWitnessHeight;
+    (unused)currentWitnessTxIndex;
+    (unused)currentWitnessOutpoint;
 
     // Get the current witness details
     CTxOutPoW2Witness currentWitnessDetails;
@@ -980,7 +1012,7 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
         }
 
         // add any final remainder to first part
-        distribution[0] += partRemainder;
+        distribution[0] += remainder;
     }
     else
     {
