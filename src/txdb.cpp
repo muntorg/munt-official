@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2019 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -48,23 +48,27 @@ static const char DB_POW2_PHASE5 = '5';
 // Additional v2 format
 static const char DB_COIN_REF = 'r';
 
-namespace {
+namespace
+{
 
-struct CoinEntry {
+struct CoinEntry
+{
     COutPoint* outpoint;
     char key;
     CoinEntry(const COutPoint* ptr) : outpoint(const_cast<COutPoint*>(ptr)), key(DB_COIN)  {}
 
     template<typename Stream>
-    void Serialize(Stream &s) const {
+    void Serialize(Stream &s) const
+    {
         s << key;
-        s << outpoint->getBucketHash();
+        s << outpoint->getTransactionHash();
         uint32_t nTemp = outpoint->n;
         s << VARINT(nTemp);
     }
 
     template<typename Stream>
-    void Unserialize(Stream& s) {
+    void Unserialize(Stream& s)
+    {
         s >> key;
         uint256 hash;
         s >> hash;
@@ -75,7 +79,8 @@ struct CoinEntry {
     }
 };
 
-struct CoinEntryRef {
+struct CoinEntryRef
+{
     char key;
     uint64_t nHeight;
     uint64_t nTxIndex;
@@ -97,7 +102,8 @@ struct CoinEntryRef {
     }
 
     template<typename Stream>
-    void Serialize(Stream &s) const {
+    void Serialize(Stream &s) const
+    {
         s << key;
         s << nHeight; //NB! We delibritely don't use varint here, to remove the possibility of collisions.
         s << nTxIndex;
@@ -105,7 +111,8 @@ struct CoinEntryRef {
     }
 
     template<typename Stream>
-    void Unserialize(Stream& s) {
+    void Unserialize(Stream& s)
+    {
         s >> key;
         s >> nHeight;
         s >> nTxIndex;
@@ -205,19 +212,27 @@ uint256 CCoinsViewDB::GetPhase5ActivationHash()
     return hashPhase5ActivationPoint;
 }
 
-uint256 CCoinsViewDB::GetBestBlock() const {
+uint256 CCoinsViewDB::GetBestBlock() const
+{
     uint256 hashBestChain;
     if (!db.Read(DB_BEST_BLOCK, hashBestChain))
         return uint256();
     return hashBestChain;
 }
 
-bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
+bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock)
+{
     CDBBatch batch(db);
     size_t count = 0;
     size_t changed = 0;
-    for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();) {
-        if (it->second.flags & CCoinsCacheEntry::DIRTY) {
+    // It is possible (in fact likely) for the same batch to be both erasing and writing the same entryref e.g. if swapping one block 1963 for a competing block 1963
+    // mapCoins is 'randomly' ordered so doing this would create random behaviour and an inconsistent coin database
+    // To overcome this we erase first always, and then pool up the inserts to do at the end
+    std::vector<std::pair<CoinEntryRef, uint256>> writeRefHashes;
+    for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();)
+    {
+        if (it->second.flags & CCoinsCacheEntry::DIRTY)
+        {
             CoinEntry entry(&it->first);
             CoinEntryRef entryRef(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n);
             if (it->second.coin.IsSpent())
@@ -228,13 +243,17 @@ bool CCoinsViewDB::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) {
             else
             {
                 batch.Write(entry, it->second.coin);
-                batch.Write(entryRef, it->first.getBucketHash());
+                writeRefHashes.emplace_back(entryRef,it->first.getTransactionHash());
             }
             changed++;
         }
         count++;
         CCoinsMap::iterator itOld = it++;
         mapCoins.erase(itOld);
+    }
+    for (const auto& [entryRef, entryHash] : writeRefHashes)
+    {
+        batch.Write(entryRef, entryHash);
     }
     if (!hashBlock.IsNull())
         batch.Write(DB_BEST_BLOCK, hashBlock);
@@ -354,14 +373,17 @@ bool CBlockTreeDB::UpdateBatchSync(const std::vector<std::pair<int, const CBlock
                                    const std::vector<uint256>& vEraseHashes)
 {
     CDBBatch batch(*this);
-    for (std::vector<std::pair<int, const CBlockFileInfo*> >::const_iterator it=fileInfo.begin(); it != fileInfo.end(); it++) {
+    for (std::vector<std::pair<int, const CBlockFileInfo*> >::const_iterator it=fileInfo.begin(); it != fileInfo.end(); it++)
+    {
         batch.Write(std::pair(DB_BLOCK_FILES, it->first), *it->second);
     }
     batch.Write(DB_LAST_BLOCK, nLastFile);
-    for (std::vector<const CBlockIndex*>::const_iterator it=vWriteIndices.begin(); it != vWriteIndices.end(); it++) {
+    for (std::vector<const CBlockIndex*>::const_iterator it=vWriteIndices.begin(); it != vWriteIndices.end(); it++)
+    {
         batch.Write(std::pair(DB_BLOCK_INDEX, (*it)->GetBlockHashPoW2()), CDiskBlockIndex(*it));
     }
-    for (const uint256& hash: vEraseHashes) {
+    for (const uint256& hash: vEraseHashes)
+    {
         batch.Erase(std::pair(DB_BLOCK_INDEX, hash));
     }
     return WriteBatch(batch, true);
@@ -371,28 +393,33 @@ bool CBlockTreeDB::UpdateBatchSync(const std::vector<std::pair<int, const CBlock
 bool CBlockTreeDB::EraseBatchSync(const std::vector<uint256>& vEraseHashes)
 {
     CDBBatch batch(*this);
-    for (const uint256& hash: vEraseHashes) {
+    for (const uint256& hash: vEraseHashes)
+    {
         batch.Erase(std::pair(DB_BLOCK_INDEX, hash));
     }
     return WriteBatch(batch, true);
 }
 
-bool CBlockTreeDB::ReadTxIndex(const uint256 &txid, CDiskTxPos &pos) {
+bool CBlockTreeDB::ReadTxIndex(const uint256 &txid, CDiskTxPos &pos)
+{
     return Read(std::pair(DB_TXINDEX, txid), pos);
 }
 
-bool CBlockTreeDB::WriteTxIndex(const std::vector<std::pair<uint256, CDiskTxPos> >&vect) {
+bool CBlockTreeDB::WriteTxIndex(const std::vector<std::pair<uint256, CDiskTxPos> >&vect)
+{
     CDBBatch batch(*this);
     for (std::vector<std::pair<uint256,CDiskTxPos> >::const_iterator it=vect.begin(); it!=vect.end(); it++)
         batch.Write(std::pair(DB_TXINDEX, it->first), it->second);
     return WriteBatch(batch);
 }
 
-bool CBlockTreeDB::WriteFlag(const std::string &name, bool fValue) {
+bool CBlockTreeDB::WriteFlag(const std::string &name, bool fValue)
+{
     return Write(std::pair(DB_FLAG, name), fValue ? '1' : '0');
 }
 
-bool CBlockTreeDB::ReadFlag(const std::string &name, bool &fValue) {
+bool CBlockTreeDB::ReadFlag(const std::string &name, bool &fValue)
+{
     char ch;
     if (!Read(std::pair(DB_FLAG, name), ch))
         return false;
@@ -407,7 +434,8 @@ bool CBlockTreeDB::LoadBlockIndexGuts(std::function<CBlockIndex*(const uint256&)
     pcursor->Seek(std::pair(DB_BLOCK_INDEX, uint256()));
 
     // Load mapBlockIndex
-    while (pcursor->Valid()) {
+    while (pcursor->Valid())
+    {
         boost::this_thread::interruption_point();
         std::pair<char, uint256> key;
         if (pcursor->GetKey(key) && key.first == DB_BLOCK_INDEX) {
@@ -453,7 +481,8 @@ bool CBlockTreeDB::LoadBlockIndexGuts(std::function<CBlockIndex*(const uint256&)
     return true;
 }
 
-namespace {
+namespace
+{
 
 //! Legacy class to deserialize pre-pertxout database entries without reindex.
 class CCoins
@@ -472,7 +501,8 @@ public:
     CCoins() : fCoinBase(false), vout(0), nHeight(0) { }
 
     template<typename Stream>
-    void Unserialize(Stream &s) {
+    void Unserialize(Stream &s)
+    {
         unsigned int nCode = 0;
         // version
         int nVersionDummy;
@@ -485,10 +515,12 @@ public:
         vAvail[1] = (nCode & 4) != 0;
         unsigned int nMaskCode = (nCode / 8) + ((nCode & 6) != 0 ? 0 : 1);
         // spentness bitmask
-        while (nMaskCode > 0) {
+        while (nMaskCode > 0)
+        {
             unsigned char chAvail = 0;
             ::Unserialize(s, chAvail);
-            for (unsigned int p = 0; p < 8; p++) {
+            for (unsigned int p = 0; p < 8; p++)
+            {
                 bool f = (chAvail & (1 << p)) != 0;
                 vAvail.push_back(f);
             }
@@ -497,7 +529,8 @@ public:
         }
         // txouts themself
         vout.assign(vAvail.size(), CTxOut());
-        for (unsigned int i = 0; i < vAvail.size(); i++) {
+        for (unsigned int i = 0; i < vAvail.size(); i++)
+        {
             if (vAvail[i])
                 ::Unserialize(s, REF(CTxOutCompressor(vout[i])));
         }
@@ -506,7 +539,8 @@ public:
     }
 
     template<typename Stream>
-    void UnserializeLegacy(Stream &s) {
+    void UnserializeLegacy(Stream &s)
+    {
         unsigned int nCode = 0;
         // version
         int nVersionDummy;
@@ -519,10 +553,12 @@ public:
         vAvail[1] = (nCode & 4) != 0;
         unsigned int nMaskCode = (nCode / 8) + ((nCode & 6) != 0 ? 0 : 1);
         // spentness bitmask
-        while (nMaskCode > 0) {
+        while (nMaskCode > 0)
+        {
             unsigned char chAvail = 0;
             ::Unserialize(s, chAvail);
-            for (unsigned int p = 0; p < 8; p++) {
+            for (unsigned int p = 0; p < 8; p++)
+            {
                 bool f = (chAvail & (1 << p)) != 0;
                 vAvail.push_back(f);
             }
@@ -531,7 +567,8 @@ public:
         }
         // txouts themself
         vout.assign(vAvail.size(), CTxOut());
-        for (unsigned int i = 0; i < vAvail.size(); i++) {
+        for (unsigned int i = 0; i < vAvail.size(); i++)
+        {
             if (vAvail[i])
                 ::Unserialize(s, REF(CTxOutCompressorLegacy(vout[i])));
         }
@@ -563,8 +600,73 @@ bool CCoinsViewDB::RequiresReindex()
 // Minor upgrades take place inside here, for major upgrades see 'RequiresReindex'
 bool CCoinsViewDB::Upgrade()
 {
-    // Any future upgrade code goes here.
-    // NB! version number should be upgraded at end of upgrade
+    if (nPreviousVersion == 2)
+    {
+        LogPrintf("Repairing V2 coindb index based utxo outpoints...\n");
+
+        CDBBatch batch(db);
+        size_t batch_size = 1 << 24;
+        
+        COutPoint cursorOutpoint(0, 0, 0);
+        
+        std::unique_ptr<CDBIterator> pcursor(db.NewIterator());
+        pcursor->Seek(std::pair(DB_COIN_REF, uint256()));        
+        LogPrintf("Erasing index based utxo outpoints...\n");
+        while (pcursor->Valid())
+        {
+            boost::this_thread::interruption_point();
+            CoinEntryRef coinEntryRef(cursorOutpoint);
+            if (pcursor->GetKey(coinEntryRef))
+            {
+                batch.Erase(coinEntryRef);
+            
+                if (batch.SizeEstimate() > batch_size)
+                {
+                    db.WriteBatch(batch);
+                    batch.Clear();
+                }
+            }
+            pcursor->Next();
+        }
+        db.WriteBatch(batch);
+        
+        pcursor->Seek(std::pair(DB_COIN, uint256()));
+        if (!pcursor->Valid())
+        {
+            LogPrintf("Failed to repair index based utxo outpoints...\n");
+            return false;
+        }
+        
+        LogPrintf("Regenerating index based utxo outpoints...\n");
+        while (pcursor->Valid())
+        {
+            boost::this_thread::interruption_point();
+            CoinEntry coinEntry(&cursorOutpoint);
+            if (pcursor->GetKey(coinEntry))
+            {
+                Coin coin;
+                if (!pcursor->GetValue(coin))
+                {
+                    return error("%s: cannot parse Coin record", __func__);
+                }
+                CoinEntryRef refEntry(COutPoint(coin.nHeight, coin.nTxIndex, coinEntry.outpoint->n));
+                batch.Write(refEntry, coinEntry.outpoint->getTransactionHash());
+                if (batch.SizeEstimate() > batch_size)
+                {
+                    db.WriteBatch(batch);
+                    batch.Clear();
+                }
+                pcursor->Next();
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        db.WriteBatch(batch);
+        db.Write(DB_VERSION, (uint32_t)nCurrentVersion);
+    }
     return true;
 }
 
