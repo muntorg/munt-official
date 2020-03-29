@@ -263,21 +263,38 @@ void GUI::doRequestRenewWitness(CAccount* funderAccount, CAccount* targetWitness
 {
     LogPrint(BCLog::QT, "GUI::doRequestRenewWitness\n");
 
+    CCoinControl coinControl;
     std::string strError;
-    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
     CReserveKeyOrScript changeReserveKey(pactiveWallet, funderAccount, KEYCHAIN_EXTERNAL);
-    CAmount txFee;
-    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(funderAccount, targetWitnessAccount, changeReserveKey, tx, txFee, strError))
+    CAmount txFeeTotal=0;
+    std::vector<CMutableTransaction> renewalTransactions;
+    uint64_t skipPastTx=0;
+    while (true)
     {
-        std::string strAlert = "Failed to create witness renew transaction: " + strError;
-        CAlert::Notify(strAlert, true, true);
-        LogPrintf("%s", strAlert.c_str());
-        return;
+        CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
+        CAmount txFee;
+        
+        if (pactiveWallet->PrepareRenewWitnessAccountTransaction(funderAccount, targetWitnessAccount, changeReserveKey, tx, txFee, strError, &skipPastTx, &coinControl))
+        {
+            renewalTransactions.emplace_back(tx);
+            txFeeTotal += txFee;
+        }
+        else if(renewalTransactions.empty())
+        {
+            std::string strAlert = "Failed to create witness renew transaction: " + strError;
+            CAlert::Notify(strAlert, true, true);
+            LogPrintf("%s", strAlert.c_str());
+            return;
+        }
+        else
+        {
+            break;
+        }
     }
 
     QString questionString = tr("Renewing witness account will incur a transaction fee: ");
     questionString.append("<span style='color:#aa0000;'>");
-    questionString.append(GuldenUnits::formatHtmlWithUnit(optionsModel->getDisplayUnit(), txFee));
+    questionString.append(GuldenUnits::formatHtmlWithUnit(optionsModel->getDisplayUnit(), txFeeTotal));
     questionString.append("</span> ");
     QDialog* d = createDialog(this, questionString, tr("Send"), tr("Cancel"), 600, 360);
 
@@ -289,12 +306,15 @@ void GUI::doRequestRenewWitness(CAccount* funderAccount, CAccount* targetWitness
 
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
-        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError))
+        for (auto& renewalTransaction : renewalTransactions)
         {
-            std::string strAlert = "Failed to sign witness renewal transaction:" + strError;
-            CAlert::Notify(strAlert, true, true);
-            LogPrintf("%s", strAlert.c_str());
-            return;
+            if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, renewalTransaction, strError))
+            {
+                std::string strAlert = "Failed to sign witness renewal transaction:" + strError;
+                CAlert::Notify(strAlert, true, true);
+                LogPrintf("%s", strAlert.c_str());
+                return;
+            }
         }
     }
 

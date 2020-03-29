@@ -888,12 +888,14 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction, CCoinControl* coinControl)
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
     //fixme: (FUT) (COIN_CONTROL)
-    CCoinControl coinControl;
+    CCoinControl tempCoinControl;
+    if (!coinControl)
+        coinControl = tempCoinControl;
 
     CGetWitnessInfo witnessInfo;
     CBlock block;
@@ -903,12 +905,19 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
         return false;
     }
     GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight);
+    bool addedAny=false;
+    uint64_t nExpiredCount=0;
     for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
     {
         if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
         {
             if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
             {
+                if (skipPastTransaction && nExpiredCount++ < *skipPastTransaction)
+                    continue;
+                
+                addedAny = true;
+
                 // Add witness input
                 AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
@@ -954,17 +963,24 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 }
                 renewedWitnessTxOutput.nValue = witCoin.coin.out.nValue;
                 tx.vout.push_back(renewedWitnessTxOutput);
-
-                // Add fee input and change output
-                std::string sFailReason;
-                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, &coinControl))
-                {
-                    strError = "Unable to add fee";
-                    return false;
-                }
-                return true;
+                
+                //fixme: (PHASE5) - Remove this and do all in one tx instead (see note in tx_verify) as blockchain must support this first
+                if(skipPastTransaction)
+                    *skipPastTransaction = nExpiredCount;
+                break;
             }
         }
+    }
+    if (addedAny)
+    {
+        // Add fee input and change output
+        std::string sFailReason;
+        if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, &coinControl))
+        {
+            strError = "Unable to add fee";
+            return false;
+        }
+        return true;
     }
     strError = "Unable to add fee";
     return false;
