@@ -647,6 +647,7 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
 
     bool succes = false;
 
+    CWitnessAccountStatus accountStatus;
     try
     {
         CAccount* forAccount;
@@ -657,7 +658,7 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
         ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
         CGetWitnessInfo witnessInfo;
-        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, &witnessInfo);
+        accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, &witnessInfo);
         if (pWitnessStatus != nullptr)
             *pWitnessStatus = accountStatus.status;
 
@@ -749,6 +750,7 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     {
         ui->viewWitnessGraphButton->setText(tr("Show graph"));
         ui->viewWitnessGraphButton->setVisible(true);
+        requestStatisticsUpdate(accountStatus);
     }
     else
     {
