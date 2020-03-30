@@ -374,20 +374,21 @@ public:
             { 1110000, { uint256S("0xeaa096c7a263ea485c8be90d26de2cf4b22a8f50252dc2a1c080f54213acf0b9"), 1582991681 } },
             { 1115000, { uint256S("0x9b6d256fbb6048c997a179f941bcdbe1b1b2aba9cd6ef6e522cef714f7d6de62"), 1583691830 } },
             { 1120000, { uint256S("0xbcc3bcb3213bc9f88a74bda5b9f30044da262733d2678bc10811c987b17c71b7"), 1584388403 } },
-            { 1120019, { uint256S("0x04cbd6040cee1169f98793fb95d42aaacc465d82ee345dc937692f73abb71b40"), 1584391041 } },
-            { 1121171, { uint256S("0x966fb3f657725528f61fd443796b24801627bcb5dd81cd7a051d6c3208430939"), 1584551365 } },
+            { 1125000, { uint256S("0xd3d0d507764229ef0c676c87a5df6f1963f6dfa2845330ef94955de0ecc60271"), 1585084828 } },
+            { 1125987, { uint256S("0x3eb05f2a3f7d8b447939926ff986553037400fbdceba16905098a8b8ff3b9307"), 1585224291 } },
+            { 1127139, { uint256S("0x6e688bfe4ca03b16dcb6087abe064a1ac9eadf878353bd30add6d18457c5f054"), 1585386006 } },
         }
         };
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x966fb3f657725528f61fd443796b24801627bcb5dd81cd7a051d6c3208430939"); //1121171
+        consensus.defaultAssumeValid = uint256S("0x6e688bfe4ca03b16dcb6087abe064a1ac9eadf878353bd30add6d18457c5f054"); //1127139
         
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805bee9f82e9779");
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805beeac7c80f35");
         
         chainTxData = ChainTxData{
-            1584551365, // * UNIX timestamp of last checkpoint block
-            2846859,    // * total number of transactions between genesis and last checkpoint
+            1585386006, // * UNIX timestamp of last checkpoint block
+            2860968,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
