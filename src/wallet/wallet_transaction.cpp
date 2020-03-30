@@ -896,6 +896,8 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     CCoinControl tempCoinControl;
     if (!coinControl)
         coinControl = &tempCoinControl;
+    
+    bool allowIndexBased = !IsOldTransactionVersion(tx.nVersion);
 
     CGetWitnessInfo witnessInfo;
     CBlock block;
@@ -919,7 +921,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 addedAny = true;
 
                 // Add witness input
-                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
+                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, allowIndexBased, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
                 // Add witness output
                 CTxOut renewedWitnessTxOutput;
