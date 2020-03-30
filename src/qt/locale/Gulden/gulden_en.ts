@@ -931,19 +931,19 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+316"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+335"/>
         <location line="+59"/>
         <location line="+46"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="-139"/>
+        <location line="-142"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-62"/>
+        <location line="-78"/>
         <location line="+29"/>
         <source>Total</source>
         <translation>Total</translation>
@@ -977,7 +977,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Address</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+198"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+217"/>
         <source>Withdrawable funds in this account is not yet mature, please wait and try again later.</source>
         <translation>Withdrawable funds in this account is not yet mature, please wait and try again later.</translation>
     </message>
@@ -992,7 +992,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>%1 block(s) remaining.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="-169"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="-188"/>
         <source>Wallet balances</source>
         <translation>Wallet balances</translation>
     </message>
@@ -1017,7 +1017,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Software update</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/GuldenGUI.cpp" line="+31"/>
+        <location filename="../../_Gulden/GuldenGUI.cpp" line="+47"/>
         <source>Renewing witness account will incur a transaction fee: </source>
         <translation>Renewing witness account will incur a transaction fee: </translation>
     </message>
@@ -1027,7 +1027,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Send</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+36"/>
         <location line="+59"/>
         <source>This feature is not yet available, please try again after block 797000.</source>
         <translation>This feature is not yet available, please try again after block 797000.</translation>
@@ -2157,16 +2157,16 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 <context>
     <name>OptimizeWitnessDialog</name>
     <message>
-        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="+55"/>
+        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="+72"/>
+        <source>Account is already optimal</source>
+        <translation>Account is already optimal</translation>
+    </message>
+    <message>
+        <location line="-17"/>
         <location line="+17"/>
         <location line="+12"/>
         <source>Okay</source>
         <translation>Okay</translation>
-    </message>
-    <message>
-        <location line="-12"/>
-        <source>Account is already optimal</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../_Gulden/forms/optimizewitnessdialog.ui" line="+155"/>
@@ -2174,7 +2174,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="-17"/>
+        <location filename="../../_Gulden/optimizewitnessdialog.cpp" line="-29"/>
         <source>No funding account selected</source>
         <translation>No funding account selected</translation>
     </message>
@@ -5257,7 +5257,7 @@ Generally when someone else generates a block at the same time as yours.</transl
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="+515"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="+542"/>
         <source>%1 months</source>
         <translation>%1 months</translation>
     </message>
@@ -5311,12 +5311,12 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>Note: this problem is only within the user interface and your funds are secure.</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-180"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-178"/>
         <source>Close graph</source>
         <translation>Close graph</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source>Show graph</source>
         <translation>Show graph</translation>
     </message>
@@ -5342,7 +5342,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <location line="+23"/>
         <location line="+23"/>
         <location line="+23"/>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-588"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-618"/>
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
@@ -5362,7 +5362,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
-        <location line="+534"/>
+        <location line="+561"/>
         <source>n/a</source>
         <translation>n/a</translation>
     </message>
@@ -5464,7 +5464,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>Renew account</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/witnessdialog.cpp" line="-663"/>
+        <location filename="../../_Gulden/witnessdialog.cpp" line="-690"/>
         <source>Earnings to date</source>
         <translation>Earnings to date</translation>
     </message>
@@ -5499,7 +5499,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>&amp;Months</translation>
     </message>
     <message>
-        <location line="+628"/>
+        <location line="+655"/>
         <source>%1 blocks</source>
         <translation>%1 blocks</translation>
     </message>

@@ -771,7 +771,7 @@ public:
     bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
 
     //! Create a transaction that renews an expired witness account
-    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError);
+    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction=nullptr, CCoinControl* coinControl=nullptr);
 
     //! Create a transaction upgrades an old ScriptLegacyOutput witness to a new PoW2WitnessOutput
     void PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut);

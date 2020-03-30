@@ -9,6 +9,41 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>OptimizeWitnessDialog</name>
+    <message>
+        <source>Account is already optimal</source>
+        <translation>Account is reeds optimaal</translation>
+    </message>
+    <message>
+        <source>Okay</source>
+        <translation>Oké</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleer</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Geen funding account geselecteerd</translation>
+    </message>
+    <message>
+        <source>Optimize witness</source>
+        <translation>Witness optimaliseren</translation>
+    </message>
+    <message>
+        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
+        <translation>Optimaliseer de delen waarin je witness gedeeld wordt om je opbrengsten te maximaliseren. Een funding account is nodig om de transactie fee te betalen voor het herschikken van je witness delen.</translation>
+    </message>
+    <message>
+        <source>Optimize</source>
+        <translation>Optimaliseer</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to optimize the witness parts?</source>
+        <translation>Weet je zeker dat je de witness delen wilt optimaliseren?</translation>
+    </message>
+</context>
+<context>
     <name>AccountSelectionWidget</name>
     <message>
         <source>Frame</source>
@@ -743,37 +778,6 @@ Witness-gewicht: %5</translation>
     <message>
         <source>Okay</source>
         <translation>Oké</translation>
-    </message>
-</context>
-<context>
-    <name>OptimizeWitnessDialog</name>
-    <message>
-        <source>Okay</source>
-        <translation>Oké</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source>No funding account selected</source>
-        <translation>Geen funding account geselecteerd</translation>
-    </message>
-    <message>
-        <source>Optimize witness</source>
-        <translation>Witness optimaliseren</translation>
-    </message>
-    <message>
-        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
-        <translation>Optimaliseer de delen waarin je witness gedeeld wordt om je opbrengsten te maximaliseren. Een funding account is nodig om de transactie fee te betalen voor het herschikken van je witness delen.</translation>
-    </message>
-    <message>
-        <source>Optimize</source>
-        <translation>Optimaliseer</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to optimize the witness parts?</source>
-        <translation>Weet je zeker dat je de witness delen wilt optimaliseren?</translation>
     </message>
 </context>
 <context>

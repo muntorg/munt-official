@@ -9,10 +9,60 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>OptimizeWitnessDialog</name>
+    <message>
+        <source>Account is already optimal</source>
+        <translation>Le compte est déjà optimal</translation>
+    </message>
+    <message>
+        <source>Okay</source>
+        <translation>D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Aucun compte de financement sélectionné</translation>
+    </message>
+    <message>
+        <source>Optimize witness</source>
+        <translation>Optimiser le witness</translation>
+    </message>
+    <message>
+        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
+        <translation>Optimisez les parties en lesquelles votre witness est divisé pour maximiser vos gains. Un compte de financement est nécessaire pour les frais de la transaction qui réorganise les parties du witness.</translation>
+    </message>
+    <message>
+        <source>Optimize</source>
+        <translation>Optimiser</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to optimize the witness parts?</source>
+        <translation>Êtes-vous sûr de vouloir optimiser les parties du witness?</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSelectionWidget</name>
+    <message>
+        <source>Frame</source>
+        <translation>Cadre</translation>
+    </message>
+    <message>
+        <source>Funding account</source>
+        <translation>Financement du compte</translation>
+    </message>
+</context>
+<context>
     <name>AccountSettingsDialog</name>
     <message>
         <source>Okay</source>
         <translation>D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Rotate key</source>
+        <translation>Rotation de la clé</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -79,6 +129,69 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     </message>
 </context>
 <context>
+    <name>FundWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Montant</translation>
+    </message>
+    <message>
+        <source>&lt;description set programmatically depending on function&gt;</source>
+        <translation>&lt;Description fixée par programme en relation avec la fonction&gt;</translation>
+    </message>
+    <message>
+        <source>Fund</source>
+        <translation>Fonds</translation>
+    </message>
+    <message>
+        <source>Extend</source>
+        <translation>Prolonger</translation>
+    </message>
+    <message>
+        <source>Extend a witness to increase amount and/or locking duration. A funding account is needed to provide the transaction fee, even if the amount is not increased.</source>
+        <translation>Prolonger un witness pour en augmenter le montant et/ou la durée de verrouillage. Un compte de financement est nécessaire pour payer les frais de transaction, même si le montant n&apos;est pas augmenté.</translation>
+    </message>
+    <message>
+        <source>Fund your witness to start witnessing and earn rewards.</source>
+        <translation>Financez votre witness pour qu&apos;il commence à témoigner et gagnez des récompenses.</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to extend the witness?</source>
+        <translation>Êtes-vous sûr de vouloir prolonger le witness?</translation>
+    </message>
+    <message>
+        <source>%1 will be locked for %2 days (%3).</source>
+        <translation>%1 sera bloqué pendant %2 jours (%3).</translation>
+    </message>
+    <message>
+        <source>It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>Il ne sera en aucun cas possible de dépenser ou de déplacer ces fonds pendant la durée de la période de blocage.</translation>
+    </message>
+    <message>
+        <source>Extend witness</source>
+        <translation>Prolonger le witness</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Aucun compte de financement sélectionné</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to fund the witness?</source>
+        <translation>tes-vous sûr de vouloir financer le witness?</translation>
+    </message>
+    <message>
+        <source>Fund witness</source>
+        <translation>financer le witness</translation>
+    </message>
+</context>
+<context>
     <name>GUI</name>
     <message>
         <source>Okay</source>
@@ -111,6 +224,18 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>&amp;Address</source>
         <translation>&amp;Adresse</translation>
+    </message>
+    <message>
+        <source>Withdrawable funds in this account is not yet mature, please wait and try again later.</source>
+        <translation>Les fonds pouvant être retirés de ce compte ne sont pas encore arrivés à échéance, veuillez patienter et réessayer plus tard.</translation>
+    </message>
+    <message>
+        <source>Operating in SPV mode (simple payment verification)</source>
+        <translation>Fonctionnement en mode SPV (simple vérification du paiement)</translation>
+    </message>
+    <message>
+        <source>%1 block(s) remaining.</source>
+        <translation>%1 bloc(s) restant(s).</translation>
     </message>
     <message>
         <source>Wallet balances</source>
@@ -648,6 +773,268 @@ Poids du Witness : %5</translation>
     <message>
         <source>Will require approximately %1 Gulden including IBAN service fee</source>
         <translation>Nécessite environ %1 Gulden, y compris les frais de service IBAN.</translation>
+    </message>
+</context>
+<context>
+    <name>NocksRequest</name>
+    <message>
+        <source>Okay</source>
+        <translation>D&apos;accord</translation>
+    </message>
+</context>
+<context>
+    <name>RotateWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Aucun compte de financement sélectionné</translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation>Rotation de la clé de witness</translation>
+    </message>
+    <message>
+        <source>Replace your witness key with a new one. To be used for example when your witness key is compromised to prevent others from reaping your witness rewards. A funding account is needed for the fee of the transaction.
+Remember to install the new key on any witness device (pi) or service you are using.</source>
+        <translation>Remplacez votre clé de witness par une nouvelle. À utiliser par exemple lorsque votre clé de witness est compromise pour empêcher d&apos;autres personnes de profiter de vos récompenses de witness. Un compte de financement est nécessaire pour les frais de la transaction.
+N&apos;oubliez pas d&apos;installer la nouvelle clé sur tout dispositif (pi) ou service de witness que vous utilisez.</translation>
+    </message>
+    <message>
+        <source>Rotate</source>
+        <translation>Rotation</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to rotate the witness key?</source>
+        <translation>Êtes-vous sûr de vouloir faire tourner la clé de witness?</translation>
+    </message>
+</context>
+<context>
+    <name>UpgradeWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Aucun compte de financement sélectionné</translation>
+    </message>
+    <message>
+        <source>Upgrade</source>
+        <translation>Mise à jour</translation>
+    </message>
+    <message>
+        <source>Upgrade an older witness. A witness will be automatically upgraded when it is selected for witnessing. However for small witness accounts it can take a long time for this to occur. You can manually upgrade the witness here so you can extend it for example. A funding account is needed for the fee of the upgrade transaction.</source>
+        <translation>Remise à niveau d&apos;un witness plus âgé. Un witness est automatiquement mis à niveau lorsqu&apos;il est sélectionné pour witnessing. Toutefois, pour les petits comptes de witness, cela peut prendre beaucoup de temps. Vous pouvez mettre à niveau manuellement le witness ici afin de pouvoir l&apos;étendre par exemple. Un compte de financement est nécessaire pour le paiement de la transaction de mise à niveau.</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to upgrade the witness?</source>
+        <translation>Êtes-vous sûr de vouloir mettre le witness à niveau?</translation>
+    </message>
+</context>
+<context>
+    <name>WitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Extend</source>
+        <translation>Prolonger</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 mois</translation>
+    </message>
+    <message>
+        <source>Optimize</source>
+        <translation>Optimiser</translation>
+    </message>
+    <message>
+        <source>Upgrade</source>
+        <translation>Mise à jour</translation>
+    </message>
+    <message>
+        <source>To begin witnessing, you have to fund the witness account.</source>
+        <translation>Pour commencer à witnessing, vous devez de financer le witness</translation>
+    </message>
+    <message>
+        <source>Parts</source>
+        <translation>Parties</translation>
+    </message>
+    <message>
+        <source>Witness finished</source>
+        <translation>Witness terminé</translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing. Your earnings and transactions remain here for you to view.
+You can empty the account to make your witness funds available. When the emptying transaction is confirmed in the blockchain you can fund this account to witness again.</source>
+        <translation>Votre witness est terminé. Vos revenus et vos transactions restent ici pour que vous puissiez les consulter.
+Vous pouvez vider le compte pour mettre vos fonds de witness à disposition. Lorsque l&apos;opération de vidage est confirmée dans la chaîne, vous pouvez à nouveau approvisionner ce compte pour witnessing.</translation>
+    </message>
+    <message>
+        <source>Witness interface error</source>
+        <translation>Erreur d&apos;interface de witness</translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view.
+When the emptying transaction is confirmed in the blockchain you can fund this account to witness again.</source>
+        <translation>Votre compte de witness a fini de servir de witness et tous les fonds ont été vidés. Vos gains et vos transactions restent ici pour que vous puissiez les consulter.
+Lorsque la transaction de vidange est confirmée dans la chaîne de blocage, vous pouvez alimenter ce compte pour witnessing à nouveau.</translation>
+    </message>
+    <message>
+        <source>Note: this problem is only within the user interface and your funds are secure.</source>
+        <translation>Remarque : ce problème ne se pose que dans l&apos;interface utilisateur et vos fonds sont sécurisés.</translation>
+    </message>
+    <message>
+        <source>Close graph</source>
+        <translation>Fermer le graphique</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>Afficher le graphique</translation>
+    </message>
+    <message>
+        <source>Projected earnings graph</source>
+        <translation>Graphique des bénéfices projetés</translation>
+    </message>
+    <message>
+        <source>Compound earnings</source>
+        <translation>Gains composés</translation>
+    </message>
+    <message>
+        <source>n/a</source>
+        <translation>N.D.</translation>
+    </message>
+    <message>
+        <source>Lock time remaining</source>
+        <translation>Temps de fermeture restant</translation>
+    </message>
+    <message>
+        <source>Locked from</source>
+        <translation>Verrouillé à partir de</translation>
+    </message>
+    <message>
+        <source>Locked until</source>
+        <translation>Verrouillé jusqu&apos;à</translation>
+    </message>
+    <message>
+        <source>Last earnings</source>
+        <translation>Derniers gains</translation>
+    </message>
+    <message>
+        <source>Earnings</source>
+        <translation>Gains</translation>
+    </message>
+    <message>
+        <source>Lock duration</source>
+        <translation>Durée de verrouillage</translation>
+    </message>
+    <message>
+        <source>Required earnings frequency</source>
+        <translation>Fréquence des gains requis</translation>
+    </message>
+    <message>
+        <source>Weight</source>
+        <translation>Poids</translation>
+    </message>
+    <message>
+        <source>Estimated earnings frequency</source>
+        <translation>Estimation de la fréquence des gains</translation>
+    </message>
+    <message>
+        <source>Network weight</source>
+        <translation>Poids du réseau</translation>
+    </message>
+    <message>
+        <source>Inactive witness account</source>
+        <translation>Compte de witness inactif</translation>
+    </message>
+    <message>
+        <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
+        <translation>Votre compte de witness a été désactivé parce que votre compte n&apos;a pas été witness dans les délais prévus. Si cela se produit souvent, assurez-vous d&apos;avoir une installation de witness stable ou contactez le service d&apos;assistance. Pour reprendre le &quot;witnessing&quot;, sélectionnez le compte ci-dessous à partir duquel des frais de réactivation minimes seront facturés et appuyez sur le bouton &quot; Renouveler le compte &quot;.</translation>
+    </message>
+    <message>
+        <source>Waiting for confirmation</source>
+        <translation>En attente de confirmation</translation>
+    </message>
+    <message>
+        <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
+        <translation>Votre compte witness attend qu&apos;une transaction soit confirmée par le réseau avant qu&apos;il ne devienne actif, ce qui ne devrait prendre en moyenne que quelques minutes. Si cette page continue à s&apos;afficher pour une période plus longue que cette période, veuillez consulter l&apos;onglet des transactions et/ou demander de l&apos;aide.</translation>
+    </message>
+    <message>
+        <source>Change units</source>
+        <translation>Modifier les unités</translation>
+    </message>
+    <message>
+        <source>View graph</source>
+        <translation>Voir le graphique</translation>
+    </message>
+    <message>
+        <source>Empty account</source>
+        <translation>Compte vide</translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
+        <translation>Retrait des gains</translation>
+    </message>
+    <message>
+        <source>Renew account</source>
+        <translation>Renouveler le compte</translation>
+    </message>
+    <message>
+        <source>Earnings to date</source>
+        <translation>Gains à ce jour :</translation>
+    </message>
+    <message>
+        <source>Projected earnings</source>
+        <translation>Graphique des gains</translation>
+    </message>
+    <message>
+        <source>Initial projected earnings</source>
+        <translation>Les gains initiaux projetés</translation>
+    </message>
+    <message>
+        <source>&amp;Blocks</source>
+        <translation>&amp;Blocs</translation>
+    </message>
+    <message>
+        <source>&amp;Days</source>
+        <translation>&amp;Jours</translation>
+    </message>
+    <message>
+        <source>&amp;Weeks</source>
+        <translation>&amp;Semaines</translation>
+    </message>
+    <message>
+        <source>&amp;Months</source>
+        <translation>&amp;Mois</translation>
+    </message>
+    <message>
+        <source>%1 blocks</source>
+        <translation>%1 Blocs</translation>
+    </message>
+    <message>
+        <source>%1 days</source>
+        <translation>%1 jours</translation>
+    </message>
+    <message>
+        <source>%1 weeks</source>
+        <translation>%1 semaines</translation>
     </message>
 </context>
 <context>
@@ -1768,6 +2155,14 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
         <translation>Copier l&apos;ID de la transaction</translation>
     </message>
     <message>
+        <source>Credit</source>
+        <translation>Crédit</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Débit</translation>
+    </message>
+    <message>
         <source>Generated</source>
         <translation>Généré</translation>
     </message>
@@ -2171,6 +2566,14 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
         <translation>juste-regarder</translation>
     </message>
     <message>
+        <source>Rearrange locked funds</source>
+        <translation>Réorganiser les fonds bloqués</translation>
+    </message>
+    <message>
+        <source>Rearrange locked funds: %1</source>
+        <translation>Réorganiser les fonds bloqués: %1</translation>
+    </message>
+    <message>
         <source>Unlock funds</source>
         <translation>Déverrouiller les fonds</translation>
     </message>
@@ -2412,6 +2815,22 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
     <message>
         <source>Amount</source>
         <translation>Montant</translation>
+    </message>
+    <message>
+        <source>1 year</source>
+        <translation>1 an</translation>
+    </message>
+    <message>
+        <source>%1 years</source>
+        <translation>%1 ans</translation>
+    </message>
+    <message>
+        <source>1 month</source>
+        <translation>1 mois</translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 mois</translation>
     </message>
     <message>
         <source>Enter an address (e.g. %1)</source>
@@ -3090,6 +3509,14 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
         <translation>Erreur</translation>
     </message>
     <message>
+        <source>Automatically hide status bar when synchronised. Disable to always show status indicators.</source>
+        <translation>Masquer automatiquement la barre d&apos;état lors de la synchronisation. Désactiver pour toujours afficher les indicateurs d&apos;état.</translation>
+    </message>
+    <message>
+        <source>Hide status bar when synchronized</source>
+        <translation>Masquer la barre d&apos;état lors de la synchronisation</translation>
+    </message>
+    <message>
         <source>Periodically check if updates are available. </source>
         <translation>Vérifiez périodiquement si des mises à jour sont disponibles. </translation>
     </message>
@@ -3347,145 +3774,6 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
     </message>
 </context>
 <context>
-    <name>WitnessDialog</name>
-    <message>
-        <source>Information</source>
-        <translation>Information</translation>
-    </message>
-    <message>
-        <source>%1 months</source>
-        <translation>%1 mois</translation>
-    </message>
-    <message>
-        <source>Projected earnings graph</source>
-        <translation>Graphique des bénéfices projetés</translation>
-    </message>
-    <message>
-        <source>Compound earnings</source>
-        <translation>Gains composés</translation>
-    </message>
-    <message>
-        <source>n/a</source>
-        <translation>N.D.</translation>
-    </message>
-    <message>
-        <source>Lock time remaining</source>
-        <translation>Temps de fermeture restant</translation>
-    </message>
-    <message>
-        <source>Locked from</source>
-        <translation>Verrouillé à partir de</translation>
-    </message>
-    <message>
-        <source>Locked until</source>
-        <translation>Verrouillé jusqu&apos;à</translation>
-    </message>
-    <message>
-        <source>Last earnings</source>
-        <translation>Derniers gains</translation>
-    </message>
-    <message>
-        <source>Earnings</source>
-        <translation>Gains</translation>
-    </message>
-    <message>
-        <source>Lock duration</source>
-        <translation>Durée de verrouillage</translation>
-    </message>
-    <message>
-        <source>Required earnings frequency</source>
-        <translation>Fréquence des gains requis</translation>
-    </message>
-    <message>
-        <source>Weight</source>
-        <translation>Poids</translation>
-    </message>
-    <message>
-        <source>Estimated earnings frequency</source>
-        <translation>Estimation de la fréquence des gains</translation>
-    </message>
-    <message>
-        <source>Network weight</source>
-        <translation>Poids du réseau</translation>
-    </message>
-    <message>
-        <source>Inactive witness account</source>
-        <translation>Compte de witness inactif</translation>
-    </message>
-    <message>
-        <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
-        <translation>Votre compte de witness a été désactivé parce que votre compte n&apos;a pas été witness dans les délais prévus. Si cela se produit souvent, assurez-vous d&apos;avoir une installation de witness stable ou contactez le service d&apos;assistance. Pour reprendre le &quot;witnessing&quot;, sélectionnez le compte ci-dessous à partir duquel des frais de réactivation minimes seront facturés et appuyez sur le bouton &quot; Renouveler le compte &quot;.</translation>
-    </message>
-    <message>
-        <source>Waiting for confirmation</source>
-        <translation>En attente de confirmation</translation>
-    </message>
-    <message>
-        <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
-        <translation>Votre compte witness attend qu&apos;une transaction soit confirmée par le réseau avant qu&apos;il ne devienne actif, ce qui ne devrait prendre en moyenne que quelques minutes. Si cette page continue à s&apos;afficher pour une période plus longue que cette période, veuillez consulter l&apos;onglet des transactions et/ou demander de l&apos;aide.</translation>
-    </message>
-    <message>
-        <source>Change units</source>
-        <translation>Modifier les unités</translation>
-    </message>
-    <message>
-        <source>View graph</source>
-        <translation>Voir le graphique</translation>
-    </message>
-    <message>
-        <source>Empty account</source>
-        <translation>Compte vide</translation>
-    </message>
-    <message>
-        <source>Withdraw earnings</source>
-        <translation>Retrait des gains</translation>
-    </message>
-    <message>
-        <source>Renew account</source>
-        <translation>Renouveler le compte</translation>
-    </message>
-    <message>
-        <source>Earnings to date</source>
-        <translation>Gains à ce jour :</translation>
-    </message>
-    <message>
-        <source>Projected earnings</source>
-        <translation>Graphique des gains</translation>
-    </message>
-    <message>
-        <source>Initial projected earnings</source>
-        <translation>Les gains initiaux projetés</translation>
-    </message>
-    <message>
-        <source>&amp;Blocks</source>
-        <translation>&amp;Blocs</translation>
-    </message>
-    <message>
-        <source>&amp;Days</source>
-        <translation>&amp;Jours</translation>
-    </message>
-    <message>
-        <source>&amp;Weeks</source>
-        <translation>&amp;Semaines</translation>
-    </message>
-    <message>
-        <source>&amp;Months</source>
-        <translation>&amp;Mois</translation>
-    </message>
-    <message>
-        <source>%1 blocks</source>
-        <translation>%1 Blocs</translation>
-    </message>
-    <message>
-        <source>%1 days</source>
-        <translation>%1 jours</translation>
-    </message>
-    <message>
-        <source>%1 weeks</source>
-        <translation>%1 semaines</translation>
-    </message>
-</context>
-<context>
     <name>GuldenAmountField</name>
     <message>
         <source>Max</source>
@@ -3494,6 +3782,53 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
     <message>
         <source>Gulden</source>
         <translation>Gulden</translation>
+    </message>
+</context>
+<context>
+    <name>WitnessDurationWidget</name>
+    <message>
+        <source>1 month</source>
+        <translation>1 mois</translation>
+    </message>
+    <message>
+        <source>Lock funds for:</source>
+        <translation>Verrouiller les fonds pour:</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation>3 an</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>Les fonds seront bloqués pendant 30 jours (1 mois) avec un gain estimé à 0. Il ne sera en aucun cas possible de dépenser ou de déplacer ces fonds pendant la durée de la période de blocage.</translation>
+    </message>
+    <message>
+        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
+        <translation>Avertissement : Ce poids dépasse 1% du poids actuel du réseau, ce qui est fantastique pour contribuer à la sécurité du réseau mais pas recommandé pour maximiser vos revenus. Pour maximiser vos revenus, il est généralement préférable de répartir vos fonds sur deux comptes dans cette situation. Une exception est faite si vous avez des raisons de penser que le poids du réseau est susceptible d&apos;augmenter considérablement à l&apos;avenir. Si vous n&apos;êtes pas sûr de la meilleure marche à suivre, veuillez demander conseil avant de vous lancer.</translation>
+    </message>
+    <message>
+        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
+        <translation>Un poids minimum de %1 est requis, mais le poids sélectionné n&apos;est que de %2. Veuillez augmenter la quantité ou la durée de verrouillage pour un poids supérieur.</translation>
+    </message>
+    <message>
+        <source>A minimum amount of %1 is required.</source>
+        <translation>Un montant minimum de %1 est requis.</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
+
+Estimated earnings: %3 (%4% per month)
+
+Witness weight: %5</source>
+        <translation>Les fonds seront bloqués pendant %1 jours (%2). Il ne sera en aucun cas possible de dépenser ou de déplacer ces fonds pendant toute la durée de la période de blocage. 
+
+Estimation des gains : %3 (%4% par mois) 
+
+Poids du Witness : %5</translation>
+    </message>
+    <message>
+        <source>Form</source>
+        <translation>Formulaire</translation>
     </message>
 </context>
 <context>
@@ -3549,6 +3884,10 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
 </context>
 <context>
     <name>MiningAccountDialog</name>
+    <message>
+        <source>Arena setup time</source>
+        <translation>Durée d&apos;installation de l&apos;arène</translation>
+    </message>
     <message>
         <source>%1 MB</source>
         <translation>%1 MB</translation>

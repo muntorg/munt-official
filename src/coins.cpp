@@ -381,6 +381,10 @@ void CCoinsViewCache::SetBestBlock(const uint256 &hashBlockIn)
 
 bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn)
 {
+    // It is possible (in fact likely) for the same batch to be both erasing and writing the same entryref e.g. if swapping one block 1963 for a competing block 1963
+    // mapCoins is 'randomly' ordered so doing this would create random behaviour and an inconsistent coin database
+    // To overcome this we erase first always, and then pool up the inserts to do at the end
+    std::vector<std::pair<COutPoint, COutPoint>> writeRefHashes;
     for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();)
     {
         // Ignore non-dirty entries (optimization).
@@ -412,7 +416,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     }
                     else
                     {
-                        cacheCoinRefs.emplace(COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, it->first.n), it->first);
+                        writeRefHashes.emplace_back(COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, it->first.n), it->first);
                     }
                 }
             }
@@ -462,6 +466,11 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
         CCoinsMap::iterator itOld = it++;
         mapCoins.erase(itOld);
     }
+    for (const auto& [outPoint, entryHash] : writeRefHashes)
+    {
+        cacheCoinRefs.emplace(outPoint, entryHash);
+    }
+    
     hashBlock = hashBlockIn;
     return true;
 }

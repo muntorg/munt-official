@@ -809,6 +809,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::WitnessType;
                         break;
                     }
+                    //fixme: (PHASE5) - Should be able to renew multiple in one transaction
                     else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut, bundle.outputs[0].first, nInputHeight, nSpendHeight) )
                     {
                         matchedExistingBundle = true;

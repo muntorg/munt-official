@@ -541,8 +541,6 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
 
     infoForAccount.pointMapForecast[0] = 0;
 
-    CTxOutPoW2Witness witnessDetails;
-
     // fixme: (PHASE5) Use only rewards of current locked witness amounts, not of previous ones after a re-fund...
     // Extract details for every witness reward we have received.
     filter->setAccountFilter(forAccount);
@@ -608,7 +606,7 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
         infoForAccount.nEstimatedWitnessBlockPeriod = uint64_t(1.0/fInv);
     }
 
-    infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(witnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
+    infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.nLockUntilBlock, chainActive.Tip()->nHeight);
 
     return infoForAccount;
 }
@@ -647,6 +645,7 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
 
     bool succes = false;
 
+    CWitnessAccountStatus accountStatus;
     try
     {
         CAccount* forAccount;
@@ -657,7 +656,7 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
         ui->compoundEarningsCheckBox->setChecked((forAccount->getCompounding() != 0));
 
         CGetWitnessInfo witnessInfo;
-        const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, &witnessInfo);
+        accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, &witnessInfo);
         if (pWitnessStatus != nullptr)
             *pWitnessStatus = accountStatus.status;
 
@@ -749,6 +748,7 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     {
         ui->viewWitnessGraphButton->setText(tr("Show graph"));
         ui->viewWitnessGraphButton->setVisible(true);
+        requestStatisticsUpdate(accountStatus);
     }
     else
     {
