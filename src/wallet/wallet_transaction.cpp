@@ -895,7 +895,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     //fixme: (FUT) (COIN_CONTROL)
     CCoinControl tempCoinControl;
     if (!coinControl)
-        coinControl = tempCoinControl;
+        coinControl = &tempCoinControl;
 
     CGetWitnessInfo witnessInfo;
     CBlock block;
@@ -975,7 +975,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     {
         // Add fee input and change output
         std::string sFailReason;
-        if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, &coinControl))
+        if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, coinControl))
         {
             strError = "Unable to add fee";
             return false;

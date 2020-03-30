@@ -18,6 +18,7 @@
 #include "init.h"
 #include "unity/appmanager.h"
 #include "alert.h"
+#include "wallet/coincontrol.h"
 
 #include <QAction>
 #include <QApplication>

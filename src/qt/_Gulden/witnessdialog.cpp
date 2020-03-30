@@ -606,7 +606,7 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
         infoForAccount.nEstimatedWitnessBlockPeriod = uint64_t(1.0/fInv);
     }
 
-    infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.lockUntilBlock, chainActive.Tip()->nHeight);
+    infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.nLockUntilBlock, chainActive.Tip()->nHeight);
 
     return infoForAccount;
 }
