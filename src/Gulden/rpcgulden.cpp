@@ -2664,7 +2664,7 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "renewwitnessaccount \"witness_account\" \n"
+            "renewwitnessaccount \"funding_account\" \"witness_account\" \n"
             "\nRenew an expired witness account. \n"
             "1. \"funding_account\"        (required) The unique UUID or label for the account.\n"
             "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
@@ -2700,20 +2700,23 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
     }
 
+    bool shouldUpgrade = false;
+
     //fixme: (PHASE5) - Share common code with GUI::requestRenewWitness
     std::string strError;
     CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
     CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
     CAmount transactionFee;
-    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError))
+    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError, nullptr, nullptr, &shouldUpgrade))
     {
         throw std::runtime_error(strprintf("Failed to create renew transaction [%s]", strError.c_str()));
     }
 
+    
     uint256 finalTransactionHash;
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
-        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash))
+        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash, shouldUpgrade?SignType::WitnessUpdate:SignType::Spend))
         {
             throw std::runtime_error(strprintf("Failed to sign renew transaction [%s]", strError.c_str()));
         }

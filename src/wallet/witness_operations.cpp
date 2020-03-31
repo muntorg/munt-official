@@ -146,10 +146,10 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
         }
     }
 
-    uint256 finalTransactionHash;
+    uint256 extendTransactionHash;
     {
         LOCK2(cs_main, pwallet->cs_wallet);
-        if (!pwallet->SignAndSubmitTransaction(reservekey, extendWitnessTransaction, reasonForFail, &finalTransactionHash))
+        if (!pwallet->SignAndSubmitTransaction(reservekey, extendWitnessTransaction, reasonForFail, &extendTransactionHash))
         {
             throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
         }
@@ -157,7 +157,7 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
 
     // Set result parameters
     if (pTxid != nullptr)
-        *pTxid = finalTransactionHash.GetHex();
+        *pTxid = extendTransactionHash.GetHex();
     if (pFee != nullptr)
         *pFee = transactionFee;
 }
@@ -324,15 +324,15 @@ void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount*
     CAmount transactionFee;
     pwallet->PrepareUpgradeWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee);
 
-    uint256 finalTransactionHash;
-    if (!pwallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash))
+    uint256 upgradeTransactionHash;
+    if (!pwallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &upgradeTransactionHash, SignType::WitnessUpdate))
     {
         throw std::runtime_error(strprintf("Failed to sign transaction [%s]", strError.c_str()));
     }
 
     // Set result parameters
     if (pTxid != nullptr)
-        *pTxid = finalTransactionHash.GetHex();
+        *pTxid = upgradeTransactionHash.GetHex();
     if (pFee != nullptr)
         *pFee = transactionFee;
 }
@@ -442,10 +442,10 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
         throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to fund transaction [%s]", reasonForFail.c_str()));
     }
 
-    uint256 finalTransactionHash;
+    uint256 rotateTransactionHash;
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
-        if (!pwallet->SignAndSubmitTransaction(reservekey, rotateWitnessTransaction, reasonForFail, &finalTransactionHash))
+        if (!pwallet->SignAndSubmitTransaction(reservekey, rotateWitnessTransaction, reasonForFail, &rotateTransactionHash))
         {
             throw witness_error(witness::RPC_MISC_ERROR, strprintf("Failed to commit transaction [%s]", reasonForFail.c_str()));
         }
@@ -453,7 +453,7 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
 
     // Set result parameters
     if (pTxid != nullptr)
-        *pTxid = finalTransactionHash.GetHex();
+        *pTxid = rotateTransactionHash.GetHex();
     if (pFee != nullptr)
         *pFee = transactionFee;
 }

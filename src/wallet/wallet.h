@@ -771,7 +771,7 @@ public:
     bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
 
     //! Create a transaction that renews an expired witness account
-    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction=nullptr, CCoinControl* coinControl=nullptr);
+    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction=nullptr, CCoinControl* coinControl=nullptr, bool* shouldUpgrade=nullptr);
 
     //! Create a transaction upgrades an old ScriptLegacyOutput witness to a new PoW2WitnessOutput
     void PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut);
@@ -799,7 +799,7 @@ public:
     /**
      * Sign and submit a transaction (that has not yet been signed) to the network, add to wallet as appropriate etc.
      */
-    bool SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut=nullptr);
+    bool SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut=nullptr, SignType type=SignType::Spend);
 
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CConnman* connman, CValidationState& state);
 

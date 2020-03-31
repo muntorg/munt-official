@@ -708,8 +708,9 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                 case WitnessStatus::Expired:
                 {
                     computedWidgetIndex = WitnessDialogStates::EXPIRED;
-                    stateRenewWitnessButton = !accountStatus.hasUnconfirmedWittnessTx;
-                    stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasUnconfirmedWittnessTx;
+                    stateUpgradeButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
+                    stateRenewWitnessButton = !stateUpgradeButton && !accountStatus.hasUnconfirmedWittnessTx;
+                    stateExtendButton = !stateUpgradeButton && IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasUnconfirmedWittnessTx;
                     break;
                 }
                 case WitnessStatus::Emptying:

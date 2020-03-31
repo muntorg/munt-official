@@ -184,6 +184,11 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
                 }
                 break;
             }
+            case WitnessUpdate:
+            {
+                return true;
+                break;
+            }
             case Witness:
             {
                 if (!Sign1(witnessKeyID, creator, scriptPubKey, ret, sigversion))
@@ -231,6 +236,10 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
             if (!Sign1(pow2Witness.spendingKeyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
             return true;
+        }
+        case WitnessUpdate:
+        {
+            return false;
         }
         case Witness:
         {
