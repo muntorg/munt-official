@@ -457,12 +457,12 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         coinbaseTx.vin[0].segregatedSignatureData.stack.clear();
         coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
         CVectorWriter(0, 0, coinbaseTx.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(nHeight);
-        CVectorWriter(0, 0, coinbaseTx.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(nExtraNonce);
-        coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end()));
+        std::string finalCoinbaseSignature = strprintf("%d%s", nExtraNonce, coinbaseSignature.c_str());
+        coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>(finalCoinbaseSignature.begin(), finalCoinbaseSignature.end()));
     }
     else
     {
-        coinbaseTx.vin[0].scriptSig = CScript() << nHeight << nExtraNonce << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
+        coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0 << nExtraNonce << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
     }
 
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
