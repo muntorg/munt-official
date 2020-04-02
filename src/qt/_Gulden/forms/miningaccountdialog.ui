@@ -341,7 +341,7 @@
               <number>0</number>
              </property>
              <item row="2" column="0">
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="bestMiningSpeed">
                <property name="text">
                 <string>Best reported speed</string>
                </property>
@@ -368,14 +368,14 @@
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QLabel" name="label_6">
+              <widget class="QLabel" name="arenaSetupTime">
                <property name="text">
                 <string>Arena setup time</string>
                </property>
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="movingAverage">
                <property name="text">
                 <string>Moving average</string>
                </property>
@@ -392,7 +392,7 @@
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="lastReportedSpeed">
                <property name="text">
                 <string>Last reported speed</string>
                </property>
