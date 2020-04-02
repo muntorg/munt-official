@@ -587,6 +587,10 @@ public:
     }
 
     std::map<uint256, CWalletTx> mapWallet;
+    std::map<uint256, uint256> mapWalletHash;
+    void maintainHashMap(const CWalletTx& wtxIn, uint256& hash);
+    /** Transaction hash from outpoint. Even if it is index based. */
+    bool GetTxHash(const COutPoint& outpoint, uint256& txHash) const;
     std::list<CAccountingEntry> laccentries;
 
     int64_t nOrderPosNext;

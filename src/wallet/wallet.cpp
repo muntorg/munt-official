@@ -69,7 +69,6 @@ CFeeRate payTxFee(DEFAULT_TRANSACTION_FEE);
 unsigned int nTxConfirmTarget = DEFAULT_TX_CONFIRM_TARGET;
 bool bSpendZeroConfChange = DEFAULT_SPEND_ZEROCONF_CHANGE;
 bool fWalletRbf = DEFAULT_WALLET_RBF;
-bool fSPV = false;
 
 const char * DEFAULT_WALLET_DAT = "wallet.dat";
 //const uint32_t BIP32_HARDENED_KEY_LIMIT = 0x80000000;
@@ -114,15 +113,33 @@ const CWalletTx* CWallet::GetWalletTx(const uint256& hash) const
     return &(it->second);
 }
 
+bool CWallet::GetTxHash(const COutPoint& outpoint, uint256& txHash) const
+{
+    auto hashIter = mapWalletHash.find(outpoint.getBucketHash());
+    if (hashIter != mapWalletHash.end())
+    {
+        txHash = hashIter->second;
+        return true;
+    }
+    else
+    {
+        return ::GetTxHash(outpoint, txHash);
+    }
+}
+
 CWalletTx* CWallet::GetWalletTx(const COutPoint& outpoint) const
 {
     uint256 txHash;
     if (outpoint.isHash)
+    {
         txHash = outpoint.getTransactionHash();
+    }
     else
     {
-        if (!GetTxHash(outpoint, txHash))
+        if (!CWallet::GetTxHash(outpoint, txHash))
+        {
             return nullptr;
+        }
     }
     return const_cast<CWalletTx*>(GetWalletTx(txHash));
 }
@@ -483,7 +500,7 @@ bool CWallet::HasWalletSpend(const uint256& txid) const
     AssertLockHeld(cs_wallet);
     auto iter = mapTxSpends.lower_bound(COutPoint(txid, 0));
     uint256 txHash;
-    return (iter != mapTxSpends.end() && GetTxHash(iter->first, txHash) && txHash == txid);
+    return (iter != mapTxSpends.end() && CWallet::GetTxHash(iter->first, txHash) && txHash == txid);
 }
 
 void CWallet::Flush(bool shutdown)
@@ -952,6 +969,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose, bool fSelf
     CWalletDB walletdb(*dbw, "r+", fFlushOnClose);
 
     uint256 hash = wtxIn.GetHash();
+    maintainHashMap(wtxIn, hash);
 
     // Inserts only if not already there, returns tx inserted or tx found
     std::pair<std::map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(std::pair(hash, wtxIn));
@@ -1035,11 +1053,25 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose, bool fSelf
     return true;
 }
 
+void CWallet::maintainHashMap(const CWalletTx& wtxIn, uint256& hash)
+{
+    //if (mapWallet.size() > 0 && mapWalletHash.empty())
+    if (wtxIn.nHeight > 0)
+    {
+        for (unsigned int i = 0; i < wtxIn.tx->vout.size(); i++)
+        {
+            mapWalletHash[COutPoint(wtxIn.nHeight, wtxIn.nIndex, i).getBucketHash()] = hash;
+        }
+    }
+}
+
 bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
 {
     uint256 hash = wtxIn.GetHash();
 
+    maintainHashMap(wtxIn, hash);
     mapWallet[hash] = wtxIn;
+    
     CWalletTx& wtx = mapWallet[hash];
     wtx.BindWallet(this);
     wtxOrdered.insert(std::pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
@@ -1105,7 +1137,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                         else
                         {
                             uint256 txHash;
-                            GetTxHash(range.first->first, txHash);
+                            CWallet::GetTxHash(range.first->first, txHash);
                             LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), txHash.ToString(), range.first->first.n);
                             MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                         }
@@ -1184,13 +1216,17 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             //GetTransaction() is expensive and locks on mutexes that intefere with other parts of the code.
             /*for(const auto& txin : tx.vin)
             {
-                bool fExistedIncoming = mapWallet.count(txin.prevout.hash) != 0;
-                if (!fExistedIncoming)
+                uint256 txHash;
+                if (CWallet::GetTxHash(txin.prevout, txHash))
                 {
-                    uint256 hashBlock = uint256();
-                    if (GetTransaction(txin.prevout.hash, wtx.tx, Params().GetConsensus(), hashBlock, true))
+                    bool fExistedIncoming = mapWallet.count(txHash) != 0;
+                    if (!fExistedIncoming)
                     {
-                        AddToWallet(wtx, false);
+                        uint256 hashBlock = uint256();
+                        if (GetTransaction(txHash, wtx.tx, Params().GetConsensus(), hashBlock, true))
+                        {
+                            AddToWallet(wtx, false);
+                        }
                     }
                 }
             }*/
@@ -1246,7 +1282,7 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
             TxSpends::const_iterator iter = mapTxSpends.lower_bound(COutPoint(hashTx, 0));
             while (iter != mapTxSpends.end()) {
                 uint256 txHash;
-                if (!GetTxHash(iter->first, txHash) || txHash != now)
+                if (!CWallet::GetTxHash(iter->first, txHash) || txHash != now)
                     break;
                 if (!done.count(iter->second)) {
                     todo.insert(iter->second);
@@ -1312,7 +1348,7 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             TxSpends::const_iterator iter = mapTxSpends.lower_bound(COutPoint(now, 0));
             while (iter != mapTxSpends.end()) {
                 uint256 txHash;
-                if (!GetTxHash(iter->first, txHash) || txHash != now)
+                if (!CWallet::GetTxHash(iter->first, txHash) || txHash != now)
                     break;
                  if (!done.count(iter->second)) {
                      todo.insert(iter->second);
@@ -2840,12 +2876,6 @@ CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtrac
 const CBlockIndex* CWallet::LastSPVBlockProcessed() const
 {
     return pSPVScanner ? pSPVScanner->LastBlockProcessed() : nullptr;
-}
-
-int CWallet::ChainHeight()
-{
-    LOCK(cs_main);
-    return fSPV ? partialChain.Height() : chainActive.Height();
 }
 
 int64_t CWallet::birthTime() const

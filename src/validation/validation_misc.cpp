@@ -237,15 +237,19 @@ double GuessVerificationProgress(const ChainTxData& data, CBlockIndex *pindex) {
 
 bool GetTxHash(const COutPoint& outpoint, uint256& txHash)
 {
-    if (outpoint.isHash) {
+    if (outpoint.isHash)
+    {
         txHash = outpoint.getTransactionHash();
         return true;
     }
-    else {
+    else
+    {
         LOCK(cs_main);
         CBlock block;
-        if ((int)outpoint.getTransactionBlockNumber() <= chainActive.Height() && ReadBlockFromDisk(block, chainActive[outpoint.getTransactionBlockNumber()], Params())) {
-            if (outpoint.getTransactionIndex() < block.vtx.size()) {
+        if ((int)outpoint.getTransactionBlockNumber() <= chainActive.Height() && ReadBlockFromDisk(block, chainActive[outpoint.getTransactionBlockNumber()], Params()))
+        {
+            if (outpoint.getTransactionIndex() < block.vtx.size())
+            {
                 txHash = block.vtx[outpoint.getTransactionIndex()]->GetHash();
                 return true;
             }

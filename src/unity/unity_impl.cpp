@@ -21,6 +21,7 @@
 #include "net_processing.h"
 #include "wallet/spvscanner.h"
 #include "sync.h"
+#include "wallet/wallettx.h"
 
 // Djinni generated files
 #include "gulden_unified_backend.hpp"
@@ -247,7 +248,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         }
         else
         {
-            if (!GetTxHash(txin.prevout, txHash))
+            if (!pwallet->GetTxHash(txin.prevout, txHash))
             {
                 LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.prevout.getTransactionBlockNumber(), txin.prevout.getTransactionIndex());
                 continue;
@@ -708,7 +709,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         {
             LogPrintf("ReplaceWalletLinkedFromURI: Empty account into linked address [%s]", getUUIDAsString(accountUUID).c_str());
             std::vector<CRecipient> vecSend;
-            CRecipient recipient = GetRecipientForDestination(address.Get(), nBalance, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip()));
+            CRecipient recipient = GetRecipientForDestination(address.Get(), nBalance, fSubtractFeeFromAmount, GetPoW2Phase(chainTip()));
             vecSend.push_back(recipient);
 
             CWalletTx* pWallettx = new CWalletTx();
@@ -1100,7 +1101,7 @@ int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
         throw std::runtime_error(_("Invalid address"));
     }
 
-    CRecipient recipient = GetRecipientForDestination(address.Get(), std::min(GetBalance(), request.amount), true, GetPoW2Phase(chainActive.Tip()));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), std::min(GetBalance(), request.amount), true, GetPoW2Phase(chainTip()));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 
@@ -1141,7 +1142,7 @@ PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRec
         throw std::runtime_error(_("Invalid address"));
     }
 
-    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, substract_fee, GetPoW2Phase(chainActive.Tip()));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, substract_fee, GetPoW2Phase(chainTip()));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 
