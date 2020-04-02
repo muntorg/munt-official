@@ -87,7 +87,7 @@ QMenu::separator
     margin-right: 30px;
 }
 
-#forexError, #pow2WeightExceedsMaxPercentWarning, #labelExpiredWitnessAccount
+#forexError, #labelExpiredWitnessAccount
 {
     color: COLOR_VALIDATION_FAILED;
 }
@@ -909,7 +909,7 @@ QHeaderView::up-arrow:hover
     margin-bottom: 25px;
 }
 
-#pow2LockFundsInfoLabel, #pow2WeightExceedsMaxPercentWarning
+#pow2LockFundsInfoLabel
 {
     padding-top: 25px;
 }

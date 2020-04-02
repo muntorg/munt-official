@@ -84,8 +84,6 @@ void WitnessDurationWidget::update()
 {
     setValid(ui->pow2LockFundsInfoLabel, true);
 
-    ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
-
     if (nAmount < CAmount(gMinimumWitnessAmount*COIN))
     {
         ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of %1 is required.").arg(gMinimumWitnessAmount));
