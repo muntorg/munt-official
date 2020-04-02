@@ -1,6 +1,7 @@
 2.2.0.5
 
 UI      - Fix UI behaviour for upgrading expired witness accounts
+UI      - Improve UI behaviour for displaying 'extend' button for witness accounts 
 RPC     - Make 'renewwitnessaccount' command work also for upgrading witness accounts
 CORE    - Improve mining behaviour for v2 transactions, insert an extra nonce, this is unlikely to matter at current mining speeds in any way but is better for correctness anyway. (Only really relevant in fringe cases like mining with -limitdeltadiffdrop=0)
 
