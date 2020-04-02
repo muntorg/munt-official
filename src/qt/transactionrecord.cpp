@@ -849,7 +849,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
         idx);
     status.countsForBalance = wtx.IsTrusted() && !(wtx.GetBlocksToMaturity() > 0);
     status.depth = wtx.GetDepthInMainChain();
-    status.cur_num_blocks = CWallet::ChainHeight();
+    status.cur_num_blocks = ChainHeight();
 
     if (!CheckFinalTx(wtx, chainActive))
     {
@@ -914,7 +914,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
 bool TransactionRecord::statusUpdateNeeded()
 {
     AssertLockHeld(cs_main);
-    return status.cur_num_blocks != CWallet::ChainHeight() || status.needsUpdate;
+    return status.cur_num_blocks != ChainHeight() || status.needsUpdate;
 }
 
 QString TransactionRecord::getTxID() const

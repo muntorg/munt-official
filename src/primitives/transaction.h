@@ -1151,7 +1151,7 @@ struct CWitnessBundles;
 typedef std::shared_ptr<const CWitnessBundles> CWitnessBundlesRef;
 
 //fixme: (PHASE5) Remove
-#define CURRENT_TX_VERSION_POW2 (IsSegSigEnabled(chainActive.TipPrev()) ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
+#define CURRENT_TX_VERSION_POW2 (IsSegSigEnabled(chainPrevTip()) ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
 
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.
