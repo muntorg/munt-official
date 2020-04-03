@@ -526,6 +526,36 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             walletInstance->setActiveAccount(walletdb, firstAccount);
         }
 
+        //fixme: (FUT) Remove this in future
+        //Clean up an issue with some wallets that accidentally changed mining address, in 2.2.0.0 release.
+        for (const auto& [accountUUID, forAccount] : walletInstance->mapAccounts)
+        {
+            if (forAccount->IsMiningAccount())
+            {
+                if (!forAccount->setKeyPoolExternal.empty() && forAccount->setKeyPoolExternal.find(0) == forAccount->setKeyPoolExternal.end())
+                {
+                    LOCK(walletInstance->cs_wallet);
+                    LogPrintf("Restoring mining address for account [%s] to first address\n", forAccount->getLabel());
+                    int nIndex=0;
+                    auto& keyPool = forAccount->setKeyPoolExternal;
+                    CWalletDB walletdb(*walletInstance->dbw);
+                    while (forAccount->setKeyPoolExternal.find(nIndex) == forAccount->setKeyPoolExternal.end())
+                    {
+                        CExtPubKey pubkey;
+                        if (static_cast<CAccountHD*>(forAccount)->GetPubKeyManual(nIndex, KEYCHAIN_EXTERNAL, pubkey))
+                        {
+                            if (walletdb.WritePool(nIndex, CKeyPool(pubkey.GetKey(), getUUIDAsString(accountUUID), KEYCHAIN_EXTERNAL )))
+                            {
+                                keyPool.insert(nIndex);
+                            }
+                        }
+                        ++nIndex;
+                    }
+                    LogPrintf("Done restoring mining addresses\n");
+                }
+            }
+        }
+        
         //Clean up an issue with some wallets that didn't delete one of the seeds correctly
         if (walletInstance->IsCrypted() && walletInstance->mapSeeds.size() > 1)
         {

@@ -254,30 +254,52 @@ std::string ListBlockFilterTypes()
     return ret.str();
 }
 
+static void BasicFilterElements(GCSFilter::ElementSet& elements, const CTxOut& txout)
+{
+    switch (txout.GetType())
+    {
+        case CTxOutType::ScriptLegacyOutput:
+        {
+            const CScript& script = txout.output.scriptPubKey;
+            if (script.empty() || script[0] == OP_RETURN)
+                break;
+            CKeyID hash;
+            if (script.IsPayToPubkeyHash(hash))
+            {
+                elements.emplace(hash.begin(), hash.end());
+            }
+            break;
+        }
+        case CTxOutType::PoW2WitnessOutput:
+        {
+            const auto& wit = txout.output.witnessDetails;
+            elements.emplace(wit.spendingKeyID.begin(), wit.spendingKeyID.end());
+            elements.emplace(wit.witnessKeyID.begin(), wit.witnessKeyID.end());
+        }
+        case CTxOutType::StandardKeyHashOutput:
+        {
+            const auto& keyID = txout.output.standardKeyHash.keyID;
+            elements.emplace(keyID.begin(), keyID.end());
+        }
+    }
+}
+
 static void BasicFilterElements(GCSFilter::ElementSet& elements, const CBlock& block, const CBlockUndo& block_undo)
 {
-    for (const CTransactionRef& tx : block.vtx) {
-        for (const CTxOut& txout : tx->vout) {
-            const CScript& script = txout.output.scriptPubKey;
-            if (script.empty() || script[0] == OP_RETURN) continue;
-            CKeyID hash;
-            if (script.IsPayToPubkeyHash(hash)) {
-                elements.emplace(hash.begin(), hash.end());
-            }
+    for (const CTransactionRef& tx : block.vtx)
+    {
+        for (const CTxOut& txout : tx->vout)
+        {
+            BasicFilterElements(elements, txout);
         }
     }
-
-    for (const CTxUndo& tx_undo : block_undo.vtxundo) {
-        for (const Coin& prevout : tx_undo.vprevout) {
-            const CScript& script = prevout.out.output.scriptPubKey;
-            if (script.empty()) continue;
-            CKeyID hash;
-            if (script.IsPayToPubkeyHash(hash)) {
-                elements.emplace(hash.begin(), hash.end());
-            }
+    for (const CTxUndo& tx_undo : block_undo.vtxundo)
+    {
+        for (const Coin& prevout : tx_undo.vprevout)
+        {
+            BasicFilterElements(elements, prevout.out);
         }
     }
-
 }
 
 static GCSFilter::ElementSet BasicFilterElements(const CBlock& block, const CBlockUndo& block_undo)
@@ -287,8 +309,7 @@ static GCSFilter::ElementSet BasicFilterElements(const CBlock& block, const CBlo
     return elements;
 }
 
-BlockFilter::BlockFilter(BlockFilterType filter_type, const uint256& block_hash,
-                         std::vector<unsigned char> filter)
+BlockFilter::BlockFilter(BlockFilterType filter_type, const uint256& block_hash, std::vector<unsigned char> filter)
     : m_filter_type(filter_type), m_block_hash(block_hash)
 {
     GCSFilter::Params params;

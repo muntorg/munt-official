@@ -511,6 +511,21 @@ void CAccountHD::GetPubKey(CExtPubKey& childKey, int nChain) const
     }
 }
 
+bool CAccountHD::GetPubKeyManual(int64_t HDKeyIndex, int keyChain, CExtPubKey& childKey) const
+{
+    if (keyChain == KEYCHAIN_EXTERNAL)
+    {
+        primaryChainKeyPub.Derive(childKey, HDKeyIndex);
+        return true;
+    }
+    else
+    {
+        changeChainKeyPub.Derive(childKey, HDKeyIndex);
+        return true;
+    }
+    return false;
+}
+
 bool CAccountHD::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const
 {
     int64_t nKeyIndex = -1;

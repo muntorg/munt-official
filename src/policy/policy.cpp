@@ -294,7 +294,7 @@ bool IsSegregatedSignatureDataStandard(const CTransaction& tx, const CCoinsViewC
 
     for (uint64_t i=0; i<tx.vin.size(); ++i)
     {
-        size_t sizeSegregatedSignatureStack = tx.vin[i].segregatedSignatureData.stack.size() - 1;
+        size_t sizeSegregatedSignatureStack = tx.vin[i].segregatedSignatureData.stack.size();
         if (sizeSegregatedSignatureStack > MAX_STANDARD_SEGREGATED_SIGNATURE_STACK_ITEMS)
             return false;
 

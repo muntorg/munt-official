@@ -9,41 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>OptimizeWitnessDialog</name>
-    <message>
-        <source>Account is already optimal</source>
-        <translation>Le compte est déjà optimal</translation>
-    </message>
-    <message>
-        <source>Okay</source>
-        <translation>D&apos;accord</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
-    </message>
-    <message>
-        <source>No funding account selected</source>
-        <translation>Aucun compte de financement sélectionné</translation>
-    </message>
-    <message>
-        <source>Optimize witness</source>
-        <translation>Optimiser le witness</translation>
-    </message>
-    <message>
-        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
-        <translation>Optimisez les parties en lesquelles votre witness est divisé pour maximiser vos gains. Un compte de financement est nécessaire pour les frais de la transaction qui réorganise les parties du witness.</translation>
-    </message>
-    <message>
-        <source>Optimize</source>
-        <translation>Optimiser</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to optimize the witness parts?</source>
-        <translation>Êtes-vous sûr de vouloir optimiser les parties du witness?</translation>
-    </message>
-</context>
-<context>
     <name>AccountSelectionWidget</name>
     <message>
         <source>Frame</source>
@@ -663,20 +628,8 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation>Mes comptes</translation>
     </message>
     <message>
-        <source>1 year</source>
-        <translation>1 an</translation>
-    </message>
-    <message>
-        <source>%1 years</source>
-        <translation>%1 ans</translation>
-    </message>
-    <message>
         <source>1 month</source>
         <translation>1 mois</translation>
-    </message>
-    <message>
-        <source>%1 months</source>
-        <translation>%1 mois</translation>
     </message>
     <message>
         <source>Lock funds for:</source>
@@ -693,26 +646,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
         <translation>Avertissement : Ce poids dépasse 1% du poids actuel du réseau, c&apos;est fantastique pour contribuer à la sécurité du réseau mais non recommandé pour maximiser vos gains. Pour des gains maximaux, il serait généralement préférable de diviser vos fonds en deux comptes dans cette situation. Une exception est que si vous avez des raisons de croire que le poids du réseau est susceptible d&apos;augmenter considérablement à l&apos;avenir, veuillez demander d&apos;autres conseils avant de procéder si vous n&apos;êtes pas certain de la meilleure ligne de conduite à adopter.</translation>
-    </message>
-    <message>
-        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
-        <translation>Un poids minimum de %1 est requis, mais le poids sélectionné est seulement %2, veuillez augmenter la quantité ou le temps de blocage pour un poids plus grand.</translation>
-    </message>
-    <message>
-        <source>A minimum amount of %1 is required.</source>
-        <translation>Un montant minimum de %1 est requis.</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
-
-Estimated earnings: %3 (%4% per month)
-
-Witness weight: %5</source>
-        <translation>Les fonds seront bloqués pendant %1 jours (%2). Il ne sera en aucun cas possible de dépenser ou de déplacer ces fonds pendant toute la durée de la période de blocage.
-
-Estimation des gains : %3 (%4% par mois)
-
-Poids du Witness : %5</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -780,6 +713,41 @@ Poids du Witness : %5</translation>
     <message>
         <source>Okay</source>
         <translation>D&apos;accord</translation>
+    </message>
+</context>
+<context>
+    <name>OptimizeWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Aucun compte de financement sélectionné</translation>
+    </message>
+    <message>
+        <source>Account is already optimal</source>
+        <translation>Le compte est déjà optimal</translation>
+    </message>
+    <message>
+        <source>Optimize witness</source>
+        <translation>Optimiser le witness</translation>
+    </message>
+    <message>
+        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
+        <translation>Optimisez les parties en lesquelles votre witness est divisé pour maximiser vos gains. Un compte de financement est nécessaire pour les frais de la transaction qui réorganise les parties du witness.</translation>
+    </message>
+    <message>
+        <source>Optimize</source>
+        <translation>Optimiser</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to optimize the witness parts?</source>
+        <translation>Êtes-vous sûr de vouloir optimiser les parties du witness?</translation>
     </message>
 </context>
 <context>
@@ -857,12 +825,12 @@ N&apos;oubliez pas d&apos;installer la nouvelle clé sur tout dispositif (pi) ou
         <translation>Information</translation>
     </message>
     <message>
-        <source>%1 months</source>
-        <translation>%1 mois</translation>
-    </message>
-    <message>
         <source>Optimize</source>
         <translation>Optimiser</translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 mois</translation>
     </message>
     <message>
         <source>Upgrade</source>
@@ -2817,16 +2785,16 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
         <translation>Montant</translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation>1 mois</translation>
+    </message>
+    <message>
         <source>1 year</source>
         <translation>1 an</translation>
     </message>
     <message>
         <source>%1 years</source>
         <translation>%1 ans</translation>
-    </message>
-    <message>
-        <source>1 month</source>
-        <translation>1 mois</translation>
     </message>
     <message>
         <source>%1 months</source>
@@ -3803,8 +3771,8 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
         <translation>Les fonds seront bloqués pendant 30 jours (1 mois) avec un gain estimé à 0. Il ne sera en aucun cas possible de dépenser ou de déplacer ces fonds pendant la durée de la période de blocage.</translation>
     </message>
     <message>
-        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
-        <translation>Avertissement : Ce poids dépasse 1% du poids actuel du réseau, ce qui est fantastique pour contribuer à la sécurité du réseau mais pas recommandé pour maximiser vos revenus. Pour maximiser vos revenus, il est généralement préférable de répartir vos fonds sur deux comptes dans cette situation. Une exception est faite si vous avez des raisons de penser que le poids du réseau est susceptible d&apos;augmenter considérablement à l&apos;avenir. Si vous n&apos;êtes pas sûr de la meilleure marche à suivre, veuillez demander conseil avant de vous lancer.</translation>
+        <source>Form</source>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
@@ -3813,22 +3781,6 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
     <message>
         <source>A minimum amount of %1 is required.</source>
         <translation>Un montant minimum de %1 est requis.</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
-
-Estimated earnings: %3 (%4% per month)
-
-Witness weight: %5</source>
-        <translation>Les fonds seront bloqués pendant %1 jours (%2). Il ne sera en aucun cas possible de dépenser ou de déplacer ces fonds pendant toute la durée de la période de blocage. 
-
-Estimation des gains : %3 (%4% par mois) 
-
-Poids du Witness : %5</translation>
-    </message>
-    <message>
-        <source>Form</source>
-        <translation>Formulaire</translation>
     </message>
 </context>
 <context>

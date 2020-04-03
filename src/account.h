@@ -450,6 +450,9 @@ public:
     virtual bool IsLocked() const override;
     virtual bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyChain) override;
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain) override;
+    
+    //NB!! This only exists for the sake of recovery code in wallet_init - it should not be used directly anywhere else in the codebase
+    bool GetPubKeyManual(int64_t HDKeyIndex, int keyChain, CExtPubKey& childKey) const;
 
     void GetPubKey(CExtPubKey& childKey, int nChain) const;
     bool IsHD() const override {return true;};

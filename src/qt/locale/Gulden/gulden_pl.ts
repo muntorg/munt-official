@@ -9,41 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>OptimizeWitnessDialog</name>
-    <message>
-        <source>Account is already optimal</source>
-        <translation>Konto jest już optymalne</translation>
-    </message>
-    <message>
-        <source>Okay</source>
-        <translation>Dobrze</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Anuluj</translation>
-    </message>
-    <message>
-        <source>No funding account selected</source>
-        <translation>Nie wybrano konta finansowania</translation>
-    </message>
-    <message>
-        <source>Optimize witness</source>
-        <translation>Zoptymalizuj witness</translation>
-    </message>
-    <message>
-        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
-        <translation>Zoptymalizuj części, na które podzielony jest twój witness , aby zmaksymalizować swoje zarobki. Konto finansowania jest potrzebne do uiszczenia opłaty za transakcję, która porządkuje części witness .</translation>
-    </message>
-    <message>
-        <source>Optimize</source>
-        <translation>Optymalizować</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to optimize the witness parts?</source>
-        <translation>Czy na pewno chcesz zoptymalizować części witness ?</translation>
-    </message>
-</context>
-<context>
     <name>AccountSelectionWidget</name>
     <message>
         <source>Frame</source>
@@ -664,20 +629,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Moje konta</translation>
     </message>
     <message>
-        <source>1 year</source>
-        <translation>1 rok</translation>
-    </message>
-    <message>
-        <source>%1 years</source>
-        <translation>%1 lat</translation>
-    </message>
-    <message>
         <source>1 month</source>
         <translation>1 miesiąc</translation>
-    </message>
-    <message>
-        <source>%1 months</source>
-        <translation>%1 miesiące</translation>
     </message>
     <message>
         <source>Lock funds for:</source>
@@ -694,26 +647,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
         <translation>Ostrzeżenie: ta waga przekracza 1% aktualnej masy sieci, co jest fantastyczne ponieważ przyczynia się do bezpieczeństwa sieci, ale nie jest zalecane do maksymalizacji zarobków. Aby uzyskać maksymalne zarobki, zwykle lepiej jest podzielić środki na dwa konta w tej sytuacji. Wyjątkiem jest sytuacja, gdy masz powody sądzić że waga sieci prawdopodobnie wzrośnie znacznie w przyszłości, jeśli nie masz pewności co do najlepszego sposobu działania proszę zasięgnij porady zanim przejdziesz dalej.</translation>
-    </message>
-    <message>
-        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
-        <translation>Wymagane jest minimalne obciążenie %1, ale wybrana obciążenie to tylko %2. Zwiększ ilość lub czas blokady dla większego obciążenia.</translation>
-    </message>
-    <message>
-        <source>A minimum amount of %1 is required.</source>
-        <translation>Wymagana jest minimalna ilość %1.</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
-
-Estimated earnings: %3 (%4% per month)
-
-Witness weight: %5</source>
-        <translation>Środki zostaną zablokowane na %1 dni (%2). W żadnym wypadku nie będzie możliwe wydawanie ani przenoszenie tych środków w okres blokady.
-
-Szacunkowe zarobki:%3 (%4% miesięcznie)
-
-Witness waga: %5</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -781,6 +714,41 @@ Witness waga: %5</translation>
     <message>
         <source>Okay</source>
         <translation>Dobrze</translation>
+    </message>
+</context>
+<context>
+    <name>OptimizeWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Dobrze</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Nie wybrano konta finansowania</translation>
+    </message>
+    <message>
+        <source>Account is already optimal</source>
+        <translation>Konto jest już optymalne</translation>
+    </message>
+    <message>
+        <source>Optimize witness</source>
+        <translation>Zoptymalizuj witness</translation>
+    </message>
+    <message>
+        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
+        <translation>Zoptymalizuj części, na które podzielony jest twój witness , aby zmaksymalizować swoje zarobki. Konto finansowania jest potrzebne do uiszczenia opłaty za transakcję, która porządkuje części witness .</translation>
+    </message>
+    <message>
+        <source>Optimize</source>
+        <translation>Optymalizować</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to optimize the witness parts?</source>
+        <translation>Czy na pewno chcesz zoptymalizować części witness ?</translation>
     </message>
 </context>
 <context>
@@ -858,12 +826,12 @@ Pamiętaj, aby zainstalować nowy klucz na dowolnym urządzeniu witness (pi) lub
         <translation>Informacja</translation>
     </message>
     <message>
-        <source>%1 months</source>
-        <translation>%1 miesięcy</translation>
-    </message>
-    <message>
         <source>Optimize</source>
         <translation>Optymalizować</translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 miesięcy</translation>
     </message>
     <message>
         <source>Upgrade</source>
@@ -2821,16 +2789,16 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>Kwota</translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation>1 miesiąc</translation>
+    </message>
+    <message>
         <source>1 year</source>
         <translation>1 rok</translation>
     </message>
     <message>
         <source>%1 years</source>
         <translation>%1 lat</translation>
-    </message>
-    <message>
-        <source>1 month</source>
-        <translation>1 miesiąc</translation>
     </message>
     <message>
         <source>%1 months</source>
@@ -3817,8 +3785,8 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>Środki zostaną zablokowane na 30 dni (1 miesiąc), a szacowany zarobek wynosi 0. W żadnym wypadku nie będzie można wydać ani przenieść tych środków na czas blokady.</translation>
     </message>
     <message>
-        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
-        <translation>Ostrzeżenie: ta waga przekracza 1% aktualnej wagi sieci, jest to fantastyczne rozwiązanie, ponieważ przyczynia się do bezpieczeństwa sieci, ale nie jest zalecane w celu maksymalizacji zarobków. Aby uzyskać maksymalne zarobki, w tej sytuacji lepiej byłoby podzielić swoje środki na dwa konta. Wyjątkiem jest sytuacja, gdy masz powody, by sądzić, że waga sieci prawdopodobnie znacznie wzrośnie w przyszłości. Jeśli nie masz pewności co do najlepszego sposobu działania, zasięgnij porady przed kontynuowaniem.</translation>
+        <source>Form</source>
+        <translation>Formularz</translation>
     </message>
     <message>
         <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
@@ -3827,22 +3795,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>A minimum amount of %1 is required.</source>
         <translation>Wymagana jest minimalna ilość %1.</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
-
-Estimated earnings: %3 (%4% per month)
-
-Witness weight: %5</source>
-        <translation>Środki zostaną zablokowane na %1 dni (%2). W żadnym wypadku nie będzie można wydawać ani przenosić tych środków na czas blokady.
-
-Szacunkowe zarobki: %3 (%4% na miesiąc)
-
-Waga świadka: %5</translation>
-    </message>
-    <message>
-        <source>Form</source>
-        <translation>Formularz</translation>
     </message>
 </context>
 <context>

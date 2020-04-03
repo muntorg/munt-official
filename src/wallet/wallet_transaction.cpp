@@ -776,9 +776,16 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 CTransaction txNewConst(txNew);
 
                 // Remove scriptSigs to eliminate the fee calculation dummy signatures
-                for (auto& vin : txNew.vin) {
-                    vin.scriptSig = CScript();
-                    vin.segregatedSignatureData.SetNull();
+                {
+                    LOCK2(cs_main, cs_wallet);
+                    for (auto& txin : txNew.vin)
+                    {
+                        txin.scriptSig = CScript();
+                        txin.segregatedSignatureData.SetNull();
+                        
+                        // Prevent input being spent twice
+                        LockCoin(txin.prevout);
+                    }
                 }
 
                 // Allow to override the default confirmation target over the CoinControl instance
@@ -888,7 +895,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction, CCoinControl* coinControl)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction, CCoinControl* coinControl, bool* shouldUpgrade)
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
@@ -920,6 +927,9 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 
                 addedAny = true;
 
+                if (shouldUpgrade && witCoin.coin.out.GetType() == CTxOutType::ScriptLegacyOutput)
+                    *shouldUpgrade = true;
+                
                 // Add witness input
                 AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, allowIndexBased, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
@@ -1050,9 +1060,9 @@ void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, C
     throw std::runtime_error("Could not find suitable witness to upgrade");
 }
 
-bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut)
+bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut, SignType type)
 {
-    if (!SignTransaction(nullptr, tx, SignType::Spend))
+    if (!SignTransaction(nullptr, tx, type))
     {
         strError = "Unable to sign transaction";
         return false;

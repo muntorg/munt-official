@@ -77,7 +77,8 @@ struct SignatureData {
 enum SignType
 {
     Spend,
-    Witness
+    Witness, 
+    WitnessUpdate
 };
 
 /** Get the CKeyID of the pubkey for the key that should be used to sign an output */

@@ -320,57 +320,21 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             }
             setAddress.insert(rcp.address);
                 ++nAddresses;
-            if(rcp.destinationPoW2Witness.lockUntilBlock != 0)
+            
+            if (IsSegSigEnabled(chainActive.TipPrev()))
             {
-                assert(rcp.destinationPoW2Witness.lockFromBlock == 0);
+                CKeyID key;
+                if (!CGuldenAddress(rcp.address.toStdString()).GetKeyID(key))
+                    return InvalidAddress;
 
-                if (IsSegSigEnabled(chainActive.TipPrev()))
-                {
-                    CRecipient recipient = CRecipient(GetPoW2WitnessOutputFromWitnessDestination(rcp.destinationPoW2Witness), rcp.amount, rcp.fSubtractFeeFromAmount);
-
-                    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
-                    recipient.witnessForAccount = rcp.witnessForAccount;
-                    assert(recipient.witnessDetails.witnessKeyID != recipient.witnessDetails.spendingKeyID);
-
-                    vecSend.push_back(recipient);
-                }
-                else if (nTipPrevPoW2Phase >= 2)
-                {
-                    CScript scriptPubKey = GetScriptForDestination(rcp.destinationPoW2Witness);
-                    CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
-
-                    // We have to copy this anyway even though we are using a CSCript as later code depends on it to grab the witness key id.
-                    recipient.witnessDetails.witnessKeyID = rcp.destinationPoW2Witness.witnessKey;
-                    recipient.witnessDetails.spendingKeyID = rcp.destinationPoW2Witness.spendingKey;
-                    assert(recipient.witnessDetails.witnessKeyID != recipient.witnessDetails.spendingKeyID);
-
-                    //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
-                    recipient.witnessForAccount = rcp.witnessForAccount;
-
-                    vecSend.push_back(recipient);
-                }
-                else
-                {
-                    return WalletModel::PoW2NotActive;
-                }
+                CRecipient recipient = CRecipient(CTxOutStandardKeyHash(key), rcp.amount, rcp.fSubtractFeeFromAmount);
+                vecSend.push_back(recipient);
             }
             else
             {
-                if (IsSegSigEnabled(chainActive.TipPrev()))
-                {
-                    CKeyID key;
-                    if (!CGuldenAddress(rcp.address.toStdString()).GetKeyID(key))
-                        return InvalidAddress;
-
-                    CRecipient recipient = CRecipient(CTxOutStandardKeyHash(key), rcp.amount, rcp.fSubtractFeeFromAmount);
-                    vecSend.push_back(recipient);
-                }
-                else
-                {
-                    CScript scriptPubKey = GetScriptForDestination(CGuldenAddress(rcp.address.toStdString()).Get());
-                    CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
-                    vecSend.push_back(recipient);
-                }
+                CScript scriptPubKey = GetScriptForDestination(CGuldenAddress(rcp.address.toStdString()).Get());
+                CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
+                vecSend.push_back(recipient);
             }
             total += rcp.amount;
         }

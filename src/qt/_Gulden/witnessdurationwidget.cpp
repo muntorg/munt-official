@@ -84,8 +84,6 @@ void WitnessDurationWidget::update()
 {
     setValid(ui->pow2LockFundsInfoLabel, true);
 
-    ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
-
     if (nAmount < CAmount(gMinimumWitnessAmount*COIN))
     {
         ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of %1 is required.").arg(gMinimumWitnessAmount));
@@ -116,13 +114,22 @@ void WitnessDurationWidget::update()
     float fPercent = (fBlocksPerDay * 30 * WITNESS_SUBSIDY)/((nAmount/100000000))*100;
 
     QString sSecondTimeUnit = daysToHuman(nDays);
+    
+    QString partsText = "";
+    if (optimalAmounts.size() > 1)
+    {
+        partsText.append(tr("Parts"));
+        partsText.append((": "));
+        partsText.append(QString::number(optimalAmounts.size()));
+    }
 
-    ui->pow2LockFundsInfoLabel->setText(tr("Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.\n\nEstimated earnings: %3 (%4% per month)\n\nWitness weight: %5")
+    ui->pow2LockFundsInfoLabel->setText(tr("Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.\n\nEstimated earnings: %3 (%4% per month)\nWitness weight: %5\n%6")
     .arg(nDays)
     .arg(sSecondTimeUnit)
     .arg(nEarnings)
     .arg(QString::number(fPercent, 'f', 2).replace(".00",""))
     .arg(nOurWeight)
+    .arg(partsText)
     );
 
     QWidget::update();
