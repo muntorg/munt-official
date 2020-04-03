@@ -128,6 +128,8 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
         else
         {
             // no entry in cacheCoinRefs, so it should be absent in cacheCoins also
+            // This assumption is not necessarily true if it was previously in mempool - so has been disabled for now
+            #if 0
             if (outpoint.isHash)
             {
                 if (cacheCoins.find(outpoint) != cacheCoins.end())
@@ -140,6 +142,7 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
                     uiInterface.NotifyUIAlertChanged(warning);
                 }
             }
+            #endif
             // The non-hash output definitely shouldn't be in the cacheCoins ever
             assert(outpoint.isHash || cacheCoins.find(COutPoint(block, txIndex, voutIndex)) == cacheCoins.end());
         }
