@@ -708,7 +708,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         {
             LogPrintf("ReplaceWalletLinkedFromURI: Empty account into linked address [%s]", getUUIDAsString(accountUUID).c_str());
             std::vector<CRecipient> vecSend;
-            CRecipient recipient = GetRecipientForDestination(address.Get(), nBalance, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip()));
+            CRecipient recipient = GetRecipientForDestination(address.Get(), nBalance, fSubtractFeeFromAmount, GetPoW2Phase(chainTip()));
             vecSend.push_back(recipient);
 
             CWalletTx* pWallettx = new CWalletTx();
@@ -832,7 +832,6 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     {
         SoftSetArg("-testnet", "C1534687770:60");
         SoftSetArg("-addnode", "devbak.net");
-        SoftSetArg("-addnode", "45.62.236.132");
     }
 
     //fixme: (FUT) (UNITY) Reverse headers
@@ -1101,7 +1100,7 @@ int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
         throw std::runtime_error(_("Invalid address"));
     }
 
-    CRecipient recipient = GetRecipientForDestination(address.Get(), std::min(GetBalance(), request.amount), true, GetPoW2Phase(chainActive.Tip()));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), std::min(GetBalance(), request.amount), true, GetPoW2Phase(chainTip()));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 
@@ -1142,7 +1141,7 @@ PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRec
         throw std::runtime_error(_("Invalid address"));
     }
 
-    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, substract_fee, GetPoW2Phase(chainActive.Tip()));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, substract_fee, GetPoW2Phase(chainTip()));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 

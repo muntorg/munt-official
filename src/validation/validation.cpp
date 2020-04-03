@@ -78,6 +78,23 @@
 
 CCriticalSection cs_main;
 
+bool fSPV = false;
+int ChainHeight()
+{
+    LOCK(cs_main);
+    return fSPV ? partialChain.Height() : chainActive.Height();
+}
+
+CBlockIndex* chainTip()
+{
+    return fSPV ? partialChain.Tip() : chainActive.Tip();
+}
+
+CBlockIndex* chainPrevTip()
+{
+    return fSPV ? partialChain.TipPrev() : chainActive.TipPrev();
+}
+
 BlockMap mapBlockIndex;
 CChain chainActive;
 CBlockIndex *pindexBestHeader = NULL;

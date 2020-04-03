@@ -531,6 +531,16 @@ extern CChain chainActive;
 /** The currently-connected chain of header, POW only validated (protected by cs_main). */
 extern CPartialChain partialChain;
 
+extern bool fSPV;
+//! Chain height for active chain (either chainActive or partialChain)
+int ChainHeight();
+
+//! Chain tip for active chain (either chainActive or partialChain)
+CBlockIndex* chainTip();
+
+//! Chain previous for active chain (either chainActive or partialChain)
+CBlockIndex* chainPrevTip();
+
 /** Global variable that points to the coins database (protected by cs_main) */
 extern CCoinsViewDB *pcoinsdbview;
 

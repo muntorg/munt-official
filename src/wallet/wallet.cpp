@@ -69,7 +69,6 @@ CFeeRate payTxFee(DEFAULT_TRANSACTION_FEE);
 unsigned int nTxConfirmTarget = DEFAULT_TX_CONFIRM_TARGET;
 bool bSpendZeroConfChange = DEFAULT_SPEND_ZEROCONF_CHANGE;
 bool fWalletRbf = DEFAULT_WALLET_RBF;
-bool fSPV = false;
 
 const char * DEFAULT_WALLET_DAT = "wallet.dat";
 //const uint32_t BIP32_HARDENED_KEY_LIMIT = 0x80000000;
@@ -2840,12 +2839,6 @@ CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtrac
 const CBlockIndex* CWallet::LastSPVBlockProcessed() const
 {
     return pSPVScanner ? pSPVScanner->LastBlockProcessed() : nullptr;
-}
-
-int CWallet::ChainHeight()
-{
-    LOCK(cs_main);
-    return fSPV ? partialChain.Height() : chainActive.Height();
 }
 
 int64_t CWallet::birthTime() const
