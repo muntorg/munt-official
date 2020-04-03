@@ -263,17 +263,6 @@ void GuldenSendCoinsEntry::addressBookSelectionChanged()
 
 void GuldenSendCoinsEntry::myAccountsSelectionChanged()
 {
-    QModelIndexList selection = ui->myAccountsTabTable->selectionModel()->selectedRows();
-    if (selection.count() > 0)
-    {
-        QModelIndex index = selection.at(0);
-        boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
-
-        LOCK(pactiveWallet->cs_wallet);
-
-        CAccount* pAccount = pactiveWallet->mapAccounts[accountUUID];
-    }
-
     tabChanged();
 }
 
