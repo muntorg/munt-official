@@ -247,7 +247,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         }
         else
         {
-            if (!GetTxHash(txin.prevout, txHash))
+            if (!pwallet->GetTxHash(txin.prevout, txHash))
             {
                 LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.prevout.getTransactionBlockNumber(), txin.prevout.getTransactionIndex());
                 continue;

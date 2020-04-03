@@ -124,7 +124,7 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
             else
             {
                 uint256 convertedHash;
-                if (GetTxHash(txin.prevout, convertedHash))
+                if (CWallet::GetTxHash(txin.prevout, convertedHash))
                 {
                     if(!coinControl.IsSelected(COutPoint(convertedHash, txin.prevout.n)))
                     {
