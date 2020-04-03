@@ -109,6 +109,7 @@ int64_t CWallet::RescanFromTime(int64_t startTime, bool update)
     return startTime;
 }
 
+#include <Gulden/util.h>
 /**
  * Scan the block chain (starting in pindexStart) for transactions
  * from or to us. If fUpdate is true, found transactions that already
@@ -183,7 +184,7 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
                                 CTxDestination destIn;
                                 CTransactionRef prev;
                                 uint256 hashBlock = uint256();
-                                if (!GetTransaction(block.vtx[posInBlock]->vin[0].prevout.getHash(), prev, Params(), hashBlock, true))
+                                if (!GetTransaction(block.vtx[posInBlock]->vin[0].prevout.getTransactionHash(), prev, Params(), hashBlock, true))
                                 {
                                     LogPrintf("Failed to get transaction\n");
                                 }

@@ -2732,13 +2732,13 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
     return result;
 }
 
-static UniValue fixwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet)
+static UniValue fixwitnessaddresshelper(CAccount* fundingAccount, std::vector<std::tuple<CTxOut, uint64_t, uint64_t, COutPoint>> unspentWitnessOutputs, CWallet* pwallet)
 {
     if (unspentWitnessOutputs.size() > 1)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Too many witness outputs cannot rotate."));
 
     // Check for immaturity
-    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     //fixme: (2.1) - This check should go through the actual chain maturity stuff (via wtx) and not calculate directly.
     if (chainActive.Tip()->nHeight - currentWitnessHeight < (uint64_t)(COINBASE_MATURITY))
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot perform operation on immature transaction, please wait for transaction to mature and try again");
@@ -2766,7 +2766,7 @@ static UniValue fixwitnessaddresshelper(CAccount* fundingAccount, std::vector<st
     CTxOut rotatedWitnessTxOutput;
     {
         // Add the existing witness output as an input
-        pwallet->AddTxInput(fixWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut), false);
+        pwallet->AddTxInput(fixWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut, false), false);
 
         // Add new witness output
         CPoW2WitnessDestination destinationPoW2Witness;
