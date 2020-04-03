@@ -528,30 +528,57 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
         //fixme: (FUT) Remove this in future
         //Clean up an issue with some wallets that accidentally changed mining address, in 2.2.0.0 release.
-        for (const auto& [accountUUID, forAccount] : walletInstance->mapAccounts)
         {
-            if (forAccount->IsMiningAccount())
+            LOCK(walletInstance->cs_wallet);
+            for (const auto& [accountUUID, forAccount] : walletInstance->mapAccounts)
             {
-                if (!forAccount->setKeyPoolExternal.empty() && forAccount->setKeyPoolExternal.find(0) == forAccount->setKeyPoolExternal.end())
+                if (forAccount->IsMiningAccount())
                 {
                     LOCK(walletInstance->cs_wallet);
-                    LogPrintf("Restoring mining address for account [%s] to first address\n", forAccount->getLabel());
-                    int nIndex=0;
-                    auto& keyPool = forAccount->setKeyPoolExternal;
-                    CWalletDB walletdb(*walletInstance->dbw);
-                    while (forAccount->setKeyPoolExternal.find(nIndex) == forAccount->setKeyPoolExternal.end())
+                    CExtPubKey pubkey;
+                    if (static_cast<CAccountHD*>(forAccount)->GetPubKeyManual(0, KEYCHAIN_EXTERNAL, pubkey))
                     {
-                        CExtPubKey pubkey;
-                        if (static_cast<CAccountHD*>(forAccount)->GetPubKeyManual(nIndex, KEYCHAIN_EXTERNAL, pubkey))
+                        CWalletDB walletdb(*walletInstance->dbw);
+                        if (!walletdb.HasPool(walletInstance, pubkey.GetKey().GetID()))
                         {
-                            if (walletdb.WritePool(nIndex, CKeyPool(pubkey.GetKey(), getUUIDAsString(accountUUID), KEYCHAIN_EXTERNAL )))
+                            LogPrintf("Restoring mining address for account [%s] to first address\n", forAccount->getLabel());
+                            
+                            // Find a unique *gap* in the current pool indexes
+                            // Needs to be a gap because we need it to be the lowest id key in the mining account
+                            // Note this isn't as bad as it looks, because most wallets will have a gap at quite low numbers if they've ever transacted at all
+                            // And small keypools if they have not
+                            int64_t nIndex = 1;
+                            bool foundGap=false;
+                            while (!foundGap)
                             {
-                                keyPool.insert(nIndex);
+                                foundGap = true;
+                                for (const auto& [loopAccountUUID, loopForAccount] : walletInstance->mapAccounts)
+                                {
+                                    (unused) loopAccountUUID;
+                                    for (auto keyChain : { KEYCHAIN_EXTERNAL, KEYCHAIN_CHANGE })
+                                    {
+                                        auto& keyPool = ( keyChain == KEYCHAIN_EXTERNAL ? loopForAccount->setKeyPoolExternal : loopForAccount->setKeyPoolInternal );
+                                        for (const auto& item : keyPool)
+                                        {
+                                            if (item == nIndex)
+                                            {
+                                                ++nIndex;
+                                                foundGap = false;
+                                                break;
+                                            }
+                                        }
+                                        if (!foundGap)
+                                            break;
+                                    }
+                                    if (!foundGap)
+                                            break;
+                                }
                             }
+                            auto& keyPool = forAccount->setKeyPoolExternal;
+                            walletdb.WritePool(++nIndex, CKeyPool(pubkey.GetKey(), getUUIDAsString(accountUUID), KEYCHAIN_EXTERNAL ));
+                            keyPool.insert(nIndex);
                         }
-                        ++nIndex;
-                    }
-                    LogPrintf("Done restoring mining addresses\n");
+                    }    
                 }
             }
         }
