@@ -222,14 +222,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>Cancelar</translation>
     </message>
     <message>
-        <source>1 year</source>
-        <translation>1 ano</translation>
-    </message>
-    <message>
-        <source>%1 years</source>
-        <translation>%1 anos</translation>
-    </message>
-    <message>
         <source>Delete</source>
         <translation>Apagar</translation>
     </message>

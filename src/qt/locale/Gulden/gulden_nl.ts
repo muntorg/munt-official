@@ -9,41 +9,6 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
-    <name>OptimizeWitnessDialog</name>
-    <message>
-        <source>Account is already optimal</source>
-        <translation>Account is reeds optimaal</translation>
-    </message>
-    <message>
-        <source>Okay</source>
-        <translation>Oké</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuleer</translation>
-    </message>
-    <message>
-        <source>No funding account selected</source>
-        <translation>Geen funding account geselecteerd</translation>
-    </message>
-    <message>
-        <source>Optimize witness</source>
-        <translation>Witness optimaliseren</translation>
-    </message>
-    <message>
-        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
-        <translation>Optimaliseer de delen waarin je witness gedeeld wordt om je opbrengsten te maximaliseren. Een funding account is nodig om de transactie fee te betalen voor het herschikken van je witness delen.</translation>
-    </message>
-    <message>
-        <source>Optimize</source>
-        <translation>Optimaliseer</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to optimize the witness parts?</source>
-        <translation>Weet je zeker dat je de witness delen wilt optimaliseren?</translation>
-    </message>
-</context>
-<context>
     <name>AccountSelectionWidget</name>
     <message>
         <source>Frame</source>
@@ -662,20 +627,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Mijn rekeningen</translation>
     </message>
     <message>
-        <source>1 year</source>
-        <translation>1 jaar</translation>
-    </message>
-    <message>
-        <source>%1 years</source>
-        <translation>%1 jaren</translation>
-    </message>
-    <message>
         <source>1 month</source>
         <translation>1 maand</translation>
-    </message>
-    <message>
-        <source>%1 months</source>
-        <translation>%1 maanden</translation>
     </message>
     <message>
         <source>Lock funds for:</source>
@@ -692,25 +645,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
         <translation>Waarschuwing: Dit gewicht is meer dan 1% van het huidige totale gewicht van het netwerk, dit is fantastisch om bij te dragen aan de netwerkbeveiliging, maar niet aanbevolen voor het maximaliseren van uw inkomsten. Voor een maximaal inkomen is het in deze situatie meestal beter om uw geld op te splitsen in twee rekeningen. Een uitzondering is als u redenen hebt om aan te nemen dat het gewicht van het netwerk in de toekomst waarschijnlijk aanzienlijk zal toenemen, vraag dan om meer advies voordat u verder gaat als u niet zeker bent over de beste handelwijze.</translation>
-    </message>
-    <message>
-        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
-        <translation>Een minimaal gewicht van %1 is vereist, maar het geselecteerde gewicht is slechts %2. Verhoog de hoeveelheid of de looptijd voor meer gewicht.</translation>
-    </message>
-    <message>
-        <source>A minimum amount of %1 is required.</source>
-        <translation>Een minimum hoeveelheid van %1 is vereist.</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
-
-Estimated earnings: %3 (%4% per month)
-
-Witness weight: %5</source>
-        <translation>De Guldens zijn geblokkeerd gedurende %1 dagen (%2). Het is onmogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de looptijd.
-Verwachte verdiensten: %3 (%4% per maand)
-
-Witness-gewicht: %5</translation>
     </message>
     <message>
         <source>Receiving address</source>
@@ -778,6 +712,41 @@ Witness-gewicht: %5</translation>
     <message>
         <source>Okay</source>
         <translation>Oké</translation>
+    </message>
+</context>
+<context>
+    <name>OptimizeWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Oké</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleer</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Geen funding account geselecteerd</translation>
+    </message>
+    <message>
+        <source>Account is already optimal</source>
+        <translation>Account is reeds optimaal</translation>
+    </message>
+    <message>
+        <source>Optimize witness</source>
+        <translation>Witness optimaliseren</translation>
+    </message>
+    <message>
+        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
+        <translation>Optimaliseer de delen waarin je witness gedeeld wordt om je opbrengsten te maximaliseren. Een funding account is nodig om de transactie fee te betalen voor het herschikken van je witness delen.</translation>
+    </message>
+    <message>
+        <source>Optimize</source>
+        <translation>Optimaliseer</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to optimize the witness parts?</source>
+        <translation>Weet je zeker dat je de witness delen wilt optimaliseren?</translation>
     </message>
 </context>
 <context>
@@ -854,12 +823,12 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Informatie</translation>
     </message>
     <message>
-        <source>%1 months</source>
-        <translation>%1 maanden</translation>
-    </message>
-    <message>
         <source>Optimize</source>
         <translation>Optimaliseren</translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 maanden</translation>
     </message>
     <message>
         <source>Upgrade</source>
@@ -2812,16 +2781,16 @@ Normaal gesproken als iemand anders een block genereert op dezelfde tijd als u.<
         <translation>Bedrag</translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation>1 maand</translation>
+    </message>
+    <message>
         <source>1 year</source>
         <translation>1 jaar</translation>
     </message>
     <message>
         <source>%1 years</source>
         <translation>%1 jaren</translation>
-    </message>
-    <message>
-        <source>1 month</source>
-        <translation>1 maand</translation>
     </message>
     <message>
         <source>%1 months</source>
@@ -3799,8 +3768,8 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
         <translation>De tegoeden worden vastgezet voor 30 dagen (1 maand) met een verwachte opbrengst van 0. Het is onder geen enkele omstandigheid mogelijk om deze tegoeden uit te geven of te verplaatsen gedurende de vastgezette periode.</translation>
     </message>
     <message>
-        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
-        <translation>Waarschuwing: Dit gewicht is meer dan 1% van het huidige totale gewicht van het netwerk, dit is fantastisch om bij te dragen aan de netwerkbeveiliging, maar niet aanbevolen voor het maximaliseren van uw inkomsten. Voor een maximaal inkomen is het in deze situatie meestal beter om uw geld op te splitsen in twee rekeningen. Een uitzondering is als u redenen hebt om aan te nemen dat het gewicht van het netwerk in de toekomst waarschijnlijk aanzienlijk zal toenemen, vraag dan om meer advies voordat u verder gaat als u niet zeker bent over de beste handelwijze.</translation>
+        <source>Form</source>
+        <translation>Formulier</translation>
     </message>
     <message>
         <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
@@ -3809,22 +3778,6 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
     <message>
         <source>A minimum amount of %1 is required.</source>
         <translation>Een minimum aantal van %1 is verplicht.</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
-
-Estimated earnings: %3 (%4% per month)
-
-Witness weight: %5</source>
-        <translation>Tegoeden worden vastgezet voor %1 dagen (%2). Het is onder geen enkele omstandigheid mogelijk om deze tegoeden uit te geven of te verplaatsen gedurende de vastgezette periode.
-
-Verwachte opbrengsten: %3 (%4% per maand)
-
-Witness gewicht: %5</translation>
-    </message>
-    <message>
-        <source>Form</source>
-        <translation>Formulier</translation>
     </message>
 </context>
 <context>
