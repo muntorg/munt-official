@@ -169,8 +169,41 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
                 return ret;
 
             CBlock block;
-            if (ReadBlockFromDisk(block, pindex, Params())) {
-                for (size_t posInBlock = 0; posInBlock < block.vtx.size(); ++posInBlock) {
+            if (ReadBlockFromDisk(block, pindex, Params()))
+            {
+                for (size_t posInBlock = 0; posInBlock < block.vtx.size(); ++posInBlock)
+                {
+                    for (const auto& out : block.vtx[posInBlock]->vout)
+                    {
+                        CTxOutPoW2Witness witnessDetails;
+                        if (GetPow2WitnessOutput(out, witnessDetails))
+                        {
+                            if (witnessDetails.lockFromBlock == 0 && witnessDetails.witnessKeyID == witnessDetails.spendingKeyID)
+                            {
+                                CTxDestination destIn;
+                                CTransactionRef prev;
+                                uint256 hashBlock = uint256();
+                                if (!GetTransaction(block.vtx[posInBlock]->vin[0].prevout.getHash(), prev, Params(), hashBlock, true))
+                                {
+                                    LogPrintf("Failed to get transaction\n");
+                                }
+                                else
+                                {
+                                    if (ExtractDestination(prev->vout[block.vtx[posInBlock]->vin[0].prevout.n], destIn))
+                                    {
+                                        CTxDestination destOut;
+                                        if (ExtractDestination(out, destOut))
+                                        {
+                                            std::string sDest1 = CGuldenAddress(destIn).ToString();
+                                            std::string sDest2 = CGuldenAddress(destOut).ToString();
+                                            LogPrintf("bad witness address: %s %s %d\n", sDest2.c_str(), sDest1.c_str(), pindex->nHeight);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     AddToWalletIfInvolvingMe(block.vtx[posInBlock], pindex, posInBlock, fUpdate);
                 }
             } else {
