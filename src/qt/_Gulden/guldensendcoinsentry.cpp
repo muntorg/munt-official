@@ -475,7 +475,6 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                     recipient.address = index.sibling(index.row(), 1).data(Qt::DisplayRole).toString();
                     recipient.label = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
                 }
-                break;
             }
             break;
         }
@@ -509,7 +508,6 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                     recipient.address = QString::fromStdString(CGuldenAddress(keyID).ToString());
                     recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
                 }
-                break;
             }
             break;
         }
@@ -744,13 +742,6 @@ void GuldenSendCoinsEntry::editAddressBookEntry()
     }
 }
 
-void GuldenSendCoinsEntry::gotoWitnessTab(CAccount* targetAccount)
-{
-    targetWitnessAccount = targetAccount;
-    witnessSliderValueChanged(0);
-    ui->sendCoinsRecipientStack->setCurrentIndex(1);
-}
-
 void GuldenSendCoinsEntry::updateDisplayUnit()
 {
     /*if(model && model->getOptionsModel())
@@ -778,111 +769,8 @@ void GuldenSendCoinsEntry::searchChangedMyAccounts(const QString& searchString)
     ui->myAccountsTabTable->selectionModel()->setCurrentIndex ( proxyModelAddresses->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
 
-#define WITNESS_SUBSIDY 20
-void GuldenSendCoinsEntry::witnessSliderValueChanged(int newValue)
-{
-    setValid(ui->pow2LockFundsInfoLabel, true);
-
-    //fixme: (PHASE4) Improve this dialog.
-    CAmount nAmount = ui->payAmount->amount();
-    ui->pow2WeightExceedsMaxPercentWarning->setVisible(false);
-
-    if (nAmount < CAmount(gMinimumWitnessAmount*COIN))
-    {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum amount of %1 is required.").arg(gMinimumWitnessAmount));
-        return;
-    }
-
-    int nDays = newValue;
-    float fMonths = newValue/30.0;
-    float fYears = newValue/365.0;
-    int nEarnings = 0;
-
-    int64_t nOurWeight = GetPoW2RawWeightForAmount(nAmount, nDays*DailyBlocksTarget());
-
-    static int64_t nNetworkWeight = gStartingWitnessNetworkWeightEstimate;
-    if (chainActive.Tip())
-    {
-        static uint64_t lastUpdate = GetTimeMillis();
-        // Only check this once a minute, no need to be constantly updating.
-        if (GetTimeMillis() - lastUpdate > 60000)
-        {
-            LOCK(cs_main);
-
-            lastUpdate = GetTimeMillis();
-            if (IsPow2WitnessingActive(chainActive.TipPrev(), Params(), chainActive))
-            {
-                CGetWitnessInfo witnessInfo;
-                CBlock block;
-                if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
-                {
-                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
-                    LogPrintf(strErrorMessage.c_str());
-                    CAlert::Notify(strErrorMessage, true, true);
-                    return;
-                }
-                if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
-                {
-                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
-                    LogPrintf(strErrorMessage.c_str());
-                    CAlert::Notify(strErrorMessage, true, true);
-                    return;
-                }
-                nNetworkWeight = witnessInfo.nTotalWeightRaw;
-            }
-        }
-    }
-
-
-    if (nOurWeight < gMinimumWitnessWeight)
-    {
-        ui->pow2LockFundsInfoLabel->setText(tr("A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.").arg(gMinimumWitnessWeight).arg(nOurWeight));
-        return;
-    }
-
-    double fWeightPercent = nOurWeight/(double)nNetworkWeight;
-    if (fWeightPercent > 0.01)
-    {
-        if (!IsSegSigEnabled(chainActive.TipPrev()))
-            ui->pow2WeightExceedsMaxPercentWarning->setVisible(true);
-        fWeightPercent = 0.01;
-    }
-
-    double fBlocksPerDay = DailyBlocksTarget() * fWeightPercent;
-    if (fBlocksPerDay > 5.76)
-        fBlocksPerDay = 5.76;
-
-    nEarnings = fBlocksPerDay * nDays * WITNESS_SUBSIDY;
-
-    float fPercent = (fBlocksPerDay * 30 * WITNESS_SUBSIDY)/((nAmount/100000000))*100;
-
-
-    QString sSecondTimeUnit = "";
-    if (fYears > 1)
-    {
-        sSecondTimeUnit = tr("1 year");
-        if (fYears > 1.0)
-            sSecondTimeUnit = tr("%1 years").arg(QString::number(fYears, 'f', 2).replace(".00",""));
-    }
-    else
-    {
-        sSecondTimeUnit = tr("1 month");
-        if (fMonths > 1.0)
-            sSecondTimeUnit = tr("%1 months").arg(QString::number(fMonths, 'f', 2).replace(".00",""));
-    }
-
-    ui->pow2LockFundsInfoLabel->setText(tr("Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.\n\nEstimated earnings: %3 (%4% per month)\n\nWitness weight: %5")
-    .arg(nDays)
-    .arg(sSecondTimeUnit)
-    .arg(nEarnings)
-    .arg(QString::number(fPercent, 'f', 2).replace(".00",""))
-    .arg(nOurWeight)
-    );
-}
-
 void GuldenSendCoinsEntry::payAmountChanged()
 {
-    witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
     payInfoUpdateRequired();
 }
 
@@ -959,8 +847,6 @@ void GuldenSendCoinsEntry::sendAllClicked()
     //fixme: (FUT) Check if 'spend unconfirmed' is checked or not.
     ui->payAmount->setAmount(pactiveWallet->GetBalance(model->getActiveAccount(), true, false, true) + pactiveWallet->GetUnconfirmedBalance(model->getActiveAccount(), false, true));
     payInfoUpdateRequired();
-    //Update witness value for amount.
-    witnessSliderValueChanged(ui->pow2LockFundsSlider->value());
 }
 
 void GuldenSendCoinsEntry::setPayInfo(const QString &msg, bool attention)
