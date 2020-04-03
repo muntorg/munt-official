@@ -11,6 +11,14 @@
 <context>
     <name>AccountSettingsDialog</name>
     <message>
+        <source>Okay</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
         <source>Change name of account</source>
         <translation>Mudar nome de uma conta</translation>
     </message>
@@ -42,58 +50,11 @@ AVISO: Certifique-se que é a única pessoa que pode ver este código QR pois ca
         <translation>Conta não está vazia, por favor esvazie a conta antes de a tentar apagar.</translation>
     </message>
     <message>
-        <source>Okay</source>
-        <translation>OK</translation>
-    </message>
-    <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
         <translation>Tem a certeza que pretende apagar a conta %1 da sua lista de contas?
 
 A conta irá continuar a ser monitorizada e será restaurada caso receba fundos no futuro.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Cancelar</translation>
-    </message>
-</context>
-<context>
-    <name>BackupDialog</name>
-    <message>
-        <source>Done</source>
-        <translation>Concluído</translation>
-    </message>
-    <message>
-        <source>Backup phrase</source>
-        <translation>Frase de segurança</translation>
-    </message>
-    <message>
-        <source>Show backup phrase</source>
-        <translation>Mostrar frase de segurança</translation>
-    </message>
-    <message>
-        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation>Também é recomendável salvar um backup encriptado da carteira, além de armazenar a frase de recuperação.</translation>
-    </message>
-    <message>
-        <source>Save to file</source>
-        <translation>Guardar o ficheiro</translation>
-    </message>
-    <message>
-        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Abaixo está sua frase secreta de recuperação, anote-a e mantenha-a segura. Se perder a frase = perde as Guldens. Alguém com acesso à frase = perde as Guldens.</translation>
-    </message>
-    <message>
-        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Abaixo estão as suas frases secretas de recuperação, deve anotá-las e mantê-las seguras. Se perder a frase = perde as Guldens. Alguém com acesso à frase = perde as Guldens.</translation>
-    </message>
-    <message>
-        <source>No recovery phrases present for this wallet.</source>
-        <translation>Nenhuma frase de recuperação está presente para esta carteira.</translation>
-    </message>
-    <message>
-        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation>A sua carteira contém algumas contas legacy que não são HD, estas não podem ser restauradas usando frases de recuperação e exigem backup regular. Certifique-se de fazer backups regulares da sua carteira ou exclua a conta legacy para garantir que seus fundos permaneçam protegidos.</translation>
     </message>
 </context>
 <context>
@@ -268,14 +229,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <source>Save</source>
         <translation>Guardar</translation>
     </message>
-    <message>
-        <source>1 year</source>
-        <translation>1 ano</translation>
-    </message>
-    <message>
-        <source>%1 years</source>
-        <translation>%1 anos</translation>
-    </message>
 </context>
 <context>
     <name>ImportPrivKeyDialog</name>
@@ -349,6 +302,45 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>I understand</source>
         <translation>Compreendo</translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Concluído</translation>
+    </message>
+    <message>
+        <source>Backup phrase</source>
+        <translation>Frase de segurança</translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation>Mostrar frase de segurança</translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>Também é recomendável salvar um backup encriptado da carteira, além de armazenar a frase de recuperação.</translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation>Guardar o ficheiro</translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Abaixo está sua frase secreta de recuperação, anote-a e mantenha-a segura. Se perder a frase = perde as Guldens. Alguém com acesso à frase = perde as Guldens.</translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Abaixo estão as suas frases secretas de recuperação, deve anotá-las e mantê-las seguras. Se perder a frase = perde as Guldens. Alguém com acesso à frase = perde as Guldens.</translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation>Nenhuma frase de recuperação está presente para esta carteira.</translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>A sua carteira contém algumas contas legacy que não são HD, estas não podem ser restauradas usando frases de recuperação e exigem backup regular. Certifique-se de fazer backups regulares da sua carteira ou exclua a conta legacy para garantir que seus fundos permaneçam protegidos.</translation>
     </message>
 </context>
 <context>
@@ -736,6 +728,10 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>(sem etiqueta)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Valor</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Seleção de Moeda</translation>
     </message>
@@ -778,10 +774,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>List mode</source>
         <translation>Modo de lista</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Valor</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -1125,10 +1117,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>Imaturo (%1 confirmações, estará disponível após %2)</translation>
     </message>
     <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Este bloco não foi recebido por outros nodes e provavelmente não será aceite!</translation>
-    </message>
-    <message>
         <source>External payee</source>
         <translation>Beneficiário externo</translation>
     </message>
@@ -1275,6 +1263,14 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <source>Message</source>
         <translation>Mensagem</translation>
     </message>
+    <message>
+        <source>Credit</source>
+        <translation>Crédito</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Débito</translation>
+    </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
         <translation>
@@ -1305,17 +1301,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>Status</source>
         <translation>Estado</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ainda não foi transmitido com sucesso</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, transmitido através de %n node(s)</numerusform>
-            <numerusform>, transmitido através de %n node(s)</numerusform>
-        </translation>
     </message>
     <message>
         <source>Source</source>
@@ -1349,10 +1334,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <source>label</source>
         <translation>etiqueta</translation>
     </message>
-    <message>
-        <source>Credit</source>
-        <translation>Crédito</translation>
-    </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
         <translation>
@@ -1363,10 +1344,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>not accepted</source>
         <translation>Não foi aceite</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Débito</translation>
     </message>
     <message>
         <source>Total debit</source>
@@ -1959,10 +1936,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>%1 meses</translation>
     </message>
     <message>
-        <source>To begin witnessing, select an account from which to lock funds:</source>
-        <translation>Para começar a fazer witnessing, selecione uma conta para bloquear os fundos.</translation>
-    </message>
-    <message>
         <source>Projected earnings graph</source>
         <translation>Gráfico de ganhos projetados</translation>
     </message>
@@ -2025,10 +1998,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>Empty account</source>
         <translation>Levantar fundos</translation>
-    </message>
-    <message>
-        <source>Fund account</source>
-        <translation>Depositar fundos</translation>
     </message>
     <message>
         <source>Renew account</source>

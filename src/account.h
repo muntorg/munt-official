@@ -1,5 +1,5 @@
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -360,6 +360,8 @@ public:
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain);
     void AddChild(CAccount* childAccount);
 
+    unsigned int GetKeyPoolSize(int keyChain);
+    //Deprecated, should be removed in future in favour of the one above
     unsigned int GetKeyPoolSize();
 
     std::string getLabel() const;
@@ -435,6 +437,7 @@ public:
     //For serialization only.
     CAccountHD(){};
 
+    virtual bool GetKeyIDWithHighestIndex(CKeyID& HDKeyID, int nChain) const;
     virtual bool GetKey(CExtKey& childKey, int nChain) const;
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;
@@ -447,6 +450,9 @@ public:
     virtual bool IsLocked() const override;
     virtual bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey, int keyChain) override;
     virtual bool AddKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, int keyChain) override;
+    
+    //NB!! This only exists for the sake of recovery code in wallet_init - it should not be used directly anywhere else in the codebase
+    bool GetPubKeyManual(int64_t HDKeyIndex, int keyChain, CExtPubKey& childKey) const;
 
     void GetPubKey(CExtPubKey& childKey, int nChain) const;
     bool IsHD() const override {return true;};

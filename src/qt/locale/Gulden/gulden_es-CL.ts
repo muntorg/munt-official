@@ -102,6 +102,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Cantidad:</translation>
     </message>
@@ -109,10 +113,6 @@
         <source>Fee:</source>
         <translation>comisión:
 </translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
     </message>
     <message>
         <source>Date</source>
@@ -125,6 +125,32 @@
     <message>
         <source>Confirmed</source>
         <translation>Confirmado</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 y %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
     </message>
 </context>
 <context>
@@ -169,32 +195,6 @@
     <message>
         <source>Balance:</source>
         <translation>Balance:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 y %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Fecha</translation>
     </message>
 </context>
 <context>

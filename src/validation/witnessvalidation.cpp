@@ -1,7 +1,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -736,17 +736,6 @@ extern std::string getStaticFundingAddress(std::string sLookupAddress, uint64_t 
     return staticFundingAddressLookupTable[sLookupAddress];
 }
 
-CAmount GetBlockSubsidyWitness(int nHeight)
-{
-    CAmount nSubsidy = 0;
-    //fixme: (PHASE5) After SIGMA activation we can hardcode this to a specific block instead.
-    if (nHeight <= 10880000) // Switch to fixed reward of 100 Gulden per block (no halving)
-    {
-        nSubsidy = 20 * COIN;
-    }
-    return nSubsidy;
-}
-
 //fixme: (PHASE5) Can remove this.
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block)
 {
@@ -972,7 +961,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     assert(pPreviousIndexChain_);
 
     allWitnessCoins.clear();
-    //fixme: (PHASE4) Add more error handling to this function.
+    //fixme: (PHASE5) Add more error handling to this function.
     // Sort out pre-conditions.
     // We have to make sure that we are using a view and chain that includes the PoW block we are witnessing and all of its transactions as the tip.
     // It won't necessarily be part of the chain yet; if we are in the process of witnessing; or if the block is an older one on a fork; because only blocks that have already been witnessed can be part of the chain.
@@ -980,7 +969,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
     // NB!!! - It is important that we don't flush either of these before destructing, we want to throw the result away.
     CCoinsViewCache viewNew(viewOverride?viewOverride:pcoinsTip);
 
-    if (pPreviousIndexChain_->nHeight < GetPhase2ActivationHeight())
+    if ((uint64_t)pPreviousIndexChain_->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight)
         return true;
 
     // We work on a clone of the chain to prevent modifying the actual chain.
@@ -991,7 +980,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 
     // Force the tip of the chain to the block that comes before the block we are examining.
     // For phase 3 this must be a PoW block - from phase 4 it should be a witness block 
-    if (pPreviousIndexChain->nVersionPoW2Witness==0 || IsPow2Phase4Active(pPreviousIndexChain->pprev, chainParams, tempChain, &viewNew))
+    if (pPreviousIndexChain->nVersionPoW2Witness==0 || IsPow2Phase4Active(pPreviousIndexChain->pprev))
     {
         ForceActivateChain(pPreviousIndexChain, nullptr, state, chainParams, tempChain, viewNew);
     }
@@ -1033,7 +1022,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
         if (!ConnectBlock(tempChain, *newBlock, state, &indexDummy, viewNew, chainParams, true, false))
         {
-            //fixme: (PHASE4) If we are inside a GetWitness call ban the peer that sent us this?
+            //fixme: (PHASE5) If we are inside a GetWitness call ban the peer that sent us this?
             return false;
         }
     }
@@ -1050,7 +1039,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 }
 
 
-//fixme: (PHASE4) Improve error handling.
+//fixme: (PHASE5) Improve error handling.
 //fixme: (PHASE5) Handle nodes with excessive pruning. //pblocktree->ReadFlag("prunedblockfiles", fHavePruned);
 bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight)
 {
@@ -1143,7 +1132,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     /** sha256 as random roulette spin/seed - NB! We delibritely use sha256 and -not- the normal PoW hash here as the normal PoW hash is biased towards certain number ranges by -design- (block target) so is not a good RNG... **/
     arith_uint256 rouletteSelectionSeed = UintToArith256(blockHash);
 
-    //fixme: (PHASE4) Update whitepaper then delete this code.
+    //fixme: (PHASE5) Update whitepaper then delete this code.
     /** ensure random seed exceeds one full spin of the wheel to prevent any possible bias towards low numbers **/
     //while (rouletteSelectionSeed < witnessInfo.nTotalWeightEligibleAdjusted)
     //{
@@ -1183,9 +1172,10 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
     // Gather all witnesses that exceed minimum weight and count the total witness weight.
     for (auto coinIter : witnessInfo.allWitnessCoins)
     {
-        //fixme: (PHASE4) Unit tests
+        //fixme: (PHASE5) Unit tests
         uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
         COutPoint outPoint = coinIter.first;
+        assert(outPoint.isHash);
         Coin coin = coinIter.second;
         if (coin.out.nValue >= (gMinimumWitnessAmount*COIN))
         {

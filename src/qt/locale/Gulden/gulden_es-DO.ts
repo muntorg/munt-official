@@ -106,6 +106,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Cantidad:</translation>
     </message>
@@ -138,10 +142,6 @@
         <translation>Modo lista</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Fecha</translation>
     </message>
@@ -152,6 +152,28 @@
     <message>
         <source>Confirmed</source>
         <translation>Confirmado</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
     </message>
 </context>
 <context>
@@ -223,28 +245,6 @@
     <message>
         <source>Balance:</source>
         <translation>Saldo:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/D</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Fecha</translation>
     </message>
 </context>
 <context>

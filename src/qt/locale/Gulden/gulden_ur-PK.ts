@@ -76,31 +76,16 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <source>Amount:</source>
-        <translation>رقم:</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>رقم</translation>
     </message>
     <message>
-        <source>Date</source>
-        <translation>تاریخ</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
         <source>Amount:</source>
         <translation>رقم:</translation>
     </message>
     <message>
-        <source>Insufficient funds!</source>
-        <translation>ناکافی فنڈز</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>بیلنس:</translation>
+        <source>Date</source>
+        <translation>تاریخ</translation>
     </message>
 </context>
 <context>
@@ -130,6 +115,21 @@
     <message>
         <source>Date</source>
         <translation>تاریخ</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>رقم:</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>ناکافی فنڈز</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>بیلنس:</translation>
     </message>
 </context>
 <context>

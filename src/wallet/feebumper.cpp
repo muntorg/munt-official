@@ -31,7 +31,7 @@ int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *pWal
     for (auto& input : tx.vin) {
         const CWalletTx* prev = pWallet->GetWalletTx(input.prevout);
         assert(prev && input.prevout.n < prev->tx->vout.size());
-        vCoins.emplace_back(CInputCoin(prev, input.prevout.n));
+        vCoins.emplace_back(CInputCoin(prev, input.prevout.n, IsOldTransactionVersion(tx.nVersion)));
     }
     std::vector<CKeyStore*> accountsToTry;
     for (const auto& [accountUUID, account] : pWallet->mapAccounts)

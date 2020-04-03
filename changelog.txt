@@ -1,24 +1,106 @@
-2.2.0
+2.2.0.5
+
+UI      - Fix UI behaviour for upgrading expired witness accounts
+UI      - Improve UI behaviour for displaying 'extend' button for witness accounts 
+UI      - Add/Fix "Ctrl+L" shortcut to clear debug console text
+RPC     - Make 'renewwitnessaccount' command work also for upgrading witness accounts
+CORE    - Restore 'first' mining address for those miners whose address was changed to a new one by buils containing the issue that was fixed in 2.2.0.3 release
+CORE    - Improve mining behaviour for v2 transactions, insert an extra nonce, this is unlikely to matter at current mining speeds in any way but is better for correctness anyway. (Only really relevant in fringe cases like mining with -limitdeltadiffdrop=0)
+
+
+
+
+2.2.0.4
+
+UI      - Fix display of witness locktime end date
+UI      - Improve phase4 witness renewal so that multi-part witness accounts can renew all parts in one go
+UI      - Fix display of witness earnings graph for expired accounts
+UI      - Fix witness renewal for phase3; A regression broke it in some instances
+CORE    - Fix an issue with txdb 'corrupting' its index based outpoints; also repair already corrupted databases in place
+CORE    - Increase the size of the maximum allowed fee on the network to 2 NLG
+
+
+
+
+2.2.0.3
+
+UI      - Fix issue where a witness account that had o nly partially been emptied could not be fully emptied
+UI      - Fix a bug in witness overview when transaction was still pending first confirmation after funding
+UI      - Fix some issues where transactions spending money out of witness accounts were not displaying the right amount in transaction list
+UI      - Fix an issue with witness graph display strangely
+CORE    - Fix an issue where mining address would change if doing a restore on top of an existing block chain
+CORE    - Temporarily lower default memory usage on pis for first batch of 2.2 pi upgrades; we will raise these limits again in future
+
+
+
+
+2.2.0.2
+
+UI      - Minor fixes to witness dialog
+CORE    - Minor stability fixes
+
+
+
+
+2.2.0.1
+
+UI      - Minor cosmetic fixes
+CORE    - Minor stability fixes
+
+
+
+
+2.2.0.0
 
 This release incorporates several major feature branches, which combined involve over years of major development effort.
 Highlights include:
-* The final phase of our PoW² rollout, which brings new functionality to witness addresses/accounts
-* Our new 'v2' transaction format
-* Unity - A single unified codebase backend that is shared between desktop and mobile wallets
+ * The final phase of our PoW² rollout, which brings new functionality to witness addresses/accounts
+ * Our new 'v2' transaction format
+ * Unity; A single unified codebase backend that is shared between desktop and mobile wallets
 
 PoW² phase4:
-RPC - Add 'fail_count' and 'action_nonce' data to 'getwitnessinfo' command.
+CORE    - Ability to compound witness earnings becomes active
+CORE    - Delta difficulty adjustments now uses the more accurate witness time instead of the mining time, which should improve block timings and reduce  hash rate swings
+UI      - Easily toggle compounding on/off for a witness account
+UI      - Extend the locktime and/or quantity of a witness account via UI
+UI      - New optimise button which can be used on large witness accounts (>1% network weight) to divide/combine into smaller/larger parts for better earnings
+UI      - Improved dialog for funding witness accounts; Also automatically optimizes large witness accounts (>1% network weight) into multiple parts when creating if appropriate
+RPC     - Various Phase4 RPC commands become active:
+            Add funds to a witness account and/or extend the lock period - extendwitnessaccount "funding_account" "witness_account" "amount" "time" 
+            Add funds to a witness address and/or extend the lock period - extendwitnessaddress "funding_account" "witness_address" "amount" "time" 
+            Split a witness account into multiple witness addresses; Lock period is not changed this exists for the benefit of users whose weight is too large for the network - splitwitnessaccount "funding_account" "witness_account" "amounts" 
+            Merge multiple identical witness addresses into a single one; Only works on identical accounts i.e. ones that have previously been split - mergewitnessaccount "funding_account" "witness_account"
+            Change the witness key on an account where the key may have been compromised or as a periodic precaution - rotatewitnessaccount "funding_account" "witness_account" 
+            Change the witness key on an address where the key may have been compromised or as a periodic precaution  - rotatewitnessaddress "funding_account" "witness_address" 
+            Set a witness account to compound all or part of the earnings it receives - setwitnesscompound "witness_account" "amount"
+            Check the compounding settings for a witness account - getwitnesscompound "witness_account"
+            Set an address or script other than the default for witness reward payout - setwitnessrewardscript "witness_account" "destination" force_pubkey
+            Get the current address or script that has been set for witness reward payout - getwitnessrewardscript "witness_account" 
+            Set the compounding template for a witness account; Can be used to managed advanced configurations of how the reward should be paid out - setwitnessrewardtemplate "witness_account" [["destination1" (,"amount") (,"percentage%") (,"remainder") (,"compound_overflow")], ["destination2" ...], ...]
+            Get the compounding template for a witness account - getwitnessrewardtemplate "witness_account" 
 
-v2 transaction format:
-CORE - Introduce 'index based outpoints' to new transaction format; allowing for reduction of transaction size in many cases.
-CORE - Remove unncessary requirement of 'OP_0' from multisig transaction signatures (Legacy bitcoin bug)
+
+v2 transaction format (SegSig):
+CORE    - New compact transaction format, with a "only pay for what you use" philosophy. Extensible transaction output/input types and flags for easier future extendability in various directions. Uses various built in methods like compact amount representation to ensure transactions are as small as possible while being efficient to process.
+CORE    - Transaction functionality like RBF using proper built in flags instead of magic values
+CORE    - Three new initial transaction types (extensible to more)
+            * Script - Bitcoin compatible 'script' format as in v1 transaction format, for more complex types of transactions that require this functionality 
+            * StandardKeyHash - A compact and concise format for regular day to day transactions without the extra unnecessary processing overhead of a scripting language
+            * PoW2WitnessOutput - A compact and concise format for witness transactions; Replaces the sub-optimal requirement of placing all the witnessing information in; More compact, faster to process and leads to a cleaner code base
+CORE    - Compact transaction signatures used throghout for smaller transaction size
+CORE    - Introduce 'index based outpoints' to new transaction format; allowing for reduction of transaction size in many cases.
+CORE    - Remove unncessary requirement of 'OP_0' from multisig transaction signatures (Legacy bitcoin bug)
+CORE    - Transaction signatures are seperate from the transaction script; Similar to SegWit, but done in a more efficient way that doesn't have to worry about backwards compatibility
+CORE    - Remove sources of transaction malleability; Similar to SegWit, but done in a more efficient way that doesn't have to worry about backwards compatibility 
+
 
 Other:
-CORE - Extend recovery phrase with (optional) birth number
-UI - Option to hide status bar when synchronized (default enabled). Disable to always show status indicators.
-RPC - Implement new 'importlinkedaccount' command.
-RPC - Add an optional purge option to 'deleteseed' command.
-RPC - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fields to 'getblockchaininfo' results
+CORE    - Extend recovery phrase with (optional) birth number
+UI      - Option to hide status bar when synchronized (default enabled). Disable to always show status indicators.
+RPC     - Implement new 'importlinkedaccount' command.
+RPC     - Add an optional purge option to 'deleteseed' command.
+RPC     - Add 'initialblockdownload', 'automatic_pruning' and 'prune_target_size' fields to 'getblockchaininfo' results
+RPC     - Add 'fail_count' and 'action_nonce' data to 'getwitnessinfo' command.
 And numerous more smaller changes and bug fixes, for a comprehensive list view the commit history on our github repository.
 
 

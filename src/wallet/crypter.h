@@ -5,7 +5,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -187,6 +187,7 @@ protected:
     }
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const;
     virtual bool GetKey(const CKeyID &address, CKey& keyOut) const;
+    virtual bool GetKeyIDWithHighestIndex(CKeyID& address) const;
     virtual bool GetKey(const CKeyID &address, int64_t& HDKeyIndex) const;
     virtual bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
     virtual void GetKeys(std::set<CKeyID> &setAddress) const

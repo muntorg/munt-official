@@ -72,6 +72,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Хэмжээ</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Хэмжээ:</translation>
     </message>
@@ -80,16 +84,45 @@
         <translation>Тѳлбѳр:</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Хэмжээ</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Огноо</translation>
     </message>
     <message>
         <source>Confirmed</source>
         <translation>Баталгаажлаа</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Хэмжээ</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Алга Байна</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Хэмжээ</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Хаягийг &amp;Хуулбарлах</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Хэмжээ</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Огноо</translation>
     </message>
 </context>
 <context>
@@ -125,39 +158,6 @@
     <message>
         <source>Balance:</source>
         <translation>Баланс:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Хэмжээ</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Алга Байна</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Хэмжээ</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Хаягийг &amp;Хуулбарлах</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Хэмжээ</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Огноо</translation>
     </message>
 </context>
 <context>

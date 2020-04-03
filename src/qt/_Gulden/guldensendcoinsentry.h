@@ -1,5 +1,5 @@
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -64,8 +64,6 @@ public:
     void deleteAddressBookEntry();
     void editAddressBookEntry();
 
-    void gotoWitnessTab(CAccount* targetAccount);
-
 public Q_SLOTS:
     void clear();
     void addressChanged();
@@ -85,16 +83,13 @@ private Q_SLOTS:
     void updateDisplayUnit();
     void searchChangedAddressBook(const QString& searchString);
     void searchChangedMyAccounts(const QString& searchString);
-    void witnessSliderValueChanged(int newValue);
     void payAmountChanged();
     void nocksQuoteProcessed();
     void nocksTimeout();
     void sendAllClicked();
 
 private:
-    CAccount* targetWitnessAccount;
 
-    bool isPoW2WitnessCreation();
     SendCoinsRecipient recipient;
     Ui::GuldenSendCoinsEntry *ui;
     WalletModel *model;

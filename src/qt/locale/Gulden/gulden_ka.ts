@@ -106,6 +106,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>თანხა</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>რაოდენობა:</translation>
     </message>
@@ -142,10 +146,6 @@
         <translation>სია</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>თანხა</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>თარიღი</translation>
     </message>
@@ -156,6 +156,40 @@
     <message>
         <source>Confirmed</source>
         <translation>დადასტურებულია</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>თანხა</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 სთ</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 წთ</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>მიუწვდ.</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 და %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>თანხა</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>თარიღი</translation>
     </message>
 </context>
 <context>
@@ -231,40 +265,6 @@
     <message>
         <source>Balance:</source>
         <translation>ბალანსი:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>თანხა</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 სთ</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 წთ</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>მიუწვდ.</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 და %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>თანხა</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>თარიღი</translation>
     </message>
 </context>
 <context>

@@ -11,6 +11,14 @@
 <context>
     <name>AccountSettingsDialog</name>
     <message>
+        <source>Okay</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
         <source>Change name of account</source>
         <translation>Cambia nome dell&apos;account</translation>
     </message>
@@ -54,56 +62,9 @@ ATTENZIONE: assicurati di essere l&apos;unica persona in grado di vedere questo 
         <translation>Account pieno, per favore svuota il tuo account prima di tentare di eliminarlo.</translation>
     </message>
     <message>
-        <source>Okay</source>
-        <translation>OK</translation>
-    </message>
-    <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
         <translation>Sei sicuro di voler eliminare %1 dall&apos;elenco dei tuoi account? Il conto continuerà ad essere monitorato e sarà ripristinato se riceverà nuovi fondi in futuro.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-</context>
-<context>
-    <name>BackupDialog</name>
-    <message>
-        <source>Done</source>
-        <translation>Fatto</translation>
-    </message>
-    <message>
-        <source>Backup phrase</source>
-        <translation>Frase di recupero</translation>
-    </message>
-    <message>
-        <source>Show backup phrase</source>
-        <translation>Mostra la frase di recupero</translation>
-    </message>
-    <message>
-        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation>Si raccomanda inoltre di fare un  backup criptato del portafoglio sul disco , oltre a memorizzare la frase di recupero di cui sopra.</translation>
-    </message>
-    <message>
-        <source>Save to file</source>
-        <translation>Salva file</translation>
-    </message>
-    <message>
-        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Questa è la tua frase segreta di recupero, scrivila e mantienila in un luogo sicuro. Perdere la frase equivale a perdere Guldens. Se qualcun altro ne venisse in possesso  equivale a  perdere Guldens.</translation>
-    </message>
-    <message>
-        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Questa è la tua frase segreta di recupero, scrivila e mantienila in un luogo sicuro. Perdere la frase equivale a perdere Guldens. Se qualcun altro ne venisse in possesso  equivale a  perdere Guldens.</translation>
-    </message>
-    <message>
-        <source>No recovery phrases present for this wallet.</source>
-        <translation>Nessuna frase di recupero per questo portafoglio</translation>
-    </message>
-    <message>
-        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation>Il portafoglio contiene alcuni conti legacy non HD, questi non possono essere ripristinati utilizzando frasi di recupero e richiedono un normale backup del disco. Assicurati di eseguire regolari backup del disco del portafoglio o di eliminare l&apos;account precedente affinché i fondi rimangano protetti.</translation>
     </message>
 </context>
 <context>
@@ -284,6 +245,45 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Ok</source>
         <translation>ok</translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Fatto</translation>
+    </message>
+    <message>
+        <source>Backup phrase</source>
+        <translation>Frase di recupero</translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation>Mostra la frase di recupero</translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>Si raccomanda inoltre di fare un  backup criptato del portafoglio sul disco , oltre a memorizzare la frase di recupero di cui sopra.</translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation>Salva file</translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Questa è la tua frase segreta di recupero, scrivila e mantienila in un luogo sicuro. Perdere la frase equivale a perdere Guldens. Se qualcun altro ne venisse in possesso  equivale a  perdere Guldens.</translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Questa è la tua frase segreta di recupero, scrivila e mantienila in un luogo sicuro. Perdere la frase equivale a perdere Guldens. Se qualcun altro ne venisse in possesso  equivale a  perdere Guldens.</translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation>Nessuna frase di recupero per questo portafoglio</translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>Il portafoglio contiene alcuni conti legacy non HD, questi non possono essere ripristinati utilizzando frasi di recupero e richiedono un normale backup del disco. Assicurati di eseguire regolari backup del disco del portafoglio o di eliminare l&apos;account precedente affinché i fondi rimangano protetti.</translation>
     </message>
 </context>
 <context>
@@ -479,6 +479,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation>(nessuna etichetta)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Importo</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Selezione Input</translation>
     </message>
@@ -521,10 +525,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>List mode</source>
         <translation>Modalità Lista</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Importo</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -767,14 +767,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Sent</source>
         <translation>Inviato</translation>
-    </message>
-    <message>
-        <source>Split locked funds</source>
-        <translation>Dividere i fondi bloccati</translation>
-    </message>
-    <message>
-        <source>Merge locked funds</source>
-        <translation>Unisci i fondi bloccati</translation>
     </message>
 </context>
 <context>

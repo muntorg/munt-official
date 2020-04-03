@@ -65,12 +65,12 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <source>Amount:</source>
-        <translation>Quantitas:</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>Quantitas</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Quantitas:</translation>
     </message>
     <message>
         <source>Date</source>
@@ -79,37 +79,6 @@
     <message>
         <source>Confirmed</source>
         <translation>Confirmatum</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>Quantitas:</translation>
-    </message>
-    <message>
-        <source>Send Coins</source>
-        <translation>Mitte Nummos</translation>
-    </message>
-    <message>
-        <source>Insufficient funds!</source>
-        <translation>Inopia nummorum</translation>
-    </message>
-    <message>
-        <source>Transaction Fee:</source>
-        <translation>Transactionis merces:</translation>
-    </message>
-    <message>
-        <source>Confirm the send action</source>
-        <translation>Confirma actionem mittendi</translation>
-    </message>
-    <message>
-        <source>Send to multiple recipients at once</source>
-        <translation>Mitte pluribus accipientibus simul</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>Pendendum:</translation>
     </message>
 </context>
 <context>
@@ -143,6 +112,37 @@
     <message>
         <source>Date</source>
         <translation>Dies</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>Quantitas:</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>Mitte Nummos</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>Inopia nummorum</translation>
+    </message>
+    <message>
+        <source>Transaction Fee:</source>
+        <translation>Transactionis merces:</translation>
+    </message>
+    <message>
+        <source>Confirm the send action</source>
+        <translation>Confirma actionem mittendi</translation>
+    </message>
+    <message>
+        <source>Send to multiple recipients at once</source>
+        <translation>Mitte pluribus accipientibus simul</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>Pendendum:</translation>
     </message>
 </context>
 <context>

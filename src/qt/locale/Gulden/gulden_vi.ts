@@ -34,16 +34,9 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <source>Amount:</source>
-        <translation>Số lượng:</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>Số lượng</translation>
     </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
     <message>
         <source>Amount:</source>
         <translation>Số lượng:</translation>
@@ -72,6 +65,13 @@
     <message>
         <source>Amount</source>
         <translation>Số lượng</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>Số lượng:</translation>
     </message>
 </context>
 <context>

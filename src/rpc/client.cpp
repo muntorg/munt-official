@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -58,6 +58,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getaccountbalances", 0, "min_conf" },
     { "getaccountbalances", 1, "include_watchonly" },
     { "getblockhash", 0, "height" },
+    { "invalidateblocksatheight", 0, "block_height" },
     { "waitforblockheight", 0, "height" },
     { "waitforblockheight", 1, "timeout" },
     { "waitforblock", 1, "timeout" },
@@ -158,6 +159,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setwitnessrewardscript", 2, "force_pubkey" },
     { "setwitnessrewardtemplate", 1, "reward_template" },
     { "sethashlimit", 0, "limit" },
+    { "getlastblocks", 0, "num_blocks" },
     { "dumpdiffarray", 0, "height" },
     { "dumpblockgaps", 0, "start_height" },
     { "dumpblockgaps", 1, "count" },

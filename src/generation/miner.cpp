@@ -284,7 +284,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
 
 
 
-std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck)
+std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pParent, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineSegSig, CBlockIndex* pWitnessBlockToEmbed, bool noValidityCheck, uint32_t nExtraNonce)
 {
     fMineSegSig = true;
 
@@ -312,8 +312,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     nHeight = pParent->nHeight + 1;
 
-    int nParentPoW2Phase = GetPoW2Phase(pParent, chainparams, chainActive);
-    int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev, chainparams, chainActive);
+    int nParentPoW2Phase = GetPoW2Phase(pParent);
+    int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev);
     bool bSegSigIsEnabled = IsSegSigEnabled(pParent);
 
     //Until PoW2 activates mining subsidy remains full, after it activates PoW part of subsidy is reduced.
@@ -331,7 +331,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // First 'active' block of phase 4 (first block with a phase 4 parent) contains two witness subsidies so miner loses out on 20 NLG for this block
     // This block is treated special. (but special casing can dissapear for PHASE5 release.
     if (nGrandParentPoW2Phase == 3 && nParentPoW2Phase == 4)
-        nSubsidy -= GetBlockSubsidyWitness(nHeight);
+        nSubsidy -= GetBlockSubsidyWitness(nHeight-1);
     
     CAmount nSubsidyDev = GetBlockSubsidyDev(nHeight);
     nSubsidy -= nSubsidyDev;
@@ -418,16 +418,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize((nSubsidyDev>0)?2:1);
     #ifdef ENABLE_WALLET
-    if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly())
+    CKeyID pubKeyID;
+    if (bSegSigIsEnabled && !coinbaseReservedKey->scriptOnly() && coinbaseReservedKey->GetReservedKeyID(pubKeyID))
     {
         coinbaseTx.vout[0].SetType(CTxOutType::StandardKeyHashOutput);
-        CPubKey addressPubKey;
-        if (!coinbaseReservedKey->GetReservedKey(addressPubKey))
-        {
-            LogPrintf("Error in CreateNewBlock: could not retrieve public key for output address.\n");
-            return nullptr;
-        }
-        coinbaseTx.vout[0].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+        coinbaseTx.vout[0].output.standardKeyHash = CTxOutStandardKeyHash(pubKeyID);
     }
     else
     #endif
@@ -437,13 +432,20 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     }
     coinbaseTx.vout[0].nValue = nFees + nSubsidy;
     
-    //fixme: (PHASE4)- handle other vout types
     if (nSubsidyDev > 0)
     {
         std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
-        CPubKey pubKey(data.begin(), data.end());
-        coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
-        coinbaseTx.vout[1].output.scriptPubKey = (CScript() << ToByteVector(pubKey) << OP_CHECKSIG);
+        CPubKey addressPubKey(data.begin(), data.end());
+        if (bSegSigIsEnabled)
+        {
+            coinbaseTx.vout[1].SetType(CTxOutType::StandardKeyHashOutput);
+            coinbaseTx.vout[1].output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+        }
+        else
+        {    
+            coinbaseTx.vout[1].SetType(CTxOutType::ScriptLegacyOutput);
+            coinbaseTx.vout[1].output.scriptPubKey = (CScript() << ToByteVector(addressPubKey) << OP_CHECKSIG);
+        }
         coinbaseTx.vout[1].nValue = nSubsidyDev;
     }
 
@@ -455,11 +457,12 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         coinbaseTx.vin[0].segregatedSignatureData.stack.clear();
         coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
         CVectorWriter(0, 0, coinbaseTx.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(nHeight);
-        coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end()));
+        std::string finalCoinbaseSignature = strprintf("%d%s", nExtraNonce, coinbaseSignature.c_str());
+        coinbaseTx.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>(finalCoinbaseSignature.begin(), finalCoinbaseSignature.end()));
     }
     else
     {
-        coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0 << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
+        coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0 << nExtraNonce << std::vector<unsigned char>(coinbaseSignature.begin(), coinbaseSignature.end());
     }
 
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
@@ -881,8 +884,8 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
         LOCK(cs_main);
         pChainTip = chainActive.Tip();
     }
-    int nPoW2PhaseTip = GetPoW2Phase(pChainTip, chainparams, chainActive);
-    int nPoW2PhasePrev = GetPoW2Phase(pChainTip->pprev, chainparams, chainActive);
+    int nPoW2PhaseTip = GetPoW2Phase(pChainTip);
+    int nPoW2PhasePrev = GetPoW2Phase(pChainTip->pprev);
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("Generated: hash=%s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
 
@@ -913,8 +916,8 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
     // Tip if last mined block was a witness block. (Mining new chain tip)
     // Tip~1 if the last mine block was a PoW block. (Competing chain tip to the current one - in case there is no witness for the current one)
     //int nPoW2PhaseTip = GetPoW2Phase(pindexTip, Params(), chainActive);
-    int nPoW2PhaseGreatGrandParent = pIndexParent->pprev && pIndexParent->pprev->pprev ? GetPoW2Phase(pIndexParent->pprev->pprev, Params(), chainActive) : 1;
-    int nPoW2PhaseGrandParent = pIndexParent->pprev ? GetPoW2Phase(pIndexParent->pprev, Params(), chainActive) : 1;
+    int nPoW2PhaseGreatGrandParent = pIndexParent->pprev && pIndexParent->pprev->pprev ? GetPoW2Phase(pIndexParent->pprev->pprev) : 1;
+    int nPoW2PhaseGrandParent = pIndexParent->pprev ? GetPoW2Phase(pIndexParent->pprev) : 1;
     boost::this_thread::interruption_point();
 
     if (nPoW2PhaseGrandParent >= 3)
@@ -1097,8 +1100,19 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
             CAlert::Notify("Invalid mining address", true, true);
             return;
         }
-        CScript outputScript = GetScriptForDestination(address.Get());
-        coinbaseScript = std::make_shared<CReserveKeyOrScript>(outputScript);
+        #ifdef ENABLE_WALLET
+        if (IsPow2Phase4Active(chainActive.Tip()))
+        {
+            CKeyID addressKeyID;
+            address.GetKeyID(addressKeyID);
+            coinbaseScript = std::make_shared<CReserveKeyOrScript>(addressKeyID);
+        }
+        else
+        #endif
+        {
+            CScript outputScript = GetScriptForDestination(address.Get());
+            coinbaseScript = std::make_shared<CReserveKeyOrScript>(outputScript);
+        }
     }
     else
     {
@@ -1109,9 +1123,15 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
         // Throw an error if no script was provided.  This can happen
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
-        //fixme: (PHASE4) - We should allow for an empty reserveScript with only the key as script is technically no longer essential...
+        
+        #ifdef ENABLE_WALLET
+        if (!coinbaseScript || (coinbaseScript->scriptOnly() && coinbaseScript->reserveScript.empty()))
+        #else
         if (!coinbaseScript || coinbaseScript->reserveScript.empty())
+        #endif
+        {
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
+        }
 
 
         while (true)
@@ -1171,7 +1191,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                     continue;
                 }
 
-                pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed);
+                pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed, nExtraNonce);
                 if (!pblocktemplate.get())
                 {
                     LogPrintf("GuldenGenerate: Failed to create block-template.\n");

@@ -110,6 +110,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Ποσό</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Επιλογή κερμάτων</translation>
     </message>
@@ -154,10 +158,6 @@
         <translation>Λίστα εντολών</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Ποσό</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Παραλήφθηκε με επιγραφή</translation>
     </message>
@@ -176,6 +176,56 @@
     <message>
         <source>Confirmed</source>
         <translation>Επικυρωμένες</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Ποσό</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 ώ</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 λ</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Κανένα</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Μη διαθέσιμο</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 και %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Ποσό</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Ημερομηνία</translation>
     </message>
 </context>
 <context>
@@ -283,56 +333,6 @@
     <message>
         <source>Balance:</source>
         <translation>Υπόλοιπο:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Ποσό</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 ώ</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 λ</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Κανένα</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Μη διαθέσιμο</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 και %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Ποσό</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Ημερομηνία</translation>
     </message>
 </context>
 <context>

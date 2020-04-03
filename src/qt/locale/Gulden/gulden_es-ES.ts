@@ -11,6 +11,14 @@
 <context>
     <name>AccountSettingsDialog</name>
     <message>
+        <source>Okay</source>
+        <translation>Bueno</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
         <source>Change name of account</source>
         <translation>Cambiar el nombre de la cuenta</translation>
     </message>
@@ -29,21 +37,6 @@
     <message>
         <source>Please fund the witness account first.</source>
         <translation>Por favor, deposite fondos en la cuenta de witness primero.</translation>
-    </message>
-    <message>
-        <source>Okay</source>
-        <translation>Bueno</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Cancelar</translation>
-    </message>
-</context>
-<context>
-    <name>BackupDialog</name>
-    <message>
-        <source>Done</source>
-        <translation>Terminado</translation>
     </message>
 </context>
 <context>
@@ -168,6 +161,13 @@
 </source>
         <translation>Fecha: %1
 </translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Terminado</translation>
     </message>
 </context>
 <context>
@@ -515,6 +515,10 @@
         <translation>(sin etiqueta)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Selección de la moneda</translation>
     </message>
@@ -553,10 +557,6 @@
     <message>
         <source>List mode</source>
         <translation>Modo lista</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidad</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -881,10 +881,6 @@
         <translation>Tipo</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Sin conexion</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Sin confirmar</translation>
     </message>
@@ -907,10 +903,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>No disponible (%1 confirmaciones. Estarán disponibles al cabo de %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Este bloque no ha sido recibido por otros nodos y probablemente no sea aceptado!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1120,16 +1112,20 @@
         <translation>Mensaje</translation>
     </message>
     <message>
+        <source>Credit</source>
+        <translation>Credito</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Enviado</translation>
+    </message>
+    <message>
         <source>Open until %1</source>
         <translation>Abierto hasta %1</translation>
     </message>
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
         <translation>Hay un conflicto con la traducción de las confirmaciones %1</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/sin conexión</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -1158,10 +1154,6 @@
     <message>
         <source>Status</source>
         <translation>Estado</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, no ha sido emitido con éxito aún</translation>
     </message>
     <message>
         <source>Source</source>
@@ -1196,16 +1188,8 @@
         <translation>etiqueta</translation>
     </message>
     <message>
-        <source>Credit</source>
-        <translation>Credito</translation>
-    </message>
-    <message>
         <source>not accepted</source>
         <translation>no aceptada</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Enviado</translation>
     </message>
     <message>
         <source>Total debit</source>

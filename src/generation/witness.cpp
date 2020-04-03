@@ -1,5 +1,5 @@
-// Copyright (c) 2015-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2015-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -35,6 +35,7 @@
 #include "utiltime.h"
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
+#include "init.h"
 
 #include <algorithm>
 #include <numeric>
@@ -72,6 +73,26 @@ CReserveKeyOrScript::CReserveKeyOrScript(CScript& script)
     reserveScript = script;
 }
 
+CReserveKeyOrScript::CReserveKeyOrScript(CPubKey &pubkey)
+{
+    pwallet = nullptr;
+    account = nullptr;
+    // By setting index as -1 we ensure key is not returned.
+    nIndex = -1;
+    nKeyChain = -1;
+    vchPubKey = pubkey;
+}
+
+CReserveKeyOrScript::CReserveKeyOrScript(CKeyID &pubKeyID_)
+{
+    pwallet = nullptr;
+    account = nullptr;
+    // By setting index as -1 we ensure key is not returned.
+    nIndex = -1;
+    nKeyChain = -1;
+    pubKeyID = pubKeyID_;
+}
+
 CReserveKeyOrScript::~CReserveKeyOrScript()
 {
     if (shouldKeepOnDestroy)
@@ -82,7 +103,7 @@ CReserveKeyOrScript::~CReserveKeyOrScript()
 
 bool CReserveKeyOrScript::scriptOnly()
 {
-    if (account == nullptr && pwallet == nullptr)
+    if (account == nullptr && pwallet == nullptr && pubKeyID.IsNull())
         return true;
     return false;
 }
@@ -141,31 +162,6 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     uint256 hash = pBlock->GetHashPoW2();
     if (!key.SignCompact(hash, pBlock->witnessHeaderPoW2Sig))
         return false;
-
-    //fixme: (PHASE4) - Enable for testing then delete; this is testing code.
-    //Note there has not been a single hit here in all the testing so this can definitely go in future.
-    #ifdef DEBUG
-    if (fittestWitnessOutput.GetType() == CTxOutType::PoW2WitnessOutput)
-    {
-        if (fittestWitnessOutput.output.witnessDetails.witnessKeyID != key.GetPubKey().GetID())
-        {
-            std::string strErrorMessage = strprintf("Fatal witness error - segsig key mismatch: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
-            CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
-            return false;
-        }
-    }
-    else
-    {
-        if (CKeyID(uint160(fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash())) != key.GetPubKey().GetID())
-        {
-            std::string strErrorMessage = strprintf("Fatal witness error - legacy key mismatch: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
-            CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
-            return false;
-        }
-    }
-    #endif
 
     return true;
 }
@@ -356,7 +352,7 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
     // Sign witness coinbase.
     {
         LOCK(pactiveWallet->cs_wallet);
-        if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, Witness))
+        if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, SignType::Witness))
         {
             std::string strErrorMessage = strprintf("Failed to sign witness coinbase: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);
@@ -366,18 +362,39 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
     }
 
     CWitnessRewardTemplate rewardTemplate;
-    if (selectedWitnessAccount->hasRewardTemplate()) {
+    // If an explicit template has been set then use that, otherwise create a default template
+    if (selectedWitnessAccount->hasRewardTemplate())
+    {
         LOCK(pactiveWallet->cs_wallet);
         rewardTemplate = selectedWitnessAccount->getRewardTemplate();
     }
-    else { // Create default template
-
-        // Take compounding setting
-        rewardTemplate.destinations.push_back(
-            CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), selectedWitnessAccount->getCompounding(), 0.0, false, false));
-        // Any remaing (and compound overflow) goes to witness account non-compounding (or reward script if set)
-        rewardTemplate.destinations.push_back(
-            CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+    else
+    {
+        if (selectedWitnessAccount->getCompounding() > 0)
+        {
+            auto compoundAmount = selectedWitnessAccount->getCompounding();
+            if (compoundAmount == MAX_MONEY)
+            {
+                compoundAmount = witnessBlockSubsidy;
+                // Subsidy and any overflow fees to compound
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), compoundAmount, 0.0, true, false));
+                // Any compound overflow to script
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, false, true));
+            }
+            else
+            {
+                // Pay up until requested amount to compound
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), compoundAmount, 0.0, false, false));
+                // Any remaining fees/overflow to script
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+            }
+        }
+        else
+        {
+            // Compound nothing, all money into 'reward script'
+            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), 0, 0.0, false, false));
+            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+        }
     }
 
     // Output for subsidy and refresh witness address.
@@ -412,6 +429,10 @@ void static GuldenWitness()
 {
     LogPrintf("GuldenWitness started\n");
     RenameThread("gulden-witness");
+    
+    // Don't even try witness if we have no wallet (-disablewallet)
+    if (!pactiveWallet)
+        return;
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     static bool regTest = GetBoolArg("-regtest", false);
@@ -455,12 +476,12 @@ void static GuldenWitness()
             Consensus::Params pParams = chainparams.GetConsensus();
 
             //We can only start witnessing from phase 3 onward.
-            if ( !pindexTip || !pindexTip->pprev || !IsPow2WitnessingActive(pindexTip, chainparams, chainActive)  )
+            if (!pindexTip || !pindexTip->pprev || !IsPow2WitnessingActive(pindexTip->nHeight))
             {
                 MilliSleep(5000);
                 continue;
             }
-            int nPoW2PhasePrev = GetPoW2Phase(pindexTip->pprev, chainparams, chainActive);
+            int nPoW2PhasePrev = GetPoW2Phase(pindexTip->pprev);
 
             //fixme: (POST-PHASE5)
             //Ideally instead of just sleeping/busy polling rather wait on a signal that gets triggered only when new blocks come in??
@@ -575,8 +596,7 @@ void static GuldenWitness()
                         CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight);
                         CAmount witnessFeesSubsidy = 0;
 
-                        //fixme: (PHASE4) (ISMINE_WITNESS)
-                        if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_SPENDABLE)
+                        if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_WITNESS)
                         {
                             CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(witnessInfo.selectedWitnessTransaction);
                             if (selectedWitnessAccount)
@@ -613,7 +633,7 @@ void static GuldenWitness()
                                     reserveKeys[selectedWitnessAccount->getUUID()] = coinbaseScript;
                                 }
 
-                                int nPoW2PhaseParent = GetPoW2Phase(candidateIter->pprev, chainparams, chainActive);
+                                int nPoW2PhaseParent = GetPoW2Phase(candidateIter->pprev);
 
                                 /** Now add any additional transactions if there is space left **/
                                 if (nPoW2PhaseParent >= 4)

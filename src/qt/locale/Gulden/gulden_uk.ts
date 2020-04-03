@@ -121,6 +121,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Кількість</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Вибір Монет</translation>
     </message>
@@ -165,10 +169,6 @@
         <translation>Списком</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Кількість</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Отримано з позначкою</translation>
     </message>
@@ -187,6 +187,56 @@
     <message>
         <source>Confirmed</source>
         <translation>Підтверджені</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Кількість</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 д</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 г</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 х</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 с</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Відсутні</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 мс</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 та %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Кількість</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
     </message>
 </context>
 <context>
@@ -310,56 +360,6 @@
     <message>
         <source>Balance:</source>
         <translation>Баланс:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Кількість</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 д</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 г</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 х</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 с</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Відсутні</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Н/Д</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 мс</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 та %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Кількість</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Дата</translation>
     </message>
 </context>
 <context>

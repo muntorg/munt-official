@@ -114,14 +114,37 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     // Add new txins (keeping original txin scriptSig/order)
     for(const CTxIn& txin : wtx.tx->vin)
     {
+        //NB!!!
+        //If txin.prevout was hash based and not index based, and a valid index based outpoint representation also exists (mature enough) then we end up with a double output here.
+        //CreateTransaction ends up selecting the index based outpoint and the two txin no longer match
+        //We work around this by looking up the hash (if its in the wallet) and using that instead
+        //However callers to this function should also rather just pass in index based inputs where possible
         if (!coinControl.IsSelected(txin.prevout))
         {
-            tx.vin.push_back(txin);
-
-            if (lockUnspents)
+            bool add = false;
+            if (txin.prevout.isHash)
             {
-              LOCK2(cs_main, cs_wallet);
-              LockCoin(txin.prevout);
+                add = true;
+            }
+            else
+            {
+                uint256 convertedHash;
+                if (CWallet::GetTxHash(txin.prevout, convertedHash))
+                {
+                    if(!coinControl.IsSelected(COutPoint(convertedHash, txin.prevout.n)))
+                    {
+                        add = true;
+                    }
+                }
+            }
+            if (add)
+            {
+                tx.vin.push_back(txin);
+                if (lockUnspents)
+                {
+                    LOCK2(cs_main, cs_wallet);
+                    LockCoin(txin.prevout);
+                }
             }
         }
     }
@@ -167,9 +190,8 @@ void CWallet::AddTxInputs(CMutableTransaction& tx, std::set<CInputCoin>& setCoin
         }
         else if(tx.nLockTime == 0)
         {
-            //fixme: (PHASE4) (SEGSIG) - Do we have to set relative lock time on the inputs?
-            //Whats the relationship between relative and absolute locktime?
-            //nFlags |= CTxInFlags::OptInRBF;
+            //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+            //nFlags |= CTxInFlags::HasAbsoluteLock;
         }
         else
         {
@@ -254,15 +276,17 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
-    if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (PHASE5) (only set this for high fee [per byte] transactions?)
-        txNew.nLockTime = chainActive.Height();
+    //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+    //if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (PHASE5) (only set this for high fee [per byte] transactions?)
+        //txNew.nLockTime = chainActive.Height();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
     // that transactions that are delayed after signing for whatever reason,
     // e.g. high-latency mix networks and some CoinJoin implementations, have
     // better privacy.
-    if (GetRandInt(100) == 0)
-        txNew.nLockTime = std::max(0, (int)txNew.nLockTime - GetRandInt(100));
+    //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+    //if (GetRandInt(100) == 0)
+        //txNew.nLockTime = std::max(0, (int)txNew.nLockTime - GetRandInt(100));
 
     assert(txNew.nLockTime <= (unsigned int)chainActive.Height());
     assert(txNew.nLockTime < LOCKTIME_THRESHOLD);
@@ -319,7 +343,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                 // Choose coins to use
                 CAmount nValueIn = 0;
                 setCoins.clear();
-                if (!SelectCoins(vAvailableCoins, nValueToSelect, setCoins, nValueIn, coinControl))
+                if (!SelectCoins(!IsOldTransactionVersion(txNew.nVersion), vAvailableCoins, nValueToSelect, setCoins, nValueIn, coinControl))
                 {
                     strFailReason = _("Insufficient funds");
                     return false;
@@ -658,7 +682,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 // Choose coins to use
                 CAmount nValueSelected = 0;
                 setCoins.clear();
-                if (!SelectCoins(vAvailableCoins, nFeeOut, setCoins, nValueSelected, coinControl))
+                if (!SelectCoins(IsOldTransactionVersion(txNew.nVersion), vAvailableCoins, nFeeOut, setCoins, nValueSelected, coinControl))
                 {
                     strFailReason = _("Insufficient funds");
                     return false;
@@ -757,9 +781,16 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                 CTransaction txNewConst(txNew);
 
                 // Remove scriptSigs to eliminate the fee calculation dummy signatures
-                for (auto& vin : txNew.vin) {
-                    vin.scriptSig = CScript();
-                    vin.segregatedSignatureData.SetNull();
+                {
+                    LOCK2(cs_main, cs_wallet);
+                    for (auto& txin : txNew.vin)
+                    {
+                        txin.scriptSig = CScript();
+                        txin.segregatedSignatureData.SetNull();
+                        
+                        // Prevent input being spent twice
+                        LockCoin(txin.prevout);
+                    }
                 }
 
                 // Allow to override the default confirmation target over the CoinControl instance
@@ -869,12 +900,16 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction, CCoinControl* coinControl, bool* shouldUpgrade)
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
     //fixme: (FUT) (COIN_CONTROL)
-    CCoinControl coinControl;
+    CCoinControl tempCoinControl;
+    if (!coinControl)
+        coinControl = &tempCoinControl;
+    
+    bool allowIndexBased = !IsOldTransactionVersion(tx.nVersion);
 
     CGetWitnessInfo witnessInfo;
     CBlock block;
@@ -884,14 +919,24 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
         return false;
     }
     GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight);
+    bool addedAny=false;
+    uint64_t nExpiredCount=0;
     for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
     {
         if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
         {
             if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
             {
+                if (skipPastTransaction && nExpiredCount++ < *skipPastTransaction)
+                    continue;
+                
+                addedAny = true;
+
+                if (shouldUpgrade && witCoin.coin.out.GetType() == CTxOutType::ScriptLegacyOutput)
+                    *shouldUpgrade = true;
+                
                 // Add witness input
-                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
+                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, allowIndexBased, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
                 // Add witness output
                 CTxOut renewedWitnessTxOutput;
@@ -911,7 +956,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                     witnessDestination.lockFromBlock = witCoin.coin.nHeight;
                 }
 
-                if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) >= 4)
+                if (GetPoW2Phase(chainActive.Tip()) >= 4)
                 {
                     renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
                     renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = witnessDestination.spendingKeyID;
@@ -935,17 +980,24 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 }
                 renewedWitnessTxOutput.nValue = witCoin.coin.out.nValue;
                 tx.vout.push_back(renewedWitnessTxOutput);
-
-                // Add fee input and change output
-                std::string sFailReason;
-                if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, &coinControl))
-                {
-                    strError = "Unable to add fee";
-                    return false;
-                }
-                return true;
+                
+                //fixme: (PHASE5) - Remove this and do all in one tx instead (see note in tx_verify) as blockchain must support this first
+                if(skipPastTransaction)
+                    *skipPastTransaction = nExpiredCount;
+                break;
             }
         }
+    }
+    if (addedAny)
+    {
+        // Add fee input and change output
+        std::string sFailReason;
+        if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, coinControl))
+        {
+            strError = "Unable to add fee";
+            return false;
+        }
+        return true;
     }
     strError = "Unable to add fee";
     return false;
@@ -972,7 +1024,7 @@ void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, C
         if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
         {
             // Add witness input
-            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out), false);
+            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
             // Add witness output
             CTxOut renewedWitnessTxOutput;
@@ -1013,9 +1065,9 @@ void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, C
     throw std::runtime_error("Could not find suitable witness to upgrade");
 }
 
-bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut)
+bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut, SignType type)
 {
-    if (!SignTransaction(nullptr, tx, SignType::Spend))
+    if (!SignTransaction(nullptr, tx, type))
     {
         strError = "Unable to sign transaction";
         return false;

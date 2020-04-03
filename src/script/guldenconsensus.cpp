@@ -121,10 +121,12 @@ static int verify_script(const unsigned char *scriptPubKey, unsigned int scriptP
         set_error(err, guldenconsensus_ERR_OK);
 
         PrecomputedTransactionData txdata(tx);
-        //fixme: (PHASE4) (SEGSIG) (HIGH) - can't pass CKeyID(), need the actual keyID
-        CKeyID tempKeyID;
+        
+        // NB! We create the signature checker with NULL ID's
+        // This is fine because the script check itself pulls the correct keys from the stack and checks them
+        CKeyID nullKeyID;
         ScriptVersion scriptversion = (tx.vin[nIn].segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
-        return VerifyScript(tx.vin[nIn].scriptSig, CScript(scriptPubKey, scriptPubKey + scriptPubKeyLen), &tx.vin[nIn].segregatedSignatureData, flags, TransactionSignatureChecker(tempKeyID, tempKeyID, &tx, nIn, amount, txdata), scriptversion, NULL);
+        return VerifyScript(tx.vin[nIn].scriptSig, CScript(scriptPubKey, scriptPubKey + scriptPubKeyLen), &tx.vin[nIn].segregatedSignatureData, flags, TransactionSignatureChecker(nullKeyID, nullKeyID, &tx, nIn, amount, txdata), scriptversion, NULL);
     } catch (const std::exception&) {
         return set_error(err, guldenconsensus_ERR_TX_DESERIALIZE); // Error deserializing
     }

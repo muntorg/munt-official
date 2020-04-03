@@ -1,5 +1,5 @@
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -8,8 +8,8 @@
 
 #include "validation/validation.h"
 
-//fixme: (PHASE4) - Properly document all of these; including pre/post conditions;
-//fixme: (PHASE4) implement unit tests.
+//fixme: (PHASE5) - Properly document all of these; including pre/post conditions;
+//fixme: (PHASE5) implement unit tests.
 
 /** Global variable that points to the witness coins database (protected by cs_main) */
 extern CWitViewDB* ppow2witdbview;
@@ -74,8 +74,6 @@ struct CGetWitnessInfo
 };
 
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block);
-
-CAmount GetBlockSubsidyWitness(int nHeight);
 
 // Returns all competing orphans at same height and same parent as current tip.
 // NB! It is important that we consider height and not chain weight here.

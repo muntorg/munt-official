@@ -135,6 +135,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Kolicina</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Količina:</translation>
     </message>
@@ -150,6 +154,27 @@
         <source>After Fee:</source>
         <translation>Nakon Naknade:</translation>
     </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kolicina</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Kolicina</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
     <message>
         <source>Amount</source>
         <translation>Kolicina</translation>
@@ -176,31 +201,6 @@
     <message>
         <source>After Fee:</source>
         <translation>Nakon Naknade:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Kolicina</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Kolicina</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Kolicina</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
     </message>
 </context>
 <context>

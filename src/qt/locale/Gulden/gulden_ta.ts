@@ -116,6 +116,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>அளவு</translation>
     </message>
@@ -136,10 +140,6 @@
         <translation>மாற்று:</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>விலை</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>தேதி</translation>
     </message>
@@ -150,6 +150,48 @@
     <message>
         <source>Confirmed</source>
         <translation>உறுதியாக</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 மற்றும் %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>தேதி</translation>
     </message>
 </context>
 <context>
@@ -193,48 +235,6 @@
     <message>
         <source>Balance:</source>
         <translation>மீதி:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>விலை</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 மற்றும் %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>விலை</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>தேதி</translation>
     </message>
 </context>
 <context>

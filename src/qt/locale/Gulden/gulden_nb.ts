@@ -121,6 +121,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Beløp</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Mynt Valg</translation>
     </message>
@@ -165,10 +169,6 @@
         <translation>Listevisning</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Beløp</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Mottatt med merkelapp</translation>
     </message>
@@ -187,6 +187,56 @@
     <message>
         <source>Confirmed</source>
         <translation>Bekreftet</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Beløp</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 t</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ingen</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>-</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 og %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Beløp</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dato</translation>
     </message>
 </context>
 <context>
@@ -310,56 +360,6 @@
     <message>
         <source>Balance:</source>
         <translation>Saldo:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Beløp</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 t</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ingen</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>-</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 og %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Beløp</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dato</translation>
     </message>
 </context>
 <context>

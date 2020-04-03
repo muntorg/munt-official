@@ -361,6 +361,10 @@
         <translation>(无标签)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>金额</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>选择钱币</translation>
     </message>
@@ -403,10 +407,6 @@
     <message>
         <source>List mode</source>
         <translation>列表模式</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>金额</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -765,10 +765,6 @@
         </translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>掉线</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>未确认的 </translation>
     </message>
@@ -787,10 +783,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>未成熟 (%1 个确认，将在 %2 个后可用)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>此数据块未被任何其他节点接收，可能不被接受！</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1059,6 +1051,14 @@
         <source>Message</source>
         <translation>消息</translation>
     </message>
+    <message>
+        <source>Credit</source>
+        <translation>收入</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>支出</translation>
+    </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
         <translation>
@@ -1072,10 +1072,6 @@
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
         <translation>与一个有 %1 个确认的交易冲突</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1 / 离线</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -1104,16 +1100,6 @@
     <message>
         <source>Status</source>
         <translation>状态</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>，未被成功广播</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, 通过 %n 个节点广播 </numerusform>
-        </translation>
     </message>
     <message>
         <source>Source</source>
@@ -1147,10 +1133,6 @@
         <source>label</source>
         <translation>标签</translation>
     </message>
-    <message>
-        <source>Credit</source>
-        <translation>收入</translation>
-    </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
         <translation>
@@ -1160,10 +1142,6 @@
     <message>
         <source>not accepted</source>
         <translation>未被接受</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>支出</translation>
     </message>
     <message>
         <source>Total debit</source>

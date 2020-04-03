@@ -145,6 +145,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Iznos</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Izbor ulaza transakcije</translation>
     </message>
@@ -177,10 +181,6 @@
         <translation>Izaberi sve/ništa</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Iznos</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Primljeno pod oznakom</translation>
     </message>
@@ -199,6 +199,28 @@
     <message>
         <source>Confirmed</source>
         <translation>Potvrđeno</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Iznos</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 i %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Iznos</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Datum</translation>
     </message>
 </context>
 <context>
@@ -254,28 +276,6 @@
     <message>
         <source>Balance:</source>
         <translation>Stanje:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Iznos</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 i %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Iznos</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Datum</translation>
     </message>
 </context>
 <context>

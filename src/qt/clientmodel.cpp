@@ -5,7 +5,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -357,7 +357,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
 void ClientModel::updatePoW2Display()
 {
     //fixme: (PHASE5) We can remove this once phase5 is locked in
-    cachedPoW2Phase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    cachedPoW2Phase = GetPoW2Phase(chainActive.Tip());
 }
 
 static void HeaderProgressChanged(ClientModel *clientmodel, int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)

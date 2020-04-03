@@ -72,6 +72,10 @@
         <translation>(bez popisu)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Výber mince</translation>
     </message>
@@ -114,10 +118,6 @@
     <message>
         <source>List mode</source>
         <translation>Zoznamový režim</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Suma</translation>
     </message>
     <message>
         <source>Received with label</source>

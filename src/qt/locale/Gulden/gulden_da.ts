@@ -361,6 +361,10 @@
         <translation>(ingen mærkat)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Beløb</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Coin-styring</translation>
     </message>
@@ -403,10 +407,6 @@
     <message>
         <source>List mode</source>
         <translation>Listetilstand</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Beløb</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -776,10 +776,6 @@
         </translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Ubekræftet</translation>
     </message>
@@ -802,10 +798,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Umoden (%1 bekræftelser; vil være tilgængelig efter %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Denne blok blev ikke modtaget af nogen andre knuder og vil formentlig ikke blive accepteret!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1080,6 +1072,14 @@
         <source>Message</source>
         <translation>Besked</translation>
     </message>
+    <message>
+        <source>Credit</source>
+        <translation>Kredit</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Debet</translation>
+    </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
         <translation>
@@ -1094,10 +1094,6 @@
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
         <translation>i konflikt med en transaktion, der har %1 bekræftelser</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -1126,17 +1122,6 @@
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, er ikke blevet transmitteret endnu</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, transmitteret igennem %n knude</numerusform>
-            <numerusform>, transmitteret igennem %n knuder</numerusform>
-        </translation>
     </message>
     <message>
         <source>Source</source>
@@ -1170,10 +1155,6 @@
         <source>label</source>
         <translation>mærkat</translation>
     </message>
-    <message>
-        <source>Credit</source>
-        <translation>Kredit</translation>
-    </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
         <translation>
@@ -1184,10 +1165,6 @@
     <message>
         <source>not accepted</source>
         <translation>ikke accepteret</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Debet</translation>
     </message>
     <message>
         <source>Total debit</source>

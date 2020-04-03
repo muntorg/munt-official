@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -204,19 +204,24 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     
     
     //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
-    std::vector<CKeyStore*> accountsToTry;
-    for ( const auto& accountPair : pactiveWallet->mapAccounts )
+    std::vector<CAccount*> accountsToTry;
+    accountsToTry.push_back(pactiveWallet->activeAccount);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
     {
-        if(accountPair.second->getParentUUID() == pactiveWallet->activeAccount->getUUID())
+        (unused) accountUUID;
+        if (account->getParentUUID() == pactiveWallet->activeAccount->getUUID())
         {
-            accountsToTry.push_back(accountPair.second);
+            accountsToTry.push_back(account);
         }
-        accountsToTry.push_back(pactiveWallet->activeAccount);
     }
-    
 
-    int64_t subtracted = wtx.GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
-    int64_t added = wtx.GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
+    int64_t subtracted;
+    int64_t added;
+    for (const auto& account : accountsToTry)
+    {
+        subtracted += wtx.GetDebit(ISMINE_SPENDABLE, account, true);
+        added += wtx.GetCredit(ISMINE_SPENDABLE, account, true);
+    }
 
     CAmount fee = 0;
     // if any funds were subtracted the transaction was sent by us
@@ -234,7 +239,21 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         // Try to extract destination, this is not possible in general. Only if the previous
         // ouput of our input happens to be in our wallet. Which will usually only be the case for
         // our own transactions.
-        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txin.prevout.getTransactionHash());
+        
+        uint256 txHash;
+        if (txin.prevout.isHash)
+        {
+            txHash = txin.prevout.getTransactionHash();
+        }
+        else
+        {
+            if (!pwallet->GetTxHash(txin.prevout, txHash))
+            {
+                LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.prevout.getTransactionBlockNumber(), txin.prevout.getTransactionIndex());
+                continue;
+            }
+        }
+        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txHash);
         if (mi != pwallet->mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
@@ -689,7 +708,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         {
             LogPrintf("ReplaceWalletLinkedFromURI: Empty account into linked address [%s]", getUUIDAsString(accountUUID).c_str());
             std::vector<CRecipient> vecSend;
-            CRecipient recipient = GetRecipientForDestination(address.Get(), nBalance, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+            CRecipient recipient = GetRecipientForDestination(address.Get(), nBalance, fSubtractFeeFromAmount, GetPoW2Phase(chainTip()));
             vecSend.push_back(recipient);
 
             CWalletTx* pWallettx = new CWalletTx();
@@ -1081,7 +1100,7 @@ int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
         throw std::runtime_error(_("Invalid address"));
     }
 
-    CRecipient recipient = GetRecipientForDestination(address.Get(), std::min(GetBalance(), request.amount), true, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), std::min(GetBalance(), request.amount), true, GetPoW2Phase(chainTip()));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 
@@ -1122,7 +1141,7 @@ PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRec
         throw std::runtime_error(_("Invalid address"));
     }
 
-    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, substract_fee, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+    CRecipient recipient = GetRecipientForDestination(address.Get(), request.amount, substract_fee, GetPoW2Phase(chainTip()));
     std::vector<CRecipient> vecSend;
     vecSend.push_back(recipient);
 

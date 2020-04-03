@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -77,7 +77,8 @@ struct SignatureData {
 enum SignType
 {
     Spend,
-    Witness
+    Witness, 
+    WitnessUpdate
 };
 
 /** Get the CKeyID of the pubkey for the key that should be used to sign an output */

@@ -9,7 +9,30 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AccountSelectionWidget</name>
+    <message>
+        <source>Frame</source>
+        <translation>Rama</translation>
+    </message>
+    <message>
+        <source>Funding account</source>
+        <translation>Konto finansowania</translation>
+    </message>
+</context>
+<context>
     <name>AccountSettingsDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Dobrze</translation>
+    </message>
+    <message>
+        <source>Rotate key</source>
+        <translation>Obróć klucz</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
     <message>
         <source>Change name of account</source>
         <translation>Zmień nazwę konta</translation>
@@ -58,10 +81,6 @@ OSTRZEŻENIE: upewnij się, że jesteś jedyną osobą, która widzi ten kod QR,
         <translation>Konto nie jest puste, należy najpierw wypłacić swoje środki przed próbą usunięcia.</translation>
     </message>
     <message>
-        <source>Okay</source>
-        <translation>Dobrze</translation>
-    </message>
-    <message>
         <source>Are you sure you want to delete %1 from your account list?
 </source>
         <translation>Czy na pewno chcesz usunąć %1 z listy kont?
@@ -72,133 +91,68 @@ OSTRZEŻENIE: upewnij się, że jesteś jedyną osobą, która widzi ten kod QR,
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
         <translation>Czy na pewno chcesz usunąć %1 z listy swojego konta? Konto będzie nadal monitorowane i zostanie przywrócone, jeśli w przyszłości otrzymają nowe fundusze.</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Anuluj</translation>
-    </message>
 </context>
 <context>
-    <name>NewAccountDialog</name>
+    <name>FundWitnessDialog</name>
     <message>
-        <source>Enter name of account.</source>
-        <translation>Wprowadź nazwę konta</translation>
-    </message>
-    <message>
-        <source>Done</source>
-        <translation>Gotowe</translation>
-    </message>
-    <message>
-        <source>Click here to make QR code visible.
-WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
-        <translation>Kliknij tutaj, aby wyświetlić QR kod.
-OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć ten QR kod, ponieważ można go wykorzystać do uzyskania dostępu do funduszy.</translation>
+        <source>Okay</source>
+        <translation>Dobrze</translation>
     </message>
     <message>
         <source>Cancel</source>
         <translation>Anuluj</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
-        <translation>&lt;li&gt; Rywalizuj z innymi górnikami, aby stworzyć Gulden z czasem bezczynności procesora &lt;/li&gt; &lt;li&gt; Pomóż zabezpieczyć sieć &lt;/li&gt;</translation>
+        <source>Amount</source>
+        <translation>Kwota</translation>
     </message>
     <message>
-        <source>Mining</source>
-        <translation>Górnictwo</translation>
+        <source>&lt;description set programmatically depending on function&gt;</source>
+        <translation>&lt;opis ustawiany programowo w zależności od funkcji&gt;</translation>
     </message>
     <message>
-        <source>Account name</source>
-        <translation>Nazwa konta</translation>
+        <source>Fund</source>
+        <translation>Fundusz</translation>
     </message>
     <message>
-        <source>Create account type</source>
-        <translation>Utwórz typ konta</translation>
+        <source>Extend</source>
+        <translation>Poszerzać</translation>
     </message>
     <message>
-        <source>Import account type</source>
-        <translation>Importuj typ konta</translation>
+        <source>Extend a witness to increase amount and/or locking duration. A funding account is needed to provide the transaction fee, even if the amount is not increased.</source>
+        <translation>Przedłuż witness , aby zwiększyć kwotę i / lub czas trwania blokady. Konto finansowania jest potrzebne do zapewnienia opłaty transakcyjnej, nawet jeśli kwota nie zostanie zwiększona.</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Codzienne zarządzanie funduszami &lt;/li&gt;&lt;li&gt; Wysyłanie i otrzymywanie Gulden&lt;/li&gt;&lt;li&gt;Wysyłanie środków na dowolne ważne konto IBAN&lt;/li&gt;</translation>
+        <source>Fund your witness to start witnessing and earn rewards.</source>
+        <translation>Finansuj swojego witness , aby zacząć świadczyć i zdobywać nagrody.</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Doładowuj, zarządzaj i kontroluj swoje mobilne fundusze z komputera.&lt;/li&gt;&lt;li&gt; Opróżnij swoje mobilne fundusze z łatwością, jeśli telefon zostanie zerwany lub skradziony&lt;/li&gt;</translation>
+        <source>Are you sure you want to extend the witness?</source>
+        <translation>Czy na pewno chcesz przedłużyć witness?</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Rozwijaj swoje pieniądze&lt;/li&gt;&lt;li&gt;Elastyczny okres od 1 miesiąca do 3 lat&lt;/li&gt;&lt;li&gt; Pomóż zabezpieczyć sieć przy minimalnych wymaganiach sprzętowych&lt;/li&gt;</translation>
+        <source>%1 will be locked for %2 days (%3).</source>
+        <translation>%1 zostanie zablokowany na %2 dni (%3).</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importuj konto witness z innego urządzenia&lt;/li&gt; &lt;li&gt;Pozwól temu urządzeniu działać jako zapasowe urządzenie witness, dzięki czemu będziesz zawsze dostępny dla witness&lt;/li&gt;</translation>
+        <source>It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>W żadnym wypadku nie będzie można wydawać ani przenosić tych środków na czas blokady.</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Importuj klucz prywatny z beckup&lt;/li&gt;&lt;li&gt; Brak kopii zapasowej jako części zwrotów odzyskiwania&lt;/li&gt;</translation>
+        <source>Extend witness</source>
+        <translation>Rozszerz witness</translation>
     </message>
     <message>
-        <source>Standard</source>
-        <translation>Standard</translation>
+        <source>No funding account selected</source>
+        <translation>Nie wybrano konta finansowania</translation>
     </message>
     <message>
-        <source>Linked mobile</source>
-        <translation>Połączony tel. komórkowy</translation>
+        <source>Are you sure you want to fund the witness?</source>
+        <translation>Czy na pewno chcesz sfinansować witness?</translation>
     </message>
     <message>
-        <source>Witness</source>
-        <translation>Witness</translation>
-    </message>
-    <message>
-        <source>Witness-only</source>
-        <translation>Witness-tylko</translation>
-    </message>
-    <message>
-        <source>Private key</source>
-        <translation>Klucz prywatny</translation>
-    </message>
-    <message>
-        <source>Scan QR to connect your mobile Gulden app</source>
-        <translation>Zeskanuj QR kod aby połączyć się z twoją mobilną aplikacją Gulden</translation>
-    </message>
-</context>
-<context>
-    <name>BackupDialog</name>
-    <message>
-        <source>Done</source>
-        <translation>Gotowe</translation>
-    </message>
-    <message>
-        <source>Backup phrase</source>
-        <translation>Kopia zapasowa phrase</translation>
-    </message>
-    <message>
-        <source>Show backup phrase</source>
-        <translation>Pokaż kopię hasła phrase</translation>
-    </message>
-    <message>
-        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
-        <translation>Zaleca się również zapisanie kopii zapasowej zaszyfrowanego dysku portfela, oprócz przechowywania powyższej frazy odzyskiwania.</translation>
-    </message>
-    <message>
-        <source>Save to file</source>
-        <translation>Zapisz do pliku</translation>
-    </message>
-    <message>
-        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Poniżej jest sekretne hasło passphrase (kopia zapasowa), zapisz to i zachowaj w bezpiecznym miejscu. Jeśli stracisz hasło passphrase = Stracisz Gulden. Ktoś niepowołany z dostępem do hasła passphrase = stracisz Gulden.</translation>
-    </message>
-    <message>
-        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Poniżej znajduje się, sekretne hasło passphrase (kopia zapasowa), zapisz to i zachowaj w bezpiecznym miejscu. Jeśli stracisz hasło passphrase = Stracisz Gulden. Ktoś niepowołany z dostępem do hasła passphrase = stracisz Gulden.</translation>
-    </message>
-    <message>
-        <source>No recovery phrases present for this wallet.</source>
-        <translation>Brak kopi zapasowej hasła passphrase dla tego portfela.</translation>
-    </message>
-    <message>
-        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
-        <translation>Portfel zawiera kilka starszych kont &quot;non-HD&quot; Nie można ich przywrócić, używając hasła passphrase i wymagają regularnej kopii zapasowej pliku. Upewnij się, że wykonujesz regularne kopie zapasowe swojego portfela lub usuń stare konto, aby zapewnić bezpieczeństwo twoich środków.</translation>
+        <source>Fund witness</source>
+        <translation>Świadek witness</translation>
     </message>
 </context>
 <context>
@@ -234,6 +188,18 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>&amp;Address</source>
         <translation>&amp;Adres</translation>
+    </message>
+    <message>
+        <source>Withdrawable funds in this account is not yet mature, please wait and try again later.</source>
+        <translation>Środki do wypłaty na tym koncie nie są jeszcze dojrzałe, poczekaj i spróbuj ponownie później.</translation>
+    </message>
+    <message>
+        <source>Operating in SPV mode (simple payment verification)</source>
+        <translation>Praca w trybie SPV (simple payment verification)</translation>
+    </message>
+    <message>
+        <source>%1 block(s) remaining.</source>
+        <translation>Pozostało %1 bloków.</translation>
     </message>
     <message>
         <source>Wallet balances</source>
@@ -548,10 +514,6 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Indeksowanie bloków na dysku...</translation>
     </message>
     <message>
-        <source>Processing blocks on disk...</source>
-        <translation>Przetwarzanie bloków na dysku...</translation>
-    </message>
-    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Ponowne indeksowanie bloków na dysku...</translation>
     </message>
@@ -667,6 +629,26 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Moje konta</translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation>1 miesiąc</translation>
+    </message>
+    <message>
+        <source>Lock funds for:</source>
+        <translation>Zablokuj fundusze dla:</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation>3 lata</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>Środki będą zablokowane na 30 dni (1 miesiąc) przy szacunkowym zarobku w wysokości 0. W żadnym wypadku nie będzie możliwe wydawanie ani przenoszenie tych środków na czas blokady.</translation>
+    </message>
+    <message>
+        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
+        <translation>Ostrzeżenie: ta waga przekracza 1% aktualnej masy sieci, co jest fantastyczne ponieważ przyczynia się do bezpieczeństwa sieci, ale nie jest zalecane do maksymalizacji zarobków. Aby uzyskać maksymalne zarobki, zwykle lepiej jest podzielić środki na dwa konta w tej sytuacji. Wyjątkiem jest sytuacja, gdy masz powody sądzić że waga sieci prawdopodobnie wzrośnie znacznie w przyszłości, jeśli nie masz pewności co do najlepszego sposobu działania proszę zasięgnij porady zanim przejdziesz dalej.</translation>
+    </message>
+    <message>
         <source>Receiving address</source>
         <translation>Adres odbiorcy</translation>
     </message>
@@ -689,26 +671,6 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Address book</source>
         <translation>Książka adresowa</translation>
-    </message>
-    <message>
-        <source>Lock funds for:</source>
-        <translation>Zablokuj fundusze dla:</translation>
-    </message>
-    <message>
-        <source>1 month</source>
-        <translation>1 miesiąc</translation>
-    </message>
-    <message>
-        <source>3 years</source>
-        <translation>3 lata</translation>
-    </message>
-    <message>
-        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
-        <translation>Środki będą zablokowane na 30 dni (1 miesiąc) przy szacunkowym zarobku w wysokości 0. W żadnym wypadku nie będzie możliwe wydawanie ani przenoszenie tych środków na czas blokady.</translation>
-    </message>
-    <message>
-        <source>Warning: This weight exceeds 1% of the current network weight, this is fantastic for contributing toward network security but not recommended for maximising your earnings. For maximum earnings it would usually be better to split your funds into two accounts in this situation. An exception is if you have reason to believe that the network weight is likely to increase substantially in future, please seek further advice before proceeding if you are unsure about the best course of action.</source>
-        <translation>Ostrzeżenie: ta waga przekracza 1% aktualnej masy sieci, co jest fantastyczne ponieważ przyczynia się do bezpieczeństwa sieci, ale nie jest zalecane do maksymalizacji zarobków. Aby uzyskać maksymalne zarobki, zwykle lepiej jest podzielić środki na dwa konta w tej sytuacji. Wyjątkiem jest sytuacja, gdy masz powody sądzić że waga sieci prawdopodobnie wzrośnie znacznie w przyszłości, jeśli nie masz pewności co do najlepszego sposobu działania proszę zasięgnij porady zanim przejdziesz dalej.</translation>
     </message>
     <message>
         <source>Amount exceeds maximum for IBAN payment.</source>
@@ -743,40 +705,305 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Zapisz</translation>
     </message>
     <message>
-        <source>A minimum amount of %1 is required.</source>
-        <translation>Wymagana jest minimalna ilość %1.</translation>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation>Wymaga około %1 Gulden, w tym opłaty za usługę IBAN</translation>
+    </message>
+</context>
+<context>
+    <name>NocksRequest</name>
+    <message>
+        <source>Okay</source>
+        <translation>Dobrze</translation>
+    </message>
+</context>
+<context>
+    <name>OptimizeWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Dobrze</translation>
     </message>
     <message>
-        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
-        <translation>Wymagane jest minimalne obciążenie %1, ale wybrana obciążenie to tylko %2. Zwiększ ilość lub czas blokady dla większego obciążenia.</translation>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
     </message>
     <message>
-        <source>1 year</source>
-        <translation>1 rok</translation>
+        <source>No funding account selected</source>
+        <translation>Nie wybrano konta finansowania</translation>
     </message>
     <message>
-        <source>%1 years</source>
-        <translation>%1 lat</translation>
+        <source>Account is already optimal</source>
+        <translation>Konto jest już optymalne</translation>
+    </message>
+    <message>
+        <source>Optimize witness</source>
+        <translation>Zoptymalizuj witness</translation>
+    </message>
+    <message>
+        <source>Optimize the parts into which your witness is split to maximize your earnings. A funding account is needed for the fee of the transaction which rearranges the witness parts.</source>
+        <translation>Zoptymalizuj części, na które podzielony jest twój witness , aby zmaksymalizować swoje zarobki. Konto finansowania jest potrzebne do uiszczenia opłaty za transakcję, która porządkuje części witness .</translation>
+    </message>
+    <message>
+        <source>Optimize</source>
+        <translation>Optymalizować</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to optimize the witness parts?</source>
+        <translation>Czy na pewno chcesz zoptymalizować części witness ?</translation>
+    </message>
+</context>
+<context>
+    <name>RotateWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Dobrze</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Nie wybrano konta finansowania</translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation>Obróć klucz witness</translation>
+    </message>
+    <message>
+        <source>Replace your witness key with a new one. To be used for example when your witness key is compromised to prevent others from reaping your witness rewards. A funding account is needed for the fee of the transaction.
+Remember to install the new key on any witness device (pi) or service you are using.</source>
+        <translation>Wymień klucz witness na nowy. Do użycia na przykład, gdy twój klucz witness jest naruszony, aby uniemożliwić innym czerpanie twoich nagród. Konto finansowania jest potrzebne do uiszczenia opłaty za transakcję.
+Pamiętaj, aby zainstalować nowy klucz na dowolnym urządzeniu witness (pi) lub serwisie, z którego korzystasz.</translation>
+    </message>
+    <message>
+        <source>Rotate</source>
+        <translation>Obróć</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to rotate the witness key?</source>
+        <translation>Czy na pewno chcesz obrócić klucz witness ?</translation>
+    </message>
+</context>
+<context>
+    <name>UpgradeWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Dobrze</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>Nie wybrano konta finansowania</translation>
+    </message>
+    <message>
+        <source>Upgrade</source>
+        <translation>Aktualizacja</translation>
+    </message>
+    <message>
+        <source>Upgrade an older witness. A witness will be automatically upgraded when it is selected for witnessing. However for small witness accounts it can take a long time for this to occur. You can manually upgrade the witness here so you can extend it for example. A funding account is needed for the fee of the upgrade transaction.</source>
+        <translation>Uaktualnij starszego witness. Witness zostanie automatycznie uaktualniony, gdy zostanie wybrany do witness. Jednak w przypadku kont małych witness może to zająć dużo czasu. Możesz ręcznie ulepszyć witness tutaj, aby na przykład go przedłużyć. Konto finansowania jest potrzebne do opłaty za transakcję aktualizacji.</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to upgrade the witness?</source>
+        <translation>Czy na pewno chcesz ulepszyć witness?</translation>
+    </message>
+</context>
+<context>
+    <name>WitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Dobrze</translation>
+    </message>
+    <message>
+        <source>Extend</source>
+        <translation>Poszerzać</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Informacja</translation>
+    </message>
+    <message>
+        <source>Optimize</source>
+        <translation>Optymalizować</translation>
     </message>
     <message>
         <source>%1 months</source>
-        <translation>%1 miesiące</translation>
+        <translation>%1 miesięcy</translation>
     </message>
     <message>
-        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
-
-Estimated earnings: %3 (%4% per month)
-
-Witness weight: %5</source>
-        <translation>Środki zostaną zablokowane na %1 dni (%2). W żadnym wypadku nie będzie możliwe wydawanie ani przenoszenie tych środków w okres blokady.
-
-Szacunkowe zarobki:%3 (%4% miesięcznie)
-
-Witness waga: %5</translation>
+        <source>Upgrade</source>
+        <translation>Aktualizacja</translation>
     </message>
     <message>
-        <source>Will require approximately %1 Gulden including IBAN service fee</source>
-        <translation>Wymaga około %1 Gulden, w tym opłaty za usługę IBAN</translation>
+        <source>To begin witnessing, you have to fund the witness account.</source>
+        <translation>Aby rozpocząć witness , musisz sfinansować konto witness.</translation>
+    </message>
+    <message>
+        <source>Parts</source>
+        <translation>Części</translation>
+    </message>
+    <message>
+        <source>Witness finished</source>
+        <translation>Witness skończony</translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing. Your earnings and transactions remain here for you to view.
+You can empty the account to make your witness funds available. When the emptying transaction is confirmed in the blockchain you can fund this account to witness again.</source>
+        <translation>Twoje konto witness zostało zakończone. Twoje zarobki i transakcje pozostają tutaj do wglądu.
+Możesz opróżnić konto, aby udostępnić środki witness. Gdy transakcja opróżniania zostanie potwierdzona w blockchain, możesz zasilić to konto, aby być witness ponownie.</translation>
+    </message>
+    <message>
+        <source>Witness interface error</source>
+        <translation>Błąd interfejsu witness</translation>
+    </message>
+    <message>
+        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view.
+When the emptying transaction is confirmed in the blockchain you can fund this account to witness again.</source>
+        <translation>Twoje konto witness zostało zakończone, a wszystkie fundusze zostały opróżnione. Twoje zarobki i transakcje pozostają tutaj do wglądu.
+Gdy transakcja opróżniania zostanie potwierdzona w blockchain, możesz zasilić to konto, aby być witness ponownie.</translation>
+    </message>
+    <message>
+        <source>Note: this problem is only within the user interface and your funds are secure.</source>
+        <translation>Uwaga: ten problem występuje tylko w interfejsie użytkownika, a twoje fundusze są bezpieczne.</translation>
+    </message>
+    <message>
+        <source>Close graph</source>
+        <translation>Zamknij wykres</translation>
+    </message>
+    <message>
+        <source>Show graph</source>
+        <translation>Pokaż wykres</translation>
+    </message>
+    <message>
+        <source>Projected earnings graph</source>
+        <translation>Prognozowany wykres zarobków</translation>
+    </message>
+    <message>
+        <source>Compound earnings</source>
+        <translation>Złożone zarobki</translation>
+    </message>
+    <message>
+        <source>n/a</source>
+        <translation>NIEDOSTĘPNE</translation>
+    </message>
+    <message>
+        <source>Lock time remaining</source>
+        <translation>Pozostały czas blokady</translation>
+    </message>
+    <message>
+        <source>Locked from</source>
+        <translation>Zablokowany od</translation>
+    </message>
+    <message>
+        <source>Locked until</source>
+        <translation>Zablokowany do</translation>
+    </message>
+    <message>
+        <source>Last earnings</source>
+        <translation>Ostatnie zarobki</translation>
+    </message>
+    <message>
+        <source>Earnings</source>
+        <translation>Zarobki</translation>
+    </message>
+    <message>
+        <source>Lock duration</source>
+        <translation>Czas blokady</translation>
+    </message>
+    <message>
+        <source>Required earnings frequency</source>
+        <translation>Wymagana częstotliwość zarobków</translation>
+    </message>
+    <message>
+        <source>Weight</source>
+        <translation>Waga</translation>
+    </message>
+    <message>
+        <source>Estimated earnings frequency</source>
+        <translation>Szacowana częstotliwość zarobków</translation>
+    </message>
+    <message>
+        <source>Network weight</source>
+        <translation>Waga sieci</translation>
+    </message>
+    <message>
+        <source>Inactive witness account</source>
+        <translation>Nieaktywne konto witness</translation>
+    </message>
+    <message>
+        <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
+        <translation>Twoje konto witness zostało dezaktywowane, ponieważ konto witness nie zostało wyświetlone (dostępne) w oczekiwanym czasie. Jeśli zdarza się to często, upewnij się, że masz stabilną konfigurację dla witnessing lub skontaktuj się z pomocą techniczną. Aby wznowić witnessing , wybierz poniższe konto, z którego zostanie pobrana niewielka opłata za ponowne aktywowanie i naciśnij przycisk &quot;Odnów konto&quot;.</translation>
+    </message>
+    <message>
+        <source>Waiting for confirmation</source>
+        <translation>Oczekiwanie na potwierdzenie</translation>
+    </message>
+    <message>
+        <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
+        <translation>Twoje konto witness czeka na potwierdzenie transakcji przez sieć zanim stanie się aktywne, średnio powinno to zająć tylko kilka minut. Jeśli ta strona będzie wyświetlana dłużej niż ten okres, skorzystaj z karty transakcji i / lub uzyskaj pomoc.</translation>
+    </message>
+    <message>
+        <source>Change units</source>
+        <translation>Zmień jednostki</translation>
+    </message>
+    <message>
+        <source>View graph</source>
+        <translation>Wyświetl wykres</translation>
+    </message>
+    <message>
+        <source>Empty account</source>
+        <translation>Puste konto</translation>
+    </message>
+    <message>
+        <source>Withdraw earnings</source>
+        <translation>Wypłać zarobki</translation>
+    </message>
+    <message>
+        <source>Renew account</source>
+        <translation>Odnów konto</translation>
+    </message>
+    <message>
+        <source>Earnings to date</source>
+        <translation>Zarobki do tej pory</translation>
+    </message>
+    <message>
+        <source>Projected earnings</source>
+        <translation>Prognozowane zarobki</translation>
+    </message>
+    <message>
+        <source>Initial projected earnings</source>
+        <translation>Wstępny prognozowane zyski</translation>
+    </message>
+    <message>
+        <source>&amp;Blocks</source>
+        <translation>&amp;Bloki</translation>
+    </message>
+    <message>
+        <source>&amp;Days</source>
+        <translation>&amp;Dni</translation>
+    </message>
+    <message>
+        <source>&amp;Weeks</source>
+        <translation>&amp;Tygodni</translation>
+    </message>
+    <message>
+        <source>&amp;Months</source>
+        <translation>&amp;Miesięcy</translation>
+    </message>
+    <message>
+        <source>%1 blocks</source>
+        <translation>%1 bloki</translation>
+    </message>
+    <message>
+        <source>%1 days</source>
+        <translation>%1 dni</translation>
+    </message>
+    <message>
+        <source>%1 weeks</source>
+        <translation>%1 tygodni</translation>
     </message>
 </context>
 <context>
@@ -815,7 +1042,7 @@ Witness waga: %5</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Ta operacja wymaga hasła passphrase aby odblokować portfel.</translation>
+        <translation>Ta operacja wymaga hasła portfela aby odblokować portfel.</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
@@ -823,7 +1050,7 @@ Witness waga: %5</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Ta operacja wymaga hasła passphrase aby odszyfrować portfel.</translation>
+        <translation>Ta operacja wymaga hasła portfela aby odszyfrować portfel.</translation>
     </message>
     <message>
         <source>Decrypt wallet</source>
@@ -1005,6 +1232,91 @@ Witness waga: %5</translation>
     <message>
         <source>Enter a witness-only URL to import</source>
         <translation>Wprowadź witness URL przeznaczony tylko do zaimportowania</translation>
+    </message>
+</context>
+<context>
+    <name>NewAccountDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Wprowadź nazwę konta</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Gotowe</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation>Kliknij tutaj, aby wyświetlić QR kod.
+OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć ten QR kod, ponieważ można go wykorzystać do uzyskania dostępu do funduszy.</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
+        <translation>&lt;li&gt; Rywalizuj z innymi górnikami, aby stworzyć Gulden z czasem bezczynności procesora &lt;/li&gt; &lt;li&gt; Pomóż zabezpieczyć sieć &lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Górnictwo</translation>
+    </message>
+    <message>
+        <source>Account name</source>
+        <translation>Nazwa konta</translation>
+    </message>
+    <message>
+        <source>Create account type</source>
+        <translation>Utwórz typ konta</translation>
+    </message>
+    <message>
+        <source>Import account type</source>
+        <translation>Importuj typ konta</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Codzienne zarządzanie funduszami &lt;/li&gt;&lt;li&gt; Wysyłanie i otrzymywanie Gulden&lt;/li&gt;&lt;li&gt;Wysyłanie środków na dowolne ważne konto IBAN&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Doładowuj, zarządzaj i kontroluj swoje mobilne fundusze z komputera.&lt;/li&gt;&lt;li&gt; Opróżnij swoje mobilne fundusze z łatwością, jeśli telefon zostanie zerwany lub skradziony&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Grow your money&lt;/li&gt;&lt;li&gt;Flexible period of 1 month to 3 years&lt;/li&gt;&lt;li&gt;Help secure the network with minimal hardware equirements&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Rozwijaj swoje pieniądze&lt;/li&gt;&lt;li&gt;Elastyczny okres od 1 miesiąca do 3 lat&lt;/li&gt;&lt;li&gt; Pomóż zabezpieczyć sieć przy minimalnych wymaganiach sprzętowych&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a witness account from another device&lt;/li&gt;&lt;li&gt;Let this device act as a backup witness device so that you are always available to witness&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importuj konto witness z innego urządzenia&lt;/li&gt; &lt;li&gt;Pozwól temu urządzeniu działać jako zapasowe urządzenie witness, dzięki czemu będziesz zawsze dostępny dla witness&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;li&gt;Import a private key from cold storage&lt;/li&gt;&lt;li&gt;Not backed up as part of your recovery phrase&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Importuj klucz prywatny z beckup&lt;/li&gt;&lt;li&gt; Brak kopii zapasowej jako części zwrotów odzyskiwania&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <source>Standard</source>
+        <translation>Standard</translation>
+    </message>
+    <message>
+        <source>Linked mobile</source>
+        <translation>Połączony tel. komórkowy</translation>
+    </message>
+    <message>
+        <source>Witness</source>
+        <translation>Witness</translation>
+    </message>
+    <message>
+        <source>Witness-only</source>
+        <translation>Witness-tylko</translation>
+    </message>
+    <message>
+        <source>Private key</source>
+        <translation>Klucz prywatny</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect your mobile Gulden app</source>
+        <translation>Zeskanuj QR kod aby połączyć się z twoją mobilną aplikacją Gulden</translation>
     </message>
 </context>
 <context>
@@ -1558,6 +1870,45 @@ Jeśli niedawno otrzymałeś środki, być może trzeba będzie poczekać, aż b
     </message>
 </context>
 <context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>Gotowe</translation>
+    </message>
+    <message>
+        <source>Backup phrase</source>
+        <translation>Kopia zapasowa phrase</translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation>Pokaż kopię hasła phrase</translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>Zaleca się również zapisanie kopii zapasowej zaszyfrowanego dysku portfela, oprócz przechowywania powyższej frazy odzyskiwania.</translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation>Zapisz do pliku</translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Poniżej jest sekretne hasło passphrase (kopia zapasowa), zapisz to i zachowaj w bezpiecznym miejscu. Jeśli stracisz hasło passphrase = Stracisz Gulden. Ktoś niepowołany z dostępem do hasła passphrase = stracisz Gulden.</translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>Poniżej znajduje się, sekretne hasło passphrase (kopia zapasowa), zapisz to i zachowaj w bezpiecznym miejscu. Jeśli stracisz hasło passphrase = Stracisz Gulden. Ktoś niepowołany z dostępem do hasła passphrase = stracisz Gulden.</translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation>Brak kopi zapasowej hasła passphrase dla tego portfela.</translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>Portfel zawiera kilka starszych kont &quot;non-HD&quot; Nie można ich przywrócić, używając hasła passphrase i wymagają regularnej kopii zapasowej pliku. Upewnij się, że wykonujesz regularne kopie zapasowe swojego portfela lub usuń stare konto, aby zapewnić bezpieczeństwo twoich środków.</translation>
+    </message>
+</context>
+<context>
     <name>AccountSummaryWidget</name>
     <message>
         <source>Account balances</source>
@@ -1773,6 +2124,14 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>Copy transaction ID</source>
         <translation>Skopiuj ID transakcji</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Kredyt</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Obciążenie</translation>
     </message>
     <message>
         <source>Generated</source>
@@ -1999,6 +2358,10 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>(brak etykiety)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Kwota</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Wybór monet</translation>
     </message>
@@ -2041,10 +2404,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>List mode</source>
         <translation>Widok listy</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Kwota</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -2162,6 +2521,10 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>Wysłane</translation>
     </message>
     <message>
+        <source>Rotate witness key</source>
+        <translation>Obróć witness klucz</translation>
+    </message>
+    <message>
         <source>Open until %1</source>
         <translation>Otwórz do %1</translation>
     </message>
@@ -2172,6 +2535,14 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>watch-only</source>
         <translation>tylko-obserwowany</translation>
+    </message>
+    <message>
+        <source>Rearrange locked funds</source>
+        <translation>Zmień kolejność zablokowanych środków</translation>
+    </message>
+    <message>
+        <source>Rearrange locked funds: %1</source>
+        <translation>Zmień kolejność zablokowanych środków: %1</translation>
     </message>
     <message>
         <source>Unlock funds</source>
@@ -2192,10 +2563,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
             <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
@@ -2220,10 +2587,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Niewystarczające (potwierdzenia %1 będą dostępne po %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Ten blok nie został odebrany przez inne węzły i prawdopodobnie nie zostanie zaakceptowany!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -2270,18 +2633,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>Rozszerz konto witness</translation>
     </message>
     <message>
-        <source>Split locked funds</source>
-        <translation>Podziel zablokowane fundusze</translation>
-    </message>
-    <message>
-        <source>Merge locked funds</source>
-        <translation>Połącz zablokowane fundusze</translation>
-    </message>
-    <message>
-        <source>Rotate witness key</source>
-        <translation>Obróć witness klucz</translation>
-    </message>
-    <message>
         <source>Renew witness account</source>
         <translation>Odnów konto witness</translation>
     </message>
@@ -2308,14 +2659,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>Extend locked funds from: %1</source>
         <translation>Rozszerz zablokowane środki z: %1</translation>
-    </message>
-    <message>
-        <source>Split locked funds: %1</source>
-        <translation>Podziel zablokowane fundusze: %1</translation>
-    </message>
-    <message>
-        <source>Merge locked funds: %1</source>
-        <translation>Połącz zablokowane fundusze: %1</translation>
     </message>
     <message>
         <source>Rotate witness key: %1</source>
@@ -2446,6 +2789,22 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>Kwota</translation>
     </message>
     <message>
+        <source>1 month</source>
+        <translation>1 miesiąc</translation>
+    </message>
+    <message>
+        <source>1 year</source>
+        <translation>1 rok</translation>
+    </message>
+    <message>
+        <source>%1 years</source>
+        <translation>%1 lat</translation>
+    </message>
+    <message>
+        <source>%1 months</source>
+        <translation>%1 miesiące</translation>
+    </message>
+    <message>
         <source>Enter an address (e.g. %1)</source>
         <translation>Wpisz adres (np. %1)</translation>
     </message>
@@ -2556,6 +2915,14 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <source>Message</source>
         <translation>Wiadomość</translation>
     </message>
+    <message>
+        <source>Credit</source>
+        <translation>Kredyt</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Obciążenie</translation>
+    </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
         <translation>
@@ -2571,10 +2938,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
         <translation>koliduje z transakcją z potwierdzeniami %1</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -2603,18 +2966,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>,nie została jeszcze pomyślnie przekazana</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, rozgłaszane przez %n węzeł</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
     </message>
     <message>
         <source>Source</source>
@@ -2648,10 +2999,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <source>label</source>
         <translation>etykieta</translation>
     </message>
-    <message>
-        <source>Credit</source>
-        <translation>Kredyt</translation>
-    </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
         <translation>
@@ -2663,10 +3010,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>not accepted</source>
         <translation>nie zaakceptowany</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Obciążenie</translation>
     </message>
     <message>
         <source>Total debit</source>
@@ -3148,6 +3491,14 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>Błąd</translation>
     </message>
     <message>
+        <source>Automatically hide status bar when synchronised. Disable to always show status indicators.</source>
+        <translation>Automatycznie ukryj pasek stanu podczas synchronizacji. Wyłącz, aby zawsze wyświetlać wskaźniki stanu.</translation>
+    </message>
+    <message>
+        <source>Hide status bar when synchronized</source>
+        <translation>Ukryj pasek stanu podczas synchronizacji</translation>
+    </message>
+    <message>
         <source>Periodically check if updates are available. </source>
         <translation>Okresowo sprawdź czy aktualizacje są dostępne. </translation>
     </message>
@@ -3405,163 +3756,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     </message>
 </context>
 <context>
-    <name>WitnessDialog</name>
-    <message>
-        <source>Information</source>
-        <translation>Informacja</translation>
-    </message>
-    <message>
-        <source>%1 months</source>
-        <translation>%1 miesięcy</translation>
-    </message>
-    <message>
-        <source>To begin witnessing, select an account from which to lock funds:</source>
-        <translation>Aby zacząć witnessing, wybierz konto z którego chcesz zablokować środki:</translation>
-    </message>
-    <message>
-        <source>Projected earnings graph</source>
-        <translation>Prognozowany wykres zarobków</translation>
-    </message>
-    <message>
-        <source>Compound earnings</source>
-        <translation>Złożone zarobki</translation>
-    </message>
-    <message>
-        <source>n/a</source>
-        <translation>NIEDOSTĘPNE</translation>
-    </message>
-    <message>
-        <source>Lock time remaining</source>
-        <translation>Pozostały czas blokady</translation>
-    </message>
-    <message>
-        <source>Locked from</source>
-        <translation>Zablokowany od</translation>
-    </message>
-    <message>
-        <source>Locked until</source>
-        <translation>Zablokowany do</translation>
-    </message>
-    <message>
-        <source>Last earnings</source>
-        <translation>Ostatnie zarobki</translation>
-    </message>
-    <message>
-        <source>Earnings</source>
-        <translation>Zarobki</translation>
-    </message>
-    <message>
-        <source>Lock duration</source>
-        <translation>Czas blokady</translation>
-    </message>
-    <message>
-        <source>Required earnings frequency</source>
-        <translation>Wymagana częstotliwość zarobków</translation>
-    </message>
-    <message>
-        <source>Weight</source>
-        <translation>Waga</translation>
-    </message>
-    <message>
-        <source>Estimated earnings frequency</source>
-        <translation>Szacowana częstotliwość zarobków</translation>
-    </message>
-    <message>
-        <source>Network weight</source>
-        <translation>Waga sieci</translation>
-    </message>
-    <message>
-        <source>Inactive witness account</source>
-        <translation>Nieaktywne konto witness</translation>
-    </message>
-    <message>
-        <source>Your witness account has been deactivated because your account has failed to witness within the expected time frame. If this happens often, please make sure you have a stable witnessing setup or contact support. To resume witnessing, select the account below from which a small reactivation fee will be charged and press the ‘Renew account’ button.</source>
-        <translation>Twoje konto witness zostało dezaktywowane, ponieważ konto witness nie zostało wyświetlone (dostępne) w oczekiwanym czasie. Jeśli zdarza się to często, upewnij się, że masz stabilną konfigurację dla witnessing lub skontaktuj się z pomocą techniczną. Aby wznowić witnessing , wybierz poniższe konto, z którego zostanie pobrana niewielka opłata za ponowne aktywowanie i naciśnij przycisk &quot;Odnów konto&quot;.</translation>
-    </message>
-    <message>
-        <source>Waiting for confirmation</source>
-        <translation>Oczekiwanie na potwierdzenie</translation>
-    </message>
-    <message>
-        <source>Your witness account is waiting for a transaction to confirm with the network before it becomes active, on average this should take only a few minutes. Should this page continue to show for longer than this time period please consult the transactions tab and/or seek assistance.</source>
-        <translation>Twoje konto witness czeka na potwierdzenie transakcji przez sieć zanim stanie się aktywne, średnio powinno to zająć tylko kilka minut. Jeśli ta strona będzie wyświetlana dłużej niż ten okres, skorzystaj z karty transakcji i / lub uzyskaj pomoc.</translation>
-    </message>
-    <message>
-        <source>Account emptied</source>
-        <translation>Konto zostało opróżnione</translation>
-    </message>
-    <message>
-        <source>Your witness account has finished witnessing and all funds have been emptied. Your earnings and transactions remain here for you to view however you cannot use the account any further. If you would like to witness again please create a new account with which to do so.
-In future versions of Gulden it will be possible to re-use this account for further witnessing.</source>
-        <translation>Twoje konto witness zakończyło witnessing, a wszystkie środki zostały opróżnione. Twoje zarobki i transakcje pozostaną tutaj do wyświetlenia, ale nie możesz dalej korzystać z konta. Jeśli chcesz być witness ponownie, utwórz nowe konto aby to zrobić.
-W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do dalszego witnessing.</translation>
-    </message>
-    <message>
-        <source>Change units</source>
-        <translation>Zmień jednostki</translation>
-    </message>
-    <message>
-        <source>View graph</source>
-        <translation>Wyświetl wykres</translation>
-    </message>
-    <message>
-        <source>Empty account</source>
-        <translation>Puste konto</translation>
-    </message>
-    <message>
-        <source>Withdraw earnings</source>
-        <translation>Wypłać zarobki</translation>
-    </message>
-    <message>
-        <source>Fund account</source>
-        <translation>Konto funduszu</translation>
-    </message>
-    <message>
-        <source>Renew account</source>
-        <translation>Odnów konto</translation>
-    </message>
-    <message>
-        <source>Earnings to date</source>
-        <translation>Zarobki do tej pory</translation>
-    </message>
-    <message>
-        <source>Projected earnings</source>
-        <translation>Prognozowane zarobki</translation>
-    </message>
-    <message>
-        <source>Initial projected earnings</source>
-        <translation>Wstępny prognozowane zyski</translation>
-    </message>
-    <message>
-        <source>&amp;Blocks</source>
-        <translation>&amp;Bloki</translation>
-    </message>
-    <message>
-        <source>&amp;Days</source>
-        <translation>&amp;Dni</translation>
-    </message>
-    <message>
-        <source>&amp;Weeks</source>
-        <translation>&amp;Tygodni</translation>
-    </message>
-    <message>
-        <source>&amp;Months</source>
-        <translation>&amp;Miesięcy</translation>
-    </message>
-    <message>
-        <source>%1 blocks</source>
-        <translation>%1 bloki</translation>
-    </message>
-    <message>
-        <source>%1 days</source>
-        <translation>%1 dni</translation>
-    </message>
-    <message>
-        <source>%1 weeks</source>
-        <translation>%1 tygodni</translation>
-    </message>
-</context>
-<context>
     <name>GuldenAmountField</name>
     <message>
         <source>Max</source>
@@ -3570,6 +3764,37 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
     <message>
         <source>Gulden</source>
         <translation>Gulden</translation>
+    </message>
+</context>
+<context>
+    <name>WitnessDurationWidget</name>
+    <message>
+        <source>1 month</source>
+        <translation>1 miesiąc</translation>
+    </message>
+    <message>
+        <source>Lock funds for:</source>
+        <translation>Zablokuj fundusze dla:</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation>3 lata</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for 30 days (1 month) with an estimated earning of 0. It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>Środki zostaną zablokowane na 30 dni (1 miesiąc), a szacowany zarobek wynosi 0. W żadnym wypadku nie będzie można wydać ani przenieść tych środków na czas blokady.</translation>
+    </message>
+    <message>
+        <source>Form</source>
+        <translation>Formularz</translation>
+    </message>
+    <message>
+        <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
+        <translation>Wymagana jest minimalna waga %1, ale wybrana waga to tylko %2. Zwiększ ilość lub czas blokady, aby uzyskać większą wagę.</translation>
+    </message>
+    <message>
+        <source>A minimum amount of %1 is required.</source>
+        <translation>Wymagana jest minimalna ilość %1.</translation>
     </message>
 </context>
 <context>
@@ -3625,6 +3850,10 @@ W przyszłych wersjach Gulden będzie można ponownie wykorzystać to konto do d
 </context>
 <context>
     <name>MiningAccountDialog</name>
+    <message>
+        <source>Arena setup time</source>
+        <translation>Czas przygotowania areny</translation>
+    </message>
     <message>
         <source>%1 MB</source>
         <translation>%1 MB</translation>

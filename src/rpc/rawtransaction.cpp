@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -393,9 +393,9 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         {
             if (rbfOptIn)
                 nFlags |= CTxInFlags::OptInRBF;
-            //fixme: (PHASE4) (SEGSIG) Also handle block based sequence number.
-            if (rawTx.nLockTime)
-                nFlags |= CTxInFlags::HasTimeBasedRelativeLock;
+            //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
+            //if (rawTx.nLockTime)
+                //nFlags |= CTxInFlags::HasTimeBasedRelativeLock;
         }
 
         // set the sequence number if passed in the parameters object
@@ -765,7 +765,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             std::vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
-            //fixme: (PHASE4) implement for other transaction types
+            //fixme: (PHASE4POSTREL) implement for other transaction types
             {
                 const Coin& coin = view.AccessCoin(out);
                 if (!coin.IsSpent() && coin.out.output.scriptPubKey != scriptPubKey) {
@@ -867,12 +867,11 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, "Input not found or already spent");
             continue;
         }
-        //fixme: (PHASE4) (SEGSIG) Other transaction types
+        //fixme: (PHASE4POSTREL) (SEGSIG) Other transaction types
         const CScript& prevPubKey = coin.out.output.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
-        //fixme: (PHASE4) (SEGSIG) (sign type)
-        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, signType);
 
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:

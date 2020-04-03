@@ -189,6 +189,10 @@
         <translation>(ללא תוית)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>כמות</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>בחירת מטבע</translation>
     </message>
@@ -231,10 +235,6 @@
     <message>
         <source>List mode</source>
         <translation>מצב רשימה</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>כמות</translation>
     </message>
     <message>
         <source>Received with label</source>

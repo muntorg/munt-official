@@ -78,7 +78,7 @@ std::string CTxIn::ToString() const
     {
         str += strprintf(", absoluteLockSequence=%u", nSequence);
     }
-    //fixme: (PHASE4) - Other sequence behaviours we should log?
+    //fixme: (PHASE5) - Other sequence behaviours we should log?
     //else if(...)
     //{
     //}

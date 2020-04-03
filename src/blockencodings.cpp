@@ -5,7 +5,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -22,7 +22,7 @@
 
 #include <unordered_map>
 
-//fixme: (PHASE4) (SEGSIG)
+//fixme: (PHASE5) (SEGSIG)
 #define MIN_TRANSACTION_BASE_SIZE (::GetSerializeSize(CTransaction(1), SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES))
 
 CBlockHeaderAndShortTxIDs::CBlockHeaderAndShortTxIDs(const CBlock& block, bool fUseWTXID) :

@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -222,7 +222,6 @@ UniValue validateaddress(const JSONRPCRequest& request)
     CGuldenAddress address(request.params[0].get_str());
     bool isValid = address.IsValid();
 
-    //fixme: (PHASE4) Add some segsig specific output here.
     UniValue ret(UniValue::VOBJ);
     ret.push_back(Pair("isvalid", isValid));
     if (isValid)
@@ -231,6 +230,7 @@ UniValue validateaddress(const JSONRPCRequest& request)
         std::string currentAddress = address.ToString();
         ret.push_back(Pair("address", currentAddress));
 
+        //fixme: (PHASE5) Add some segsig specific output here.
         CScript scriptPubKey = GetScriptForDestination(dest);
         ret.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
 
@@ -301,7 +301,7 @@ static UniValue getaddress(const JSONRPCRequest& request)
                 result.push_back(CGuldenAddress(addr).ToString());
             }
         }
-        //fixme: (PHASE4) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
+        //fixme: (PHASE5) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
     }
 
     return result;
@@ -374,8 +374,6 @@ UniValue createmultisig(const JSONRPCRequest& request)
 {
 #ifdef ENABLE_WALLET
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
-#else
-    CWallet* const pwallet = NULL;
 #endif
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 2)

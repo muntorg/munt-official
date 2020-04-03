@@ -4,8 +4,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2017-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -189,8 +189,11 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
         const CTxIn& txin = tx.vin[i];
         UniValue in(UniValue::VOBJ);
         if (tx.IsCoinBase() && !tx.IsPoW2WitnessCoinBase())
+        {
             in.pushKV("coinbase", HexStr(txin.scriptSig.begin(), txin.scriptSig.end()));
-        else {
+        }
+        else
+        {
             if ( tx.IsPoW2WitnessCoinBase() )
             {
                 in.pushKV("pow2_coinbase", "");
@@ -215,26 +218,35 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
             o.pushKV("asm", ScriptToAsmStr(txin.scriptSig, true));
             o.pushKV("hex", HexStr(txin.scriptSig.begin(), txin.scriptSig.end()));
             in.pushKV("scriptSig", o);
-            if (!tx.vin[i].segregatedSignatureData.IsNull()) {
+            if (!tx.vin[i].segregatedSignatureData.IsNull()) 
+            {
                 UniValue txinSigData(UniValue::VARR);
-                for (const auto& item : tx.vin[i].segregatedSignatureData.stack) {
+                for (const auto& item : tx.vin[i].segregatedSignatureData.stack)
+                {
                     txinSigData.push_back(HexStr(item.begin(), item.end()));
                 }
                 in.pushKV("txin_sig_data", txinSigData);
             }
         }
         if (IsOldTransactionVersion(tx.nVersion) || txin.FlagIsSet(CTxInFlags::HasRelativeLock))
+        {
             in.pushKV("sequence", (int64_t)txin.GetSequence(tx.nVersion));
+        }
         if (txin.FlagIsSet(CTxInFlags::OptInRBF))
+        {
             in.pushKV("rbf", true);
+        }
         else
+        {
             in.pushKV("rbf", false);
+        }
         vin.push_back(in);
     }
     entry.pushKV("vin", vin);
 
     UniValue vout(UniValue::VARR);
-    for (unsigned int i = 0; i < tx.vout.size(); i++) {
+    for (unsigned int i = 0; i < tx.vout.size(); i++)
+    {
         const CTxOut& txout = tx.vout[i];
 
         UniValue out(UniValue::VOBJ);
@@ -243,30 +255,32 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
         out.pushKV("value", outValue);
         out.pushKV("n", (int64_t)i);
 
-        if (txout.GetType() <= CTxOutType::ScriptLegacyOutput)
+        switch (txout.GetType())
         {
-            UniValue o(UniValue::VOBJ);
-            ScriptPubKeyToUniv(txout.output.scriptPubKey, o, true);
-            out.pushKV("scriptPubKey", o);
-            vout.push_back(out);
-        }
-        else if (txout.GetType() == CTxOutType::PoW2WitnessOutput)
-        {
-            UniValue o(UniValue::VOBJ);
-            PoW2WitnessToUniv(txout, o, true);
-            out.pushKV("PoW²-witness", o);
-            vout.push_back(out);
-        }
-        else if (txout.GetType() == CTxOutType::StandardKeyHashOutput)
-        {
-            UniValue o(UniValue::VOBJ);
-            StandardKeyHashToUniv(txout, o, true);
-            out.pushKV("standard-key-hash", o);
-            vout.push_back(out);
-        }
-        else
-        {
-            assert(0);
+            case CTxOutType::ScriptLegacyOutput:
+            {
+                UniValue o(UniValue::VOBJ);
+                ScriptPubKeyToUniv(txout.output.scriptPubKey, o, true);
+                out.pushKV("scriptPubKey", o);
+                vout.push_back(out);
+                break;
+            }
+            case CTxOutType::PoW2WitnessOutput:
+            {
+                UniValue o(UniValue::VOBJ);
+                PoW2WitnessToUniv(txout, o, true);
+                out.pushKV("PoW²-witness", o);
+                vout.push_back(out);
+                break;
+            }
+            case CTxOutType::StandardKeyHashOutput:
+            {
+                UniValue o(UniValue::VOBJ);
+                StandardKeyHashToUniv(txout, o, true);
+                out.pushKV("standard-key-hash", o);
+                vout.push_back(out);
+                break;
+            }
         }
     }
     entry.pushKV("vout", vout);

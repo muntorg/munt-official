@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -23,18 +23,14 @@ CHDSeed::SeedType SeedTypeFromString(std::string type);
 #endif
 
 class CBlockIndex;
-bool IsPow2Phase2Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase2Active(const CBlockIndex* pindexPrev);
 bool IsPow2Phase3Active(uint64_t nHeight);
-bool IsPow2Phase4Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2Phase4Active(const CBlockIndex* pindexPrev);
 bool IsPow2Phase5Active(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
+bool IsPow2WitnessingActive(uint64_t nHeight);
+int GetPoW2Phase(const CBlockIndex* pindexPrev);
 
-int GetPhase2ActivationHeight();
-
-bool IsPow2WitnessingActive(const CBlockIndex* pindexPrev, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
-int GetPoW2Phase(const CBlockIndex* pIndex, const CChainParams& chainparams, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
-
-int64_t GetPoW2Phase3ActivationTime(CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
 int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks);
 
@@ -63,12 +59,14 @@ inline bool GetPow2WitnessOutput(const CTxOut& out, CTxOutPoW2Witness& witnessDe
     if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         witnessDetails = out.output.witnessDetails;
+        witnessDetails.nType = CTxOutType::PoW2WitnessOutput;
         return true;
     }
     else if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (PHASE5) we can remove this
     {
         if (!out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails))
             return false;
+        witnessDetails.nType = CTxOutType::ScriptLegacyOutput;
         return true;
     }
     return false;

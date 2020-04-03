@@ -550,7 +550,6 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/hash/sigma/echo256/sphlib/sph_types.h \
   crypto/hash/sigma/echo256/sphlib/sph_echo.h \
   crypto/hash/sigma/echo256/sphlib/aes_helper.c \
-  crypto/hash/sigma/shavite3_256/shavite3_256_opt_compress.h \
   crypto/hash/sigma/shavite3_256/ref/AESround.h \
   crypto/hash/sigma/shavite3_256/ref/portable.h \
   crypto/hash/sigma/shavite3_256/ref/shavite3_256_ref_compress.h \
@@ -647,6 +646,7 @@ libgulden_common_a_SOURCES = \
   base58.cpp \
   chainparams.cpp \
   coins.cpp \
+  ui_interface.cpp \
   compressor.cpp \
   blockfilter.cpp \
   key.cpp \
@@ -768,7 +768,7 @@ libgulden_unity_node_js_la_SOURCES = \
 
 
 libgulden_unity_node_js_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS)
-libgulden_unity_node_js_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
+libgulden_unity_node_js_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(LIBGULDEN_CRYPTO_ALL) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
 libgulden_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 endif

@@ -74,16 +74,16 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>سەرجەم</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>کۆ:</translation>
     </message>
     <message>
         <source>Fee:</source>
         <translation>تێچوون:</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>سەرجەم</translation>
     </message>
     <message>
         <source>Date</source>
@@ -96,21 +96,6 @@
     <message>
         <source>no</source>
         <translation>نەخێر</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>کۆ:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>تێچوون:</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>خێرا</translation>
     </message>
 </context>
 <context>
@@ -129,6 +114,21 @@
     <message>
         <source>Date</source>
         <translation>رێکەت</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>کۆ:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>تێچوون:</translation>
+    </message>
+    <message>
+        <source>fast</source>
+        <translation>خێرا</translation>
     </message>
 </context>
 <context>

@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -81,8 +81,11 @@ public:
     uint64_t failCount;
     uint64_t actionNonce;
 
-    //fixme: (PHASE4) - Should these comparators consider the lock block or not?
-    //fixme: (PHASE4) - should these return = if the witnessKey is different but spending key is the same? Depends where exactly this is called from...
+    //fixme: (PHASE5) NB! This compares only on keys, it doesn't consider other variables
+    // We should somehow make this more explicit to prevent accidental usage by code that expects better
+    // e.g. Should these comparators consider the lock block or not?
+    // e.g. Should these return = if the witnessKey is different but spending key is the same? Depends where exactly this is called from...
+    // Current behaviour is probably fine, but make explicit that this is the case
     friend bool operator==(const CPoW2WitnessDestination &a, const CPoW2WitnessDestination &b) { return a.spendingKey == b.spendingKey && a.witnessKey == b.witnessKey; }
     friend bool operator<(const CPoW2WitnessDestination &a, const CPoW2WitnessDestination &b) { return a.spendingKey < b.spendingKey || (a.spendingKey == b.spendingKey && a.witnessKey < b.witnessKey); }
 

@@ -361,6 +361,10 @@
         <translation>(нет метки)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Сумма</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Выбор монет</translation>
     </message>
@@ -403,10 +407,6 @@
     <message>
         <source>List mode</source>
         <translation>Режим списка</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Сумма</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -779,10 +779,6 @@
         </translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Отключен</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Не подтверждено</translation>
     </message>
@@ -805,10 +801,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Незрелый (%1 подтверждений, будет доступно после %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Этот блок не был получен другими узлами и, возможно, не будет принят!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1089,6 +1081,14 @@
         <source>Message</source>
         <translation>Сообщение</translation>
     </message>
+    <message>
+        <source>Credit</source>
+        <translation>Кредит</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Дебет</translation>
+    </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
         <translation>
@@ -1104,10 +1104,6 @@
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
         <translation>конфликт с транзакцией с %1 подтверждений</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/отключен</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -1136,18 +1132,6 @@
     <message>
         <source>Status</source>
         <translation>Статус</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ещё не было успешно разослано</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, разослано через %n узел</numerusform>
-            <numerusform>, разослано через %n узла</numerusform>
-            <numerusform>, разослано через %n узлов</numerusform>
-        </translation>
     </message>
     <message>
         <source>Source</source>
@@ -1181,10 +1165,6 @@
         <source>label</source>
         <translation>метка</translation>
     </message>
-    <message>
-        <source>Credit</source>
-        <translation>Кредит</translation>
-    </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
         <translation>
@@ -1196,10 +1176,6 @@
     <message>
         <source>not accepted</source>
         <translation>не принято</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Дебет</translation>
     </message>
     <message>
         <source>Total debit</source>

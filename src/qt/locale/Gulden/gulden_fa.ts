@@ -181,6 +181,10 @@
         <translation>(بدون برچسب)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>انتخاب سکه</translation>
     </message>
@@ -219,10 +223,6 @@
     <message>
         <source>List mode</source>
         <translation>مدل لیست</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
     </message>
     <message>
         <source>Received with label</source>

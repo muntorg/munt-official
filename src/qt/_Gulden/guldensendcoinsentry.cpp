@@ -1,5 +1,5 @@
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -68,20 +68,13 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
 
     ui->sendCoinsRecipientStack->setContentsMargins(0, 0, 0, 0);
     ui->sendCoinsRecipientPage->setContentsMargins(0, 0, 0, 0);
-    ui->sendCoinsWitnessPage->setContentsMargins(0, 0, 0, 0);
 
     ui->sendCoinsRecipientBook->setContentsMargins(0, 0, 0, 0);
     ui->searchLabel1->setContentsMargins(0, 0, 0, 0);
     ui->searchLabel2->setContentsMargins(0, 0, 0, 0);
     ui->addressBookTabTable->setContentsMargins(0, 0, 0, 0);
     ui->myAccountsTabTable->setContentsMargins(0, 0, 0, 0);
-
-    ui->pow2LockFundsSlider->setMinimum(30);
-    ui->pow2LockFundsSlider->setMaximum(365*3);
-    ui->pow2LockFundsSlider->setValue(30);
-    ui->pow2LockFundsSlider->setCursor(Qt::PointingHandCursor);
-    
-    
+       
     ui->receivingAddressAccountName->setVisible(false);
 
 
@@ -92,8 +85,6 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     connect(ui->sendCoinsRecipientBook, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     connect(ui->receivingAddress, SIGNAL(textEdited(QString)), this, SLOT(addressChanged()));
     connect(ui->receivingAddressAccountName, SIGNAL(textEdited(QString)), this, SLOT(receivingAccountNameChanged()));
-
-    connect(ui->pow2LockFundsSlider, SIGNAL(valueChanged(int)), this, SLOT(witnessSliderValueChanged(int)));
 
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SLOT(payAmountChanged()));
     connect(ui->payAmount, SIGNAL(amountChanged()), this, SIGNAL(valueChanged()));
@@ -111,18 +102,8 @@ GuldenSendCoinsEntry::~GuldenSendCoinsEntry()
     delete ui;
 }
 
-bool GuldenSendCoinsEntry::isPoW2WitnessCreation()
-{
-    return ui->sendCoinsRecipientStack->currentIndex() == 1;
-}
-
 void GuldenSendCoinsEntry::update()
 {
-    if (isPoW2WitnessCreation())
-    {
-        ui->sendCoinsRecipientStack->setCurrentIndex(0);
-        ui->myAccountsTabTable->clearSelection();
-    }
 }
 
 void GuldenSendCoinsEntry::setModel(WalletModel *_model)
@@ -282,21 +263,6 @@ void GuldenSendCoinsEntry::addressBookSelectionChanged()
 
 void GuldenSendCoinsEntry::myAccountsSelectionChanged()
 {
-    QModelIndexList selection = ui->myAccountsTabTable->selectionModel()->selectedRows();
-    if (selection.count() > 0)
-    {
-        QModelIndex index = selection.at(0);
-        boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
-
-        LOCK(pactiveWallet->cs_wallet);
-
-        CAccount* pAccount = pactiveWallet->mapAccounts[accountUUID];
-        if ( pAccount->IsPoW2Witness() )
-        {
-            gotoWitnessTab(pAccount);
-        }
-    }
-
     tabChanged();
 }
 
@@ -350,17 +316,6 @@ bool GuldenSendCoinsEntry::validate()
     ui->payAmount->setValid(true);
     setValid(ui->receivingAddressAccountName, true);
     clearPayInfo();
-
-    if (isPoW2WitnessCreation())
-    {
-        int nDays = ui->pow2LockFundsSlider->value();
-        int64_t nOurWeight = GetPoW2RawWeightForAmount(ui->payAmount->amount(), nDays*DailyBlocksTarget());
-        if (ui->payAmount->amount() < (gMinimumWitnessAmount*COIN) || nOurWeight <= gMinimumWitnessWeight)
-        {
-            setValid(ui->pow2LockFundsInfoLabel, false);
-            return false;
-        }
-    }
 
     SendCoinsRecipient val = getValue(false);
     if (val.paymentType == SendCoinsRecipient::PaymentType::InvalidPayment)
@@ -499,114 +454,64 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
 
     //fixme: (FUT) - Handle 'messages'
     //recipient.message = ui->messageTextLabel->text();
-
-    recipient.destinationPoW2Witness.lockFromBlock = 0;
-    recipient.destinationPoW2Witness.lockUntilBlock = 0;
-    if (isPoW2WitnessCreation())
+    
+    switch(ui->sendCoinsRecipientBook->currentIndex())
     {
-        uint32_t nLockPeriodInBlocks = ui->pow2LockFundsSlider->value()*DailyBlocksTarget();
-        // Add a small buffer to give us time to enter the blockchain
-        if (nLockPeriodInBlocks == 30 * uint32_t(DailyBlocksTarget()))
-            nLockPeriodInBlocks += 50;
-
-        recipient.destinationPoW2Witness.lockUntilBlock = chainActive.Tip()->nHeight + nLockPeriodInBlocks;
-
-        CReserveKeyOrScript keySpending(pactiveWallet, targetWitnessAccount, KEYCHAIN_SPENDING);
-        CPubKey pubSpendingKey;
-        if (!keySpending.GetReservedKey(pubSpendingKey))
+        case 0:
         {
-            std::string strErrorMessage = "Failed to generate a spending key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
-            CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
-            recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
-            recipient.address = QString("error");
-            return recipient;
+            recipient.address = ui->receivingAddress->text();
+            recipient.label = ui->receivingAddressLabel->text();
+            recipient.addToAddressBook = ui->checkBoxAddToAddressBook->isChecked();
+            break;
         }
-        //We delibritely return the key here, so that if we fail we won't leak the key.
-        //The key will be marked as used when the transaction is accepted anyway.
-        keySpending.ReturnKey();
-        CReserveKeyOrScript keyWitness(pactiveWallet, targetWitnessAccount, KEYCHAIN_WITNESS);
-        CPubKey pubWitnessKey;
-        if (!keySpending.GetReservedKey(pubWitnessKey))
+        case 1:
         {
-            std::string strErrorMessage = "Failed to generate a witness key for witness funding.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
-            CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf(strErrorMessage.c_str());
-            recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
-            recipient.address = QString("error");
-            return recipient;
-        }
-        //We delibritely return the key here, so that if we fail we won't leak the key.
-        //The key will be marked as used when the transaction is accepted anyway.
-        keyWitness.ReturnKey();
-        recipient.destinationPoW2Witness.spendingKey = pubSpendingKey.GetID();
-        recipient.destinationPoW2Witness.witnessKey = pubWitnessKey.GetID();
-        recipient.destinationPoW2Witness.failCount = 0;
-        recipient.destinationPoW2Witness.actionNonce = 0;
-
-        //NB! Setting this is -super- important, if we don't then encrypted wallets may fail to witness.
-        recipient.witnessForAccount = targetWitnessAccount;
-        recipient.address = QString::fromStdString(CGuldenAddress(CPoW2WitnessDestination(recipient.destinationPoW2Witness.spendingKey, recipient.destinationPoW2Witness.witnessKey)).ToString());
-        recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[targetWitnessAccount->getUUID()]);
-    }
-    else
-    {
-        switch(ui->sendCoinsRecipientBook->currentIndex())
-        {
-            case 0:
+            if (proxyModelRecipients)
             {
-                recipient.address = ui->receivingAddress->text();
-                recipient.label = ui->receivingAddressLabel->text();
-                recipient.addToAddressBook = ui->checkBoxAddToAddressBook->isChecked();
-                break;
-            }
-            case 1:
-            {
-                if (proxyModelRecipients)
+                QModelIndexList selection = ui->addressBookTabTable->selectionModel()->selectedRows();
+                if (selection.count() > 0)
                 {
-                    QModelIndexList selection = ui->addressBookTabTable->selectionModel()->selectedRows();
-                    if (selection.count() > 0)
-                    {
-                        QModelIndex index = selection.at(0);
-                        recipient.address = index.sibling(index.row(), 1).data(Qt::DisplayRole).toString();
-                        recipient.label = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
-                    }
+                    QModelIndex index = selection.at(0);
+                    recipient.address = index.sibling(index.row(), 1).data(Qt::DisplayRole).toString();
+                    recipient.label = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
                 }
                 break;
             }
-            case 2:
+            break;
+        }
+        case 2:
+        {
+            if (proxyModelAddresses)
             {
-                if (proxyModelAddresses)
+                QModelIndexList selection = ui->myAccountsTabTable->selectionModel()->selectedRows();
+                if (selection.count() > 0)
                 {
-                    QModelIndexList selection = ui->myAccountsTabTable->selectionModel()->selectedRows();
-                    if (selection.count() > 0)
+                    QModelIndex index = selection.at(0);
+                    boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
+
+                    LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+                    CReserveKeyOrScript keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
+                    CPubKey pubSpendingKey;
+                    if (!keySpending.GetReservedKey(pubSpendingKey))
                     {
-                        QModelIndex index = selection.at(0);
-                        boost::uuids::uuid accountUUID = getUUIDFromString(index.data(AccountTableModel::AccountTableRoles::SelectedAccountRole).toString().toStdString());
-
-                        LOCK2(cs_main, pactiveWallet->cs_wallet);
-
-                        CReserveKeyOrScript keySpending(pactiveWallet, pactiveWallet->mapAccounts[accountUUID], KEYCHAIN_EXTERNAL);
-                        CPubKey pubSpendingKey;
-                        if (!keySpending.GetReservedKey(pubSpendingKey))
-                        {
-                            std::string strErrorMessage = "Failed to generate a spending key for transaction.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
-                            CAlert::Notify(strErrorMessage, true, true);
-                            LogPrintf(strErrorMessage.c_str());
-                            recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
-                            recipient.address = QString("error");
-                            return recipient;
-                        }
-                        //We delibritely return the key here, so that if we fail we won't leak the key.
-                        //The key will be marked as used when the transaction is accepted anyway.
-                        keySpending.ReturnKey();
-                        CKeyID keyID = pubSpendingKey.GetID();
-                        recipient.address = QString::fromStdString(CGuldenAddress(keyID).ToString());
-                        recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
+                        std::string strErrorMessage = "Failed to generate a spending key for transaction.\nPlease unlock your wallet and try again.\nIf the problem persists please seek technical support.";
+                        CAlert::Notify(strErrorMessage, true, true);
+                        LogPrintf(strErrorMessage.c_str());
+                        recipient.paymentType = SendCoinsRecipient::PaymentType::InvalidPayment;
+                        recipient.address = QString("error");
+                        return recipient;
                     }
+                    //We delibritely return the key here, so that if we fail we won't leak the key.
+                    //The key will be marked as used when the transaction is accepted anyway.
+                    keySpending.ReturnKey();
+                    CKeyID keyID = pubSpendingKey.GetID();
+                    recipient.address = QString::fromStdString(CGuldenAddress(keyID).ToString());
+                    recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
                 }
                 break;
             }
+            break;
         }
     }
 

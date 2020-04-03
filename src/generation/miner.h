@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -207,7 +207,7 @@ public:
     BlockAssembler(const CChainParams& params, const Options& options);
 
     /** Construct a new block template with coinbase to scriptPubKeyIn */
-    std::unique_ptr<CBlockTemplate> CreateNewBlock(CBlockIndex* pIndexPrev, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineWitnessTx=true, CBlockIndex* pWitnessBlockIndex=nullptr, bool noValidityCheck=false);
+    std::unique_ptr<CBlockTemplate> CreateNewBlock(CBlockIndex* pIndexPrev, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, bool fMineWitnessTx=true, CBlockIndex* pWitnessBlockIndex=nullptr, bool noValidityCheck=false, uint32_t nExtraNonce=0);
 
 private:
     // utility functions

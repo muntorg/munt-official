@@ -81,12 +81,12 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <source>Amount:</source>
-        <translation>Iznos:</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>iznos</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Iznos:</translation>
     </message>
     <message>
         <source>Date</source>
@@ -95,21 +95,6 @@
     <message>
         <source>Confirmed</source>
         <translation>Potvrdjen</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>Iznos:</translation>
-    </message>
-    <message>
-        <source>Send Coins</source>
-        <translation>Слање новца</translation>
-    </message>
-    <message>
-        <source>Confirm the send action</source>
-        <translation>Потврди акцију слања</translation>
     </message>
 </context>
 <context>
@@ -139,6 +124,21 @@
     <message>
         <source>Date</source>
         <translation>datum</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>Iznos:</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>Слање новца</translation>
+    </message>
+    <message>
+        <source>Confirm the send action</source>
+        <translation>Потврди акцију слања</translation>
     </message>
 </context>
 <context>

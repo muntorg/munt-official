@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -138,6 +138,24 @@ public:
             }
         }
         return false;
+    }
+    bool GetKeyIDWithHighestIndex(CKeyID& HDKeyID) const
+    {
+        int64_t highestIndex=0;
+        {
+            LOCK(cs_KeyStore);
+            if (mapHDKeys.empty())
+                return false;
+            for (const auto& [keyID, keyIndex] : mapHDKeys)
+            {
+                if (keyIndex >= highestIndex)
+                {
+                    highestIndex = keyIndex;
+                    HDKeyID = keyID;
+                }
+            }
+        }
+        return true;
     }
     virtual bool AddCScript(const CScript& redeemScript);
     virtual bool HaveCScript(const CScriptID &hash) const;

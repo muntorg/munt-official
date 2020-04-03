@@ -269,6 +269,10 @@
         <translation>непазначаны</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Колькасць</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Колькасць:</translation>
     </message>
@@ -303,10 +307,6 @@
     <message>
         <source>List mode</source>
         <translation>Рэжым спіса</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Колькасць</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -479,10 +479,6 @@
         <translation>Пацверджана (%1 пацверджанняў)</translation>
     </message>
     <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Гэты блок не быў прыняты іншымі вузламі і магчыма не будзе ўхвалены!</translation>
-    </message>
-    <message>
         <source>Generated but not accepted</source>
         <translation>Згенеравана, але не прынята</translation>
     </message>
@@ -640,10 +636,6 @@
         <translation>Паведамленне</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
         <source>%1/unconfirmed</source>
         <translation>%1/непацверджана</translation>
     </message>
@@ -654,10 +646,6 @@
     <message>
         <source>Status</source>
         <translation>Статус</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, пакуль не было паспяхова транслявана</translation>
     </message>
     <message>
         <source>unknown</source>

@@ -41,12 +41,12 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <source>Amount:</source>
-        <translation>राशि :</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>राशि</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>राशि :</translation>
     </message>
     <message>
         <source>Date</source>
@@ -55,29 +55,6 @@
     <message>
         <source>Confirmed</source>
         <translation>पक्का</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>राशि :</translation>
-    </message>
-    <message>
-        <source>Send Coins</source>
-        <translation>सिक्के भेजें|</translation>
-    </message>
-    <message>
-        <source>Confirm the send action</source>
-        <translation>भेजने की पुष्टि करें</translation>
-    </message>
-    <message>
-        <source>Send to multiple recipients at once</source>
-        <translation>एक साथ कई प्राप्तकर्ताओं को भेजें</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>बाकी रकम :</translation>
     </message>
 </context>
 <context>
@@ -112,6 +89,29 @@
     <message>
         <source>Date</source>
         <translation>taareek</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>राशि :</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>सिक्के भेजें|</translation>
+    </message>
+    <message>
+        <source>Confirm the send action</source>
+        <translation>भेजने की पुष्टि करें</translation>
+    </message>
+    <message>
+        <source>Send to multiple recipients at once</source>
+        <translation>एक साथ कई प्राप्तकर्ताओं को भेजें</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>बाकी रकम :</translation>
     </message>
 </context>
 <context>

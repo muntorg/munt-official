@@ -302,6 +302,10 @@
         <translation>(라벨 없음)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>거래액</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>코인 선택</translation>
     </message>
@@ -344,10 +348,6 @@
     <message>
         <source>List mode</source>
         <translation>리스트 모드</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>거래액</translation>
     </message>
     <message>
         <source>Received with label</source>

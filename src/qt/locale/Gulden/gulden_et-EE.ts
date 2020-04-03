@@ -158,11 +158,11 @@
         <translation>(silt puudub)</translation>
     </message>
     <message>
-        <source>Amount:</source>
+        <source>Amount</source>
         <translation>Kogus</translation>
     </message>
     <message>
-        <source>Amount</source>
+        <source>Amount:</source>
         <translation>Kogus</translation>
     </message>
     <message>

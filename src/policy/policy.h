@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -37,7 +37,7 @@ static const unsigned int MAX_P2SH_SIGOPS = 15;
 static const unsigned int MAX_STANDARD_TX_SIGOPS_COST = MAX_BLOCK_SIGOPS_COST/5;
 /** Default for -maxmempool, maximum megabytes of mempool memory usage */
 static const unsigned int DEFAULT_MAX_MEMPOOL_SIZE = 300;
-static const unsigned int DEFAULT_MAX_MEMPOOL_SIZE_LOWMEM = 100;
+static const unsigned int DEFAULT_MAX_MEMPOOL_SIZE_LOWMEM = 50;
 /** Default for -incrementalrelayfee, which sets the minimum feerate increase for mempool limiting or BIP 125 replacement **/
 static const unsigned int DEFAULT_INCREMENTAL_RELAY_FEE = 1000;
 /** Default for -bytespersigop */
@@ -90,6 +90,8 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, int nPoW2Version,
      * @return True if all inputs (scriptSigs) use only standard transaction forms
      */
 bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
+
+bool IsSegregatedSignatureDataStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
 
 extern CFeeRate incrementalRelayFee;
 extern CFeeRate dustRelayFee;

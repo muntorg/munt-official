@@ -121,6 +121,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Määrä</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Kolikoiden valinta</translation>
     </message>
@@ -165,10 +169,6 @@
         <translation>Listarakenne</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Määrä</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Vastaanotettu nimikkeellä</translation>
     </message>
@@ -187,6 +187,36 @@
     <message>
         <source>Confirmed</source>
         <translation>Vahvistettu</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Määrä</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ei yhtään</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Ei saatavilla</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 ja %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Määrä</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Aika</translation>
     </message>
 </context>
 <context>
@@ -306,36 +336,6 @@
     <message>
         <source>Balance:</source>
         <translation>Balanssi:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Määrä</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ei yhtään</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Ei saatavilla</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 ja %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Määrä</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Aika</translation>
     </message>
 </context>
 <context>

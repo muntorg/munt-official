@@ -5,7 +5,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -44,6 +44,7 @@
 #include <QTime>
 #include <QTimer>
 #include <QStringList>
+#include <QShortcut>
 
 #if QT_VERSION < 0x050000
 #include <QUrl>
@@ -448,6 +449,7 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     ui->messagesWidget->installEventFilter(this);
 
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
+    new QShortcut(QKeySequence(Qt::ControlModifier + Qt::Key_L), this, SLOT(clear()));
     connect(ui->fontBiggerButton, SIGNAL(clicked()), this, SLOT(fontBigger()));
     connect(ui->fontSmallerButton, SIGNAL(clicked()), this, SLOT(fontSmaller()));
     connect(ui->openDebugLogfileButton, SIGNAL(clicked()), this, SLOT(openDebugLogfileButton_clicked()));

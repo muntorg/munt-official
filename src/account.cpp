@@ -1,5 +1,5 @@
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -425,6 +425,18 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, Accoun
     m_readOnly = true;
 }
 
+bool CAccountHD::GetKeyIDWithHighestIndex(CKeyID& HDKeyID, int nChain) const
+{
+    if (nChain == KEYCHAIN_EXTERNAL)
+    {
+        return externalKeyStore.GetKeyIDWithHighestIndex(HDKeyID);
+    }
+    else
+    {
+        return internalKeyStore.GetKeyIDWithHighestIndex(HDKeyID);
+    }
+}
+
 bool CAccountHD::GetKey(CExtKey& childKey, int nChain) const
 {
     assert(!m_readOnly);
@@ -497,6 +509,21 @@ void CAccountHD::GetPubKey(CExtPubKey& childKey, int nChain) const
     {
         changeChainKeyPub.Derive(childKey, m_nNextChangeIndex++);
     }
+}
+
+bool CAccountHD::GetPubKeyManual(int64_t HDKeyIndex, int keyChain, CExtPubKey& childKey) const
+{
+    if (keyChain == KEYCHAIN_EXTERNAL)
+    {
+        primaryChainKeyPub.Derive(childKey, HDKeyIndex);
+        return true;
+    }
+    else
+    {
+        changeChainKeyPub.Derive(childKey, HDKeyIndex);
+        return true;
+    }
+    return false;
 }
 
 bool CAccountHD::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const
@@ -1073,11 +1100,23 @@ uint64_t CAccount::getEarliestPossibleCreationTime()
     return earliestPossibleCreationTime;
 }
 
-//fixme: (FUT) (ACCOUNTS) (CLEANUP) - relook at how the wallet reports keypool size in an accounts context.
 unsigned int CAccount::GetKeyPoolSize()
 {
     AssertLockHeld(cs_keypool); // setKeyPool
     return setKeyPoolExternal.size();
+}
+
+unsigned int CAccount::GetKeyPoolSize(int nChain)
+{
+    AssertLockHeld(cs_keypool); // setKeyPool
+    if (nChain == KEYCHAIN_EXTERNAL)
+    {
+        return setKeyPoolExternal.size();
+    }
+    else
+    {
+        return setKeyPoolInternal.size();
+    }
 }
 
 std::string CAccount::getLabel() const

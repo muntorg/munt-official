@@ -1,5 +1,5 @@
-// Copyright (c) 2015-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2015-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -252,7 +252,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         pTipIndex = chainActive.Tip();
     }
 
-    if (!pTipIndex || pTipIndex->nHeight < GetPhase2ActivationHeight())
+    if (!pTipIndex || (uint64_t)pTipIndex->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight)
         return NullUniValue;
 
     if (request.params.size() >= 2)
@@ -262,7 +262,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         showMineOnly = request.params[2].get_bool();
 
     CBlockIndex* pTipIndex_ = nullptr;
-    //fixme: (2.0.x) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
+    //fixme: (PHASE5) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
     CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(chainActive, pTipIndex, 10), pTipIndex, pTipIndex_);
 
     if (!pTipIndex_)
@@ -276,11 +276,11 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
     if (IsPow2Phase5Active(pTipIndex_, Params(), tempChain, &viewNew))
         nPow2Phase = 5;
-    else if (IsPow2Phase4Active(pTipIndex_, Params(), tempChain, &viewNew))
+    else if (IsPow2Phase4Active(pTipIndex_))
         nPow2Phase = 4;
-    else if (IsPow2Phase3Active(pTipIndex_->nHeight))
+    else if (IsPow2Phase3Active(pTipIndex_?pTipIndex_->nHeight:0))
         nPow2Phase = 3;
-    else if (IsPow2Phase2Active(pTipIndex_, Params(), tempChain, &viewNew))
+    else if (IsPow2Phase2Active(pTipIndex_))
         nPow2Phase = 2;
 
     CGetWitnessInfo witInfo;
@@ -962,7 +962,7 @@ static UniValue createwitnessaccount(const JSONRPCRequest& request)
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
 
-    if (GetPoW2Phase(chainActive.Tip(), Params(), chainActive) < 2)
+    if (GetPoW2Phase(chainActive.Tip()) < 2)
         throw std::runtime_error("Cannot create witness accounts before phase 2 activates.");
 
     return createaccounthelper(pwallet, request.params[0].get_str(), "Witness", false);
@@ -1126,13 +1126,13 @@ static UniValue getminingrewardaddress(const JSONRPCRequest& request)
     return result;
 }
 
-static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
+static witnessOutputsInfoVector getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
 {
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
         throw std::runtime_error("Failed to enumerate all witness coins.");
 
-    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    witnessOutputsInfoVector matchedOutputs;
     for (const auto& [outpoint, coin] : allWitnessCoins)
     {
         CTxDestination compareDestination;
@@ -1140,24 +1140,24 @@ static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsFor
 
         if (fValidAddress && (CGuldenAddress(compareDestination) == searchAddress))
         {
-            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, coin.nTxIndex, outpoint));
         }
     }
     return matchedOutputs;
 }
 
-static std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> getCurrentOutputsForWitnessAccount(CAccount* forAccount)
+static witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount)
 {
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
         throw std::runtime_error("Failed to enumerate all witness coins.");
 
-    std::vector<std::tuple<CTxOut, uint64_t, COutPoint>> matchedOutputs;
+    witnessOutputsInfoVector matchedOutputs;
     for (const auto& [outpoint, coin] : allWitnessCoins)
     {
         if (IsMine(*forAccount, coin.out))
         {
-            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, outpoint));
+            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, coin.nTxIndex, outpoint));
         }
     }
     return matchedOutputs;
@@ -1240,7 +1240,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"100d\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
 
-    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip(), Params(), chainActive);
+    int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip());
 
     // Basic sanity checks.
     if (!pwallet)
@@ -2291,9 +2291,10 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     }
 
     // Find the account
-    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint] = unspentWitnessOutputs[0];
     (unused) currentWitnessHeight;
     (unused) currentWitnessOutpoint;
+    (unused) currentWitnessTxIndex;
     CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
     if (!witnessAccount)
     {
@@ -2561,17 +2562,23 @@ static UniValue getlastblocks(const JSONRPCRequest& request)
 {
     // NB! Delibritely return no help, we don't want this command to be listed in the help.
     if (request.fHelp) throw std::runtime_error("");
-    if (request.params.size() != 0)
+    if (request.params.size() > 1)
     {
-        throw std::runtime_error("getlastblocks does not take arguments\n");
+        throw std::runtime_error(
+            "\nRenew an expired witness account. \n"
+            "1. \"num_blocks\"        (optional) How many blocks to go back from the tip; default 30\n");
     }
 
+    uint64_t numBlocks = 30;
+    if (request.params.size() > 0)
+        numBlocks = request.params[0].get_int();
+        
     LogPrintf("getlastblocks requested.\n");
     UniValue result(UniValue::VOBJ);    
-    if (chainActive.Tip()->nHeight > 30)
+    if ((uint64_t)chainActive.Tip()->nHeight > numBlocks)
     {
         CBlockIndex* pIndex = chainActive.Tip();
-        for (int i=0;i<30;++i)
+        for (uint64_t i=0;i<numBlocks;++i)
         {
             result.push_back(Pair(pIndex->GetBlockHashPoW2().ToString(),pIndex->nHeight));
             pIndex = pIndex->pprev;
@@ -2658,7 +2665,7 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "renewwitnessaccount \"witness_account\" \n"
+            "renewwitnessaccount \"funding_account\" \"witness_account\" \n"
             "\nRenew an expired witness account. \n"
             "1. \"funding_account\"        (required) The unique UUID or label for the account.\n"
             "2. \"witness_account\"        (required) The unique UUID or label for the account.\n"
@@ -2694,20 +2701,23 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
     }
 
+    bool shouldUpgrade = false;
+
     //fixme: (PHASE5) - Share common code with GUI::requestRenewWitness
     std::string strError;
     CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
     CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
     CAmount transactionFee;
-    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError))
+    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError, nullptr, nullptr, &shouldUpgrade))
     {
         throw std::runtime_error(strprintf("Failed to create renew transaction [%s]", strError.c_str()));
     }
 
+    
     uint256 finalTransactionHash;
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
-        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash))
+        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash, shouldUpgrade?SignType::WitnessUpdate:SignType::Spend))
         {
             throw std::runtime_error(strprintf("Failed to sign renew transaction [%s]", strError.c_str()));
         }
@@ -3273,15 +3283,15 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
             "setwitnessrewardtemplate \"witness_account\" [[\"destination1\" (,\"amount\") (,\"percentage%\") (,\"remainder\") (,\"compound_overflow\")], [\"destination2\" ...], ...]\n"
-            "\nSet the template to control where witness earnings are paid. Multiple destianations can be specified, compounding or not each receving a fixed\n"
+            "\nSet the template to control where witness earnings are paid. Multiple destinations can be specified, compounding or not each receiving a fixed\n"
             "amount and/or a percentage of the witness amounts earned.\n"
             "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
-            "2. \"destinationX\"           (required) an address or one of the special keywords: \"account\" or \"compound\"\n"
-            "                                  where: \"compound\", compound into witness\n"
-            "                                         \"account\", to witness account, but not compounding (ie. spendable)\n"
+            "2. \"destinationX\"           (required) an address or one of the special keywords, \"account\" or \"compound\"\n"
+            "                                         \"compound\", compounds back into \"witness_account\"\n"
+            "                                         \"account\" pays out to \"witness_account\" without compounding (ie. spendable payout)\n"
             "3. amount                     (string, optional) Fixed amount for this destination.\n"
             "4. percentage                 (string, optional) Percentage of remaining non-fixed amount for this destination (postfixed with % symbol).\n"
-            "4. remainder                  (string, optional) The remainder marked destination receives amount reamining after dishing out fixed and percentage amounts.\n"
+            "4. remainder                  (string, optional) The remainder marked destination receives any amount still remaining after distributing fixed and percentage amounts.\n"
             "5. compound_overflow          (string, optional) The compound_overflow marked destination receives any excess compound.\n"
             "\nResult:\n"
             "(string) The UUID of the account that has been modified.\n"
@@ -3294,11 +3304,11 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
             "When resulting compound exceeds the allowed amount without a \"compound_overflow\" in the template, the overflow will go to the remainder (which cannot be on the \"compound\" destination in this case).\n"
             "\nDistribution of rewards:\n"
             "1. All fixed amounts are distributed (including compound)\n"
-            "2. Percentages of the remaining amount are dihsed out.\n"
+            "2. Percentages of the remaining amount are distributed.\n"
             "3. Any remaining amount goes to the remainder destination.\n"
-            "4. If the compound amount resulting from above calculation exceeds the maximum allowed the maximum will be compound and the excess amount will go to compound_overflow.\n"
+            "4. If the compound amount resulting from above calculation exceeds the maximum allowed compound amount, then the maximum will be compounded and any excess amount will go to compound_overflow.\n"
             "\nExamples:\n"
-            "Assuming there is 90 NLG witness reward to dive, then in the example below the fixed amount to divide is 40 (10 + 30), leaving 50 for percentage splits. Only 40% (20 NLG) is specified (5% + 5% + 30%), leaving 30 NLG as remainder.\n"
+            "Assuming there is 90 NLG witness reward to divide, then in the example below the fixed amount to divide is 40 (10 + 30), leaving 50 for percentage splits. Only 40% (20 NLG) is specified (5% + 5% + 30%), leaving 30 NLG as remainder.\n"
             "So the distribution is: 2.5 NLG to TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF, 40 non-compounding to the witness account, 2.5 NLG to TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo (compound overflow = 0) and 45 is compounded into the witness.\n"
             + HelpExampleCli("setwitnessrewardtemplate \"my witness account\" '[[\"TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF\", \"5%\"], [\"account\", \"10\", \"remainder\"],[\"TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo\", \"5%\", \"compound_overflow\"], [\"compound\", \"30\", \"30%\"]]'", "")
             + HelpExampleRpc("setwitnessrewardtemplate \"my witness account\" '[[\"TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF\", \"5%\"], [\"account\", \"10\", \"remainder\"],[\"TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo\", \"5%\", \"compound_overflow\"], [\"compound\", \"30\", \"30%\"]]'", ""));
@@ -3477,7 +3487,7 @@ static UniValue getwitnessaccountkeys(const JSONRPCRequest& request)
     if (!chainActive.Tip())
         throw std::runtime_error("Wait for chain to synchronise before using command.");
 
-    if (!IsPow2WitnessingActive(chainActive.Tip(), Params(), chainActive, nullptr))
+    if (!IsPow2WitnessingActive(chainActive.Tip()->nHeight))
         throw std::runtime_error("Wait for witnessing to activate before using this command.");
 
     EnsureWalletIsUnlocked(pwallet);
@@ -3540,7 +3550,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
             {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness address.");
             }
-            //fixme: (PHASE4) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
+            //fixme: (PHASE5) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
             witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
             break;
         }
@@ -3664,7 +3674,7 @@ static const CRPCCommand commands[] =
     { "support",                 "resetconfig_pi_lowmem",           &resetconfig_pi_lowmem,          true,    {""} },
     { "support",                 "resetconfig_pi_medmem",           &resetconfig_pi_medmem,          true,    {""} },
     { "support",                 "getcheckpoint",                   &getcheckpoint,                  true,    {""} },
-    { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {""} },
+    { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {"num_blocks"} },
 
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
     { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },

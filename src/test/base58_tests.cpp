@@ -5,7 +5,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -96,7 +96,7 @@ public:
     }
     bool operator()(const CPoW2WitnessDestination &id) const
     {
-        //fixme: (PHASE4) (tests)
+        //fixme: (PHASE5) (tests)
         return false;
     }
     bool operator()(const CNoDestination &no) const

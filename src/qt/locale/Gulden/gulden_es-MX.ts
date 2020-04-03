@@ -87,6 +87,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Cantidad</translation>
     </message>
@@ -107,16 +111,41 @@
         <translation>Cambio</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Fecha</translation>
     </message>
     <message>
         <source>Confirmed</source>
         <translation>Confirmado </translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Copiar dirección</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
     </message>
 </context>
 <context>
@@ -160,35 +189,6 @@
     <message>
         <source>Balance:</source>
         <translation>Saldo:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Copiar dirección</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Fecha</translation>
     </message>
 </context>
 <context>

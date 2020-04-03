@@ -103,6 +103,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>การเลือก Coin</translation>
     </message>
@@ -147,10 +151,6 @@
         <translation>โหมดแบบรายการ</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>จำนวน</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>รับโดยป้ายชื่อ (label)</translation>
     </message>
@@ -169,6 +169,35 @@
     <message>
         <source>Confirmed</source>
         <translation>ยืนยันแล้ว</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 และ %2</translation>
+    </message>
+</context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>วันที่</translation>
     </message>
 </context>
 <context>
@@ -204,35 +233,6 @@
     <message>
         <source>Send Coins</source>
         <translation>ส่งเหรียญ</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>จำนวน</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 และ %2</translation>
-    </message>
-</context>
-<context>
-    <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Amount</source>
-        <translation>จำนวน</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>จำนวน</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>วันที่</translation>
     </message>
 </context>
 <context>

@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -806,10 +806,22 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
     ss << hash;
     ss << VARINT(outputs.begin()->second.nHeight * 2 + outputs.begin()->second.fCoinBase);
     stats.nTransactions++;
-    for (const auto output : outputs) {
+    for (const auto output : outputs)
+    {
         ss << VARINT(output.first + 1);
-        //fixme: (PHASE4) (SEGSIG)
-        ss << *(const CScriptBase*)(&output.second.out.output.scriptPubKey);
+        ss << output.second.out.GetType();
+        switch (output.second.out.GetType())
+        {
+            case CTxOutType::ScriptLegacyOutput:
+                ss << *(const CScriptBase*)(&output.second.out.output.scriptPubKey);
+                break;
+            case CTxOutType::StandardKeyHashOutput:
+                ss << output.second.out.output.standardKeyHash;
+                break;
+            case CTxOutType::PoW2WitnessOutput:
+                ss << output.second.out.output.witnessDetails;
+                break;
+        }
         ss << VARINT(output.second.out.nValue);
         {
             std::vector<CTxDestination> addresses;
@@ -841,19 +853,24 @@ static bool GetUTXOStats(CCoinsView *view, CCoinsStats &stats)
     ss << stats.hashBlock;
     uint256 prevkey;
     std::map<uint32_t, Coin> outputs;
-    while (pcursor->Valid()) {
+    while (pcursor->Valid())
+    {
         boost::this_thread::interruption_point();
         COutPoint key;
         uint256 txHash;
         Coin coin;
-        if (pcursor->GetKey(key) && pcursor->GetValue(coin) && GetTxHash(key, txHash)) {
-            if (!outputs.empty() && txHash != prevkey) {
+        if (pcursor->GetKey(key) && pcursor->GetValue(coin) && GetTxHash(key, txHash))
+        {
+            if (!outputs.empty() && txHash != prevkey)
+            {
                 ApplyStats(stats, ss, prevkey, outputs);
                 outputs.clear();
             }
             prevkey = txHash;
             outputs[key.n] = std::move(coin);
-        } else {
+        }
+        else
+        {
             return error("%s: unable to read value", __func__);
         }
         pcursor->Next();
@@ -1033,12 +1050,27 @@ static UniValue gettxout(const JSONRPCRequest& request)
         ret.push_back(Pair("confirmations", (int64_t)(pindex->nHeight - coin.nHeight + 1)));
     }
     ret.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
-    //fixme: (PHASE4) - (SEGSIG)
-    if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
+    UniValue o(UniValue::VOBJ);
+    switch (coin.out.GetType())
     {
-        UniValue o(UniValue::VOBJ);
-        ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
-        ret.push_back(Pair("scriptPubKey", o));
+        case CTxOutType::ScriptLegacyOutput:
+        {
+            ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
+            ret.push_back(Pair("scriptPubKey", o));
+            break;
+        }
+        case CTxOutType::StandardKeyHashOutput:
+        {
+            PoW2WitnessToUniv(coin.out, o, true);
+            ret.push_back(Pair("PoW²-witness", o));
+            break;
+        }
+        case CTxOutType::PoW2WitnessOutput:
+        {
+            StandardKeyHashToUniv(coin.out, o, true);
+            ret.push_back(Pair("standard-key-hash", o));
+            break;
+        }
     }
     ret.push_back(Pair("coinbase", (bool)coin.fCoinBase));
 
@@ -1218,8 +1250,6 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
     softforks.push_back(SoftForkDesc("bip66", 3, tip, consensusParams));
     softforks.push_back(SoftForkDesc("bip65", 4, tip, consensusParams));
     BIP9SoftForkDescPushBack(bip9_softforks, "csv", consensusParams, Consensus::DEPLOYMENT_CSV);
-    BIP9SoftForkDescPushBack(bip9_softforks, "PoW² - phase 2", consensusParams, Consensus::DEPLOYMENT_POW2_PHASE2);
-    BIP9SoftForkDescPushBack(bip9_softforks, "PoW² - phase 4", consensusParams, Consensus::DEPLOYMENT_POW2_PHASE4);
     obj.push_back(Pair("softforks",             softforks));
     obj.push_back(Pair("bip9_softforks", bip9_softforks));
 
@@ -1481,6 +1511,47 @@ static UniValue invalidateblock(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
+static UniValue invalidateblocksatheight(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "invalidateblocksatheight \"height\"\n"
+            "\nPermanently marks all block candidates at a given height as invalid, as if it violated a consensus rule.\n"
+            "\nArguments:\n"
+            "1. \"block_height\"   (integet, required) the hash of the block to mark as invalid\n"
+            "\nResult:\n"
+            "\nExamples:\n"
+            + HelpExampleCli("invalidateblocksatheight", "\"300000\"")
+            + HelpExampleRpc("invalidateblocksatheight", "\"300000\"")
+        );
+
+    uint64_t nHeight = request.params[0].get_int();
+    
+    CValidationState state;
+    {
+        LOCK(cs_main);
+        while ((uint64_t)chainActive.Height() >= nHeight)
+        {
+            {
+                LOCK(cs_main);
+                if (!InvalidateBlock(state, Params(), chainActive[nHeight]))
+                    throw JSONRPCError(RPC_DATABASE_ERROR, "failed to invalidate block");
+            }
+            
+            if (state.IsValid())
+            {
+                ActivateBestChain(state, Params());
+            }
+            
+            if (!state.IsValid())
+            {
+                throw JSONRPCError(RPC_DATABASE_ERROR, state.GetRejectReason());
+            }
+        }
+    }
+    return NullUniValue;
+}
+
 static UniValue reconsiderblock(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -1609,11 +1680,12 @@ static const CRPCCommand commands[] =
     { "blockchain",         "preciousblock",          &preciousblock,          true,  {"blockhash"} },
 
     /* Not shown in help */
-    { "hidden",             "invalidateblock",        &invalidateblock,        true,  {"blockhash"} },
-    { "hidden",             "reconsiderblock",        &reconsiderblock,        true,  {"blockhash"} },
-    { "hidden",             "waitfornewblock",        &waitfornewblock,        true,  {"timeout"} },
-    { "hidden",             "waitforblock",           &waitforblock,           true,  {"blockhash","timeout"} },
-    { "hidden",             "waitforblockheight",     &waitforblockheight,     true,  {"height","timeout"} },
+    { "hidden",             "invalidateblock",         &invalidateblock,         true,  {"blockhash"} },
+    { "hidden",             "invalidateblocksatheight",&invalidateblocksatheight,true,  {"block_height"} },
+    { "hidden",             "reconsiderblock",         &reconsiderblock,         true,  {"blockhash"} },
+    { "hidden",             "waitfornewblock",         &waitfornewblock,         true,  {"timeout"} },
+    { "hidden",             "waitforblock",            &waitforblock,            true,  {"blockhash","timeout"} },
+    { "hidden",             "waitforblockheight",      &waitforblockheight,      true,  {"height","timeout"} },
 };
 
 void RegisterBlockchainRPCCommands(CRPCTable &t)

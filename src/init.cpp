@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -391,7 +391,7 @@ std::string LicenseInfo()
     //fixme: (FUT) Mention additional libraries, boost etc.
     //fixme: (FUT) Translate
     //fixme: (FUT) Add code to ensure translations never strip copyrights
-    return helptr("Copyright (C) 2014-2019 The Gulden developers")+ "\n"
+    return helptr("Copyright (C) 2014-2020 The Gulden developers")+ "\n"
            + helptr("Licensed under the Gulden license")+ "\n"
            + "\n"
            + helptr("This is experimental software.")+ "\n"
@@ -755,7 +755,15 @@ bool AppInitParameterInteraction()
     // ********************************************************* Step 2: parameter interactions
     // also see: InitParameterInteraction()
     
+    #ifdef BETA_BUILD
+    if (!IsArgSet("-testnet"))
+    {
+        return InitError(errortr("Running beta builds on mainnet is dangerous, please don't do this."));
+    }
+    #endif
+    
     // Limit default memory usage on low memory systems, to try and prevent OOM on low spec pi devices and similar.
+    #ifndef PLATFORM_MOBILE
     if (systemPhysicalMemoryInBytes() <= 1*1024*1024*1024ULL)
     {
         if (SoftSetArg("-maxconnections", i64tostr(40)))
@@ -766,7 +774,7 @@ bool AppInitParameterInteraction()
         {
             InitWarning(strprintf(warningtr("Reducing -maxmempool to 100, because of system limitations, this can be overridden by explicitely setting -maxmempool to a larger amount.")));
         }
-        if (SoftSetArg("-dbcache", i64tostr(200)))
+        if (SoftSetArg("-dbcache", i64tostr(100)))
         {
             InitWarning(strprintf(warningtr("Reducing -dbcache to 200, because of system limitations, this can be overridden by explicitely setting -dbcache to a larger amount.")));
         }
@@ -783,6 +791,7 @@ bool AppInitParameterInteraction()
             //InitWarning(strprintf(warningtr("Lowering receive buffer size from [%d] to [%d], because of system limitations, this can be overridden by explicitely setting -reverseheaders to true."), DEFAULT_MAXRECEIVEBUFFER, DEFAULT_MAXRECEIVEBUFFER_LOWMEM));
         //}   
     }
+    #endif
 
     // if using block pruning, then disallow txindex
     if (GetArg("-prune", 0)) {
@@ -1632,17 +1641,10 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         }
     }
 
-    if (chainparams.GetConsensus().vDeployments[Consensus::DEPLOYMENT_POW2_PHASE4].nTimeout != 0) {
-        // Only advertise witness capabilities if they have a reasonable start time.
-        // This allows us to have the code merged without a defined softfork, by setting its
-        // end time to 0.
-        // Note that setting NODE_SEGSIG is never required: the only downside from not
-        // doing so is that after activation, no upgraded nodes will fetch from you.
-        nLocalServices = ServiceFlags(nLocalServices | NODE_SEGSIG);
-        // Only care about others providing witness capabilities if there is a softfork
-        // defined.
-        nRelevantServices = ServiceFlags(nRelevantServices | NODE_SEGSIG);
-    }
+    // Note that setting NODE_SEGSIG is never required: the only downside from not
+    // doing so is that after activation, no upgraded nodes will fetch from you.
+    nLocalServices = ServiceFlags(nLocalServices | NODE_SEGSIG);
+    nRelevantServices = ServiceFlags(nRelevantServices | NODE_SEGSIG);
 
     // ********************************************************* Step 10: import blocks
 

@@ -361,6 +361,10 @@
         <translation>(etiket yok)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Tutar</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Bitcoin Seçimi</translation>
     </message>
@@ -403,10 +407,6 @@
     <message>
         <source>List mode</source>
         <translation>Liste kipi</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Tutar</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -767,10 +767,6 @@
         </translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Çevrim dışı</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Doğrulanmamış</translation>
     </message>
@@ -793,10 +789,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Olgunlaşmamış (%1 doğrulama, %2 doğrulama sonra kullanılabilir olacaktır)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Bu blok başka hiçbir düğüm tarafından alınmamıştır ve muhtemelen kabul edilmeyecektir!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1065,6 +1057,14 @@
         <source>Message</source>
         <translation>İleti</translation>
     </message>
+    <message>
+        <source>Credit</source>
+        <translation>Alınan Tutar</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Çekilen Tutar</translation>
+    </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
         <translation>
@@ -1078,10 +1078,6 @@
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
         <translation>%1 doğrulamalı bir işlem ile çelişti</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/çevrim dışı</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -1110,16 +1106,6 @@
     <message>
         <source>Status</source>
         <translation>Durum</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, henüz başarılı bir şekilde yayınlanmadı</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation>
-            <numerusform>, %n düğüm aracılığıyla yayınlandı</numerusform>
-        </translation>
     </message>
     <message>
         <source>Source</source>
@@ -1153,10 +1139,6 @@
         <source>label</source>
         <translation>etiket</translation>
     </message>
-    <message>
-        <source>Credit</source>
-        <translation>Alınan Tutar</translation>
-    </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
         <translation>
@@ -1166,10 +1148,6 @@
     <message>
         <source>not accepted</source>
         <translation>kabul edilmedi</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Çekilen Tutar</translation>
     </message>
     <message>
         <source>Total debit</source>

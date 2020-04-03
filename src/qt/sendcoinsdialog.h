@@ -5,7 +5,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -57,7 +57,6 @@ public:
 
     void update();
 
-    void gotoWitnessTab(CAccount* targetAccount);
     void setAmount(CAmount amount);
 
 public Q_SLOTS:

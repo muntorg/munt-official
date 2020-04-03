@@ -106,10 +106,6 @@
         <source>Message</source>
         <translation>Билдирүү</translation>
     </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/тармакта эмес</translation>
-    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>

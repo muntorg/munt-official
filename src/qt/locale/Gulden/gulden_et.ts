@@ -253,6 +253,10 @@
         <translation>(märgis puudub)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Kogus</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Kogus:</translation>
     </message>
@@ -287,10 +291,6 @@
     <message>
         <source>List mode</source>
         <translation>Loetelu režiim</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Kogus</translation>
     </message>
     <message>
         <source>Received with label</source>

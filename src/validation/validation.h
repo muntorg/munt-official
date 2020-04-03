@@ -88,7 +88,7 @@ static const bool DEFAULT_WHITELISTFORCERELAY = true;
 /** Default for -minrelaytxfee, minimum relay fee for transactions */
 static const unsigned int DEFAULT_MIN_RELAY_TX_FEE = 1000;
 //! -maxtxfee default
-static const CAmount DEFAULT_TRANSACTION_MAXFEE = 0.1 * COIN;
+static const CAmount DEFAULT_TRANSACTION_MAXFEE = 2 * COIN;
 //! Discourage users to set fees higher than this amount (in satoshis) per kB
 static const CAmount HIGH_TX_FEE_PER_KB = 0.01 * COIN;
 //! -maxtxfee will warn if called with a higher fee than this amount (in satoshis)
@@ -356,8 +356,9 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &tx, const CChainParams
 bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams, std::shared_ptr<const CBlock> pblock = std::shared_ptr<const CBlock>());
 
 /** The reward that must be paid out per block */
-CAmount GetBlockSubsidy(int nHeight);
-CAmount GetBlockSubsidyDev(int nHeight);
+CAmount GetBlockSubsidy(uint64_t nHeight);
+CAmount GetBlockSubsidyDev(uint64_t nHeight);
+CAmount GetBlockSubsidyWitness(uint64_t nHeight);
 inline std::string devSubsidyAddress = "03ae258dc3463de883e9fbda5239353fe9dc98805cf31800d5a6eeaa3ed4afcc70";
 
 /** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
@@ -529,6 +530,16 @@ extern CChain chainActive;
 
 /** The currently-connected chain of header, POW only validated (protected by cs_main). */
 extern CPartialChain partialChain;
+
+extern bool fSPV;
+//! Chain height for active chain (either chainActive or partialChain)
+int ChainHeight();
+
+//! Chain tip for active chain (either chainActive or partialChain)
+CBlockIndex* chainTip();
+
+//! Chain previous for active chain (either chainActive or partialChain)
+CBlockIndex* chainPrevTip();
 
 /** Global variable that points to the coins database (protected by cs_main) */
 extern CCoinsViewDB *pcoinsdbview;

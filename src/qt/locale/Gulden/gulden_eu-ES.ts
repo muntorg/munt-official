@@ -241,11 +241,11 @@
         <translation>(etiketarik ez)</translation>
     </message>
     <message>
-        <source>Amount:</source>
+        <source>Amount</source>
         <translation>Kopurua</translation>
     </message>
     <message>
-        <source>Amount</source>
+        <source>Amount:</source>
         <translation>Kopurua</translation>
     </message>
     <message>
@@ -313,10 +313,6 @@
     <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>Konfirmatuta (%1 konfirmazio)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Bloke hau ez du beste inongo nodorik jaso, eta seguruenik ez da onartuko!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -462,10 +458,6 @@
     <message>
         <source>%1 confirmations</source>
         <translation>%1 konfirmazioak</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ez da arrakastaz emititu oraindik</translation>
     </message>
     <message>
         <source>unknown</source>

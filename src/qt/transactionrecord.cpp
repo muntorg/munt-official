@@ -4,8 +4,8 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Copyright (c) 2016-2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -43,9 +43,11 @@ bool TransactionRecord::showTransaction(const CWalletTx &wtx)
 bool AddAddressForOutPoint(const CWallet *wallet, const COutPoint& outpoint, std::string address)
 {
     CTransactionRef tx;
-    if (outpoint.isHash) {
+    if (outpoint.isHash)
+    {
         const CWalletTx* wtx = wallet->GetWalletTx(outpoint.getTransactionHash());
-        if (wtx) {
+        if (wtx)
+        {
             tx = wtx->tx;
         }
     }
@@ -53,8 +55,12 @@ bool AddAddressForOutPoint(const CWallet *wallet, const COutPoint& outpoint, std
     {
         CBlock block;
         LOCK(cs_main);
-        if (ReadBlockFromDisk(block, chainActive[outpoint.getTransactionBlockNumber()], Params()) && block.vtx.size() > outpoint.getTransactionIndex()) {
-            tx = block.vtx[outpoint.getTransactionIndex()];
+        if (chainActive.Tip() && (uint64_t)outpoint.getTransactionBlockNumber() < (uint64_t)chainActive.Tip()->nHeight)
+        {
+            if (ReadBlockFromDisk(block, chainActive[outpoint.getTransactionBlockNumber()], Params()) && block.vtx.size() > outpoint.getTransactionIndex())
+            {
+                tx = block.vtx[outpoint.getTransactionIndex()];
+            }
         }
     }
 
@@ -286,8 +292,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 break;
                 case CWitnessTxBundle::WitnessTxType::WitnessType:
                 {
-                    //fixme: (PHASE4) - this can change into a break once we apply other fixes described in other fixmes in this function.
-                    goto continuedecompose;
+                    //We never reach here because this is special cased at top of function
                 }
                 break;
                 case CWitnessTxBundle::WitnessTxType::SpendType:
@@ -295,10 +300,17 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     TransactionRecord subSend(hash, nTime);
                     TransactionRecord subReceive(hash, nTime);
                     subReceive.idx = -1;
+
+                    // Locate the input for the spend bundle
                     for (const auto& output : outputs)
                     {
                         for( const auto& [accountUUID, account] : wallet->mapAccounts )
                         {
+                            //NB! This will 'break' if someone pays from one witness account to another
+                            //Its an acceptable tradeoff for now, because UI forbids this anyway.
+                            if (account->IsPoW2Witness())
+                                continue;
+
                             (unused) accountUUID;
                             isminetype mine = IsMine(*account, output);
                             if (mine)
@@ -326,15 +338,19 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         if (subReceive.idx != -1)
                             break;
                     }
+                    // Locate the output for the spend bundle
                     if (subReceive.idx != -1)
                     {
                         CAccount* account = nullptr;
-                        for (auto const& [txOut, txOutWitness]: witnessBundle.inputs) {
+                        for (auto const& [txOut, txOutWitness]: witnessBundle.inputs)
+                        {
                             (unused) txOutWitness;
-                            for(const auto& [current_uuid, current_account] : wallet->mapAccounts) {
+                            for(const auto& [current_uuid, current_account] : wallet->mapAccounts)
+                            {
                                 (unused) current_uuid;
                                 isminetype mine = ::IsMine(*current_account, txOut);
-                                if (mine) {
+                                if (mine)
+                                {
                                     account = current_account;
                                     CTxDestination destination;
                                     ExtractDestination(txOut, destination);
@@ -347,14 +363,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                     parts[subReceive.idx].fromAccountUUID = parts[subReceive.idx].fromAccountParentUUID = subSend.fromAccountUUID;
                                     subSend.credit = 0;
                                     subSend.idx = parts.size(); // sequence number
+                                    subSend.debit = subReceive.credit;
+                                    parts.append(subSend);
                                     break;
                                 }
                             }
-                            if (account)
-                                subSend.debit += txOut.nValue;
                         }
-                        if (account)
-                            parts.append(subSend);
                     }
                 }
                 break;
@@ -454,7 +468,6 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         //fixme: (FUT) - we should try deal with "complex" (mixed) transactions by removing the below return and still trying to match remaining inputs/outputs.
         return parts;
     }
-    continuedecompose:
 
 
     LOCK(wallet->cs_wallet);
@@ -836,7 +849,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
         idx);
     status.countsForBalance = wtx.IsTrusted() && !(wtx.GetBlocksToMaturity() > 0);
     status.depth = wtx.GetDepthInMainChain();
-    status.cur_num_blocks = CWallet::ChainHeight();
+    status.cur_num_blocks = ChainHeight();
 
     if (!CheckFinalTx(wtx, chainActive))
     {
@@ -901,7 +914,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
 bool TransactionRecord::statusUpdateNeeded()
 {
     AssertLockHeld(cs_main);
-    return status.cur_num_blocks != CWallet::ChainHeight() || status.needsUpdate;
+    return status.cur_num_blocks != ChainHeight() || status.needsUpdate;
 }
 
 QString TransactionRecord::getTxID() const

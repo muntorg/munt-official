@@ -80,6 +80,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Monto</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Selección de moneda</translation>
     </message>
@@ -116,10 +120,6 @@
         <translation>Modo de lista</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Monto</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Recibido con etiqueta</translation>
     </message>
@@ -138,29 +138,6 @@
     <message>
         <source>Confirmed</source>
         <translation>Confirmado</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>Quantity:</source>
-        <translation>Cantidad:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Monto:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Polvo:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Comisión:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Cambio:</translation>
     </message>
 </context>
 <context>
@@ -194,6 +171,29 @@
     <message>
         <source>Date</source>
         <translation>Fecha</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Quantity:</source>
+        <translation>Cantidad:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Monto:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Polvo:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Comisión:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Cambio:</translation>
     </message>
 </context>
 <context>

@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2016-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -438,7 +438,7 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
     std::string strError;
     std::vector<CRecipient> vecSend;
     int nChangePosRet = -1;
-    CRecipient recipient = GetRecipientForDestination(address, nValue, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+    CRecipient recipient = GetRecipientForDestination(address, nValue, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip()));
     vecSend.push_back(recipient);
     
     std::vector<CKeyStore*> accountsToTry;
@@ -1227,7 +1227,7 @@ UniValue sendmany(const JSONRPCRequest& request)
                 fSubtractFeeFromAmount = true;
         }
 
-        CRecipient recipient = GetRecipientForDestination(address.Get(), nAmount, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip(), Params(), chainActive));
+        CRecipient recipient = GetRecipientForDestination(address.Get(), nAmount, fSubtractFeeFromAmount, GetPoW2Phase(chainActive.Tip()));
         vecSend.push_back(recipient);
     }
 

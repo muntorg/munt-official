@@ -238,6 +238,10 @@ Var vänlig och försök igen.</translation>
         <translation>(Ingen etikett)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Mängd</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Myntval</translation>
     </message>
@@ -280,10 +284,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>List mode</source>
         <translation>Listvy</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Mängd</translation>
     </message>
     <message>
         <source>Received with label</source>

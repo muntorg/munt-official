@@ -178,16 +178,16 @@
         <translation>(pa etiketë)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Sasia</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Zgjedhja e monedhes</translation>
     </message>
     <message>
         <source>Amount:</source>
         <translation>Shuma:</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Sasia</translation>
     </message>
     <message>
         <source>Date</source>
@@ -262,10 +262,6 @@
     <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>I/E konfirmuar(%1 konfirmime)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Ky bllok është marrë nga ndonjë nyje dhe ka shumë mundësi të mos pranohet! </translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -391,10 +387,6 @@
     <message>
         <source>%1 confirmations</source>
         <translation>%1 konfirmimet</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, nuk është transmetuar me sukses deri tani</translation>
     </message>
     <message>
         <source>unknown</source>

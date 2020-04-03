@@ -143,7 +143,8 @@ void FundWitnessDialog::fundClicked()
 
         pactiveWallet->BeginUnlocked(_("Wallet unlock required to fund witness"), [=](){
 
-            try {
+            try
+            {
                 LOCK2(cs_main, pactiveWallet->cs_wallet);
                 CAccount* witnessAccount = pactiveWallet->activeAccount;
                 fundwitnessaccount(pactiveWallet,
@@ -157,7 +158,9 @@ void FundWitnessDialog::fundClicked()
                 // request dismissal only when succesful
                 Q_EMIT dismiss(this);
 
-            } catch (std::runtime_error& e) {
+            }
+            catch (std::runtime_error& e)
+            {
                 GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
             }
 

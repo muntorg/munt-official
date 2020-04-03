@@ -106,41 +106,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <source>Bytes:</source>
-        <translation>Бајти:</translation>
-    </message>
-    <message>
-        <source>Amount:</source>
-        <translation>Сума:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Прашина:</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Провизија:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>После Провизија:</translation>
-    </message>
-    <message>
-        <source>Change:</source>
-        <translation>Кусур:</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>Сума</translation>
     </message>
     <message>
-        <source>Date</source>
-        <translation>Дата</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
         <source>Bytes:</source>
         <translation>Бајти:</translation>
     </message>
@@ -163,6 +132,10 @@
     <message>
         <source>Change:</source>
         <translation>Кусур:</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
     </message>
 </context>
 <context>
@@ -205,6 +178,33 @@
     <message>
         <source>Date</source>
         <translation>Дата</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Bytes:</source>
+        <translation>Бајти:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Сума:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Прашина:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Провизија:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>После Провизија:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Кусур:</translation>
     </message>
 </context>
 <context>

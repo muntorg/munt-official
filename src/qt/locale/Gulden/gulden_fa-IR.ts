@@ -76,12 +76,12 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
-        <source>Amount:</source>
-        <translation>میزان وجه:</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>میزان</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>میزان وجه:</translation>
     </message>
     <message>
         <source>Date</source>
@@ -90,33 +90,6 @@
     <message>
         <source>Confirmed</source>
         <translation>تایید شده</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>میزان وجه:</translation>
-    </message>
-    <message>
-        <source>Send Coins</source>
-        <translation>سکه های ارسالی</translation>
-    </message>
-    <message>
-        <source>Insufficient funds!</source>
-        <translation>وجوه ناکافی</translation>
-    </message>
-    <message>
-        <source>Confirm the send action</source>
-        <translation>تایید عملیات ارسال </translation>
-    </message>
-    <message>
-        <source>Send to multiple recipients at once</source>
-        <translation>ارسال همزمان به گیرنده های متعدد</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>مانده حساب:</translation>
     </message>
 </context>
 <context>
@@ -146,6 +119,33 @@
     <message>
         <source>Date</source>
         <translation>تاریخ</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>میزان وجه:</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>سکه های ارسالی</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>وجوه ناکافی</translation>
+    </message>
+    <message>
+        <source>Confirm the send action</source>
+        <translation>تایید عملیات ارسال </translation>
+    </message>
+    <message>
+        <source>Send to multiple recipients at once</source>
+        <translation>ارسال همزمان به گیرنده های متعدد</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>مانده حساب:</translation>
     </message>
 </context>
 <context>

@@ -110,6 +110,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Sumo</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Kvanto:</translation>
     </message>
@@ -150,10 +154,6 @@
         <translation>Listreĝimo</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Sumo</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Ricevita kun etikedo</translation>
     </message>
@@ -172,6 +172,44 @@
     <message>
         <source>Confirmed</source>
         <translation>Konfirmita</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sumo</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Neniu</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>neaplikebla</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 kaj %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Sumo</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dato</translation>
     </message>
 </context>
 <context>
@@ -239,44 +277,6 @@
     <message>
         <source>Balance:</source>
         <translation>Saldo:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Sumo</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Neniu</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>neaplikebla</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 kaj %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Sumo</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dato</translation>
     </message>
 </context>
 <context>

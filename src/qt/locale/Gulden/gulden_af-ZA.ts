@@ -170,12 +170,12 @@
         <translation>(geen etiket)</translation>
     </message>
     <message>
-        <source>Amount:</source>
-        <translation>Bedrag:</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>Bedrag</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Bedrag:</translation>
     </message>
     <message>
         <source>Date</source>
@@ -373,6 +373,14 @@
         <translation>Boodskap</translation>
     </message>
     <message>
+        <source>Credit</source>
+        <translation>Krediet</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Debiet</translation>
+    </message>
+    <message>
         <source>From</source>
         <translation>Van</translation>
     </message>
@@ -393,16 +401,8 @@
         <translation>etiket</translation>
     </message>
     <message>
-        <source>Credit</source>
-        <translation>Krediet</translation>
-    </message>
-    <message>
         <source>not accepted</source>
         <translation>nie aanvaar nie</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Debiet</translation>
     </message>
     <message>
         <source>Transaction fee</source>

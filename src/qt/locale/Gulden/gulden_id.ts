@@ -121,6 +121,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Jumlah</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Pemilihan Koin</translation>
     </message>
@@ -165,10 +169,6 @@
         <translation>Mode daftar</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Jumlah</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Diterima dengan label</translation>
     </message>
@@ -187,6 +187,40 @@
     <message>
         <source>Confirmed</source>
         <translation>Terkonfirmasi</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Nilai</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 Jam</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 menit</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>T/S</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 dan %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Jumlah</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Tanggal</translation>
     </message>
 </context>
 <context>
@@ -278,40 +312,6 @@
     <message>
         <source>Balance:</source>
         <translation>Saldo:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Nilai</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 Jam</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 menit</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>T/S</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 dan %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Jumlah</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Tanggal</translation>
     </message>
 </context>
 <context>

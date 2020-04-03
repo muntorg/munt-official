@@ -121,6 +121,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Összeg</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Érme Választás</translation>
     </message>
@@ -165,10 +169,6 @@
         <translation>Lista nézet</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Összeg</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Címkével érkezett</translation>
     </message>
@@ -187,6 +187,52 @@
     <message>
         <source>Confirmed</source>
         <translation>Megerősítve</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Összeg</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 n</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 ó</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 p</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 mp</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Semmi</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Nem elérhető</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 és %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Összeg</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Dátum</translation>
     </message>
 </context>
 <context>
@@ -282,52 +328,6 @@
     <message>
         <source>Balance:</source>
         <translation>Egyenleg:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Összeg</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 n</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 ó</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 p</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 mp</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Semmi</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Nem elérhető</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 és %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Összeg</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Dátum</translation>
     </message>
 </context>
 <context>

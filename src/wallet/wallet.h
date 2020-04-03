@@ -214,28 +214,39 @@ CRecipient GetRecipientForTxOut(const CTxOut& out, CAmount nValue, bool fSubtrac
 
 class CInputCoin {
 public:
-    CInputCoin(const CWalletTx* walletTx, unsigned int i)
+    CInputCoin(const CWalletTx* walletTx, unsigned int i, bool allowIndexBased)
     {
         if (!walletTx)
             throw std::invalid_argument("walletTx should not be null");
         if (i >= walletTx->tx->vout.size())
             throw std::out_of_range("The output index is out of range");
 
-        if (walletTx->GetDepthInMainChain() > COINBASE_MATURITY && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
+        if (allowIndexBased && walletTx->GetDepthInMainChain() > COINBASE_MATURITY && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
         {
+            // Convert to an index based outpoint, whenever possible
             outpoint = COutPoint(walletTx->nHeight, walletTx->nIndex, i);
         }
         else
         {
+            // Use a regular hash based outpoint
             outpoint = COutPoint(walletTx->GetHash(), i);
         }
         
         txout = walletTx->tx->vout[i];
     }
 
-    CInputCoin(const COutPoint& outpoint_, const CTxOut& txout_)
+    CInputCoin(const COutPoint& outpoint_, const CTxOut& txout_, bool allowIndexBased, uint64_t nBlockHeight=0, uint64_t nTxIndex=0)
     {
-        outpoint = outpoint_;
+        if (allowIndexBased && nBlockHeight < (uint64_t)chainActive.Tip()->nHeight && ((uint64_t)chainActive.Tip()->nHeight - nBlockHeight > (uint64_t)COINBASE_MATURITY))
+        {
+            // Convert to an index based outpoint, whenever possible
+            outpoint = COutPoint(nBlockHeight, nTxIndex, outpoint_.n);
+        }
+        else
+        {
+            // Use a regular hash based outpoint
+            outpoint = outpoint_;
+        }
         txout = txout_;
     }
 
@@ -452,7 +463,7 @@ private:
      * all coins from coinControl are selected; Never select unconfirmed coins
      * if they are not ours
      */
-    bool SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, const CCoinControl *coinControl = NULL) const;
+    bool SelectCoins(bool allowIndexBased, const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, const CCoinControl *coinControl = NULL) const;
 
     CWalletDB *pwalletdbEncryption;
 
@@ -576,6 +587,10 @@ public:
     }
 
     std::map<uint256, CWalletTx> mapWallet;
+    std::map<uint256, uint256> mapWalletHash;
+    void maintainHashMap(const CWalletTx& wtxIn, uint256& hash);
+    /** Transaction hash from outpoint. Even if it is index based. */
+    bool GetTxHash(const COutPoint& outpoint, uint256& txHash) const;
     std::list<CAccountingEntry> laccentries;
 
     int64_t nOrderPosNext;
@@ -614,7 +629,7 @@ public:
      * completion the coin set and corresponding actual target value is
      * assembled
      */
-    bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, uint64_t nMaxAncestors, std::vector<COutput> vCoins, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const;
+    bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, uint64_t nMaxAncestors, std::vector<COutput> vCoins, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, bool allowIndexBased) const;
 
     bool IsSpent(const COutPoint& outpoint) const;
 
@@ -751,13 +766,16 @@ public:
     CAmount GetAvailableBalance(CAccount* forAccount, const CCoinControl* coinControl = nullptr) const;
 
     //! Fund a transaction that is otherwise already created
+    // Where possible it is best to ensuire that all inputs of the transaction to be funded are constructed as index based (if they fit the criteria) instead of hash based
+    // Otherwise this can result in some obscure issues, see comments in function body for more witnessDetails
+    // The function automatically tries to take care of these issues but its better to avoid it having to do so entirely
     bool FundTransaction(CAccount* fundingAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl, CReserveKeyOrScript& reservekey);
 
     //! Sign a transaction that is already fully populated/funded
     bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
 
     //! Create a transaction that renews an expired witness account
-    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError);
+    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction=nullptr, CCoinControl* coinControl=nullptr, bool* shouldUpgrade=nullptr);
 
     //! Create a transaction upgrades an old ScriptLegacyOutput witness to a new PoW2WitnessOutput
     void PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut);
@@ -785,7 +803,7 @@ public:
     /**
      * Sign and submit a transaction (that has not yet been signed) to the network, add to wallet as appropriate etc.
      */
-    bool SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut=nullptr);
+    bool SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, std::string& strError, uint256* pTransactionHashOut=nullptr, SignType type=SignType::Spend);
 
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CConnman* connman, CValidationState& state);
 
@@ -812,7 +830,7 @@ public:
     /*
     size_t KeypoolCountExternalKeys();
     */
-    int TopUpKeyPool(unsigned int nTargetKeypoolSize = 0, unsigned int nMaxNewAllocations = 0, CAccount* forAccount = nullptr);
+    int TopUpKeyPool(unsigned int nTargetKeypoolSize = 0, unsigned int nMaxNewAllocations = 0, CAccount* forAccount = nullptr, unsigned int nMinimalKeypoolOverride = 1);
     void ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& keypool, CAccount* forAccount, int64_t keyChain);
     void KeepKey(int64_t nIndex);
     void ReturnKey(int64_t nIndex, CAccount* forAccount, int64_t keyChain);
@@ -960,9 +978,6 @@ public:
     bool BackupWallet(const std::string& strDest);
 
     const CBlockIndex* LastSPVBlockProcessed() const;
-
-    //! Chain height for wallets (height used depends on SPV).
-    static int ChainHeight();
 
     static void ResetUnifiedSPVProgressNotification();
 

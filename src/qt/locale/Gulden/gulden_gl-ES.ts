@@ -106,6 +106,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Cantidade</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Cantidade:</translation>
     </message>
@@ -134,10 +138,6 @@
         <translation>Modo lista</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Cantidade</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Data</translation>
     </message>
@@ -148,6 +148,24 @@
     <message>
         <source>Confirmed</source>
         <translation>Confirmado</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidade</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantidade</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
     </message>
 </context>
 <context>
@@ -191,24 +209,6 @@
     <message>
         <source>Send to multiple recipients at once</source>
         <translation>Enviar a múltiples receptores á vez</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidade</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantidade</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
     </message>
 </context>
 <context>

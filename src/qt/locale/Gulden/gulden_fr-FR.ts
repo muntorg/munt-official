@@ -11,6 +11,14 @@
 <context>
     <name>AccountSettingsDialog</name>
     <message>
+        <source>Okay</source>
+        <translation>D&apos;accord</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
         <source>Change name of account</source>
         <translation>Changer le nom du compte</translation>
     </message>
@@ -41,18 +49,10 @@ AVERTISSEMENT : veuillez vous assurer que vous êtes la seule personne qui peut 
         <translation>Compte non vide, veuillez d&apos;abord vider votre compte avant d&apos;essayer de le supprimer.</translation>
     </message>
     <message>
-        <source>Okay</source>
-        <translation>D&apos;accord</translation>
-    </message>
-    <message>
         <source>Are you sure you want to delete %1 from your account list?
 The account will continue to be monitored and will be restored should it receive new funds in future.</source>
         <translation>Êtes-vous sûr de vouloir supprimer %1 de votre liste de comptes ?
 Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit de nouveaux fonds à l&apos;avenir.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
     </message>
 </context>
 <context>
@@ -164,6 +164,10 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Montant</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Sélection de pièce </translation>
     </message>
@@ -204,10 +208,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation>Mode list</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Montant</translation>
-    </message>
-    <message>
         <source>Received with label</source>
         <translation>Reçu avec : </translation>
     </message>
@@ -218,6 +218,32 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Confirmed</source>
         <translation>Confirmée</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Montant</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 j</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 et %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Montant</translation>
     </message>
 </context>
 <context>
@@ -301,32 +327,6 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Balance:</source>
         <translation>Solde :</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Montant</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 j</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Aucun</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 et %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Montant</translation>
     </message>
 </context>
 <context>

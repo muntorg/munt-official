@@ -60,6 +60,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Саны</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Саны</translation>
     </message>
@@ -76,10 +80,6 @@
         <translation>Комиссия алу кейін</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Саны</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Күні</translation>
     </message>
@@ -90,25 +90,6 @@
     <message>
         <source>Confirmed</source>
         <translation>Растық</translation>
-    </message>
-</context>
-<context>
-    <name>SendCoinsDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>Саны</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Шаң</translation>
-    </message>
-    <message>
-        <source>Fee:</source>
-        <translation>Комиссия:</translation>
-    </message>
-    <message>
-        <source>After Fee:</source>
-        <translation>Комиссия алу кейін:</translation>
     </message>
 </context>
 <context>
@@ -138,6 +119,25 @@
     <message>
         <source>Date</source>
         <translation>Күні</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation>Саны</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Шаң</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Комиссия:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Комиссия алу кейін:</translation>
     </message>
 </context>
 <context>

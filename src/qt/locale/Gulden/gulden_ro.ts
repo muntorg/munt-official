@@ -109,6 +109,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>Selecția monedelor</translation>
     </message>
@@ -145,10 +149,6 @@
         <translation>Mod listă</translation>
     </message>
     <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
         <source>Received with address</source>
         <translation>Primit cu adresa</translation>
     </message>
@@ -163,6 +163,28 @@
     <message>
         <source>Confirmed</source>
         <translation>Confirmat</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 și %2</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDesc</name>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
     </message>
 </context>
 <context>
@@ -190,28 +212,6 @@
     <message>
         <source>Change:</source>
         <translation>Schimbă:</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 și %2</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Cantitate</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
     </message>
 </context>
 <context>

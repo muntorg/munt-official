@@ -319,6 +319,15 @@ bool CCryptoKeyStore::GetKey(const CKeyID &address, std::vector<unsigned char>& 
     return false;
 }
 
+bool CCryptoKeyStore::GetKeyIDWithHighestIndex(CKeyID &address) const
+{
+   // For HD we don't encrypt anything here - as the public key we need access to anyway, and the index is not special info - we derive the private key when we need it.
+    {
+        LOCK(cs_KeyStore);
+        return CBasicKeyStore::GetKeyIDWithHighestIndex(address);
+    }
+}
+
 bool CCryptoKeyStore::GetKey(const CKeyID &address, CKey& keyOut) const
 {
     {

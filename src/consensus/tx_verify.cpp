@@ -64,8 +64,7 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
     // tx.nVersion is signed integer so requires cast to unsigned otherwise
     // we would be doing a signed comparison and half the range of nVersion
     // wouldn't support BIP 68.
-    bool fEnforceBIP68 = static_cast<uint32_t>(tx.nVersion) >= 2
-                      && flags & LOCKTIME_VERIFY_SEQUENCE;
+    bool fEnforceBIP68 = static_cast<uint32_t>(tx.nVersion) >= 2 && (flags & LOCKTIME_VERIFY_SEQUENCE);
 
     // Do not enforce sequence numbers as a relative lock time
     // unless we have been instructed to
@@ -73,15 +72,18 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
         return std::pair(nMinHeight, nMinTime);
     }
 
-    for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++) {
+    for (size_t txinIndex = 0; txinIndex < tx.vin.size(); txinIndex++)
+    {
         const CTxIn& txin = tx.vin[txinIndex];
 
         // Gulden - segsig - if we aren't using relative locktime then we don't have a sequence number at all.
         // Sequence numbers with the most significant bit set are not
         // treated as relative lock-times, nor are they given any
         // consensus-enforced meaning at this point.
-        if ((IsOldTransactionVersion(tx.nVersion) && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG))
-            || (!IsOldTransactionVersion(tx.nVersion) && (!txin.FlagIsSet(CTxInFlags::HasRelativeLock)))) {
+        bool test1 = IsOldTransactionVersion(tx.nVersion) && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_DISABLE_FLAG);
+        bool test2 = !IsOldTransactionVersion(tx.nVersion) && !txin.FlagIsSet(CTxInFlags::HasRelativeLock);
+        if (test1 || test2)
+        {
             // The height of this input is not relevant for sequence locks
             (*prevHeights)[txinIndex] = 0;
             continue;
@@ -89,8 +91,9 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
 
         int nCoinHeight = (*prevHeights)[txinIndex];
 
-        if ((IsOldTransactionVersion(tx.nVersion) && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG))
-            || (!IsOldTransactionVersion(tx.nVersion) && (txin.FlagIsSet(HasTimeBasedRelativeLock))))
+        bool test3 = IsOldTransactionVersion(tx.nVersion) && (txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG);
+        bool test4 = !IsOldTransactionVersion(tx.nVersion) && txin.FlagIsSet(HasTimeBasedRelativeLock);
+        if (test3 || test4)
         {
             int64_t nCoinTime = block.GetAncestor(std::max(nCoinHeight-1, 0))->GetMedianTimePast();
             // NOTE: Subtract 1 to maintain nLockTime semantics
@@ -107,16 +110,24 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
             // txout being spent, which is the median time past of the
             // block prior.
             if (IsOldTransactionVersion(tx.nVersion))
+            {
                 nMinTime = std::max(nMinTime, nCoinTime + (int64_t)((txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_MASK) << CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) - 1);
+            }
             else
+            {
                 nMinTime = std::max(nMinTime, nCoinTime + (txin.GetSequence(tx.nVersion) << CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) - 1);
+            }
         }
         else
         {
             if (IsOldTransactionVersion(tx.nVersion))
+            {
                 nMinHeight = std::max(nMinHeight, nCoinHeight + (int)(txin.GetSequence(tx.nVersion) & CTxIn::SEQUENCE_LOCKTIME_MASK) - 1);
+            }
             else
+            {
                 nMinHeight = std::max(nMinHeight, nCoinHeight + (int)txin.GetSequence(tx.nVersion) - 1);
+            }
         }
     }
 
@@ -242,14 +253,17 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         {
             if (tx.vin[0].scriptSig.size() != 0)
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-            //fixme: (PHASE4) (SEGSIG) (HIGH) implement - check the segregatedSignatureData here? (already tested elsewhere I believe but double check)
+            if (tx.vin[0].segregatedSignatureData.stack.size() != 2)
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-segdata");
         }
     }
     else
     {
         for (const auto& txin : tx.vin)
+        {
             if (txin.prevout.IsNull())
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
+        }
     }
 
     return true;
@@ -372,12 +386,28 @@ inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 * Input/Output.
 * Signed by witness key.
 */
-inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight)
+inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, CAmount nInputAmount, CAmount nOutputAmount, uint64_t nInputHeight, bool isOldTransactionVersion)
 {
-    //fixme: (PHASE4) (SEGSIG) - test coinbase type. - Don't think this is actually necessary anymore.
-    // Only 1 signature (witness key) - except in phase 3 embedded PoW coinbase where it is 0.
-    if (input.segregatedSignatureData.stack.size() != 1 && input.segregatedSignatureData.stack.size() != 0)
-        return false;
+    //Phase 3 (no signatures)
+    //Phase 4, 1 signature - stack will have either 1 or 2 items depending on whether its a script or proper PoW2-witness address.
+    if (isOldTransactionVersion)
+    {
+        if (input.segregatedSignatureData.stack.size() != 0)
+            return false;
+    }
+    else
+    {
+        if (inputDetails.nType == CTxOutType::PoW2WitnessOutput)
+        {
+            if (input.segregatedSignatureData.stack.size() != 1)
+                return false;
+        }
+        if (inputDetails.nType == ScriptLegacyOutput)
+        {
+            if (input.segregatedSignatureData.stack.size() != 2)
+                return false;
+        }
+    }
     // Amount in address should stay the same or increase
     if (nInputAmount > nOutputAmount)
         return false;
@@ -415,7 +445,7 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
     if (inputs[0].second.lockUntilBlock >= nCheckHeight)
         return false;
 
-    //fixme: (PHASE4) - We must remove this in future once it is no longer needed
+    //fixme: (PHASE5) - Remove once phase4 fully activated
     if (inputs[0].second.witnessKeyID == inputs[0].second.spendingKeyID)
     {
         if (tx.vout.size() != 1)
@@ -437,9 +467,9 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
     return true;
 }
 
+//fixme: (PHASE5) - Remove this check once phase4 is active
 inline bool IsUnSigned(const CTxIn& input)
 {
-    //fixme: (PHASE4) - Remove this check for phase 4.
     if (input.segregatedSignatureData.stack.size() == 0)
     {
         // At this point we only need to check here that the scriptSig is push only and that it has 0 items as a result, the rest is checked by later parts of the code.
@@ -464,10 +494,9 @@ inline bool IsUnSigned(const CTxIn& input)
 */
 inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, const CTxOut& prevOut, const CTxOut& output, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
-    //fixme: (PHASE5) - Remove in future once all problem addresses are cleaned up
+    //fixme: (PHASE5) - Remove once all addresses dealt with
     //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
-    //fixme: (PHASE4) (RELEASE) SEt a new activation block for this
-    if (nSpendHeight > 881000 || (IsArgSet("-testnet") && nSpendHeight > 96400))
+    if (nSpendHeight > Params().GetConsensus().pow2Phase4FirstBlockHeight-150)
     {
         if (IsUnSigned(input))
         {
@@ -609,7 +638,7 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
         return false;
 
     // F: verify that output value is at least input value
-    if (nInputValue > nOutputValue)
+    if (nOutputValue < nInputValue)
         return false;
 
     return true;
@@ -708,10 +737,12 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
     {
         const auto& inputDetails = input.second;
 
-        if (1 > std::count_if(outputs.begin(), outputs.end(), [&](const auto& output) {
+        if (1 > std::count_if(outputs.begin(), outputs.end(), [&](const auto& output)
+        {
                 const auto& outputDetails = output.second;
                 if (input.first.nValue != output.first.nValue)
                     return false;
+
                 if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
                     return false;
                 if (inputDetails.witnessKeyID == outputDetails.witnessKeyID)
@@ -748,8 +779,8 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
     return true;
 }
 
-//fixme: (PHASE4) (HIGH) Implement unit test code for this function.
-bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight)
+//fixme: (PHASE5) (HIGH) Implement unit test code for this function.
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight, bool isOldTransactionVersion)
 {
     if (pWitnessBundles)
     {
@@ -766,7 +797,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                     const auto& outputDetails = bundle.outputs[0].second;
 
                     // Witnessing: amount should stay the same or increase, fail count can reduced by 1 or 0, if lockfrom was previously 0 it must be set to the current block height. Can only appear as a "witnesscoinbase" transaction.
-                    if ( IsWitnessBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight) )
+                    if ( IsWitnessBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight, isOldTransactionVersion) )
                     {
                         if (bundle.outputs[0].first.nValue - prevOut.nValue > gMaximumWitnessCompoundAmount * COIN)
                         {
@@ -778,6 +809,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::WitnessType;
                         break;
                     }
+                    //fixme: (PHASE5) - Should be able to renew multiple in one transaction
                     else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut, bundle.outputs[0].first, nInputHeight, nSpendHeight) )
                     {
                         matchedExistingBundle = true;
@@ -1011,7 +1043,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
             return false;
         }
 
-        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, nSpendHeight))
+        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, nSpendHeight, IsOldTransactionVersion(tx.nVersion)))
         {
             return false;
         }

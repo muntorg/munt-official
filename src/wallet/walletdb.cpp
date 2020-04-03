@@ -284,8 +284,7 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id, bool forceErase)
             {
                 if ((iter.second->setKeyPoolExternal.find(keyIndex) != iter.second->setKeyPoolExternal.end()) || (iter.second->setKeyPoolInternal.find(keyIndex) != iter.second->setKeyPoolInternal.end()))
                 {
-                    allowErase = false;
-                    break;
+                    return true;
                 }
             }
         }
@@ -295,11 +294,8 @@ bool CWalletDB::ErasePool(CWallet* pwallet, const CKeyID& id, bool forceErase)
     //Remove from internal keypool, key has been used so shouldn't circulate anymore - address will now reside only in address book.
     for (auto iter : pwallet->mapAccounts)
     {
-        if (forceErase || !iter.second->IsFixedKeyPool())
-        {
-            iter.second->setKeyPoolExternal.erase(keyIndex);
-            iter.second->setKeyPoolInternal.erase(keyIndex);
-        }
+        iter.second->setKeyPoolExternal.erase(keyIndex);
+        iter.second->setKeyPoolInternal.erase(keyIndex);
     }
 
     //Remove from disk

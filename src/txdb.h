@@ -6,7 +6,7 @@
 // File contains modifications by: The Gulden developers
 // All modifications:
 // Copyright (c) 2017-2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -108,7 +108,7 @@ public:
     
     size_t EstimateSize() const override;
     // For handling of upgrades.
-    uint32_t nCurrentVersion=2;
+    uint32_t nCurrentVersion=3;
     uint32_t nPreviousVersion=1;
 
     /*int GetDepth() const override

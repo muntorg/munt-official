@@ -313,6 +313,10 @@
         <translation>(لا وصف)</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>مبلغ</translation>
+    </message>
+    <message>
         <source>Coin Selection</source>
         <translation>اختيار العمله</translation>
     </message>
@@ -355,10 +359,6 @@
     <message>
         <source>List mode</source>
         <translation>صيغة القائمة</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>مبلغ</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -563,16 +563,8 @@
         <translation>النوع</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>غير متصل</translation>
-    </message>
-    <message>
         <source>Conflicted</source>
         <translation>يتعارض</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>لم يتم تلقى هذه الكتلة (Block) من قبل أي العقد الأخرى وربما لن تكون مقبولة!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -774,12 +766,12 @@
         <translation>رسالة </translation>
     </message>
     <message>
-        <source>Open until %1</source>
-        <translation>مفتوح حتى %1</translation>
+        <source>Debit</source>
+        <translation>دين</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1 غير متواجد</translation>
+        <source>Open until %1</source>
+        <translation>مفتوح حتى %1</translation>
     </message>
     <message>
         <source>%1/unconfirmed</source>
@@ -792,10 +784,6 @@
     <message>
         <source>Status</source>
         <translation>الحالة.</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>,  لم يتم حتى الآن البث بنجاح</translation>
     </message>
     <message>
         <source>Source</source>
@@ -828,10 +816,6 @@
     <message>
         <source>not accepted</source>
         <translation>غير مقبولة</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>دين</translation>
     </message>
     <message>
         <source>Transaction fee</source>
