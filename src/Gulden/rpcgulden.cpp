@@ -2772,6 +2772,11 @@ static UniValue fixwitnessaddresshelper(CAccount* fundingAccount, std::vector<st
         CPoW2WitnessDestination destinationPoW2Witness;
         // As we are rotating the witness key we reset the "lock from" and we set the "lock until" everything else except the value remains unchanged.
         destinationPoW2Witness.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        if (destinationPoW2Witness.lockFromBlock == 0)
+        {
+            destinationPoW2Witness.lockFromBlock = currentWitnessHeight;
+        }
+            
         destinationPoW2Witness.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
         CGuldenAddress(getStaticFundingAddress(sWitnessAddress, chainActive.Height())).GetKeyID(destinationPoW2Witness.spendingKey);
         destinationPoW2Witness.witnessKey = currentWitnessDetails.witnessKeyID;
