@@ -1,3 +1,10 @@
+2.2.0.6
+
+RPC     - Add output of witness/spending pubkeyhash when calling validateaddress on a witness address
+
+
+
+
 2.2.0.5
 
 UI      - Fix UI behaviour for upgrading expired witness accounts
