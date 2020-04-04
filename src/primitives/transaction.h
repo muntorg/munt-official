@@ -1151,7 +1151,7 @@ struct CWitnessBundles;
 typedef std::shared_ptr<const CWitnessBundles> CWitnessBundlesRef;
 
 //fixme: (PHASE5) Remove
-#define CURRENT_TX_VERSION_POW2 (IsSegSigEnabled(chainPrevTip()) ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION)
+#define CURRENT_TX_VERSION_POW2 CTransaction::SEGSIG_ACTIVATION_VERSION
 
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.
@@ -1160,7 +1160,7 @@ class CTransaction
 {
 public:
     // Default transaction version.
-    static const int32_t CURRENT_VERSION=2;
+    static const int32_t CURRENT_VERSION=5;
 
     // Changing the default transaction version requires a two step process: first
     // adapting relay policy by bumping MAX_STANDARD_VERSION, and then later date
