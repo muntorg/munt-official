@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -75,6 +75,9 @@ inline std::string _(const char* psz)
     boost::optional<std::string> rv = translationInterface.Translate(psz);
     return rv ? (*rv) : psz;
 }
+
+// Application startup time (used for uptime calculation)
+int64_t GetStartupTime();
 
 void SetupEnvironment();
 bool SetupNetworking();
