@@ -583,7 +583,7 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
     infoForAccount.nWitnessLength = infoForAccount.nOriginLength;
     if (infoForAccount.nOriginNetworkWeight == 0)
         infoForAccount.nOriginNetworkWeight = gStartingWitnessNetworkWeightEstimate;
-    uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod(infoForAccount.nOriginWeight, infoForAccount.nOriginNetworkWeight);
+    uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod((infoForAccount.nOriginWeight>0)?infoForAccount.nOriginWeight:gMinimumWitnessWeight, infoForAccount.nOriginNetworkWeight);
     infoForAccount.pointMapForecast[0] = 0;
     for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < infoForAccount.nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
     {

@@ -99,8 +99,8 @@ struct CWitnessAccountStatus
 };
 
 /** Get account witness status and accompanying details
- * hasScriptLegacyOutput iff any of the outputs is CTxOutType::ScriptLegacyOutput
- * hasUnconfirmedWittnessTx iff unconfirmed witness tx for the account (not actually checked for witness type, see implementation note)
+ * hasScriptLegacyOutput IFF any of the outputs is CTxOutType::ScriptLegacyOutput
+ * hasUnconfirmedWittnessTx IFF unconfirmed witness tx for the account (not actually checked for witness type, see implementation note)
  * pWitnessInfo if != nullptr it will be filled with the witnessInfo if available
 */
 CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, CGetWitnessInfo* pWitnessInfo = nullptr);

@@ -575,7 +575,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         witnessInfo = GetWitnessInfoWrapper();
     }
 
-    // Collect uspent witnesses coins on for the account
+    // Collect uspent witnesses coins for the account
     std::vector<RouletteItem> accountItems;
     for (const auto& item : witnessInfo.witnessSelectionPoolUnfiltered)
     {
@@ -647,7 +647,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         throw std::runtime_error("Unable to determine witness state.");
     }
 
-    // NOTE: assuming any unconfirmed tx here is a witness one to avoid getting the witness bundles and testing those, this will almost always be
+    // NOTE: assuming any unconfirmed tx here is a witness; avoid getting the witness bundles and testing those, this will almost always be
     // correct. Any edge cases where this fails will automatically resolve once the tx confirms.
     bool hasUnconfirmedWittnessTx = std::any_of(pWallet->mapWallet.begin(), pWallet->mapWallet.end(), [=](const auto& it){
         const auto& wtx = it.second;
@@ -667,7 +667,8 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         account,
         status,
         networkWeight,
-        isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : uint64_t(0),
+        //NB! We always want the account weight (even if expired) - otherwise how do we e.g. draw a historical graph of the expected earnings for the expired account?
+        std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }),
         hasScriptLegacyOutput,
         hasUnconfirmedWittnessTx,
         nLockFromBlock,
