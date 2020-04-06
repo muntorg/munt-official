@@ -1268,21 +1268,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                 return state.DoS(100, error("ConnectBlock(): PoW2 witness pays too much (actual=%d vs limit=%d)", block.vtx[nWitnessCoinbaseIndex]->GetValueOut(), nSubsidyWitnessExpected), REJECT_INVALID, "bad-witness-cb-amount");
             }
 
-            if (nPoW2PhaseParent == 3)
-            {
-                if (block.vtx[nWitnessCoinbaseIndex]->vout.size() != 2)
-                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vout size)"), REJECT_INVALID, "bad-witness-cb");
-
-                if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 2)
-                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vin size)"), REJECT_INVALID, "bad-witness-cb");
-
-                if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].prevout.IsNull())
-                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid prevout)"), REJECT_INVALID, "bad-witness-cb");
-
-                if (block.vtx[nWitnessCoinbaseIndex]->vin[0].GetSequence(block.vtx[nWitnessCoinbaseIndex]->nVersion) != 0)
-                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid sequence)"), REJECT_INVALID, "bad-witness-cb");
-            }
-            else if (nPoW2PhaseParent >= 4)
+            if (nPoW2PhaseParent >= 4)
             {
                 if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 2)
                     return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vin size)"), REJECT_INVALID, "bad-witness-cb");
@@ -1317,16 +1303,10 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     
     if (nSubsidyDev > 0)
     {
-        if (nPoW2PhaseGrandParent < 3)
-        {
-            // This should never happen, dev subsidy only part of phase 3.
-            assert(0);
-        }
-        // Phase 3 - Must have 4 outputs (miner, dev, marker, witness)
         // Phase 4 - Must have 2 outputs (miner, dev) - witness in seperate transaction
-        if ((nPoW2PhaseGrandParent == 3 && block.vtx[0]->vout.size() != 4) || (nPoW2PhaseGrandParent > 3 && block.vtx[0]->vout.size() != 2))
+        if ((nPoW2PhaseGrandParent > 3 && block.vtx[0]->vout.size() != 2))
         {
-            return state.DoS(100, error("ConnectBlock(): coinbase has incorrect number of outputs (actual=%d vs limit=%d)", block.vtx[0]->vout.size(), (nPoW2PhaseGrandParent >= 3)?4:2), REJECT_INVALID, "bad-cb-amount");
+            return state.DoS(100, error("ConnectBlock(): coinbase has incorrect number of outputs (actual=%d vs limit=%d)", block.vtx[0]->vout.size(), 2), REJECT_INVALID, "bad-cb-amount");
         }
         
         static std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
@@ -2285,15 +2265,15 @@ static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainP
         // Note: (PoW2) If we wanted to include witness weight in the chain weight this would be the place to do it.
         // This would have the benefit of making it harder to mine a side chain using lots of small witnesses.
         // However it would also bias the earnings and chain control even more to large witnesses and act as a 'centralisation' incentive.
-        // So at this point we don't do this - and prefer instead to be agnostic, so we increase witnessed blocks always by a fixed weight.
-
+        // So at this point we don't do this - and prefer instead to be witness-size-agnostic, so we increase witnessed blocks always by a fixed weight.
         if (pIndex->pprev->nVersionPoW2Witness != 0)
         {
             // Witnessed blocks sit ahead of non-witnessed blocks in the chain so must have more work than our non-witnessed counterpart.
             // However this is more complicated than it would seem at first.
             // If we increase the work by some arbitrary amount e.g. 1 or 10000 then we sit with the following problem:
             // 1) Miner mines a block at high difficulty. 2) Witness is 'absent'. 3) Chain temporarily stalls.
-            // 4) Miners start mining competing blocks at lower difficulty (delta difficulty halving). 5) Witnesses witness the block
+            // 4) Miners start mining competing blocks at lower difficulty (delta difficulty halving).
+            // 5) Witnesses witness the lower difficulty block
             // 6) However because they are substantially lower difficulty - nBlockProof + 1 is not enough to put the new block at tip of chain
             // 7) It takes multiple lower difficulty blocks to form a new chain tip and for chain to progress (chain stalls unacceptably long)
             // If we base it on the current block weight (e.g. 2x current weight) then we face the opposite - i.e. an attacker can hold back a high difficulty witnessed block and then orphan a bunch of lower difficulty blocks using it.
@@ -2310,11 +2290,6 @@ static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainP
             assert (nCount == 10);
             nBlockProof /= nCount;
             chainWork += nBlockProof;
-        }
-        else
-        {
-            // However for phase 3 we need subsequent PoW blocks to outweigh PoS blocks so we are stuck with the temporary limitation of using nChainWork + 1
-            chainWork += 1;
         }
     }
     return chainWork;
@@ -2869,7 +2844,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         }
     }
 
-    // Enforce rule that the coinbase starts with serialized block height
+    // Enforce rule that the PoW coinbase starts with serialized block height
     if (nHeight >= chainParams.GetConsensus().BIP34Height)
     {
         if (fHaveSegregatedSignatures)
@@ -2878,19 +2853,11 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
             CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
             if (block.vtx[0]->vin[0].segregatedSignatureData.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].segregatedSignatureData.stack[0].begin()))
             {
-                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase2");
-            }
-        }
-        else
-        {
-            CScript expect = CScript() << nHeight;
-            if (block.vtx[0]->vin[0].scriptSig.size() < expect.size() ||
-                !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
-                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase1");
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase");
             }
         }
     }
-
+    
     // And the same for witness coinbase. (Enforce rule that the coinbase starts with serialized block height)
     unsigned int nWitnessCoinbaseIndex = 0;
     if (block.nVersionPoW2Witness != 0)
@@ -2909,38 +2876,21 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
             return state.DoS(100, error("ContextualCheckBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
         }
     }
-
     if (block.nVersionPoW2Witness != 0)
     {
-        // Phase 3 - we restrict the coinbase signature to only the block height.
-        // This helps simplify the logic for the PoW mining (which has to stuff all this info into it's own coinbase signature).
         if (fHaveSegregatedSignatures)
         {
             std::vector<unsigned char> expect;
             CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
             if (block.vtx[nWitnessCoinbaseIndex]->vin[0].segregatedSignatureData.stack.empty() || !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].segregatedSignatureData.stack[0].begin()))
             {
-                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase3");
-            }
-        }
-        else
-        {
-            CScript expect = CScript() << nHeight;
-            if (block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptSig.size() != expect.size())
-                return state.DoS(100, error("ContextualCheckBlock(): PoW2 phase 3 witness coinbase has incorrect size for scriptSig)"), REJECT_INVALID, "bad-phase3-witness-cb-scriptsig");
-
-            // Enforce rule that the coinbase starts with serialized block height
-            if (block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptSig.size() < expect.size() ||
-                !std::equal(expect.begin(), expect.end(), block.vtx[nWitnessCoinbaseIndex]->vin[0].scriptSig.begin()))
-            {
-                return state.DoS(100, false, REJECT_INVALID, "bad-witness-cb-height", false, "block height mismatch in witness coinbase");
+                return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in witness coinbase");
             }
         }
     }
 
     //NB!! GULDEN - segwit commits/adds a coinbase commitment here.
     //For segsig this is unnecessary; we hash this data as part of the normal merkle root instead.
-
 
     //fixme: (PHASE5) Below checks can be removed/simplified
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
