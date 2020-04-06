@@ -1064,15 +1064,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //NB! IMPORTANT - Below this point we should -not- do any further Is/Get PoW2 phase checks - as we modify the view below which alters the results of phase 3 check.
     //Do and store all such tests above this point in the code.
 
-
-    //Only the second block with a phase 3 parent onwards has a witness coinbase with embedded data, as only the first block with a phase 3 parent has a witness.
-    int nEmbeddedWitnessCoinbaseIndex = 0;
-    if (nPoW2PhaseGrandParent == 3 && nPoW2PhaseParent != 4)
-    {
-        nEmbeddedWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
-        if (nEmbeddedWitnessCoinbaseIndex == -1)
-            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness data)"), REJECT_INVALID, "bad-cb-nowitnessdata");
-    }
     unsigned int nWitnessCoinbaseIndex = 0;
     if (nPoW2PhaseParent >= 3)
     {
@@ -1248,24 +1239,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     CAmount nSubsidyWitnessExpected = GetBlockSubsidyWitness(pindex->nHeight);
     CAmount nSubsidyDev = GetBlockSubsidyDev(pindex->nHeight);
 
-    // Second block with a phase 3 parent up to and including first block with a phase 4 parent.
-    // Coinbase of previous witness block embedded in coinbase of current PoW block.
-    if (nPoW2PhaseGrandParent == 3 && nPoW2PhaseParent != 4)
-    {
-        unsigned int nWitnessCoinbasePayoutIndex = nEmbeddedWitnessCoinbaseIndex + 1;
-
-        if (block.vtx[0]->vout.size()-1 < nWitnessCoinbasePayoutIndex)
-        {
-            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness payout)"), REJECT_INVALID, "bad-cb-nowitnesspayout");
-        }
-
-        CAmount nSubsidyWitnessPaid = block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue;
-        if (nSubsidyWitnessPaid != nSubsidyWitnessExpected)
-        {
-            return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount [%d] [%d])", block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue, nSubsidyWitnessExpected), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
-        }
-    }
-    else if (nPoW2PhaseParent >= 4)
+    if (nPoW2PhaseParent >= 4)
     {
         nSubsidy -= nSubsidyWitnessExpected;
     }
@@ -2914,32 +2888,6 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
                 !std::equal(expect.begin(), expect.end(), block.vtx[0]->vin[0].scriptSig.begin())) {
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase1");
             }
-        }
-    }
-
-
-    //Enforce embedded witness coinbase data in phase 3.
-    //Only the second block with a phase 3 parent onwards has a witness coinbase with embedded data, as only the first block with a phase 3 parent has a witness.
-    //Also having the check here prevents miners from broadcasting invalid blocks sooner.
-    //fixme: (PHASE5) This is now a duplicate of the check in ConnectBlock - reconsider if we need both.
-    //This was added as invalid blocks were still being accepted (just not connected) and this was combining with other factors to cause network issues.
-    if (nHeight > 10 && IsPow2Phase3Active(nHeight-2) && !fHaveSegregatedSignatures && block.nVersionPoW2Witness == 0)
-    {
-        int nEmbeddedWitnessCoinbaseIndex = 0;
-        nEmbeddedWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
-        if (nEmbeddedWitnessCoinbaseIndex == -1)
-            return state.DoS(20, error("ContextualCheckBlock(): PoW2 phase 3 coinbase lacks witness data)"), REJECT_INVALID, "bad-cb-nowitnessdata");
-
-        unsigned int nWitnessCoinbasePayoutIndex = nEmbeddedWitnessCoinbaseIndex + 1;
-
-        if (block.vtx[0]->vout.size()-1 < nWitnessCoinbasePayoutIndex)
-            return state.DoS(20, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness payout)"), REJECT_INVALID, "bad-cb-nowitnesspayout");
-
-        CAmount nSubsidyWitnessExpected = GetBlockSubsidyWitness(nHeight-1);
-        CAmount nSubsidyWitnessActual = block.vtx[0]->vout[nWitnessCoinbasePayoutIndex].nValue;
-        if (nSubsidyWitnessActual != nSubsidyWitnessExpected)
-        {
-            return state.DoS(20, error("ConnectBlock(): PoW2 phase 3 coinbase has incorrect witness payout amount [%d] [%d])", nSubsidyWitnessActual, nSubsidyWitnessExpected), REJECT_INVALID, "bad-cb-badwitnesspayoutamount");
         }
     }
 
