@@ -86,6 +86,9 @@ bool witnessOutputsToReceiveRecord(const CWallet *wallet, const CWalletTx &wtx, 
         (unused) witnessDetails;
         for( const auto& accountPair : wallet->mapAccounts )
         {
+            if (!accountPair.second->IsPoW2Witness())
+                continue;
+
             isminetype mine = IsMine(*accountPair.second, txOut);
             if (mine)
             {
@@ -138,7 +141,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     // New method to decompose witness generation tx
     // The existing code below produces odd/unexpected results for some witness generation tx.
     // Instead of fixing up the code below (which has more issues) simpler new code was introduced here to handle it.
-    if (wtx.IsPoW2WitnessCoinBase()) {
+    if (wtx.IsPoW2WitnessCoinBase())
+    {
         for( const auto& accountPair : wallet->mapAccounts )
         {
             CAccount* account = accountPair.second;
