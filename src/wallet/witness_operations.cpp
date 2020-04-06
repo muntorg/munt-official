@@ -21,6 +21,7 @@
 #include "net.h"
 #include "alert.h"
 #include "utilmoneystr.h"
+#include "wallet.h"
 
 static witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount)
 {
@@ -106,7 +107,8 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
     }
 
     // Find the account for this address
-    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    CAccount* witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
+    
     if (!witnessAccount)
         throw witness_error(witness::RPC_MISC_ERROR, "Could not locate account for address");
     if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
@@ -361,7 +363,7 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
         CTxOutPoW2Witness currentWitnessDetails;
         const auto& currentWitnessTxOut = std::get<0>(unspentWitnessOutputs[0]);
         GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
-        witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+        witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
     }
     if (!witnessAccount)
     {

@@ -28,6 +28,41 @@
 #include "Gulden/util.h"
 #include "alert.h"
 
+std::vector<CAccount*> CWallet::FindAccountsForTransaction(const CTxOut& out)
+{
+    std::vector<CAccount*> ret;
+    for (const auto& [accountUUID, forAccount] : mapAccounts)
+    {
+        (unused) accountUUID;
+        if (::IsMine(*forAccount, out) == ISMINE_SPENDABLE)
+        {
+            ret.push_back(forAccount);
+        }
+    }
+    return ret;
+}
+
+CAccount* CWallet::FindBestWitnessAccountForTransaction(const CTxOut& out)
+{
+    // Find all accounts for this address
+    CAccount* witnessAccount = nullptr;
+    std::vector<CAccount*> potentialWitnessAccounts = FindAccountsForTransaction(out);
+    
+    // Filter for witness accounts
+    for (auto account : potentialWitnessAccounts)
+    {
+        if (account->IsPoW2Witness())
+        {
+            // Try to prefer full witness account to witness only
+            if (!witnessAccount || witnessAccount->IsWitnessOnly())
+            {
+                witnessAccount = account;
+            }
+        }
+    }
+    return witnessAccount;
+}
+
 bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type)
 {
     AssertLockHeld(cs_wallet); // mapWallet
@@ -35,7 +70,8 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
     // sign the new tx
     CTransaction txNewConst(tx);
     int nIn = 0;
-    for (const auto& input : tx.vin) {
+    for (const auto& input : tx.vin)
+    {
         if (input.prevout.IsNull() && txNewConst.IsPoW2WitnessCoinBase())
         {
             nIn++;
@@ -49,14 +85,22 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         const CAmount& amount = prev->tx->vout[input.prevout.n].nValue;
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(prev->tx->vout[input.prevout.n], type);
         SignatureData sigdata;
-        CAccount *signAccount=fromAccount;
-        if (!signAccount)
-            signAccount = FindAccountForTransaction(prev->tx->vout[input.prevout.n]);
-        if (!signAccount)
+        std::vector<CAccount*> accountsToTry;
+        if (!fromAccount)
+            accountsToTry = FindAccountsForTransaction(prev->tx->vout[input.prevout.n]);
+        else
+            accountsToTry.push_back(fromAccount);    
+        if (accountsToTry.empty())
             return false;
-        std::vector<CKeyStore*> accountsToTry;
-        accountsToTry.push_back(signAccount);
-        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, amount, SIGHASH_ALL), prev->tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
+        
+        std::vector<CKeyStore*> keystores;
+        keystores.reserve(accountsToTry.size());
+        for (auto account : accountsToTry)
+        {
+            keystores.push_back(account);
+        }
+        
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), prev->tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -65,18 +109,7 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
     return true;
 }
 
-CAccount* CWallet::FindAccountForTransaction(const CTxOut& out)
-{
-    for (const auto& [accountUUID, forAccount] : mapAccounts)
-    {
-        (unused) accountUUID;
-        if (::IsMine(*forAccount, out) == ISMINE_SPENDABLE)
-        {
-            return forAccount;
-        }
-    }
-    return NULL;
-}
+
 
 bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl coinControl, CReserveKeyOrScript& reservekey)
 {

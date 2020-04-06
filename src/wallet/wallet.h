@@ -870,7 +870,8 @@ public:
 
     bool DelAddressBook(const std::string& address);
 
-    CAccount* FindAccountForTransaction(const CTxOut& out);
+    std::vector<CAccount*> FindAccountsForTransaction(const CTxOut& out);
+    CAccount* FindBestWitnessAccountForTransaction(const CTxOut& out);
 
     // CValidationInterface updates
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;

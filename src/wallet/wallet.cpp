@@ -1184,7 +1184,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 {
                     if ( txOut.GetType() == CTxOutType::PoW2WitnessOutput || (txOut.GetType() == CTxOutType::ScriptLegacyOutput && txOut.output.scriptPubKey.IsPoW2Witness()) )
                     {
-                        CAccount* potentialWitnessAccount = pactiveWallet->FindAccountForTransaction(txOut);
+                        CAccount* potentialWitnessAccount = pactiveWallet->FindBestWitnessAccountForTransaction(txOut);
                         if (potentialWitnessAccount && potentialWitnessAccount->m_Type == AccountType::PoW2Witness)
                         {
                             if (potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessEmpty || potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessPending)

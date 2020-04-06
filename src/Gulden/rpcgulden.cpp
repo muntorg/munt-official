@@ -2326,7 +2326,7 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     (unused) currentWitnessHeight;
     (unused) currentWitnessOutpoint;
     (unused) currentWitnessTxIndex;
-    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    CAccount* witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
     if (!witnessAccount)
     {
         result.push_back(Pair("validity", false));
