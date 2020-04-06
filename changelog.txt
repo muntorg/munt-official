@@ -1,6 +1,13 @@
 2.2.0.6
 
+UI      - Fix a UI freeze that was occuring on 'finished' witness accounts
+RPC     - Fix a crash in 'signrawtransaction' when signing new transaction types (of non script type)
+RPC     - Improve 'dumpblockgaps' command to output data for both witness and PoW timestamps; previous behaviour considered PoW timestamps only
+RPC     - Backport/add 'uptime' command from upstream
+RPC     - Backport/add 'getblockstats' command from upstream
+RPC     - Update second paramater of 'estimatesmartfee' from bool to string to match changes in upstream
 RPC     - Add output of witness/spending pubkeyhash when calling validateaddress on a witness address
+CORE    - Remove various parts of the old phase3 codebase, this should bring performance improvements
 
 
 
