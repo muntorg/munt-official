@@ -983,40 +983,6 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
                         // Grab the witness from our index.
                         pWitnessBlockToEmbed = GetWitnessOrphanForBlock(pIndexParent->pprev->nHeight, pIndexParent->pprev->GetBlockHashLegacy(), pIndexParent->pprev->GetBlockHashLegacy());
 
-                        //We don't have it in our index - try extract it from the tip in which we have already embedded it.
-                        if (!pWitnessBlockToEmbed)
-                        {
-                            std::shared_ptr<CBlock> pBlockPoWParent(new CBlock);
-                            LOCK(cs_main); // For ReadBlockFromDisk
-                            if (ReadBlockFromDisk(*pBlockPoWParent.get(), pIndexParent, Params()))
-                            {
-                                int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
-                                if (nWitnessCoinbaseIndex != -1)
-                                {
-                                    std::shared_ptr<CBlock> embeddedWitnessBlock(new CBlock);
-                                    if (ExtractWitnessBlockFromWitnessCoinbase(chainActive, nWitnessCoinbaseIndex, pIndexParent->pprev, *pBlockPoWParent.get(), chainparams, *pcoinsTip, *embeddedWitnessBlock.get()))
-                                    {
-                                        uint256 hashPoW2Witness = embeddedWitnessBlock->GetHashPoW2();
-                                        if (mapBlockIndex.count(hashPoW2Witness) > 0)
-                                        {
-                                            pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            if (ProcessNewBlock(Params(), embeddedWitnessBlock, true, nullptr, false, true))
-                                            {
-                                                if (mapBlockIndex.count(hashPoW2Witness) > 0)
-                                                {
-                                                    pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         if (!pWitnessBlockToEmbed)
                         {
                             pIndexParent = pIndexParent->pprev;

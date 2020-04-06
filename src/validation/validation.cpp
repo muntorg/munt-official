@@ -1072,12 +1072,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         nEmbeddedWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(block);
         if (nEmbeddedWitnessCoinbaseIndex == -1)
             return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase lacks witness data)"), REJECT_INVALID, "bad-cb-nowitnessdata");
-
-        if (fVerifyWitness)
-        {
-            if (!WitnessCoinbaseInfoIsValid(chain, nEmbeddedWitnessCoinbaseIndex, pindex->pprev, block, chainparams, view))
-                return state.DoS(100, error("ConnectBlock(): PoW2 phase 3 coinbase has invalid coinbase info)"), REJECT_INVALID, "bad-cb-badwitnessinfo");
-        }
     }
     unsigned int nWitnessCoinbaseIndex = 0;
     if (nPoW2PhaseParent >= 3)
