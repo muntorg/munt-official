@@ -1840,11 +1840,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         // Disconnect any peers that are not yet synced beyond the last checkpoint height
         // They will only slow the sync down
-        if (pfrom->nStartingHeight < Checkpoints::LastCheckPointHeight())
+        if (IsInitialBlockDownload())
         {
-            LOCK(cs_main);
-            pfrom->fDisconnect = true;
-            return false;
+            if (pfrom->nStartingHeight < Checkpoints::LastCheckPointHeight())
+            {
+                LOCK(cs_main);
+                pfrom->fDisconnect = true;
+                return false;
+            }
         }
 
         return true;
@@ -3850,7 +3853,8 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
                 nRHeaderSyncStarted++;
 
                 // set header request/response timeout, always as for reverse headers sure to expect a response
-                state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_RESPONSE_TIMEOUT;
+                if (pindexBestHeader->GetBlockTime() < GetAdjustedTime() - 24 * 60 * 60)
+                    state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_RESPONSE_TIMEOUT;
 
                 LogPrintf("initial reverse getrheaders (%d) to peer=%d (startheight:%d)\n", lastCheckPointHeight - vReverseHeaders.size(),
                          pto->GetId(), pto->nStartingHeight);
@@ -3869,7 +3873,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
                 // set header request/response timeout, but not when close to today (headers will be requested from all peers so a single one not
                 // giving a response is ok)
-                if (pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60)
+                if (pindexBestHeader->GetBlockTime() < GetAdjustedTime() - 24 * 60 * 60)
                     state.nHeadersSyncTimeout = GetTimeMicros() + HEADERS_DOWNLOAD_RESPONSE_TIMEOUT;
 
                 nSyncStarted++;
