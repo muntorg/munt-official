@@ -853,7 +853,7 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
         stats.nTransactionOutputs++;
         stats.nTotalAmount += output.second.out.nValue;
         stats.nBogoSize += 32 /* txid */ + 4 /* vout index */ + 4 /* height + coinbase */ + 8 /* amount */ +
-                           2 /* scriptPubKey len */ + output.second.out.output.scriptPubKey.size() /* scriptPubKey */;
+                           2 /* scriptPubKey len */ + nScriptSize /* scriptPubKey */;
     }
     ss << VARINT(0);
 }
