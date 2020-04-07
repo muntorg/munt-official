@@ -817,7 +817,8 @@ void CTxMemPool::queryHashes(std::vector<uint256>& vtxid)
     vtxid.clear();
     vtxid.reserve(mapTx.size());
 
-    for (auto it : iters) {
+    for (auto it : iters)
+    {
         vtxid.push_back(it->GetTx().GetHash());
     }
 }

@@ -37,6 +37,8 @@ const char* GetTxnOutputType(txnouttype t)
     case TX_MULTISIG: return "multisig";
     case TX_NULL_DATA: return "nulldata";
     case TX_PUBKEYHASH_POW2WITNESS: return "pow2_witness";
+    case TX_MAX+1: return "keyhash_standard";
+    case TX_MAX+2: return "pow2_witness_standard";
     }
     return NULL;
 }

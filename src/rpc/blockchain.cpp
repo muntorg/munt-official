@@ -412,7 +412,9 @@ UniValue mempoolToJSON(bool fVerbose)
 
         UniValue a(UniValue::VARR);
         for(const uint256& hash : vtxid)
+        {
             a.push_back(hash.ToString());
+        }
 
         return a;
     }
@@ -825,12 +827,27 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
                 break;
         }
         ss << VARINT(output.second.out.nValue);
+        uint64_t nScriptSize=0;
         {
             std::vector<CTxDestination> addresses;
-            txnouttype whichType;
-            int nRequired;
-            ExtractDestinations(output.second.out.output.scriptPubKey, whichType, addresses, nRequired);
-            stats.nTypeCount[whichType]++;
+            switch (output.second.out.GetType())
+            {
+                case CTxOutType::ScriptLegacyOutput:
+                    txnouttype whichType;
+                    int nRequired;
+                    ExtractDestinations(output.second.out.output.scriptPubKey, whichType, addresses, nRequired);
+                    stats.nTypeCount[whichType]++;
+                    nScriptSize = output.second.out.output.scriptPubKey.size();
+                    break;
+                case CTxOutType::StandardKeyHashOutput:
+                    //fixme: (PHASE5) Handle 'nBogoSize' here
+                    stats.nTypeCount[TX_MAX+1]++;
+                    break;
+                case CTxOutType::PoW2WitnessOutput:
+                    //fixme: (PHASE5) Handle 'nBogoSize' here
+                    stats.nTypeCount[TX_MAX+2]++;
+                    break;
+            }
         }
 
         stats.nTransactionOutputs++;
@@ -943,13 +960,13 @@ static UniValue gettxoutsetinfo(const JSONRPCRequest& request)
             "Note this call may take some time.\n"
             "\nResult:\n"
             "{\n"
-            "  \"height\":n,     (numeric) The current block height (index)\n"
-            "  \"bestblock\": \"hex\",   (string) the best block hash hex\n"
-            "  \"transactions\": n,      (numeric) The number of transactions\n"
-            "  \"txouts\": n,            (numeric) The number of output transactions\n"
-            "  \"bogosize\": n,          (numeric) A meaningless metric for UTXO set size\n"
-            "  \"hash_serialized_2\": \"hash\", (string) The serialized hash\n"
-            "  \"disk_size\": n,         (numeric) The estimated size of the chainstate on disk\n"
+            "  \"height\":n,                    (numeric) The current block height (index)\n"
+            "  \"bestblock\": \"hex\",            (string) the best block hash hex\n"
+            "  \"transactions\": n,             (numeric) The number of transactions\n"
+            "  \"txouts\": n,                   (numeric) The number of output transactions\n"
+            "  \"bogosize\": n,                 (numeric) A meaningless metric for UTXO set size\n"
+            "  \"hash_serialized_2\": \"hash\",   (string) The serialized hash\n"
+            "  \"disk_size\": n,                (numeric) The estimated size of the chainstate on disk\n"
             "  \"total_amount\": x.xxx          (numeric) The total amount\n"
             "}\n"
             "\nExamples:\n"
@@ -961,7 +978,8 @@ static UniValue gettxoutsetinfo(const JSONRPCRequest& request)
 
     CCoinsStats stats;
     FlushStateToDisk();
-    if (GetUTXOStats(pcoinsdbview, stats)) {
+    if (GetUTXOStats(pcoinsdbview, stats))
+    {
         ret.push_back(Pair("height", (int64_t)stats.nHeight));
         ret.push_back(Pair("bestblock", stats.hashBlock.GetHex()));
         ret.push_back(Pair("transactions", (int64_t)stats.nTransactions));
@@ -974,7 +992,9 @@ static UniValue gettxoutsetinfo(const JSONRPCRequest& request)
         {
             ret.push_back(Pair(GetTxnOutputType((txnouttype)item.first), item.second));
         }
-    } else {
+    }
+    else
+    {
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to read UTXO set");
     }
     return ret;
