@@ -1,3 +1,12 @@
+2.2.0.7
+
+NET     - Remove support for old protocol versions that are no longer supported
+RPC     - Fix a crash in gettxoutsetinfo; Improve gettxoutsetinfo behaviour for new transaction output types
+RPC     - Fix GetNetworkHashPS calculation; It was incorrectly including witness 'work' in the mining calculation and returning an overly high number as a result
+
+
+
+
 2.2.0.6
 
 UI      - Fix a UI freeze that was occuring on 'finished' witness accounts
