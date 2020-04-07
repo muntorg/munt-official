@@ -894,8 +894,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     AssertLockHeld(cs_main);
     assert(pindex);
     // pindex->phashBlock can be null if called by CreateNewBlock/TestBlockValidity
-    assert((pindex->phashBlock == NULL) ||
-           (*pindex->phashBlock == block.GetHashPoW2()));
+    assert((pindex->phashBlock == NULL) || (*pindex->phashBlock == block.GetHashPoW2()));
     int64_t nTimeStart = GetTimeMicros();
 
     // Check it again in case a previous version let a bad block in
@@ -924,7 +923,8 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     }
 
     bool fScriptChecks = true;
-    if (!hashAssumeValid.IsNull()) {
+    if (!hashAssumeValid.IsNull())
+    {
         // We've been configured with the hash of a block which has been externally verified to have a valid history.
         // A suitable default value is included with the software and updated from time to time.  Because validity
         //  relative to a piece of software is an objective fact these defaults can be easily reviewed.
@@ -984,10 +984,14 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //Only continue to enforce if we're below BIP34 activation height or the block hash at that height doesn't correspond.
     fEnforceBIP30 = fEnforceBIP30 && (!pindexBIP34height || !(pindexBIP34height->GetBlockHashPoW2() == chainparams.GetConsensus().BIP34Hash));
 
-    if (fEnforceBIP30) {
-        for (const auto& tx : block.vtx) {
-            for (size_t o = 0; o < tx->vout.size(); o++) {
-                if (view.HaveCoin(COutPoint(tx->GetHash(), o))) {
+    if (fEnforceBIP30)
+    {
+        for (const auto& tx : block.vtx)
+        {
+            for (size_t o = 0; o < tx->vout.size(); o++)
+            {
+                if (view.HaveCoin(COutPoint(tx->GetHash(), o)))
+                {
                     return state.DoS(100, error("ConnectBlock(): tried to overwrite transaction [%s]", tx->GetHash().ToString()), REJECT_INVALID, "bad-txns-BIP30");
                 }
             }
@@ -1001,18 +1005,21 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     unsigned int flags = fStrictPayToScriptHash ? SCRIPT_VERIFY_P2SH : SCRIPT_VERIFY_NONE;
 
     // Start enforcing the DERSIG (BIP66) rule
-    if (pindex->nHeight >= chainparams.GetConsensus().BIP66Height) {
+    if (pindex->nHeight >= chainparams.GetConsensus().BIP66Height)
+    {
         flags |= SCRIPT_VERIFY_DERSIG;
     }
 
     // Start enforcing CHECKLOCKTIMEVERIFY (BIP65) rule
-    if (pindex->nHeight >= chainparams.GetConsensus().BIP65Height) {
+    if (pindex->nHeight >= chainparams.GetConsensus().BIP65Height)
+    {
         flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
     }
 
     // Start enforcing BIP68 (sequence locks) and BIP112 (CHECKSEQUENCEVERIFY) using versionbits logic.
     int nLockTimeFlags = 0;
-    if (VersionBitsState(pindex->pprev, chainparams.GetConsensus(), Consensus::DEPLOYMENT_CSV, versionbitscache) == THRESHOLD_ACTIVE) {
+    if (VersionBitsState(pindex->pprev, chainparams.GetConsensus(), Consensus::DEPLOYMENT_CSV, versionbitscache) == THRESHOLD_ACTIVE)
+    {
         flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
         nLockTimeFlags |= LOCKTIME_VERIFY_SEQUENCE;
     }
@@ -1058,38 +1065,29 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //So we can move this down and combine it with the scope where we check:
     //unsigned int nWitnessCoinbasePayoutIndex = nWitnessCoinbaseIndex + 1;
     //NB! This must occur before CCheckQueueControl to prevent CCheckQueueControl re-entrancy.
-
-    int nPoW2PhaseParent = GetPoW2Phase(pindex->pprev);
-    int nPoW2PhaseGrandParent = GetPoW2Phase(pindex->pprev->pprev);
-    //NB! IMPORTANT - Below this point we should -not- do any further Is/Get PoW2 phase checks - as we modify the view below which alters the results of phase 3 check.
-    //Do and store all such tests above this point in the code.
-
     unsigned int nWitnessCoinbaseIndex = 0;
-    if (nPoW2PhaseParent >= 3)
+    if (block.nVersionPoW2Witness == 0)
     {
-        if (block.nVersionPoW2Witness == 0)
+        // PoW block
+        // Phase 4 + 5 - miner mines 80 reward instead of 100, so nothing to do here (GetBlockSubsidy returns correct amount)
+    }
+    else
+    {
+        // PoW2 block
+        // Ensure witness coinbase is present and that it pays out the right amount.
         {
-            // PoW block
-            // Phase 4 + 5 - miner mines 80 reward instead of 100, so nothing to do here (GetBlockSubsidy returns correct amount)
-        }
-        else
-        {
-            // PoW2 block
-            // Ensure witness coinbase is present and that it pays out the right amount.
+            for (unsigned int i = 1; i < block.vtx.size(); i++)
             {
-                for (unsigned int i = 1; i < block.vtx.size(); i++)
+                if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
                 {
-                    if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
-                    {
-                        nWitnessCoinbaseIndex = i;
-                        break;
-                    }
+                    nWitnessCoinbaseIndex = i;
+                    break;
                 }
-                //testme: (GULDEN) (PHASE5) I think this is a duplicate check so can probably be removed.
-                if (nWitnessCoinbaseIndex == 0)
-                {
-                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
-                }
+            }
+            //testme: (GULDEN) (PHASE5) I think this is a duplicate check so can probably be removed.
+            if (nWitnessCoinbaseIndex == 0)
+            {
+                return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
             }
         }
     }
@@ -1239,7 +1237,8 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     CAmount nSubsidyWitnessExpected = GetBlockSubsidyWitness(pindex->nHeight);
     CAmount nSubsidyDev = GetBlockSubsidyDev(pindex->nHeight);
 
-    if (nPoW2PhaseParent >= 4)
+    bool isPhase4 = IsPow2Phase4Active(pindex);
+    if (isPhase4)
     {
         nSubsidy -= nSubsidyWitnessExpected;
     }
@@ -1253,37 +1252,27 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     {
         // PoW2 block
         // Ensure witness coinbase is present and that it pays out the right amount.
-        if (nPoW2PhaseParent >= 3)
+        CAmount nValIn = 0;
+        for (auto output : blockundo.vtxundo[nWitnessCoinbaseIndex-1].vprevout)
         {
-            CAmount nValIn = 0;
-            for (auto output : blockundo.vtxundo[nWitnessCoinbaseIndex-1].vprevout)
-            {
-                if (output.out.nValue > 0)
-                    nValIn += output.out.nValue;
-            }
-
-            nSubsidyWitnessExpected += nFeesPoW2Witness;
-            if (block.vtx[nWitnessCoinbaseIndex]->GetValueOut() - nValIn > nSubsidyWitnessExpected)
-            {
-                return state.DoS(100, error("ConnectBlock(): PoW2 witness pays too much (actual=%d vs limit=%d)", block.vtx[nWitnessCoinbaseIndex]->GetValueOut(), nSubsidyWitnessExpected), REJECT_INVALID, "bad-witness-cb-amount");
-            }
-
-            if (nPoW2PhaseParent >= 4)
-            {
-                if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 2)
-                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vin size)"), REJECT_INVALID, "bad-witness-cb");
-
-                if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].prevout.IsNull())
-                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid prevout)"), REJECT_INVALID, "bad-witness-cb");
-
-                if (block.vtx[nWitnessCoinbaseIndex]->vin[0].GetSequence(block.vtx[nWitnessCoinbaseIndex]->nVersion) != 0)
-                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid sequence)"), REJECT_INVALID, "bad-witness-cb");
-            }
+            if (output.out.nValue > 0)
+                nValIn += output.out.nValue;
         }
-        else
+
+        nSubsidyWitnessExpected += nFeesPoW2Witness;
+        if (block.vtx[nWitnessCoinbaseIndex]->GetValueOut() - nValIn > nSubsidyWitnessExpected)
         {
-            assert(0);
+            return state.DoS(100, error("ConnectBlock(): PoW2 witness pays too much (actual=%d vs limit=%d)", block.vtx[nWitnessCoinbaseIndex]->GetValueOut(), nSubsidyWitnessExpected), REJECT_INVALID, "bad-witness-cb-amount");
         }
+
+        if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 2)
+            return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vin size)"), REJECT_INVALID, "bad-witness-cb");
+
+        if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].prevout.IsNull())
+            return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid prevout)"), REJECT_INVALID, "bad-witness-cb");
+
+        if (block.vtx[nWitnessCoinbaseIndex]->vin[0].GetSequence(block.vtx[nWitnessCoinbaseIndex]->nVersion) != 0)
+            return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid sequence)"), REJECT_INVALID, "bad-witness-cb");
     }
 
     //fixme: (PHASE5) (SEGSIG/POW2) - Triple check that there are no additional remaining tests that should go here.
@@ -1304,7 +1293,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     if (nSubsidyDev > 0)
     {
         // Phase 4 - Must have 2 outputs (miner, dev) - witness in seperate transaction
-        if ((nPoW2PhaseGrandParent > 3 && block.vtx[0]->vout.size() != 2))
+        if ((isPhase4 && block.vtx[0]->vout.size() != 2))
         {
             return state.DoS(100, error("ConnectBlock(): coinbase has incorrect number of outputs (actual=%d vs limit=%d)", block.vtx[0]->vout.size(), 2), REJECT_INVALID, "bad-cb-amount");
         }
@@ -1337,7 +1326,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     }
     
     // From phase 3 onward we forbid miners from not claiming the full reward.
-    if (nPoW2PhaseParent >= 3 && expectedBlockReward < actualBlockReward)
+    if (isPhase4 && expectedBlockReward < actualBlockReward)
     {
         return state.DoS(100, error("ConnectBlock(): coinbase pays too little (actual=%d vs limit=%d)", actualBlockReward, expectedBlockReward), REJECT_INVALID, "bad-cb-amount");
     }
@@ -2778,11 +2767,14 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 //After phase4 activation we won't need the phase checks so we can code this properly.
 bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CChainParams& chainParams, const CBlockIndex* pindexPrev, CChain& chainOverride, CCoinsViewCache* viewOverride, bool doUTXOChecks)
 {
+    bool haveSegregatedSignatures = IsSegSigEnabled(pindexPrev);
+    
     const int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
 
     // Start enforcing BIP113 (Median Time Past) using versionbits logic.
     int nLockTimeFlags = 0;
-    if (VersionBitsState(pindexPrev, chainParams.GetConsensus(), Consensus::DEPLOYMENT_CSV, versionbitscache) == THRESHOLD_ACTIVE) {
+    if (VersionBitsState(pindexPrev, chainParams.GetConsensus(), Consensus::DEPLOYMENT_CSV, versionbitscache) == THRESHOLD_ACTIVE)
+    {
         nLockTimeFlags |= LOCKTIME_MEDIAN_TIME_PAST;
     }
 
@@ -2791,14 +2783,16 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
                               : block.GetBlockTime();
 
     // Check that all transactions are finalized
-    for (const auto& tx : block.vtx) {
-        if (!IsFinalTx(*tx, nHeight, nLockTimeCutoff)) {
+    for (const auto& tx : block.vtx)
+    {
+        if (!IsFinalTx(*tx, nHeight, nLockTimeCutoff))
+        {
             return state.DoS(10, false, REJECT_INVALID, "bad-txns-nonfinal", false, "non-final transaction");
         }
     }
 
     // Check that no transactions (from phase2 onward) have transaction version above 4 - this behaviour is no longer allowed
-    if (doUTXOChecks && GetPoW2Phase(pindexPrev) >= 3)
+    if (doUTXOChecks && haveSegregatedSignatures)
     {
         for (const auto& tx : block.vtx)
         {
@@ -2809,9 +2803,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         }
     }
 
-    bool fHaveSegregatedSignatures = IsSegSigEnabled(pindexPrev);
     // Check that no transactions (from phase4 onward) contain a scriptSig - scriptSig is completely deprecated.
-    if (fHaveSegregatedSignatures)
+    if (haveSegregatedSignatures)
     {
         for (const auto& tx : block.vtx)
         {
@@ -2829,25 +2822,11 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
             }
         }
     }
-    else
-    {
-        for (const auto& tx : block.vtx)
-        {
-            for (const auto& txIn : tx->vin)
-            {
-                (unused)txIn;
-                if (!IsOldTransactionVersion(tx->nVersion))
-                {
-                    return state.DoS(100, false, REJECT_INVALID, "bad-transaction-version", false, "mining segsig version transactions before activation is forbidden");
-                }
-            }
-        }
-    }
 
     // Enforce rule that the PoW coinbase starts with serialized block height
     if (nHeight >= chainParams.GetConsensus().BIP34Height)
     {
-        if (fHaveSegregatedSignatures)
+        if (haveSegregatedSignatures)
         {
             std::vector<unsigned char> expect;
             CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
@@ -2859,9 +2838,9 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     }
     
     // And the same for witness coinbase. (Enforce rule that the coinbase starts with serialized block height)
-    unsigned int nWitnessCoinbaseIndex = 0;
     if (block.nVersionPoW2Witness != 0)
     {
+        unsigned int nWitnessCoinbaseIndex = 0;
         for (unsigned int i = 1; i < block.vtx.size(); i++)
         {
             if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
@@ -2875,10 +2854,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
         {
             return state.DoS(100, error("ContextualCheckBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
         }
-    }
-    if (block.nVersionPoW2Witness != 0)
-    {
-        if (fHaveSegregatedSignatures)
+        if (haveSegregatedSignatures)
         {
             std::vector<unsigned char> expect;
             CVectorWriter(0, 0, expect, 0) << VARINT(nHeight);
@@ -2894,20 +2870,12 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
 
     //fixme: (PHASE5) Below checks can be removed/simplified
     // No witness data is allowed in blocks that don't commit to witness data, as this would otherwise leave room for spam
-    if (fHaveSegregatedSignatures)
+    if (haveSegregatedSignatures)
     {
         for (const auto& tx : block.vtx)
         {
             if (!tx->HasSegregatedSignatures())
                 return state.DoS(100, false, REJECT_INVALID, "missing-segregated-signature", true, strprintf("%s : missing segregated signature data found", __func__));
-        }
-    }
-    else
-    {
-        for (const auto& tx : block.vtx)
-        {
-            if (tx->HasSegregatedSignatures())
-                return state.DoS(100, false, REJECT_INVALID, "invalid-segregated-signature", true, strprintf("%s : segregated signature not allowed before phase 4 activation", __func__));
         }
     }
 
@@ -2917,7 +2885,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     // large by filling up the coinbase witness, which doesn't change
     // the block hash, so we couldn't mark the block as permanently
     // failed).
-    if (GetBlockWeight(block) > MAX_BLOCK_WEIGHT) {
+    if (GetBlockWeight(block) > MAX_BLOCK_WEIGHT)
+    {
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-weight", false, strprintf("%s : weight limit failed", __func__));
     }
 
