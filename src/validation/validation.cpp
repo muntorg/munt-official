@@ -1237,8 +1237,8 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     CAmount nSubsidyWitnessExpected = GetBlockSubsidyWitness(pindex->nHeight);
     CAmount nSubsidyDev = GetBlockSubsidyDev(pindex->nHeight);
 
-    bool isPhase4 = IsPow2Phase4Active(pindex);
-    if (isPhase4)
+    bool haveSegregatedSignatures = IsSegSigEnabled(pindex);
+    if (IsPow2Phase4Active(pindex->pprev))
     {
         nSubsidy -= nSubsidyWitnessExpected;
     }
@@ -1293,7 +1293,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     if (nSubsidyDev > 0)
     {
         // Phase 4 - Must have 2 outputs (miner, dev) - witness in seperate transaction
-        if ((isPhase4 && block.vtx[0]->vout.size() != 2))
+        if ((IsSegSigEnabled(pindex->pprev) && block.vtx[0]->vout.size() != 2))
         {
             return state.DoS(100, error("ConnectBlock(): coinbase has incorrect number of outputs (actual=%d vs limit=%d)", block.vtx[0]->vout.size(), 2), REJECT_INVALID, "bad-cb-amount");
         }
@@ -1326,7 +1326,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     }
     
     // From phase 3 onward we forbid miners from not claiming the full reward.
-    if (isPhase4 && expectedBlockReward < actualBlockReward)
+    if (haveSegregatedSignatures && expectedBlockReward < actualBlockReward)
     {
         return state.DoS(100, error("ConnectBlock(): coinbase pays too little (actual=%d vs limit=%d)", actualBlockReward, expectedBlockReward), REJECT_INVALID, "bad-cb-amount");
     }
