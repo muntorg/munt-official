@@ -707,11 +707,6 @@ void CNode::copyStats(CNodeStats &stats)
 }
 #undef X
 
-bool CNode::IsPoW2Capable()
-{
-    return nVersion >= POW2_CAPABLE_VERSION;
-}
-
 bool CNode::ReceiveMsgBytes(const char *pch, unsigned int nBytes, bool& complete)
 {
     complete = false;
