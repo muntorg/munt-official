@@ -83,10 +83,12 @@ static UniValue GetNetworkHashPS(uint32_t lookup, int height)
     int64_t minTime = pb0->GetBlockTime();
     int64_t maxTime = minTime;
     uint64_t count = 0;
+    arith_uint256 workDiff = 0;
     for (uint32_t i = 0; i < lookup; i++)
     {
         if (sigmaActive && pb0->pprev->nTime < defaultSigmaSettings.activationDate)
             break;
+        workDiff += GetBlockProof(*pb0);
         count++;
         pb0 = pb0->pprev;
         int64_t time = pb0->GetBlockTime();
@@ -98,7 +100,7 @@ static UniValue GetNetworkHashPS(uint32_t lookup, int height)
     if (minTime == maxTime)
         return 0;
 
-    arith_uint256 workDiff = pb->nChainWork - pb0->nChainWork;
+
     int64_t timeDiff = maxTime - minTime;
 
     if (sigmaActive)
