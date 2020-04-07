@@ -60,9 +60,7 @@ enum txnouttype
     TX_MULTISIG,
     TX_NULL_DATA,
     TX_PUBKEYHASH_POW2WITNESS,
-
-    // Not used by any transaction type - just used via some statistics generation code in the RPC
-    TX_MAX
+    // NB! if adding any additional types here, search for and fix TX_PUBKEYHASH_POW2WITNESS+1 TX_PUBKEYHASH_POW2WITNESS+2 occurences in code to match changes.
 };
 
 class CNoDestination {
