@@ -2793,8 +2793,8 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
             "     \"fee_amount\"           (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", "")
-            + HelpExampleRpc("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", ""));
+            + HelpExampleCli("splitwitnessaccount \"My account\" \"My witness account\"  \"[10000, 5000, 5000]\"", "")
+            + HelpExampleRpc("splitwitnessaccount \"My account\" \"My witness account\"  \"[10000, 5000, 5000]\"", ""));
 
     // Basic sanity checks.
     if (!pwallet)
