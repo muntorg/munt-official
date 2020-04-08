@@ -228,6 +228,10 @@ CAmount CWalletTx::GetImmatureCredit(bool fUseCache, const CAccount* forAccount,
                 {
                     if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
                     {
+                        // Work around an issue where (for another year at least) some witness accounts have a spending key that comes from a different account (and we don't want the balance to count toward both accounts)
+                        if (forAccount && txout.GetType() == CTxOutType::PoW2WitnessOutput && !forAccount->IsPoW2Witness())
+                            continue;
+
                         nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
                         if (!MoneyRange(nCredit))
                             throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
@@ -276,6 +280,10 @@ CAmount CWalletTx::GetImmatureCreditIncludingLockedWitnesses(bool fUseCache, con
                 const CTxOut &txout = tx->vout[i];
                 if (!forAccount || IsMine(*forAccount, txout))
                 {
+                    // Work around an issue where (for another year at least) some witness accounts have a spending key that comes from a different account (and we don't want the balance to count toward both accounts)
+                    if (forAccount && txout.GetType() == CTxOutType::PoW2WitnessOutput && !forAccount->IsPoW2Witness())
+                        continue;
+
                     nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
                     if (!MoneyRange(nCredit))
                         throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
@@ -325,6 +333,10 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const CAccount* forAccount
                 {
                     if (!IsPoW2WitnessLocked(txout, chainActive.Tip()->nHeight))
                     {
+                        // Work around an issue where (for another year at least) some witness accounts have a spending key that comes from a different account (and we don't want the balance to count toward both accounts)
+                        if (forAccount && (txout.GetType() == CTxOutType::PoW2WitnessOutput && !forAccount->IsPoW2Witness()))
+                            continue;
+
                         nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
                         if (!MoneyRange(nCredit))
                             throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
@@ -370,6 +382,11 @@ CAmount CWalletTx::GetAvailableCreditIncludingLockedWitnesses(bool fUseCache, co
             if (!pwallet->IsSpent(COutPoint(GetHash(), i)) && !pwallet->IsSpent(COutPoint(nHeight, nIndex, i)))
             {
                 const CTxOut &txout = tx->vout[i];
+
+                // Work around an issue where (for another year at least) some witness accounts have a spending key that comes from a different account (and we don't want the balance to count toward both accounts)
+                if (forAccount && txout.GetType() == CTxOutType::PoW2WitnessOutput && !forAccount->IsPoW2Witness())
+                    continue;
+                
                 if (!forAccount || IsMine(*forAccount, txout))
                 {
                     nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
@@ -449,6 +466,10 @@ CAmount CWalletTx::GetAvailableWatchOnlyCredit(const bool& fUseCache, const CAcc
             if (!pwallet->IsSpent(COutPoint(GetHash(), i)) && !pwallet->IsSpent(COutPoint(nHeight, nIndex, i)))
             {
                 const CTxOut &txout = tx->vout[i];
+                // Work around an issue where (for another year at least) some witness accounts have a spending key that comes from a different account (and we don't want the balance to count toward both accounts)
+                if (forAccount && txout.GetType() == CTxOutType::PoW2WitnessOutput && !forAccount->IsPoW2Witness())
+                    continue;
+                        
                 nCredit += pwallet->GetCredit(txout, ISMINE_WATCH_ONLY);
                 if (!MoneyRange(nCredit))
                     throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
@@ -490,6 +511,7 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool incl
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
+           
             //fixme: (FUT) (ACCOUNT) - is this okay? Should it be cached or something? (CBSU?)
             if (!forAccount || ::IsMine(forAccount, *pcoin))
             {
