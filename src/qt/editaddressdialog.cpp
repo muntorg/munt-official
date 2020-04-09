@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -110,19 +110,25 @@ bool EditAddressDialog::saveCurrentRow()
     {
         case NewReceivingAddress:
         case NewSendingAddress:
-            address = model->addRow(
-                    (mode == NewSendingAddress) ? AddressTableModel::Send : AddressTableModel::Receive, ui->labelEdit->text(), ui->addressEdit->text());
+        {
+            const auto type = (mode == NewSendingAddress) ? AddressTableModel::Send : AddressTableModel::Receive;
+            address = model->addRow(ui->addressEdit->text(), ui->labelEdit->text(), ui->descriptionEdit->text(), type);
             break;
+        }
         case NewMiningAddress:
-            address = model->addRow(AddressTableModel::Send, ui->labelEdit->text(), ui->addressEdit->text());
+        {
+            address = model->addRow(ui->addressEdit->text(), ui->labelEdit->text(), ui->descriptionEdit->text(), AddressTableModel::Send);
             break;
+        }
         case EditReceivingAddress:
         case EditSendingAddress:
+        {
             if(mapper->submit())
             {
                 address = ui->addressEdit->text();
             }
             break;
+        }
     }
     return !address.isEmpty();
 }

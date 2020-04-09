@@ -35,24 +35,34 @@ static std::map<CKeyID, int64_t> staticPoolCache;
 // CWalletDB
 //
 
-bool CWalletDB::WriteName(const std::string& strAddress, const std::string& strName)
+bool CWalletDB::WriteRecipientName(const std::string& strAddress, const std::string& strName)
 {
     return WriteIC(std::pair(std::string("name"), strAddress), strName);
 }
 
-bool CWalletDB::EraseName(const std::string& strAddress)
+bool CWalletDB::EraseRecipientName(const std::string& strAddress)
 {
     // This should only be used for sending addresses, never for receiving addresses,
     // receiving addresses must always have an address book entry if they're not change return.
     return EraseIC(std::pair(std::string("name"), strAddress));
 }
 
-bool CWalletDB::WritePurpose(const std::string& strAddress, const std::string& strPurpose)
+bool CWalletDB::WriteRecipientDescription(const std::string& strAddress, const std::string& strDescription)
+{
+    return WriteIC(std::pair(std::string("rcp_description"), strAddress), strDescription);
+}
+
+bool CWalletDB::EraseRecipientDescription(const std::string& strDescription)
+{
+    return EraseIC(std::pair(std::string("rcp_description"), strDescription));
+}
+
+bool CWalletDB::WriteRecipientPurpose(const std::string& strAddress, const std::string& strPurpose)
 {
     return WriteIC(std::pair(std::string("purpose"), strAddress), strPurpose);
 }
 
-bool CWalletDB::ErasePurpose(const std::string& strPurpose)
+bool CWalletDB::EraseRecipientPurpose(const std::string& strPurpose)
 {
     return EraseIC(std::pair(std::string("purpose"), strPurpose));
 }
@@ -463,6 +473,12 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
             std::string strAddress;
             ssKey >> strAddress;
             ssValue >> pwallet->mapAddressBook[strAddress].name;
+        }
+        else if (strType == "rcp_description")
+        {
+            std::string strAddress;
+            ssKey >> strAddress;
+            ssValue >> pwallet->mapAddressBook[strAddress].description;
         }
         else if (strType == "purpose")
         {

@@ -2215,22 +2215,28 @@ DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
 }
 
 
-bool CWallet::SetAddressBook(const std::string& address, const std::string& strName, const std::string& strPurpose)
+bool CWallet::SetAddressBook(const std::string& address, const std::string& strName, const std::string& strRecipientDescription, const std::string& strPurpose)
 {
     bool fUpdated = false;
     {
         LOCK(cs_wallet); // mapAddressBook
         std::map<std::string, CAddressBookData>::iterator mi = mapAddressBook.find(address);
         fUpdated = mi != mapAddressBook.end();
-        mapAddressBook[address].name = strName;
-        if (!strPurpose.empty()) /* update purpose only if requested */
-            mapAddressBook[address].purpose = strPurpose;
+        auto& data = mapAddressBook[address];
+        data.name = strName;
+        // Only update if explicitely requested to do so
+        if (!strPurpose.empty())
+            data.purpose = strPurpose;
+        if (!strRecipientDescription.empty())
+            data.description = strName;
     }
-    NotifyAddressBookChanged(this, address, strName, ::IsMine(*this, CGuldenAddress(address).Get()) != ISMINE_NO,
-                             strPurpose, (fUpdated ? CT_UPDATED : CT_NEW) );
-    if (!strPurpose.empty() && !CWalletDB(*dbw).WritePurpose(address, strPurpose))
+    NotifyAddressBookChanged(this, address, strName, ::IsMine(*this, CGuldenAddress(address).Get()) != ISMINE_NO, strPurpose, (fUpdated ? CT_UPDATED : CT_NEW) );
+    
+    if (!strPurpose.empty() && !CWalletDB(*dbw).WriteRecipientPurpose(address, strPurpose))
         return false;
-    return CWalletDB(*dbw).WriteName(address, strName);
+    if (!strRecipientDescription.empty()  && !CWalletDB(*dbw).WriteRecipientDescription(address, strRecipientDescription)) 
+        return false;
+    return CWalletDB(*dbw).WriteRecipientName(address, strName);
 }
 
 bool CWallet::DelAddressBook(const std::string& address)
@@ -2252,8 +2258,8 @@ bool CWallet::DelAddressBook(const std::string& address)
     // else it is most likely an IBAN address and then use that directly as key
     CGuldenAddress guldenAddress;
     std::string deleteKey = guldenAddress.SetString(address) ? guldenAddress.ToString() : address;
-    CWalletDB(*dbw).ErasePurpose(deleteKey);
-    return CWalletDB(*dbw).EraseName(deleteKey);
+    CWalletDB(*dbw).EraseRecipientPurpose(deleteKey);
+    return CWalletDB(*dbw).EraseRecipientName(deleteKey);
 }
 
 std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()

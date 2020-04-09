@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Gulden developers
+# Copyright (c) 2020 The Gulden developers
 # Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
 # Distributed under the GULDEN software license, see the accompanying
 # file COPYING
@@ -31,6 +31,7 @@ uri_recipient = record {
     valid : bool;
     address : string;
     label : string;
+    description : string;
     amount : i64;
 } deriving(parcelable)
 
@@ -66,6 +67,7 @@ transaction_status = enum {
 input_record = record {
     address : string;
     label : string;
+    description : string;
     isMine : bool;
 } deriving(parcelable)
 
@@ -73,13 +75,15 @@ output_record = record {
     amount : i64;
     address : string;
     label : string;
+    description : string;
     isMine : bool;
 } deriving(parcelable)
 
 address_record = record {
     address : string;
-    purpose : string;
     name : string;
+    description : string;
+    purpose : string;
 } deriving(parcelable)
 
 peer_record = record {

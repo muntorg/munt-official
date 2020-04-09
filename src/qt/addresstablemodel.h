@@ -1,6 +1,13 @@
 // Copyright (c) 2011-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #ifndef GULDEN_QT_ADDRESSTABLEMODEL_H
 #define GULDEN_QT_ADDRESSTABLEMODEL_H
@@ -26,7 +33,8 @@ public:
 
     enum ColumnIndex {
         Label = 0,   /**< User specified label */
-        Address = 1  /**< Gulden address */
+        Description = 1,   /**< User specified description (for IBANs) */
+        Address = 2  /**< Gulden address */
     };
 
     enum RoleIndex {
@@ -61,7 +69,7 @@ public:
     /* Add an address to the model.
        Returns the added address on success, and an empty string otherwise.
      */
-    QString addRow(const QString &type, const QString &label, const QString &address);
+    QString addRow(const QString& address, const QString& label, const QString& description, const QString& type);
 
     /* Look up label for address in address book, if not found return empty string.
      */
@@ -87,7 +95,7 @@ private:
 public Q_SLOTS:
     /* Update address list from core.
      */
-    void updateEntry(const QString &address, const QString &label, bool isMine, const QString &purpose, int status);
+    void updateEntry(const QString &address, const QString &label, const QString &description, bool isMine, const QString &purpose, int status);
 
     friend class AddressTablePriv;
 };

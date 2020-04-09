@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -357,7 +357,21 @@ bool GuldenSendCoinsEntry::validate()
                 return false;
             }
             
-            if (ui->receivingAddressAccountName->text().isEmpty())
+            QString selDescription;
+            if (ui->sendCoinsRecipientBook->currentIndex() == 1)
+            {
+                if (proxyModelRecipients)
+                {
+                    QModelIndexList selection = ui->addressBookTabTable->selectionModel()->selectedRows();
+                    if (selection.count() > 0)
+                    {
+                        QModelIndex index = selection.at(0);
+                        selDescription = index.sibling(index.row(), AddressTableModel::ColumnIndex::Description).data(Qt::DisplayRole).toString().isEmpty();
+                    }
+                }
+            }               
+
+            if (ui->receivingAddressAccountName->text().isEmpty() && selDescription.isEmpty())
             {
                 setValid(ui->receivingAddressAccountName, false);
                 setPayInfo(tr("A recipient name is required for IBAN payments."), true);
@@ -472,8 +486,12 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                 if (selection.count() > 0)
                 {
                     QModelIndex index = selection.at(0);
-                    recipient.address = index.sibling(index.row(), 1).data(Qt::DisplayRole).toString();
-                    recipient.label = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
+                    recipient.address = index.sibling(index.row(), AddressTableModel::ColumnIndex::Address).data(Qt::DisplayRole).toString();
+                    if (model->validateAddressIBAN(recipient.address))
+                    {
+                        recipient.forexDescription = index.sibling(index.row(), AddressTableModel::ColumnIndex::Description).data(Qt::DisplayRole).toString();
+                    }
+                    recipient.label = index.sibling(index.row(), AddressTableModel::ColumnIndex::Label).data(Qt::DisplayRole).toString();
                 }
             }
             break;
