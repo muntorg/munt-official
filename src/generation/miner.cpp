@@ -1100,21 +1100,34 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
         }
 
 
+
+        // Ensure we are reasonably caught up with peers, so we don't waste time mining on an obsolete chain.
+        // In testnet/regtest mode we expect to be able to mine without peers.
+        if (!regTest && !testnet)
+        {
+            while (true)
+            {
+                if (IsChainNearPresent() && !IsInitialBlockDownload())
+                {
+                    break;
+                }
+                MilliSleep(1000);
+            }
+        }
+
         while (true)
         {
+            // If we have no peers, pause mining until we do, otherwise theres no real point in mining.
+            // In testnet/regtest mode we expect to be able to mine without peers.
             if (!regTest && !testnet)
             {
-                // Busy-wait for the network to come online so we don't waste time mining on an obsolete chain. In regtest mode we expect to fly solo.
                 while (true)
                 {
                     if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
                     {
-                        if (IsArgSet("-testnet") || !IsInitialBlockDownload())
-                        {
-                            break;
-                        }
+                        break;
                     }
-                    MilliSleep(1000);
+                    MilliSleep(100);
                 }
             }
 
