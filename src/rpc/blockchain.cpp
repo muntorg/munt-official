@@ -85,10 +85,11 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("version", blockindex->nVersion));
     result.push_back(Pair("versionHex", strprintf("%08x", blockindex->nVersion)));
     result.push_back(Pair("merkleroot", blockindex->hashMerkleRoot.GetHex()));
-    result.push_back(Pair("time", (int64_t)blockindex->nTime));
+    result.push_back(Pair("time", (int64_t)blockindex->GetBlockTimePoW2Witness()));
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
     result.push_back(Pair("witness_version", blockindex->nVersionPoW2Witness));
     result.push_back(Pair("witness_versionHex", strprintf("%08x", blockindex->nVersionPoW2Witness)));
+    result.push_back(Pair("pow_time", (int64_t)blockindex->nTime));
     result.push_back(Pair("witness_time", (int64_t)blockindex->nTimePoW2Witness));
     result.push_back(Pair("witness_merkleroot", blockindex->hashMerkleRootPoW2Witness.GetHex()));
     result.push_back(Pair("nonce", (uint64_t)blockindex->nNonce));
@@ -126,6 +127,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("witness_version", blockindex->nVersionPoW2Witness));
     result.push_back(Pair("witness_versionHex", strprintf("%08x", blockindex->nVersionPoW2Witness)));
     result.push_back(Pair("witness_time", (int64_t)blockindex->nTimePoW2Witness));
+    result.push_back(Pair("pow_time", (int64_t)blockindex->nTime));
     result.push_back(Pair("witness_merkleroot", blockindex->hashMerkleRootPoW2Witness.GetHex()));
     UniValue txs(UniValue::VARR);
     for(const auto& tx : block.vtx)
@@ -140,7 +142,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
             txs.push_back(tx->GetHash().GetHex());
     }
     result.push_back(Pair("tx", txs));
-    result.push_back(Pair("time", block.GetBlockTime()));
+    result.push_back(Pair("time", (int64_t)blockindex->GetBlockTimePoW2Witness()));
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
     result.push_back(Pair("nonce", (uint64_t)block.nNonce));
     result.push_back(Pair("pre_nonce", (uint64_t)block.nPreNonce));
@@ -1669,7 +1671,7 @@ static UniValue getchaintxstats(const JSONRPCRequest& request)
     int nTxDiff = pindex->nChainTx - pindexPast->nChainTx;
 
     UniValue ret(UniValue::VOBJ);
-    ret.push_back(Pair("time", (int64_t)pindex->nTime));
+    ret.push_back(Pair("time", (int64_t)pindex->GetBlockTimePoW2Witness()));
     ret.push_back(Pair("txcount", (int64_t)pindex->nChainTx));
     ret.push_back(Pair("txrate", ((double)nTxDiff) / nTimeDiff));
 
@@ -2014,7 +2016,7 @@ static UniValue getblockstats(const JSONRPCRequest& request)
     ret_all.pushKV("swtotal_size", swtotal_size);
     ret_all.pushKV("swtotal_weight", swtotal_weight);
     ret_all.pushKV("swtxs", swtxs);
-    ret_all.pushKV("time", pindex->GetBlockTime());
+    ret_all.pushKV("time", pindex->GetBlockTimePoW2Witness());
     ret_all.pushKV("total_out", total_out);
     ret_all.pushKV("total_size", total_size);
     ret_all.pushKV("total_weight", total_weight);
