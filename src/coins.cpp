@@ -63,7 +63,7 @@ size_t CCoinsViewCache::DynamicMemoryUsage() const
 }
 
 
-#ifndef PLATFORM_MOBILE
+#if defined(DEBUG) && !defined(PLATFORM_MOBILE)
 void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, uint64_t txIndex, uint32_t voutIndex) const
 {
     // check args
