@@ -3772,8 +3772,24 @@ Toen dit blok gegenereerd werd, werd het uitgezonden naar het netwerk om aan de 
         <translation>Formulier</translation>
     </message>
     <message>
+        <source>Parts</source>
+        <translation>Delen</translation>
+    </message>
+    <message>
         <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
         <translation>Een minimum gewicht van %1 is benodigd, maar het geselecteerde gewicht is slechts %2. Verhoog het aantal of de vastgezette periode voor een hoger gewicht.</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
+
+Estimated earnings: %3 (%4% per month)
+Witness weight: %5
+%6</source>
+        <translation>De Guldens zijn geblokkeerd gedurende %1 dagen (%2). Het is niet mogelijk om deze Guldens uit te geven of te verplaatsen voor de duur van de geblokkeerde periode.
+
+Verwachtte verdiensten: %3 (%4 per maand) 
+Witness gewicht: %5
+%6</translation>
     </message>
     <message>
         <source>A minimum amount of %1 is required.</source>

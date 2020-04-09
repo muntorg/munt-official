@@ -269,7 +269,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>AddressTableModel</name>
     <message>
-        <location filename="../../addresstablemodel.cpp" line="+181"/>
+        <location filename="../../addresstablemodel.cpp" line="+182"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
@@ -279,9 +279,19 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Address</translation>
     </message>
     <message>
-        <location line="+37"/>
+        <location line="+0"/>
+        <source>Description</source>
+        <translation type="unfinished">Description</translation>
+    </message>
+    <message>
+        <location line="+38"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>(no description)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -757,11 +767,17 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <location line="+7"/>
+        <source>Description</source>
+        <translation type="unfinished">Description</translation>
+    </message>
+    <message>
+        <location line="+10"/>
         <source>&amp;Address</source>
         <translation>&amp;Address</translation>
     </message>
     <message>
         <location line="+10"/>
+        <location line="+7"/>
         <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
         <translation>The address associated with this address list entry. This can only be modified for sending addresses.</translation>
     </message>
@@ -786,7 +802,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Edit sending address</translation>
     </message>
     <message>
-        <location line="+72"/>
+        <location line="+78"/>
         <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
         <translation>The entered address &quot;%1&quot; is not a valid Gulden address.</translation>
     </message>
@@ -1523,12 +1539,12 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+457"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="+460"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="+217"/>
+        <location line="+221"/>
         <location line="+66"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
@@ -1594,7 +1610,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Address book</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-380"/>
+        <location filename="../../_Gulden/guldensendcoinsentry.cpp" line="-398"/>
         <source>Amount exceeds maximum for IBAN payment.</source>
         <translation>Amount exceeds maximum for IBAN payment.</translation>
     </message>
@@ -1604,7 +1620,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Amount below minimum for IBAN payment.</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+21"/>
         <source>A recipient name is required for IBAN payments.</source>
         <translation>A recipient name is required for IBAN payments.</translation>
     </message>
@@ -1619,7 +1635,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
     <message>
-        <location line="+218"/>
+        <location line="+222"/>
         <source>Are you sure you want to delete %1 from the address book?</source>
         <translation>Are you sure you want to delete %1 from the address book?</translation>
     </message>
@@ -2967,7 +2983,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Debug window</translation>
     </message>
     <message>
-        <location filename="../../rpcconsole.cpp" line="+985"/>
+        <location filename="../../rpcconsole.cpp" line="+987"/>
         <source>%1 MB</source>
         <translation>%1 MB</translation>
     </message>
@@ -5002,7 +5018,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletModel</name>
     <message>
-        <location filename="../../walletmodel.cpp" line="+906"/>
+        <location filename="../../walletmodel.cpp" line="+905"/>
         <location line="+46"/>
         <location line="+9"/>
         <source>Fee bump error</source>
