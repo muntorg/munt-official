@@ -1,8 +1,14 @@
 2.2.0.7
 
+NET     - Improve networking performance
 NET     - Remove support for old protocol versions that are no longer supported
 RPC     - Fix a crash in gettxoutsetinfo; Improve gettxoutsetinfo behaviour for new transaction output types
 RPC     - Fix GetNetworkHashPS calculation; It was incorrectly including witness 'work' in the mining calculation and returning an overly high number as a result
+RPC     - Introduce 'pow_time' and 'witness_time' fields to all block based RPC commands that include 'time' in the output; Change 'time' to display the most accurate time always (witness time if available, otherwise pow time)
+MINING  - Prevent mining of orphan blocks while wallet is still syncing on startup
+UI      - Fix a balance display issue some wallets were experiencing
+CORE    - Fix a rare crash that was being triggered in some nodes
+CORE    - Various performance improvements from removal of parts of the phase3 backwards support
 
 
 
