@@ -991,11 +991,14 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
     if (partMin < gMinimumWitnessAmount*COIN)
         partMin = gMinimumWitnessAmount*COIN+1;
 
-    // Divide int parts into 95% of maximum workable amount.
+    // Divide int parts into 96% of maximum workable amount.
     // Leaves some room for:
     // a) leaves some room for entwork weight fluctuatiopns
     // b) leaves some room when total network witness weight changes
-    CAmount partTarget = (95 * partMax) / 100;
+    CAmount partTarget = (96 * partMax) / 100;
+    
+    // Don't divide at all if parts are smaller than this
+    CAmount partTargetMin = (60 * partMax) / 100;
 
     // ensure minimum criterium is met (on mainnet this is not expected to happen)
     if (partTarget < partMin)
@@ -1003,7 +1006,7 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
 
     int wholeParts = totalAmount / partTarget;
     
-    if (wholeParts > 0)
+    if (wholeParts > 1)
     {
         CAmount remainder = totalAmount - wholeParts * partTarget;
         CAmount partRemainder = remainder/wholeParts;
@@ -1016,6 +1019,12 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
 
         // add any final remainder to first part
         distribution[0] += remainder;
+    }
+    else if (wholeParts == 1 && (totalAmount > partTarget) && (totalAmount / 2 > partTargetMin))
+    {
+        CAmount remainder = totalAmount - (totalAmount/2*2);
+        distribution.push_back((totalAmount/2)+remainder);
+        distribution.push_back(totalAmount/2);
     }
     else
     {
