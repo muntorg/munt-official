@@ -3244,6 +3244,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     // Consider aborting here.
                     vReverseHeaders.clear();
                     vReverseHeaders.shrink_to_fit();
+                    
+                    //fixme: We need to look into why this is happening so regularly, but in meantime work around it by disabling
+                    // Fall back to regular headers
+                    fReverseHeaders = false;
 
                     // Blame peer latest reverse headers came from
                     LOCK(cs_main);
