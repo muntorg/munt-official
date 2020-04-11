@@ -234,6 +234,9 @@ static UniValue generate(const JSONRPCRequest& request)
             + HelpExampleCli("generate", "11")
         );
 
+    if (!IsArgSet("-regtest"))
+        throw std::runtime_error("generate command only for regtest; for mainnet/testnet use setgenerate");
+
     int nGenerate = request.params[0].get_int();
     uint64_t nMaxTries = 1000000;
     if (request.params.size() > 1) {
@@ -474,6 +477,9 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
             "\nGenerate 11 blocks to myaddress\n"
             + HelpExampleCli("generatetoaddress", "11 \"myaddress\"")
         );
+
+    if (!IsArgSet("-regtest"))
+        throw std::runtime_error("generatetoaddress command only for regtest; for mainnet/testnet use setgenerate");
 
     int nGenerate = request.params[0].get_int();
     uint64_t nMaxTries = 1000000;
