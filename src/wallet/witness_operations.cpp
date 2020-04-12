@@ -21,6 +21,7 @@
 #include "net.h"
 #include "alert.h"
 #include "utilmoneystr.h"
+#include "wallet.h"
 
 static witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount)
 {
@@ -106,7 +107,8 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
     }
 
     // Find the account for this address
-    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    CAccount* witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
+    
     if (!witnessAccount)
         throw witness_error(witness::RPC_MISC_ERROR, "Could not locate account for address");
     if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
@@ -361,7 +363,7 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
         CTxOutPoW2Witness currentWitnessDetails;
         const auto& currentWitnessTxOut = std::get<0>(unspentWitnessOutputs[0]);
         GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
-        witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+        witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
     }
     if (!witnessAccount)
     {
@@ -575,7 +577,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         witnessInfo = GetWitnessInfoWrapper();
     }
 
-    // Collect uspent witnesses coins on for the account
+    // Collect uspent witnesses coins for the account
     std::vector<RouletteItem> accountItems;
     for (const auto& item : witnessInfo.witnessSelectionPoolUnfiltered)
     {
@@ -647,7 +649,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         throw std::runtime_error("Unable to determine witness state.");
     }
 
-    // NOTE: assuming any unconfirmed tx here is a witness one to avoid getting the witness bundles and testing those, this will almost always be
+    // NOTE: assuming any unconfirmed tx here is a witness; avoid getting the witness bundles and testing those, this will almost always be
     // correct. Any edge cases where this fails will automatically resolve once the tx confirms.
     bool hasUnconfirmedWittnessTx = std::any_of(pWallet->mapWallet.begin(), pWallet->mapWallet.end(), [=](const auto& it){
         const auto& wtx = it.second;
@@ -667,7 +669,8 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         account,
         status,
         networkWeight,
-        isLocked ? std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }) : uint64_t(0),
+        //NB! We always want the account weight (even if expired) - otherwise how do we e.g. draw a historical graph of the expected earnings for the expired account?
+        std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }),
         hasScriptLegacyOutput,
         hasUnconfirmedWittnessTx,
         nLockFromBlock,
@@ -988,11 +991,14 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
     if (partMin < gMinimumWitnessAmount*COIN)
         partMin = gMinimumWitnessAmount*COIN+1;
 
-    // Divide int parts into 95% of maximum workable amount.
+    // Divide int parts into 96% of maximum workable amount.
     // Leaves some room for:
     // a) leaves some room for entwork weight fluctuatiopns
     // b) leaves some room when total network witness weight changes
-    CAmount partTarget = (95 * partMax) / 100;
+    CAmount partTarget = (96 * partMax) / 100;
+    
+    // Don't divide at all if parts are smaller than this
+    CAmount partTargetMin = (60 * partMax) / 100;
 
     // ensure minimum criterium is met (on mainnet this is not expected to happen)
     if (partTarget < partMin)
@@ -1000,7 +1006,7 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
 
     int wholeParts = totalAmount / partTarget;
     
-    if (wholeParts > 0)
+    if (wholeParts > 1)
     {
         CAmount remainder = totalAmount - wholeParts * partTarget;
         CAmount partRemainder = remainder/wholeParts;
@@ -1013,6 +1019,12 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
 
         // add any final remainder to first part
         distribution[0] += remainder;
+    }
+    else if (wholeParts == 1 && (totalAmount > partTarget) && (totalAmount / 2 > partTargetMin))
+    {
+        CAmount remainder = totalAmount - (totalAmount/2*2);
+        distribution.push_back((totalAmount/2)+remainder);
+        distribution.push_back(totalAmount/2);
     }
     else
     {

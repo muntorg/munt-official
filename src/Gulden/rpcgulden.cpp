@@ -638,7 +638,9 @@ static UniValue dumpblockgaps(const JSONRPCRequest& request)
 
     UniValue jsonGaps(UniValue::VARR);
 
-    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > gapStats;
+    typedef boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max>> StatCollection;
+    StatCollection gapStatsPoW;
+    StatCollection gapStatsWitness;
 
     while(pBlock && pBlock->pprev && --nStart>0)
     {
@@ -647,25 +649,55 @@ static UniValue dumpblockgaps(const JSONRPCRequest& request)
 
     while(pBlock && pBlock->pprev && --nNumToOutput>0)
     {
-        int64_t gap = std::abs((int64_t)pBlock->nTime - (int64_t)pBlock->pprev->nTime);
+        int64_t gapPoW = std::abs((int64_t)pBlock->nTime - (int64_t)pBlock->pprev->nTime);
+        int64_t gapWitness = std::abs((int64_t)(pBlock->nTimePoW2Witness>0?pBlock->nTimePoW2Witness:pBlock->nTime) - (int64_t)(pBlock->pprev->nTimePoW2Witness>0?pBlock->pprev->nTimePoW2Witness:pBlock->pprev->nTime));
         pBlock = pBlock->pprev;
-        if (gap > 6000)
+        if (gapPoW > 6000)
         {
             continue;
         }
-        jsonGaps.push_back(gap);
-        gapStats(gap);
+        UniValue rec(UniValue::VOBJ);
+        UniValue arr(UniValue::VARR);
+        arr.push_back(gapWitness);
+        arr.push_back(gapPoW);
+        rec.push_back(Pair(itostr(pBlock->nHeight), arr));
+        jsonGaps.push_back(rec);
+        gapStatsPoW(gapPoW);
+        gapStatsWitness(gapWitness);
     }
 
-    jsonGaps.push_back("max:");
-    jsonGaps.push_back(boost::accumulators::max(gapStats));
-    jsonGaps.push_back("min:");
-    jsonGaps.push_back(boost::accumulators::min(gapStats));
-    jsonGaps.push_back("mean:");
-    jsonGaps.push_back(boost::accumulators::mean(gapStats));
-    jsonGaps.push_back("median:");
-    jsonGaps.push_back(boost::accumulators::median(gapStats));
-
+    {
+        UniValue rec(UniValue::VOBJ);
+        UniValue arr(UniValue::VARR);
+        arr.push_back(boost::accumulators::max(gapStatsWitness));
+        arr.push_back(boost::accumulators::max(gapStatsPoW));
+        rec.push_back(Pair("max", arr));
+        jsonGaps.push_back(rec);
+    }
+    {
+        UniValue rec(UniValue::VOBJ);
+        UniValue arr(UniValue::VARR);
+        arr.push_back(boost::accumulators::min(gapStatsWitness));
+        arr.push_back(boost::accumulators::min(gapStatsPoW));
+        rec.push_back(Pair("min", arr));
+        jsonGaps.push_back(rec);
+    }
+    {
+        UniValue rec(UniValue::VOBJ);
+        UniValue arr(UniValue::VARR);
+        arr.push_back(boost::accumulators::mean(gapStatsWitness));
+        arr.push_back(boost::accumulators::mean(gapStatsPoW));
+        rec.push_back(Pair("mean", arr));
+        jsonGaps.push_back(rec);
+    }
+    {
+        UniValue rec(UniValue::VOBJ);
+        UniValue arr(UniValue::VARR);
+        arr.push_back(boost::accumulators::median(gapStatsWitness));
+        arr.push_back(boost::accumulators::median(gapStatsPoW));
+        rec.push_back(Pair("median", arr));
+        jsonGaps.push_back(rec);
+    }
     return jsonGaps;
 }
 
@@ -2294,7 +2326,7 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     (unused) currentWitnessHeight;
     (unused) currentWitnessOutpoint;
     (unused) currentWitnessTxIndex;
-    CAccount* witnessAccount = pwallet->FindAccountForTransaction(currentWitnessTxOut);
+    CAccount* witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
     if (!witnessAccount)
     {
         result.push_back(Pair("validity", false));
@@ -2761,8 +2793,8 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
             "     \"fee_amount\"           (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", "")
-            + HelpExampleRpc("splitwitnessaccount \"My account\" \"My witness account\"  [10000, 5000, 5000]", ""));
+            + HelpExampleCli("splitwitnessaccount \"My account\" \"My witness account\"  \"[10000, 5000, 5000]\"", "")
+            + HelpExampleRpc("splitwitnessaccount \"My account\" \"My witness account\"  \"[10000, 5000, 5000]\"", ""));
 
     // Basic sanity checks.
     if (!pwallet)

@@ -1,7 +1,14 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Gulden developers
+// All modifications:
+// Copyright (c) 2020 The Gulden developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 #include "rpc/server.h"
 
@@ -266,6 +273,16 @@ static UniValue stop(const JSONRPCRequest& jsonRequest)
     return "Gulden server stopping";
 }
 
+static UniValue uptime(const JSONRPCRequest& jsonRequest)
+{
+    if (jsonRequest.fHelp || jsonRequest.params.size() > 1)
+        throw std::runtime_error(
+            "uptime\n"
+            "\nReturns the total uptime of the server (in seconds).");
+
+    return GetTime() - GetStartupTime();
+}
+
 /**
  * Call Table
  */
@@ -275,6 +292,7 @@ static const CRPCCommand vRPCCommands[] =
     /* Overall control/query calls */
     { "control",            "help",                   &help,                   true,  {"command"}  },
     { "control",            "stop",                   &stop,                   true,  {"wait"}  },
+    { "control",            "uptime",                 &uptime,                 true,  {""}  },
 };
 
 CRPCTable::CRPCTable()

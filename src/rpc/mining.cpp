@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2019 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -83,10 +83,12 @@ static UniValue GetNetworkHashPS(uint32_t lookup, int height)
     int64_t minTime = pb0->GetBlockTime();
     int64_t maxTime = minTime;
     uint64_t count = 0;
+    arith_uint256 workDiff = 0;
     for (uint32_t i = 0; i < lookup; i++)
     {
         if (sigmaActive && pb0->pprev->nTime < defaultSigmaSettings.activationDate)
             break;
+        workDiff += GetBlockProof(*pb0);
         count++;
         pb0 = pb0->pprev;
         int64_t time = pb0->GetBlockTime();
@@ -98,7 +100,7 @@ static UniValue GetNetworkHashPS(uint32_t lookup, int height)
     if (minTime == maxTime)
         return 0;
 
-    arith_uint256 workDiff = pb->nChainWork - pb0->nChainWork;
+
     int64_t timeDiff = maxTime - minTime;
 
     if (sigmaActive)
@@ -231,6 +233,9 @@ static UniValue generate(const JSONRPCRequest& request)
             "\nGenerate 11 blocks\n"
             + HelpExampleCli("generate", "11")
         );
+
+    if (!IsArgSet("-regtest"))
+        throw std::runtime_error("generate command only for regtest; for mainnet/testnet use setgenerate");
 
     int nGenerate = request.params[0].get_int();
     uint64_t nMaxTries = 1000000;
@@ -473,6 +478,9 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
             + HelpExampleCli("generatetoaddress", "11 \"myaddress\"")
         );
 
+    if (!IsArgSet("-regtest"))
+        throw std::runtime_error("generatetoaddress command only for regtest; for mainnet/testnet use setgenerate");
+
     int nGenerate = request.params[0].get_int();
     uint64_t nMaxTries = 1000000;
     if (request.params.size() > 2) {
@@ -712,6 +720,31 @@ static UniValue estimatefee(const JSONRPCRequest& request)
     return ValueFromAmount(feeRate.GetFeePerK());
 }
 
+/* Used to determine type of fee estimation requested */
+enum class FeeEstimateMode {
+    UNSET,        //!< Use default settings based on other criteria
+    ECONOMICAL,   //!< Force estimateSmartFee to use non-conservative estimates
+    CONSERVATIVE, //!< Force estimateSmartFee to use conservative estimates
+};
+
+bool FeeModeFromString(const std::string& mode_string, FeeEstimateMode& fee_estimate_mode)
+{
+    static const std::map<std::string, FeeEstimateMode> fee_modes = {
+        {"UNSET", FeeEstimateMode::UNSET},
+        {"ECONOMICAL", FeeEstimateMode::ECONOMICAL},
+        {"CONSERVATIVE", FeeEstimateMode::CONSERVATIVE},
+    };
+    auto mode = fee_modes.find(mode_string);
+
+    if (mode == fee_modes.end()) return false;
+
+    fee_estimate_mode = mode->second;
+    return true;
+}
+
+
+
+
 static UniValue estimatesmartfee(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
@@ -723,7 +756,7 @@ static UniValue estimatesmartfee(const JSONRPCRequest& request)
             "in BIP 141 (witness data is discounted).\n"
             "\nArguments:\n"
             "1. num_blocks    (numeric)\n"
-            "2. conservative  (bool, optional, default=true) Whether to return a more conservative estimate which\n"
+            "2. conservative  (String, optional) Whether to return a more conservative estimate which\n"
             "                 also satisfies a longer history. A conservative estimate potentially returns a higher\n"
             "                 feerate and is more likely to be sufficient for the desired target, but is not as\n"
             "                 responsive to short term drops in the prevailing fee market\n"
@@ -740,20 +773,39 @@ static UniValue estimatesmartfee(const JSONRPCRequest& request)
             + HelpExampleCli("estimatesmartfee", "6")
             );
 
-    RPCTypeCheck(request.params, {UniValue::VNUM});
-
-    int nBlocks = request.params[0].get_int();
+   
+    RPCTypeCheck(request.params, {UniValue::VNUM, UniValue::VSTR});
+    RPCTypeCheckArgument(request.params[0], UniValue::VNUM);
+    //unsigned int max_target = ::feeEstimator.HighestTargetTracked(FeeEstimateHorizon::LONG_HALFLIFE);
+    //unsigned int conf_target = ParseConfirmTarget(request.params[0], max_target);
     bool conservative = true;
-    if (request.params.size() > 1 && !request.params[1].isNull()) {
-        RPCTypeCheckArgument(request.params[1], UniValue::VBOOL);
-        conservative = request.params[1].get_bool();
+    if (!request.params[1].isNull())
+    {
+        FeeEstimateMode fee_mode;
+        if (!FeeModeFromString(request.params[1].get_str(), fee_mode))
+        {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid estimate_mode parameter");
+        }
+        if (fee_mode == FeeEstimateMode::ECONOMICAL)
+            conservative = false;
     }
 
     UniValue result(UniValue::VOBJ);
+    UniValue errors(UniValue::VARR);
+    //FeeCalculation feeCalc;
     int answerFound;
-    CFeeRate feeRate = ::feeEstimator.estimateSmartFee(nBlocks, &answerFound, ::mempool, conservative);
-    result.push_back(Pair("feerate", feeRate == CFeeRate(0) ? -1.0 : ValueFromAmount(feeRate.GetFeePerK())));
-    result.push_back(Pair("blocks", answerFound));
+    //CFeeRate feeRate = ::feeEstimator.estimateSmartFee(conf_target, &feeCalc, conservative);
+    CFeeRate feeRate = ::feeEstimator.estimateSmartFee(request.params[0].get_int(), &answerFound, ::mempool, conservative);
+    if (feeRate.GetFeePerK() != 0)
+    {
+        result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
+    }
+    else
+    {
+        errors.push_back("Insufficient data or no feerate found");
+        result.pushKV("errors", errors);
+    }
+    result.pushKV("blocks", answerFound);
     return result;
 }
 

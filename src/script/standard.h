@@ -60,6 +60,7 @@ enum txnouttype
     TX_MULTISIG,
     TX_NULL_DATA,
     TX_PUBKEYHASH_POW2WITNESS,
+    // NB! if adding any additional types here, search for and fix TX_PUBKEYHASH_POW2WITNESS+1 TX_PUBKEYHASH_POW2WITNESS+2 occurences in code to match changes.
 };
 
 class CNoDestination {

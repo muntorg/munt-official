@@ -1,8 +1,40 @@
+2.2.0.7
+
+NET     - Improve networking performance
+NET     - Remove support for old protocol versions that are no longer supported
+RPC     - Fix a crash in gettxoutsetinfo; Improve gettxoutsetinfo behaviour for new transaction output types
+RPC     - Fix GetNetworkHashPS calculation; It was incorrectly including witness 'work' in the mining calculation and returning an overly high number as a result
+RPC     - Introduce 'pow_time' and 'witness_time' fields to all block based RPC commands that include 'time' in the output; Change 'time' to display the most accurate time always (witness time if available, otherwise pow time)
+MINING  - Prevent mining of orphan blocks while wallet is still syncing on startup
+UI      - Fix a balance display issue some wallets were experiencing
+CORE    - Fix a rare crash that was being triggered in some nodes
+CORE    - Various performance improvements from removal of parts of the phase3 backwards support
+
+
+
+
+2.2.0.6
+
+UI      - Fix a UI freeze that was occuring on 'finished' witness accounts
+RPC     - Fix a crash in 'signrawtransaction' when signing new transaction types (of non script type)
+RPC     - Improve 'dumpblockgaps' command to output data for both witness and PoW timestamps; previous behaviour considered PoW timestamps only
+RPC     - Backport/add 'uptime' command from upstream
+RPC     - Backport/add 'getblockstats' command from upstream
+RPC     - Update second paramater of 'estimatesmartfee' from bool to string to match changes in upstream
+RPC     - Add output of witness/spending pubkeyhash when calling validateaddress on a witness address
+CORE    - Fix an issue some wallets were having with signing extend/optimise transactions
+CORE    - Remove various parts of the old phase3 codebase, this should bring performance improvements
+
+
+
+
 2.2.0.5
 
 UI      - Fix UI behaviour for upgrading expired witness accounts
 UI      - Improve UI behaviour for displaying 'extend' button for witness accounts 
+UI      - Add/Fix "Ctrl+L" shortcut to clear debug console text
 RPC     - Make 'renewwitnessaccount' command work also for upgrading witness accounts
+CORE    - Restore 'first' mining address for those miners whose address was changed to a new one by buils containing the issue that was fixed in 2.2.0.3 release
 CORE    - Improve mining behaviour for v2 transactions, insert an extra nonce, this is unlikely to matter at current mining speeds in any way but is better for correctness anyway. (Only really relevant in fringe cases like mining with -limitdeltadiffdrop=0)
 
 

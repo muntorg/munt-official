@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -222,11 +222,10 @@ void WalletModel::updateTransaction()
     fForceCheckBalanceChanged = true;
 }
 
-void WalletModel::updateAddressBook(const QString &address, const QString &label,
-        bool isMine, const QString &purpose, int status)
+void WalletModel::updateAddressBook(const QString& address, const QString& label, const QString& description, bool isMine, const QString &purpose, int status)
 {
     if(addressTableModel)
-        addressTableModel->updateEntry(address, label, isMine, purpose, status);
+        addressTableModel->updateEntry(address, label, description, isMine, purpose, status);
 }
 
 void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
@@ -277,7 +276,6 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
     QSet<QString> setAddress; // Used to detect duplicates
     int nAddresses = 0;
 
-    int nTipPrevPoW2Phase = GetPoW2Phase(chainActive.Tip()->pprev);
     // Pre-check input data for validity
     for(const SendCoinsRecipient &rcp : recipients)
     {
@@ -434,6 +432,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
         {
             std::string strAddress = rcp.forexAddress.isEmpty() ? rcp.address.toStdString() : rcp.forexAddress.toStdString();
             std::string strLabel = rcp.label.toStdString();
+            std::string strRecipientDescription = rcp.forexDescription.toStdString();
             {
                 LOCK(wallet->cs_wallet);
 
@@ -442,11 +441,11 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
                 // Check if we have a new address or an updated label
                 if (mi == wallet->mapAddressBook.end())
                 {
-                    wallet->SetAddressBook(strAddress, strLabel, "send");
+                    wallet->SetAddressBook(strAddress, strLabel, strRecipientDescription, "send");
                 }
                 else if (mi->second.name != strLabel)
                 {
-                    wallet->SetAddressBook(strAddress, strLabel, ""); // "" means don't change purpose
+                    wallet->SetAddressBook(strAddress, strLabel, strRecipientDescription, ""); // "" means don't change purpose
                 }
             }
         }

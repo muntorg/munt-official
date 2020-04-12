@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -143,11 +143,14 @@ public:
     {
     }
 
-    bool WriteName(const std::string& strAddress, const std::string& strName);
-    bool EraseName(const std::string& strAddress);
+    bool WriteRecipientName(const std::string& strAddress, const std::string& strName);
+    bool EraseRecipientName(const std::string& strAddress);
 
-    bool WritePurpose(const std::string& strAddress, const std::string& purpose);
-    bool ErasePurpose(const std::string& strAddress);
+    bool WriteRecipientDescription(const std::string& strAddress, const std::string& description);
+    bool EraseRecipientDescription(const std::string& strAddress);
+    
+    bool WriteRecipientPurpose(const std::string& strAddress, const std::string& purpose);
+    bool EraseRecipientPurpose(const std::string& strAddress);
 
     bool WriteTx(const CWalletTx& wtx);
     bool EraseTx(uint256 hash);

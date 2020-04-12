@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -34,13 +34,19 @@ struct AddressTableEntry
         Hidden /* QSortFilterProxyModel will filter these out */
     };
 
-    Type type;
-    QString label;
     QString address;
+    QString label;
+    QString description;
+    Type type;
+
 
     AddressTableEntry() {}
-    AddressTableEntry(Type _type, const QString &_label, const QString &_address):
-        type(_type), label(_label), address(_address) {}
+    AddressTableEntry(const QString &_address, const QString &_label, const QString &_description, Type _type)
+    : address(_address)
+    , label(_label)
+    , description(_description)
+    , type(_type)
+    {}
 };
 
 struct AddressTableEntryLessThan
@@ -89,16 +95,11 @@ public:
         cachedAddressTable.clear();
         {
             LOCK(wallet->cs_wallet);
-            for(const PAIRTYPE(std::string, CAddressBookData)& item : wallet->mapAddressBook)
+            for(const auto&[address, data] : wallet->mapAddressBook)
             {
-                const std::string& address = item.first;
                 bool fMine = IsMine(*wallet, CGuldenAddress(address).Get());
-                AddressTableEntry::Type addressType = translateTransactionType(
-                        QString::fromStdString(item.second.purpose), fMine);
-                const std::string& strName = item.second.name;
-                cachedAddressTable.append(AddressTableEntry(addressType,
-                                  QString::fromStdString(strName),
-                                  QString::fromStdString(address)));
+                AddressTableEntry::Type addressType = translateTransactionType(QString::fromStdString(data.purpose), fMine);
+                cachedAddressTable.append(AddressTableEntry(QString::fromStdString(address), QString::fromStdString(data.name), QString::fromStdString(data.description), addressType));
             }
         }
         // std::upper_bound() and std::lower_bound() require our cachedAddressTable list to be sorted in asc order
@@ -107,7 +108,7 @@ public:
         std::sort(cachedAddressTable.begin(), cachedAddressTable.end(), AddressTableEntryLessThan());
     }
 
-    void updateEntry(const QString &address, const QString &label, bool isMine, const QString &purpose, int status)
+    void updateEntry(const QString& address, const QString& label, const QString& description, bool isMine, const QString& purpose, int status)
     {
         // Find address / label in model
         QList<AddressTableEntry>::iterator lower = std::lower_bound(
@@ -128,7 +129,7 @@ public:
                 break;
             }
             parent->beginInsertRows(QModelIndex(), lowerIndex, lowerIndex);
-            cachedAddressTable.insert(lowerIndex, AddressTableEntry(newEntryType, label, address));
+            cachedAddressTable.insert(lowerIndex, AddressTableEntry(address, label, description, newEntryType));
             parent->endInsertRows();
             break;
         case CT_UPDATED:
@@ -178,7 +179,7 @@ AddressTableModel::AddressTableModel(CWallet *_wallet, WalletModel *parent)
 , wallet(_wallet)
 , priv(nullptr)
 {
-    columns << tr("Label") << tr("Address");
+    columns << tr("Label") << tr("Description") << tr("Address");
     priv = new AddressTablePriv(wallet, this);
     priv->refreshAddressTable();
 }
@@ -212,17 +213,32 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
     {
         switch(index.column())
         {
-        case Label:
-            if(rec->label.isEmpty() && role == Qt::DisplayRole)
+            case ColumnIndex::Label:
             {
-                return tr("(no label)");
+                if(rec->label.isEmpty() && role == Qt::DisplayRole)
+                {
+                    return tr("(no label)");
+                }
+                else
+                {
+                    return rec->label;
+                }
             }
-            else
+            case ColumnIndex::Description:
             {
-                return rec->label;
+                if(rec->description.isEmpty() && role == Qt::DisplayRole)
+                {
+                    return tr("(no description)");
+                }
+                else
+                {
+                    return rec->description;
+                }
             }
-        case Address:
-            return rec->address;
+            case ColumnIndex::Address:
+            {
+                return rec->address;
+            }
         }
     }
     /* GULDEN - no fixed pitch font.
@@ -273,15 +289,28 @@ bool AddressTableModel::setData(const QModelIndex &index, const QVariant &value,
     {
         LOCK(wallet->cs_wallet); /* For SetAddressBook / DelAddressBook */
         std::string curAddress = rec->address.toStdString();
-        if(index.column() == Label)
+        std::string curLabel = rec->label.toStdString();
+        std::string curDesc = rec->description.toStdString();
+        std::string val = value.toString().toStdString();
+        if(index.column() == ColumnIndex::Label)
         {
             // Do nothing, if old label == new label
-            if(rec->label == value.toString())
+            if(curLabel == val)
             {
                 editStatus = NO_CHANGES;
                 return false;
             }
-            wallet->SetAddressBook(curAddress, value.toString().toStdString(), strPurpose);
+            wallet->SetAddressBook(curAddress, val, curDesc, strPurpose);
+        }
+        else if(index.column() == ColumnIndex::Description)
+        {
+            // Do nothing, if old description == new description
+            if(curDesc == val)
+            {
+                editStatus = NO_CHANGES;
+                return false;
+            }
+            wallet->SetAddressBook(curAddress, curLabel, val, strPurpose);
         }
         else if(index.column() == Address)
         {
@@ -311,7 +340,7 @@ bool AddressTableModel::setData(const QModelIndex &index, const QVariant &value,
                 // Remove old entry
                 wallet->DelAddressBook(curAddress);
                 // Add new entry with new address
-                wallet->SetAddressBook(newAddress.toStdString(), rec->label.toStdString(), strPurpose);
+                wallet->SetAddressBook(newAddress.toStdString(), curLabel, curDesc, strPurpose);
             }
         }
         return true;
@@ -338,10 +367,9 @@ Qt::ItemFlags AddressTableModel::flags(const QModelIndex &index) const
     AddressTableEntry *rec = static_cast<AddressTableEntry*>(index.internalPointer());
 
     Qt::ItemFlags retval = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    // Can edit address and label for sending addresses,
-    // and only label for receiving addresses.
-    if(rec->type == AddressTableEntry::Sending ||
-      (rec->type == AddressTableEntry::Receiving && index.column()==Label))
+    // Can edit everything for sending addresses,
+    // Everything except address for receiving addresses
+    if(rec->type == AddressTableEntry::Sending || (rec->type == AddressTableEntry::Receiving && index.column()!=ColumnIndex::Address))
     {
         retval |= Qt::ItemIsEditable;
     }
@@ -362,16 +390,16 @@ QModelIndex AddressTableModel::index(int row, int column, const QModelIndex &par
     }
 }
 
-void AddressTableModel::updateEntry(const QString &address,
-        const QString &label, bool isMine, const QString &purpose, int status)
+void AddressTableModel::updateEntry(const QString& address, const QString& label, const QString& description, bool isMine, const QString &purpose, int status)
 {
     // Update address book model from Gulden core
-    priv->updateEntry(address, label, isMine, purpose, status);
+    priv->updateEntry(address, label, description, isMine, purpose, status);
 }
 
-QString AddressTableModel::addRow(const QString &type, const QString &label, const QString &address)
+QString AddressTableModel::addRow(const QString& address, const QString& label, const QString& description, const QString& type)
 {
     std::string strLabel = label.toStdString();
+    std::string strDescription = description.toStdString();
     std::string strAddress = address.toStdString();
 
     //fixme: (FUT)
@@ -433,7 +461,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
     // Add entry
     {
         LOCK(wallet->cs_wallet);
-        wallet->SetAddressBook(strAddress, strLabel, (type == Send ? "send" : "receive"));
+        wallet->SetAddressBook(strAddress, strLabel, strDescription, (type == Send ? "send" : "receive"));
     }
     return QString::fromStdString(strAddress);
 }

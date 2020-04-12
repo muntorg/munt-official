@@ -152,6 +152,7 @@ class CAddressBookData
 {
 public:
     std::string name;
+    std::string description;
     std::string purpose;
 
     CAddressBookData() : purpose("unknown") {}
@@ -866,11 +867,12 @@ public:
     DBErrors ZapWalletTx(std::vector<CWalletTx>& vWtx);
     DBErrors ZapSelectTx(CWalletDB& walletdb, std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut);
 
-    bool SetAddressBook(const std::string& address, const std::string& strName, const std::string& purpose);
+    bool SetAddressBook(const std::string& address, const std::string& strName, const std::string& strRecipientDescription, const std::string& purpose);
 
     bool DelAddressBook(const std::string& address);
 
-    CAccount* FindAccountForTransaction(const CTxOut& out);
+    std::vector<CAccount*> FindAccountsForTransaction(const CTxOut& out);
+    CAccount* FindBestWitnessAccountForTransaction(const CTxOut& out);
 
     // CValidationInterface updates
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;

@@ -983,40 +983,6 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
                         // Grab the witness from our index.
                         pWitnessBlockToEmbed = GetWitnessOrphanForBlock(pIndexParent->pprev->nHeight, pIndexParent->pprev->GetBlockHashLegacy(), pIndexParent->pprev->GetBlockHashLegacy());
 
-                        //We don't have it in our index - try extract it from the tip in which we have already embedded it.
-                        if (!pWitnessBlockToEmbed)
-                        {
-                            std::shared_ptr<CBlock> pBlockPoWParent(new CBlock);
-                            LOCK(cs_main); // For ReadBlockFromDisk
-                            if (ReadBlockFromDisk(*pBlockPoWParent.get(), pIndexParent, Params()))
-                            {
-                                int nWitnessCoinbaseIndex = GetPoW2WitnessCoinbaseIndex(*pBlockPoWParent.get());
-                                if (nWitnessCoinbaseIndex != -1)
-                                {
-                                    std::shared_ptr<CBlock> embeddedWitnessBlock(new CBlock);
-                                    if (ExtractWitnessBlockFromWitnessCoinbase(chainActive, nWitnessCoinbaseIndex, pIndexParent->pprev, *pBlockPoWParent.get(), chainparams, *pcoinsTip, *embeddedWitnessBlock.get()))
-                                    {
-                                        uint256 hashPoW2Witness = embeddedWitnessBlock->GetHashPoW2();
-                                        if (mapBlockIndex.count(hashPoW2Witness) > 0)
-                                        {
-                                            pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            if (ProcessNewBlock(Params(), embeddedWitnessBlock, true, nullptr, false, true))
-                                            {
-                                                if (mapBlockIndex.count(hashPoW2Witness) > 0)
-                                                {
-                                                    pWitnessBlockToEmbed = mapBlockIndex[hashPoW2Witness];
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         if (!pWitnessBlockToEmbed)
                         {
                             pIndexParent = pIndexParent->pprev;
@@ -1134,21 +1100,34 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
         }
 
 
+
+        // Ensure we are reasonably caught up with peers, so we don't waste time mining on an obsolete chain.
+        // In testnet/regtest mode we expect to be able to mine without peers.
+        if (!regTest && !testnet)
+        {
+            while (true)
+            {
+                if (IsChainNearPresent() && !IsInitialBlockDownload())
+                {
+                    break;
+                }
+                MilliSleep(1000);
+            }
+        }
+
         while (true)
         {
+            // If we have no peers, pause mining until we do, otherwise theres no real point in mining.
+            // In testnet/regtest mode we expect to be able to mine without peers.
             if (!regTest && !testnet)
             {
-                // Busy-wait for the network to come online so we don't waste time mining on an obsolete chain. In regtest mode we expect to fly solo.
                 while (true)
                 {
                     if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
                     {
-                        if (IsArgSet("-testnet") || !IsInitialBlockDownload())
-                        {
-                            break;
-                        }
+                        break;
                     }
-                    MilliSleep(1000);
+                    MilliSleep(100);
                 }
             }
 

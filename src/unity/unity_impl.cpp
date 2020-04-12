@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The Gulden developers
+// Copyright (c) 2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -21,7 +21,6 @@
 #include "net_processing.h"
 #include "wallet/spvscanner.h"
 #include "sync.h"
-#include "wallet/wallettx.h"
 
 // Djinni generated files
 #include "gulden_unified_backend.hpp"
@@ -273,9 +272,12 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             address = addr.ToString();
         }
         std::string label;
+        std::string description;
         if (pwallet->mapAddressBook.count(address))
         {
-            label = pwallet->mapAddressBook[address].name;
+            const auto& data = pwallet->mapAddressBook[address];
+            label = data.name;
+            description = data.description;
         }
         bool isMine = false;
         for (const auto& account : accountsToTry)
@@ -285,7 +287,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
                 isMine = true;
             }
         }
-        inputs.push_back(InputRecord(address, label, isMine));
+        inputs.push_back(InputRecord(address, label, description, isMine));
     }
 
     for (const CTxOut& txout: tx.vout)
@@ -306,7 +308,9 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         std::string label;
         if (pwallet->mapAddressBook.count(address))
         {
-            label = pwallet->mapAddressBook[address].name;
+            const auto& data = pwallet->mapAddressBook[address];
+            label = data.name;
+            description = data.description;
         }
         bool isMine = false;
         for (const auto& account : accountsToTry)
@@ -316,7 +320,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
                 isMine = true;
             }
         }
-        outputs.push_back(OutputRecord(txout.nValue, address, label, isMine));
+        outputs.push_back(OutputRecord(txout.nValue, address, label, description, isMine));
     }
 
     TransactionStatus status = getStatusForTransaction(&wtx);
@@ -1068,6 +1072,7 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
 
     std::string address = request.path;
     std::string label = "";
+    std::string description = "";
     CAmount amount = 0;
     if (request.items.find("amount") != request.items.end())
     {
@@ -1079,11 +1084,13 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
         DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
         if (pactiveWallet->mapAddressBook.find(address) != pactiveWallet->mapAddressBook.end())
         {
-            label = pactiveWallet->mapAddressBook[address].name;
+            const auto& data = pactiveWallet->mapAddressBook[address];
+            label = data.name;
+            description = data.description;
         }
     }
 
-    return UriRecipient(true, address, label, amount);
+    return UriRecipient(true, address, label, description, amount);
 }
 
 
@@ -1248,7 +1255,7 @@ std::vector<AddressRecord> GuldenUnifiedBackend::getAddressBookRecords()
         DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
         for(const auto& [address, addressData] : pactiveWallet->mapAddressBook)
         {
-            ret.emplace_back(AddressRecord(address, addressData.purpose, addressData.name));
+            ret.emplace_back(AddressRecord(address, addressData.name, addressData.description, addressData.purpose));
         }
     }
 
@@ -1259,7 +1266,7 @@ void GuldenUnifiedBackend::addAddressBookRecord(const AddressRecord& address)
 {
     if (pactiveWallet)
     {
-        pactiveWallet->SetAddressBook(address.address, address.name, address.purpose);
+        pactiveWallet->SetAddressBook(address.address, address.name, address.description, address.purpose);
     }
 }
 

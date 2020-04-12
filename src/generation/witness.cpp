@@ -598,7 +598,7 @@ void static GuldenWitness()
 
                         if (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_WITNESS)
                         {
-                            CAccount* selectedWitnessAccount = pactiveWallet->FindAccountForTransaction(witnessInfo.selectedWitnessTransaction);
+                            CAccount* selectedWitnessAccount = pactiveWallet->FindBestWitnessAccountForTransaction(witnessInfo.selectedWitnessTransaction);
                             if (selectedWitnessAccount)
                             {
                                 //We must do this before we add the blank coinbase otherwise GetBlockWeight crashes on a NULL pointer dereference.

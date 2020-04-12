@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -664,7 +664,7 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, SendCoinsRecipient recipien
         //fixme: (PHASE5)
         if (wallet->GetKeyFromPool(newKey, wallet->activeAccount, KEYCHAIN_EXTERNAL)) {
             CKeyID keyID = newKey.GetID();
-            wallet->SetAddressBook(CGuldenAddress(keyID).ToString(), strAccount, "refund");
+            wallet->SetAddressBook(CGuldenAddress(keyID).ToString(), strAccount, "", "refund");
 
             CScript s = GetScriptForDestination(keyID);
             payments::Output* refund_to = payment.add_refund_to();

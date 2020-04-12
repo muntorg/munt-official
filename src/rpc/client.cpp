@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -115,12 +115,13 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "importmulti", 2, "options" },
     { "verifychain", 0, "check_level" },
     { "verifychain", 1, "num_blocks" },
+    { "getblockstats", 0, "hash_or_height" },
+    { "getblockstats", 1, "stats" },
     { "pruneblockchain", 0, "height" },
     { "keypoolrefill", 0, "new_size" },
     { "getrawmempool", 0, "verbose" },
     { "estimatefee", 0, "num_blocks" },
     { "estimatesmartfee", 0, "num_blocks" },
-    { "estimatesmartfee", 1, "conservative" },
     { "estimaterawfee", 0, "num_blocks" },
     { "estimaterawfee", 1, "threshold" },
     { "estimaterawfee", 2, "horizon" },

@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -779,6 +779,15 @@ void RenameThread([[maybe_unused]] const char* name)
 #elif defined(MAC_OSX)
     pthread_setname_np(name);
 #endif
+}
+
+// Application startup time (used for uptime calculation)
+const int64_t nStartupTime = GetTime();
+
+// Obtain the application startup time (used for uptime calculation)
+int64_t GetStartupTime()
+{
+    return nStartupTime;
 }
 
 void SetupEnvironment()

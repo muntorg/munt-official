@@ -9,6 +9,114 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AccountSelectionWidget</name>
+    <message>
+        <source>Funding account</source>
+        <translation>Akun pendanaan</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSettingsDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>Oke</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Batalkan</translation>
+    </message>
+    <message>
+        <source>Change name of account</source>
+        <translation>Ubah nama akun</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>Masukkan nama akun.</translation>
+    </message>
+    <message>
+        <source>Delete account</source>
+        <translation>Hapus akun</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>Selesai</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>Batal</translation>
+    </message>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Dialog Kata kunci</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>Masukkan kata kunci</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Kata kunci baru</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Ulangi kata kunci baru</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>Oke</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Enkripsi dompet</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Buka kunci dompet</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Dekripsi dompet</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Konfirmasikan enkripsi dompet</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Dompet terenkripsi</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSummaryWidget</name>
+    <message>
+        <source>Account balances</source>
+        <translation>Saldo akun</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Jumlah</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>Terkunci</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>Tertunda</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>Dapat digunakan</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>Perkiraan konversi</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -50,6 +158,34 @@
         <source>&amp;Copy</source>
         <translation>&amp;Menyalin</translation>
     </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>M&amp;emilih</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Mengirim alamat</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Salin Alamat</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Salin &amp;Label</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Edit</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Daftar Alamat Ekspor</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Ekspor Gagal</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -59,22 +195,18 @@
     </message>
 </context>
 <context>
-    <name>AskPassphraseDialog</name>
+    <name>AddressTableModel</name>
     <message>
-        <source>Passphrase Dialog</source>
-        <translation>Dialog Kata kunci</translation>
+        <source>Label</source>
+        <translation>Label</translation>
     </message>
     <message>
-        <source>Enter passphrase</source>
-        <translation>Masukkan kata kunci</translation>
+        <source>Address</source>
+        <translation>Alamat</translation>
     </message>
     <message>
-        <source>New passphrase</source>
-        <translation>Kata kunci baru</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>Ulangi kata kunci baru</translation>
+        <source>(no label)</source>
+        <translation>(tanpa label)</translation>
     </message>
 </context>
 <context>

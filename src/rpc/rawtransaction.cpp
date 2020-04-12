@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -61,8 +61,8 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
             CBlockIndex* pindex = (*mi).second;
             if (chainActive.Contains(pindex)) {
                 entry.push_back(Pair("confirmations", 1 + chainActive.Height() - pindex->nHeight));
-                entry.push_back(Pair("time", pindex->GetBlockTime()));
-                entry.push_back(Pair("blocktime", pindex->GetBlockTime()));
+                entry.push_back(Pair("time", pindex->GetBlockTimePoW2Witness()));
+                entry.push_back(Pair("blocktime", pindex->GetBlockTimePoW2Witness()));
             }
             else
                 entry.push_back(Pair("confirmations", 0));
@@ -180,7 +180,6 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
         return strHex;
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("hex", strHex));
     TxToJSON(*tx, hashBlock, result);
     return result;
 }
@@ -765,10 +764,10 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             std::vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
-            //fixme: (PHASE4POSTREL) implement for other transaction types
             {
                 const Coin& coin = view.AccessCoin(out);
-                if (!coin.IsSpent() && coin.out.output.scriptPubKey != scriptPubKey) {
+                if (!coin.IsSpent() && coin.out.output.nType == ScriptLegacyOutput && coin.out.output.scriptPubKey != scriptPubKey)
+                {
                     std::string err("Previous output scriptPubKey mismatch:\n");
                     err = err + ScriptToAsmStr(coin.out.output.scriptPubKey) + "\nvs:\n" + ScriptToAsmStr(scriptPubKey);
                     throw JSONRPCError(RPC_DESERIALIZATION_ERROR, err);
@@ -860,15 +859,15 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     // transaction to avoid rehashing.
     const CTransaction txConst(mergedTx);
     // Sign what we can:
-    for (unsigned int i = 0; i < mergedTx.vin.size(); i++) {
+    for (unsigned int i = 0; i < mergedTx.vin.size(); i++)
+    {
         CTxIn& txin = mergedTx.vin[i];
         const Coin& coin = view.AccessCoin(txin.prevout);
         if (coin.IsSpent()) {
             TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, "Input not found or already spent");
             continue;
         }
-        //fixme: (PHASE4POSTREL) (SEGSIG) Other transaction types
-        const CScript& prevPubKey = coin.out.output.scriptPubKey;
+        
         const CAmount& amount = coin.out.nValue;
 
         CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, signType);
@@ -878,19 +877,46 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         if (!fHashSingle || (i < mergedTx.vout.size()))
             ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, accountsToTry, &mergedTx, i, amount, nHashType), coin.out, sigdata, signType, mergedTx.nVersion);
 
-        // ... and merge in other signatures:
-        for(const CMutableTransaction& txv : txVariants) {
-            if (txv.vin.size() > i) {
-                sigdata = CombineSignatures(prevPubKey, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), sigdata, DataFromTransaction(txv, i));
+        switch (coin.out.output.nType)
+        {
+            case ScriptLegacyOutput:
+            {
+                const CScript& prevPubKey = coin.out.output.scriptPubKey;
+                // ... and merge in other signatures:
+                for(const CMutableTransaction& txv : txVariants)
+                {
+                    if (txv.vin.size() > i)
+                    {
+                        sigdata = CombineSignatures(prevPubKey, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), sigdata, DataFromTransaction(txv, i));
+                    }
+                }
+                
+                UpdateTransaction(mergedTx, i, sigdata);
+
+                ScriptError serror = SCRIPT_ERR_OK;
+                if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.segregatedSignatureData, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), SCRIPT_V2, &serror)) {
+                    TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, ScriptErrorString(serror));
+                }
+                break;
+            }
+            case PoW2WitnessOutput:
+            {
+                if (!SignSignature(accountsToTry, coin.out, mergedTx, i, amount, nHashType, SignType::Spend))
+                {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "Failed to sign witness output");
+                }
+                break;
+            }
+            case StandardKeyHashOutput:
+            {
+                if (!SignSignature(accountsToTry, coin.out, mergedTx, i, amount, nHashType, SignType::Spend))
+                {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "Failed to sign keyhash output");
+                }
             }
         }
 
-        UpdateTransaction(mergedTx, i, sigdata);
-
-        ScriptError serror = SCRIPT_ERR_OK;
-        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.segregatedSignatureData, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), SCRIPT_V1, &serror)) {
-            TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, ScriptErrorString(serror));
-        }
+        
     }
     bool fComplete = vErrors.empty();
 

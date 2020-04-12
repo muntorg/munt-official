@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -147,7 +147,7 @@ UniValue importprivkey(const JSONRPCRequest& request)
     CKeyID vchAddress = pubkey.GetID();
     {
         pwallet->MarkDirty();
-        pwallet->SetAddressBook(CGuldenAddress(vchAddress).ToString(), strLabel, "receive");
+        pwallet->SetAddressBook(CGuldenAddress(vchAddress).ToString(), strLabel, "", "receive");
 
         // Don't throw error in case a key is already there
         if (pwallet->HaveKey(vchAddress)){
@@ -218,7 +218,7 @@ void ImportScript(CWallet* const pwallet, const CScript& script, const std::stri
     } else {
         CTxDestination destination;
         if (ExtractDestination(script, destination)) {
-            pwallet->SetAddressBook(CGuldenAddress(destination).ToString(), strLabel, "receive");
+            pwallet->SetAddressBook(CGuldenAddress(destination).ToString(), strLabel, "", "receive");
         }
     }
 }
@@ -229,7 +229,7 @@ void ImportAddress(CWallet* const pwallet, const CGuldenAddress& address, const 
     ImportScript(pwallet, script, strLabel, false);
     // add to address book or update label
     if (address.IsValid())
-        pwallet->SetAddressBook(address.ToString(), strLabel, "receive");
+        pwallet->SetAddressBook(address.ToString(), strLabel, "", "receive");
 }
 
 UniValue importaddress(const JSONRPCRequest& request)
@@ -564,7 +564,7 @@ UniValue importwallet(const JSONRPCRequest& request)
         }
         pwallet->mapKeyMetadata[keyid].nCreateTime = nTime;
         if (fLabel)
-            pwallet->SetAddressBook(keyid.ToString(), strLabel, "receive");
+            pwallet->SetAddressBook(keyid.ToString(), strLabel, "", "receive");
         nTimeBegin = std::min(nTimeBegin, nTime);
     }
     file.close();
@@ -869,7 +869,7 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
             // add to address book or update label
             if (address.IsValid()) {
-                pwallet->SetAddressBook(address.ToString(), label, "receive");
+                pwallet->SetAddressBook(address.ToString(), label, "", "receive");
             }
 
             // Import private keys.
@@ -895,7 +895,7 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
                     CKeyID vchAddress = pubkey.GetID();
                     pwallet->MarkDirty();
-                    pwallet->SetAddressBook(CGuldenAddress(vchAddress).ToString(), label, "receive");
+                    pwallet->SetAddressBook(CGuldenAddress(vchAddress).ToString(), label, "", "receive");
 
                     if (forAccount->HaveKey(vchAddress)) {
                         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Already have this key");
@@ -967,7 +967,7 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
                 // add to address book or update label
                 if (pubKeyAddress.IsValid()) {
-                    pwallet->SetAddressBook(pubKeyAddress.ToString(), label, "receive");
+                    pwallet->SetAddressBook(pubKeyAddress.ToString(), label, "", "receive");
                 }
 
                 // TODO Is this necessary?
@@ -1031,7 +1031,7 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
 
                 CKeyID vchAddress = pubKey.GetID();
                 pwallet->MarkDirty();
-                pwallet->SetAddressBook(CGuldenAddress(vchAddress).ToString(), label, "receive");
+                pwallet->SetAddressBook(CGuldenAddress(vchAddress).ToString(), label, "", "receive");
 
                 if (forAccount->HaveKey(vchAddress)) {
                     return false;
@@ -1063,10 +1063,12 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
                     //throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
                 //}
 
-                if (scriptPubKey.getType() == UniValue::VOBJ) {
+                if (scriptPubKey.getType() == UniValue::VOBJ)
+                {
                     // add to address book or update label
-                    if (address.IsValid()) {
-                        pwallet->SetAddressBook(address.ToString(), label, "receive");
+                    if (address.IsValid())
+                    {
+                        pwallet->SetAddressBook(address.ToString(), label, "", "receive");
                     }
                 }
 
