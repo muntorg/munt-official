@@ -646,7 +646,6 @@ libgulden_common_a_SOURCES = \
   base58.cpp \
   chainparams.cpp \
   coins.cpp \
-  ui_interface.cpp \
   compressor.cpp \
   blockfilter.cpp \
   key.cpp \
