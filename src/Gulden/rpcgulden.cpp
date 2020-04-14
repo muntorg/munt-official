@@ -884,7 +884,7 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
         }
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
         {
-            throw std::runtime_error("Account not empty, please first empty your account before trying to delete it.");
+            throw std::runtime_error(strprintf("Account not empty, please first empty your account before trying to delete it [balance: %s]", FormatMoney(balance)));
         }
     }
 

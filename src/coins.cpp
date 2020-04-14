@@ -113,11 +113,13 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
             // Unless the other one is spent and marked dirty, in which case thats fine
             if (!transactionHashesMatch && !(it->second.flags&CCoinsCacheEntry::DIRTY&&it->second.coin.IsSpent()))
             {
+                #if 0
                 std::string warning = strprintf("Warning: outpoint mismatch.\nPlease notify the developers with this information to assist them.\n\n"
                                                 "cohash:[%s]\nophash:[%s]\nblock:[%d] txidx:[%d] outidx:[%d] flags:[%d] spent:[%s] lookupishash: [%s]",
                                                 canonicalOutPoint.getTransactionHash().ToString(), outpoint.getTransactionHash().ToString(), 
                                                 block, txIndex, voutIndex, it->second.flags, (it->second.coin.IsSpent()?"yes":"no"), (outpoint.isHash?"yes":"no"));
                 uiInterface.NotifyUIAlertChanged(warning);
+                #endif
             }
             
             // Block and index should match up
