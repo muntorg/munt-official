@@ -3,7 +3,7 @@
 SOURCES_PATH ?= $(BASEDIR)/sources
 WORK_PATH = $(BASEDIR)/work
 BASE_CACHE ?= $(BASEDIR)/built
-SDK_PATH ?= $(BASEDIR)/SDKs
+SDK_PATH ?= $(shell ./sdk.guess $(BASEDIR)/SDKs)
 NO_QT ?=
 RAPIDCHECK ?=
 NO_WALLET ?=
