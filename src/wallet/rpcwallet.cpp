@@ -822,13 +822,6 @@ UniValue getbalance(const JSONRPCRequest& request)
             "                     a named account, or as the empty string (\"\") to find the balance\n"
             "                     associated with wallet keys not in any named account, or as \"*\" to find\n"
             "                     the balance associated with all wallet keys regardless of account.\n"
-            "                     When this option is specified, it calculates the balance in a different\n"
-            "                     way than when it is not specified, and which can count spends twice when\n"
-            "                     there are conflicting pending transactions (such as those created by\n"
-            "                     the bumpfee command), temporarily resulting in low or even negative\n"
-            "                     balances. In general, account balance calculation is not considered\n"
-            "                     reliable and has resulted in confusing outcomes, so it is recommended to\n"
-            "                     avoid passing this argument.\n"
             "2. min_conf          (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "3. include_watchonly (bool, optional, default=false) Also include balance in watch-only addresses (see 'importaddress')\n"
             "\nResult:\n"
@@ -848,6 +841,7 @@ UniValue getbalance(const JSONRPCRequest& request)
     int nMinDepth = 1;
     bool includeWatchOnly = false;
 
+    CAccount* forAccount = nullptr;
     if (request.params.size() > 0)
     {
         if (request.params.size() > 1)
@@ -859,12 +853,19 @@ UniValue getbalance(const JSONRPCRequest& request)
         if (request.params[0].get_str() != "" && request.params[0].get_str() != "*")
         {
             //NB! - Intermediate AccountFromValue step is required in order to handle default account semantics.
-            CAccount* forAccount = request.params[0].get_str() != "*" ? AccountFromValue(pwallet, request.params[0], true) : nullptr;
+            forAccount = request.params[0].get_str() != "*" ? AccountFromValue(pwallet, request.params[0], true) : nullptr;
             if (forAccount)
                 accountUUID = forAccount->getUUID();
         }
     }
-    return ValueFromAmount(pwallet->GetLegacyBalance(includeWatchOnly?ISMINE_ALL:ISMINE_SPENDABLE, nMinDepth, &accountUUID));
+
+    int64_t nTime = GetTimeMicros();
+    CAmount balance = pwallet->GetBalanceForDepth(nMinDepth, forAccount, false, true);
+    if (includeWatchOnly)
+        balance += pwallet->GetWatchOnlyBalance(nMinDepth, forAccount, true);
+    int64_t nTime1 = GetTimeMicros();
+    LogPrint(BCLog::BENCH, "GetBalanceTiming: %.2fms [%.2fs]\n", (nTime1 - nTime) * 0.001, (nTime1 - nTime) * 0.000001);
+    return ValueFromAmount(balance);
 }
 
 UniValue getunconfirmedbalance(const JSONRPCRequest &request)
@@ -1001,15 +1002,8 @@ UniValue movecmd(const JSONRPCRequest& request)
 
     bool subtractFeeFromAmount = false;
     boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
-    CAmount nBalance = 0;
-    if (fromAccount->IsPoW2Witness())
-    {
-        nBalance = pwallet->GetBalance(fromAccount, true, false, true);
-    }
-    else
-    {
-        nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID, true);
-    }
+    CAmount nBalance = pwallet->GetBalanceForDepth(nMinDepth, fromAccount, false, true);
+
     CAmount nAmount = 0;
     if (request.params[2].getValStr() == "-1")
     {
@@ -1107,8 +1101,7 @@ UniValue sendfrom(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
 
     // Check funds
-    boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
-    CAmount nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
+    CAmount nBalance = pwallet->GetBalanceForDepth(nMinDepth, fromAccount, false, true);
     if (nAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
@@ -1234,8 +1227,7 @@ UniValue sendmany(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
 
     // Check funds
-    boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
-    CAmount nBalance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &fromAccountUUID);
+    CAmount nBalance = pwallet->GetBalanceForDepth(nMinDepth, fromAccount, false, true);
     if (totalAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 

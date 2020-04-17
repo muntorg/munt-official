@@ -756,14 +756,17 @@ public:
     void ReacceptWalletTransactions();
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
     void GetBalances(WalletBalances& balances, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
+    CAmount GetBalanceForDepth(int minDepth, const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetBalance(const CAccount* forAccount = nullptr, bool useCache=true, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetLockedBalance(const CAccount* forAccount = nullptr, bool includeChildren=false);
     CAmount GetUnconfirmedBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetImmatureBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
-    CAmount GetWatchOnlyBalance() const;
+    CAmount GetWatchOnlyBalance(int minDepth=0, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
+    #if 0
     CAmount GetLegacyBalance(const isminefilter& filter, int minDepth, const boost::uuids::uuid* accountUUID, bool includeChildren=false) const;
+    #endif
     CAmount GetAvailableBalance(CAccount* forAccount, const CCoinControl* coinControl = nullptr) const;
 
     //! Fund a transaction that is otherwise already created
