@@ -1001,7 +1001,6 @@ UniValue movecmd(const JSONRPCRequest& request)
         strComment = request.params[4].get_str();
 
     bool subtractFeeFromAmount = false;
-    boost::uuids::uuid fromAccountUUID = fromAccount->getUUID();
     CAmount nBalance = pwallet->GetBalanceForDepth(nMinDepth, fromAccount, false, true);
 
     CAmount nAmount = 0;
