@@ -178,7 +178,6 @@ void AccountSettingsDialog::deleteAccount()
 {
     if (activeAccount)
     {
-        boost::uuids::uuid accountUUID = activeAccount->getUUID();
         CAmount balance = pactiveWallet->GetBalanceForDepth(0, activeAccount, true, true);
         if (activeAccount->IsPoW2Witness() && activeAccount->IsFixedKeyPool())
         {
