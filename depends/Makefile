@@ -57,6 +57,10 @@ host_os:=$(strip $(host_os))
 ifeq ($(host_os),)
 host_os=$(full_host_os)
 endif
+host_flavor=$(word 4,$(subst -, ,$(canonical_host)))
+ifeq ($(host_flavor),androideabi)
+host_flavor=android
+endif
 
 $(host_arch)_$(host_os)_prefix=$(BASEDIR)/$(host)
 $(host_arch)_$(host_os)_host=$(host)
