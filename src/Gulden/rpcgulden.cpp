@@ -876,15 +876,14 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
         forcePurge = true;
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
-        boost::uuids::uuid accountUUID = account->getUUID();
-        CAmount balance = pwallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
+        CAmount balance = pwallet->GetBalanceForDepth(0, account, true, true);
         if (account->IsWitnessOnly())
         {
-            balance = pwallet->GetBalance(account, true, false, true);
+            balance = pwallet->GetBalanceForDepth(0, account, false, true);
         }
         if (balance > MINIMUM_VALUABLE_AMOUNT && !account->IsReadOnly())
         {
-            throw std::runtime_error("Account not empty, please first empty your account before trying to delete it.");
+            throw std::runtime_error(strprintf("Account not empty, please first empty your account before trying to delete it [balance: %s]", FormatMoney(balance)));
         }
     }
 
@@ -1754,12 +1753,15 @@ static UniValue getaccountbalances(const JSONRPCRequest& request)
     UniValue allAccounts(UniValue::VARR);
 
     //NB! - Intermediate AccountFromValue step is required in order to handle default account semantics.
-    for (const auto& accountPair : pwallet->mapAccounts)
+    for (const auto& [accountUUID, account] : pwallet->mapAccounts)
     {
         UniValue rec(UniValue::VOBJ);
-        rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
-        rec.push_back(Pair("label", accountPair.second->getLabel()));
-        rec.push_back(Pair("balance", ValueFromAmount(pwallet->GetLegacyBalance(includeWatchOnly?ISMINE_ALL:ISMINE_SPENDABLE, nMinDepth, &accountPair.first))));
+        rec.push_back(Pair("UUID", getUUIDAsString(accountUUID)));
+        rec.push_back(Pair("label",account->getLabel()));
+        CAmount balance = pwallet->GetBalanceForDepth(nMinDepth, account, false, true);
+        if (includeWatchOnly)
+            balance += pwallet->GetWatchOnlyBalance(nMinDepth, account, true);
+        rec.push_back(Pair("balance", balance));
         allAccounts.push_back(rec);
     }
 

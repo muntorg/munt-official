@@ -1207,14 +1207,13 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 MarkReplaced(wtx, newTx);
             }
 
-            return ret;
-            //fixme: (PHASE5) It is not clear if this is 100% necessary or not. See comment below for the original motivation.
+            //fixme: (Future) This is slow and should be made faster.
             //Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.
             //Is there maybe a better way to do this?
             //
             //Note the below has large speed implications - if we do need this it would be better to maybe just serialise the "from address" as part of CWalletTx and not keep additional transactions (that aren't ours) around.
             //GetTransaction() is expensive and locks on mutexes that intefere with other parts of the code.
-            /*for(const auto& txin : tx.vin)
+            for(const auto& txin : tx.vin)
             {
                 uint256 txHash;
                 if (CWallet::GetTxHash(txin.prevout, txHash))
@@ -1223,13 +1222,14 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     if (!fExistedIncoming)
                     {
                         uint256 hashBlock = uint256();
-                        if (GetTransaction(txHash, wtx.tx, Params().GetConsensus(), hashBlock, true))
+                        if (GetTransaction(txHash, wtx.tx, Params(), hashBlock, true))
                         {
                             AddToWallet(wtx, false);
                         }
                     }
                 }
-            }*/
+            }
+            return ret;
         }
     }
     return false;

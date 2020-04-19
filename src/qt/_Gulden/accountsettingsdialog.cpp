@@ -178,11 +178,10 @@ void AccountSettingsDialog::deleteAccount()
 {
     if (activeAccount)
     {
-        boost::uuids::uuid accountUUID = activeAccount->getUUID();
-        CAmount balance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+        CAmount balance = pactiveWallet->GetBalanceForDepth(0, activeAccount, true, true);
         if (activeAccount->IsPoW2Witness() && activeAccount->IsFixedKeyPool())
         {
-            balance = pactiveWallet->GetBalance(activeAccount, true, false, true); 
+            balance = pactiveWallet->GetBalanceForDepth(0, activeAccount, false, true);
         }
         if (!activeAccount->IsReadOnly() && balance > MINIMUM_VALUABLE_AMOUNT)
         {

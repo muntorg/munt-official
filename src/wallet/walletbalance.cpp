@@ -503,6 +503,44 @@ CAmount CWalletTx::GetChange() const
 
 extern bool IsMine(const CKeyStore* forAccount, const CWalletTx& tx);
 
+
+CAmount CWallet::GetBalanceForDepth(int minDepth, const CAccount* forAccount, bool includePoW2LockedWitnesses, bool includeChildren) const
+{
+    CAmount nTotal = 0;
+    {
+        LOCK2(cs_main, cs_wallet);
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        {
+            const CWalletTx* pcoin = &(*it).second;
+           
+            //fixme: (FUT) (ACCOUNT) - is this okay? Should it be cached or something? (CBSU?)
+            if (pcoin->GetDepthInMainChain() < minDepth)
+                continue;
+            if (pcoin->IsTrusted() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
+            {
+                if (!forAccount || ::IsMine(forAccount, *pcoin))
+                {
+                    CAmount nCredit = includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(true, forAccount, false) : pcoin->GetAvailableCredit(true, forAccount, false);
+                    nTotal += nCredit;
+                }
+            }
+        }
+    }
+    if (forAccount && includeChildren)
+    {
+        for (const auto& [childAccountUUID, childAccount] : mapAccounts)
+        {
+            (unused) childAccountUUID;
+            if (childAccount->getParentUUID() == forAccount->getUUID())
+            {
+                nTotal += GetBalanceForDepth(minDepth, childAccount, includePoW2LockedWitnesses, false);
+            }
+        }
+    }
+
+    return nTotal;
+}
+
 CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool includePoW2LockedWitnesses, bool includeChildren) const
 {
     CAmount nTotal = 0;
@@ -517,7 +555,8 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool incl
             {
                 if (pcoin->IsTrusted() && !pcoin->isAbandoned() && pcoin->mapValue.count("replaced_by_txid") == 0)
                 {
-                    nTotal += includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(useCache, forAccount, false) : pcoin->GetAvailableCredit(useCache, forAccount, false);
+                    CAmount nCredit = includePoW2LockedWitnesses ? pcoin->GetAvailableCreditIncludingLockedWitnesses(useCache, forAccount, false) : pcoin->GetAvailableCredit(useCache, forAccount, false);
+                    nTotal += nCredit;
                 }
             }
 
@@ -525,9 +564,9 @@ CAmount CWallet::GetBalance(const CAccount* forAccount, bool useCache, bool incl
     }
     if (forAccount && includeChildren)
     {
-        for (const auto& [accountUUID, childAccount] : mapAccounts)
+        for (const auto& [childAccountUUID, childAccount] : mapAccounts)
         {
-            (unused) accountUUID;
+            (unused) childAccountUUID;
             if (childAccount->getParentUUID() == forAccount->getUUID())
             {
                 nTotal += GetBalance(childAccount, useCache, includePoW2LockedWitnesses, false);
@@ -624,7 +663,7 @@ CAmount CWallet::GetImmatureBalance(const CAccount* forAccount, bool includePoW2
     return nTotal;
 }
 
-CAmount CWallet::GetWatchOnlyBalance() const
+CAmount CWallet::GetWatchOnlyBalance(int minDepth, const CAccount* forAccount, bool includeChildren) const
 {
     CAmount nTotal = 0;
     {
@@ -632,8 +671,11 @@ CAmount CWallet::GetWatchOnlyBalance() const
         for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const CWalletTx* pcoin = &(*it).second;
+           
+            if (pcoin->GetDepthInMainChain() < minDepth)
+                continue;
             if (pcoin->IsTrusted())
-                nTotal += pcoin->GetAvailableWatchOnlyCredit();
+                nTotal += pcoin->GetAvailableWatchOnlyCredit(true, forAccount, includeChildren);
         }
     }
 
@@ -669,6 +711,8 @@ CAmount CWallet::GetImmatureWatchOnlyBalance() const
     return nTotal;
 }
 
+//fixme: (Future). We temporarily keep this around for debugging purposes, in future we can remove it.
+#if 0
 // Calculate total balance in a different way from GetBalance. The biggest
 // difference is that GetBalance sums up all unspent TxOuts paying to the
 // wallet, while this sums up both spent and unspent TxOuts paying to the
@@ -679,6 +723,8 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
 {
     LOCK2(cs_main, cs_wallet);
 
+    LogPrintf("GetLegacyBalanceForAccount [%s]\n", getUUIDAsString(*accountUUID));
+    
     CAccount* forAccount = NULL;
     if (accountUUID && mapAccounts.find(*accountUUID) != mapAccounts.end())
         forAccount = mapAccounts.find(*accountUUID)->second;
@@ -687,22 +733,28 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
 
 
     //checkme: (GULDEN) - Is fee handled right?
-    for (const auto& entry : mapWallet) {
+    for (const auto& entry : mapWallet)
+    {
         const CWalletTx& wtx = entry.second;
         const int depth = wtx.GetDepthInMainChain();
-        if (depth < 0 || !CheckFinalTx(*wtx.tx, chainActive) || wtx.GetBlocksToMaturity() > 0 || wtx.isAbandoned()) {
+        
+        if (depth < 0 || !CheckFinalTx(*wtx.tx, chainActive) || wtx.GetBlocksToMaturity() > 0 || wtx.isAbandoned())
+        {
             continue;
         }
 
         if (depth >= minDepth)
         {
-            balance += wtx.GetCredit(filter, forAccount, includeChildren);
-            balance -= wtx.GetDebit(filter, forAccount, includeChildren);
+            CAmount nCredit = wtx.GetCredit(filter, forAccount, includeChildren);
+            CAmount nDebit = wtx.GetDebit(filter, forAccount, includeChildren);
+            balance += nCredit;
+            balance -= nDebit;
         }
     }
 
     return balance;
 }
+#endif
 
 CAmount CWallet::GetAvailableBalance(CAccount* forAccount, const CCoinControl* coinControl) const
 {

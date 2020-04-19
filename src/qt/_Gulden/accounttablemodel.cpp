@@ -81,7 +81,7 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
         }
         if (index.column() == ColumnIndex::Balance)
         {
-            CAmount balance = pactiveWallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID);
+            CAmount balance = m_wallet->GetBalanceForDepth(0, account, true, true);
             return GuldenUnits::format(GuldenUnits::NLG, balance, false, GuldenUnits::separatorAlways, 2);
         }
     }
@@ -95,7 +95,7 @@ QVariant AccountTableModel::data(const QModelIndex& index, int role) const
     }
     else if (role == AvailableBalanceRole)
     {
-        return (qlonglong)m_wallet->GetLegacyBalance(ISMINE_SPENDABLE, 0, &accountUUID );
+        return (qlonglong)m_wallet->GetBalanceForDepth(0, account, true, true);
     }
     else if (role == ActiveAccountRole)
     {
@@ -130,7 +130,7 @@ void AccountTableModel::activeAccountChanged(CAccount* account)
 {
     LogPrintf("AccountTableModel::activeAccountChanged\n");
 
-    // Unfortunately because of "GetLegacyBalance" some of our child models might cause cs_main to lock
+    // Unfortunately because of "GetBalanceForDepth" some of our child models might cause cs_main to lock
     // Because of lock order always being cs_main before cs_wallet (to prevent deadlock) we are forced to lock cs_main here.
     LOCK2(cs_main, m_wallet->cs_wallet);
 
@@ -142,7 +142,7 @@ void AccountTableModel::activeAccountChanged(CAccount* account)
 
 void AccountTableModel::accountAdded(CAccount* account)
 {
-    // Unfortunately because of "GetLegacyBalance" some of our child models might cause cs_main to lock
+    // Unfortunately because of "GetBalanceForDepth" some of our child models might cause cs_main to lock
     // Because of lock order always being cs_main before cs_wallet (to prevent deadlock) we are forced to lock cs_main here.
     LOCK2(cs_main, m_wallet->cs_wallet);
 
