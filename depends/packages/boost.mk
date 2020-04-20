@@ -27,9 +27,11 @@ $(package)_cxxflags=-std=c++17
 $(package)_cxxflags_$(host_os)=-fvisibility=hidden
 $(package)_cxxflags_linux+=-fPIC
 $(package)_cxxflags_ios=-fvisibility=default
+$(package)_patches=fix_clang_version.patch
 endef
 
 define $(package)_preprocess_cmds
+  patch -p1 < $($(package)_patch_dir)/fix_clang_version.patch && \
   echo "using $($(package)_toolset_$(host_os)) : : $($(package)_cxx) : <cxxflags>\"$($(package)_cxxflags) $($(package)_cppflags)\" <linkflags>\"$($(package)_ldflags)\" <archiver>\"$($(package)_archiver_$(host_os))\" <striper>\"$(host_STRIP)\"  <ranlib>\"$(host_RANLIB)\" <rc>\"$(host_WINDRES)\" : ;" > user-config.jam
 endef
 
