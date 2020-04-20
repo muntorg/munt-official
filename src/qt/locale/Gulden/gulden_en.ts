@@ -17,7 +17,7 @@
 <context>
     <name>AccountSettingsDialog</name>
     <message>
-        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="+190"/>
+        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="+189"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
@@ -58,7 +58,7 @@
         <translation>Done</translation>
     </message>
     <message>
-        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="-134"/>
+        <location filename="../../_Gulden/accountsettingsdialog.cpp" line="-133"/>
         <source>Scan QR to connect to your mobile Gulden app</source>
         <translation>Scan QR to connect to your mobile Gulden app</translation>
     </message>
@@ -87,7 +87,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Please fund the witness account first.</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+54"/>
         <source>Account not empty, please first empty your account before trying to delete it.</source>
         <translation>Account not empty, please first empty your account before trying to delete it.</translation>
     </message>
@@ -270,6 +270,16 @@ The account will continue to be monitored and will be restored should it receive
     <name>AddressTableModel</name>
     <message>
         <location filename="../../addresstablemodel.cpp" line="+182"/>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message>
+        <location line="+49"/>
+        <source>(no description)</source>
+        <translation>(no description)</translation>
+    </message>
+    <message>
+        <location line="-49"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
@@ -279,19 +289,9 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Address</translation>
     </message>
     <message>
-        <location line="+0"/>
-        <source>Description</source>
-        <translation type="unfinished">Description</translation>
-    </message>
-    <message>
         <location line="+38"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>(no description)</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -736,6 +736,11 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>EditAddressDialog</name>
     <message>
+        <location filename="../../forms/editaddressdialog.ui" line="+57"/>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message>
         <location filename="../../editaddressdialog.cpp" line="+37"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
@@ -751,7 +756,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>New mining address</translation>
     </message>
     <message>
-        <location filename="../../forms/editaddressdialog.ui" line="+14"/>
+        <location filename="../../forms/editaddressdialog.ui" line="-43"/>
         <source>Edit Address</source>
         <translation>Edit Address</translation>
     </message>
@@ -766,12 +771,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>The label associated with this address list entry</translation>
     </message>
     <message>
-        <location line="+7"/>
-        <source>Description</source>
-        <translation type="unfinished">Description</translation>
-    </message>
-    <message>
-        <location line="+10"/>
+        <location line="+17"/>
         <source>&amp;Address</source>
         <translation>&amp;Address</translation>
     </message>
@@ -4413,7 +4413,12 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionTableModel</name>
     <message>
-        <location filename="../../transactiontablemodel.cpp" line="+896"/>
+        <location filename="../../transactiontablemodel.cpp" line="+273"/>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message>
+        <location line="+623"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
@@ -4476,11 +4481,6 @@ If you  have recently received funds you may need to wait for them to clear befo
         <location line="-348"/>
         <source>Type</source>
         <translation>Type</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Description</source>
-        <translation>Description</translation>
     </message>
     <message numerus="yes">
         <location line="+59"/>
