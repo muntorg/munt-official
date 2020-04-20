@@ -12,7 +12,7 @@ public final class UriRecipient implements android.os.Parcelable {
 
     /*package*/ final String mLabel;
 
-    /*package*/ final String mDescription;
+    /*package*/ final String mDesc;
 
     /*package*/ final long mAmount;
 
@@ -20,12 +20,12 @@ public final class UriRecipient implements android.os.Parcelable {
             boolean valid,
             String address,
             String label,
-            String description,
+            String desc,
             long amount) {
         this.mValid = valid;
         this.mAddress = address;
         this.mLabel = label;
-        this.mDescription = description;
+        this.mDesc = desc;
         this.mAmount = amount;
     }
 
@@ -41,8 +41,8 @@ public final class UriRecipient implements android.os.Parcelable {
         return mLabel;
     }
 
-    public String getDescription() {
-        return mDescription;
+    public String getDesc() {
+        return mDesc;
     }
 
     public long getAmount() {
@@ -55,7 +55,7 @@ public final class UriRecipient implements android.os.Parcelable {
                 "mValid=" + mValid +
                 "," + "mAddress=" + mAddress +
                 "," + "mLabel=" + mLabel +
-                "," + "mDescription=" + mDescription +
+                "," + "mDesc=" + mDesc +
                 "," + "mAmount=" + mAmount +
         "}";
     }
@@ -78,7 +78,7 @@ public final class UriRecipient implements android.os.Parcelable {
         this.mValid = in.readByte() != 0;
         this.mAddress = in.readString();
         this.mLabel = in.readString();
-        this.mDescription = in.readString();
+        this.mDesc = in.readString();
         this.mAmount = in.readLong();
     }
 
@@ -92,7 +92,7 @@ public final class UriRecipient implements android.os.Parcelable {
         out.writeByte(this.mValid ? (byte)1 : 0);
         out.writeString(this.mAddress);
         out.writeString(this.mLabel);
-        out.writeString(this.mDescription);
+        out.writeString(this.mDesc);
         out.writeLong(this.mAmount);
     }
 

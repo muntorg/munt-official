@@ -15,7 +15,7 @@ auto NativeAddressRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni:
     auto r = ::djinni::LocalRef<JniType>{jniEnv->NewObject(data.clazz.get(), data.jconstructor,
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.address)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.name)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.description)),
+                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.desc)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.purpose)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
@@ -27,7 +27,7 @@ auto NativeAddressRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
     const auto& data = ::djinni::JniClass<NativeAddressRecord>::get();
     return {::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mAddress)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mName)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mDescription)),
+            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mDesc)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mPurpose))};
 }
 

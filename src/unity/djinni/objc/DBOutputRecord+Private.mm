@@ -13,7 +13,7 @@ auto OutputRecord::toCpp(ObjcType obj) -> CppType
     return {::djinni::I64::toCpp(obj.amount),
             ::djinni::String::toCpp(obj.address),
             ::djinni::String::toCpp(obj.label),
-            ::djinni::String::toCpp(obj.description),
+            ::djinni::String::toCpp(obj.desc),
             ::djinni::Bool::toCpp(obj.isMine)};
 }
 
@@ -22,7 +22,7 @@ auto OutputRecord::fromCpp(const CppType& cpp) -> ObjcType
     return [[DBOutputRecord alloc] initWithAmount:(::djinni::I64::fromCpp(cpp.amount))
                                           address:(::djinni::String::fromCpp(cpp.address))
                                             label:(::djinni::String::fromCpp(cpp.label))
-                                      description:(::djinni::String::fromCpp(cpp.description))
+                                             desc:(::djinni::String::fromCpp(cpp.desc))
                                            isMine:(::djinni::Bool::fromCpp(cpp.isMine))];
 }
 

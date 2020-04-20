@@ -10,18 +10,18 @@ public final class AddressRecord implements android.os.Parcelable {
 
     /*package*/ final String mName;
 
-    /*package*/ final String mDescription;
+    /*package*/ final String mDesc;
 
     /*package*/ final String mPurpose;
 
     public AddressRecord(
             String address,
             String name,
-            String description,
+            String desc,
             String purpose) {
         this.mAddress = address;
         this.mName = name;
-        this.mDescription = description;
+        this.mDesc = desc;
         this.mPurpose = purpose;
     }
 
@@ -33,8 +33,8 @@ public final class AddressRecord implements android.os.Parcelable {
         return mName;
     }
 
-    public String getDescription() {
-        return mDescription;
+    public String getDesc() {
+        return mDesc;
     }
 
     public String getPurpose() {
@@ -46,7 +46,7 @@ public final class AddressRecord implements android.os.Parcelable {
         return "AddressRecord{" +
                 "mAddress=" + mAddress +
                 "," + "mName=" + mName +
-                "," + "mDescription=" + mDescription +
+                "," + "mDesc=" + mDesc +
                 "," + "mPurpose=" + mPurpose +
         "}";
     }
@@ -68,7 +68,7 @@ public final class AddressRecord implements android.os.Parcelable {
     public AddressRecord(android.os.Parcel in) {
         this.mAddress = in.readString();
         this.mName = in.readString();
-        this.mDescription = in.readString();
+        this.mDesc = in.readString();
         this.mPurpose = in.readString();
     }
 
@@ -81,7 +81,7 @@ public final class AddressRecord implements android.os.Parcelable {
     public void writeToParcel(android.os.Parcel out, int flags) {
         out.writeString(this.mAddress);
         out.writeString(this.mName);
-        out.writeString(this.mDescription);
+        out.writeString(this.mDesc);
         out.writeString(this.mPurpose);
     }
 
