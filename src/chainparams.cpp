@@ -376,20 +376,21 @@ public:
             { 1120000, { uint256S("0xbcc3bcb3213bc9f88a74bda5b9f30044da262733d2678bc10811c987b17c71b7"), 1584388403 } },
             { 1125000, { uint256S("0xd3d0d507764229ef0c676c87a5df6f1963f6dfa2845330ef94955de0ecc60271"), 1585084828 } },
             { 1130000, { uint256S("0x3a4c11d187451f340d928bf487e5d942d11559cb38f889cf69f05510ae8ff299"), 1585791393 } },
-            { 1132294, { uint256S("0xfb0ca240756044b1cfa2ab0a3bdb783a12d99f9ad6a7d10bfe9e4fec538c618a"), 1586113936 } },
-            { 1133446, { uint256S("0xdf12457f700161bd19437051bd3a111e6da5ca0cd77a982a23012cefdc814464"), 1586273546 } },
+            { 1135000, { uint256S("0xbc68728519d04280048031d79e29e7f8595e68641349547491902b4d219d5f1a"), 1586491711 } },
+            { 1139096, { uint256S("0xc166ba902a06d4313b2a6ce7b15120a298b6202981f61975043cdc0e69709851"), 1587068148 } },
+            { 1140248, { uint256S("0xb15bbeb259bfe17cdb1ff8ba5ae20ba47ad733bddfb4ef7909cc63bd0221e6b1"), 1587231240 } },
         }
         };
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0xdf12457f700161bd19437051bd3a111e6da5ca0cd77a982a23012cefdc814464");
+        consensus.defaultAssumeValid = uint256S("0xb15bbeb259bfe17cdb1ff8ba5ae20ba47ad733bddfb4ef7909cc63bd0221e6b1");
         
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805beeac7c80f35");
         
         chainTxData = ChainTxData{
-            1586273546, // * UNIX timestamp of last checkpoint block
-            2876458,    // * total number of transactions between genesis and last checkpoint
+            1587231240, // * UNIX timestamp of last checkpoint block
+            2892631,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
