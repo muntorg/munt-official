@@ -425,7 +425,7 @@ CAccountHD::CAccountHD(CExtPubKey accountKey_, boost::uuids::uuid seedID, Accoun
     m_readOnly = true;
 }
 
-bool CAccountHD::GetKeyIDWithHighestIndex(CKeyID& HDKeyID, int nChain) const
+bool CAccountHD::GetAccountKeyIDWithHighestIndex(CKeyID& HDKeyID, int nChain) const
 {
     if (nChain == KEYCHAIN_EXTERNAL)
     {

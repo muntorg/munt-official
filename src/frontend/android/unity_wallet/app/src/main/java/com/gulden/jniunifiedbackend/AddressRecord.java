@@ -8,37 +8,46 @@ public final class AddressRecord implements android.os.Parcelable {
 
     /*package*/ final String mAddress;
 
-    /*package*/ final String mPurpose;
-
     /*package*/ final String mName;
+
+    /*package*/ final String mDescription;
+
+    /*package*/ final String mPurpose;
 
     public AddressRecord(
             String address,
-            String purpose,
-            String name) {
+            String name,
+            String description,
+            String purpose) {
         this.mAddress = address;
-        this.mPurpose = purpose;
         this.mName = name;
+        this.mDescription = description;
+        this.mPurpose = purpose;
     }
 
     public String getAddress() {
         return mAddress;
     }
 
-    public String getPurpose() {
-        return mPurpose;
-    }
-
     public String getName() {
         return mName;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public String getPurpose() {
+        return mPurpose;
     }
 
     @Override
     public String toString() {
         return "AddressRecord{" +
                 "mAddress=" + mAddress +
-                "," + "mPurpose=" + mPurpose +
                 "," + "mName=" + mName +
+                "," + "mDescription=" + mDescription +
+                "," + "mPurpose=" + mPurpose +
         "}";
     }
 
@@ -58,8 +67,9 @@ public final class AddressRecord implements android.os.Parcelable {
 
     public AddressRecord(android.os.Parcel in) {
         this.mAddress = in.readString();
-        this.mPurpose = in.readString();
         this.mName = in.readString();
+        this.mDescription = in.readString();
+        this.mPurpose = in.readString();
     }
 
     @Override
@@ -70,8 +80,9 @@ public final class AddressRecord implements android.os.Parcelable {
     @Override
     public void writeToParcel(android.os.Parcel out, int flags) {
         out.writeString(this.mAddress);
-        out.writeString(this.mPurpose);
         out.writeString(this.mName);
+        out.writeString(this.mDescription);
+        out.writeString(this.mPurpose);
     }
 
 }

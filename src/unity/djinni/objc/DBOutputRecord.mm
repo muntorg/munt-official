@@ -9,12 +9,14 @@
 - (nonnull instancetype)initWithAmount:(int64_t)amount
                                address:(nonnull NSString *)address
                                  label:(nonnull NSString *)label
+                           description:(nonnull NSString *)description
                                 isMine:(BOOL)isMine
 {
     if (self = [super init]) {
         _amount = amount;
         _address = [address copy];
         _label = [label copy];
+        _description = [description copy];
         _isMine = isMine;
     }
     return self;
@@ -23,17 +25,19 @@
 + (nonnull instancetype)outputRecordWithAmount:(int64_t)amount
                                        address:(nonnull NSString *)address
                                          label:(nonnull NSString *)label
+                                   description:(nonnull NSString *)description
                                         isMine:(BOOL)isMine
 {
     return [(DBOutputRecord*)[self alloc] initWithAmount:amount
                                                  address:address
                                                    label:label
+                                             description:description
                                                   isMine:isMine];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p amount:%@ address:%@ label:%@ isMine:%@>", self.class, (void *)self, @(self.amount), self.address, self.label, @(self.isMine)];
+    return [NSString stringWithFormat:@"<%@ %p amount:%@ address:%@ label:%@ description:%@ isMine:%@>", self.class, (void *)self, @(self.amount), self.address, self.label, self.description, @(self.isMine)];
 }
 
 @end
