@@ -1267,7 +1267,7 @@ void GuldenUnifiedBackend::addAddressBookRecord(const AddressRecord& address)
 {
     if (pactiveWallet)
     {
-        pactiveWallet->SetAddressBook(address.address, address.name, address.description, address.purpose);
+        pactiveWallet->SetAddressBook(address.address, address.name, address.desc, address.purpose);
     }
 }
 

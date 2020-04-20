@@ -29,7 +29,7 @@ private:
     const jfieldID field_mValid { ::djinni::jniGetFieldID(clazz.get(), "mValid", "Z") };
     const jfieldID field_mAddress { ::djinni::jniGetFieldID(clazz.get(), "mAddress", "Ljava/lang/String;") };
     const jfieldID field_mLabel { ::djinni::jniGetFieldID(clazz.get(), "mLabel", "Ljava/lang/String;") };
-    const jfieldID field_mDescription { ::djinni::jniGetFieldID(clazz.get(), "mDescription", "Ljava/lang/String;") };
+    const jfieldID field_mDesc { ::djinni::jniGetFieldID(clazz.get(), "mDesc", "Ljava/lang/String;") };
     const jfieldID field_mAmount { ::djinni::jniGetFieldID(clazz.get(), "mAmount", "J") };
 };
 

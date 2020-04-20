@@ -8,13 +8,13 @@
 
 - (nonnull instancetype)initWithAddress:(nonnull NSString *)address
                                   label:(nonnull NSString *)label
-                            description:(nonnull NSString *)description
+                                   desc:(nonnull NSString *)desc
                                  isMine:(BOOL)isMine
 {
     if (self = [super init]) {
         _address = [address copy];
         _label = [label copy];
-        _description = [description copy];
+        _desc = [desc copy];
         _isMine = isMine;
     }
     return self;
@@ -22,18 +22,18 @@
 
 + (nonnull instancetype)inputRecordWithAddress:(nonnull NSString *)address
                                          label:(nonnull NSString *)label
-                                   description:(nonnull NSString *)description
+                                          desc:(nonnull NSString *)desc
                                         isMine:(BOOL)isMine
 {
     return [(DBInputRecord*)[self alloc] initWithAddress:address
                                                    label:label
-                                             description:description
+                                                    desc:desc
                                                   isMine:isMine];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p address:%@ label:%@ description:%@ isMine:%@>", self.class, (void *)self, self.address, self.label, self.description, @(self.isMine)];
+    return [NSString stringWithFormat:@"<%@ %p address:%@ label:%@ desc:%@ isMine:%@>", self.class, (void *)self, self.address, self.label, self.desc, @(self.isMine)];
 }
 
 @end

@@ -31,7 +31,7 @@ uri_recipient = record {
     valid : bool;
     address : string;
     label : string;
-    description : string;
+    desc : string;
     amount : i64;
 } deriving(parcelable)
 
@@ -67,7 +67,7 @@ transaction_status = enum {
 input_record = record {
     address : string;
     label : string;
-    description : string;
+    desc : string;
     isMine : bool;
 } deriving(parcelable)
 
@@ -75,14 +75,14 @@ output_record = record {
     amount : i64;
     address : string;
     label : string;
-    description : string;
+    desc : string;
     isMine : bool;
 } deriving(parcelable)
 
 address_record = record {
     address : string;
     name : string;
-    description : string;
+    desc : string;
     purpose : string;
 } deriving(parcelable)
 

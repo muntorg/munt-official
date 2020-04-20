@@ -28,7 +28,7 @@ private:
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V") };
     const jfieldID field_mAddress { ::djinni::jniGetFieldID(clazz.get(), "mAddress", "Ljava/lang/String;") };
     const jfieldID field_mLabel { ::djinni::jniGetFieldID(clazz.get(), "mLabel", "Ljava/lang/String;") };
-    const jfieldID field_mDescription { ::djinni::jniGetFieldID(clazz.get(), "mDescription", "Ljava/lang/String;") };
+    const jfieldID field_mDesc { ::djinni::jniGetFieldID(clazz.get(), "mDesc", "Ljava/lang/String;") };
     const jfieldID field_mIsMine { ::djinni::jniGetFieldID(clazz.get(), "mIsMine", "Z") };
 };
 
