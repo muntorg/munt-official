@@ -364,7 +364,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         //To obtain a proper key gap instead of what we have now
                         //Probably we should be storing the 'highest used key' somewhere in this function
                         //And then topupkeypool should utilise it for allocation (instead of the allocation trick we use here)
-                        if (dynamic_cast<CAccountHD*>(forAccount)->GetKeyIDWithHighestIndex(highestKeyID, KEYCHAIN_EXTERNAL) && (highestKeyID == keyID))
+                        if (dynamic_cast<CAccountHD*>(forAccount)->GetAccountKeyIDWithHighestIndex(highestKeyID, KEYCHAIN_EXTERNAL) && (highestKeyID == keyID))
                         {
                             // Assign 1 extra key, because mining accounts never discard keys the keypool size always grows when new keys are allocated
                             // Ideally most mining accounts will only have 1 key, but due to a previous bug some have more

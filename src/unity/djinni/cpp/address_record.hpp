@@ -8,14 +8,17 @@
 
 struct AddressRecord final {
     std::string address;
-    std::string purpose;
     std::string name;
+    std::string description;
+    std::string purpose;
 
     AddressRecord(std::string address_,
-                  std::string purpose_,
-                  std::string name_)
+                  std::string name_,
+                  std::string description_,
+                  std::string purpose_)
     : address(std::move(address_))
-    , purpose(std::move(purpose_))
     , name(std::move(name_))
+    , description(std::move(description_))
+    , purpose(std::move(purpose_))
     {}
 };

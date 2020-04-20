@@ -172,8 +172,10 @@ void NJSGuldenUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const Transactio
         Nan::DefineOwnProperty(arg_0_9_elem, Nan::New<String>("address").ToLocalChecked(), arg_0_9_elem_1);
         auto arg_0_9_elem_2 = Nan::New<String>(transaction.inputs[arg_0_9_id].label).ToLocalChecked();
         Nan::DefineOwnProperty(arg_0_9_elem, Nan::New<String>("label").ToLocalChecked(), arg_0_9_elem_2);
-        auto arg_0_9_elem_3 = Nan::New<Boolean>(transaction.inputs[arg_0_9_id].isMine);
-        Nan::DefineOwnProperty(arg_0_9_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_0_9_elem_3);
+        auto arg_0_9_elem_3 = Nan::New<String>(transaction.inputs[arg_0_9_id].description).ToLocalChecked();
+        Nan::DefineOwnProperty(arg_0_9_elem, Nan::New<String>("description").ToLocalChecked(), arg_0_9_elem_3);
+        auto arg_0_9_elem_4 = Nan::New<Boolean>(transaction.inputs[arg_0_9_id].isMine);
+        Nan::DefineOwnProperty(arg_0_9_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_0_9_elem_4);
 
         arg_0_9->Set((int)arg_0_9_id,arg_0_9_elem);
     }
@@ -189,8 +191,10 @@ void NJSGuldenUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const Transactio
         Nan::DefineOwnProperty(arg_0_10_elem, Nan::New<String>("address").ToLocalChecked(), arg_0_10_elem_2);
         auto arg_0_10_elem_3 = Nan::New<String>(transaction.outputs[arg_0_10_id].label).ToLocalChecked();
         Nan::DefineOwnProperty(arg_0_10_elem, Nan::New<String>("label").ToLocalChecked(), arg_0_10_elem_3);
-        auto arg_0_10_elem_4 = Nan::New<Boolean>(transaction.outputs[arg_0_10_id].isMine);
-        Nan::DefineOwnProperty(arg_0_10_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_0_10_elem_4);
+        auto arg_0_10_elem_4 = Nan::New<String>(transaction.outputs[arg_0_10_id].description).ToLocalChecked();
+        Nan::DefineOwnProperty(arg_0_10_elem, Nan::New<String>("description").ToLocalChecked(), arg_0_10_elem_4);
+        auto arg_0_10_elem_5 = Nan::New<Boolean>(transaction.outputs[arg_0_10_id].isMine);
+        Nan::DefineOwnProperty(arg_0_10_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_0_10_elem_5);
 
         arg_0_10->Set((int)arg_0_10_id,arg_0_10_elem);
     }

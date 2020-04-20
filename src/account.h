@@ -437,7 +437,7 @@ public:
     //For serialization only.
     CAccountHD(){};
 
-    virtual bool GetKeyIDWithHighestIndex(CKeyID& HDKeyID, int nChain) const;
+    virtual bool GetAccountKeyIDWithHighestIndex(CKeyID& HDKeyID, int nChain) const;
     virtual bool GetKey(CExtKey& childKey, int nChain) const;
     virtual bool GetKey(const CKeyID& keyID, CKey& key) const override;
     virtual bool GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const override;

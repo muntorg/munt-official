@@ -10,14 +10,18 @@ public final class InputRecord implements android.os.Parcelable {
 
     /*package*/ final String mLabel;
 
+    /*package*/ final String mDescription;
+
     /*package*/ final boolean mIsMine;
 
     public InputRecord(
             String address,
             String label,
+            String description,
             boolean isMine) {
         this.mAddress = address;
         this.mLabel = label;
+        this.mDescription = description;
         this.mIsMine = isMine;
     }
 
@@ -29,6 +33,10 @@ public final class InputRecord implements android.os.Parcelable {
         return mLabel;
     }
 
+    public String getDescription() {
+        return mDescription;
+    }
+
     public boolean getIsMine() {
         return mIsMine;
     }
@@ -38,6 +46,7 @@ public final class InputRecord implements android.os.Parcelable {
         return "InputRecord{" +
                 "mAddress=" + mAddress +
                 "," + "mLabel=" + mLabel +
+                "," + "mDescription=" + mDescription +
                 "," + "mIsMine=" + mIsMine +
         "}";
     }
@@ -59,6 +68,7 @@ public final class InputRecord implements android.os.Parcelable {
     public InputRecord(android.os.Parcel in) {
         this.mAddress = in.readString();
         this.mLabel = in.readString();
+        this.mDescription = in.readString();
         this.mIsMine = in.readByte() != 0;
     }
 
@@ -71,6 +81,7 @@ public final class InputRecord implements android.os.Parcelable {
     public void writeToParcel(android.os.Parcel out, int flags) {
         out.writeString(this.mAddress);
         out.writeString(this.mLabel);
+        out.writeString(this.mDescription);
         out.writeByte(this.mIsMine ? (byte)1 : 0);
     }
 

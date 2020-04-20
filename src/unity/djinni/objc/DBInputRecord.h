@@ -6,14 +6,18 @@
 @interface DBInputRecord : NSObject
 - (nonnull instancetype)initWithAddress:(nonnull NSString *)address
                                   label:(nonnull NSString *)label
+                            description:(nonnull NSString *)description
                                  isMine:(BOOL)isMine;
 + (nonnull instancetype)inputRecordWithAddress:(nonnull NSString *)address
                                          label:(nonnull NSString *)label
+                                   description:(nonnull NSString *)description
                                         isMine:(BOOL)isMine;
 
 @property (nonatomic, readonly, nonnull) NSString * address;
 
 @property (nonatomic, readonly, nonnull) NSString * label;
+
+@property (nonatomic, readonly, nonnull) NSString * description;
 
 @property (nonatomic, readonly) BOOL isMine;
 

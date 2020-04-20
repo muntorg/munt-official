@@ -605,8 +605,10 @@ NAN_METHOD(NJSGuldenUnifiedBackend::IsValidRecipient) {
     Nan::DefineOwnProperty(arg_1, Nan::New<String>("address").ToLocalChecked(), arg_1_2);
     auto arg_1_3 = Nan::New<String>(result.label).ToLocalChecked();
     Nan::DefineOwnProperty(arg_1, Nan::New<String>("label").ToLocalChecked(), arg_1_3);
-    auto arg_1_4 = Nan::New<Number>(result.amount);
-    Nan::DefineOwnProperty(arg_1, Nan::New<String>("amount").ToLocalChecked(), arg_1_4);
+    auto arg_1_4 = Nan::New<String>(result.description).ToLocalChecked();
+    Nan::DefineOwnProperty(arg_1, Nan::New<String>("description").ToLocalChecked(), arg_1_4);
+    auto arg_1_5 = Nan::New<Number>(result.amount);
+    Nan::DefineOwnProperty(arg_1, Nan::New<String>("amount").ToLocalChecked(), arg_1_5);
 
 
     //Return result
@@ -633,9 +635,13 @@ NAN_METHOD(NJSGuldenUnifiedBackend::feeForRecipient) {
     String::Utf8Value string_arg_0_3(field_arg_0_3->ToString());
     auto arg_0_3 = std::string(*string_arg_0_3);
 
-    auto field_arg_0_4 = Nan::Get(info[0]->ToObject(), Nan::New<String>("amount").ToLocalChecked()).ToLocalChecked();
-    auto arg_0_4 = Nan::To<int64_t>(field_arg_0_4).FromJust();
-    UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
+    auto field_arg_0_4 = Nan::Get(info[0]->ToObject(), Nan::New<String>("description").ToLocalChecked()).ToLocalChecked();
+    String::Utf8Value string_arg_0_4(field_arg_0_4->ToString());
+    auto arg_0_4 = std::string(*string_arg_0_4);
+
+    auto field_arg_0_5 = Nan::Get(info[0]->ToObject(), Nan::New<String>("amount").ToLocalChecked()).ToLocalChecked();
+    auto arg_0_5 = Nan::To<int64_t>(field_arg_0_5).FromJust();
+    UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4, arg_0_5);
 
 
     auto result = GuldenUnifiedBackend::feeForRecipient(arg_0);
@@ -667,9 +673,13 @@ NAN_METHOD(NJSGuldenUnifiedBackend::performPaymentToRecipient) {
     String::Utf8Value string_arg_0_3(field_arg_0_3->ToString());
     auto arg_0_3 = std::string(*string_arg_0_3);
 
-    auto field_arg_0_4 = Nan::Get(info[0]->ToObject(), Nan::New<String>("amount").ToLocalChecked()).ToLocalChecked();
-    auto arg_0_4 = Nan::To<int64_t>(field_arg_0_4).FromJust();
-    UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
+    auto field_arg_0_4 = Nan::Get(info[0]->ToObject(), Nan::New<String>("description").ToLocalChecked()).ToLocalChecked();
+    String::Utf8Value string_arg_0_4(field_arg_0_4->ToString());
+    auto arg_0_4 = std::string(*string_arg_0_4);
+
+    auto field_arg_0_5 = Nan::Get(info[0]->ToObject(), Nan::New<String>("amount").ToLocalChecked()).ToLocalChecked();
+    auto arg_0_5 = Nan::To<int64_t>(field_arg_0_5).FromJust();
+    UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4, arg_0_5);
 
     auto arg_1 = Nan::To<bool>(info[1]).FromJust();
 
@@ -722,8 +732,10 @@ NAN_METHOD(NJSGuldenUnifiedBackend::getTransactionHistory) {
             Nan::DefineOwnProperty(arg_0_elem_9_elem, Nan::New<String>("address").ToLocalChecked(), arg_0_elem_9_elem_1);
             auto arg_0_elem_9_elem_2 = Nan::New<String>(result[arg_0_id].inputs[arg_0_elem_9_id].label).ToLocalChecked();
             Nan::DefineOwnProperty(arg_0_elem_9_elem, Nan::New<String>("label").ToLocalChecked(), arg_0_elem_9_elem_2);
-            auto arg_0_elem_9_elem_3 = Nan::New<Boolean>(result[arg_0_id].inputs[arg_0_elem_9_id].isMine);
-            Nan::DefineOwnProperty(arg_0_elem_9_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_0_elem_9_elem_3);
+            auto arg_0_elem_9_elem_3 = Nan::New<String>(result[arg_0_id].inputs[arg_0_elem_9_id].description).ToLocalChecked();
+            Nan::DefineOwnProperty(arg_0_elem_9_elem, Nan::New<String>("description").ToLocalChecked(), arg_0_elem_9_elem_3);
+            auto arg_0_elem_9_elem_4 = Nan::New<Boolean>(result[arg_0_id].inputs[arg_0_elem_9_id].isMine);
+            Nan::DefineOwnProperty(arg_0_elem_9_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_0_elem_9_elem_4);
 
             arg_0_elem_9->Set((int)arg_0_elem_9_id,arg_0_elem_9_elem);
         }
@@ -739,8 +751,10 @@ NAN_METHOD(NJSGuldenUnifiedBackend::getTransactionHistory) {
             Nan::DefineOwnProperty(arg_0_elem_10_elem, Nan::New<String>("address").ToLocalChecked(), arg_0_elem_10_elem_2);
             auto arg_0_elem_10_elem_3 = Nan::New<String>(result[arg_0_id].outputs[arg_0_elem_10_id].label).ToLocalChecked();
             Nan::DefineOwnProperty(arg_0_elem_10_elem, Nan::New<String>("label").ToLocalChecked(), arg_0_elem_10_elem_3);
-            auto arg_0_elem_10_elem_4 = Nan::New<Boolean>(result[arg_0_id].outputs[arg_0_elem_10_id].isMine);
-            Nan::DefineOwnProperty(arg_0_elem_10_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_0_elem_10_elem_4);
+            auto arg_0_elem_10_elem_4 = Nan::New<String>(result[arg_0_id].outputs[arg_0_elem_10_id].description).ToLocalChecked();
+            Nan::DefineOwnProperty(arg_0_elem_10_elem, Nan::New<String>("description").ToLocalChecked(), arg_0_elem_10_elem_4);
+            auto arg_0_elem_10_elem_5 = Nan::New<Boolean>(result[arg_0_id].outputs[arg_0_elem_10_id].isMine);
+            Nan::DefineOwnProperty(arg_0_elem_10_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_0_elem_10_elem_5);
 
             arg_0_elem_10->Set((int)arg_0_elem_10_id,arg_0_elem_10_elem);
         }
@@ -794,8 +808,10 @@ NAN_METHOD(NJSGuldenUnifiedBackend::getTransaction) {
         Nan::DefineOwnProperty(arg_1_9_elem, Nan::New<String>("address").ToLocalChecked(), arg_1_9_elem_1);
         auto arg_1_9_elem_2 = Nan::New<String>(result.inputs[arg_1_9_id].label).ToLocalChecked();
         Nan::DefineOwnProperty(arg_1_9_elem, Nan::New<String>("label").ToLocalChecked(), arg_1_9_elem_2);
-        auto arg_1_9_elem_3 = Nan::New<Boolean>(result.inputs[arg_1_9_id].isMine);
-        Nan::DefineOwnProperty(arg_1_9_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_1_9_elem_3);
+        auto arg_1_9_elem_3 = Nan::New<String>(result.inputs[arg_1_9_id].description).ToLocalChecked();
+        Nan::DefineOwnProperty(arg_1_9_elem, Nan::New<String>("description").ToLocalChecked(), arg_1_9_elem_3);
+        auto arg_1_9_elem_4 = Nan::New<Boolean>(result.inputs[arg_1_9_id].isMine);
+        Nan::DefineOwnProperty(arg_1_9_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_1_9_elem_4);
 
         arg_1_9->Set((int)arg_1_9_id,arg_1_9_elem);
     }
@@ -811,8 +827,10 @@ NAN_METHOD(NJSGuldenUnifiedBackend::getTransaction) {
         Nan::DefineOwnProperty(arg_1_10_elem, Nan::New<String>("address").ToLocalChecked(), arg_1_10_elem_2);
         auto arg_1_10_elem_3 = Nan::New<String>(result.outputs[arg_1_10_id].label).ToLocalChecked();
         Nan::DefineOwnProperty(arg_1_10_elem, Nan::New<String>("label").ToLocalChecked(), arg_1_10_elem_3);
-        auto arg_1_10_elem_4 = Nan::New<Boolean>(result.outputs[arg_1_10_id].isMine);
-        Nan::DefineOwnProperty(arg_1_10_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_1_10_elem_4);
+        auto arg_1_10_elem_4 = Nan::New<String>(result.outputs[arg_1_10_id].description).ToLocalChecked();
+        Nan::DefineOwnProperty(arg_1_10_elem, Nan::New<String>("description").ToLocalChecked(), arg_1_10_elem_4);
+        auto arg_1_10_elem_5 = Nan::New<Boolean>(result.outputs[arg_1_10_id].isMine);
+        Nan::DefineOwnProperty(arg_1_10_elem, Nan::New<String>("isMine").ToLocalChecked(), arg_1_10_elem_5);
 
         arg_1_10->Set((int)arg_1_10_id,arg_1_10_elem);
     }
@@ -877,10 +895,12 @@ NAN_METHOD(NJSGuldenUnifiedBackend::getAddressBookRecords) {
         auto arg_0_elem = Nan::New<Object>();
         auto arg_0_elem_1 = Nan::New<String>(result[arg_0_id].address).ToLocalChecked();
         Nan::DefineOwnProperty(arg_0_elem, Nan::New<String>("address").ToLocalChecked(), arg_0_elem_1);
-        auto arg_0_elem_2 = Nan::New<String>(result[arg_0_id].purpose).ToLocalChecked();
-        Nan::DefineOwnProperty(arg_0_elem, Nan::New<String>("purpose").ToLocalChecked(), arg_0_elem_2);
-        auto arg_0_elem_3 = Nan::New<String>(result[arg_0_id].name).ToLocalChecked();
-        Nan::DefineOwnProperty(arg_0_elem, Nan::New<String>("name").ToLocalChecked(), arg_0_elem_3);
+        auto arg_0_elem_2 = Nan::New<String>(result[arg_0_id].name).ToLocalChecked();
+        Nan::DefineOwnProperty(arg_0_elem, Nan::New<String>("name").ToLocalChecked(), arg_0_elem_2);
+        auto arg_0_elem_3 = Nan::New<String>(result[arg_0_id].description).ToLocalChecked();
+        Nan::DefineOwnProperty(arg_0_elem, Nan::New<String>("description").ToLocalChecked(), arg_0_elem_3);
+        auto arg_0_elem_4 = Nan::New<String>(result[arg_0_id].purpose).ToLocalChecked();
+        Nan::DefineOwnProperty(arg_0_elem, Nan::New<String>("purpose").ToLocalChecked(), arg_0_elem_4);
 
         arg_0->Set((int)arg_0_id,arg_0_elem);
     }
@@ -903,14 +923,18 @@ NAN_METHOD(NJSGuldenUnifiedBackend::addAddressBookRecord) {
     String::Utf8Value string_arg_0_1(field_arg_0_1->ToString());
     auto arg_0_1 = std::string(*string_arg_0_1);
 
-    auto field_arg_0_2 = Nan::Get(info[0]->ToObject(), Nan::New<String>("purpose").ToLocalChecked()).ToLocalChecked();
+    auto field_arg_0_2 = Nan::Get(info[0]->ToObject(), Nan::New<String>("name").ToLocalChecked()).ToLocalChecked();
     String::Utf8Value string_arg_0_2(field_arg_0_2->ToString());
     auto arg_0_2 = std::string(*string_arg_0_2);
 
-    auto field_arg_0_3 = Nan::Get(info[0]->ToObject(), Nan::New<String>("name").ToLocalChecked()).ToLocalChecked();
+    auto field_arg_0_3 = Nan::Get(info[0]->ToObject(), Nan::New<String>("description").ToLocalChecked()).ToLocalChecked();
     String::Utf8Value string_arg_0_3(field_arg_0_3->ToString());
     auto arg_0_3 = std::string(*string_arg_0_3);
-    AddressRecord arg_0(arg_0_1, arg_0_2, arg_0_3);
+
+    auto field_arg_0_4 = Nan::Get(info[0]->ToObject(), Nan::New<String>("purpose").ToLocalChecked()).ToLocalChecked();
+    String::Utf8Value string_arg_0_4(field_arg_0_4->ToString());
+    auto arg_0_4 = std::string(*string_arg_0_4);
+    AddressRecord arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
 
      GuldenUnifiedBackend::addAddressBookRecord(arg_0);
 }
@@ -928,14 +952,18 @@ NAN_METHOD(NJSGuldenUnifiedBackend::deleteAddressBookRecord) {
     String::Utf8Value string_arg_0_1(field_arg_0_1->ToString());
     auto arg_0_1 = std::string(*string_arg_0_1);
 
-    auto field_arg_0_2 = Nan::Get(info[0]->ToObject(), Nan::New<String>("purpose").ToLocalChecked()).ToLocalChecked();
+    auto field_arg_0_2 = Nan::Get(info[0]->ToObject(), Nan::New<String>("name").ToLocalChecked()).ToLocalChecked();
     String::Utf8Value string_arg_0_2(field_arg_0_2->ToString());
     auto arg_0_2 = std::string(*string_arg_0_2);
 
-    auto field_arg_0_3 = Nan::Get(info[0]->ToObject(), Nan::New<String>("name").ToLocalChecked()).ToLocalChecked();
+    auto field_arg_0_3 = Nan::Get(info[0]->ToObject(), Nan::New<String>("description").ToLocalChecked()).ToLocalChecked();
     String::Utf8Value string_arg_0_3(field_arg_0_3->ToString());
     auto arg_0_3 = std::string(*string_arg_0_3);
-    AddressRecord arg_0(arg_0_1, arg_0_2, arg_0_3);
+
+    auto field_arg_0_4 = Nan::Get(info[0]->ToObject(), Nan::New<String>("purpose").ToLocalChecked()).ToLocalChecked();
+    String::Utf8Value string_arg_0_4(field_arg_0_4->ToString());
+    auto arg_0_4 = std::string(*string_arg_0_4);
+    AddressRecord arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
 
      GuldenUnifiedBackend::deleteAddressBookRecord(arg_0);
 }

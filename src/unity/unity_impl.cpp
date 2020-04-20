@@ -201,8 +201,8 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 
     std::vector<InputRecord> inputs;
     std::vector<OutputRecord> outputs;
-    
-    
+
+
     //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
     std::vector<CAccount*> accountsToTry;
     accountsToTry.push_back(pactiveWallet->activeAccount);
@@ -215,8 +215,8 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         }
     }
 
-    int64_t subtracted;
-    int64_t added;
+    int64_t subtracted=0;
+    int64_t added=0;
     for (const auto& account : accountsToTry)
     {
         subtracted += wtx.GetDebit(ISMINE_SPENDABLE, account, true);
@@ -239,7 +239,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         // Try to extract destination, this is not possible in general. Only if the previous
         // ouput of our input happens to be in our wallet. Which will usually only be the case for
         // our own transactions.
-        
+
         uint256 txHash;
         if (txin.prevout.isHash)
         {
@@ -306,6 +306,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             address = addr.ToString();
         }
         std::string label;
+        std::string description;
         if (pwallet->mapAddressBook.count(address))
         {
             const auto& data = pwallet->mapAddressBook[address];
@@ -1065,10 +1066,10 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
      // return if URI is not valid or is no Gulden: URI
     std::string lowerCaseScheme = boost::algorithm::to_lower_copy(request.scheme);
     if (lowerCaseScheme != "guldencoin" && lowerCaseScheme != "gulden")
-        return UriRecipient(false, "", "", 0);
+        return UriRecipient(false, "", "", "", 0);
 
     if (!CGuldenAddress(request.path).IsValid())
-        return UriRecipient(false, "", "", 0);
+        return UriRecipient(false, "", "", "", 0);
 
     std::string address = request.path;
     std::string label = "";

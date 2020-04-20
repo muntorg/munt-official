@@ -12,16 +12,20 @@ public final class OutputRecord implements android.os.Parcelable {
 
     /*package*/ final String mLabel;
 
+    /*package*/ final String mDescription;
+
     /*package*/ final boolean mIsMine;
 
     public OutputRecord(
             long amount,
             String address,
             String label,
+            String description,
             boolean isMine) {
         this.mAmount = amount;
         this.mAddress = address;
         this.mLabel = label;
+        this.mDescription = description;
         this.mIsMine = isMine;
     }
 
@@ -37,6 +41,10 @@ public final class OutputRecord implements android.os.Parcelable {
         return mLabel;
     }
 
+    public String getDescription() {
+        return mDescription;
+    }
+
     public boolean getIsMine() {
         return mIsMine;
     }
@@ -47,6 +55,7 @@ public final class OutputRecord implements android.os.Parcelable {
                 "mAmount=" + mAmount +
                 "," + "mAddress=" + mAddress +
                 "," + "mLabel=" + mLabel +
+                "," + "mDescription=" + mDescription +
                 "," + "mIsMine=" + mIsMine +
         "}";
     }
@@ -69,6 +78,7 @@ public final class OutputRecord implements android.os.Parcelable {
         this.mAmount = in.readLong();
         this.mAddress = in.readString();
         this.mLabel = in.readString();
+        this.mDescription = in.readString();
         this.mIsMine = in.readByte() != 0;
     }
 
@@ -82,6 +92,7 @@ public final class OutputRecord implements android.os.Parcelable {
         out.writeLong(this.mAmount);
         out.writeString(this.mAddress);
         out.writeString(this.mLabel);
+        out.writeString(this.mDescription);
         out.writeByte(this.mIsMine ? (byte)1 : 0);
     }
 
