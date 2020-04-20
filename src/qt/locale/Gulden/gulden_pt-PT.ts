@@ -9,6 +9,124 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>TransactionTableModel</name>
+    <message>
+        <source>Description</source>
+        <translation>Descrição</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(sem etiqueta)</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Recebido</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Enviado</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Aberto até %1</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>ver-apenas</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Aberto para mais %n bloco(s)</numerusform>
+            <numerusform>Aberto para mais %n bloco(s)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation>Não confirmado</translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>Confirmando (%1 de %2 transações recomendadas)</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Confirmado (%1 confirmações)</translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation>Conflito</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>Imaturo (%1 confirmações, estará disponível após %2)</translation>
+    </message>
+    <message>
+        <source>External payee</source>
+        <translation>Beneficiário externo</translation>
+    </message>
+    <message>
+        <source>Multiple addresses</source>
+        <translation>Endereços múltiplos</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Recebido com</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Recebido de</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Enviado para</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Pagamento para si mesmo</translation>
+    </message>
+    <message>
+        <source>Internal transfer</source>
+        <translation>Transferência interna</translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation>Recompensa de Witness</translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation>Transação complexa, ver os detalhes da transação.</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Estado da transação. Passe o rato sobre esse campo para mostrar o número de confirmações.</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Data e tempo em que a transação foi recebida.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Tipo de transação.</translation>
+    </message>
+    <message>
+        <source>Amount added to balance.</source>
+        <translation>Quantidade adicionada ao saldo.</translation>
+    </message>
+    <message>
+        <source>Amount removed from balance.</source>
+        <translation>Quantidade removida do saldo.</translation>
+    </message>
+</context>
+<context>
     <name>AccountSettingsDialog</name>
     <message>
         <source>Okay</source>
@@ -1053,124 +1171,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>Confirm custom change address</source>
         <translation>Confirmar endereço de troco personalizado</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionTableModel</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(sem etiqueta)</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Recebido</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Enviado</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Aberto até %1</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>ver-apenas</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation>Tipo</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation>Descrição</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>Aberto para mais %n bloco(s)</numerusform>
-            <numerusform>Aberto para mais %n bloco(s)</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Unconfirmed</source>
-        <translation>Não confirmado</translation>
-    </message>
-    <message>
-        <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation>Confirmando (%1 de %2 transações recomendadas)</translation>
-    </message>
-    <message>
-        <source>Confirmed (%1 confirmations)</source>
-        <translation>Confirmado (%1 confirmações)</translation>
-    </message>
-    <message>
-        <source>Conflicted</source>
-        <translation>Conflito</translation>
-    </message>
-    <message>
-        <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation>Imaturo (%1 confirmações, estará disponível após %2)</translation>
-    </message>
-    <message>
-        <source>External payee</source>
-        <translation>Beneficiário externo</translation>
-    </message>
-    <message>
-        <source>Multiple addresses</source>
-        <translation>Endereços múltiplos</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation>Recebido com</translation>
-    </message>
-    <message>
-        <source>Received from</source>
-        <translation>Recebido de</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation>Enviado para</translation>
-    </message>
-    <message>
-        <source>Payment to yourself</source>
-        <translation>Pagamento para si mesmo</translation>
-    </message>
-    <message>
-        <source>Internal transfer</source>
-        <translation>Transferência interna</translation>
-    </message>
-    <message>
-        <source>Witness reward</source>
-        <translation>Recompensa de Witness</translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
-        <translation>Transação complexa, ver os detalhes da transação.</translation>
-    </message>
-    <message>
-        <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>Estado da transação. Passe o rato sobre esse campo para mostrar o número de confirmações.</translation>
-    </message>
-    <message>
-        <source>Date and time that the transaction was received.</source>
-        <translation>Data e tempo em que a transação foi recebida.</translation>
-    </message>
-    <message>
-        <source>Type of transaction.</source>
-        <translation>Tipo de transação.</translation>
-    </message>
-    <message>
-        <source>Amount added to balance.</source>
-        <translation>Quantidade adicionada ao saldo.</translation>
-    </message>
-    <message>
-        <source>Amount removed from balance.</source>
-        <translation>Quantidade removida do saldo.</translation>
     </message>
 </context>
 <context>

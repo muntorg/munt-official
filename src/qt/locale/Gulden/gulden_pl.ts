@@ -9,6 +9,339 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AddressTableModel</name>
+    <message>
+        <source>Description</source>
+        <translation>Opis</translation>
+    </message>
+    <message>
+        <source>(no description)</source>
+        <translation>Brak opisu</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etykieta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(brak etykiety)</translation>
+    </message>
+</context>
+<context>
+    <name>EditAddressDialog</name>
+    <message>
+        <source>Description</source>
+        <translation>Opis</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>New mining address</source>
+        <translation>Nowy adres górnika</translation>
+    </message>
+    <message>
+        <source>Edit Address</source>
+        <translation>Zmień adres</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etykieta</translation>
+    </message>
+    <message>
+        <source>The label associated with this address list entry</source>
+        <translation>Etykieta skojarzona z tym wpisem na liście adresów</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Adres</translation>
+    </message>
+    <message>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation>Ten adres jest skojarzony z wpisem na liście adresów. Może być zmodyfikowany jedynie dla adresów wysyłających.</translation>
+    </message>
+    <message>
+        <source>New receiving address</source>
+        <translation>Nowy adres odbiorcy</translation>
+    </message>
+    <message>
+        <source>New sending address</source>
+        <translation>Nowy adres wysyłania</translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>Zmień adres odbioru</translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>Zmień adres wysyłania</translation>
+    </message>
+    <message>
+        <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
+        <translation>Wprowadzony adres &quot;%1&quot; nie jest prawidłowym adresem Gulden.</translation>
+    </message>
+    <message>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>Wprowadzony adres &quot;%1&quot; znajduje się już w książce adresowej.</translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>Nie można odblokować portfela.</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>Generowanie nowego klucza nie powiodło się.</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <source>Description</source>
+        <translation>Opis</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(brak etykiety)</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Otrzymane</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Wysłane</translation>
+    </message>
+    <message>
+        <source>Rotate witness key</source>
+        <translation>Obróć witness klucz</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Otwórz do %1</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Wygenerowano</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>tylko-obserwowany</translation>
+    </message>
+    <message>
+        <source>Rearrange locked funds</source>
+        <translation>Zmień kolejność zablokowanych środków</translation>
+    </message>
+    <message>
+        <source>Rearrange locked funds: %1</source>
+        <translation>Zmień kolejność zablokowanych środków: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds</source>
+        <translation>Odblokuj środki</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation>
+            <numerusform>Otwórz dla %n więcej blok</numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation>Niepotwierdzone</translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation>Porzucone</translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>Potwierdzanie (%1 z %2 zalecanych potwierdzeń)</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Potwierdzone (%1 potwierdzeń)</translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation>Skonfliktowane</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>Niewystarczające (potwierdzenia %1 będą dostępne po %2)</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>Wygenerowane ale nie zaakceptowane</translation>
+    </message>
+    <message>
+        <source>External payee</source>
+        <translation>Zewnętrzny odbiorca</translation>
+    </message>
+    <message>
+        <source>Multiple addresses</source>
+        <translation>Wiele adresów</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Otrzymano razem</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Otrzymano od</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Wysłane do</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Zapłata na siebie</translation>
+    </message>
+    <message>
+        <source>Internal transfer</source>
+        <translation>Transfer wewnętrzny</translation>
+    </message>
+    <message>
+        <source>Witness reward</source>
+        <translation>Nagroda Witness</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension</source>
+        <translation>Funduszu konta witness rozszerzenie</translation>
+    </message>
+    <message>
+        <source>Extend witness account</source>
+        <translation>Rozszerz konto witness</translation>
+    </message>
+    <message>
+        <source>Renew witness account</source>
+        <translation>Odnów konto witness</translation>
+    </message>
+    <message>
+        <source>Fund witness account</source>
+        <translation>Fundusz konta witness</translation>
+    </message>
+    <message>
+        <source>Lock funds</source>
+        <translation>Zablokuj środki</translation>
+    </message>
+    <message>
+        <source>Empty witness account</source>
+        <translation>Puste konto witness</translation>
+    </message>
+    <message>
+        <source>Received from witness account</source>
+        <translation>Otrzymane z konta witness</translation>
+    </message>
+    <message>
+        <source>Lock funds from: %1</source>
+        <translation>Zablokuj środki z: %1</translation>
+    </message>
+    <message>
+        <source>Extend locked funds from: %1</source>
+        <translation>Rozszerz zablokowane środki z: %1</translation>
+    </message>
+    <message>
+        <source>Rotate witness key: %1</source>
+        <translation>Obróć  witness klucz: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds from: %1</source>
+        <translation>Odblokuj środki od: %1</translation>
+    </message>
+    <message>
+        <source>Paid to: %1</source>
+        <translation>Zapłacono dla: %1</translation>
+    </message>
+    <message>
+        <source>Payment from: %1</source>
+        <translation>Płatność z: %1</translation>
+    </message>
+    <message>
+        <source>Complex transaction, view transaction details.</source>
+        <translation>Skomplikowana transakcja, wyświetl szczegóły  transakcji.</translation>
+    </message>
+    <message>
+        <source>Internal transfer from: %1</source>
+        <translation>Przelew wewnętrzny z: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account: %1</source>
+        <translation>Konto witness z funduszu: %1</translation>
+    </message>
+    <message>
+        <source>Fund witness account extension: %1</source>
+        <translation>Fundusz, konto witness rozszerzenie: %1</translation>
+    </message>
+    <message>
+        <source>Unlock funds to: %1</source>
+        <translation>Odblokuj środki na: %1</translation>
+    </message>
+    <message>
+        <source>Internal transfer to: %1</source>
+        <translation>Przelew wewnętrzny do: %1</translation>
+    </message>
+    <message>
+        <source>Internal account movement</source>
+        <translation>Ruch konta wewnętrznego</translation>
+    </message>
+    <message>
+        <source>Extend locked funds</source>
+        <translation>Przedłużać zablokowane fundusze</translation>
+    </message>
+    <message>
+        <source>Generation reward</source>
+        <translation>Wygenerowana nagroda</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Stan transakcji. Najedź na to pole, aby wyświetlić liczbę potwierdzeń.</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Data i godzina otrzymania transakcji.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Rodzaj transakcji.</translation>
+    </message>
+    <message>
+        <source>Whether or not a watch-only address is involved in this transaction.</source>
+        <translation>Niezależnie od tego czy jest to adres do oglądania, jest zaangażowany w tę transakcję.</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction.</source>
+        <translation>Zdefiniowana przez użytkownika, cel transakcji.</translation>
+    </message>
+    <message>
+        <source>Amount added to balance.</source>
+        <translation>Kwota dodana do Salda.</translation>
+    </message>
+    <message>
+        <source>Amount removed from balance.</source>
+        <translation>Kwota usunięta z Salda.</translation>
+    </message>
+</context>
+<context>
     <name>AccountSelectionWidget</name>
     <message>
         <source>Frame</source>
@@ -1122,73 +1455,6 @@ Gdy transakcja opróżniania zostanie potwierdzona w blockchain, możesz zasili�
     </message>
 </context>
 <context>
-    <name>EditAddressDialog</name>
-    <message>
-        <source>Cancel</source>
-        <translation>Anuluj</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
-        <source>New mining address</source>
-        <translation>Nowy adres górnika</translation>
-    </message>
-    <message>
-        <source>Edit Address</source>
-        <translation>Zmień adres</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;Etykieta</translation>
-    </message>
-    <message>
-        <source>The label associated with this address list entry</source>
-        <translation>Etykieta skojarzona z tym wpisem na liście adresów</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>&amp;Adres</translation>
-    </message>
-    <message>
-        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation>Ten adres jest skojarzony z wpisem na liście adresów. Może być zmodyfikowany jedynie dla adresów wysyłających.</translation>
-    </message>
-    <message>
-        <source>New receiving address</source>
-        <translation>Nowy adres odbiorcy</translation>
-    </message>
-    <message>
-        <source>New sending address</source>
-        <translation>Nowy adres wysyłania</translation>
-    </message>
-    <message>
-        <source>Edit receiving address</source>
-        <translation>Zmień adres odbioru</translation>
-    </message>
-    <message>
-        <source>Edit sending address</source>
-        <translation>Zmień adres wysyłania</translation>
-    </message>
-    <message>
-        <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
-        <translation>Wprowadzony adres &quot;%1&quot; nie jest prawidłowym adresem Gulden.</translation>
-    </message>
-    <message>
-        <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation>Wprowadzony adres &quot;%1&quot; znajduje się już w książce adresowej.</translation>
-    </message>
-    <message>
-        <source>Could not unlock wallet.</source>
-        <translation>Nie można odblokować portfela.</translation>
-    </message>
-    <message>
-        <source>New key generation failed.</source>
-        <translation>Generowanie nowego klucza nie powiodło się.</translation>
-    </message>
-</context>
-<context>
     <name>ImportPrivKeyDialog</name>
     <message>
         <source>Cancel</source>
@@ -2259,21 +2525,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     </message>
 </context>
 <context>
-    <name>AddressTableModel</name>
-    <message>
-        <source>Label</source>
-        <translation>Etykieta</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adres</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(brak etykiety)</translation>
-    </message>
-</context>
-<context>
     <name>ReceiveRequestDialog</name>
     <message>
         <source>Label</source>
@@ -2500,245 +2751,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>(change)</source>
         <translation>(reszta)</translation>
-    </message>
-</context>
-<context>
-    <name>TransactionTableModel</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(brak etykiety)</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Data</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Otrzymane</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Wysłane</translation>
-    </message>
-    <message>
-        <source>Rotate witness key</source>
-        <translation>Obróć witness klucz</translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Otwórz do %1</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Wygenerowano</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>tylko-obserwowany</translation>
-    </message>
-    <message>
-        <source>Rearrange locked funds</source>
-        <translation>Zmień kolejność zablokowanych środków</translation>
-    </message>
-    <message>
-        <source>Rearrange locked funds: %1</source>
-        <translation>Zmień kolejność zablokowanych środków: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds</source>
-        <translation>Odblokuj środki</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation>Typ</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation>Opis</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation>
-            <numerusform>Otwórz dla %n więcej blok</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Unconfirmed</source>
-        <translation>Niepotwierdzone</translation>
-    </message>
-    <message>
-        <source>Abandoned</source>
-        <translation>Porzucone</translation>
-    </message>
-    <message>
-        <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation>Potwierdzanie (%1 z %2 zalecanych potwierdzeń)</translation>
-    </message>
-    <message>
-        <source>Confirmed (%1 confirmations)</source>
-        <translation>Potwierdzone (%1 potwierdzeń)</translation>
-    </message>
-    <message>
-        <source>Conflicted</source>
-        <translation>Skonfliktowane</translation>
-    </message>
-    <message>
-        <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation>Niewystarczające (potwierdzenia %1 będą dostępne po %2)</translation>
-    </message>
-    <message>
-        <source>Generated but not accepted</source>
-        <translation>Wygenerowane ale nie zaakceptowane</translation>
-    </message>
-    <message>
-        <source>External payee</source>
-        <translation>Zewnętrzny odbiorca</translation>
-    </message>
-    <message>
-        <source>Multiple addresses</source>
-        <translation>Wiele adresów</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation>Otrzymano razem</translation>
-    </message>
-    <message>
-        <source>Received from</source>
-        <translation>Otrzymano od</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation>Wysłane do</translation>
-    </message>
-    <message>
-        <source>Payment to yourself</source>
-        <translation>Zapłata na siebie</translation>
-    </message>
-    <message>
-        <source>Internal transfer</source>
-        <translation>Transfer wewnętrzny</translation>
-    </message>
-    <message>
-        <source>Witness reward</source>
-        <translation>Nagroda Witness</translation>
-    </message>
-    <message>
-        <source>Fund witness account extension</source>
-        <translation>Funduszu konta witness rozszerzenie</translation>
-    </message>
-    <message>
-        <source>Extend witness account</source>
-        <translation>Rozszerz konto witness</translation>
-    </message>
-    <message>
-        <source>Renew witness account</source>
-        <translation>Odnów konto witness</translation>
-    </message>
-    <message>
-        <source>Fund witness account</source>
-        <translation>Fundusz konta witness</translation>
-    </message>
-    <message>
-        <source>Lock funds</source>
-        <translation>Zablokuj środki</translation>
-    </message>
-    <message>
-        <source>Empty witness account</source>
-        <translation>Puste konto witness</translation>
-    </message>
-    <message>
-        <source>Received from witness account</source>
-        <translation>Otrzymane z konta witness</translation>
-    </message>
-    <message>
-        <source>Lock funds from: %1</source>
-        <translation>Zablokuj środki z: %1</translation>
-    </message>
-    <message>
-        <source>Extend locked funds from: %1</source>
-        <translation>Rozszerz zablokowane środki z: %1</translation>
-    </message>
-    <message>
-        <source>Rotate witness key: %1</source>
-        <translation>Obróć  witness klucz: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds from: %1</source>
-        <translation>Odblokuj środki od: %1</translation>
-    </message>
-    <message>
-        <source>Paid to: %1</source>
-        <translation>Zapłacono dla: %1</translation>
-    </message>
-    <message>
-        <source>Payment from: %1</source>
-        <translation>Płatność z: %1</translation>
-    </message>
-    <message>
-        <source>Complex transaction, view transaction details.</source>
-        <translation>Skomplikowana transakcja, wyświetl szczegóły  transakcji.</translation>
-    </message>
-    <message>
-        <source>Internal transfer from: %1</source>
-        <translation>Przelew wewnętrzny z: %1</translation>
-    </message>
-    <message>
-        <source>Fund witness account: %1</source>
-        <translation>Konto witness z funduszu: %1</translation>
-    </message>
-    <message>
-        <source>Fund witness account extension: %1</source>
-        <translation>Fundusz, konto witness rozszerzenie: %1</translation>
-    </message>
-    <message>
-        <source>Unlock funds to: %1</source>
-        <translation>Odblokuj środki na: %1</translation>
-    </message>
-    <message>
-        <source>Internal transfer to: %1</source>
-        <translation>Przelew wewnętrzny do: %1</translation>
-    </message>
-    <message>
-        <source>Internal account movement</source>
-        <translation>Ruch konta wewnętrznego</translation>
-    </message>
-    <message>
-        <source>Extend locked funds</source>
-        <translation>Przedłużać zablokowane fundusze</translation>
-    </message>
-    <message>
-        <source>Generation reward</source>
-        <translation>Wygenerowana nagroda</translation>
-    </message>
-    <message>
-        <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>Stan transakcji. Najedź na to pole, aby wyświetlić liczbę potwierdzeń.</translation>
-    </message>
-    <message>
-        <source>Date and time that the transaction was received.</source>
-        <translation>Data i godzina otrzymania transakcji.</translation>
-    </message>
-    <message>
-        <source>Type of transaction.</source>
-        <translation>Rodzaj transakcji.</translation>
-    </message>
-    <message>
-        <source>Whether or not a watch-only address is involved in this transaction.</source>
-        <translation>Niezależnie od tego czy jest to adres do oglądania, jest zaangażowany w tę transakcję.</translation>
-    </message>
-    <message>
-        <source>User-defined intent/purpose of the transaction.</source>
-        <translation>Zdefiniowana przez użytkownika, cel transakcji.</translation>
-    </message>
-    <message>
-        <source>Amount added to balance.</source>
-        <translation>Kwota dodana do Salda.</translation>
-    </message>
-    <message>
-        <source>Amount removed from balance.</source>
-        <translation>Kwota usunięta z Salda.</translation>
     </message>
 </context>
 <context>
