@@ -58,16 +58,17 @@ fun createRecipient(text: String): UriRecipient {
     val address = uri.host ?: throw InvalidRecipientException("No recipient address")
     val amount = uri.getQueryParameter("amount")?.toDoubleOrZero()?.toNative() ?: 0
     val label = uri.getQueryParameter("label") ?: ""
+    val description = uri.getQueryParameter("description") ?: ""
 
     if (IBANValidator.getInstance().isValid(address))
-        return UriRecipient(false, address, label, amount)
+        return UriRecipient(false, address, label, description, amount)
 
-    // if there is a scheme it should equal gulden or guldencoin, but that will be checked insode C++, so just pass it through
+    // if there is a scheme it should equal gulden or guldencoin, but that will be checked inside C++, so just pass it through
     val coreRecipient = GuldenUnifiedBackend.IsValidRecipient(UriRecord(uri.scheme, address, HashMap<String, String>()))
     if (!coreRecipient.valid)
         throw InvalidRecipientException("Core deemed recipient invalid")
 
-    return UriRecipient(true, coreRecipient.address, if (coreRecipient.label != "") coreRecipient.label else label, amount)
+    return UriRecipient(true, coreRecipient.address, if (coreRecipient.label != "") coreRecipient.label else label, if (coreRecipient.desc != "") coreRecipient.desc else description, amount)
 }
 
 fun ellipsizeString(sourceString: String, maxLength: Int): String

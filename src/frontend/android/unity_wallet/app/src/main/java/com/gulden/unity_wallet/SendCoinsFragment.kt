@@ -118,7 +118,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
         // test layout using display dimens
         val outSize = getDisplayDimensions(context!!)
-        mMainlayout!!.measure(outSize.x, outSize.y)
+        mMainlayout.measure(outSize.x, outSize.y)
 
         // height that the entire bottom sheet wants to be
         val preferredHeight = mMainlayout.measuredHeight
@@ -259,7 +259,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
     }
 
-    private fun confirmAndCommitGuldenPayment(view: View) {
+    private fun confirmAndCommitGuldenPayment()
+    {
         val amountNLG = when (entryMode) {
             EntryMode.Local -> (amountEditStr.toDoubleOrZero() / localRate).toString()
             EntryMode.Native -> amountEditStr
@@ -268,7 +269,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         val amountNative = amountNLG.toNative()
 
         try {
-            val paymentRequest = UriRecipient(true, recipient.address, recipient.label, amountNative)
+            val paymentRequest = UriRecipient(true, recipient.address, recipient.label, recipient.desc, amountNative)
             val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
             val balance = GuldenUnifiedBackend.GetBalance()
             if (fee > balance) {
@@ -281,7 +282,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                     // on confirmation compose recipient with reduced amount and execute payment with substract fee from amount
                     positiveButton(getString(R.string.send_all_btn)) {
-                        val sendAllRequest = UriRecipient(true, recipient.address, recipient.label, balance)
+                        val sendAllRequest = UriRecipient(true, recipient.address, recipient.label, recipient.desc, balance)
                         performAuthenticatedPayment(dialog!!, sendAllRequest, null,true)
                     }
 
@@ -308,7 +309,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
     }
 
-    private fun confirmAndCommitIBANPayment(view: View, name: String, description: String) {
+    private fun confirmAndCommitIBANPayment(name: String, description: String) {
         mMainlayout.button_send.isEnabled = false
         this.launch {
             try {
@@ -318,7 +319,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 // note that testing if the transaction exceeds balance has to be done with an order (placed above already), when using a quote the actual rate when placing the order could already be different and also
                 // the recipient is needed to calculate the network fee
                 val amountNative = orderResult.depositAmountNLG.toNative()
-                val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, amountNative)
+                val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, recipient.desc, amountNative)
                 val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
                 val balance = GuldenUnifiedBackend.GetBalance()
                 if (fee > balance) {
@@ -376,7 +377,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             // on confirmation compose recipient and execute payment
             positiveButton(getString(R.string.send_btn)) {
                 mMainlayout.button_send.isEnabled = true
-                val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, orderResult.depositAmountNLG.toNative())
+                val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, recipient.desc, orderResult.depositAmountNLG.toNative())
                 try {
                     performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message), substractFee)
                 } catch (exception: RuntimeException) {
@@ -580,7 +581,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         return true
     }
 
-    private fun handleSendButtonIBAN(view : View)
+    private fun handleSendButtonIBAN()
     {
         val contentView = LayoutInflater.from(context).inflate(R.layout.iban_name_entry, null)
         val builder = context!!.alert(Appcompat) {
@@ -589,7 +590,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             if (recipient.label.isNotEmpty())
                 contentView.name.setText(recipient.label)
             positiveButton("Pay") {
-                confirmAndCommitIBANPayment(view, contentView.name.text.toString(), contentView.description.text.toString())
+                confirmAndCommitIBANPayment(contentView.name.text.toString(), contentView.description.text.toString())
             }
             negativeButton("Cancel") {
             }
@@ -621,7 +622,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         dialog.show()
     }
 
-    private fun handleSendButton(view : View)
+    private fun handleSendButton()
     {
         if (!UnityCore.instance.walletReady.isCompleted) {
             errorMessage(getString(R.string.core_not_ready_yet))
@@ -637,8 +638,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
             when
             {
-                isIBAN -> handleSendButtonIBAN(view)
-                else -> confirmAndCommitGuldenPayment(view)
+                isIBAN -> handleSendButtonIBAN()
+                else -> confirmAndCommitGuldenPayment()
             }
         }
     }
@@ -687,7 +688,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             }
             R.id.button_send ->
             {
-                handleSendButton(view)
+                handleSendButton()
             }
 
         }
@@ -714,7 +715,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             dialog.dismiss()
             val label = input.text.toString()
-            val record = AddressRecord(mSendCoinsReceivingStaticAddress.text.toString(), "Send", label)
+            val record = AddressRecord(mSendCoinsReceivingStaticAddress.text.toString(), label, "", "Send")
             UnityCore.instance.addAddressBookRecord(record)
             setAddressLabel(label)
         }
@@ -738,7 +739,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             return
         }
 
-        val record = AddressRecord(mSendCoinsReceivingStaticAddress.text.toString(), "Send", mSendCoinsReceivingStaticLabel.text.toString())
+        val record = AddressRecord(mSendCoinsReceivingStaticAddress.text.toString(), mSendCoinsReceivingStaticLabel.text.toString(), "", "Send")
         UnityCore.instance.deleteAddressBookRecord(record)
         setAddressLabel("")
     }
