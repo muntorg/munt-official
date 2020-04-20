@@ -2276,7 +2276,10 @@ static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainP
                 nBlockProof += GetBlockProof(*pprev);
                 pprev = pprev->pprev;
             }
-            assert (nCount == 10);
+            if (!fSPV)
+            {
+                assert (nCount == 10);
+            }
             nBlockProof /= nCount;
             chainWork += nBlockProof;
         }

@@ -1303,14 +1303,30 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
     return true;
 }
 
+static void forceRestart()
+{
+    // Immediately disable what we can so this is cleaner.
+    if (g_connman)
+    {
+        g_connman->SetNetworkActive(false);
+    }
+    fullyEraseDatadirOnShutdown=true;
+    
+    // Event loop will exit after current HTTP requests have been handled, so
+    // this reply will get back to the client.
+    GuldenAppManager::gApp->shutdown();
+}
+
 void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
 {
     LOCK2(cs_main, cs_wallet);
 
     int conflictconfirms = 0;
-    if (mapBlockIndex.count(hashBlock)) {
+    if (mapBlockIndex.count(hashBlock))
+    {
         CBlockIndex* pindex = mapBlockIndex[hashBlock];
-        if (partialChain.Contains(pindex) || chainActive.Contains(pindex)) {
+        if (partialChain.Contains(pindex) || chainActive.Contains(pindex))
+        {
             conflictconfirms = -(std::max(partialChain.Height(), chainActive.Height()) - pindex->nHeight + 1);
         }
     }
@@ -1329,15 +1345,22 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
 
     todo.insert(hashTx);
 
-    while (!todo.empty()) {
+    while (!todo.empty())
+    {
         uint256 now = *todo.begin();
         todo.erase(now);
         done.insert(now);
         auto it = mapWallet.find(now);
-        assert(it != mapWallet.end());
+        if (it == mapWallet.end())
+        {
+            forceRestart();
+            return;
+        }
+        //assert(it != mapWallet.end());
         CWalletTx& wtx = it->second;
         int currentconfirm = wtx.GetDepthInMainChain();
-        if (conflictconfirms < currentconfirm || (conflictconfirms == currentconfirm && wtx.nIndex >= 0)) {
+        if (conflictconfirms < currentconfirm || (conflictconfirms == currentconfirm && wtx.nIndex >= 0))
+        {
             // Block is 'more conflicted' than current confirm; update. Or tx not marked as conflicted yet.
             // Mark transaction as conflicted with this block.
             wtx.nIndex = -1;
@@ -1346,18 +1369,21 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             walletdb.WriteTx(wtx);
             // Iterate over all its outputs, and mark transactions in the wallet that spend them conflicted too
             TxSpends::const_iterator iter = mapTxSpends.lower_bound(COutPoint(now, 0));
-            while (iter != mapTxSpends.end()) {
+            while (iter != mapTxSpends.end())
+            {
                 uint256 txHash;
                 if (!CWallet::GetTxHash(iter->first, txHash) || txHash != now)
                     break;
-                 if (!done.count(iter->second)) {
+                 if (!done.count(iter->second))
+                 {
                      todo.insert(iter->second);
                  }
                  iter++;
             }
             // If a transaction changes 'conflicted' state, that changes the balance
             // available of the outputs it spends. So force those to be recomputed
-            for (const CTxIn& txin : wtx.tx->vin) {
+            for (const CTxIn& txin : wtx.tx->vin)
+            {
                 CWalletTx* prev = GetWalletTx(txin.prevout);
                 if (prev)
                     prev->MarkDirty();
