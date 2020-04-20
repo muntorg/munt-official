@@ -24,9 +24,10 @@ import com.gulden.jniunifiedbackend.TransactionRecord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.runOnUiThread
 import kotlin.coroutines.CoroutineContext
+import kotlin.system.exitProcess
+
 
 private const val TAG = "activity-manager"
 
@@ -59,6 +60,9 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 
     override fun onCoreShutdown() {
         ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
+
+        //fixme: In future see if we can restart the core here
+        exitProcess(-1)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
