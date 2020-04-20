@@ -132,17 +132,17 @@ class NocksService {
 
     private fun extractNocksError(input: String): String {
         try {
-            val adapterError = moshi?.adapter(NocksError::class.java)
+            val adapterError = moshi.adapter(NocksError::class.java)
             val error1 = adapterError?.fromJson(input)
             return error1?.error?.message!!
         } catch (e: Throwable) {
             try {
-                val adapterError = moshi?.adapter(NocksSimpleError::class.java)
+                val adapterError = moshi.adapter(NocksSimpleError::class.java)
                 val error2 = adapterError?.fromJson(input)
                 return error2?.error!!
             } catch (e: Throwable) {
                 try {
-                    val adapterError = moshi?.adapter(NocksListError::class.java)
+                    val adapterError = moshi.adapter(NocksListError::class.java)
                     val error3 = adapterError?.fromJson(input)
                     return error3?.error!![0]
                 } catch (e: Throwable) {
@@ -168,7 +168,7 @@ class NocksService {
 
         // execute request suspended on IO thread pool and return response body
         val responseBody = withContext(IO) {
-            val response = client!!.newCall(request).execute()
+            val response = client.newCall(request).execute()
 
             val bodyStr = response.body()?.string()
                     ?: throw NocksException("Null body in Nocks response")
@@ -218,8 +218,8 @@ class NocksService {
 
         if (FAKE_NOCKS_SERVICE) {
             delay(500)
-            val amount = Random.nextDouble(300.0, 400.0)
-            return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = amount, amountEUR = 1.0 / amount, uuid = "88e30c05-e427-4b36-aa2a-44b89e480355")
+            val fakeAmount = Random.nextDouble(300.0, 400.0)
+            return NocksOrderResult(depositAddress = "GeDH37Y17DaLZb5x1XsZsFGq7Ked17uC8c", depositAmountNLG = fakeAmount, amountEUR = 1.0 / fakeAmount, uuid = "88e30c05-e427-4b36-aa2a-44b89e480355")
         } else {
             val params = NocksTransactionParams(source_currency = "NLG", target_currency = "EUR", target_address = destinationIBAN,
                     name = nameStripped, description = descriptionStripped, amount = NocksAmount(amount.toString(), amtCurrency.symbol))
