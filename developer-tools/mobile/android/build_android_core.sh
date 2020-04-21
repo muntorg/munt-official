@@ -107,6 +107,7 @@ do
     echo Skipping depends
   fi
 
+  export TARGET_OS=android
   mkdir build_android_${target_host} | true
   cd build_android_${target_host}
   if [ -z "$SKIP_CONFIG" ]
