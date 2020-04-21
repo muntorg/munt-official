@@ -111,7 +111,7 @@ void WitnessDurationWidget::update()
 
     nEarnings = fBlocksPerDay * nDays * WITNESS_SUBSIDY;
 
-    float fPercent = (fBlocksPerDay * 30 * WITNESS_SUBSIDY)/((nAmount/100000000))*100;
+    float fPercent = (fBlocksPerDay * 30 * WITNESS_SUBSIDY)/((nAmount/COIN))*100;
 
     QString sSecondTimeUnit = daysToHuman(nDays);
     
@@ -165,7 +165,7 @@ uint64_t WitnessDurationWidget::GetNetworkWeight()
                     CAlert::Notify(strErrorMessage, true, true);
                     return nNetworkWeight;
                 }
-                nNetworkWeight = witnessInfo.nTotalWeightRaw;
+                nNetworkWeight = witnessInfo.nTotalWeightEligibleRaw;
             }
         }
     }
