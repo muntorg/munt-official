@@ -72,7 +72,9 @@ AC_DEFUN([AX_BOOST_THREAD],
              elif test "x$host_os" = "xmingw32" ; then
                  CXXFLAGS="-mthreads $CXXFLAGS"
              else
-                CXXFLAGS="$CXXFLAGS"
+                if test "x$TARGET_OS" != xandroid; then
+                    CXXFLAGS="-pthread $CXXFLAGS"
+                fi
              fi
              AC_COMPILE_IFELSE([
                  AC_LANG_PROGRAM(
@@ -89,7 +91,9 @@ AC_DEFUN([AX_BOOST_THREAD],
            elif test "x$host_os" = "xmingw32" ; then
               BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS"
            else
-              BOOST_CPPFLAGS="$BOOST_CPPFLAGS"
+                if test "x$TARGET_OS" != xandroid; then
+                    BOOST_CPPFLAGS="-pthread $BOOST_CPPFLAGS"
+                fi
            fi
 
             AC_SUBST(BOOST_CPPFLAGS)
