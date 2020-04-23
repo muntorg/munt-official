@@ -96,10 +96,7 @@ public:
     // caches for the best header
     mutable std::atomic<int> cachedBestHeaderHeight;
     mutable std::atomic<int64_t> cachedBestHeaderTime;
-    mutable std::atomic<int> cachedPoW2Phase;
     mutable std::atomic<int> cachedProbableHeight;
-
-    void updatePoW2Display();
 
     void unsubscribeFromCoreSignals();
 private:

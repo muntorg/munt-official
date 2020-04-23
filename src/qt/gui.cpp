@@ -781,13 +781,6 @@ bool GUI::addWallet(const QString& name, WalletModel *walletModel)
     connect(walletModel, SIGNAL(balanceChanged(WalletBalances,CAmount,CAmount,CAmount)), this, SLOT(setBalance(WalletBalances,CAmount,CAmount,CAmount)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
 
-    //fixme: (PHASE5) This can be removed
-    // Force this to run once to ensure correct PoW2 phase displays
-    if (clientModel)
-        clientModel->updatePoW2Display();
-    if (rpcConsole)
-        rpcConsole->updatePoW2PhaseState();
-
     return walletFrame->addWallet(name, walletModel);
 }
 

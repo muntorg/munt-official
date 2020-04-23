@@ -835,15 +835,6 @@ void RPCConsole::setNumBlocks(int count, const QDateTime& blockDate, [[maybe_unu
 
     ui->numberOfBlocks->setText(QString::number(count));
     ui->lastBlockTime->setText(blockDate.toString());
-
-    if (clientModel)
-        ui->pow2phasevalue->setText(QString::number(clientModel->cachedPoW2Phase));
-}
-
-void RPCConsole::updatePoW2PhaseState()
-{
-    if (clientModel)
-        ui->pow2phasevalue->setText(QString::number(clientModel->cachedPoW2Phase));
 }
 
 void RPCConsole::setMempoolSize(long numberOfTxs, size_t dynUsage)

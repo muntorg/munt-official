@@ -51,7 +51,6 @@ ClientModel::ClientModel(OptionsModel *_optionsModel, QObject *parent) :
     cachedBestHeaderHeight = -1;
     cachedBestHeaderTime = -1;
     cachedProbableHeight = Checkpoints::LastCheckPointHeight();
-    cachedPoW2Phase = 1;
     peerTableModel = new PeerTableModel(this);
     banTableModel = new BanTableModel(this);
 
@@ -343,8 +342,8 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
     int64_t& nLastUpdateNotification = nLastBlockTipUpdateNotification;
 
     // if we are in-sync, update the UI regardless of last update time
-    if (!initialSync || now - nLastUpdateNotification > MODEL_UPDATE_DELAY) {
-        clientmodel->updatePoW2Display();
+    if (!initialSync || now - nLastUpdateNotification > MODEL_UPDATE_DELAY)
+    {
         //pass a async signal to the UI thread
         QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
                                   Q_ARG(int, pIndex->nHeight),
@@ -352,12 +351,6 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
                                   Q_ARG(double, clientmodel->getVerificationProgress(pIndex)));
         nLastUpdateNotification = now;
     }
-}
-
-void ClientModel::updatePoW2Display()
-{
-    //fixme: (PHASE5) We can remove this once phase5 is locked in
-    cachedPoW2Phase = GetPoW2Phase(chainActive.Tip());
 }
 
 static void HeaderProgressChanged(ClientModel *clientmodel, int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
