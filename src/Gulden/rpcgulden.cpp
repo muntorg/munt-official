@@ -2734,14 +2734,12 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
     }
 
-    bool shouldUpgrade = false;
-
     //fixme: (PHASE5) - Share common code with GUI::requestRenewWitness
     std::string strError;
     CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
     CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
     CAmount transactionFee;
-    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError, nullptr, nullptr, &shouldUpgrade))
+    if (!pactiveWallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError, nullptr, nullptr))
     {
         throw std::runtime_error(strprintf("Failed to create renew transaction [%s]", strError.c_str()));
     }
@@ -2750,7 +2748,7 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
     uint256 finalTransactionHash;
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
-        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash, shouldUpgrade?SignType::WitnessUpdate:SignType::Spend))
+        if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash, SignType::Spend))
         {
             throw std::runtime_error(strprintf("Failed to sign renew transaction [%s]", strError.c_str()));
         }

@@ -928,7 +928,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction, CCoinControl* coinControl, bool* shouldUpgrade)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction, CCoinControl* coinControl)
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
@@ -959,10 +959,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                     continue;
                 
                 addedAny = true;
-
-                if (shouldUpgrade && witCoin.coin.out.GetType() == CTxOutType::ScriptLegacyOutput)
-                    *shouldUpgrade = true;
-                
+               
                 // Add witness input
                 AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, allowIndexBased, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 

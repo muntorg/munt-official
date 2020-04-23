@@ -100,7 +100,6 @@ public Q_SLOTS:
     void emptyWitnessClicked();
     void fundWitnessClicked();
     void renewWitnessClicked();
-    void upgradeWitnessClicked();
     void extendClicked();
     void optimizeClicked();
     void activeAccountChanged(CAccount* account);

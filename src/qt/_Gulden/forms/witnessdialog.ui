@@ -826,16 +826,6 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="upgradeButton">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="text">
-               <string>Upgrade</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="extendButton">
               <property name="cursor">
                <cursorShape>PointingHandCursor</cursorShape>

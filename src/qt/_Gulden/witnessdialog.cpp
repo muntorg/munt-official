@@ -42,7 +42,6 @@
 #include "Gulden/util.h"
 #include "GuldenGUI.h"
 #include "fundwitnessdialog.h"
-#include "upgradewitnessdialog.h"
 #include "optimizewitnessdialog.h"
 #include "accounttablemodel.h"
 #include "consensus/validation.h"
@@ -272,7 +271,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->unitButton->setVisible(false);
     ui->viewWitnessGraphButton->setVisible(false);
     ui->extendButton->setVisible(false);
-    ui->upgradeButton->setVisible(false);
 
     connect(ui->unitButton, SIGNAL(clicked()), this, SLOT(unitButtonClicked()));
     connect(ui->viewWitnessGraphButton, SIGNAL(clicked()), this, SLOT(viewWitnessInfoClicked()));
@@ -282,7 +280,6 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     connect(ui->withdrawEarningsButton2, SIGNAL(clicked()), this, SLOT(emptyWitnessClicked()));
     connect(ui->renewWitnessButton, SIGNAL(clicked()), this, SLOT(renewWitnessClicked()));
     connect(ui->compoundEarningsCheckBox, SIGNAL(clicked()), this, SLOT(compoundEarningsCheckboxClicked()));
-    connect(ui->upgradeButton, SIGNAL(clicked()), this, SLOT(upgradeWitnessClicked()));
     connect(ui->extendButton, SIGNAL(clicked()), this, SLOT(extendClicked()));
     connect(ui->optimizeButton, SIGNAL(clicked()), this, SLOT(optimizeClicked()));
     connect(unitBlocksAction, &QAction::triggered, [this]() { updateUnit(GraphScale::Blocks); } );
@@ -352,13 +349,6 @@ void WitnessDialog::renewWitnessClicked()
     CAccount* funderAccount = ui->renewWitnessAccountTableView->selectedAccount();
     if (funderAccount)
         Q_EMIT requestRenewWitness(funderAccount);
-}
-
-void WitnessDialog::upgradeWitnessClicked()
-{
-    LOG_QT_METHOD;
-
-    pushDialog(new UpgradeWitnessDialog(model, platformStyle, this));
 }
 
 void WitnessDialog::extendClicked()
@@ -639,7 +629,6 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     bool stateWithdrawEarningsButton = false;
     bool stateWithdrawEarningsButton2 = false;
     bool stateRenewWitnessButton = false;
-    bool stateUpgradeButton = false;
     bool stateExtendButton = false;
     bool stateOptimizeButton = false;
 
@@ -694,7 +683,6 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                 case WitnessStatus::Witnessing:
                 {
                     computedWidgetIndex = WitnessDialogStates::STATISTICS;
-                    stateUpgradeButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
                     stateOptimizeButton = !isWitnessDistributionNearOptimal(pactiveWallet, forAccount, witnessInfo);
                     stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && !accountStatus.hasUnconfirmedWittnessTx;
                     break;
@@ -708,9 +696,8 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
                 case WitnessStatus::Expired:
                 {
                     computedWidgetIndex = WitnessDialogStates::EXPIRED;
-                    stateUpgradeButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasScriptLegacyOutput && !accountStatus.hasUnconfirmedWittnessTx;
-                    stateRenewWitnessButton = !stateUpgradeButton && !accountStatus.hasUnconfirmedWittnessTx;
-                    stateExtendButton = !stateUpgradeButton && IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasUnconfirmedWittnessTx;
+                    stateRenewWitnessButton = !accountStatus.hasUnconfirmedWittnessTx;
+                    stateExtendButton = IsSegSigEnabled(chainActive.TipPrev()) && accountStatus.hasUnconfirmedWittnessTx;
                     break;
                 }
                 case WitnessStatus::Emptying:
@@ -762,7 +749,6 @@ bool WitnessDialog::doUpdate(bool forceUpdate, WitnessStatus* pWitnessStatus)
     ui->withdrawEarningsButton->setVisible(stateWithdrawEarningsButton);
     ui->withdrawEarningsButton2->setVisible(stateWithdrawEarningsButton2);
     ui->renewWitnessButton->setVisible(stateRenewWitnessButton);
-    ui->upgradeButton->setVisible(stateUpgradeButton);
     ui->extendButton->setVisible(stateExtendButton);
     ui->optimizeButton->setVisible(stateOptimizeButton);
 
