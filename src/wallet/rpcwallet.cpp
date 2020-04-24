@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -27,18 +27,19 @@
 #include "script/sign.h"
 #include "timedata.h"
 #include "util.h"
+#include "Gulden/util.h"
 #include "utilmoneystr.h"
 #include "wallet/coincontrol.h"
 #include "wallet/feebumper.h"
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
 #include "script/ismine.h"
+#include "auto_checkpoints.h"
 
 #include <stdint.h>
 
 #include <univalue.h>
 
-#include <Gulden/auto_checkpoints.h>
 
 CWallet *GetWalletForJSONRPCRequest(const JSONRPCRequest& request)
 {

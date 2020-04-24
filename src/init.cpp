@@ -23,7 +23,7 @@
 #include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"
-#include <Gulden/auto_checkpoints.h>
+#include "auto_checkpoints.h"
 #include "compat/sanity.h"
 #include "consensus/validation.h"
 #include "validation/validation.h"
@@ -54,6 +54,7 @@
 #include "torcontrol.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "Gulden/util.h"
 #include "utilmoneystr.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -6,7 +6,7 @@
 #include "accountsettingsdialog.h"
 #include <qt/_Gulden/forms/ui_accountsettingsdialog.h>
 
-#include "account.h"
+#include "wallet/account.h"
 #include "wallet/wallet.h"
 #include <validation/witnessvalidation.h>
 

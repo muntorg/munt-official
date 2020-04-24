@@ -53,7 +53,7 @@
 //Gulden specific includes
 #include "init.h"
 #include <unity/appmanager.h>
-#include <Gulden/mnemonic.h>
+#include <wallet/mnemonic.h>
 #include <script/ismine.h>
 
 //fixme: (PHASE5) - we can remove these includes after phase4 activation.

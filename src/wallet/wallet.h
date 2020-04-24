@@ -44,8 +44,8 @@ extern CWalletRef pactiveWallet;
 
 //Gulden specific includes
 #include "wallet/walletdberrors.h"
-#include "wallet/Gulden/guldenwallet.h"
-#include "account.h"
+#include "wallet/guldenwallet.h"
+#include "wallet/account.h"
 
 #include <boost/thread.hpp>
 #include <consensus/consensus.h>

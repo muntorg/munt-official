@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -11,7 +11,7 @@
 #include <wallet/wallet.h>
 #include "ui_interface.h"
 #include <QMovie>
-#include <Gulden/mnemonic.h>
+#include <wallet/mnemonic.h>
 #include <vector>
 #include "random.h"
 

@@ -9,7 +9,7 @@
 #include "GuldenGUI.h"
 #include <wallet/wallet.h>
 #include "ui_interface.h"
-#include <Gulden/mnemonic.h>
+#include <wallet/mnemonic.h>
 #include <vector>
 #include "random.h"
 #include "walletmodel.h"

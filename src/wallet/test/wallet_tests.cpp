@@ -27,8 +27,7 @@
 #include <univalue.h>
 
 #include <wallet/wallet.h>
-
-#include <Gulden/mnemonic.h>
+#include <wallet/mnemonic.h>
 
 extern CWallet* pwalletMain;
 

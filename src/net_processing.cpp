@@ -34,13 +34,14 @@
 #include "txmempool.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "Gulden/util.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
 #include "validation/validationinterface.h"
 
 #include "alert.h"
 #include "checkpoints.h"
-#include "Gulden/auto_checkpoints.h"
+#include "auto_checkpoints.h"
 
 #include <boost/foreach.hpp>
 

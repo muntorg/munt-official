@@ -19,7 +19,7 @@
 #include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"
-#include "Gulden/auto_checkpoints.h"
+#include "auto_checkpoints.h"
 #include "checkqueue.h"
 #include "consensus/consensus.h"
 #include "consensus/merkle.h"
@@ -47,6 +47,7 @@
 #include "ui_interface.h"
 #include "undo.h"
 #include "util.h"
+#include "Gulden/util.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
 #include "validation/validationinterface.h"
@@ -1028,7 +1029,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //fixme: (PHASE5) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
     //However GetWitness calls recursively into ConnectBlock and CCheckQueueControl has a non-recursive mutex - so we must call this before creating 
     // Witness block must have valid signature from witness.
-    if (pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
+    if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
     {
         if (block.nVersionPoW2Witness != 0)
         {
@@ -1172,7 +1173,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         txdata.emplace_back(tx);
 
         CWitnessBundles bundles;
-        if (pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
+        if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
         {
             if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
                     [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {

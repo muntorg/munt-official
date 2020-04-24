@@ -24,7 +24,7 @@
 #include "net_processing.h"
 #include "spvscanner.h"
 #include <unity/appmanager.h>
-#include <Gulden/mnemonic.h>
+#include <wallet/mnemonic.h>
 #include <future>
 
 CWallet::CWallet()

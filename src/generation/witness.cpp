@@ -18,7 +18,7 @@
 #include "consensus/tx_verify.h"
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
-#include "Gulden/auto_checkpoints.h"
+#include "auto_checkpoints.h"
 #include "hash.h"
 #include "key.h"
 #include "validation/validation.h"

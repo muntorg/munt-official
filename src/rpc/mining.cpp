@@ -42,13 +42,13 @@
 
 #include <univalue.h>
 #ifdef ENABLE_WALLET
-#include "account.h"
+#include "wallet/account.h"
 #include "wallet/wallet.h"
 #include "wallet/rpcwallet.h"
 #endif
 #include "generation/generation.h"
 #include "script/script.h"
-#include <Gulden/rpcgulden.h>
+#include <rpc/rpcgulden.h>
 #include <validation/witnessvalidation.h>
 
 #include <boost/algorithm/string/predicate.hpp> // for ends_with()

@@ -13,7 +13,7 @@
 #include <boost/uuid/nil_generator.hpp>
 #include <boost/algorithm/string/predicate.hpp> // for starts_with() and end_swith()
 #include <boost/algorithm/string.hpp> // for split()
-#include <Gulden/mnemonic.h>
+#include <wallet/mnemonic.h>
 #include "util.h"
 #include <validation/validation.h>
 

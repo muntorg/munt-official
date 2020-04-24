@@ -15,10 +15,11 @@
 #include "consensus/consensus.h"
 #include "validation/validation.h"
 #include "timedata.h"
-#include <Gulden/auto_checkpoints.h>
+#include "auto_checkpoints.h"
 #include "wallet/wallet.h"
-#include "account.h"
+#include "wallet/account.h"
 #include "script/ismine.h"
+#include <Gulden/util.h>
 
 #include <stdint.h>
 

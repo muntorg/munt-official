@@ -17,7 +17,7 @@
 #include "warnings.h"
 #include "alert.h"
 #include "validation/validation.h"
-#include <Gulden/auto_checkpoints.h>
+#include <auto_checkpoints.h>
 
 CCriticalSection cs_warnings;
 std::string strMiscWarning;

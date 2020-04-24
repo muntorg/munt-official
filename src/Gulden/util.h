@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2018 The Gulden developers
+// Copyright (c) 2015-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -9,7 +9,7 @@
 #include <string>
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
-#include "account.h"
+#include "wallet/account.h"
 #endif
 #include "script/standard.h"
 #include "chainparams.h"
