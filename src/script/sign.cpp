@@ -144,7 +144,11 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
             ret.push_back(valtype()); // workaround CHECKMULTISIG bug
         }
         return (SignN(vSolutions, creator, scriptPubKey, ret, sigversion));
-
+    case TX_STANDARD_WITNESS:
+    case TX_STANDARD_PUBKEY_HASH:
+        assert(0);
+        break;
+        
     default:
         return false;
     }
@@ -489,6 +493,10 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
         }
     case TX_MULTISIG:
         return Stacks(CombineMultisig(scriptPubKey, checker, vSolutions, sigs1.script, sigs2.script, sigversion));
+    case TX_STANDARD_WITNESS:
+    case TX_STANDARD_PUBKEY_HASH:
+        assert(0);
+        break;
     default:
         return Stacks();
     }

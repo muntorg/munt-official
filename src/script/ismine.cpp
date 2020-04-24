@@ -133,6 +133,10 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& 
                 return ISMINE_SPENDABLE;
             break;
         }
+        case TX_STANDARD_WITNESS:
+        case TX_STANDARD_PUBKEY_HASH:
+            assert(0);
+            break;
     }
 
     //fixme: (FUT) (WATCH_ONLY) (MED)
@@ -307,6 +311,10 @@ isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& sc
             }
             break;
         }
+        case TX_STANDARD_WITNESS:
+        case TX_STANDARD_PUBKEY_HASH:
+            assert(0);
+            break;
     }
     /*
      //fixme: (FUT) (WATCH_ONLY) (MED)
