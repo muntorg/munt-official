@@ -59,9 +59,9 @@ enum txnouttype
     TX_SCRIPTHASH,
     TX_MULTISIG,
     TX_NULL_DATA,
-    // NB! if adding any additional types here, search for and fix TX_NULL_DATA+1 TX_NULL_DATA+2 occurences in code to match changes.
-    TX_STANDARD_PUBKEY_HASH=TX_NULL_DATA+1,
-    TX_STANDARD_WITNESS=TX_NULL_DATA+2,
+    // NB! Not actual script types, just workarounds for other transaction types in stat geneation
+    TX_STANDARD_PUBKEY_HASH,
+    TX_STANDARD_WITNESS,
 };
 
 class CNoDestination {

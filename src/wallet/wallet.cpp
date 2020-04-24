@@ -1122,7 +1122,6 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 {
                     if (range.first->second != tx.GetHash())
                     {
-                        const CWalletTx* prev = GetWalletTx(txin.prevout);
                         uint256 txHash;
                         CWallet::GetTxHash(range.first->first, txHash);
                         LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), txHash.ToString(), range.first->first.n);

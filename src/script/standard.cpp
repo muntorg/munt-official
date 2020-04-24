@@ -29,15 +29,7 @@ CScriptID::CScriptID(const CScript& in) : uint160(Hash160(in.begin(), in.end()))
 const char* GetTxnOutputType(txnouttype t)
 {
     // Outside of switch statement to avoid compiler warnings on some compilers
-    if (t == TX_NULL_DATA+1)
-    {
-        return "keyhash_standard";
-    }
-    else if (t == TX_NULL_DATA+2)
-    {
-        return "pow2_witness_standard";
-    }
-    else switch (t)
+    switch (t)
     {
         case TX_NONSTANDARD: return "nonstandard";
         case TX_PUBKEY: return "pubkey";
@@ -45,6 +37,8 @@ const char* GetTxnOutputType(txnouttype t)
         case TX_SCRIPTHASH: return "scripthash";
         case TX_MULTISIG: return "multisig";
         case TX_NULL_DATA: return "nulldata";
+        case TX_STANDARD_PUBKEY_HASH: return "keyhash_standard";
+        case TX_STANDARD_WITNESS: return "pow2_witness_standard";
     }
     return NULL;
 }
