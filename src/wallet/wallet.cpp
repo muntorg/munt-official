@@ -642,10 +642,7 @@ bool CWallet::IsSpent(const COutPoint& outpoint) const
                         const auto& prevOut = prevtx->tx->vout[mit->second.tx->vin[0].prevout.n].output;
                         if ( prevOut.nType == ScriptLegacyOutput )
                         {
-                            if ( !prevOut.scriptPubKey.IsPoW2Witness() )
-                            {
-                                return true; // Spent
-                            }
+                            return true; // Spent
                         }
                         else if ( prevOut.nType != PoW2WitnessOutput )
                         {
@@ -1126,21 +1123,10 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     if (range.first->second != tx.GetHash())
                     {
                         const CWalletTx* prev = GetWalletTx(txin.prevout);
-                        if (prev && GetPoW2Phase(chainActive.Tip()) == 3 && prev->tx->vout.size() > 0 && prev->tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
-                        {
-                            LogPrintf("Updated phase 3 witness transaction %s (in block %s) replace wallet transaction %s\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString());
-                            if (mapWallet.find(range.first->second)->second.mapValue.count("replaced_by_txid") == 0)
-                            {
-                                markReplacements.push_back(std::pair(range.first->second, tx.GetHash()));
-                            }
-                        }
-                        else
-                        {
-                            uint256 txHash;
-                            CWallet::GetTxHash(range.first->first, txHash);
-                            LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), txHash.ToString(), range.first->first.n);
-                            MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
-                        }
+                        uint256 txHash;
+                        CWallet::GetTxHash(range.first->first, txHash);
+                        LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), txHash.ToString(), range.first->first.n);
+                        MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                     }
                     range.first++;
                 }
@@ -1182,7 +1168,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             {
                 for (const auto& txOut : wtx.tx->vout)
                 {
-                    if ( txOut.GetType() == CTxOutType::PoW2WitnessOutput || (txOut.GetType() == CTxOutType::ScriptLegacyOutput && txOut.output.scriptPubKey.IsPoW2Witness()) )
+                    if (txOut.GetType() == CTxOutType::PoW2WitnessOutput)
                     {
                         CAccount* potentialWitnessAccount = pactiveWallet->FindBestWitnessAccountForTransaction(txOut);
                         if (potentialWitnessAccount && potentialWitnessAccount->m_Type == AccountType::PoW2Witness)

@@ -675,8 +675,6 @@ public:
     bool IsPayToPubkeyHash(CKeyID &hash) const;
     bool IsPayToScriptHash() const;
 
-    bool IsPoW2Witness() const;
-    std::vector<unsigned char> GetPow2WitnessHash() const;
     bool ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const;
 
     /** Called by IsStandardTx and P2SH/BIP62 VerifyScript (which makes it consensus-critical). */

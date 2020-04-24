@@ -82,6 +82,7 @@ struct Params {
     uint64_t pow2Phase3FirstBlockHeight;
     uint64_t devBlockSubsidyActivationHeight;
     uint64_t pow2Phase4FirstBlockHeight;
+    uint64_t pow2Phase5FirstBlockHeight;
     /** Proof of work parameters */
     uint256 powLimit;
     bool fPowAllowMinDifficultyBlocks;

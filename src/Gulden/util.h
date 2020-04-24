@@ -49,7 +49,7 @@ int GetPow2ValidationCloneHeight(CChain& chain, const CBlockIndex* pIndex, int n
 
 inline bool IsPow2WitnessOutput(const CTxOut& out)
 {
-    if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) || (out.GetType() == CTxOutType::PoW2WitnessOutput) )
+    if (out.GetType() == CTxOutType::PoW2WitnessOutput)
         return true;
     return false;
 }
@@ -60,13 +60,6 @@ inline bool GetPow2WitnessOutput(const CTxOut& out, CTxOutPoW2Witness& witnessDe
     {
         witnessDetails = out.output.witnessDetails;
         witnessDetails.nType = CTxOutType::PoW2WitnessOutput;
-        return true;
-    }
-    else if ( (out.GetType() <= CTxOutType::ScriptLegacyOutput && out.output.scriptPubKey.IsPoW2Witness()) )  //fixme: (PHASE5) we can remove this
-    {
-        if (!out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails))
-            return false;
-        witnessDetails.nType = CTxOutType::ScriptLegacyOutput;
         return true;
     }
     return false;

@@ -477,7 +477,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, uint32_t nHeig
 bool CScriptCheck::operator()() {
     const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
     const CSegregatedSignatureData *witness = &ptxTo->vin[nIn].segregatedSignatureData;
-    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, spendingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), scriptVer, &error);
+    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), scriptVer, &error);
 }
 
 int GetSpendHeight(const CCoinsViewCache& inputs)
@@ -593,7 +593,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 
                         //We extract the pubkey from the signatures so just pass in an empty pubkey for the checks.
                         std::vector<unsigned char> vchEmptyPubKey;
-                        CachingTransactionSignatureChecker check1(witnessSigningKeyID, CKeyID(), &tx, i, amount, cacheStore, txdata);
+                        CachingTransactionSignatureChecker check1(witnessSigningKeyID, &tx, i, amount, cacheStore, txdata);
                         if (!check1.CheckSig(tx.vin[i].segregatedSignatureData.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                         {
                             return false;
@@ -601,7 +601,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         // For a witness spend operation we have a second key that also needs checking.
                         if (!spendSigningKeyID.IsNull())
                         {
-                            CachingTransactionSignatureChecker check2(spendSigningKeyID, CKeyID(), &tx, i, amount, cacheStore, txdata);
+                            CachingTransactionSignatureChecker check2(spendSigningKeyID, &tx, i, amount, cacheStore, txdata);
                             if (!check2.CheckSig(tx.vin[i].segregatedSignatureData.stack[1], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                             {
                                 return false;
@@ -619,10 +619,6 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                 ScriptVersion scriptversion = IsOldTransactionVersion(tx.nVersion) ? SCRIPT_V1 : SCRIPT_V2;
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
                 CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata, scriptversion);
-                if (scriptPubKey.IsPoW2Witness())
-                {
-                    check.spendingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
-                }
                 if (pvChecks)
                 {
                     pvChecks->push_back(CScriptCheck());
@@ -1032,31 +1028,29 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //fixme: (PHASE5) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
     //However GetWitness calls recursively into ConnectBlock and CCheckQueueControl has a non-recursive mutex - so we must call this before creating 
     // Witness block must have valid signature from witness.
-    if (block.nVersionPoW2Witness != 0)
+    if (pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
     {
-        CPubKey pubkey;
-        uint256 hash = block.GetHashPoW2();
-        if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
-            return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
-
-        if (fVerifyWitness)
+        if (block.nVersionPoW2Witness != 0)
         {
-            CGetWitnessInfo witInfo;
-            if (!GetWitness(chain, chainparams, &view, pindex->pprev, block, witInfo))
-                return state.DoS(100, false, REJECT_INVALID, "invalid-witness", false, "could not determine a valid witness for block");
-            if (witInfo.selectedWitnessTransaction.GetType() <= CTxOutType::ScriptLegacyOutput)
+            CPubKey pubkey;
+            uint256 hash = block.GetHashPoW2();
+            if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
+                return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
+
+            if (fVerifyWitness)
             {
-                if (CKeyID(uint160(witInfo.selectedWitnessTransaction.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
-                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "script witness signature incorrect for block");
-            }
-            else if(witInfo.selectedWitnessTransaction.GetType() == CTxOutType::PoW2WitnessOutput)
-            {
-                if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey.GetID())
-                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
-            }
-            else
-            {
-                return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature missing for block");
+                CGetWitnessInfo witInfo;
+                if (!GetWitness(chain, chainparams, &view, pindex->pprev, block, witInfo))
+                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness", false, "could not determine a valid witness for block");
+                if(witInfo.selectedWitnessTransaction.GetType() == CTxOutType::PoW2WitnessOutput)
+                {
+                    if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey.GetID())
+                        return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
+                }
+                else
+                {
+                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature missing for block");
+                }
             }
         }
     }
@@ -1178,18 +1172,21 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         txdata.emplace_back(tx);
 
         CWitnessBundles bundles;
-        if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
-                [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
-                    const Coin& coin = view.AccessCoin(outpoint);
-                    if (coin.IsSpent())
-                        return false;
-                    txOut = coin.out;
-                    txHeight = coin.nHeight;
-                    return true;
-                },
-                bundles))
+        if (pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
         {
-            return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
+            if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
+                    [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
+                        const Coin& coin = view.AccessCoin(outpoint);
+                        if (coin.IsSpent())
+                            return false;
+                        txOut = coin.out;
+                        txHeight = coin.nHeight;
+                        return true;
+                    },
+                    bundles))
+            {
+                return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
+            }
         }
 
         witnessBundles.push_back(std::make_shared<CWitnessBundles>(bundles));

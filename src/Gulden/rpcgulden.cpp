@@ -358,9 +358,16 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             if (!ExtractDestination(iter.second.out, address))
                 throw std::runtime_error("Could not extract PoW² witness for block.");
             
-            CTxOutPoW2Witness witnessDetails;
-            if (!GetPow2WitnessOutput(iter.second.out, witnessDetails))
-                throw std::runtime_error("Could not extract PoW² witness details for block.");
+            uint64_t nFailCount=0;
+            uint64_t nActionNonce=0;
+            if (iter.second.out.GetType() == PoW2WitnessOutput)
+            {
+                CTxOutPoW2Witness witnessDetails;
+                if (!GetPow2WitnessOutput(iter.second.out, witnessDetails))
+                    throw std::runtime_error("Could not extract PoW² witness details for block.");
+                nFailCount = witnessDetails.failCount;
+                nActionNonce = witnessDetails.actionNonce;
+            }
 
             uint64_t nLastActiveBlock = iter.second.nHeight;
             uint64_t nLockFromBlock = 0;
@@ -393,8 +400,8 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             rec.push_back(Pair("lock_period_expired", fLockPeriodExpired));
             rec.push_back(Pair("eligible_to_witness", fEligible));
             rec.push_back(Pair("expired_from_inactivity", fExpired));
-            rec.push_back(Pair("fail_count", witnessDetails.failCount));
-            rec.push_back(Pair("action_nonce", witnessDetails.actionNonce));
+            rec.push_back(Pair("fail_count", nFailCount));
+            rec.push_back(Pair("action_nonce", nActionNonce));
             #ifdef ENABLE_WALLET
             rec.push_back(Pair("ismine_accountname", accountName));
             #else
@@ -2337,6 +2344,8 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     }
 
     // Get the current witness details
+    if (currentWitnessTxOut.GetType() != CTxOutType::PoW2WitnessOutput)
+        throw std::runtime_error("Cannot extract witness output from legacy script output");
     CTxOutPoW2Witness currentWitnessDetails;
     GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
 

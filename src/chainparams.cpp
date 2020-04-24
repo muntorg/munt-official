@@ -110,7 +110,8 @@ public:
         consensus.pow2Phase2FirstBlockHeight=778177;
         consensus.pow2Phase3FirstBlockHeight=778301;
         consensus.devBlockSubsidyActivationHeight=1030001;
-        consensus.pow2Phase4FirstBlockHeight=1131652; // Approximately, 6th march @ 6pm
+        consensus.pow2Phase4FirstBlockHeight=1131652;
+        consensus.pow2Phase5FirstBlockHeight=1140958;
         
 
         // Message start string to avoid accidental cross communication with other chains or software.
@@ -454,6 +455,7 @@ public:
                 consensus.pow2Phase3FirstBlockHeight=51;
                 consensus.devBlockSubsidyActivationHeight=528750;
                 consensus.pow2Phase4FirstBlockHeight=528762;
+                consensus.pow2Phase5FirstBlockHeight=528762;
             }
             else
             {
@@ -462,6 +464,7 @@ public:
                 consensus.pow2Phase3FirstBlockHeight=51;
                 consensus.devBlockSubsidyActivationHeight=90;
                 consensus.pow2Phase4FirstBlockHeight=100;
+                consensus.pow2Phase5FirstBlockHeight=100;
             }
 
             // The best chain should have at least this much work.
@@ -682,6 +685,7 @@ public:
         consensus.pow2Phase3FirstBlockHeight=50000;
         consensus.devBlockSubsidyActivationHeight=50100;
         consensus.pow2Phase4FirstBlockHeight=50500;
+        consensus.pow2Phase5FirstBlockHeight=50500;
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");

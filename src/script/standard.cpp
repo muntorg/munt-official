@@ -29,11 +29,11 @@ CScriptID::CScriptID(const CScript& in) : uint160(Hash160(in.begin(), in.end()))
 const char* GetTxnOutputType(txnouttype t)
 {
     // Outside of switch statement to avoid compiler warnings on some compilers
-    if (t == TX_PUBKEYHASH_POW2WITNESS+1)
+    if (t == TX_NULL_DATA+1)
     {
         return "keyhash_standard";
     }
-    else if (t == TX_PUBKEYHASH_POW2WITNESS+2)
+    else if (t == TX_NULL_DATA+2)
     {
         return "pow2_witness_standard";
     }
@@ -45,7 +45,6 @@ const char* GetTxnOutputType(txnouttype t)
         case TX_SCRIPTHASH: return "scripthash";
         case TX_MULTISIG: return "multisig";
         case TX_NULL_DATA: return "nulldata";
-        case TX_PUBKEYHASH_POW2WITNESS: return "pow2_witness";
     }
     return NULL;
 }
@@ -78,19 +77,6 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
         typeRet = TX_SCRIPTHASH;
         std::vector<unsigned char> hashBytes(scriptPubKey.begin()+2, scriptPubKey.begin()+22);
         vSolutionsRet.push_back(hashBytes);
-        return true;
-    }
-
-    //fixme: (PHASE5) We can remove this logic after phase 4 activation.
-    // Shortcut for PoW2 witness, which is more constrained than other types: 
-    //OP_0 [1 byte] 64 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
-    if (scriptPubKey.IsPoW2Witness())
-    {
-        typeRet = TX_PUBKEYHASH_POW2WITNESS;
-        std::vector<unsigned char> hashSpendingBytes(scriptPubKey.begin()+2, scriptPubKey.begin()+22);
-        vSolutionsRet.push_back(hashSpendingBytes);
-        std::vector<unsigned char> hashWitnessBytes(scriptPubKey.begin()+22, scriptPubKey.begin()+42);
-        vSolutionsRet.push_back(hashWitnessBytes);
         return true;
     }
 
@@ -226,11 +212,6 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
         addressRet = CKeyID(uint160(vSolutions[0]));
         return true;
     }
-    else if (whichType == TX_PUBKEYHASH_POW2WITNESS)
-    {
-        addressRet = CPoW2WitnessDestination(CKeyID(uint160(vSolutions[0])), CKeyID(uint160(vSolutions[1])));
-        return true;
-    }
     else if (whichType == TX_SCRIPTHASH)
     {
         addressRet = CScriptID(uint160(vSolutions[0]));
@@ -245,14 +226,14 @@ bool ExtractDestinations(const CTxOut& out, txnouttype& typeRet, std::vector<CTx
     if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
         nRequiredRet = 1;
-        typeRet = TX_PUBKEYHASH_POW2WITNESS;
+        typeRet = TX_STANDARD_WITNESS;
         addressRet.push_back(CPoW2WitnessDestination(out.output.witnessDetails.spendingKeyID, out.output.witnessDetails.witnessKeyID));
         return true;
     }
     else if (out.GetType() == CTxOutType::StandardKeyHashOutput)
     {
         nRequiredRet = 1;
-        typeRet = TX_PUBKEYHASH;
+        typeRet = TX_STANDARD_PUBKEY_HASH;
         addressRet.push_back(out.output.standardKeyHash.keyID);
         return true;
     }

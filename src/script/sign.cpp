@@ -145,67 +145,6 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
         }
         return (SignN(vSolutions, creator, scriptPubKey, ret, sigversion));
 
-    case TX_PUBKEYHASH_POW2WITNESS:
-    {
-        CKeyID spendingKeyID = CKeyID(uint160(vSolutions[0]));
-        CKeyID witnessKeyID = CKeyID(uint160(vSolutions[1]));
-
-        switch(type)
-        {
-            case Spend:
-            {
-                if (!Sign1(spendingKeyID, creator, scriptPubKey, ret, sigversion))
-                    return false;
-                else
-                {
-                    CPubKey vch;
-                    for (const auto& forAccount : creator.accounts())
-                    {
-                        if (forAccount->GetPubKey(spendingKeyID, vch))
-                        {
-                            ret.push_back(ToByteVector(vch));
-                            break;
-                        }
-                    }
-                }
-                if (!Sign1(witnessKeyID, creator, scriptPubKey, ret, sigversion))
-                    return false;
-                else
-                {
-                    CPubKey vch;
-                    for (const auto& forAccount : creator.accounts())
-                    {
-                        if (forAccount->GetPubKey(witnessKeyID, vch))
-                        {
-                            ret.push_back(ToByteVector(vch));
-                            break;
-                        }
-                    }
-                }
-                break;
-            }
-            case Witness:
-            {
-                if (!Sign1(witnessKeyID, creator, scriptPubKey, ret, sigversion))
-                    return false;
-                else
-                {
-                    CPubKey vch;
-                    for (const auto& forAccount : creator.accounts())
-                    {
-                        if (forAccount->GetPubKey(witnessKeyID, vch))
-                        {
-                            ret.push_back(ToByteVector(vch));
-                            break;
-                        }
-                    }
-                }
-                break;
-            }
-        }
-        return true;
-    }
-
     default:
         return false;
     }
@@ -527,10 +466,6 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
         // Signatures are bigger than placeholders or empty scripts:
         if (sigs1.script.empty() || sigs1.script[0].empty())
             return sigs2;
-        return sigs1;
-    case TX_PUBKEYHASH_POW2WITNESS:
-        //fixme: (PHASE5) Key renewal
-        //We need to devise a way to sign with the right key here (both keys if it is a spend, witness key if just witnessing)
         return sigs1;
     case TX_SCRIPTHASH:
         if (sigs1.script.empty() || sigs1.script.back().empty())

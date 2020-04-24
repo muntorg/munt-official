@@ -130,11 +130,6 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         witnessKeyID = fittestWitnessOutput.output.witnessDetails.witnessKeyID;
     }
-    else if ( (fittestWitnessOutput.GetType() <= CTxOutType::ScriptLegacyOutput && fittestWitnessOutput.output.scriptPubKey.IsPoW2Witness()) ) //fixme: (PHASE5) We can remove this.
-    {
-        std::vector<unsigned char> hashWitnessBytes = fittestWitnessOutput.output.scriptPubKey.GetPow2WitnessHash();
-        witnessKeyID = CKeyID(uint160(hashWitnessBytes));
-    }
     else
     {
         assert(0);
