@@ -118,7 +118,7 @@ endif
 .PHONY: FORCE check-symbols check-security
 
 # core #
-GULDEN_CORE_H = Gulden/rpcgulden.h \
+GULDEN_CORE_H = rpc/rpcgulden.h \
   Gulden/Common/diff.h \
   Gulden/Common/diff_delta.h \
   Gulden/Common/diff_old.h \
@@ -126,13 +126,13 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   Gulden/Common/hash/hash.h \
   Gulden/Common/hash/city.h \
   Gulden/Common/hash/cityconfig.h \
-  Gulden/mnemonic.h \
+  wallet/mnemonic.h \
   Gulden/util.h \
-  Gulden/auto_checkpoints.h \
-  wallet/Gulden/guldenwallet.h \
+  auto_checkpoints.h \
+  wallet/guldenwallet.h \
   LRUCache/LRUCache11.hpp \
   alert.h \
-  account.h \
+  wallet/account.h \
   addrdb.h \
   addrman.h \
   base58.h \
@@ -258,7 +258,7 @@ clientversion.cpp: obj/build.h
 libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_server_a_SOURCES = \
-  Gulden/rpcgulden.cpp \
+  rpc/rpcgulden.cpp \
   unity/generic/init_generic.cpp \
   httprpc.cpp \
   httpserver.cpp \
@@ -285,7 +285,7 @@ libgulden_node_a_SOURCES = \
   addrdb.cpp \
   addrman.cpp \
   alert.cpp \
-  Gulden/auto_checkpoints.cpp \
+  auto_checkpoints.cpp \
   bloom.cpp \
   blockencodings.cpp \
   blockstore.cpp \
@@ -338,9 +338,9 @@ endif
 libgulden_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_wallet_a_SOURCES = \
-  account.cpp \
-  Gulden/mnemonic.cpp \
-  wallet/Gulden/guldenwallet.cpp \
+  wallet/account.cpp \
+  wallet/mnemonic.cpp \
+  wallet/guldenwallet.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/feebumper.cpp \
