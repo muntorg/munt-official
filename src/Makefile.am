@@ -537,6 +537,8 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/bytevectorhash.cpp \
   crypto/chacha20.h \
   crypto/chacha20.cpp \
+  Gulden/Common/scrypt.h \
+  Gulden/Common/scrypt.cpp \
   crypto/scrypt/sha256_scrypt.h \
   crypto/scrypt/sha256_scrypt.cpp \
   crypto/scrypt/crypto_scrypt.h \
