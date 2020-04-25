@@ -6,8 +6,8 @@
 #include "mnemonic.h"
 #include "arith_uint256.h"
 
-#include <Gulden/Common/scrypt.h>
-#include <Gulden/Common/hash/hash.h>
+#include <crypto/hash/scrypt.h>
+#include <crypto/hash/hash.h>
 
 #include <bitset>
 #include <sstream>

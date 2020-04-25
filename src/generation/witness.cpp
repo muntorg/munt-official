@@ -42,7 +42,7 @@
 #include <queue>
 #include <utility>
 
-#include <Gulden/Common/hash/hash.h>
+#include <crypto/hash/hash.h>
 #include <Gulden/util.h>
 #include <openssl/sha.h>
 

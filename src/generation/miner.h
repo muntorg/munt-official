@@ -23,7 +23,7 @@
 #include "boost/multi_index_container.hpp"
 #include "boost/multi_index/ordered_index.hpp"
 
-#include <Gulden/Common/scrypt.h>
+#include <crypto/hash/scrypt.h>
 #include <boost/thread/thread.hpp>
 
 class CBlockIndex;

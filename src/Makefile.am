@@ -123,9 +123,9 @@ GULDEN_CORE_H = rpc/rpcgulden.h \
   Gulden/Common/diff_delta.h \
   Gulden/Common/diff_old.h \
   Gulden/Common/diff_common.h \
-  Gulden/Common/hash/hash.h \
-  Gulden/Common/hash/city.h \
-  Gulden/Common/hash/cityconfig.h \
+  crypo/hash/hash.h \
+  crypto/hash/city.h \
+  crypto/hash/cityconfig.h \
   wallet/mnemonic.h \
   Gulden/util.h \
   auto_checkpoints.h \
@@ -537,8 +537,8 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/bytevectorhash.cpp \
   crypto/chacha20.h \
   crypto/chacha20.cpp \
-  Gulden/Common/scrypt.h \
-  Gulden/Common/scrypt.cpp \
+  crypto/hash/scrypt.h \
+  crypto/hash/scrypt.cpp \
   crypto/scrypt/sha256_scrypt.h \
   crypto/scrypt/sha256_scrypt.cpp \
   crypto/scrypt/crypto_scrypt.h \
@@ -608,7 +608,7 @@ libgulden_consensus_a_SOURCES = \
   Gulden/Common/diff_delta.cpp \
   Gulden/Common/diff_old.cpp \
   Gulden/Common/diff_common.cpp \
-  Gulden/Common/hash/city.cpp \
+  crypto/hash/city.cpp \
   amount.h \
   arith_uint256.cpp \
   arith_uint256.h \

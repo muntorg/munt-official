@@ -8,8 +8,8 @@
 
 #include <hash.h>
 #include <uint256.h>
-#include "../scrypt.h"
-#include "city.h"
+#include "crypto/hash/scrypt.h"
+#include "crypto/hash/city.h"
 
 inline void hash_sha256(const void* pData, unsigned int size, unsigned char* hash)
 {
