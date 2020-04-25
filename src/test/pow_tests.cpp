@@ -11,7 +11,7 @@
 
 #include "chain.h"
 #include "chainparams.h"
-#include "pow.h"
+#include "pow/pow.h"
 #include "random.h"
 #include "util.h"
 #include "test/test_gulden.h"

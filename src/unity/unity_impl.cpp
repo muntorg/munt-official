@@ -49,7 +49,7 @@
 #include <qrencode.h>
 #include <memory>
 
-#include "pow.h"
+#include "pow/pow.h"
 #include <crypto/hash/sigma/sigma.h>
 #include <algorithm>
 

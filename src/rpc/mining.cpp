@@ -26,7 +26,7 @@
 #include "generation/miner.h"
 #include "net.h"
 #include "policy/fees.h"
-#include "pow.h"
+#include "pow/pow.h"
 #include "rpc/blockchain.h"
 #include "rpc/server.h"
 #include "txmempool.h"

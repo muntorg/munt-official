@@ -119,10 +119,10 @@ endif
 
 # core #
 GULDEN_CORE_H = rpc/rpcgulden.h \
-  Gulden/Common/diff.h \
-  Gulden/Common/diff_delta.h \
-  Gulden/Common/diff_old.h \
-  Gulden/Common/diff_common.h \
+  pow/diff.h \
+  pow/diff_delta.h \
+  pow/diff_old.h \
+  pow/diff_common.h \
   crypo/hash/hash.h \
   crypto/hash/city.h \
   crypto/hash/cityconfig.h \
@@ -189,7 +189,7 @@ GULDEN_CORE_H = rpc/rpcgulden.h \
   policy/fees.h \
   policy/policy.h \
   policy/rbf.h \
-  pow.h \
+  pow/pow.h \
   protocol.h \
   random.h \
   reverselock.h \
@@ -320,7 +320,7 @@ libgulden_node_a_SOURCES = \
   script/sigcache.cpp \
   script/ismine.cpp \
   timedata.cpp \
-  pow.cpp \
+  pow/pow.cpp \
   $(GULDEN_CORE_H)
 
 # zmq: shared between GuldenD and Gulden, only if zmq enabled
@@ -605,9 +605,9 @@ libgulden_android_compat_a_SOURCES = \
 libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_consensus_a_SOURCES = \
-  Gulden/Common/diff_delta.cpp \
-  Gulden/Common/diff_old.cpp \
-  Gulden/Common/diff_common.cpp \
+  pow/diff_delta.cpp \
+  pow/diff_old.cpp \
+  pow/diff_common.cpp \
   crypto/hash/city.cpp \
   amount.h \
   arith_uint256.cpp \

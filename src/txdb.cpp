@@ -14,7 +14,7 @@
 
 #include "chainparams.h"
 #include "hash.h"
-#include "pow.h"
+#include "pow/pow.h"
 #include "uint256.h"
 
 #include <Gulden/util.h>
