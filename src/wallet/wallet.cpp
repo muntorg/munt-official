@@ -57,7 +57,7 @@
 #include <script/ismine.h>
 
 //fixme: (PHASE5) - we can remove these includes after phase4 activation.
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "validation/validation.h"
 
 std::vector<CWalletRef> vpwallets;

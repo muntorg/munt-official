@@ -21,7 +21,7 @@
 #include "utilstrencodings.h"
 
 //fixme: (PHASE5) - we can remove these includes
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "validation/validation.h"
 
 CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)

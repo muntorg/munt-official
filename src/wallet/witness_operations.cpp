@@ -16,7 +16,7 @@
 #include "validation/witnessvalidation.h"
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "coincontrol.h"
 #include "net.h"
 #include "alert.h"

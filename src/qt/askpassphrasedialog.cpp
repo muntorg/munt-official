@@ -24,7 +24,7 @@
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QPushButton>
-#include "_Gulden/GuldenGUI.h"
+#include "GuldenGUI.h"
 #include <unity/appmanager.h>
 
 AskPassphraseDialog::AskPassphraseDialog(Mode _mode, QWidget *parent, QString reason) :

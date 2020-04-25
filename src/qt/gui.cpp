@@ -33,13 +33,13 @@
 #include "chainparams.h"
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
-#include "qt/_Gulden/exchangeratedialog.h"
+#include "qt/exchangeratedialog.h"
 
 #ifdef ENABLE_WALLET
 #include "walletframe.h"
 #include "walletmodel.h"
-#include "qt/_Gulden/witnessdialog.h"
-#include "qt/_Gulden/miningaccountdialog.h"
+#include "qt/witnessdialog.h"
+#include "qt/miningaccountdialog.h"
 #endif // ENABLE_WALLET
 
 #ifdef Q_OS_MAC
@@ -80,9 +80,9 @@
 #include "walletview.h"
 #include "sendcoinsdialog.h"
 
-#include <Gulden/util.h>
-#include <_Gulden/accountsummarywidget.h>
-#include "_Gulden/receivecoinsdialog.h"
+#include <guldenutil.h>
+#include <accountsummarywidget.h>
+#include "receivecoinsdialog.h"
 
 #include "generation/miner.h"
 

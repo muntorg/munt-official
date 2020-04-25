@@ -35,7 +35,7 @@
 #include <QMessageBox>
 #include <QTimer>
 
-#include "_Gulden/GuldenGUI.h"
+#include "GuldenGUI.h"
 #include <unity/appmanager.h>
 
 //Very primitive function to capatalise first letter of string (only for latin alphabet).

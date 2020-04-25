@@ -20,7 +20,7 @@
 #include "txmempool.h"
 
 // Gulden specific includes
-#include "Gulden/util.h"
+#include "guldenutil.h"
 
 #include <alert.h>
 #include "ui_interface.h"

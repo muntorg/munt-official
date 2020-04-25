@@ -9,7 +9,7 @@
 
 // Standard gulden headers
 #include "util.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "ui_interface.h"
 #include "wallet/wallet.h"
 #include "unity/appmanager.h"

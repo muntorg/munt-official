@@ -14,139 +14,139 @@ bin_PROGRAMS += qt/Gulden
 EXTRA_LIBRARIES += qt/libguldenqt.a
 
 
-GDN_QRC = qt/_Gulden/Gulden.qss \
-qt/_Gulden/res/AngleDownBlue.png \
-qt/_Gulden/res/AngleUpBlue.png \
-qt/_Gulden/res/AngleDownGrey.png \
-qt/_Gulden/res/AngleUpGrey.png \
-qt/_Gulden/res/check.png \
-qt/_Gulden/res/check@2x.png \
-qt/_Gulden/res/DialogBackground.png \
-qt/_Gulden/fonts/fa5pl.ttf \
-qt/_Gulden/fonts/fa5pr.ttf \
-qt/_Gulden/fonts/fa5ps.ttf \
-qt/_Gulden/fonts/fa5br.ttf \
-qt/_Gulden/fonts/guldensign.ttf \
-qt/_Gulden/res/Import.png \
-qt/_Gulden/res/Rescan.png \
-qt/_Gulden/fonts/Lato-Black.ttf \
-qt/_Gulden/fonts/Lato-BlackItalic.ttf \
-qt/_Gulden/fonts/Lato-Bold.ttf \
-qt/_Gulden/fonts/Lato-BoldItalic.ttf \
-qt/_Gulden/fonts/Lato-Italic.ttf \
-qt/_Gulden/fonts/Lato-Medium.ttf \
-qt/_Gulden/fonts/Lato-MediumItalic.ttf \
-qt/_Gulden/fonts/Lato-Regular.ttf \
-qt/_Gulden/res/LoadingAnimation.gif \
-qt/_Gulden/res/Lock.png \
-qt/_Gulden/res/Lock@2x.png \
-qt/_Gulden/res/LogoBlue.png \
-qt/_Gulden/res/LogoBlue@2x.png \
-qt/_Gulden/res/MainBackground.png \
-qt/_Gulden/res/SliderHandle.png \
-qt/_Gulden/res/SliderHandle@2x.png
+GDN_QRC = qt/Gulden.qss \
+qt/res/AngleDownBlue.png \
+qt/res/AngleUpBlue.png \
+qt/res/AngleDownGrey.png \
+qt/res/AngleUpGrey.png \
+qt/res/check.png \
+qt/res/check@2x.png \
+qt/res/DialogBackground.png \
+qt/fonts/fa5pl.ttf \
+qt/fonts/fa5pr.ttf \
+qt/fonts/fa5ps.ttf \
+qt/fonts/fa5br.ttf \
+qt/fonts/guldensign.ttf \
+qt/res/Import.png \
+qt/res/Rescan.png \
+qt/fonts/Lato-Black.ttf \
+qt/fonts/Lato-BlackItalic.ttf \
+qt/fonts/Lato-Bold.ttf \
+qt/fonts/Lato-BoldItalic.ttf \
+qt/fonts/Lato-Italic.ttf \
+qt/fonts/Lato-Medium.ttf \
+qt/fonts/Lato-MediumItalic.ttf \
+qt/fonts/Lato-Regular.ttf \
+qt/res/LoadingAnimation.gif \
+qt/res/Lock.png \
+qt/res/Lock@2x.png \
+qt/res/LogoBlue.png \
+qt/res/LogoBlue@2x.png \
+qt/res/MainBackground.png \
+qt/res/SliderHandle.png \
+qt/res/SliderHandle@2x.png
 
 
-GDN_MOCS = qt/_Gulden/moc_guldensendcoinsentry.cpp \
-qt/_Gulden/moc_accountsummarywidget.cpp \
-qt/_Gulden/moc_accountselectionwidget.cpp \
-qt/_Gulden/moc_witnessdurationwidget.cpp \
-qt/_Gulden/moc_viewaddressdialog.cpp \
-qt/_Gulden/moc_receivecoinsdialog.cpp \
-qt/_Gulden/moc_GuldenGUI.cpp \
-qt/_Gulden/moc_ticker.cpp \
-qt/_Gulden/moc_nockssettings.cpp \
-qt/_Gulden/moc_nocksrequest.cpp \
-qt/_Gulden/moc_clickablelabel.cpp \
-qt/_Gulden/moc_clickableqrimage.cpp \
-qt/_Gulden/moc_newaccountdialog.cpp \
-qt/_Gulden/moc_accountsettingsdialog.cpp \
-qt/_Gulden/moc_passwordmodifydialog.cpp \
-qt/_Gulden/moc_backupdialog.cpp \
-qt/_Gulden/moc_welcomedialog.cpp \
-qt/_Gulden/moc_witnessdialog.cpp \
-qt/_Gulden/moc_miningaccountdialog.cpp \
-qt/_Gulden/moc_fundwitnessdialog.cpp \
-qt/_Gulden/moc_rotatewitnessdialog.cpp \
-qt/_Gulden/moc_optimizewitnessdialog.cpp \
-qt/_Gulden/moc_exchangeratedialog.cpp \
-qt/_Gulden/moc_importprivkeydialog.cpp \
-qt/_Gulden/moc_importwitnessdialog.cpp \
-qt/_Gulden/moc_accounttablemodel.cpp
+GDN_MOCS = qt/moc_guldensendcoinsentry.cpp \
+qt/moc_accountsummarywidget.cpp \
+qt/moc_accountselectionwidget.cpp \
+qt/moc_witnessdurationwidget.cpp \
+qt/moc_viewaddressdialog.cpp \
+qt/moc_receivecoinsdialog.cpp \
+qt/moc_GuldenGUI.cpp \
+qt/moc_ticker.cpp \
+qt/moc_nockssettings.cpp \
+qt/moc_nocksrequest.cpp \
+qt/moc_clickablelabel.cpp \
+qt/moc_clickableqrimage.cpp \
+qt/moc_newaccountdialog.cpp \
+qt/moc_accountsettingsdialog.cpp \
+qt/moc_passwordmodifydialog.cpp \
+qt/moc_backupdialog.cpp \
+qt/moc_welcomedialog.cpp \
+qt/moc_witnessdialog.cpp \
+qt/moc_miningaccountdialog.cpp \
+qt/moc_fundwitnessdialog.cpp \
+qt/moc_rotatewitnessdialog.cpp \
+qt/moc_optimizewitnessdialog.cpp \
+qt/moc_exchangeratedialog.cpp \
+qt/moc_importprivkeydialog.cpp \
+qt/moc_importwitnessdialog.cpp \
+qt/moc_accounttablemodel.cpp
 
-GDN_FORMS = qt/_Gulden/forms/guldensendcoinsentry.ui \
-qt/_Gulden/forms/accountsummarywidget.ui \
-qt/_Gulden/forms/accountselectionwidget.ui \
-qt/_Gulden/forms/witnessdurationwidget.ui \
-qt/_Gulden/forms/viewaddressdialog.ui \
-qt/_Gulden/forms/receivecoinsdialog.ui \
-qt/_Gulden/forms/miningaccountdialog.ui \
-qt/_Gulden/forms/newaccountdialog.ui \
-qt/_Gulden/forms/accountsettingsdialog.ui \
-qt/_Gulden/forms/passwordmodifydialog.ui \
-qt/_Gulden/forms/backupdialog.ui \
-qt/_Gulden/forms/welcomedialog.ui \
-qt/_Gulden/forms/witnessdialog.ui \
-qt/_Gulden/forms/fundwitnessdialog.ui \
-qt/_Gulden/forms/rotatewitnessdialog.ui \
-qt/_Gulden/forms/optimizewitnessdialog.ui \
-qt/_Gulden/forms/exchangeratedialog.ui \
-qt/_Gulden/forms/importprivkeydialog.ui \
-qt/_Gulden/forms/importwitnessdialog.ui
+GDN_FORMS = qt/forms/guldensendcoinsentry.ui \
+qt/forms/accountsummarywidget.ui \
+qt/forms/accountselectionwidget.ui \
+qt/forms/witnessdurationwidget.ui \
+qt/forms/viewaddressdialog.ui \
+qt/forms/receivecoinsdialog.ui \
+qt/forms/miningaccountdialog.ui \
+qt/forms/newaccountdialog.ui \
+qt/forms/accountsettingsdialog.ui \
+qt/forms/passwordmodifydialog.ui \
+qt/forms/backupdialog.ui \
+qt/forms/welcomedialog.ui \
+qt/forms/witnessdialog.ui \
+qt/forms/fundwitnessdialog.ui \
+qt/forms/rotatewitnessdialog.ui \
+qt/forms/optimizewitnessdialog.ui \
+qt/forms/exchangeratedialog.ui \
+qt/forms/importprivkeydialog.ui \
+qt/forms/importwitnessdialog.ui
 
-GDN_QT_H = qt/_Gulden/guldensendcoinsentry.h \
-qt/_Gulden/accountsummarywidget.h \
-qt/_Gulden/accountselectionwidget.h \
-qt/_Gulden/witnessdurationwidget.h \
-qt/_Gulden/viewaddressdialog.h \
-qt/_Gulden/receivecoinsdialog.h \
-qt/_Gulden/miningaccountdialog.h \
-qt/_Gulden/GuldenGUI.h \
-qt/_Gulden/ticker.h \
-qt/_Gulden/nockssettings.h \
-qt/_Gulden/nocksrequest.h \
-qt/_Gulden/clickablelabel.h \
-qt/_Gulden/clickableqrimage.h \
-qt/_Gulden/newaccountdialog.h \
-qt/_Gulden/accountsettingsdialog.h \
-qt/_Gulden/passwordmodifydialog.h \
-qt/_Gulden/backupdialog.h \
-qt/_Gulden/welcomedialog.h \
-qt/_Gulden/witnessdialog.h \
-qt/_Gulden/fundwitnessdialog.h \
-qt/_Gulden/rotatewitnessdialog.h \
-qt/_Gulden/optimizewitnessdialog.h \
-qt/_Gulden/exchangeratedialog.h \
-qt/_Gulden/importprivkeydialog.h \
-qt/_Gulden/importwitnessdialog.h \
-qt/_Gulden/accounttablemodel.h
+GDN_QT_H = qt/guldensendcoinsentry.h \
+qt/accountsummarywidget.h \
+qt/accountselectionwidget.h \
+qt/witnessdurationwidget.h \
+qt/viewaddressdialog.h \
+qt/receivecoinsdialog.h \
+qt/miningaccountdialog.h \
+qt/GuldenGUI.h \
+qt/ticker.h \
+qt/nockssettings.h \
+qt/nocksrequest.h \
+qt/clickablelabel.h \
+qt/clickableqrimage.h \
+qt/newaccountdialog.h \
+qt/accountsettingsdialog.h \
+qt/passwordmodifydialog.h \
+qt/backupdialog.h \
+qt/welcomedialog.h \
+qt/witnessdialog.h \
+qt/fundwitnessdialog.h \
+qt/rotatewitnessdialog.h \
+qt/optimizewitnessdialog.h \
+qt/exchangeratedialog.h \
+qt/importprivkeydialog.h \
+qt/importwitnessdialog.h \
+qt/accounttablemodel.h
 
-GDN_QT_SRCS = qt/_Gulden/guldensendcoinsentry.cpp \
-qt/_Gulden/accountsummarywidget.cpp \
-qt/_Gulden/accountselectionwidget.cpp \
-qt/_Gulden/witnessdurationwidget.cpp \
-qt/_Gulden/viewaddressdialog.cpp \
-qt/_Gulden/receivecoinsdialog.cpp \
-qt/_Gulden/miningaccountdialog.cpp \
-qt/_Gulden/GuldenGUI.cpp \
-qt/_Gulden/ticker.cpp \
-qt/_Gulden/nockssettings.cpp \
-qt/_Gulden/nocksrequest.cpp \
-qt/_Gulden/clickablelabel.cpp \
-qt/_Gulden/clickableqrimage.cpp \
-qt/_Gulden/newaccountdialog.cpp \
-qt/_Gulden/accountsettingsdialog.cpp \
-qt/_Gulden/passwordmodifydialog.cpp \
-qt/_Gulden/backupdialog.cpp \
-qt/_Gulden/welcomedialog.cpp \
-qt/_Gulden/witnessdialog.cpp \
-qt/_Gulden/fundwitnessdialog.cpp \
-qt/_Gulden/rotatewitnessdialog.cpp \
-qt/_Gulden/optimizewitnessdialog.cpp \
-qt/_Gulden/exchangeratedialog.cpp \
-qt/_Gulden/importprivkeydialog.cpp \
-qt/_Gulden/importwitnessdialog.cpp \
-qt/_Gulden/accounttablemodel.cpp
+GDN_QT_SRCS = qt/guldensendcoinsentry.cpp \
+qt/accountsummarywidget.cpp \
+qt/accountselectionwidget.cpp \
+qt/witnessdurationwidget.cpp \
+qt/viewaddressdialog.cpp \
+qt/receivecoinsdialog.cpp \
+qt/miningaccountdialog.cpp \
+qt/GuldenGUI.cpp \
+qt/ticker.cpp \
+qt/nockssettings.cpp \
+qt/nocksrequest.cpp \
+qt/clickablelabel.cpp \
+qt/clickableqrimage.cpp \
+qt/newaccountdialog.cpp \
+qt/accountsettingsdialog.cpp \
+qt/passwordmodifydialog.cpp \
+qt/backupdialog.cpp \
+qt/welcomedialog.cpp \
+qt/witnessdialog.cpp \
+qt/fundwitnessdialog.cpp \
+qt/rotatewitnessdialog.cpp \
+qt/optimizewitnessdialog.cpp \
+qt/exchangeratedialog.cpp \
+qt/importprivkeydialog.cpp \
+qt/importwitnessdialog.cpp \
+qt/accounttablemodel.cpp
 
 GDN_RES_ICONS = qt/res/icons/connect0@2x.png \
   qt/res/icons/connect1@2x.png \

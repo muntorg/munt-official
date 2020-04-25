@@ -436,7 +436,7 @@ void CoinControlDialog::updateLabelLocked()
 }
 
 //fixme: (PHASE5) - we can remove this header once phase 4 is active
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "validation/validation.h"
 
 void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)

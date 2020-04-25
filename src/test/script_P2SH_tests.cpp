@@ -20,7 +20,7 @@
 #include "script/sign.h"
 #include "script/ismine.h"
 #include "test/test_gulden.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 
 #include <vector>
 

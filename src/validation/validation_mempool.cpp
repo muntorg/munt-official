@@ -29,7 +29,7 @@
 #include "util.h"
 #include "utilmoneystr.h"
 #include "chainparams.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 
 static const uint64_t MEMPOOL_DUMP_VERSION = 1;
 

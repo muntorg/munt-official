@@ -27,7 +27,7 @@
 #include "script/sign.h"
 #include "timedata.h"
 #include "util.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "utilmoneystr.h"
 #include "wallet/coincontrol.h"
 #include "wallet/feebumper.h"

@@ -18,7 +18,7 @@
 #include <QDataWidgetMapper>
 #include <QMessageBox>
 #include <QPushButton>
-#include "_Gulden/GuldenGUI.h"
+#include "GuldenGUI.h"
 
 EditAddressDialog::EditAddressDialog(Mode _mode, QWidget *parent, QString labelHint):
     QDialog(parent),

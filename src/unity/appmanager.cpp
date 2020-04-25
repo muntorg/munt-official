@@ -6,7 +6,7 @@
 #include "appmanager.h"
 #include "chainparams.h"
 #include "util.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "init.h"
 #include "warnings.h"
 

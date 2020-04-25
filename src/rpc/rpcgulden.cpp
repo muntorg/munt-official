@@ -16,6 +16,7 @@
 #include "auto_checkpoints.h"
 #include "init.h"
 #include "unity/appmanager.h"
+#include "guldenutil.h"
 
 #ifdef ENABLE_WALLET
 #include <wallet/rpcwallet.h>
@@ -25,7 +26,6 @@
 #include "wallet/witness_operations.h"
 #endif
 
-#include <Gulden/util.h>
 #include <numeric>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
@@ -40,7 +40,6 @@
 #include "blockfilter.h"
 #include "primitives/transaction.h"
 
-#include <Gulden/util.h>
 #include "utilmoneystr.h"
 
 #include <consensus/validation.h>

@@ -27,7 +27,7 @@
 #include "script/script_error.h"
 #include "script/standard.h"
 #include "utilstrencodings.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "coins.h"
 
 #include <map>

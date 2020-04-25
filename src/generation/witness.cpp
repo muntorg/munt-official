@@ -43,7 +43,7 @@
 #include <utility>
 
 #include <crypto/hash/hash.h>
-#include <Gulden/util.h>
+#include <guldenutil.h>
 #include <openssl/sha.h>
 
 #include <boost/thread.hpp>

@@ -1449,7 +1449,7 @@
   <customwidget>
    <class>ClickableLabel</class>
    <extends>QLabel</extends>
-   <header location="global">qt/_Gulden/clickablelabel.h</header>
+   <header location="global">qt/clickablelabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>

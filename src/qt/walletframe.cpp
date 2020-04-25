@@ -13,7 +13,7 @@
 
 #include "gui.h"
 #include "walletview.h"
-#include "_Gulden/welcomedialog.h"
+#include "welcomedialog.h"
 
 #include <cstdio>
 

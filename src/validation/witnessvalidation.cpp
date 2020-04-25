@@ -8,7 +8,7 @@
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 #include <consensus/validation.h>
-#include <Gulden/util.h>
+#include <guldenutil.h>
 #include "timedata.h" // GetAdjustedTime()
 
 #ifdef ENABLE_WALLET

@@ -26,7 +26,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
-#include "_Gulden/GuldenGUI.h"
+#include "GuldenGUI.h"
 
 AddressBookPage::AddressBookPage(const QStyle *platformStyle, Mode _mode, Tabs _tab, QWidget *parent) :
     QDialog(parent),

@@ -19,7 +19,7 @@
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 
-#include "_Gulden/GuldenGUI.h"
+#include "GuldenGUI.h"
 #include "validation/validation.h"
 
 WarningOverlay::WarningOverlay(QWidget *parent)

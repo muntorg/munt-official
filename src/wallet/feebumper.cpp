@@ -74,7 +74,7 @@ bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx
 }
 
 //fixme: (PHASE5) We can remove these includes after phase 4 activation
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "validation/validation.h"
 
 CFeeBumper::CFeeBumper(const CWallet *pWallet, const uint256 txidIn, int newConfirmTarget, bool ignoreGlobalPayTxFee, CAmount totalFee, bool newTxReplaceable)

@@ -54,7 +54,7 @@
 #include "torcontrol.h"
 #include "ui_interface.h"
 #include "util.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "utilmoneystr.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
