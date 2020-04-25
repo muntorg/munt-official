@@ -123,7 +123,7 @@ GULDEN_CORE_H = rpc/rpcgulden.h \
   pow/diff_delta.h \
   pow/diff_old.h \
   pow/diff_common.h \
-  crypo/hash/hash.h \
+  crypto/hash/hash.h \
   crypto/hash/city.h \
   crypto/hash/cityconfig.h \
   wallet/mnemonic.h \
