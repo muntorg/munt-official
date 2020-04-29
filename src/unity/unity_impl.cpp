@@ -17,7 +17,7 @@
 #include <chain.h>
 #include "consensus/validation.h"
 #include "net.h"
-#include "Gulden/mnemonic.h"
+#include "wallet/mnemonic.h"
 #include "net_processing.h"
 #include "wallet/spvscanner.h"
 #include "sync.h"

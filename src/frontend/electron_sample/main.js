@@ -35,15 +35,13 @@ function createWindow () {
 // Keep global references of all these objects
 let libgulden
 let guldenbackend
-let guldensignalhandler
 let signalhandler
 function guldenUnitySetup() {
     var basepath = app.getAppPath();
 
     global.libgulden = libgulden = require('./libgulden_unity_node_js')
     global.guldenbackend = guldenbackend = new libgulden.NJSGuldenUnifiedBackend
-    global.signalhandler = signalhandler = new Object()
-    global.guldensignalhandler = guldensignalhandler = new libgulden.NJSGuldenUnifiedFrontend(signalhandler);
+    signalhandler = global.signalhandler = new libgulden.NJSGuldenUnifiedFrontend();
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {
@@ -85,7 +83,7 @@ function guldenUnitySetup() {
     }
 
     // Start the Gulden unified backend
-    guldenbackend.InitUnityLibThreaded(basepath+"/"+"wallet", "", -1, -1, false, guldensignalhandler, "")
+    guldenbackend.InitUnityLibThreaded(basepath+"/"+"wallet", "", -1, -1, false, signalhandler, "")
 }
 
 // This method will be called when Electron has finished

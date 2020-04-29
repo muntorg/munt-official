@@ -7,26 +7,18 @@
 
 #include <cstdint>
 
-#include <nan.h>
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <gulden_monitor_listener.hpp>
 
-using namespace v8;
-using namespace node;
 using namespace std;
 
-class NJSGuldenMonitorListener: public ::GuldenMonitorListener {
+class NJSGuldenMonitorListener: public ::GuldenMonitorListener, public Napi::ObjectWrap<NJSGuldenMonitorListener> {
 public:
 
-    static void Initialize(Local<Object> target);
-
-    static Local<Object> wrap(const std::shared_ptr<::GuldenMonitorListener> &object);
-    static Nan::Persistent<ObjectTemplate> GuldenMonitorListener_prototype;
-    ~NJSGuldenMonitorListener()
-    {
-        njs_impl.Reset();
-    };
-    NJSGuldenMonitorListener(Local<Object> njs_implementation){njs_impl.Reset(njs_implementation);};
+    static Napi::FunctionReference constructor;
+    static Napi::Object Init(Napi::Env env, Napi::Object exports);
+    NJSGuldenMonitorListener(const Napi::CallbackInfo& info) : Napi::ObjectWrap<NJSGuldenMonitorListener>(info){};
 
     void onPartialChain(int32_t height, int32_t probable_height, int32_t offset);
 
@@ -35,14 +27,11 @@ public:
     void onProcessedSPVBlocks(int32_t height);
 
 private:
-    static NAN_METHOD(onPartialChain);
+    void onPartialChain(const Napi::CallbackInfo& info);
 
-    static NAN_METHOD(onPruned);
+    void onPruned(const Napi::CallbackInfo& info);
 
-    static NAN_METHOD(onProcessedSPVBlocks);
+    void onProcessedSPVBlocks(const Napi::CallbackInfo& info);
 
-    static NAN_METHOD(New);
-
-    Nan::Persistent<Object> njs_impl;
 };
 #endif //DJINNI_GENERATED_NJSGULDENMONITORLISTENER_HPP
