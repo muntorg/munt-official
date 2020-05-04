@@ -922,7 +922,7 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
             }
             else
             {
-                strErr = "Error reading compound script for account";
+                strErr = stdprintf("Error reading compound script for account [%s]", accountUUID);
                 return false;
             }
         }
@@ -941,7 +941,7 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
             }
             else
             {
-                strErr = "Error reading reward template for account";
+                strErr = strprintf("Error reading reward template for account [%s] [%s]", accountUUID, ssValue);
                 return false;
             }
         }
