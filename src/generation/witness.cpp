@@ -636,8 +636,8 @@ void static GuldenWitness()
                                     // Piggy back off existing block assembler code to grab the transactions we want to include.
                                     // Setup maximum size for assembler so that size of existing (PoW) block transactions are subtracted from overall maximum.
                                     BlockAssembler::Options assemblerOptions;
-                                    assemblerOptions.nBlockMaxWeight = DEFAULT_BLOCK_MAX_WEIGHT - nStartingBlockWeight;
-                                    assemblerOptions.nBlockMaxSize = assemblerOptions.nBlockMaxWeight;
+                                    assemblerOptions.nBlockMaxWeight = GetArg("-blockmaxweight", DEFAULT_BLOCK_MAX_WEIGHT) - nStartingBlockWeight;
+                                    assemblerOptions.nBlockMaxSize = GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) - nStartingBlockWeight;
 
                                     std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript, true, nullptr, true));
                                     if (!pblocktemplate.get())
