@@ -8,6 +8,7 @@ $(package)_sha256_hash=e3bcd48a62739ad179ad8064b523346abb53767bcbefc01fe37303412
 $(package)_makefile_darwin=GNUmakefile
 $(package)_makefile_linux=GNUmakefile
 $(package)_makefile_mingw32=GNUmakefile
+$(package)_makefile_mingw64=GNUmakefile
 $(package)_makefile=$($(package)_makefile_$(host_os))
 
 $(package)_cxxflags_debug += 
