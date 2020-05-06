@@ -1,3 +1,7 @@
+LIBRARY electron.exe
+EXPORTS
+uv_default_loop
+uv_queue_work
 napi_acquire_threadsafe_function
 napi_add_env_cleanup_hook
 napi_add_finalizer
