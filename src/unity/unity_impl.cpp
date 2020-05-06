@@ -333,36 +333,10 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 }
 
 // rate limited balance change notifier
-static CRateLimit<int> balanceChangeNotifier([](int){
-    if (pactiveWallet && signalHandler)
-    {
-        WalletBalances balances;
-        pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
-        signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
-    }
-
-}, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
+static CRateLimit<int>* balanceChangeNotifier=nullptr;
 
 // rate limited new mutations notifier
-static CRateLimit<std::pair<uint256, bool> > newMutationsNotifier([](const std::pair<uint256, bool>& txInfo){
-    if (pactiveWallet && signalHandler)
-    {
-        const uint256& txHash = txInfo.first;
-        const bool fSelfComitted = txInfo.second;
-
-        LOCK2(cs_main, pactiveWallet->cs_wallet);
-        if (pactiveWallet->mapWallet.find(txHash) != pactiveWallet->mapWallet.end())
-        {
-            const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
-            std::vector<MutationRecord> mutations;
-            addMutationsForTransaction(&wtx, mutations);
-            for (auto& m: mutations) {
-                LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
-                signalHandler->notifyNewMutation(m, fSelfComitted);
-            }
-        }
-    }
-}, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
+static CRateLimit<std::pair<uint256, bool>>* newMutationsNotifier=nullptr;
 
 
 void terminateUnityFrontend()
@@ -482,7 +456,7 @@ void handlePostInitMain()
             if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
             {
                 if (status == CT_NEW) {
-                    newMutationsNotifier.trigger(std::make_pair(hash, fSelfComitted));
+                    newMutationsNotifier->trigger(std::make_pair(hash, fSelfComitted));
                 }
                 else if (status == CT_UPDATED && signalHandler)
                 {
@@ -494,11 +468,11 @@ void handlePostInitMain()
                 //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
                 // else if (status == CT_DELETED)
             }
-            balanceChangeNotifier.trigger(0);
+            balanceChangeNotifier->trigger(0);
         });
 
         // Fire once immediately to update with latest on load.
-        balanceChangeNotifier.trigger(0);
+        balanceChangeNotifier->trigger(0);
     }
 }
 
@@ -602,7 +576,7 @@ bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& p
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("%s: Update balance and rescan", __func__);
-    balanceChangeNotifier.trigger(0);
+    balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -669,7 +643,7 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("%s: Update balance and rescan", __func__);
-    balanceChangeNotifier.trigger(0);
+    balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -772,7 +746,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("ReplaceWalletLinkedFromURI: Update balance and rescan");
-    balanceChangeNotifier.trigger(0);
+    balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -797,6 +771,38 @@ bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 
 int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals, const std::string& extraArgs)
 {
+    balanceChangeNotifier = new CRateLimit<int>([](int)
+    {
+        if (pactiveWallet && signalHandler)
+        {
+            WalletBalances balances;
+            pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
+            signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+        }
+    }, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
+
+    newMutationsNotifier = new CRateLimit<std::pair<uint256, bool>>([](const std::pair<uint256, bool>& txInfo)
+    {
+        if (pactiveWallet && signalHandler)
+        {
+            const uint256& txHash = txInfo.first;
+            const bool fSelfComitted = txInfo.second;
+
+            LOCK2(cs_main, pactiveWallet->cs_wallet);
+            if (pactiveWallet->mapWallet.find(txHash) != pactiveWallet->mapWallet.end())
+            {
+                const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
+                std::vector<MutationRecord> mutations;
+                addMutationsForTransaction(&wtx, mutations);
+                for (auto& m: mutations)
+                {
+                    LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
+                    signalHandler->notifyNewMutation(m, fSelfComitted);
+                }
+            }
+        }
+    }, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
+
     // Force the datadir to specific place on e.g. android devices
     if (!dataDir.empty())
         SoftSetArg("-datadir", dataDir);
