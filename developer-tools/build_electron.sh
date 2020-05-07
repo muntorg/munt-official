@@ -9,13 +9,19 @@ NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PLATFORM=`./depends/config.guess`
 PLATFORM_VENDOR=`./depends/config.guess | cut -d- -f2`
+PLATFORM_OS=`./depends/config.guess | cut -d- -f3`
 
 export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer"
 export CFLAGS=${CXXFLAGS}
 if [ ${PLATFORM_VENDOR} = "apple" ]; then
     export LDFLAGS="-fPIC -Bsymbolic"
 else
-    export LDFLAGS="-fPIC -Bsymbolic -Wl,--gc-sections"
+    if [ ${PLATFORM_OS} = "mingw64" ]; then
+        export LDFLAGS="-fPIC -Bsymbolic -L${DIR}/../build_electron -lnode -Wl,--gc-sections"
+        export EXTRA_CXX_FLAGS="-DNODE_GYP_MODULE_NAME=guldenunifiedbackend -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_HAS_EXCEPTIONS=0 -DBUILDING_NODE_EXTENSION -D_WINDLL"
+    else
+        export LDFLAGS="-fPIC -Bsymbolic -Wl,--gc-sections"
+    fi
 fi
 
 
@@ -34,15 +40,16 @@ tar -xvf iojs-v${ELECTRON_VERSION}.tar.gz -C electron-${ELECTRON_VERSION}
 mkdir node-addon-api-${NAPI_VERSION} | true
 tar -xvf node-addon-api-${NAPI_VERSION}.tgz -C node-addon-api-${NAPI_VERSION}
 
-wget -c https://github.com/nodejs/nan/archive/v2.13.2.tar.gz
-tar -xvf  v2.13.2.tar.gz
-
-export CXXFLAGS="${CXXFLAGS} -I${DIR}/../build_electron/electron-${ELECTRON_VERSION}/node_headers/include/node/ -I${DIR}/../build_electron/node-addon-api-${NAPI_VERSION}/package/"
+export CXXFLAGS="${CXXFLAGS} -I${DIR}/../build_electron/electron-${ELECTRON_VERSION}/node_headers/include/node/ -I${DIR}/../build_electron/node-addon-api-${NAPI_VERSION}/package/ $(EXTRA_CXX_FLAGS} -O2"
 export CFLAGS=${CXXFLAGS}
 
+if [ ${PLATFORM_OS} = "mingw64" ]; then
+    dlltool -d ${DIR}/electron/electron.def -l libnode.a
+fi
 
 ../autogen.sh
-../configure --prefix=$PWD/../depends/${PLATFORM} --disable-bench --disable-tests --disable-man --disable-zmq --without-utils  --without-daemon --with-node-js-libs --with-qrencode --with-gui=no --enable-debug
+#NB! Important to pass exmpty config.site here; otherwise msys2 has a default config.site that messes with (overrides) our own from the depends directory...
+CONFIG_SITE='' ../configure --prefix=$PWD/../depends/${PLATFORM} --disable-bench --disable-tests --disable-man --disable-zmq --without-utils  --without-daemon --with-node-js-libs --with-qrencode --with-gui=no
 make V=1 -j ${NUM_PROCS}
 cd ..
 
