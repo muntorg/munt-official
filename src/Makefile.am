@@ -743,8 +743,7 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.cpp \
   unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.hpp \
   unity/djinni/node_js/NJSGuldenUnifiedFrontend.cpp \
-  unity/djinni/node_js/NJSGuldenUnifiedFrontend.hpp \
-  unity/djinni/node_js/NJSObjectWrapper.hpp
+  unity/djinni/node_js/NJSGuldenUnifiedFrontend.hpp
 
 libgulden_unity_node_js_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_unity_node_js_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -767,8 +766,8 @@ libgulden_unity_node_js_la_SOURCES = \
   $(GULDEN_CORE_H)
 
 
-libgulden_unity_node_js_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS)
-libgulden_unity_node_js_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(LIBGULDEN_CRYPTO_ALL) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
+libgulden_unity_node_js_la_LDFLAGS = -shared -module -no-undefined -export-dynamic $(AM_LDFLAGS) $(RELDFLAGS) -pthread
+libgulden_unity_node_js_la_LIBADD = $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(LIBGULDEN_CRYPTO_ALL) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(SSL_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
 libgulden_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 endif
