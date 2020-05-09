@@ -28,3 +28,5 @@ djinni/src/run \
    --cpp-out src/unity/djinni/cpp/ \
    --idl src/unity/libunity.djinni
 
+mkdir src/unity/djinni/support-lib
+cp -rf djinni/support-lib/* src/unity/djinni/support-lib/

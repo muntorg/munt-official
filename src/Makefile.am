@@ -755,6 +755,7 @@ libgulden_unity_node_js_la_SOURCES = \
   unity/node_js/init_node_js.cpp \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/djinni/support-lib/nodejs/win_delay_load_hook.cpp \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_NODE_JS_GEN)
 
@@ -817,16 +818,16 @@ libgulden_unity_jni_la_SOURCES = \
   $(GULDEN_CORE_H)
 
 nodist_libgulden_unity_jni_la_SOURCES = \
-  ../djinni/support-lib/jni/djinni_support.cpp \
-  ../djinni/support-lib/jni/djinni_main.cpp
+  unity/djinni/support-lib/jni/djinni_support.cpp \
+  unity/djinni/support-lib/jni/djinni_main.cpp
 
 ANDROID_DEPS = $(LIBGULDEN_COMPAT) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_NODE) $(LIBGULDEN_UTIL) $(LIBGULDEN_COMMON) $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL) $(LIBGULDEN_ANDROID_COMPAT)
 
 
 libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS_NO_THREADS) $(RELDFLAGS) -llog
 libgulden_unity_jni_la_LIBADD = $(ANDROID_DEPS) $(ANDROID_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
-libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 endif
 #
 
