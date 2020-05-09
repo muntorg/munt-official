@@ -1,4 +1,4 @@
-LIBRARY electron.exe
+LIBRARY node.exe
 EXPORTS
 uv_default_loop
 uv_queue_work

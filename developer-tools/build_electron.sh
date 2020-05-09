@@ -17,7 +17,7 @@ if [ ${PLATFORM_VENDOR} = "apple" ]; then
     export LDFLAGS="-fPIC -Bsymbolic"
 else
     if [ ${PLATFORM_OS} = "mingw64" ]; then
-        export LDFLAGS="-fPIC -Bsymbolic -L${DIR}/../build_electron -lelectron -Wl,--gc-sections"
+        export LDFLAGS="-fPIC -Bsymbolic -L${DIR}/../build_electron -lnode -Wl,--gc-sections"
         export EXTRA_CXX_FLAGS="-DNODE_GYP_MODULE_NAME=guldenunifiedbackend -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_HAS_EXCEPTIONS=0 -DBUILDING_NODE_EXTENSION -D_WINDLL"
     else
         export LDFLAGS="-fPIC -Bsymbolic -Wl,--gc-sections"
@@ -44,7 +44,7 @@ export CXXFLAGS="${CXXFLAGS} -I${DIR}/../build_electron/electron-${ELECTRON_VERS
 export CFLAGS=${CXXFLAGS}
 
 if [ ${PLATFORM_OS} = "mingw64" ]; then
-    dlltool -d ${DIR}/electron/electron.def -l libelectron.a
+    dlltool -d ${DIR}/node/node.def -l libnode.a
 fi
 
 ../autogen.sh
