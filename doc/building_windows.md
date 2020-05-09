@@ -23,7 +23,7 @@ Installation of msys2
 * `pacman -Syu`
 * Close and restart the console
 * `pacman -Su`
-* `pacman -S --noconfirm mingw-w64-i686-toolchain mingw-w64-i686-python2 git make patch tar autoconf automake libtool`
+* `pacman -S --noconfirm mingw-w64-i686-toolchain mingw-w64-i686-python2 git make patch tar autoconf automake libtool pkg-config`
 
 
 Building under msys2
