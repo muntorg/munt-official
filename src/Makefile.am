@@ -776,13 +776,6 @@ libgulden_unity_jni_la_SOURCES = \
   unity/libinit.h \
   unity/android/logging_android.cpp \
   unity/android/init_android.cpp \
-  $(libgulden_wallet_a_SOURCES) \
-  $(libgulden_common_a_SOURCES) \
-  $(libgulden_util_a_SOURCES) \
-  $(libgulden_node_a_SOURCES) \
-  $(libgulden_consensus_a_SOURCES) \
-  $(crypto_libgulden_crypto_a_SOURCES) \
-  $(libgulden_android_compat_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
   unity/djinni/jni/NativeBlockInfoRecord.hpp \
@@ -827,9 +820,11 @@ nodist_libgulden_unity_jni_la_SOURCES = \
   ../djinni/support-lib/jni/djinni_support.cpp \
   ../djinni/support-lib/jni/djinni_main.cpp
 
+ANDROID_DEPS = $(LIBGULDEN_COMPAT) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_NODE) $(LIBGULDEN_UTIL) $(LIBGULDEN_COMMON) $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL) $(LIBGULDEN_ANDROID_COMPAT)
+
 
 libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS_NO_THREADS) $(RELDFLAGS) -llog
-libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBGULDEN_UNITY_CRYPTO_OBJ) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
+libgulden_unity_jni_la_LIBADD = $(ANDROID_DEPS) $(ANDROID_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
 libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 endif
