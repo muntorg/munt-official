@@ -279,7 +279,7 @@ libgulden_server_a_SOURCES += \
 endif
 
 # node: shared between GuldenD, Gulden and unity libraries.
-libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/univalue/include
 libgulden_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_node_a_SOURCES = \
   addrdb.cpp \
@@ -753,21 +753,15 @@ libgulden_unity_node_js_la_SOURCES = \
   unity/libinit.h \
   unity/node_js/logging_node_js.cpp \
   unity/node_js/init_node_js.cpp \
-  $(libgulden_wallet_a_SOURCES) \
-  $(libgulden_common_a_SOURCES) \
-  $(libgulden_util_a_SOURCES) \
-  $(libgulden_node_a_SOURCES) \
-  $(libgulden_consensus_a_SOURCES) \
-  $(crypto_libgulden_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
   $(DJINNI_CPP_GEN) \
-  $(DJINNI_NODE_JS_GEN) \
-  $(GULDEN_CORE_H)
+  $(DJINNI_NODE_JS_GEN)
 
 
+GULDEN_NJS_DEPS = $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_NODE) $(LIBGULDEN_UTIL) $(LIBGULDEN_COMMON) $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL)
 libgulden_unity_node_js_la_LDFLAGS = -shared -module -no-undefined -export-dynamic $(AM_LDFLAGS) $(RELDFLAGS) -pthread
-libgulden_unity_node_js_la_LIBADD = $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(LIBGULDEN_CRYPTO_ALL) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(SSL_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
+libgulden_unity_node_js_la_LIBADD = $(GULDEN_NJS_DEPS) $(GULDEN_NJS_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(SSL_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
 libgulden_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 endif
