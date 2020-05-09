@@ -3,6 +3,11 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+//Workaround braindamaged 'hack' in libtool.m4 that defines DLL_EXPORT when building a dll via libtool (this in turn imports unwanted symbols from e.g. pthread that breaks static pthread linkage)
+#ifdef DLL_EXPORT
+#undef DLL_EXPORT
+#endif
+
 // Unity specific includes
 #include "unity_impl.h"
 #include "libinit.h"
