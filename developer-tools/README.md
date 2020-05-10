@@ -4,7 +4,7 @@ Developer tools
 This directory, and sub-directories, contain various scripts that are not a core part of the repository itself, but aid developers with working with maintaining the repository, or building the repository for specific configurations and so forth.
 
 * build_docker.sh        - Build Gulden/GuldenD binaries inside a docker container
-* build_electron.sh      - Build a copy of the Gulden core "unity" library that can be used from electron applications
+* build_node.sh          - Build a copy of the Gulden core "unity" library that can be used from node/electron applications
 * build_android_core.sh  - Build a copy of the Gulden core "unity" library that can be used from android applications
 * build_ios_core.sh      - Build a copy of the Gulden core "unity" library that can be used from ios applications
 * gencheckpoints.sh      - Generate updated/recent checkpoints to be used for new builds (result must be manually pasted into chainparams.cpp as appropriate)
