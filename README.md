@@ -58,10 +58,9 @@ All code, binaries and other assets in this repository are subject to [The Gulde
 ### Branches
 `master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the sofrware than use the `master` branch.
 
-Each major version of the software gets its own branch e.g. `2.0_development`, `2.1_development` where if `2.1` were the next major release than both `2.0` and `2.1` may see some activity with `2.0` getting minor backports and updates while `2.1` development continues.
+Each major version of the software gets its own branch e.g. `2.3_development`, `2.2_development` where if `2.3` were the next major release than both `2.3` and `2.2` may see some activity with `2.2` getting minor backports and updates while `2.3` development continues.
 
-Major features may also see their own release e.g. `unity`.
-The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches.
+Major features are worked on in temporary feature branches until they can be merged back into one of the development branches. The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
 
 ### Contributing
 If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
@@ -86,10 +85,9 @@ Connect with the community through one or more of the following:
 The latest binaries and installers can be found [here](https://github.com/Gulden/gulden-official/releases) for all platforms, including raspbian.
 
 ### Building
-Reconsider whether it is actually necessary for you to build.
-[Binaries for both the UI software as well as the command line/server are provided by us at every release for multiple architectures.](https://github.com/Gulden/gulden-official/releases) For users who are not developers a lot of headaches can be avoided by simply using these.
+[Binaries](https://github.com/Gulden/gulden-official/releases) for both the UI as well as the daemon and command line interface for multiple architectures.
 
-If you are sure you need to build the software yourself, please read the [build instructions](./doc/building.md) before attempting to build the software.
+For those who really need too or are technically inclined it is of course possible to build the software yourself. Please read the [build instructions](./doc/building.md) before attempting to build the software and/or seeking support.
 
 ### Additional technical information
 
