@@ -16,7 +16,7 @@ export CFLAGS=${CXXFLAGS}
 if [ ${PLATFORM_VENDOR} = "apple" ]; then
     export LDFLAGS="-fPIC -Bsymbolic"
 else
-    if [ ${PLATFORM_OS} = "mingw64" ]; then
+    if [ ${PLATFORM_OS} = "mingw32" ] ||  [ ${PLATFORM_OS} = "mingw64" ]; then
         export LDFLAGS="-fPIC -Bsymbolic -L${DIR}/../build_electron -lnode -Wl,--gc-sections"
         export EXTRA_CXX_FLAGS="-DNODE_HOST_BINARY=node.exe -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_HAS_EXCEPTIONS=0 -DBUILDING_NODE_EXTENSION -D_WINDLL"
     else
@@ -43,7 +43,7 @@ tar -xvf node-addon-api-${NAPI_VERSION}.tgz -C node-addon-api-${NAPI_VERSION}
 export CXXFLAGS="${CXXFLAGS} -I${DIR}/../build_electron/electron-${ELECTRON_VERSION}/node_headers/include/node/ -I${DIR}/../build_electron/node-addon-api-${NAPI_VERSION}/package/ ${EXTRA_CXX_FLAGS} -O2"
 export CFLAGS=${CXXFLAGS}
 
-if [ ${PLATFORM_OS} = "mingw64" ]; then
+if [ ${PLATFORM_OS} = "mingw32" ] || [ ${PLATFORM_OS} = "mingw64" ]; then
     dlltool -d ${DIR}/node/node.def -y libnode.a
 fi
 
