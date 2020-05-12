@@ -13,7 +13,7 @@ $(package)_config_opts_linux=threadapi=pthread runtime-link=shared
 $(package)_config_opts_darwin=--toolset=clang-darwin runtime-link=shared
 $(package)_config_opts_mingw32=binary-format=pe target-os=windows threadapi=win32 runtime-link=static
 $(package)_config_opts_mingw64=binary-format=pe target-os=windows threadapi=win32 runtime-link=static
-$(package)_config_opts_x86_64_mingw32=address-model=64
+$(package)_config_opts_x86_64_mingw32=address-model=32
 $(package)_config_opts_x86_64_mingw64=address-model=64
 $(package)_config_opts_i686_mingw32=address-model=32
 $(package)_config_opts_i686_linux=address-model=32 architecture=x86
