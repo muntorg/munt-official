@@ -378,13 +378,14 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
             bool fLockPeriodExpired = (GetPoW2RemainingLockLengthInBlocks(nLockUntilBlock, pTipIndex_->nHeight) == 0);
 
+            std::string strAddress = CGuldenAddress(address).ToString();
             #ifdef ENABLE_WALLET
             std::string accountName = accountNameForAddress(*pwallet, address);
             #endif
 
             UniValue rec(UniValue::VOBJ);
             rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
-            rec.push_back(Pair("address", CGuldenAddress(address).ToString()));
+            rec.push_back(Pair("address", strAddress));
             rec.push_back(Pair("age", nAge));
             rec.push_back(Pair("amount", ValueFromAmount(nValue)));
             rec.push_back(Pair("raw_weight", nRawWeight));

@@ -60,8 +60,16 @@ isminetype IsMine(const CKeyStore& keystore, const CTxDestination& dest, SigVers
 
 isminetype IsMine(const CKeyStore &keystore, const CTxDestination& dest, bool& isInvalid, SigVersion sigversion)
 {
-    CScript script = GetScriptForDestination(dest);
-    return IsMine(keystore, script, isInvalid, sigversion);
+    if (dest.type() == typeid(CPoW2WitnessDestination))
+    {
+        const CPoW2WitnessDestination* witnessDetails = boost::get<CPoW2WitnessDestination>(&dest);
+        return IsMine(keystore, *witnessDetails);
+    }
+    else
+    {
+        CScript script = GetScriptForDestination(dest);
+        return IsMine(keystore, script, isInvalid, sigversion);
+    }
 }
 
 isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& isInvalid, SigVersion sigversion)
@@ -148,6 +156,32 @@ isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& 
     return ISMINE_NO;
 }
 
+
+isminetype IsMine(const CKeyStore& keystore, const CPoW2WitnessDestination& witnessDetails)
+{
+    if (keystore.HaveKey(witnessDetails.spendingKey))
+        return ISMINE_SPENDABLE;
+    if (keystore.HaveKey(witnessDetails.witnessKey))
+        return ISMINE_WITNESS;
+    return ISMINE_NO;
+}
+
+isminetype IsMine(const CKeyStore& keystore, const CTxOutPoW2Witness& witnessDetails)
+{
+    if (keystore.HaveKey(witnessDetails.spendingKeyID))
+        return ISMINE_SPENDABLE;
+    if (keystore.HaveKey(witnessDetails.witnessKeyID))
+        return ISMINE_WITNESS;
+    return ISMINE_NO;
+}
+
+isminetype IsMine(const CKeyStore& keystore, const CTxOutStandardKeyHash& standardKeyHash)
+{
+    if (keystore.HaveKey(standardKeyHash.keyID))
+        return ISMINE_SPENDABLE;
+    return ISMINE_NO;
+}
+
 isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
 {
     switch (txout.GetType())
@@ -155,19 +189,9 @@ isminetype IsMine(const CKeyStore &keystore, const CTxOut& txout)
         case CTxOutType::ScriptLegacyOutput:
             return IsMine(keystore, txout.output.scriptPubKey);
         case CTxOutType::PoW2WitnessOutput:
-        {
-            if (keystore.HaveKey(txout.output.witnessDetails.spendingKeyID))
-                return ISMINE_SPENDABLE;
-            if (keystore.HaveKey(txout.output.witnessDetails.witnessKeyID))
-                return ISMINE_WITNESS;
-            break;
-        }
+            return IsMine(keystore, txout.output.witnessDetails);
         case CTxOutType::StandardKeyHashOutput:
-        {
-            if (keystore.HaveKey(txout.output.standardKeyHash.keyID))
-                return ISMINE_SPENDABLE;
-            break;
-        }
+            return IsMine(keystore, txout.output.standardKeyHash);
     }
     return ISMINE_NO;
 }

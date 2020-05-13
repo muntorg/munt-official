@@ -151,62 +151,21 @@ bool IsPow2Phase4Active(const CBlockIndex* pindexPrev)
 
 // Phase 5 becomes active after all 'backwards compatible' witness addresses have been flushed from the system.
 // At this point 'backwards compatible' witness addresses in the chain are treated simply as anyone can spend transactions (as they have all been spent this is fine) and old witness data is discarded.
-static uint256 phase5ActivationHash;
-bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, CChain& chain, CCoinsViewCache* viewOverride)
+bool IsPow2Phase5Active(uint64_t nHeight)
 {
-    DO_BENCHMARK("WIT: IsPow2Phase5Active", BCLog::BENCH|BCLog::WITNESS);
-
-    #ifdef ENABLE_WALLET
-    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
-    #else
-    LOCK(cs_main);
-    #endif
-
-    // First make sure that none of the obvious conditions that would preclude us from being active are true, if they are we can just abort testing immediately.
-    if (!IsPow2Phase4Active(pIndex))
-        return false;
-
-    // Now we try make use of the activation hash (if phase 3 is already active) to speed up testing.
-    if (phase5ActivationHash == uint256())
-        phase5ActivationHash = ppow2witdbview->GetPhase5ActivationHash();
-    if (phase5ActivationHash != uint256())
-    {
-        const CBlockIndex* pIndexPrev = pIndex;
-        while (pIndexPrev)
-        {
-            if (pIndexPrev->GetBlockHashPoW2() == phase5ActivationHash)
-                return true;
-            // No point searching any further as we won't find any true matches below this depth.
-            if ((uint64_t)pIndexPrev->nHeight < Params().GetConsensus().pow2Phase4FirstBlockHeight)
-                break;
-            pIndexPrev = pIndexPrev->pprev;
-        }
-    }
-
-    // Phase 5 can't be active if phase 4 is not.
-    if (!IsPow2Phase4Active(pIndex))
-    {
-        return false;
-    }
-
-    std::map<COutPoint, Coin> allWitnessCoins;
-    if (!getAllUnspentWitnessCoins(chain, params, pIndex, allWitnessCoins, nullptr, viewOverride))
-        return error("IsPow2Phase5Active: Failed to enumerate all witness coins");
-
-    // If any PoW2WitnessOutput remain then we aren't active yet.
-    for (auto iter : allWitnessCoins)
-    {
-        if (iter.second.out.GetType() != CTxOutType::PoW2WitnessOutput)
-            return false;
-    }
-
-    // If we are the first ever block to test as active, or if the previous active block is not our parent (can happen in the case of a fork from before activation)
-    // Then set ourselves as the activation hash.
-    phase5ActivationHash = pIndex->GetBlockHashPoW2();
-    ppow2witdbview->SetPhase5ActivationHash(phase5ActivationHash);
-    return true;
+    if (nHeight >= Params().GetConsensus().pow2Phase5FirstBlockHeight)
+        return true;
+    return false;
 }
 
+bool IsPow2Phase5Active(const CBlockIndex* pIndex, const CChainParams& params, CChain& chain, CCoinsViewCache* viewOverride)
+{
+    if (pIndex)
+    {
+        return IsPow2Phase5Active((uint64_t)pIndex->nHeight);
+    }
+    return false;
+}
 
 bool IsPow2WitnessingActive(uint64_t nHeight)
 {
@@ -254,6 +213,13 @@ int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockN
     {
         nFromBlockOut = out.output.witnessDetails.lockFromBlock == 0 ? txBlockNumber : out.output.witnessDetails.lockFromBlock;
         nUntilBlockOut = out.output.witnessDetails.lockUntilBlock;
+    }
+    else if (out.GetType() <= CTxOutType::ScriptLegacyOutput)
+    {
+        CTxOutPoW2Witness witnessDetails;
+        out.output.scriptPubKey.ExtractPoW2WitnessFromScript(witnessDetails);
+        nFromBlockOut =  witnessDetails.lockFromBlock == 0 ? txBlockNumber : witnessDetails.lockFromBlock;
+        nUntilBlockOut = witnessDetails.lockUntilBlock;
     }
     else
     {
