@@ -960,7 +960,7 @@ CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
     return newAccount;
 }
 
-bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates)
+bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates, bool allowRescan)
 {
     if (!forAccount)
         return false;
@@ -985,7 +985,7 @@ bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount
     {
         CPubKey pubWitnessKey = privateWitnessKey.GetPubKey();
         CKeyID witnessKeyID = pubWitnessKey.GetID();
-        static_cast<CWallet*>(this)->importPrivKeyIntoAccount(forAccount, privateWitnessKey, witnessKeyID, nKeyBirthDate);
+        static_cast<CWallet*>(this)->importPrivKeyIntoAccount(forAccount, privateWitnessKey, witnessKeyID, nKeyBirthDate, allowRescan);
     }
     return true;
 }
@@ -1038,7 +1038,7 @@ std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureS
     return privateWitnessKeys;
 }
 
-CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates)
+CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates, bool allowRescan)
 {
     CAccount* newAccount = NULL;
 
@@ -1058,7 +1058,7 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
             return nullptr;
     }
 
-    if (ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates))
+    if (ImportKeysIntoWitnessOnlyWitnessAccount(newAccount, privateWitnessKeysWithBirthDates, allowRescan))
     {
         // Write new account
         addAccount(newAccount, strAccount);

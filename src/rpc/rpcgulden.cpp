@@ -3473,7 +3473,7 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 4)
         throw std::runtime_error(
             "importwitnesskeys \"account_name\" \"encoded_key_url\" \"create_account\" \n"
             "\nAdd keys imported from an \"encoded_key_url\" which has been obtained by using \"getwitnessaddresskeys\" or \"getwitnessaccountkeys\" \n"
@@ -3481,6 +3481,7 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
             "1. \"account_name\"            (string) name/label of the new account.\n"
             "2. \"encoded_key_url\"         (string) Encoded string containing the extended public key for the account.\n"
             "3. \"create_account\"          (boolean, optional, default=false) Encoded string containing the extended public key for the account.\n"
+            "4. \"rescan\"                  (boolean, optional, default=true) Perform a rescan for account transactions.\n"
             "\nResult:\n"
             "\nReturn the UUID of account.\n"
             "\nExamples:\n"
@@ -3495,13 +3496,17 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
     bool shouldCreateAccount = false;
     if (request.params.size() > 2)
         shouldCreateAccount = request.params[2].get_bool();
+    
+    bool shouldRescan = true;
+    if (request.params.size() > 3)
+        shouldRescan = request.params[3].get_bool();
 
     const auto& keysAndBirthDates = pwallet->ParseWitnessKeyURL(request.params[1].get_str().c_str());
     if (keysAndBirthDates.empty())
         throw std::runtime_error("Invalid encoded key URL");
 
     CAccount* account = nullptr;
-    if (shouldCreateAccount)
+    if (!shouldCreateAccount)
     {
         account = AccountFromValue(pwallet, request.params[0], false);
         if (!account)
@@ -3509,13 +3514,13 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
         if (account->m_Type != WitnessOnlyWitnessAccount)
             throw std::runtime_error("Account is not a witness-only account");
 
-        if (!pwallet->ImportKeysIntoWitnessOnlyWitnessAccount(account, keysAndBirthDates))
+        if (!pwallet->ImportKeysIntoWitnessOnlyWitnessAccount(account, keysAndBirthDates, shouldRescan))
             throw std::runtime_error("Failed to import keys into account");
     }
     else
     {
         std::string requestedAccountName = request.params[0].get_str();
-        account = pwallet->CreateWitnessOnlyWitnessAccount(requestedAccountName, keysAndBirthDates);
+        account = pwallet->CreateWitnessOnlyWitnessAccount(requestedAccountName, keysAndBirthDates, shouldRescan);
         if (!account)
             throw std::runtime_error("Failed to create witness-only witness account");
     }

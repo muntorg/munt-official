@@ -412,7 +412,7 @@ bool CWallet::forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKeyToIns
     return true;
 }
 
-bool CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate)
+bool CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate, bool allowRescan)
 {
     assert(!targetAccount->IsHD());
 
@@ -427,7 +427,10 @@ bool CWallet::importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& priv
 
     // Whenever a key is imported, we need to scan the whole chain from birth date - do so now
     pactiveWallet->nTimeFirstKey = std::min(pactiveWallet->nTimeFirstKey, keyBirthDate);
-    ResetSPVStartRescanThread();
+    if (allowRescan)
+    {
+        ResetSPVStartRescanThread();
+    }
 
     return true;
 }

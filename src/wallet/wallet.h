@@ -729,7 +729,7 @@ public:
 
     void importPrivKey(const SecureString& sKey, std::string sAccountName);
     void importPrivKey(const CKey& privKey, std::string sAccountName);
-    bool importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate);
+    bool importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate, bool allowRescan=true);
     bool forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKey);
 
     /** 

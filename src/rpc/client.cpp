@@ -152,6 +152,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "deleteseed", 1, "should_purge_accounts" },
     { "importseed", 2, "is_read_only" },
     { "importwitnesskeys", 2, "create_account" },
+    { "importwitnesskeys", 3, "rescan" },
     { "splitwitnessaccount", 2, "amounts" },
     { "setwitnesscompound", 1, "amount" },
     { "getwitnessinfo", 1, "verbose" },
