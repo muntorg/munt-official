@@ -314,7 +314,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     int nParentPoW2Phase = GetPoW2Phase(pParent);
     int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev);
-    bool bSegSigIsEnabled = IsSegSigEnabled(pParent);
+    bool bSegSigIsEnabled = IsSegSigEnabled(pParent->pprev?pParent->pprev:pParent);
 
     //Until PoW2 activates mining subsidy remains full, after it activates PoW part of subsidy is reduced.
     //fixme: (PHASE5) (CLEANUP) - We can remove this after phase4 becomes active.
