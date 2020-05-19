@@ -373,7 +373,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         // -promiscuousmempoolflags is used.
         // TODO: replace this with a call to main to assess validity of a mempool
         // transaction (which in most cases can be a no-op).
-        fIncludeSegSig = IsSegSigEnabled(pParent) && fMineSegSig;
+        fIncludeSegSig = bSegSigIsEnabled && fMineSegSig;
 
         // If we are mining below the tip (orphaned tip due to absent witness) - it is desirable to include first all transactions that are in the tip.
         // If we do not do this we can end up creating invalid blocks, due to the fact that we don't rewind the mempool here

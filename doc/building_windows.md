@@ -18,13 +18,18 @@ Download the latest linux\*.tar.gz extract it and simply copy GuldenD out of it 
 
 Installation of msys2
 -----
-* Download and run the 32 bit msys installer - www.msys2.org
-* Open the *MSYS2 MinGW 32-bit* console (also called *Mingw-w64 32 bit* in the Mintty launcher)
+* Download and run the 64 bit msys installer - www.msys2.org
+* Open the *MSYS2 MinGW 64-bit* console (also called *Mingw-w64 64 bit* in the Mintty launcher)
 * `pacman -Syu`
 * Close and restart the console
 * `pacman -Su`
-* `pacman -S --noconfirm mingw-w64-i686-toolchain mingw-w64-i686-python2 git make patch tar autoconf automake libtool pkg-config`
+* `pacman -S --noconfirm mingw-w64-i686-toolchain mingw-w64-i686-python2 git make patch tar autoconf automake libtool pkg-config mingw-w64-x86_64-gcc`
 
+Building under msys2 (nodejs addon)
+-----
+* `git clone https://github.com/Gulden/gulden-official`
+* `cd gulden-official`
+* `./developer-tools/build_node.sh`
 
 Building under msys2
 -----
