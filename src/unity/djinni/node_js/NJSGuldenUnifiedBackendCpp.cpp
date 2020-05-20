@@ -564,12 +564,27 @@ Napi::Value NJSGuldenUnifiedBackend::IsValidRecipient(const Napi::CallbackInfo& 
     //Check if parameters have correct types
 
     auto field_arg_0_1 = info[0].ToObject().Get("scheme");
+    if (field_arg_0_1.IsEmpty() || field_arg_0_1.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'scheme' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     std::string arg_0_1 = field_arg_0_1.As<Napi::String>();
 
     auto field_arg_0_2 = info[0].ToObject().Get("path");
+    if (field_arg_0_2.IsEmpty() || field_arg_0_2.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'path' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     std::string arg_0_2 = field_arg_0_2.As<Napi::String>();
 
     auto field_arg_0_3 = info[0].ToObject().Get("items");
+    if (field_arg_0_3.IsEmpty() || field_arg_0_3.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'items' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     unordered_map<std::string, std::string> arg_0_3;
     auto arg_0_3_prop_names = field_arg_0_3.ToObject().GetPropertyNames();
     for(uint32_t arg_0_3_id = 0; arg_0_3_id < arg_0_3_prop_names.Length(); arg_0_3_id++)
@@ -613,18 +628,43 @@ Napi::Value NJSGuldenUnifiedBackend::feeForRecipient(const Napi::CallbackInfo& i
     //Check if parameters have correct types
 
     auto field_arg_0_1 = info[0].ToObject().Get("valid");
+    if (field_arg_0_1.IsEmpty() || field_arg_0_1.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'valid' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     auto arg_0_1 = field_arg_0_1.ToBoolean().Value();
 
     auto field_arg_0_2 = info[0].ToObject().Get("address");
+    if (field_arg_0_2.IsEmpty() || field_arg_0_2.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'address' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     std::string arg_0_2 = field_arg_0_2.As<Napi::String>();
 
     auto field_arg_0_3 = info[0].ToObject().Get("label");
+    if (field_arg_0_3.IsEmpty() || field_arg_0_3.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'label' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     std::string arg_0_3 = field_arg_0_3.As<Napi::String>();
 
     auto field_arg_0_4 = info[0].ToObject().Get("desc");
+    if (field_arg_0_4.IsEmpty() || field_arg_0_4.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'desc' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     std::string arg_0_4 = field_arg_0_4.As<Napi::String>();
 
     auto field_arg_0_5 = info[0].ToObject().Get("amount");
+    if (field_arg_0_5.IsEmpty() || field_arg_0_5.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'amount' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     auto arg_0_5 = field_arg_0_5.ToNumber().Int64Value();
     UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4, arg_0_5);
 
@@ -649,18 +689,43 @@ Napi::Value NJSGuldenUnifiedBackend::performPaymentToRecipient(const Napi::Callb
     //Check if parameters have correct types
 
     auto field_arg_0_1 = info[0].ToObject().Get("valid");
+    if (field_arg_0_1.IsEmpty() || field_arg_0_1.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'valid' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     auto arg_0_1 = field_arg_0_1.ToBoolean().Value();
 
     auto field_arg_0_2 = info[0].ToObject().Get("address");
+    if (field_arg_0_2.IsEmpty() || field_arg_0_2.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'address' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     std::string arg_0_2 = field_arg_0_2.As<Napi::String>();
 
     auto field_arg_0_3 = info[0].ToObject().Get("label");
+    if (field_arg_0_3.IsEmpty() || field_arg_0_3.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'label' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     std::string arg_0_3 = field_arg_0_3.As<Napi::String>();
 
     auto field_arg_0_4 = info[0].ToObject().Get("desc");
+    if (field_arg_0_4.IsEmpty() || field_arg_0_4.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'desc' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     std::string arg_0_4 = field_arg_0_4.As<Napi::String>();
 
     auto field_arg_0_5 = info[0].ToObject().Get("amount");
+    if (field_arg_0_5.IsEmpty() || field_arg_0_5.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'amount' field").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
     auto arg_0_5 = field_arg_0_5.ToNumber().Int64Value();
     UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4, arg_0_5);
 
@@ -907,15 +972,35 @@ void NJSGuldenUnifiedBackend::addAddressBookRecord(const Napi::CallbackInfo& inf
     //Check if parameters have correct types
 
     auto field_arg_0_1 = info[0].ToObject().Get("address");
+    if (field_arg_0_1.IsEmpty() || field_arg_0_1.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'address' field").ThrowAsJavaScriptException();
+        return;
+    }
     std::string arg_0_1 = field_arg_0_1.As<Napi::String>();
 
     auto field_arg_0_2 = info[0].ToObject().Get("name");
+    if (field_arg_0_2.IsEmpty() || field_arg_0_2.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'name' field").ThrowAsJavaScriptException();
+        return;
+    }
     std::string arg_0_2 = field_arg_0_2.As<Napi::String>();
 
     auto field_arg_0_3 = info[0].ToObject().Get("desc");
+    if (field_arg_0_3.IsEmpty() || field_arg_0_3.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'desc' field").ThrowAsJavaScriptException();
+        return;
+    }
     std::string arg_0_3 = field_arg_0_3.As<Napi::String>();
 
     auto field_arg_0_4 = info[0].ToObject().Get("purpose");
+    if (field_arg_0_4.IsEmpty() || field_arg_0_4.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'purpose' field").ThrowAsJavaScriptException();
+        return;
+    }
     std::string arg_0_4 = field_arg_0_4.As<Napi::String>();
     AddressRecord arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
 
@@ -934,15 +1019,35 @@ void NJSGuldenUnifiedBackend::deleteAddressBookRecord(const Napi::CallbackInfo& 
     //Check if parameters have correct types
 
     auto field_arg_0_1 = info[0].ToObject().Get("address");
+    if (field_arg_0_1.IsEmpty() || field_arg_0_1.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'address' field").ThrowAsJavaScriptException();
+        return;
+    }
     std::string arg_0_1 = field_arg_0_1.As<Napi::String>();
 
     auto field_arg_0_2 = info[0].ToObject().Get("name");
+    if (field_arg_0_2.IsEmpty() || field_arg_0_2.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'name' field").ThrowAsJavaScriptException();
+        return;
+    }
     std::string arg_0_2 = field_arg_0_2.As<Napi::String>();
 
     auto field_arg_0_3 = info[0].ToObject().Get("desc");
+    if (field_arg_0_3.IsEmpty() || field_arg_0_3.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'desc' field").ThrowAsJavaScriptException();
+        return;
+    }
     std::string arg_0_3 = field_arg_0_3.As<Napi::String>();
 
     auto field_arg_0_4 = info[0].ToObject().Get("purpose");
+    if (field_arg_0_4.IsEmpty() || field_arg_0_4.IsUndefined())
+    {
+        Napi::Error::New(env, "Object is missing 'purpose' field").ThrowAsJavaScriptException();
+        return;
+    }
     std::string arg_0_4 = field_arg_0_4.As<Napi::String>();
     AddressRecord arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
 

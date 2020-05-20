@@ -17,6 +17,7 @@ void NJSGuldenUnifiedFrontend::notifyUnifiedProgress_aimpl__(float progress)
     if(result_notifyUnifiedProgress.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyUnifiedProgress call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -69,6 +70,7 @@ void NJSGuldenUnifiedFrontend::notifyBalanceChange_aimpl__(const BalanceRecord &
     if(result_notifyBalanceChange.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyBalanceChange call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -113,6 +115,7 @@ void NJSGuldenUnifiedFrontend::notifyNewMutation_aimpl__(const MutationRecord & 
     if(result_notifyNewMutation.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyNewMutation call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -197,6 +200,7 @@ void NJSGuldenUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const Transactio
     if(result_notifyUpdatedTransaction.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyUpdatedTransaction call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -226,6 +230,7 @@ void NJSGuldenUnifiedFrontend::notifyInitWithExistingWallet_aimpl__()
     if(result_notifyInitWithExistingWallet.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyInitWithExistingWallet call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -255,6 +260,7 @@ void NJSGuldenUnifiedFrontend::notifyInitWithoutExistingWallet_aimpl__()
     if(result_notifyInitWithoutExistingWallet.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyInitWithoutExistingWallet call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -284,6 +290,7 @@ void NJSGuldenUnifiedFrontend::notifyShutdown_aimpl__()
     if(result_notifyShutdown.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyShutdown call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -313,6 +320,7 @@ void NJSGuldenUnifiedFrontend::notifyCoreReady_aimpl__()
     if(result_notifyCoreReady.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyCoreReady call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -344,6 +352,7 @@ void NJSGuldenUnifiedFrontend::logPrint_aimpl__(const std::string & str)
     if(result_logPrint.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenUnifiedFrontend::logPrint call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 

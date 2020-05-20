@@ -21,6 +21,7 @@ void NJSGuldenMonitorListener::onPartialChain(int32_t height, int32_t probable_h
     if(result_onPartialChain.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenMonitorListener::onPartialChain call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -37,6 +38,7 @@ void NJSGuldenMonitorListener::onPruned(int32_t height)
     if(result_onPruned.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenMonitorListener::onPruned call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
@@ -53,6 +55,7 @@ void NJSGuldenMonitorListener::onProcessedSPVBlocks(int32_t height)
     if(result_onProcessedSPVBlocks.IsEmpty())
     {
         Napi::Error::New(env, "NJSGuldenMonitorListener::onProcessedSPVBlocks call failed").ThrowAsJavaScriptException();
+        return;
     }
 }
 
