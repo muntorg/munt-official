@@ -1768,7 +1768,7 @@ static UniValue getaccountbalances(const JSONRPCRequest& request)
         CAmount balance = pwallet->GetBalanceForDepth(nMinDepth, account, false, true);
         if (includeWatchOnly)
             balance += pwallet->GetWatchOnlyBalance(nMinDepth, account, true);
-        rec.push_back(Pair("balance", balance));
+        rec.push_back(Pair("balance", ValueFromAmount(balance)));
         allAccounts.push_back(rec);
     }
 
