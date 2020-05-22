@@ -1,6 +1,13 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 
+// Keep global references of all these objects
+let libgulden
+let guldenbackend
+let signalhandler
+
+let coreIsRunning=false
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -29,13 +36,18 @@ function createWindow () {
     mainWindow = null
   })
 
+  mainWindow.on('close', (e) => {
+      if (coreIsRunning)
+      {
+          e.preventDefault();
+          mainWindow.hide()
+          guldenbackend.TerminateUnityLib()
+      }
+  })
+
   guldenUnitySetup();
 }
 
-// Keep global references of all these objects
-let libgulden
-let guldenbackend
-let signalhandler
 function guldenUnitySetup() {
     var basepath = app.getAppPath();
 
@@ -45,6 +57,7 @@ function guldenUnitySetup() {
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {
+        coreIsRunning=true
         console.log("received: notifyCoreReady")
         mainWindow.webContents.send('notifyCoreReady')
     }
@@ -78,8 +91,8 @@ function guldenUnitySetup() {
         guldenbackend.InitWalletFromRecoveryPhrase(guldenbackend.GenerateRecoveryMnemonic(),"password")
     }
     signalhandler.notifyShutdown = function () {
-        console.log("received: notifyShutdown")
-        mainWindow.webContents.send('notifyShutdown')
+        coreIsRunning=false
+        app.quit()
     }
 
     // Start the Gulden unified backend
@@ -95,7 +108,11 @@ app.on('ready', createWindow)
 app.on('window-all-closed', function () {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin')
+  {
+      mainWindow.hide()
+      guldenbackend.TerminateUnityLib()
+  }
 })
 
 app.on('activate', function () {
