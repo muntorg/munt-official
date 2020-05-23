@@ -878,14 +878,11 @@ void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, cons
 
 void GuldenUnifiedBackend::TerminateUnityLib()
 {
-    std::thread([=]
-    {
-        work.reset();
-        ioctx.stop();
-        GuldenAppManager::gApp->shutdown();
-        GuldenAppManager::gApp->waitForShutDown();
-        run_thread.join();
-    });
+    work.reset();
+    ioctx.stop();
+    GuldenAppManager::gApp->shutdown();
+    GuldenAppManager::gApp->waitForShutDown();
+    run_thread.join();
 }
 
 QrCodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)

@@ -7,6 +7,8 @@ let guldenbackend
 let signalhandler
 
 let coreIsRunning=false
+let allowExit=false
+let terminateCore=false
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -39,9 +41,19 @@ function createWindow () {
   mainWindow.on('close', (e) => {
       if (coreIsRunning)
       {
+          console.log("terminate core from mainWindow close")
           e.preventDefault();
-          mainWindow.hide()
           guldenbackend.TerminateUnityLib()
+      }
+      else if (!allowExit)
+      {
+          console.log("set core to terminate from mainWindow close")
+          terminateCore=true
+          e.preventDefault();
+      }
+      else
+      {
+         console.log("allow app to exit, from mainwindow close")
       }
   })
 
@@ -60,6 +72,12 @@ function guldenUnitySetup() {
         coreIsRunning=true
         console.log("received: notifyCoreReady")
         mainWindow.webContents.send('notifyCoreReady')
+        if (terminateCore)
+        {
+            console.log("terminate core immediately after init")
+            terminateCore=false
+            guldenbackend.TerminateUnityLib()
+        }
     }
     signalhandler.logPrint  = function(message) {
         console.log("gulden_unity_core: " + message)
@@ -91,6 +109,9 @@ function guldenUnitySetup() {
         guldenbackend.InitWalletFromRecoveryPhrase(guldenbackend.GenerateRecoveryMnemonic(),"password")
     }
     signalhandler.notifyShutdown = function () {
+
+        console.log("call app.quit from notifyShutdown")
+        allowExit=true
         coreIsRunning=false
         app.quit()
     }
@@ -110,8 +131,16 @@ app.on('window-all-closed', function () {
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin')
   {
-      mainWindow.hide()
-      guldenbackend.TerminateUnityLib()
+      if (coreIsRunning)
+      {
+            console.log("terminate core from window-all-closed")
+          guldenbackend.TerminateUnityLib()
+      }
+      else
+      {
+          console.log("set core to terminate after init window-all-closed")
+          terminateCore=true
+      }
   }
 })
 
