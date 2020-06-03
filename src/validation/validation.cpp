@@ -2247,7 +2247,7 @@ static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainP
 
     arith_uint256 nBlockProof = GetBlockProof(*pIndex);
     arith_uint256 chainWork = (pIndex->pprev ? pIndex->pprev->nChainWork : 0) + nBlockProof;
-    if (pIndex->nVersionPoW2Witness != 0)
+    if (pIndex->nVersionPoW2Witness != 0 && pIndex->pprev)
     {
         // Note: (PoW2) If we wanted to include witness weight in the chain weight this would be the place to do it.
         // This would have the benefit of making it harder to mine a side chain using lots of small witnesses.
@@ -2276,7 +2276,7 @@ static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainP
             }
             if (!fSPV)
             {
-                assert (nCount == 10);
+                assert (pIndex->nHeight < 11 || nCount == 10);
             }
             nBlockProof /= nCount;
             chainWork += nBlockProof;
