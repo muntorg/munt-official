@@ -1124,7 +1124,6 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     //fixme: (SIGMA) Improve.
     // Select optimised algorithms for SIGMA
-    selected_argon2_echo_hash = argon2_echo_ctx_ref;
     selectOptimisedImplementations();
 
 #ifndef WIN32

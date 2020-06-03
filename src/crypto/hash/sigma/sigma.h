@@ -106,7 +106,7 @@ inline HashReturn (*selected_echo256_opt_UpdateFinal)(echo256_opt_hashState* sta
 inline bool (*selected_shavite3_256_opt_Init)(shavite3_256_opt_hashState* state) = nullptr;
 inline bool (*selected_shavite3_256_opt_Update)(shavite3_256_opt_hashState* state, const unsigned char* data, uint64_t dataLenBytes) = nullptr;
 inline bool (*selected_shavite3_256_opt_Final)(shavite3_256_opt_hashState* state, unsigned char* hashval) = nullptr;
-inline int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash) = nullptr;
+inline int (*selected_argon2_echo_hash)(argon2_echo_context* context, bool doHash) = argon2_echo_ctx_ref;
 
 void normaliseBufferSize(uint64_t& nBufferSizeBytes);
 
