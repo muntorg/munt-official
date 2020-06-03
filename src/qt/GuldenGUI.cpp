@@ -396,19 +396,6 @@ void GUI::requestEmptyWitness()
                                 return;
                             }
                             std::string sDestIn = CGuldenAddress(destIn).ToString();
-
-                            if (haveStaticFundingAddress(sDestIn, chainActive.Height()) > 0)
-                            {
-                                SendCoinsRecipient rcp;
-                                rcp.paymentType = SendCoinsRecipient::PaymentType::NormalPayment;
-                                rcp.fSubtractFeeFromAmount = true;
-                                rcp.amount = availableAmount;
-                                rcp.forexFailCode = "";
-                                rcp.address = QString::fromStdString(getStaticFundingAddress(sDestIn, chainActive.Height()));
-                                walletFrame->currentWalletView()->sendCoinsPage->pendingRecipients.push_back(rcp);
-                                walletFrame->currentWalletView()->sendCoinsPage->on_sendButton_clicked();
-                                return;
-                            }
                         }
                     }
                 }
