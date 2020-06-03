@@ -119,7 +119,7 @@ void CReserveKeyOrScript::keepScriptOnDestroy()
     shouldKeepOnDestroy = true;
 }
 
-static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOutput)
+static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWitnessOutput, CAccount* signingAccount)
 {
     assert(pBlock->nVersionPoW2Witness != 0);
 
@@ -136,7 +136,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     }
 
     CKey key;
-    if (!pactiveWallet->GetKey(witnessKeyID, key))
+    if (!signingAccount->GetKey(witnessKeyID, key))
     {
         std::string strErrorMessage = strprintf("Failed to obtain key to sign as witness: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
         CAlert::Notify(strErrorMessage, true, true);
@@ -694,7 +694,7 @@ void static GuldenWitness()
 
 
                                     /** Do the witness operation (Sign the block using our witness key) and broadcast the final product to the network. **/
-                                    if (SignBlockAsWitness(pWitnessBlock, witnessInfo.selectedWitnessTransaction))
+                                    if (SignBlockAsWitness(pWitnessBlock, witnessInfo.selectedWitnessTransaction, selectedWitnessAccount))
                                     {
                                         LogPrint(BCLog::WITNESS, "GuldenWitness: witness block found %s", pWitnessBlock->GetHashPoW2().ToString());
                                         ProcessBlockFound(pWitnessBlock, chainparams);
