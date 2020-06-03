@@ -115,6 +115,8 @@ public:
                 {
                     if (ser_action.ForRead())
                         witnessHeaderPoW2Sig.resize(65);
+                    else
+                        assert(witnessHeaderPoW2Sig.size() == 65);
                     READWRITENOSIZEVECTOR(witnessHeaderPoW2Sig);
                 }
             }
