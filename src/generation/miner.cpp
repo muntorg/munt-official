@@ -879,11 +879,6 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 //
 bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams)
 {
-    CBlockIndex* pChainTip = nullptr;
-    {
-        LOCK(cs_main);
-        pChainTip = chainActive.Tip();
-    }
     LogPrintf("%s\n", pblock->ToString());
     LogPrintf("Generated: hash=%s hashpow2=%s amt=%s\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue));
 
