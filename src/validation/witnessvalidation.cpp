@@ -271,17 +271,24 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
 
     // Force the tip of the chain to the block that comes before the block we are examining.
     // For phase 3 this must be a PoW block - from phase 4 it should be a witness block 
-    if (pPreviousIndexChain->nVersionPoW2Witness==0 || IsPow2Phase4Active(pPreviousIndexChain->pprev))
+    if (pPreviousIndexChain->nHeight == 0)
     {
         ForceActivateChain(pPreviousIndexChain, nullptr, state, chainParams, tempChain, viewNew);
     }
     else
     {
-        CBlockIndex* pPreviousIndexChainPoW = new CBlockIndex(*GetPoWBlockForPoSBlock(pPreviousIndexChain));
-        assert(pPreviousIndexChainPoW);
-        pPreviousIndexChainPoW->pprev = pPreviousIndexChain->pprev;
-        ForceActivateChainWithBlockAsTip(pPreviousIndexChain->pprev, nullptr, state, chainParams, tempChain, viewNew, pPreviousIndexChainPoW);
-        pPreviousIndexChain = tempChain.Tip();
+        if (pPreviousIndexChain->nVersionPoW2Witness==0 || IsPow2Phase4Active(pPreviousIndexChain->pprev))
+        {
+            ForceActivateChain(pPreviousIndexChain, nullptr, state, chainParams, tempChain, viewNew);
+        }
+        else
+        {
+            CBlockIndex* pPreviousIndexChainPoW = new CBlockIndex(*GetPoWBlockForPoSBlock(pPreviousIndexChain));
+            assert(pPreviousIndexChainPoW);
+            pPreviousIndexChainPoW->pprev = pPreviousIndexChain->pprev;
+            ForceActivateChainWithBlockAsTip(pPreviousIndexChain->pprev, nullptr, state, chainParams, tempChain, viewNew, pPreviousIndexChainPoW);
+            pPreviousIndexChain = tempChain.Tip();
+        }
     }
 
     // If we have been passed a new tip block (not yet part of the chain) then add it to the chain now.
@@ -398,22 +405,23 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
         witnessInfo.nTotalWeightEligibleRaw += item.nWeight;
     }
 
+    uint64_t genesisWeight=0;
+    if (Params().numGenesisWitnesses > 0)
+    {
+        genesisWeight = std::max(witnessInfo.nTotalWeightEligibleRaw / Params().genesisWitnessWeightDivisor, (uint64_t)1000);
+        witnessInfo.nTotalWeightEligibleRaw += Params().numGenesisWitnesses*genesisWeight;
+    }
+    
     /** Reduce larger weightings to a maximum weighting of 1% of network weight. **/
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    if ((!IsArgSet("-testnet") && nBlockHeight > 881000 ) || (IsArgSet("-testnet") && nBlockHeight > 96400 ))
-    {
-        witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightEligibleRaw / 100;
-    }
-    else
-    {
-        //fixme: (PHASE5) Original 2.0 behaviour, since patched to use nTotalWeightEligibleRaw - after phase 4 we can get rid of this backwards compatible code.
-        witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightRaw / 100;
-    }
+    witnessInfo.nMaxIndividualWeight = witnessInfo.nTotalWeightEligibleRaw / 100;
     witnessInfo.nTotalWeightEligibleAdjusted = 0;
     for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
+        if (item.nWeight == 0)
+            item.nWeight = genesisWeight;
         if (item.nWeight > witnessInfo.nMaxIndividualWeight)
             item.nWeight = witnessInfo.nMaxIndividualWeight;
         witnessInfo.nTotalWeightEligibleAdjusted += item.nWeight;

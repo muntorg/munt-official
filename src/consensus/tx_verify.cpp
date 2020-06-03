@@ -277,7 +277,12 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
         if (IsPow2WitnessOutput(txout))
         {
             if ( txout.nValue < (gMinimumWitnessAmount * COIN) )
-                return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+            {
+                if (txout.output.witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+                }
+            }
 
             CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
             uint64_t nUnused1, nUnused2;
@@ -285,12 +290,20 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             if (nLockLengthInBlocks < int64_t(MinimumWitnessLockLength()))
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
             if (nLockLengthInBlocks - checkHeight > int64_t(MaximumWitnessLockLength()))
-                return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+            {
+                if (txout.output.witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+                }
+            }
 
             int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
             if (nWeight < gMinimumWitnessWeight)
             {
-                return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+                if (txout.output.witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+                }
             }
         }
     }
@@ -867,12 +880,15 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
     {
         if (IsPow2WitnessOutput(txout))
         {
+            CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
             if ( txout.nValue < (gMinimumWitnessAmount * COIN) )
             {
-                return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+                if (witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+                }
             }
-
-            CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
+            
             uint64_t nUnused1, nUnused2;
             int64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, nSpendHeight, nUnused1, nUnused2);
             if (nLockLengthInBlocks < int64_t(MinimumWitnessLockLength()))
@@ -881,13 +897,19 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
             }
             if (nLockLengthInBlocks - nSpendHeight > int64_t(MaximumWitnessLockLength()))
             {
-                return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+                if (witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+                }
             }
 
             int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
             if (nWeight < gMinimumWitnessWeight)
             {
-                return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+                if (witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+                }
             }
 
             if (tx.IsPoW2WitnessCoinBase())
