@@ -900,13 +900,22 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     // verify that the view's current state corresponds to the previous block
     uint256 hashPrevBlock = pindex->pprev == NULL ? uint256() : pindex->pprev->GetBlockHashPoW2();
-    assert(hashPrevBlock == view.GetBestBlock());
+    uint256 hashBestBlock = view.GetBestBlock();
+    assert(hashPrevBlock == hashBestBlock);
 
     // Special case for the genesis block, skipping connection of its transactions
     // (its coinbase is unspendable)
-    if (block.GetHashLegacy() == chainparams.GetConsensus().hashGenesisBlock) {
+    if (block.GetHashLegacy() == chainparams.GetConsensus().hashGenesisBlock)
+    {
         if (!fJustCheck)
-            view.SetBestBlock(pindex->GetBlockHashLegacy());
+        {
+            view.SetBestBlock(pindex->GetBlockHashPoW2());
+            if (block.vtx.size() == 1 && block.vtx[0]->vout.size()>1)
+            {
+                CTxUndo undoDummy;
+                UpdateCoins(*block.vtx[0], view, undoDummy, pindex->nHeight, 0);
+            }
+        }
         return true;
     }
 
