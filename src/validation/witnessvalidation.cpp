@@ -485,6 +485,11 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
             witnessInfo.witnessSelectionPoolUnfiltered.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
             witnessInfo.nTotalWeightRaw += nWeight;
         }
+        else if (coin.out.output.witnessDetails.lockFromBlock == 1)
+        {
+            int64_t nWeight = 0;
+            witnessInfo.witnessSelectionPoolUnfiltered.push_back(RouletteItem(outPoint, coin, nWeight, nAge));                     
+        }
     }
     return true;
 }
@@ -513,6 +518,9 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
 // As we need to call this from within the witness algorithm from before nReducedTotalWeight is even known. 
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight)
 {
+    if (nWitnessWeight == 0)
+        return false;
+
     uint64_t nExpectedWitnessPeriod = expectedWitnessBlockPeriod(nWitnessWeight, nNetworkTotalWitnessWeight);
     return ( nWitnessAge > gMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );
 }

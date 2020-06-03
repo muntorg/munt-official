@@ -147,7 +147,7 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
     case TX_STANDARD_WITNESS:
     case TX_STANDARD_PUBKEY_HASH:
         assert(0);
-        break;
+        return false;
         
     default:
         return false;
