@@ -74,7 +74,7 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
     int64_t nLongTimeStep  = nDrift;
     if (nDeltaVersion>=3)
     {
-        int64_t nLongTimeLimit = (3 * nDrift);
+        nLongTimeLimit = (3 * nDrift);
     }
 
     // Limit adjustment amount to try prevent jumping too far in either direction.
@@ -341,7 +341,7 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
 
     // Exception 2 - Reduce difficulty if current block generation time has already exceeded maximum time limit. (NB! nLongTimeLimit must exceed maximum possible drift in both positive and negative direction)
     {
-        uint64_t lastBlockTime=pindexLast->GetBlockTime();
+        int64_t lastBlockTime=pindexLast->GetBlockTime();
         if (nDeltaVersion>=3)
         {
             lastBlockTime=pindexLast->GetBlockTimePoW2Witness();
