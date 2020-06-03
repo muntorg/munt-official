@@ -22,6 +22,7 @@
 
 #include <cstdio>
 #include "chainparamsseeds.h"
+#include <validation/witnessvalidation.h>
 
 static CBlock CreateGenesisBlock(const std::vector<unsigned char>& timestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
@@ -448,6 +449,12 @@ public:
             consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
             consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
 
+            // The best chain should have at least this much work.
+            consensus.nMinimumChainWork = uint256S("");
+
+            // By default assume that the signatures in ancestors of this block are valid.
+            consensus.defaultAssumeValid = uint256S("");
+
             if (fIsOfficialTestnetV1)
             {
                 consensus.fixedRewardReductionHeight=250001;
@@ -456,31 +463,79 @@ public:
                 consensus.devBlockSubsidyActivationHeight=528750;
                 consensus.pow2Phase4FirstBlockHeight=528762;
                 consensus.pow2Phase5FirstBlockHeight=528762;
+
+                genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
+                genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+                genesis.nNonce = 928;
+                genesis.nTime = 1534687770;
             }
             else
             {
-                consensus.fixedRewardReductionHeight=10;
-                consensus.pow2Phase2FirstBlockHeight=21;
-                consensus.pow2Phase3FirstBlockHeight=51;
-                consensus.devBlockSubsidyActivationHeight=90;
-                consensus.pow2Phase4FirstBlockHeight=100;
-                consensus.pow2Phase5FirstBlockHeight=100;
-            }
+                consensus.fixedRewardReductionHeight=1;
+                consensus.pow2Phase2FirstBlockHeight=0;
+                consensus.pow2Phase3FirstBlockHeight=0;
+                consensus.devBlockSubsidyActivationHeight=1;
+                consensus.pow2Phase4FirstBlockHeight=0;
+                consensus.pow2Phase5FirstBlockHeight=0;
 
-            // The best chain should have at least this much work.
-            consensus.nMinimumChainWork = uint256S("");
+                numGenesisWitnesses = 10;
+                genesisWitnessWeightDivisor = 100;
+                
+                // Don't bother creating the genesis block if we haven't started ECC yet (e.g. we are being called from the help text)
+                // We can't initialise key anyway unless the app has first initialised ECC, and the help doesn't need the genesis block, creating it twice is a waste of cpu cycles
+                ECC_Start();
+                {
+                    CMutableTransaction txNew(CTransaction::CURRENT_VERSION);
+                    txNew.vin.resize(1);
+                    txNew.vin[0].prevout.SetNull();
+                    txNew.vin[0].segregatedSignatureData.stack.clear();
+                    txNew.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
+                    CVectorWriter(0, 0, txNew.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(0);
+                    txNew.vin[0].segregatedSignatureData.stack.push_back(ParseHex("4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e"));
+                    
+                    {
+                        std::string sKey = std::string(sTestnetParams, 1, 8);
+                        sKey += sKey;
+                        sKey += sKey;
+                        genesisWitnessPrivKey.Set((unsigned char*)&sTestnetParams[0],(unsigned char*)&sTestnetParams[0]+32, true);
+                        
+                        CTxOut renewedWitnessTxOutput;
+                        renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+                        renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
+                        renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
+                        renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = 1;
+                        renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = 900000;
+                        renewedWitnessTxOutput.output.witnessDetails.failCount = 0;
+                        renewedWitnessTxOutput.output.witnessDetails.actionNonce = 1;
+                        renewedWitnessTxOutput.nValue=0;
+                        for (uint32_t i=0; i<numGenesisWitnesses;++i)
+                        {
+                            txNew.vout.push_back(renewedWitnessTxOutput);
+                        }
+                    }
 
-            // By default assume that the signatures in ancestors of this block are valid.
-            consensus.defaultAssumeValid = uint256S("");
+                    genesis.nTime    = seedTimestamp;
+                    genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+                    genesis.nNonce   = 0;
+                    genesis.nVersion = 536870912;
+                    genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
+                    genesis.hashPrevBlock.SetNull();
+                    genesis.hashMerkleRoot = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
+                    genesis.hashMerkleRootPoW2Witness = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
+                    genesis.witnessHeaderPoW2Sig.resize(65);
 
-            genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
-            genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-
-            while(UintToArith256(genesis.GetPoWHash()) > UintToArith256(consensus.powLimit))
-            {
-                genesis.nNonce++;
-                if(genesis.nNonce == 0)
-                    genesis.nTime++;
+                    uint256 foundBlockHash;
+                    std::atomic<uint64_t> halfHashCounter=0;
+                    std::atomic<uint64_t> nThreadCounter=0;
+                    bool interrupt=false;
+                    sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
+                    generateContext.prepareArenas(genesis);
+                    generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
+                    
+                    genesis.nTimePoW2Witness = genesis.nTime+1;
+                    genesis.nVersionPoW2Witness = genesis.nVersion;
+                }
+                ECC_Stop();
             }
             consensus.hashGenesisBlock = genesis.GetHashPoW2();
             LogPrintf("genesis nonce: %d\n",genesis.nNonce);
