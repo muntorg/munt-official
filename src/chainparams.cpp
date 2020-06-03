@@ -124,7 +124,7 @@ public:
         nPruneAfterHeight = 200000;
 
         genesis = CreateGenesisBlock(1009843200, 2200095, 0x1e0ffff0, 1, 0);
-        consensus.hashGenesisBlock = genesis.GetHashLegacy();
+        consensus.hashGenesisBlock = genesis.GetHashPoW2();
         assert(consensus.hashGenesisBlock == uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92"));
         assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
@@ -482,7 +482,7 @@ public:
                 if(genesis.nNonce == 0)
                     genesis.nTime++;
             }
-            consensus.hashGenesisBlock = genesis.GetHashLegacy();
+            consensus.hashGenesisBlock = genesis.GetHashPoW2();
             LogPrintf("genesis nonce: %d\n",genesis.nNonce);
             LogPrintf("genesis time: %d\n",genesis.nTime);
             LogPrintf("genesis bits: %d\n",genesis.nBits);
@@ -701,7 +701,7 @@ public:
         nPruneAfterHeight = 1000;
 
         genesis = CreateGenesisBlock(1296688602, 2, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
-        consensus.hashGenesisBlock = genesis.GetHashLegacy();
+        consensus.hashGenesisBlock = genesis.GetHashPoW2();
         assert(consensus.hashGenesisBlock == uint256S("0x3e4b830e0f75f7b72060ae5ebcc22fdf5df57c7e2350a2669ac4f8a2d734e1bc"));
         assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
@@ -714,7 +714,7 @@ public:
         fUseSyncCheckpoints = false;
 
         checkpointData = {
-            { 0, { genesis.GetHashLegacy(), genesis.nTime } }
+            { 0, { genesis.GetHashPoW2(), genesis.nTime } }
         };
 
         chainTxData = ChainTxData{
