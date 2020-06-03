@@ -776,7 +776,9 @@ public:
     bool FundTransaction(CAccount* fundingAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl, CReserveKeyOrScript& reservekey);
 
     //! Sign a transaction that is already fully populated/funded
-    bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
+    //! The transaction inputs must be in the wallet as SignTransaction will look these up and fail if the are not
+    //! For special cases of signing when not in wallet we provide prevOutOverride - however this only caters for one input to not be in the wallet...
+    bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type, CTxOut* prevOutOverride=nullptr);
 
     //! Create a transaction that renews an expired witness account
     bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction=nullptr, CCoinControl* coinControl=nullptr);

@@ -63,7 +63,7 @@ CAccount* CWallet::FindBestWitnessAccountForTransaction(const CTxOut& out)
     return witnessAccount;
 }
 
-bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type)
+bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type, CTxOut* prevOutOverride)
 {
     AssertLockHeld(cs_wallet); // mapWallet
 
@@ -79,15 +79,29 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         }
 
         const CWalletTx* prev = GetWalletTx(input.prevout);
-        if(!prev || input.prevout.n >= prev->tx->vout.size()) {
-            return false;
+        const CTxOut* prevout = nullptr;
+        if(!prev || input.prevout.n >= prev->tx->vout.size())
+        {
+            if (prevOutOverride)
+            {
+                prevout = prevOutOverride;
+            }
+            else
+            {
+                return false;
+            }
         }
-        const CAmount& amount = prev->tx->vout[input.prevout.n].nValue;
-        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(prev->tx->vout[input.prevout.n], type);
+        else
+        {
+            prevout = &prev->tx->vout[input.prevout.n];
+        }
+        
+        const CAmount& amount = prevout->nValue;
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(*prevout, type);
         SignatureData sigdata;
         std::vector<CAccount*> accountsToTry;
         if (!fromAccount)
-            accountsToTry = FindAccountsForTransaction(prev->tx->vout[input.prevout.n]);
+            accountsToTry = FindAccountsForTransaction(*prevout);
         else
             accountsToTry.push_back(fromAccount);    
         if (accountsToTry.empty())
@@ -100,7 +114,8 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             keystores.push_back(account);
         }
         
-        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), prev->tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), *prevout, sigdata, type, txNewConst.nVersion))
+        {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
