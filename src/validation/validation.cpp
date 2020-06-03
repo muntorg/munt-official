@@ -986,7 +986,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     // before the first had been spent.  Since those coinbases are sufficiently buried its no longer possible to create further
     // duplicate transactions descending from the known pairs either.
     // If we're on the known chain at height greater than where BIP34 activated, we can save the db accesses needed for the BIP30 check.
-    CBlockIndex *pindexBIP34height = pindex->pprev->GetAncestor(chainparams.GetConsensus().BIP34Height);
+    CBlockIndex *pindexBIP34height = pindex->pprev ? pindex->pprev->GetAncestor(chainparams.GetConsensus().BIP34Height) : pindex;
     //Only continue to enforce if we're below BIP34 activation height or the block hash at that height doesn't correspond.
     fEnforceBIP30 = fEnforceBIP30 && (!pindexBIP34height || !(pindexBIP34height->GetBlockHashPoW2() == chainparams.GetConsensus().BIP34Hash));
 
@@ -1088,10 +1088,12 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     break;
                 }
             }
-            //testme: (GULDEN) (PHASE5) I think this is a duplicate check so can probably be removed.
-            if (nWitnessCoinbaseIndex == 0)
+            if (pindex->nHeight > 0)
             {
-                return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
+                if (nWitnessCoinbaseIndex == 0)
+                {
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
+                }
             }
         }
     }
@@ -1250,7 +1252,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         nSubsidy -= nSubsidyWitnessExpected;
     }
 
-    if (block.nVersionPoW2Witness == 0)
+    if (block.nVersionPoW2Witness == 0 || pindex->nHeight == 0)
     {
         // PoW block
         // Phase 4 + 5 - miner mines 80 reward instead of 100, so nothing to do here (GetBlockSubsidy returns correct amount)
@@ -1347,7 +1349,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         return true;
 
     // Write undo information to disk
-    if (pindex->GetUndoPos().IsNull() || !pindex->IsValid(BLOCK_VALID_SCRIPTS))
+    if (pindex->pprev &&(pindex->GetUndoPos().IsNull() || !pindex->IsValid(BLOCK_VALID_SCRIPTS)))
     {
         if (pindex->GetUndoPos().IsNull()) {
             CDiskBlockPos _pos;
