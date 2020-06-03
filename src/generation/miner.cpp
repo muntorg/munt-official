@@ -884,10 +884,8 @@ bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainP
         LOCK(cs_main);
         pChainTip = chainActive.Tip();
     }
-    int nPoW2PhaseTip = GetPoW2Phase(pChainTip);
-    int nPoW2PhasePrev = GetPoW2Phase(pChainTip->pprev);
     LogPrintf("%s\n", pblock->ToString());
-    LogPrintf("Generated: hash=%s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
+    LogPrintf("Generated: hash=%s hashpow2=%s amt=%s\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue));
 
     //fixme: (POST-PHASE5) we should avoid submitting stale blocks here
     //but only if they are really stale (there are cases where we want to mine not on the tip (stalled chain)
