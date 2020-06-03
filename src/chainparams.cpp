@@ -755,6 +755,11 @@ void SelectParams(const std::string& network)
     globalChainParams = CreateChainParams(network);
 }
 
+void FreeParams()
+{
+    globalChainParams = nullptr;
+}
+
 void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
 {
     globalChainParams->UpdateVersionBitsParameters(d, nStartTime, nTimeout);

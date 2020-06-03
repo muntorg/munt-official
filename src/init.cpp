@@ -308,6 +308,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
     vpwallets.clear();
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     #endif
+    FreeParams();
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("Core shutdown: done.\n");

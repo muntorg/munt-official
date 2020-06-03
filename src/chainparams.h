@@ -137,6 +137,11 @@ const CChainParams &Params();
 void SelectParams(const std::string& chain);
 
 /**
+ * Free any globally stored chain params for app shutdown
+ */
+void FreeParams();
+
+/**
  * Allows modifying the Version Bits regtest parameters.
  */
 void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
