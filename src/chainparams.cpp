@@ -117,7 +117,7 @@ public:
         pchMessageStart[2] = 0xfc; // 'V' + 0xb0
         pchMessageStart[3] = 0xfd; // 'O' + 0xb0
         vAlertPubKey = ParseHex("073513ffe7147aba88d33aea4da129d8a2829c545526d5d854ab51d5778f4d0625431ba1c5a3245bdfe8736b127fdfdb488de72640727d37355c4c3a66c547efad");
-        nDefaultPort = 9231;
+        nDefaultPort = 9233;
         nPruneAfterHeight = 200000;
 
         genesis = CreateGenesisBlock(1009843200, 2200095, 0x1e0ffff0, 1, 0);
@@ -543,7 +543,7 @@ public:
         }
 
         vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
-        nDefaultPort = 9923;
+        nDefaultPort = 9235;
         nPruneAfterHeight = 1000;
 
         vFixedSeeds.clear();

@@ -102,8 +102,8 @@ For those who really need too or are technically inclined it is of course possib
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
 |Total coins to be minted over time:|1680M|-|
-|P2P Port|9231|9923|
-|RPC Port|9232|9924|
+|P2P Port|9233|9234|
+|RPC Port|9934|9235|
 |P2P Network Header|fcfdfcfd|Look in debug.log|
 |Address version byte|38 (G)|65 (T)|
 |P2SH version byte|98 (g)|127 (t)|
