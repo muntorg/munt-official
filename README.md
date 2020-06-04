@@ -98,7 +98,7 @@ For those who really need too or are technically inclined it is of course possib
 |Recommended transaction confirmations:|2|2|
 |Block reward SIGMA:|50 NLG|1000 NLG|
 |Block reward witness:|30 NLG|20 NLG|
-|Block interval target:|150 seconds (2.5 minutes)|Configurable|
+|Block interval target:|300 seconds (5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
 |Total coins to be minted over time:|1680M|-|
