@@ -88,7 +88,7 @@ public:
         consensus.BIP34Height = 1;
         consensus.BIP65Height = 1; 
         consensus.BIP66Height = 1; 
-        consensus.powLimit =  uint256S("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit =  uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 3.5 * 24 * 60 * 60; // Gulden: 3.5 days
         consensus.nPowTargetSpacing = 150; // Gulden: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
