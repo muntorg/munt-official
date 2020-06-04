@@ -110,7 +110,6 @@ public:
         consensus.pow2Phase3FirstBlockHeight=0;
         consensus.pow2Phase4FirstBlockHeight=0;
         consensus.pow2Phase5FirstBlockHeight=0;
-        consensus.deltaV3ActivationTime=1594044000;
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -457,7 +456,6 @@ public:
                 consensus.pow2Phase3FirstBlockHeight=51;
                 consensus.pow2Phase4FirstBlockHeight=528762;
                 consensus.pow2Phase5FirstBlockHeight=528762;
-                consensus.deltaV3ActivationTime=1591372800;
 
                 genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
                 genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
@@ -470,7 +468,6 @@ public:
                 consensus.pow2Phase3FirstBlockHeight=0;
                 consensus.pow2Phase4FirstBlockHeight=0;
                 consensus.pow2Phase5FirstBlockHeight=0;
-                consensus.deltaV3ActivationTime=1591188240;
 
                 numGenesisWitnesses = 10;
                 genesisWitnessWeightDivisor = 100;
@@ -732,7 +729,6 @@ public:
         consensus.pow2Phase3FirstBlockHeight=50000;
         consensus.pow2Phase4FirstBlockHeight=50500;
         consensus.pow2Phase5FirstBlockHeight=50500;
-        consensus.deltaV3ActivationTime=1591188240;
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");

@@ -23,11 +23,7 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
 
     std::string sLogInfo;
     
-    uint32_t nDeltaVersion=2;
-    if (block->nTime >= Params().GetConsensus().deltaV3ActivationTime)
-    {
-        nDeltaVersion=3;
-    }
+    uint32_t nDeltaVersion=3;
 
     // The spacing we want our blocks to come in at.
     int64_t nRetargetTimespan      = nPowTargetSpacing;
