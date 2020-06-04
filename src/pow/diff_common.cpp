@@ -12,11 +12,12 @@ unsigned int GetNextWorkRequired(const CBlockIndex* indexLast, const CBlockHeade
     if (Params().GetConsensus().fPowNoRetargeting)
         return indexLast->nBits;
 
-    static int nDeltaSwitchoverBlock = DIFF_SWITCHOVER(10, 250000);
-    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 1020000);
+    static int nDeltaSwitchoverBlock = 0;
+    // We disable old_diff for now as we don't use it in any way
+    //static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 1020000);
 
-    if ((indexLast->nHeight+1) >= nOldDiffSwitchoverBlock)
-    {
+    //if ((indexLast->nHeight+1) >= nOldDiffSwitchoverBlock)
+    //{
         // Delta can't handle a target spacing of 1 - so we just assume a static diff for testnets where target spacing is 1.
         if (nPowTargetSpacing>1 && (indexLast->nHeight+1) >= nDeltaSwitchoverBlock)
         {
@@ -24,8 +25,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex* indexLast, const CBlockHeade
         }
         else
         {
-            return 524287999;
+            return nPowLimit;
         }
-    }
-    return diff_old(indexLast->nHeight+1, nPowLimit);
+    //}
+    //return diff_old(indexLast->nHeight+1, nPowLimit);
 }
