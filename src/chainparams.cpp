@@ -106,12 +106,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1493596800; // May 1st, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
        
-        consensus.fixedRewardReductionHeight=250001;
-        consensus.pow2Phase2FirstBlockHeight=778177;
-        consensus.pow2Phase3FirstBlockHeight=778301;
-        consensus.devBlockSubsidyActivationHeight=1030001;
-        consensus.pow2Phase4FirstBlockHeight=1131652;
-        consensus.pow2Phase5FirstBlockHeight=1140958;
+        consensus.pow2Phase2FirstBlockHeight=0;
+        consensus.pow2Phase3FirstBlockHeight=0;
+        consensus.pow2Phase4FirstBlockHeight=0;
+        consensus.pow2Phase5FirstBlockHeight=0;
         consensus.deltaV3ActivationTime=1594044000;
 
         // Message start string to avoid accidental cross communication with other chains or software.
@@ -455,10 +453,8 @@ public:
 
             if (fIsOfficialTestnetV1)
             {
-                consensus.fixedRewardReductionHeight=250001;
                 consensus.pow2Phase2FirstBlockHeight=21;
                 consensus.pow2Phase3FirstBlockHeight=51;
-                consensus.devBlockSubsidyActivationHeight=528750;
                 consensus.pow2Phase4FirstBlockHeight=528762;
                 consensus.pow2Phase5FirstBlockHeight=528762;
                 consensus.deltaV3ActivationTime=1591372800;
@@ -470,10 +466,8 @@ public:
             }
             else
             {
-                consensus.fixedRewardReductionHeight=1;
                 consensus.pow2Phase2FirstBlockHeight=0;
                 consensus.pow2Phase3FirstBlockHeight=0;
-                consensus.devBlockSubsidyActivationHeight=1;
                 consensus.pow2Phase4FirstBlockHeight=0;
                 consensus.pow2Phase5FirstBlockHeight=0;
                 consensus.deltaV3ActivationTime=1591188240;
@@ -734,10 +728,8 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
 
-        consensus.fixedRewardReductionHeight=40600;
         consensus.pow2Phase2FirstBlockHeight=40800;
         consensus.pow2Phase3FirstBlockHeight=50000;
-        consensus.devBlockSubsidyActivationHeight=50100;
         consensus.pow2Phase4FirstBlockHeight=50500;
         consensus.pow2Phase5FirstBlockHeight=50500;
         consensus.deltaV3ActivationTime=1591188240;

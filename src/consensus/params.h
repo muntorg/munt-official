@@ -76,10 +76,8 @@ struct Params {
     uint32_t nMinerConfirmationWindow;
     BIP9Deployment vDeployments[MAX_VERSION_BITS_DEPLOYMENTS];
     uint64_t fixedRewardIntroductionHeight;
-    uint64_t fixedRewardReductionHeight;
     uint64_t pow2Phase2FirstBlockHeight;
     uint64_t pow2Phase3FirstBlockHeight;
-    uint64_t devBlockSubsidyActivationHeight;
     uint64_t pow2Phase4FirstBlockHeight;
     uint64_t pow2Phase5FirstBlockHeight;
     uint64_t deltaV3ActivationTime;
