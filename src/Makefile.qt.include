@@ -10,7 +10,7 @@
 # file COPYING
 
 
-bin_PROGRAMS += qt/Gulden
+bin_PROGRAMS += qt/novo
 EXTRA_LIBRARIES += qt/libguldenqt.a
 
 
@@ -479,7 +479,7 @@ QT_FORMS_H=$(join $(dir $(QT_FORMS_UI)),$(addprefix ui_, $(notdir $(QT_FORMS_UI:
 # Most files will depend on the forms and moc files as includes. Generate them
 # before anything else.
 $(QT_MOC): $(QT_FORMS_H)
-$(qt_libguldenqt_a_OBJECTS) $(qt_Gulden_OBJECTS) : | $(QT_MOC)
+$(qt_libguldenqt_a_OBJECTS) $(qt_novo_OBJECTS) : | $(QT_MOC)
 
 #Generating these with a half-written protobuf header leads to wacky results.
 #This makes sure it's done.
@@ -487,40 +487,40 @@ $(QT_MOC): $(PROTOBUF_H)
 $(QT_MOC_CPP): $(PROTOBUF_H)
 
 # Gulden binary #
-qt_Gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(GULDEN_QT_INCLUDES) \
+qt_novo_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(GULDEN_QT_INCLUDES) \
   $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(QWT_CFLAGS)
-qt_Gulden_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
+qt_novo_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
-qt_Gulden_SOURCES = qt/gulden.cpp
+qt_novo_SOURCES = qt/gulden.cpp
 if TARGET_DARWIN
-  qt_Gulden_SOURCES += $(GULDEN_MM)
+  qt_novo_SOURCES += $(GULDEN_MM)
 endif
 if TARGET_WINDOWS
-  qt_Gulden_SOURCES += $(GULDEN_RC)
+  qt_novo_SOURCES += $(GULDEN_RC)
 endif
-qt_Gulden_LDADD = qt/libguldenqt.a $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
+qt_novo_LDADD = qt/libguldenqt.a $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
 if ENABLE_WALLET
-qt_Gulden_LDADD += $(LIBGULDEN_WALLET)
+qt_novo_LDADD += $(LIBGULDEN_WALLET)
 endif
 if ENABLE_ZMQ
-qt_Gulden_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+qt_novo_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
 endif
-qt_Gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UTIL) $(LIBGULDEN_GENERIC) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO_ALL) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+qt_novo_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UTIL) $(LIBGULDEN_GENERIC) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO_ALL) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(QWT_LIBS)
 
-qt_Gulden_LDADD += qt/libguldenqt.a $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
+qt_novo_LDADD += qt/libguldenqt.a $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
 if ENABLE_WALLET
-qt_Gulden_LDADD += $(LIBGULDEN_WALLET)
+qt_novo_LDADD += $(LIBGULDEN_WALLET)
 endif
 if ENABLE_ZMQ
-qt_Gulden_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+qt_novo_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
 endif
-qt_Gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UTIL) $(LIBGULDEN_GENERIC) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO_ALL) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+qt_novo_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_UTIL) $(LIBGULDEN_GENERIC) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO_ALL) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
-qt_Gulden_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
-qt_Gulden_LIBTOOLFLAGS = --tag CXX
+qt_novo_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+qt_novo_LIBTOOLFLAGS = --tag CXX
 
 #locale/foo.ts -> locale/foo.qm
 QT_QM=$(QT_TS:.ts=.qm)
@@ -545,7 +545,7 @@ CLEAN_QT = $(nodist_qt_libguldenqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda q
 CLEANFILES += $(CLEAN_QT)
 
 Gulden_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libguldenqt_a_OBJECTS) $(qt_Gulden_OBJECTS) qt/Gulden$(EXEEXT) $(LIBGULDENQT)
+	rm -f $(CLEAN_QT) $(qt_libguldenqt_a_OBJECTS) $(qt_novo_OBJECTS) qt/novo$(EXEEXT) $(LIBGULDENQT)
 
 Gulden_qt : qt/Gulden$(EXEEXT)
 
